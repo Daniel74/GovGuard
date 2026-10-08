@@ -15,7 +15,7 @@
 - Die 4 Presets liefern ihren Soll-Gesamtstatus und ihre Pflicht-Befunde.
 - Jeder Audit-Report hat genau einen Befund je Prüfregel; jeder Beleg steht wörtlich in der Eingabe.
 - Das größte Preset (≤ 100.000 Zeichen) ist in unter 29 Sekunden ausgewertet.
-- Ein Audit kostet unter 1 Cent; im Leerlauf fallen 0 € an (außer Cent-Beträgen für S3).
+- Ein Audit kostet unter 1 Cent; im Leerlauf fallen keine variablen Kosten an, Fixkosten nur für den KMS-Schlüssel (ca. 1 $/Monat).
 - Alle 3 Golden Archetypes sind freigegeben (Architektur-Audit und cdk-nag ohne Beanstandung).
 
 ## Offene Fragen

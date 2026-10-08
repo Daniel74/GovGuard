@@ -6,7 +6,7 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 
 ## Leitplanken
 
-- AWS: Daten nur in `eu-central-1`, Inferenz nur in der EU (Bedrock-Profil `eu.`, ADR 0001), 100 % serverless, 0 € im Leerlauf (FinOps).
+- AWS: Daten nur in `eu-central-1`, Inferenz nur in der EU (Bedrock-Profil `eu.`, ADR 0001), 100 % serverless, 0 € variable Kosten im Leerlauf; Fixkosten nur für Sicherheit, z. B. KMS-Schlüssel ca. 1 $/Monat (FinOps).
 - Python, Pydantic, Bedrock Converse API mit Tool-Choice, Streamlit-UI.
 - Wissensbasis als JSON in S3 bzw. im Repo, Bounded Catalog ohne Suche, keine Vektor-DB (ADR 0002).
 

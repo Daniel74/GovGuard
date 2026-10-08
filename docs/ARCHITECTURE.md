@@ -2,6 +2,20 @@
 
 GovGuard hat zwei Betriebsarten: **Build-Zeit** (Wissensbasis und Golden Archetypes erzeugen) und **Laufzeit** (Audits beantworten). Beide nutzen dieselbe **Audit-Engine**. Begriffe: [CONTEXT.md](../CONTEXT.md), Anforderungen: [SPEC.md](SPEC.md).
 
+## Arbeitsteilung LLM ↔ Code
+
+Testfrage für jede Aufgabe: **Gibt es genau eine richtige Antwort, die sich ohne Sprachverständnis ermitteln lässt?** Ja → Code. Nein → LLM, und danach prüft der Code das Ergebnis.
+
+| Code (deterministisch) | LLM (probabilistisch) |
+|---|---|
+| zählen, sortieren, nachschlagen, vergleichen | verstehen, bewerten, formulieren |
+| Vorfilter, Ranking, Obergrenze | „Ist diese Anforderung prüfbar?“ |
+| Primäranker, Querverweis-IDs prüfen, Archetyp-Dateien laden | Prüfregel-Kriterien und Empfehlungen formulieren |
+| Zitat steht wörtlich in Quelle/Eingabe? Jede Prüfregel genau ein Befund? | „Verstößt diese Spezifikation gegen Art. 9?“ |
+| Gesamtstatus = schlechtester Einzelstatus | Archetyp aus geschlossener Liste wählen |
+
+Das LLM sitzt immer **zwischen zwei Code-Schichten**: Der Code bereitet vor (filtern, auswählen), das LLM urteilt, und der Code kontrolliert (Schema, Vollständigkeit, Zitate). Was der Code schon weiß, erzeugt das LLM nicht. Das hält den Anteil klein, der halluzinieren kann.
+
 ## 1. Build-Zeit – Wissensbasis erzeugen (lokal oder per manuellem Workflow)
 
 ```mermaid
@@ -210,8 +224,12 @@ So beweist GovGuard an sich selbst, dass seine Regeln erfüllbar sind (Dogfoodin
 - `/archetype/select` vertraut dem mitgesendeten Report: vertretbar, weil Archetypen öffentlich und vorab freigegeben sind.
 - Scheitert die Validierung, folgt ein erneuter Bedrock-Aufruf mit der Fehlermeldung, danach HTTP 502.
 
-## Offene Fragen
+## Kosten
 
-- KMS-CMK für den eigenen Stack kostet ca. 1 $/Monat je Schlüssel – Widerspruch zu „0 € im Leerlauf“ oder akzeptierter Preis für Compliance?
-- SDM-Bausteine markieren ungültige Maßnahmen durch Durchstreichen; das geht beim Extrahieren als Text verloren. Reicht die Spalte „Gültigkeit“ als Filter?
-- DSGVO-Einheit ist der ganze Artikel; Art. 5 liefert damit nur **eine** Prüfregel, obwohl er sechs Grundsätze enthält. Reicht das, wenn das SDM Datenminimierung und Speicherbegrenzung zusätzlich abdeckt?
+Der eigene Stack verschlüsselt mit einem kundenverwalteten KMS-Schlüssel (CMK), ca. 1 $/Monat. Regel: **0 € variable Kosten im Leerlauf; Fixkosten nur für Sicherheit.** Satz für die Verteidigung: „Sicherheit hat einen Preis, und ich kann ihn auf den Cent beziffern.“
+
+## Bekannte Grenzen
+
+- **SDM-Durchstreichungen:** Ungültige Maßnahmen sind im PDF nur durchgestrichen, und das geht beim Extrahieren als Text verloren. Betroffen sein kann nur Protokollieren (V2.0); die übrigen Bausteine sind V1.0 und haben keine Vorgängerversion. Eine falsch gewählte Maßnahme fällt spätestens im Preset-Gate auf.
+- **DSGVO-Einheit „Artikel“:** Art. 5 ergibt nur eine Prüfregel, obwohl er sechs Grundsätze enthält. Die Grundsätze kommen über das SDM in den Katalog; die SDM-Methode ist genau ihre Operationalisierung (Teil C, „Systematisierung der Anforderungen der DS-GVO durch die Gewährleistungsziele“).
+- **Umfang:** Höchstens 24 bzw. 20 Prüfregeln und Eingaben bis 100.000 Zeichen. Wie GovGuard darüber hinaus wächst, beschreibt [AUSBAU.md](AUSBAU.md).
