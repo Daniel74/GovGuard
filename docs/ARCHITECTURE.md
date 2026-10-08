@@ -30,7 +30,7 @@ flowchart TD
   F --> K["3 LLM: prüfbar ja/nein"]
   K --> R["4 Ranking + Obergrenze (deterministisch)"]
   R --> P["5 LLM formuliert Prüfregeln + Querverweise"]
-  P --> G1{"Gate: Schema + Anker existiert"}
+  P --> G1{"Gate: Schema, Anker, Zitat"}
   G1 -->|ok| A["6 LLM schreibt CDK-Archetyp"]
   A --> S["cdk synth"]
   S --> AE["Audit-Engine + cdk-nag"]
@@ -41,9 +41,21 @@ flowchart TD
   PR -->|rot| X
 ```
 
+Die Rauten sind **Gates**: automatische Prüfpunkte, an denen Code das Ergebnis des LLM kontrolliert. Fällt etwas durch, bricht der Build ab, und die alte Wissensbasis bleibt aktiv.
+
 Das Build-Skript liest die Quellen ein und siebt sie in zwei Stufen: Ein deterministischer Vorfilter wirft offensichtlich Irrelevantes weg, dann entscheidet das LLM je Anforderung, ob sie an einer Spezifikation oder an Infrastructure as Code (IaC) prüfbar ist. Ein festes Ranking schneidet auf die Obergrenze des Bounded Catalog ab; erst danach formuliert das LLM daraus Prüfregeln.
 
-Für jede Prüfregel prüft der Code, ob das Schema stimmt und ob der Primäranker in der Quelle wirklich existiert. Danach entstehen die Golden Archetypes. Das LLM schreibt CDK-Code, `cdk synth` macht daraus ein CloudFormation-Template, und unsere Audit-Engine sowie cdk-nag prüfen dieses Template. Bei Beanstandungen korrigiert das LLM, höchstens dreimal.
+Das erste Gate prüft jede Prüfregel in drei Punkten:
+
+| Prüfung | Frage | Schützt vor |
+|---|---|---|
+| Schema | Passt das JSON zum Pydantic-Modell `Rule` (Pflichtfelder, Typen, erlaubte Werte)? | unvollständigen oder kaputten Regeln |
+| Anker | Gibt es Primäranker und Querverweise wirklich in der Quelle (1.3)? | erfundenen Fundstellen, z. B. „DET.3.99“ |
+| Zitat | Steht `source_quote` wörtlich im extrahierten Quelltext (1.3)? | erfundenem oder umformuliertem Normtext |
+
+Den Primäranker setzt zwar der Code, der Check sichert aber die Extraktion ab. Querverweise schlägt dagegen das LLM vor; hier fängt der Check erfundene IDs ab.
+
+Danach entstehen die Golden Archetypes. Das LLM schreibt CDK-Code, `cdk synth` macht daraus ein CloudFormation-Template, und unsere Audit-Engine sowie cdk-nag prüfen dieses Template. Bei Beanstandungen korrigiert das LLM, höchstens dreimal.
 
 Zum Schluss müssen die 4 Presets ihr festgelegtes Soll-Ergebnis liefern. Nur wenn alle Gates grün sind, öffnet der Workflow einen Pull Request mit der neuen Wissensbasis. Nach S3 gelangt sie erst nach dem Merge, über den normalen Deploy (Abschnitt 3). Jeder Fehler bricht den Build ab, und die alte Version bleibt aktiv.
 
