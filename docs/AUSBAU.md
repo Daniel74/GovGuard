@@ -1,108 +1,83 @@
-# GovGuard – Ausbau in vier Szenarien (nicht MVP)
+# GovGuard – Ausbau in vier Szenarien (Post-MVP)
 
-Das MVP ist bewusst klein: 24 bzw. 20 Prüfregeln, Eingaben bis 100.000 Zeichen, 3 Golden Archetypes. Dieses Dokument beschreibt für vier Szenarien, was beim Wachsen bricht und was sich dann ändert. Es ist ein **Ausblick, keine Entscheidung**. Gebaut wird eine Stufe erst, wenn ihr Auslöser messbar eintritt.
+Das GovGuard-MVP operiert bewusst mit definierten Limits: maximal 24 bzw. 20 Prüfregeln, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt vier Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
 
-**Was in jedem Szenario gleich bleibt:**
-- Jede Prüfregel bekommt einen Befund; es wird nichts per Ähnlichkeitssuche weggelassen.
-- Jeder Beleg ist ein wörtliches Zitat, das der Code prüft.
-- Das LLM urteilt, der Code bereitet vor und kontrolliert (siehe [ARCHITECTURE.md](ARCHITECTURE.md)).
+Drei fundamentale Prinzipien bleiben in jedem Ausbauszenario konstant:
 
----
+- Jede Prüfregel bekommt zwingend einen Befund; es werden keine Regeln per Vektorsuche weggelassen.
 
-## Szenario 1: Mehr Regeln erfassen und anwenden
+- Jeder Beleg ist ein wörtliches Zitat, dessen Existenz vom Code verifiziert wird.
 
-**Beispiel:** Eine Behörde will statt 12 deutlich mehr BSI-Anforderungen geprüft haben (angenommen 80; die echte Zahl zeigt der erste Build-Lauf), dazu BSI C5 als neue Quelle.
+- Das LLM urteilt ausschließlich, während der Code die Vorbereitung (Filtern, Clustern) und die Endkontrolle übernimmt.
 
-**Was bricht:** Jede Prüfregel erzeugt einen Befund. Bei 80 Regeln schreibt das Modell viermal so viel. Das dauert länger als die 29 Sekunden, die API Gateway wartet, und die Qualität sinkt, weil das Modell zu viel auf einmal bewerten muss.
+## Szenario 1: Skalierung der Regelbasis (z. B. auf 80 Regeln oder BSI C5)
 
-**Was sich ändert:**
+- **Auslöser:** Die Wissensbasis überschreitet ca. 50 Regeln oder die API-Antwortzeit nähert sich dem 29-Sekunden-Timeout des API Gateways.
 
-| Schritt | Änderung | Wer |
+- **Was bricht:** Das Modell muss zu viel auf einmal bewerten. Die Inferenzzeit steigt massiv an, und die Qualität der Antworten sinkt durch das "Lost in the Middle"-Syndrom.
+
+**Architektur-Anpassungen (Lösungen):**
+
+| Phase | Anpassung | Ausführende Schicht |
 |---|---|---|
-| Erfassen (Build) | Obergrenze in der Konfiguration erhöhen; der Rest der Pipeline bleibt gleich. | Konfiguration |
-| Neue Quelle (Build) | Ein **Quellen-Adapter** mit drei Funktionen: Anforderungen auslesen, vorfiltern, Rang bestimmen. Alles danach ist bestehende Pipeline. | Code |
-| Schneller neu bauen (Build) | Bereits klassifizierte Anforderungen werden zwischengespeichert. Ein Neubau fragt das LLM nur zu geänderten Anforderungen. | Code |
-| Unnötiges weglassen (Laufzeit) | Kommt in einem Template kein S3-Bucket vor, setzt der Code alle S3-Regeln direkt auf N/A. Diese Regeln gehen gar nicht ans LLM. | Code |
-| Aufteilen (Laufzeit) | Der Katalog wird in Pakete à 20 Regeln geteilt (z. B. Identität, Speicher, Protokollierung). Jedes Paket prüft ein eigener LLM-Aufruf, alle laufen **parallel**. Danach fügt der Code die Befunde zusammen. | LLM je Paket, Code fügt zusammen |
+| **Build** | **Quellen-Adapter:** Neue Kataloge (wie BSI C5) erhalten standardisierte Schnittstellen zum Auslesen, Vorfiltern und Ranken. | Code |
+| **Build** | **Inkrementeller Build:** Bereits klassifizierte Anforderungen werden gecacht. Das LLM bewertet nur noch Delta-Änderungen (geänderte/neue Regeln). | Code & LLM |
+| **Laufzeit** | **Deterministisches Pruning:** Fehlt eine Ressource im IaC-Template (z.B. kein S3-Bucket), setzt der Code alle S3-Prüfregeln sofort auf `N/A`, ohne diese an das LLM zu senden. | Code |
+| **Laufzeit** | **Map-Reduce-Evaluierung:** Der Katalog wird in thematische Pakete à 20 Regeln zerlegt. Eigene LLM-Aufrufe evaluieren diese Pakete parallel; der Code führt die Befunde final zusammen. | Code & LLM |
 
-Das Aufteilen heißt **Map-Reduce**: viele gleiche Teilaufgaben parallel (Map), dann ein Zusammenführen (Reduce).
+## Szenario 2: Verarbeitung massiver Dokumente (> 100.000 Zeichen)
 
-**Auslöser:** mehr als ca. 50 Regeln oder eine Antwortzeit über 20 Sekunden.
+- **Auslöser:** Upload von 300-seitigen Architekturkonzepten oder 3.000 Zeilen großen Terraform-Projekten.
 
----
+- **Was bricht:** Der HTTP-Request überschreitet das Payload-Limit (Lambda akzeptiert maximal 6 MB). Das LLM übersieht in riesigen Textmengen kritische DSGVO-Verstöße.
 
-## Szenario 2: Längere Dokumente auditen
+**Architektur-Anpassungen (Lösungen):**
 
-**Beispiel:** Ein Fachkonzept mit 300 Seiten oder ein Terraform-Projekt mit 3.000 Zeilen.
-
-**Was bricht:** Die Eingabe passt nicht mehr in den Request (Lambda nimmt höchstens 6 MB an). Außerdem übersieht das Modell in sehr langen Texten Details in der Mitte.
-
-**Was sich ändert:** Je nach Art der Eingabe gibt es einen anderen Weg.
-
-| Eingabe | Vorgehen | Wer |
+| Eingabeformat | Anpassung | Ausführende Schicht |
 |---|---|---|
-| Jede große Datei | Der Client lädt die Datei direkt nach S3 hoch; die API bekommt nur noch den Speicherort. | Code |
-| Terraform, CloudFormation, OpenAPI | **Kürzen:** Die Datei wird geparst, nur sicherheitsrelevante Teile bleiben (Ressourcen und ihre Einstellungen, Datenfelder, Authentifizierung). Beschreibungen und Beispiele fallen weg. | Code |
-| Langer Freitext | **Erst Fakten sammeln, dann prüfen** (siehe unten). | LLM sammelt, Code prüft |
+| **Generell** | **S3-Upload-Pattern:** Der Client lädt die Datei direkt in einen S3-Bucket und übergibt der API lediglich die Object-URI zur Verarbeitung. | Code |
+| **IaC / OpenAPI** | **AST-Kürzung:** Ein Parser extrahiert nur sicherheitsrelevante Ressourcen, Attribute und Datenfelder. Unnötige Beschreibungen und Beispiele werden algorithmisch verworfen. | Code |
+| **Langer Freitext** | **Agentic Map-Reduce (Faktenextraktion):** 1. Code zerlegt das Dokument in Kapitel. 2. Das LLM extrahiert parallel aus jedem Kapitel Fakten (z.B. Datenhaltung, PII) inkl. Zitat. 3. Der Code baut daraus ein kompaktes Faktenblatt. 4. Das Audit läuft auf dem verdichteten Faktenblatt ab. | LLM & Code |
 
-Bei langem Freitext:
+_Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, visualisiert das UI das erzeugte Faktenblatt vor dem eigentlichen Audit-Report.
 
-1. Der Code schneidet das Dokument an Überschriften in Abschnitte.
-2. Je Abschnitt sammelt das LLM nur auditrelevante Fakten, z. B. welche Daten erhoben werden, wofür, wo sie gespeichert werden und welche Dienste beteiligt sind. Jeden Fakt belegt es mit einem wörtlichen Zitat. Alle Abschnitte laufen parallel.
-3. Der Code prüft jedes Zitat gegen das Original und führt die Fakten zu einem **Faktenblatt** zusammen.
-4. Das Audit läuft wie im MVP, nur auf dem Faktenblatt statt auf 300 Seiten.
+## Szenario 3: Komplexe Mehrfach-Architekturen
 
-**Preis dafür:** Was in Schritt 2 übersehen wird, fehlt dem Audit. Deshalb zeigt die UI das Faktenblatt an, damit der Nutzer Lücken erkennt.
+- **Auslöser:** Ein Fachverfahren erfordert eine Kombination aus Backend, Frontend und Audit-Log (mehrere Archetypen gleichzeitig).
 
-**Auslöser:** Eingaben über 100.000 Zeichen.
+- **Was bricht:** Die aktuelle Auswahllogik erzwingt genau _einen_ Golden Archetype. Eine dynamische Generierung zur Laufzeit bricht mit der Prämisse der vorab freigegebenen Templates (ADR 0003).
 
----
+**Architektur-Anpassungen in Eskalationsstufen:**
 
-## Szenario 3: Größere Architekturen erzeugen
+1. **Stufe 3a (Mehrfachauswahl):** Die Tool-Choice erlaubt die Rückgabe einer Liste kompatibler Stacks (z.B. ARCH-01 + ARCH-03) inklusive einer Begründung für ihr Zusammenspiel. Das Risiko bleibt minimal, da die Bausteine vorab gehärtet wurden.
 
-**Beispiel:** Ein Bürgerportal braucht Web-Frontend, REST-Backend, Dokumenten-Upload und Audit-Log, also mehrere Archetypen auf einmal.
+2. **Stufe 3b (Kombi-Archetypen):** Sehr häufige Kombinationen (z.B. Portal + Backend) werden zur Build-Zeit als neuer, dedizierter Archetyp erzeugt, auditiert und freigegeben.
 
-**Was bricht:** Die Archetyp-Auswahl liefert genau einen Archetyp. Kombinationen gibt es nicht, und zur Laufzeit wird bewusst nichts generiert (ADR 0003).
+3. **Stufe 3c (Laufzeit-Generierung):** Das LLM kombiniert Infrastruktur-Bausteine "on the fly". **Risiko hoch:** Bricht ADR 0003. Dies erfordert den Aufbau einer eigenen Build-Container-Infrastruktur, die `cdk synth` und `cdk-nag` pro User-Request asynchron ausführt.
 
-**Was sich ändert:** Drei Stufen, jede mit mehr Nutzen und mehr Risiko.
+## Szenario 4: Skalierung der Golden Archetypes (> 10 Muster)
 
-| Stufe | Änderung | Risiko |
+- **Auslöser:** Der Baukasten wächst um spezialisierte Muster wie ARCH-06 (Analytics) oder ARCH-07 (Mobile).
+
+- **Was bricht:** Bei vielen ähnlichen Archetypen sinkt die Auswahlpräzision des LLMs; es kommt zu Fehlentscheidungen.
+
+**Architektur-Anpassungen (Lösungen):**
+
+| Phase | Anpassung | Ausführende Schicht |
 |---|---|---|
-| 3a Mehrfachauswahl | Die Auswahl liefert eine **Liste** von Archetypen, z. B. ARCH-01 + ARCH-02 + ARCH-03. Jeder bleibt ein eigener, freigegebener Stack; eine Begründung beschreibt, wie sie zusammenspielen. | gering, weil alles weiterhin vorab freigegeben ist |
-| 3b Kombi-Archetypen | Häufige Kombinationen werden als **eigener Archetyp** zur Build-Zeit erzeugt und genauso freigegeben wie die einzelnen. | gering, aber mehr Build-Aufwand |
-| 3c Erzeugung zur Laufzeit | Das LLM baut aus Archetypen als Bausteinen einen neuen Entwurf. Die Freigabe-Schleife (`cdk synth`, Audit, cdk-nag) läuft dann **pro Anfrage** in einem Build-Container. | hoch: bricht ADR 0003, dauert Minuten, braucht ein neues ADR |
+| **Test** | **Auswahl-Presets (Ground Truth):** Für jeden Archetyp wird ein Preset mit fixiertem Soll-Ergebnis definiert, um die KI-Auswahl zu testen. | Mensch |
+| **Laufzeit** | **Zweistufige Auswahl:** 1. Das LLM extrahiert binäre Merkmale aus der Spezifikation (z.B. "asynchron?", "Datei-Upload?"). 2. Der Code filtert den Katalog hart nach diesen Merkmalen. 3. Das LLM trifft die finale Auswahl aus den wenigen verbliebenen, gefilterten Mustern. | LLM & Code |
 
-**Auslöser:** Nutzer fragen regelmäßig nach Kombinationen (3a, 3b). 3c nur mit neuem ADR.
+## Systemweite Auswirkungen: Der Weg zu Asynchronität
 
----
+Sobald Map-Reduce für große Regelkataloge (Szenario 1) oder lange Dokumente (Szenario 2) greift, ändert sich die Systemarchitektur fundamental:
 
-## Szenario 4: Mehr Archetypen definieren
+- **REST API:** Antwortet nicht mehr mit dem finalen Report, sondern asynchron mit einer Job-ID (HTTP 202 Accepted).
 
-**Beispiel:** Ein Archetyp für mobile Bürger-Apps (ARCH-07) oder für Datenanalyse (ARCH-06) kommt dazu.
+- **Orchestrierung:** **AWS Step Functions** steuern die parallelen Lambda-Aufrufe (Scatter-Gather-Pattern), wobei Kosten nur pro Ausführung anfallen.
 
-**Was bricht:** Zunächst nichts, ein neuer Archetyp ist nur ein neuer Steckbrief. Ab etwa 10 Archetypen wird die Auswahl unsicherer, weil das Modell zwischen vielen ähnlichen Optionen wählen muss.
+- **Persistenz & DSGVO:** Aufträge und Reports müssen persistent gespeichert (S3/DynamoDB) und abgefragt werden. Dies erzwingt die Implementierung strenger Löschfristen nach Art. 5 Abs. 1 lit. e DSGVO.
 
-**Was sich ändert:**
+**Der Leitgedanke für das Systemdesign:**
 
-| Schritt | Änderung | Wer |
-|---|---|---|
-| Definieren | Neuer **Steckbrief**: Zweck, Solutions Constructs, Pflicht-Ressourcentypen. | Konfiguration |
-| Erzeugen und freigeben | Die bestehende Build-Schleife: LLM schreibt CDK, `cdk synth`, Audit, cdk-nag. | wie im MVP |
-| Auswahl testen | Je Archetyp ein **Auswahl-Preset**: eine Spezifikation, für die ein Mensch festlegt, welcher Archetyp herauskommen muss. | Mensch legt Soll fest |
-| Auswahl in zwei Schritten | Ab ca. 10 Archetypen: Zuerst bestimmt das LLM wenige Merkmale der Spezifikation (z. B. synchron oder asynchron? Datei-Upload? Mobile App?). Dann filtert der Code die Archetypen nach diesen Merkmalen, und das LLM wählt nur noch unter den passenden. | LLM, Code, LLM |
-
-**Auslöser:** mehr als ca. 10 Archetypen oder ein Auswahl-Preset schlägt fehl.
-
----
-
-## Übersicht: Was sich am System insgesamt ändert
-
-Sobald ein Audit mehrere LLM-Aufrufe braucht (Szenario 1 Aufteilen, Szenario 2 Freitext), reicht die synchrone Antwort nicht mehr:
-
-| Heute (MVP) | Später |
-|---|---|
-| Die API antwortet direkt mit dem Report. | Die API antwortet sofort mit einer Auftragsnummer; der Report wird später abgeholt. |
-| Eine Lambda-Funktion. | **Step Functions** steuert die parallelen Aufrufe; Kosten nur pro Ausführung. |
-| Nichts wird gespeichert. | Aufträge und Reports werden gespeichert und brauchen dann Löschfristen (DSGVO Art. 5 Abs. 1 lit. e). |
-
-**Satz für die Verteidigung:** „Wir skalieren durch Aufteilen, nicht durch Weglassen. Vollständigkeit und Zitatpflicht gelten in jeder Ausbaustufe.“
+> „Wir skalieren durch Aufteilen, nicht durch Weglassen. Vollständigkeit und Zitatpflicht gelten in jeder Ausbaustufe.“
