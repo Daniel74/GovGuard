@@ -38,6 +38,7 @@ Beispiel: „Warum diese IAM-Action statt einer Wildcard? Welcher BSI-Baustein g
 - Fachwort beim ersten Auftreten in einem Halbsatz erklären.
 - **Rule of 3**: maximal 3 Bulletpoints, Fließtext maximal 3 Zeilen. Code-Erklärungen: Was macht es? Warum so (Bezug BSI/AWS)? Welcher Begriff ist fürs Fachgespräch wichtig?
 - Ist ein Konzept neu, endet die Antwort mit einer Verständnisfrage statt mit mehr Theorie.
+- **Projektsprache:** Code, Bezeichner, JSON-Felder und Kommentare englisch (Normbezug als Kürzel, z. B. `# Enforces BSI OPS.1.1.2.A3`). LLM-Prompts, Doku, UI und Inhalte der Audit-Reports deutsch. Englische Code-Namen der Fachbegriffe stehen in `CONTEXT.md` (*Code*).
 
 ## Doku: lean
 

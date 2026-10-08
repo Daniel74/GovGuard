@@ -66,34 +66,34 @@ Jede Quelle durchläuft dieselben drei Stufen; nur die Parameter unterscheiden s
 
 ### 1.2 Prüfregel-Schema
 
-Aus jeder ausgewählten Anforderung formuliert das LLM genau eine Prüfregel (Pydantic-Modell `Pruefregel`). Beispiel:
+Aus jeder ausgewählten Anforderung formuliert das LLM genau eine Prüfregel (Pydantic-Modell `Rule`). Feldnamen sind englisch, Inhalte deutsch. Beispiel:
 
 ```json
 {
   "id": "ARCH-CIS-3.1.4",
-  "audit_art": "architektur",
-  "quelle": "CIS",
-  "primaeranker": "CIS AWS v7.0.0 3.1.4",
-  "quelltext_zitat": "Ensure that S3 is configured with 'Block Public Access' enabled",
-  "titel": "S3 Block Public Access aktiv",
-  "konform_wenn": "Jeder S3-Bucket hat alle vier Block-Public-Access-Einstellungen aktiv.",
-  "verstoss_wenn": "Ein Bucket deaktiviert mindestens eine Einstellung.",
-  "empfehlung": "Am Bucket BlockPublicAccess.BLOCK_ALL setzen.",
-  "cfn_ressourcentypen": ["AWS::S3::Bucket"],
-  "auswahl_begruendung": "Direkt an der Bucket-Konfiguration im Template prüfbar.",
-  "rang": 3,
-  "querverweise": [{ "anker": "BSI GS++ …", "herkunft": "KI-vorgeschlagen" }]
+  "audit_type": "architecture",
+  "source": "CIS",
+  "primary_anchor": "CIS AWS v7.0.0 3.1.4",
+  "source_quote": "Ensure that S3 is configured with 'Block Public Access' enabled",
+  "title": "S3 Block Public Access aktiv",
+  "compliant_if": "Jeder S3-Bucket hat alle vier Block-Public-Access-Einstellungen aktiv.",
+  "violation_if": "Ein Bucket deaktiviert mindestens eine Einstellung.",
+  "recommendation": "Am Bucket BlockPublicAccess.BLOCK_ALL setzen.",
+  "cfn_resource_types": ["AWS::S3::Bucket"],
+  "selection_rationale": "Direkt an der Bucket-Konfiguration im Template prüfbar.",
+  "rank": 3,
+  "cross_references": [{ "anchor": "BSI GS++ …", "origin": "ai_suggested" }]
 }
 ```
 
 | Feld | Herkunft | Zweck |
 |---|---|---|
-| `id`, `audit_art`, `quelle`, `primaeranker`, `rang` | Code | Identität und Herkunft – das LLM erfindet hier nichts |
-| `quelltext_zitat` | LLM, vom Code geprüft | Wörtlicher Auszug aus der Quelle (siehe 1.3) |
-| `titel`, `konform_wenn`, `verstoss_wenn`, `empfehlung` | LLM | Prüfbare Kriterien für PASS/FAIL und die Abhilfe |
-| `cfn_ressourcentypen` | LLM, nur Architektur | Für welche CloudFormation-Typen die Regel gilt (sperrt N/A, siehe 1.4) |
-| `auswahl_begruendung` | LLM aus Stufe ② | Warum die Anforderung prüfbar ist |
-| `querverweise` | LLM, vom Code geprüft | Bezug auf eine andere Quelle; nur „KI-vorgeschlagen“, ohne Einfluss auf den Status |
+| `id`, `audit_type`, `source`, `primary_anchor`, `rank` | Code | Identität und Herkunft – das LLM erfindet hier nichts |
+| `source_quote` | LLM, vom Code geprüft | Wörtlicher Auszug aus der Quelle (siehe 1.3) |
+| `title`, `compliant_if`, `violation_if`, `recommendation` | LLM | Prüfbare Kriterien für PASS/FAIL und die Abhilfe |
+| `cfn_resource_types` | LLM, nur Architektur | Für welche CloudFormation-Typen die Regel gilt (sperrt N/A, siehe 1.4) |
+| `selection_rationale` | LLM aus Stufe ② | Warum die Anforderung prüfbar ist |
+| `cross_references` | LLM, vom Code geprüft | Bezug auf eine andere Quelle; nur `ai_suggested` (KI-vorgeschlagen), ohne Einfluss auf den Status |
 
 ### 1.3 Primäranker
 
@@ -106,14 +106,14 @@ Der Primäranker ist die **eine** Anforderung, aus der eine Prüfregel stammt. I
 | DSGVO | `DSGVO Art. 32` (optional Abs./lit.) | Überschrift „Artikel 32“ steht im PDF-Text |
 | SDM | `SDM Löschen M60.D01` | Maßnahmen-ID steht im Baustein-Text |
 
-Zusätzlich muss das `quelltext_zitat` **wörtlich** im extrahierten Quelltext stehen, nach Normalisierung von Leerzeichen und Zeilenumbrüchen und nach Entfernen von EUR-Lex-Markern wie „►C2“. Das ist dasselbe Prinzip wie der Beleg zur Laufzeit: Zitat statt Behauptung.
+Zusätzlich muss das `source_quote` **wörtlich** im extrahierten Quelltext stehen, nach Normalisierung von Leerzeichen und Zeilenumbrüchen und nach Entfernen von EUR-Lex-Markern wie „►C2“. Das ist dasselbe Prinzip wie der Beleg zur Laufzeit: Zitat statt Behauptung.
 
 ### 1.4 Soll-Ergebnis der Golden Archetypes
 
 Für Presets legt ein Mensch das Soll fest. Für Archetypen ist es **vollautomatisch** und besteht aus drei Bedingungen, die alle erfüllt sein müssen:
 
 1. **Struktur-Soll:** Das Template enthält die Pflicht-Ressourcentypen aus dem Steckbrief des Archetyps (deterministischer Check).
-2. **Compliance-Soll:** Jede Architektur-Prüfregel ist PASS oder N/A. N/A ist **verboten**, wenn einer ihrer `cfn_ressourcentypen` im Template vorkommt (Code-Check). So kann das LLM eine unbequeme Regel nicht wegdefinieren.
+2. **Compliance-Soll:** Jede Architektur-Prüfregel ist PASS oder N/A. N/A ist **verboten**, wenn einer ihrer `cfn_resource_types` im Template vorkommt (Code-Check). So kann das LLM eine unbequeme Regel nicht wegdefinieren.
 3. **cdk-nag:** Das Regelpaket AwsSolutions meldet keine Errors. `NagSuppressions` sind im Archetyp-Code verboten (Code-Check).
 
 | Archetyp | Solutions Constructs | Pflicht-Ressourcentypen |
@@ -143,7 +143,7 @@ sequenceDiagram
   U->>API: POST /archetype/select (Spezifikation + Audit-Report)
   API->>L: weiterleiten
   L->>B: Converse, Tool select_archetype
-  B-->>L: ARCH-01 / 02 / 03 oder KEINER
+  B-->>L: ARCH-01 / 02 / 03 oder NONE
   L-->>U: Golden Archetype (CDK + Template) + Begründung
 ```
 
@@ -151,7 +151,7 @@ Beim Kaltstart lädt die Lambda-Funktion die Wissensbasis einmal aus S3 in den S
 
 Danach prüft der Code, nicht das Modell, das Ergebnis. Pydantic validiert das Schema, und zusätzlich muss jede Prüfregel genau einen Befund haben und jeder Beleg wörtlich in der Eingabe stehen. Erst dann wird der Gesamtstatus berechnet.
 
-Hat das Spec-Audit kein FAIL, kann der Client in einem zweiten Aufruf einen Golden Archetype anfordern. Das Modell wählt dann nur aus einer geschlossenen Liste: ARCH-01, -02, -03 oder „keiner“. Das Architektur-Audit (`POST /audit/architecture`) läuft genauso wie das Spec-Audit ab, nur mit den Prüfregeln aus BSI und CIS.
+Hat das Spec-Audit kein FAIL, kann der Client in einem zweiten Aufruf einen Golden Archetype anfordern. Das Modell wählt dann nur aus einer geschlossenen Liste: ARCH-01, -02, -03 oder `NONE` (keiner). Das Architektur-Audit (`POST /audit/architecture`) läuft genauso wie das Spec-Audit ab, nur mit den Prüfregeln aus BSI und CIS.
 
 ### 2.1 Tool-Choice – wie das Modell zur Struktur gezwungen wird
 
@@ -166,7 +166,7 @@ response = bedrock.converse(
         "tools": [{"toolSpec": {
             "name": "submit_audit",
             "description": "Gib genau einen Befund je Prüfregel ab.",
-            "inputSchema": {"json": AuditAntwort.model_json_schema()},  # aus Pydantic erzeugt
+            "inputSchema": {"json": AuditResponse.model_json_schema()},  # aus Pydantic erzeugt
         }}],
         "toolChoice": {"tool": {"name": "submit_audit"}},   # erzwingt genau dieses Tool
     },
@@ -175,10 +175,10 @@ response = bedrock.converse(
 
 | Tool | Schema (vereinfacht) | Wo |
 |---|---|---|
-| `klassifiziere` | `pruefbar: bool`, `begruendung: str` | Build, Stufe ② |
-| `formuliere_pruefregel` | LLM-Felder der Prüfregel (siehe 1.2) | Build, Stufe 5 |
-| `submit_audit` | `befunde: [{pruefregel_id, status: PASS\|WARN\|FAIL\|N/A, beleg, begruendung, empfehlung}]` | Laufzeit, beide Audits |
-| `select_archetype` | `archetyp: ARCH-01\|ARCH-02\|ARCH-03\|KEINER`, `begruendung: str` | Laufzeit, Archetyp-Auswahl |
+| `classify_requirement` | `testable: bool`, `rationale: str` | Build, Stufe ② |
+| `formulate_rule` | LLM-Felder der Prüfregel (siehe 1.2) | Build, Stufe 5 |
+| `submit_audit` | `findings: [{rule_id, status: PASS\|WARN\|FAIL\|N/A, evidence, rationale, recommendation}]` | Laufzeit, beide Audits |
+| `select_archetype` | `archetype: ARCH-01\|ARCH-02\|ARCH-03\|NONE`, `rationale: str` | Laufzeit, Archetyp-Auswahl |
 
 - **Enums schließen die Antwortmenge:** Das Modell kann keinen Status „OK“ und keinen Archetyp „ARCH-09“ erfinden.
 - **Tool-Choice ist kein Beweis:** Das Modell kann trotzdem falsche Werte liefern. Deshalb validiert danach Pydantic, und der Code prüft Vollständigkeit und Belege. Bei Fehlern folgt ein erneuter Aufruf mit der Fehlermeldung, danach HTTP 502.
@@ -223,17 +223,17 @@ Ein- und Ausgabe (AWS, externe Programme) und Prüflogik liegen in getrennten Da
 
 ```
 src/govguard/
-  models.py          Pydantic-Modelle (Prüfregel, Befund, Audit-Report)
+  models.py          Pydantic-Modelle (Rule, Finding, AuditReport)
   audit_engine.py    reine Prüflogik: Prompt bauen, Befunde prüfen, Gesamtstatus – kein boto3
   aws_services.py    alle boto3-Aufrufe: Bedrock Converse, S3
   handler.py         Lambda: verbindet aws_services und audit_engine
   cli.py             Audit lokal und im Selbst-Audit: python -m govguard.cli
   kb_build/          Build der Wissensbasis: python -m govguard.kb_build
-    quellen/         Quellen-Adapter bsi.py, cis.py, dsgvo.py, sdm.py: extrahiere(), vorfilter() (rein)
+    sources/         Quellen-Adapter bsi.py, cis.py, dsgvo.py, sdm.py: extract(), prefilter() (rein)
     ranking.py       Ranking + Obergrenze (rein)
     gates.py         Schema, Primäranker, Zitat, Preset-Gate (rein)
-    kuratierung.py   Stufe ② und 5: Prompts, LLM als übergebene Funktion
-    archetypen.py    Freigabe-Schleife: Struktur-, Compliance-Soll, max. 3 Runden
+    curation.py      Stufe ② und 5: Prompts, LLM als übergebene Funktion
+    archetypes.py    Freigabe-Schleife: Struktur-, Compliance-Soll, max. 3 Runden
     cdk_runner.py    einziger Ort für subprocess: cdk synth, cdk-nag
     __main__.py      nur Orchestrierung
 infra/               CDK-Stack
