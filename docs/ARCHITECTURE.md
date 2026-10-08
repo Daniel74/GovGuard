@@ -217,6 +217,26 @@ Es gibt nur **einen Weg in die Produktion**: `deploy.yml`. Er lädt auch die Wis
 | Build-Workflow | manuell: Build-Skript ausführen, PR öffnen | GitHub Actions `build-kb.yml` |
 | Deploy-Workflow | bei Push: Selbst-Audit, Deploy, Wissensbasis nach S3 | GitHub Actions `deploy.yml`, CDK |
 
+## Code-Struktur
+
+AWS-Aufrufe und Prüflogik liegen in getrennten Dateien. So bleibt der Kern ohne AWS testbar.
+
+```
+src/govguard/
+  models.py        Pydantic-Modelle (Prüfregel, Befund, Audit-Report)
+  audit_engine.py  reine Prüflogik: Prompt bauen, Befunde prüfen, Gesamtstatus – kein boto3
+  aws_services.py  alle boto3-Aufrufe: Bedrock Converse, S3
+  handler.py       Lambda: verbindet aws_services und audit_engine
+build/             Build-Skript; reine Schritte (Extrahieren, Vorfilter, Ranking) ohne boto3
+infra/             CDK-Stack
+ui/                Streamlit
+presets/           4 Presets mit Soll-Ergebnis
+```
+
+- **Nur `aws_services.py` importiert boto3.** Ein Test prüft das.
+- **Dependency Injection:** `audit_engine` bekommt den Bedrock-Aufruf als Funktion übergeben. Tests ersetzen ihn durch ein Fake-LLM.
+- `handler.py` und das Build-Skript enthalten keine Geschäftslogik, sie verbinden nur die Module.
+
 ## Endpunkte
 
 | Endpunkt | Eingabe → Ausgabe |
