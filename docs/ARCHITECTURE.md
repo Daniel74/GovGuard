@@ -209,7 +209,7 @@ Es gibt nur **einen Weg in die Produktion**: `deploy.yml`. Er lädt auch die Wis
 
 | Komponente | Aufgabe | Technik |
 |---|---|---|
-| Build-Skript | Wissensbasis und Archetypen erzeugen | Python, boto3, CDK CLI |
+| Build-Skript | Wissensbasis und Archetypen erzeugen | Python-Paket `govguard.kb_build`, CDK CLI |
 | Audit-Engine | Prompt bauen, Bedrock aufrufen, Befunde validieren | Python-Modul, Pydantic |
 | API | 3 Endpunkte, IAM-Auth, Throttling | API Gateway REST + Lambda |
 | Wissensbasis | Prüfregeln und Golden Archetypes | JSON im Repo (versioniert), per Deploy nach S3 |
@@ -219,23 +219,32 @@ Es gibt nur **einen Weg in die Produktion**: `deploy.yml`. Er lädt auch die Wis
 
 ## Code-Struktur
 
-AWS-Aufrufe und Prüflogik liegen in getrennten Dateien. So bleibt der Kern ohne AWS testbar.
+Ein- und Ausgabe (AWS, externe Programme) und Prüflogik liegen in getrennten Dateien. So bleibt der Kern ohne AWS und ohne CDK testbar.
 
 ```
 src/govguard/
-  models.py        Pydantic-Modelle (Prüfregel, Befund, Audit-Report)
-  audit_engine.py  reine Prüflogik: Prompt bauen, Befunde prüfen, Gesamtstatus – kein boto3
-  aws_services.py  alle boto3-Aufrufe: Bedrock Converse, S3
-  handler.py       Lambda: verbindet aws_services und audit_engine
-build/             Build-Skript; reine Schritte (Extrahieren, Vorfilter, Ranking) ohne boto3
-infra/             CDK-Stack
-ui/                Streamlit
-presets/           4 Presets mit Soll-Ergebnis
+  models.py          Pydantic-Modelle (Prüfregel, Befund, Audit-Report)
+  audit_engine.py    reine Prüflogik: Prompt bauen, Befunde prüfen, Gesamtstatus – kein boto3
+  aws_services.py    alle boto3-Aufrufe: Bedrock Converse, S3
+  handler.py         Lambda: verbindet aws_services und audit_engine
+  cli.py             Audit lokal und im Selbst-Audit: python -m govguard.cli
+  kb_build/          Build der Wissensbasis: python -m govguard.kb_build
+    quellen/         Quellen-Adapter bsi.py, cis.py, dsgvo.py, sdm.py: extrahiere(), vorfilter() (rein)
+    ranking.py       Ranking + Obergrenze (rein)
+    gates.py         Schema, Primäranker, Zitat, Preset-Gate (rein)
+    kuratierung.py   Stufe ② und 5: Prompts, LLM als übergebene Funktion
+    archetypen.py    Freigabe-Schleife: Struktur-, Compliance-Soll, max. 3 Runden
+    cdk_runner.py    einziger Ort für subprocess: cdk synth, cdk-nag
+    __main__.py      nur Orchestrierung
+infra/               CDK-Stack
+ui/                  Streamlit
+presets/             4 Presets mit Soll-Ergebnis
+.github/workflows/   build-kb.yml, deploy.yml – ohne Logik
 ```
 
-- **Nur `aws_services.py` importiert boto3.** Ein Test prüft das.
-- **Dependency Injection:** `audit_engine` bekommt den Bedrock-Aufruf als Funktion übergeben. Tests ersetzen ihn durch ein Fake-LLM.
-- `handler.py` und das Build-Skript enthalten keine Geschäftslogik, sie verbinden nur die Module.
+- **Adapter für I/O:** Nur `aws_services.py` importiert boto3, nur `cdk_runner.py` startet Prozesse. Ein Test prüft beides.
+- **Dependency Injection:** Prüflogik bekommt Bedrock- und CDK-Aufrufe als Funktion übergeben. Tests ersetzen sie durch Fakes.
+- **Keine Logik in Klebe-Code:** `handler.py`, `__main__.py` und die Workflow-YAML verbinden nur. Ein Workflow meldet sich an, ruft `python -m …` auf und öffnet den PR. Derselbe Befehl läuft lokal.
 
 ## Endpunkte
 
