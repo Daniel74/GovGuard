@@ -16,7 +16,7 @@ Testfrage für jede Aufgabe: **Gibt es genau eine richtige Antwort, die sich ohn
 
 Das LLM sitzt immer **zwischen zwei Code-Schichten**: Der Code bereitet vor (filtern, auswählen), das LLM urteilt, und der Code kontrolliert (Schema, Vollständigkeit, Zitate). Was der Code schon weiß, erzeugt das LLM nicht. Das hält den Anteil klein, der halluzinieren kann.
 
-## 1. Build-Zeit – Wissensbasis erzeugen (lokal oder per manuellem Workflow)
+## 1. Build-Zeit – Wissensbasis erzeugen (manueller Workflow `build-kb.yml`)
 
 ```mermaid
 flowchart TD
@@ -36,7 +36,7 @@ flowchart TD
   S --> AE["Audit-Engine + cdk-nag"]
   AE -->|"Beanstandung (max. 3 Runden)"| A
   AE -->|freigegeben| PR{"7 Preset-Gate"}
-  PR -->|grün| S3[("S3 eu-central-1<br/>rules_spec.json<br/>rules_arch.json<br/>archetypes.json")]
+  PR -->|grün| KB["Pull Request<br/>rules_spec.json<br/>rules_arch.json<br/>archetypes.json"]
   G1 -->|Fehler| X["Build-Abbruch"]
   PR -->|rot| X
 ```
@@ -45,7 +45,9 @@ Das Build-Skript liest die Quellen ein und siebt sie in zwei Stufen: Ein determi
 
 Für jede Prüfregel prüft der Code, ob das Schema stimmt und ob der Primäranker in der Quelle wirklich existiert. Danach entstehen die Golden Archetypes. Das LLM schreibt CDK-Code, `cdk synth` macht daraus ein CloudFormation-Template, und unsere Audit-Engine sowie cdk-nag prüfen dieses Template. Bei Beanstandungen korrigiert das LLM, höchstens dreimal.
 
-Zum Schluss müssen die 4 Presets ihr festgelegtes Soll-Ergebnis liefern. Nur wenn alle Gates grün sind, landet die neue Wissensbasis in S3. Jeder Fehler bricht den Build ab, und die alte Version bleibt aktiv.
+Zum Schluss müssen die 4 Presets ihr festgelegtes Soll-Ergebnis liefern. Nur wenn alle Gates grün sind, öffnet der Workflow einen Pull Request mit der neuen Wissensbasis. Nach S3 gelangt sie erst nach dem Merge, über den normalen Deploy (Abschnitt 3). Jeder Fehler bricht den Build ab, und die alte Version bleibt aktiv.
+
+Der Workflow startet nur manuell: Er kostet viele LLM-Aufrufe, liefert bei jedem Lauf leicht andere Texte, und die Quellen ändern sich selten. Kuration und Archetypen laufen immer zusammen, weil die Archetypen gegen die aktuellen Prüfregeln freigegeben werden (1.4).
 
 ### 1.1 Sieben: Vorfilter, LLM, Ranking
 
@@ -187,11 +189,11 @@ response = bedrock.converse(
 
 ```mermaid
 flowchart LR
-  Push["Push auf main"] --> GA["GitHub Actions"]
+  Push["Push auf main<br/>(auch Merge des KB-PR)"] --> GA["GitHub Actions<br/>deploy.yml"]
   GA -->|"OIDC-Rolle, keine Keys"| Synth["cdk synth GovGuard-Stack"]
   Synth --> Nag["cdk-nag"]
   Nag --> Self["Audit-Engine: Architektur-Audit<br/>des eigenen Templates"]
-  Self -->|"kein FAIL / WARN"| Deploy["cdk deploy eu-central-1"]
+  Self -->|"kein FAIL / WARN"| Deploy["cdk deploy eu-central-1<br/>+ Wissensbasis nach S3"]
   Self -->|Beanstandung| Stop["Deploy blockiert"]
 ```
 
@@ -201,6 +203,8 @@ Vor jedem Deploy durchläuft der eigene Stack dieselben zwei Prüfungen wie die 
 
 So beweist GovGuard an sich selbst, dass seine Regeln erfüllbar sind (Dogfooding).
 
+Es gibt nur **einen Weg in die Produktion**: `deploy.yml`. Er lädt auch die Wissensbasis aus dem Repo nach S3. Darum liegen die Regeln schon vor dem ersten Deploy bereit, und das Selbst-Audit nutzt immer dieselbe Version, die danach live geht.
+
 ## Komponenten
 
 | Komponente | Aufgabe | Technik |
@@ -208,9 +212,10 @@ So beweist GovGuard an sich selbst, dass seine Regeln erfüllbar sind (Dogfoodin
 | Build-Skript | Wissensbasis und Archetypen erzeugen | Python, boto3, CDK CLI |
 | Audit-Engine | Prompt bauen, Bedrock aufrufen, Befunde validieren | Python-Modul, Pydantic |
 | API | 3 Endpunkte, IAM-Auth, Throttling | API Gateway REST + Lambda |
-| Wissensbasis | Prüfregeln und Golden Archetypes | JSON in S3, versioniert |
+| Wissensbasis | Prüfregeln und Golden Archetypes | JSON im Repo (versioniert), per Deploy nach S3 |
 | UI | Eingabe, Ampel, Download | Streamlit Community Cloud (ADR 0004) |
-| Pipeline | Selbst-Audit und Deploy | GitHub Actions, CDK |
+| Build-Workflow | manuell: Build-Skript ausführen, PR öffnen | GitHub Actions `build-kb.yml` |
+| Deploy-Workflow | bei Push: Selbst-Audit, Deploy, Wissensbasis nach S3 | GitHub Actions `deploy.yml`, CDK |
 
 ## Endpunkte
 

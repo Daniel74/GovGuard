@@ -8,7 +8,7 @@
 2. Als Architekt lasse ich eine Architektur (Freitext, Terraform oder CloudFormation) auditieren.
 3. Als Architekt erhalte ich bei einer Spezifikation ohne FAIL einen Golden Archetype (CDK-Code + Template) mit Begründung – oder „kein passender Archetyp“.
 4. Als CI-Pipeline rufe ich die Audit-API (IAM-Auth) auf und werte den Gesamtstatus maschinell aus.
-5. Als Projektbetreiber erzeuge ich die Wissensbasis per Build-Skript neu; sie wird nur übernommen, wenn alle Gates grün sind.
+5. Als Projektbetreiber starte ich den Build der Wissensbasis manuell; nur bei grünen Gates öffnet er einen Pull Request, und erst dessen Merge rollt die Wissensbasis aus.
 
 ## Akzeptanzkriterien
 
