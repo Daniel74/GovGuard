@@ -1,14 +1,14 @@
 # GovGuard – GovCloud Compliance Copilot
 
-Portfolio- und IHK-Praxisprojekt (Cloud Business Expert, Modul 4). Der Copilot prüft Spezifikationen (DSGVO/SDM) und Architekturen (BSI IT-Grundschutz/CIS) und liefert einen Audit-Report mit PASS/WARN/FAIL. Danach schlägt er einen passenden Golden Archetype als Terraform-Entwurf vor.
+Portfolio- und IHK-Praxisprojekt (Cloud Business Expert, Modul 4). Der Copilot prüft Spezifikationen (DSGVO/SDM) und Architekturen (BSI IT-Grundschutz/CIS) und liefert einen Audit-Report mit PASS/WARN/FAIL. Danach schlägt er einen passenden Golden Archetype als CDK-Entwurf (Python, AWS Solutions Constructs) vor.
 
 Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollständig verteidigen kann, als eine große, die ich nur halb verstehe.
 
 ## Leitplanken
 
-- AWS, nur `eu-central-1`, 100 % serverless, 0 € im Leerlauf (FinOps).
+- AWS: Daten nur in `eu-central-1`, Inferenz nur in der EU (Bedrock-Profil `eu.`, ADR 0001), 100 % serverless, 0 € im Leerlauf (FinOps).
 - Python, Pydantic, Bedrock Converse API mit Tool-Choice, Streamlit-UI.
-- Wissensbasis als JSON in S3 bzw. im Repo, In-Memory-Suche, keine Vektor-DB.
+- Wissensbasis als JSON in S3 bzw. im Repo, Bounded Catalog ohne Suche, keine Vektor-DB (ADR 0002).
 
 `docs/Modul4_Praxisprojekt_Emails.md` ist **Rohmaterial**, voller älterer und widersprüchlicher Ideen. Verbindlich sind `CONTEXT.md` (Glossar) und `docs/adr/`. Fehlen sie, gilt das Gespräch mit mir.
 
