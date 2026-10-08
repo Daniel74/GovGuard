@@ -51,7 +51,7 @@ Das erste Gate prüft jede Prüfregel in drei Punkten:
 |---|---|---|
 | Schema | Passt das JSON zum Pydantic-Modell `Rule` (Pflichtfelder, Typen, erlaubte Werte)? | unvollständigen oder kaputten Regeln |
 | Anker | Gibt es Primäranker und Querverweise wirklich in der Quelle (1.3)? | erfundenen Fundstellen, z. B. „DET.3.99“ |
-| Zitat | Steht `source_quote` wörtlich im extrahierten Quelltext (1.3)? | erfundenem oder umformuliertem Normtext |
+| Zitat | Steht `source_quote` wörtlich im Text der verankerten Anforderung (1.3)? | erfundenem oder umformuliertem Normtext |
 
 Den Primäranker setzt zwar der Code, der Check sichert aber die Extraktion ab. Querverweise schlägt dagegen das LLM vor; hier fängt der Check erfundene IDs ab.
 
@@ -118,7 +118,7 @@ Der Primäranker ist die **eine** Anforderung, aus der eine Prüfregel stammt. I
 | DSGVO | `DSGVO Art. 32` (optional Abs./lit.) | Überschrift „Artikel 32“ steht im PDF-Text |
 | SDM | `SDM Löschen M60.D01` | Maßnahmen-ID steht im Baustein-Text |
 
-Zusätzlich muss das `source_quote` **wörtlich** im extrahierten Quelltext stehen, nach Normalisierung von Leerzeichen und Zeilenumbrüchen und nach Entfernen von EUR-Lex-Markern wie „►C2“. Das ist dasselbe Prinzip wie der Beleg zur Laufzeit: Zitat statt Behauptung.
+Zusätzlich muss das `source_quote` **wörtlich** im Text genau der verankerten Anforderung stehen, nach Normalisierung von Leerzeichen und Zeilenumbrüchen und nach Entfernen von EUR-Lex-Markern wie „►C2“. Das ist dasselbe Prinzip wie der Beleg zur Laufzeit: Zitat statt Behauptung.
 
 ### 1.4 Soll-Ergebnis der Golden Archetypes
 
@@ -241,7 +241,7 @@ flowchart TB
     M["kb_build/__main__.py<br/>Build"]
   end
   subgraph L["Logik – rein, ohne I/O"]
-    AE["govguard/audit_engine.py<br/>+ models.py"]
+    AE["govguard/audit_engine.py<br/>+ models.py, text.py"]
     KB["kb_build/: sources/, ranking.py,<br/>gates.py, curation.py, archetypes.py"]
   end
   subgraph A["Adapter – einziger Ort für I/O"]
@@ -274,7 +274,8 @@ ui/                   Streamlit-App, spricht nur per HTTP mit der API
 data/sources/         Quell-PDFs (CIS, DSGVO, SDM); BSI-OSCAL lädt der Build per Commit-SHA
 data/extracted/       extrahierte Anforderungen (JSON)
 data/knowledge_base/  rules_spec.json, rules_arch.json, archetypes.json
-data/presets/         4 Presets mit expected.json
+data/presets/         4 Presets: Eingabedatei + preset.json mit Soll-Ergebnis
+data/archetype_profiles.json  Steckbriefe der 3 Archetypen (von Hand gepflegt)
 tests/                pytest
 .github/workflows/    build-kb.yml, deploy.yml
 ```
