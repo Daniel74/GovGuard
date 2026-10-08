@@ -209,42 +209,67 @@ Es gibt nur **einen Weg in die Produktion**: `deploy.yml`. Er lädt auch die Wis
 
 | Komponente | Aufgabe | Technik |
 |---|---|---|
-| Build-Skript | Wissensbasis und Archetypen erzeugen | Python-Paket `govguard.kb_build`, CDK CLI |
+| Build-Skript | Wissensbasis und Archetypen erzeugen | Python-Paket `kb_build`, CDK CLI |
 | Audit-Engine | Prompt bauen, Bedrock aufrufen, Befunde validieren | Python-Modul, Pydantic |
 | API | 3 Endpunkte, IAM-Auth, Throttling | API Gateway REST + Lambda |
-| Wissensbasis | Prüfregeln und Golden Archetypes | JSON im Repo (versioniert), per Deploy nach S3 |
+| Wissensbasis | Prüfregeln und Golden Archetypes | JSON in `data/knowledge_base/` (versioniert), per Deploy nach S3 |
 | UI | Eingabe, Ampel, Download | Streamlit Community Cloud (ADR 0004) |
 | Build-Workflow | manuell: Build-Skript ausführen, PR öffnen | GitHub Actions `build-kb.yml` |
 | Deploy-Workflow | bei Push: Selbst-Audit, Deploy, Wissensbasis nach S3 | GitHub Actions `deploy.yml`, CDK |
 
 ## Code-Struktur
 
-Ein- und Ausgabe (AWS, externe Programme) und Prüflogik liegen in getrennten Dateien. So bleibt der Kern ohne AWS und ohne CDK testbar.
+Ein- und Ausgabe (AWS, externe Programme) und Prüflogik liegen in getrennten Dateien. So bleibt der Kern ohne AWS und ohne CDK testbar. Pfeil = „importiert bzw. ruft auf“.
+
+```mermaid
+flowchart TB
+  subgraph E["Einstieg – verbindet nur"]
+    H["govguard/handler.py<br/>Lambda"]
+    C["govguard/cli.py<br/>lokal + Selbst-Audit"]
+    M["kb_build/__main__.py<br/>Build"]
+  end
+  subgraph L["Logik – rein, ohne I/O"]
+    AE["govguard/audit_engine.py<br/>+ models.py"]
+    KB["kb_build/: sources/, ranking.py,<br/>gates.py, curation.py, archetypes.py"]
+  end
+  subgraph A["Adapter – einziger Ort für I/O"]
+    AWS["govguard/aws_services.py<br/>boto3"]
+    CDK["kb_build/cdk_runner.py<br/>subprocess"]
+  end
+  subgraph X["Extern"]
+    B[("Bedrock eu.")]
+    S3[("S3")]
+    CL["CDK CLI + cdk-nag"]
+  end
+  H & C --> AE
+  H & C --> AWS
+  M --> KB
+  M --> AWS & CDK
+  KB --> AE
+  AWS --> B & S3
+  CDK --> CL
+```
+
+Von der Logik führt **kein Pfeil** zu den Adaptern. Der Einstieg reicht die Adapter-Funktionen hinein (Dependency Injection), Tests reichen Fakes hinein.
+
+Jeder Ordner auf oberster Ebene ist eine eigene Deployment-Einheit oder eine Datenart:
 
 ```
-src/govguard/
-  models.py          Pydantic-Modelle (Rule, Finding, AuditReport)
-  audit_engine.py    reine Prüflogik: Prompt bauen, Befunde prüfen, Gesamtstatus – kein boto3
-  aws_services.py    alle boto3-Aufrufe: Bedrock Converse, S3
-  handler.py         Lambda: verbindet aws_services und audit_engine
-  cli.py             Audit lokal und im Selbst-Audit: python -m govguard.cli
-  kb_build/          Build der Wissensbasis: python -m govguard.kb_build
-    sources/         Quellen-Adapter bsi.py, cis.py, dsgvo.py, sdm.py: extract(), prefilter() (rein)
-    ranking.py       Ranking + Obergrenze (rein)
-    gates.py         Schema, Primäranker, Zitat, Preset-Gate (rein)
-    curation.py      Stufe ② und 5: Prompts, LLM als übergebene Funktion
-    archetypes.py    Freigabe-Schleife: Struktur-, Compliance-Soll, max. 3 Runden
-    cdk_runner.py    einziger Ort für subprocess: cdk synth, cdk-nag
-    __main__.py      nur Orchestrierung
-infra/               CDK-Stack
-ui/                  Streamlit
-presets/             4 Presets mit Soll-Ergebnis
-.github/workflows/   build-kb.yml, deploy.yml – ohne Logik
+src/govguard/         Laufzeit-Kern, wird zum Lambda-Paket
+src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, nie umgekehrt)
+infra/                CDK-App des GovGuard-Stacks
+ui/                   Streamlit-App, spricht nur per HTTP mit der API
+data/sources/         Quell-PDFs (CIS, DSGVO, SDM); BSI-OSCAL lädt der Build per Commit-SHA
+data/extracted/       extrahierte Anforderungen (JSON)
+data/knowledge_base/  rules_spec.json, rules_arch.json, archetypes.json
+data/presets/         4 Presets mit expected.json
+tests/                pytest
+.github/workflows/    build-kb.yml, deploy.yml
 ```
 
 - **Adapter für I/O:** Nur `aws_services.py` importiert boto3, nur `cdk_runner.py` startet Prozesse. Ein Test prüft beides.
-- **Dependency Injection:** Prüflogik bekommt Bedrock- und CDK-Aufrufe als Funktion übergeben. Tests ersetzen sie durch Fakes.
-- **Keine Logik in Klebe-Code:** `handler.py`, `__main__.py` und die Workflow-YAML verbinden nur. Ein Workflow meldet sich an, ruft `python -m …` auf und öffnet den PR. Derselbe Befehl läuft lokal.
+- **Keine Logik in Klebe-Code:** Einstiegsdateien und Workflow-YAML verbinden nur. Ein Workflow meldet sich an, ruft `python -m …` auf und öffnet den PR. Derselbe Befehl läuft lokal.
+- **src-Layout:** Der CDK-Stack packt mit `Code.from_asset("src/govguard")` genau den Laufzeit-Kern, ohne Build-Code, UI oder Daten.
 
 ## Endpunkte
 
