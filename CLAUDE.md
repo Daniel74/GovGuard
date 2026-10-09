@@ -10,6 +10,7 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 - Python, Pydantic, Pydantic AI auf der Bedrock Converse API mit Tool-Choice (ADR 0005), Streamlit-UI.
 - Wissensbasis als JSON in S3 bzw. im Repo, Bounded Catalog ohne Suche, keine Vektor-DB (ADR 0002).
 - Code modular nach `docs/ARCHITECTURE.md` → *Code-Struktur*: boto3 und das Bedrock-Modell für Pydantic AI nur in `aws_services.py`, subprocess nur in `src/kb_build/cdk_runner.py`, Prüflogik rein, nie vermischt. Workflow-YAML enthält keine Logik, nur `python -m …`.
+- Kleine Einheiten: ein Modul = eine Aufgabe, ca. 200 Zeilen; eine Funktion ca. 30 Zeilen. Wird es größer, teile auf. Die Grenzen prüfen ruff (`pyproject.toml`) und ein pytest-Test.
 
 `docs/Modul4_Praxisprojekt_Emails.md` ist **Rohmaterial**, voller älterer und widersprüchlicher Ideen. Verbindlich sind `CONTEXT.md` (Glossar) und `docs/adr/`. Fehlen sie, gilt das Gespräch mit mir.
 
@@ -20,6 +21,11 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 3. Setze genau diesen Schritt um und zeige, was sich geändert hat.
 
 Code entsteht in kleinen Häppchen, die ich in einer Minute lesen kann. Commits mache ich selbst oder sage es explizit.
+
+## Definition of Done je Ticket
+
+- Alle Akzeptanzkriterien erfüllt, Tests und ruff grün, `/code-review` ohne offene Punkte.
+- **Fachgespräch-Notiz** als Kommentar im Issue, max. 6 Zeilen: *Gebaut* · *Entscheidung + Warum* (Bezug BSI/DSGVO/FinOps) · *Prüfungsbegriffe* · *Fachgespräch-Satz*. Zeige mir den Entwurf; gepostet wird nach meinem Go.
 
 ## Prüfer-Modus (Pocock /teach, dosiert)
 
