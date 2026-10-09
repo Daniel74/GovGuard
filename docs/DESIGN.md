@@ -182,7 +182,7 @@ Jedes Preset ist ein Ordner `data/presets/<id>/` mit einer Eingabedatei und eine
 ```python
 class RequiredFinding(BaseModel):
     anchor: str                          # Primäranker, z. B. "DSGVO Art. 9" – stabil über Builds
-    status: Status
+    status: Literal["PASS", "FAIL"]        # nie WARN: Ermessen würde das Gate flackern lassen
 
 class Expected(BaseModel):
     overall_status: Status
@@ -192,7 +192,7 @@ class Expected(BaseModel):
 class Preset(BaseModel):                 # Datei preset.json
     title: str                           # Anzeige in der UI, deutsch
     audit_type: Literal["spec", "architecture"]
-    input_file: str                      # z. B. "input.md" oder "template.json", max. 100.000 Zeichen
+    input_file: str                      # "input.md", "openapi.yaml" oder "template.json", max. 100.000 Zeichen
     expected: Expected
 ```
 
@@ -201,7 +201,7 @@ Das Preset-Gate gilt als bestanden, wenn drei Bedingungen erfüllt sind:
 - Zu jedem `RequiredFinding` gibt es eine Prüfregel mit diesem Primäranker und genau diesem Status.
 - Der Archetyp stimmt, falls einer angegeben ist.
 
-Weitere Befunde sind frei. Pflicht-Befunde verweisen auf den Primäranker statt auf die Regel-ID, weil ein Mensch ihn direkt aus der Norm kennt. Die Anker aller `required_findings` einer Audit-Art sind zugleich ihre gesetzten Plätze (#6), höchstens 4.
+Weitere Befunde sind frei. Ein Anker wird nur Pflicht-Befund, wenn der Bauplan der Eingabe und eine blinde Zweitprüfung mit einem anderen Modell übereinstimmen (FAHRPLAN Schritt 2). Pflicht-Befunde verweisen auf den Primäranker statt auf die Regel-ID, weil ein Mensch ihn direkt aus der Norm kennt. Die Anker aller `required_findings` einer Audit-Art sind zugleich ihre gesetzten Plätze (#6), höchstens 4.
 
 ## 2. Laufzeit-Verträge
 

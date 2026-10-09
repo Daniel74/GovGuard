@@ -7,3 +7,6 @@ data/extracted/cis.json
 __pycache__/
 .pytest_cache/
 .ruff_cache/
+
+# Preset design notes stay local: the blind cross-check must not see them (FAHRPLAN step 2)
+data/presets/*.local.md

@@ -1,6 +1,6 @@
-# GovGuard – Ausbau in vier Szenarien (Post-MVP)
+# GovGuard – Ausbau in fünf Szenarien (Post-MVP)
 
-Das GovGuard-MVP operiert bewusst mit definierten Limits: maximal 24 bzw. 20 Prüfregeln, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt vier Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
+Das GovGuard-MVP operiert bewusst mit definierten Limits: maximal 24 bzw. 20 Prüfregeln, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt fünf Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
 
 Drei fundamentale Prinzipien bleiben in jedem Ausbauszenario konstant:
 
@@ -51,7 +51,7 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 
 1. **Stufe 3a (Mehrfachauswahl):** Die Tool-Choice erlaubt die Rückgabe einer Liste kompatibler Stacks (z.B. ARCH-01 + ARCH-03) inklusive einer Begründung für ihr Zusammenspiel. Das Risiko bleibt minimal, da die Bausteine vorab gehärtet wurden.
 
-2. **Stufe 3b (Kombi-Archetypen):** Sehr häufige Kombinationen (z.B. Portal + Backend) werden zur Build-Zeit als neuer, dedizierter Archetyp erzeugt, auditiert und freigegeben.
+2. **Stufe 3b (Kombi-Archetypen):** Sehr häufige Kombinationen (z.B. Antragseingang + Audit-Log-Archiv; Portal + Backend erst mit Szenario 5) werden zur Build-Zeit als neuer, dedizierter Archetyp erzeugt, auditiert und freigegeben.
 
 3. **Stufe 3c (Laufzeit-Generierung):** Das LLM kombiniert Infrastruktur-Bausteine "on the fly". **Risiko hoch:** Bricht ADR 0003. Dies erfordert den Aufbau einer eigenen Build-Container-Infrastruktur, die `cdk synth` und `cdk-nag` pro User-Request asynchron ausführt.
 
@@ -67,6 +67,20 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 |---|---|---|
 | **Test** | **Auswahl-Presets (Ground Truth):** Für jeden Archetyp wird ein Preset mit fixiertem Soll-Ergebnis definiert, um die KI-Auswahl zu testen. | Mensch |
 | **Laufzeit** | **Zweistufige Auswahl:** 1. Das LLM extrahiert binäre Merkmale aus der Spezifikation (z.B. "asynchron?", "Datei-Upload?"). 2. Der Code filtert den Katalog hart nach diesen Merkmalen. 3. Das LLM trifft die finale Auswahl aus den wenigen verbliebenen, gefilterten Mustern. | LLM & Code |
+
+## Szenario 5: Souveräne Cloud und Bürgerportal
+
+- **Auslöser:** Eine Behörde verlangt Betrieb unter EU-Kontrolle, oder ein Vorhaben braucht ein Portal als Teil des Archetyps.
+
+- **Was bricht:** Ein statisches Portal braucht CloudFront. CloudFront hat keine Preisklasse nur für die EU; TLS endet an der Edge, möglicherweise in einem Drittland. Deshalb enden die Archetypen im MVP beim API Gateway (ADR 0009). Die **AWS European Sovereign Cloud** (ESC, GA seit 15.01.2026, Brandenburg) ist eine eigene Partition, getrennt vom globalen AWS. CloudFront ist dort erst für Ende 2026 angekündigt, und Bedrock bietet dort kein Claude, nur Amazon Nova und Open-Weight-Modelle.
+
+**Architektur-Anpassungen (Lösungen):**
+
+| Auslöser | Anpassung | Ausführende Schicht |
+|---|---|---|
+| **CloudFront ohne Drittlandtransfer** (z. B. in der ESC, Edge-Standorte nur in der EU) | **Portal-Archetyp:** `aws-cloudfront-s3` vor einer bestehenden Kette, z. B. ARCH-02. Bürger melden sich per Cognito an, die Ausnahme COG4 entfällt dann für diese API. Freigabe wie bisher (ADR 0003). Vorher prüfen: Wo terminiert TLS, wo liegen Logs und Cache? | Mensch & Code |
+| **Umzug in die ESC** | **Region und Partition** als Konfiguration statt fest `eu-central-1`; ARNs über `Aws.PARTITION`. Alle Gates laufen in der ESC neu. | Code |
+| **Kein Claude in der ESC** | **Modellwechsel** (ADR 0001 ersetzen): Nova Pro oder ein Open-Weight-Modell. Das Preset-Gate misst Qualität, Laufzeit (< 29 s) und Kosten neu, bevor gewechselt wird. | Code & LLM |
 
 ## Systemweite Auswirkungen: Der Weg zu Asynchronität
 

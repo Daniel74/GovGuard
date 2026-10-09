@@ -213,8 +213,8 @@ Zur Laufzeit generiert GovGuard keine Infrastruktur. Alle Vorlagen entstehen vor
 | Archetyp | Wofür | AWS Solutions Constructs | Pflicht-Ressourcentypen |
 | --- | --- | --- | --- |
 | ARCH-01 Sync REST | Synchrone Fachanwendung mit API und Datenbank | `aws-apigateway-lambda`, `aws-lambda-dynamodb` | API Gateway RestApi, Lambda, DynamoDB |
-| ARCH-02 Async Document Ingest | Dokumente hochladen und asynchron verarbeiten | `aws-s3-sqs`, `aws-sqs-lambda` | S3 Bucket, SQS Queue, Lambda |
-| ARCH-03 Audit-Log-Archiv | Unveränderbares Archiv für Protokolle | `aws-kinesisfirehose-s3` | Kinesis Firehose, S3 Bucket mit Object Lock |
+| ARCH-02 Antragseingang | Antrag per API annehmen, asynchron prüfen und ablegen | `aws-apigateway-lambda`, `aws-lambda-sqs`, `aws-sqs-lambda`, `aws-lambda-s3` | API Gateway RestApi, Lambda, SQS Queue, S3 Bucket |
+| ARCH-03 Audit-Log-Archiv | Protokolle per API annehmen und unveränderbar archivieren | `aws-apigateway-lambda`, `aws-lambda-kinesisfirehose`, `aws-kinesisfirehose-s3` | API Gateway RestApi, Lambda, Kinesis Firehose, S3 Bucket mit Object Lock |
 
 Solutions Constructs sind vorgefertigte CDK-Bausteine von AWS, die sichere Standards (Verschlüsselung, Logging) mitbringen. Das LLM baut also nicht frei, sondern aus bewährten Teilen.
 

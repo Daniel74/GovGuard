@@ -1,4 +1,4 @@
-"""Pydantic contracts of the audit (DESIGN 1.2, 2.1, 2.4). Names follow CONTEXT.md.
+"""Pydantic contracts of the audit (DESIGN 1.2, 1.4, 2.1, 2.4). Names follow CONTEXT.md.
 
 Draft pattern: the LLM fills only *Draft models; the code adds what it already knows.
 """
@@ -6,11 +6,12 @@ Draft pattern: the LLM fills only *Draft models; the code adds what it already k
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 Status = Literal["PASS", "WARN", "FAIL", "N/A"]
 AuditType = Literal["spec", "architecture"]
 SourceName = Literal["BSI", "CIS", "DSGVO", "SDM"]
+ArchetypeId = Literal["ARCH-01", "ARCH-02", "ARCH-03", "NONE"]
 
 
 class CrossReference(BaseModel):
@@ -88,3 +89,28 @@ class AuditEvent(BaseModel):  # one JSON line in CloudWatch Logs, no evidence (D
     overall_status: Status | None
     statuses: dict[str, Status]  # rule_id -> status
     archetype: str | None
+
+
+class RequiredFinding(BaseModel):  # set by a human, never by a previous run
+    anchor: str  # primary anchor, e.g. "DSGVO Art. 9" - stable across builds
+    status: Literal["PASS", "FAIL"]  # never WARN: judgement would make the preset gate flicker
+
+
+class Expected(BaseModel):
+    overall_status: Status
+    required_findings: list[RequiredFinding]
+    archetype: ArchetypeId | None = None
+
+
+class Preset(BaseModel):  # file data/presets/<id>/preset.json
+    title: str  # shown in the UI, German
+    audit_type: AuditType
+    input_file: str  # next to preset.json, max. 100,000 characters
+    expected: Expected
+
+    @model_validator(mode="after")
+    def archetype_only_for_spec_without_fail(self) -> "Preset":
+        allowed = self.audit_type == "spec" and self.expected.overall_status != "FAIL"
+        if self.expected.archetype is not None and not allowed:
+            raise ValueError("archetype is only expected for a spec audit without FAIL")
+        return self

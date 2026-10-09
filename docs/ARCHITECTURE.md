@@ -131,18 +131,20 @@ Für Presets legt ein Mensch das Soll fest. Für Archetypen ist es **vollautomat
 2. **Compliance-Soll:** Jede Architektur-Prüfregel ist PASS oder N/A. N/A setzt hier nur der Code, wenn keiner ihrer `cfn_resource_types` im Template vorkommt (Abschnitt 2). Kommt einer vor, ist N/A **verboten**. So kann das LLM eine unbequeme Regel nicht wegdefinieren.
 3. **cdk-nag:** Das Regelpaket AwsSolutions meldet keine Errors außer Ausnahmen aus `data/nag_allowlist.json` (ADR 0007). Die Ausnahmen wendet der Code an; der Archetyp-Code darf kein `Validations.of(...).acknowledge(...)` enthalten (Code-Check, cdk-nag 3).
 
+Jeder Archetyp ist eine End-to-End-Kette ab API Gateway mit IAM-Auth; das Portal der Behörde liegt außerhalb (ADR 0009).
+
 | Archetyp | Solutions Constructs | Pflicht-Ressourcentypen |
 |---|---|---|
 | ARCH-01 Sync REST | `aws-apigateway-lambda`, `aws-lambda-dynamodb` | `AWS::ApiGateway::RestApi`, `AWS::Lambda::Function`, `AWS::DynamoDB::Table` |
-| ARCH-02 Async Document Ingest | `aws-s3-sqs`, `aws-sqs-lambda` | `AWS::S3::Bucket`, `AWS::SQS::Queue`, `AWS::Lambda::Function` |
-| ARCH-03 Audit-Log-Archiv | `aws-kinesisfirehose-s3` | `AWS::KinesisFirehose::DeliveryStream`, `AWS::S3::Bucket` mit `ObjectLockEnabled` |
+| ARCH-02 Antragseingang | `aws-apigateway-lambda`, `aws-lambda-sqs`, `aws-sqs-lambda`, `aws-lambda-s3` | `AWS::ApiGateway::RestApi`, `AWS::Lambda::Function`, `AWS::SQS::Queue`, `AWS::S3::Bucket` |
+| ARCH-03 Audit-Log-Archiv | `aws-apigateway-lambda`, `aws-lambda-kinesisfirehose`, `aws-kinesisfirehose-s3` | `AWS::ApiGateway::RestApi`, `AWS::Lambda::Function`, `AWS::KinesisFirehose::DeliveryStream`, `AWS::S3::Bucket` mit `ObjectLockEnabled` |
 
 Startliste der Ausnahmen (Spike mit cdk-nag 3.0.2 und Solutions Constructs 2.105):
 
 | Regel | Ressource | Begründung |
 |---|---|---|
-| AwsSolutions-COG4 | API-Methoden von ARCH-01 | IAM-Auth (SigV4) für Maschine-zu-Maschine statt Cognito-Login; auch im GovGuard-Stack (ADR 0004) |
-| AwsSolutions-IAM4 | `BucketNotificationsHandler` (ARCH-02) | CDK-interne Hilfs-Lambda für S3-Notifications; die verwaltete Policy erlaubt nur Logs |
+| AwsSolutions-COG4 | API-Methoden aller Archetypen | IAM-Auth (SigV4) für Maschine-zu-Maschine statt Cognito-Login; auch im GovGuard-Stack (ADR 0004) |
+| AwsSolutions-IAM4 | `BucketNotificationsHandler` (altes ARCH-02 mit `aws-s3-sqs`) | CDK-interne Hilfs-Lambda für S3-Notifications; die verwaltete Policy erlaubt nur Logs. Wird gestrichen, wenn #7 zeigt, dass sie nicht mehr greift (ADR 0009) |
 | AwsSolutions-IAM5 | Firehose-Policy `bucket/*` (ARCH-03) | Objektnamen entstehen zur Laufzeit; Rechte auf genau einen Bucket, nur Schreiben |
 
 Die Steckbriefe (Zweck, Constructs, Pflicht-Typen, `resource_types`) sind die einzige feste Vorgabe an das LLM. `resource_types` steuert den Relevanzfilter (1.1): die Pflicht-Typen plus `AWS::IAM::Role`, `AWS::KMS::Key` und `AWS::Logs::LogGroup`. Sie stammen aus [Behörden Cloud-Referenzarchitekturen Analyse](research/Behörden%20Cloud-Referenzarchitekturen%20Analyse.md). ARCH-01 nutzt DynamoDB statt Aurora (wie das Construct-Mapping im Research-Dokument): DynamoDB On-Demand kostet im Leerlauf 0 €.

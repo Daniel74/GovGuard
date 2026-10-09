@@ -66,8 +66,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** keine; parallel zu Schritt 1.
 
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/grilling Presets für #3: 4 fiktive Behördenszenarien, Aufteilung Spec/Architektur, Soll-Gesamtstatus, Pflichtanker (höchstens 4 je Audit-Art)`
-- [ ] **Bauen** 👤 „Lege die Presets nach unseren Antworten an“ → Go → 🤖 schreibt `data/presets/<id>/` (Eingabe + `preset.json`). Ein Architektur-Preset ist CloudFormation-JSON, damit „N/A durch Code“ mitgetestet wird.
-- [ ] **Prüfen** 👤 Lies jede Eingabe und jedes Soll selbst. Die Eingaben enthalten nur fiktive Daten, die größte höchstens 100.000 Zeichen.
+- [ ] **Bauen** 👤 „Lege die Presets nach unseren Antworten an“ → Go → 🤖 schreibt die Eingaben unter `data/presets/<id>/`, den Bauplan nach `data/presets/BAUPLAN.local.md` (gitignored) und `data/sources/bsi_gspp_auszug.txt`. Formate: OpenAPI, Freitext, CloudFormation-JSON (damit „N/A durch Code“ mitgetestet wird).
+- [ ] **Blind prüfen** 👤 Gemini (normaler Chat, nicht Deep Research), ein Chat je Preset: Eingabe + Quellen hochladen, Prompt aus `BAUPLAN.local.md`. Ein Anker bleibt nur, wenn Gemini dieselbe Norm mit demselben Status nennt. Ein ungeplanter FAIL in einem WARN-Preset → 🤖 korrigiert die Eingabe.
+- [ ] **Soll festlegen** 👤 nennt je Preset Gesamtstatus und bestätigte Anker → 🤖 schreibt die `preset.json`, Tests grün.
 - [ ] **Verstehen** 👤 `/verstehen 3` (Kernfrage: warum das Soll von dir kommt und nicht aus einem früheren Lauf)
 - [ ] **Abschließen** 👤 committet und pusht
 

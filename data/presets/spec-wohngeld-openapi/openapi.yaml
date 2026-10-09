@@ -1,0 +1,1982 @@
+openapi: 3.1.0
+info:
+  title: Wohngeld-Antragsschnittstelle der Stadt Musterhausen
+  version: 1.4.0
+  summary: Online-Eingang von Wohngeldanträgen, Weiterleistungsanträgen, Änderungsmitteilungen und Nachweisen.
+  contact:
+    name: Wohngeldstelle der Stadt Musterhausen, Fachbereich Soziales
+    email: wohngeld-it@musterhausen.example
+  description: |
+    # Fachkonzept: Online-Antrag auf Wohngeld
+
+    _Fiktives Beispiel. Alle Namen, Anschriften, Kontonummern und Aktenzeichen sind erfunden._
+
+    ## 1 Ausgangslage und Zweck
+
+    Die Wohngeldstelle der Stadt Musterhausen bearbeitet jährlich rund 9.400 Anträge auf Wohngeld nach
+    dem Wohngeldgesetz (WoGG). Bisher reichen Bürgerinnen und Bürger ihre Anträge überwiegend auf Papier
+    ein. Fehlende Nachweise führen zu Rückfragen per Brief und verlängern die Bearbeitungszeit auf
+    durchschnittlich elf Wochen.
+
+    Mit dieser Schnittstelle nimmt die Stadt Anträge auf Wohngeld elektronisch entgegen. Zweck der
+    Verarbeitung ist ausschließlich die Prüfung und Bewilligung von Wohngeld als Mietzuschuss oder
+    Lastenzuschuss nach dem WoGG. Eine Verarbeitung der Antragsdaten für andere Zwecke, etwa für
+    Statistiken mit Personenbezug, Werbung oder die Weitergabe an Dritte außerhalb der gesetzlichen
+    Übermittlungsbefugnisse, findet nicht statt. Die amtliche Wohngeldstatistik nach § 34 WoGG erhält
+    die Wohngeldstelle aus dem Fachverfahren, nicht aus dieser Schnittstelle.
+
+    Die Schnittstelle ist Teil des Online-Zugangs nach dem Onlinezugangsgesetz (OZG). Sie ersetzt nicht
+    die schriftliche Antragstellung; Papieranträge bleiben weiterhin möglich.
+
+    ## 2 Beteiligte und Rollen
+
+    | Rolle | Beschreibung |
+    |---|---|
+    | Antragstellende Person | Volljähriges Haushaltsmitglied, das den Antrag für den gesamten Haushalt stellt (§ 3 WoGG). |
+    | Haushaltsmitglieder | Personen, die mit der antragstellenden Person eine Wohn- und Wirtschaftsgemeinschaft führen (§ 5 WoGG). |
+    | Bürgerportal | Das Bürgerportal der Stadt Musterhausen ist nicht Gegenstand dieser Spezifikation. Es führt die Bürgerin oder den Bürger durch den Antrag und ruft diese Schnittstelle serverseitig auf. |
+    | Wohngeldstelle | Verantwortliche im Sinne von Art. 4 Nr. 7 DSGVO ist die Stadt Musterhausen, vertreten durch den Oberbürgermeister; zuständig ist die Wohngeldstelle im Fachbereich Soziales. |
+    | Sachbearbeitung | Beschäftigte der Wohngeldstelle, die Anträge im Fachverfahren prüfen und bescheiden. |
+    | Datenschutzbeauftragte | Die behördliche Datenschutzbeauftragte der Stadt Musterhausen ist unter datenschutz@musterhausen.example erreichbar. |
+
+    Bürgerinnen und Bürger melden sich im Bürgerportal mit ihrem Nutzerkonto an. Die Schnittstelle selbst
+    kennt keine Bürger-Logins: Nur das Bürgerportal darf sie aufrufen, und zwar mit signierten Anfragen
+    (AWS Signature Version 4) über eine eigene technische Rolle. Die Identität der antragstellenden Person
+    übergibt das Portal im Antrag; das Vertrauensniveau der Anmeldung steht im Feld
+    `authentisierung.vertrauensniveau`.
+
+    ## 3 Ablauf
+
+    1. Die antragstellende Person füllt den Antrag im Bürgerportal aus und lädt die Nachweise hoch.
+    2. Das Bürgerportal übermittelt den Antrag mit `POST /antraege`. Die Schnittstelle prüft den Antrag
+       formal (Pflichtfelder, Formate, Plausibilität der Beträge) und antwortet sofort mit
+       `202 Accepted` und einer Vorgangsnummer. Eine inhaltliche Entscheidung trifft die Schnittstelle nie.
+    3. Nachweise übermittelt das Portal einzeln mit `POST /antraege/{vorgangsnummer}/nachweise`.
+       Jeder Nachweis wird ebenfalls mit `202 Accepted` bestätigt.
+    4. Die angenommenen Anträge und Nachweise werden in eine Warteschlange gestellt. Ein
+       Verarbeitungsdienst übernimmt sie nacheinander, prüft sie auf Schadsoftware und legt sie im
+       Dokumentenarchiv der Wohngeldstelle ab. Lastspitzen, etwa zum Jahreswechsel, puffert die
+       Warteschlange, ohne dass Anträge verloren gehen.
+    5. Das Fachverfahren der Wohngeldstelle übernimmt den Vorgang aus dem Dokumentenarchiv. Die
+       Sachbearbeitung prüft und erlässt den Bescheid.
+    6. Den Bescheid erhält die antragstellende Person per Post oder, wenn sie das wählt, im Postfach
+       ihres Nutzerkontos.
+
+    Die Schnittstelle arbeitet bewusst asynchron: Zwischen Eingang und Ablage im Archiv können einige
+    Minuten liegen. Eine Statusabfrage bietet die Schnittstelle nicht an; den Bearbeitungsstand teilt die
+    Wohngeldstelle über das Postfach im Nutzerkonto mit.
+
+    Weitere Vorgänge:
+
+    - **Weiterleistungsantrag** (`POST /weiterleistungsantraege`): Antrag für den nächsten
+      Bewilligungszeitraum, frühestens zwei Monate vor dessen Beginn.
+    - **Änderungsmitteilung** (`POST /antraege/{vorgangsnummer}/aenderungsmitteilungen`): Mitteilung nach
+      § 27 WoGG, etwa wenn sich das Einkommen um mehr als 15 Prozent erhöht oder ein Haushaltsmitglied
+      auszieht.
+    - **Rücknahme** (`POST /antraege/{vorgangsnummer}/ruecknahme`): Die antragstellende Person nimmt
+      einen Antrag zurück, solange noch kein Bescheid ergangen ist.
+
+    ## 4 Rechtsgrundlagen
+
+    Wohngeld ist eine Sozialleistung nach § 26 SGB I. Für die Daten gilt deshalb neben der DSGVO der
+    Sozialdatenschutz nach §§ 67 ff. SGB X.
+
+    | Verarbeitung | Rechtsgrundlage |
+    |---|---|
+    | Antragsdaten, Einkommen, Miete oder Belastung, Haushaltsmitglieder | Art. 6 Abs. 1 lit. e und Abs. 3 DSGVO in Verbindung mit § 67a SGB X und §§ 3 bis 24 WoGG |
+    | Mitwirkung der antragstellenden Person | § 60 SGB I (Pflicht, die für die Leistung erheblichen Tatsachen anzugeben) |
+    | Angabe zur Schwerbehinderung für den Freibetrag | Art. 9 Abs. 2 lit. b DSGVO in Verbindung mit § 67b Abs. 1 SGB X und § 17 Nr. 1 WoGG |
+    | Bankverbindung für die Auszahlung | Art. 6 Abs. 1 lit. e DSGVO in Verbindung mit § 26 Abs. 1 WoGG und § 47 SGB I |
+    | Wahl des elektronischen Postfachs für den Bescheid | Art. 6 Abs. 1 lit. a DSGVO (Einwilligung, jederzeit widerrufbar) |
+
+    ### 4.1 Besondere Kategorien personenbezogener Daten
+
+    Die Schnittstelle verarbeitet genau eine besondere Kategorie personenbezogener Daten im Sinne von
+    Art. 9 Abs. 1 DSGVO: die Angabe, dass ein Haushaltsmitglied schwerbehindert ist, mit dem Grad der
+    Behinderung (GdB) und gegebenenfalls der Pflegebedürftigkeit. Diese Angabe ist Voraussetzung für den
+    Freibetrag nach § 17 Nr. 1 WoGG.
+
+    Rechtsgrundlage für die Angabe zur Schwerbehinderung ist Art. 9 Abs. 2 lit. b DSGVO in Verbindung mit
+    § 67b Abs. 1 SGB X und § 17 Nr. 1 WoGG. Die Angabe ist freiwillig und wird nur erhoben, wenn die
+    antragstellende Person den Freibetrag beantragt. Diagnosen, Befunde oder Arztberichte erhebt die
+    Schnittstelle nicht; als Nachweis genügt der Schwerbehindertenausweis oder der Feststellungsbescheid
+    des Versorgungsamts, jeweils nur die Seite mit GdB und Gültigkeit.
+
+    Weitere besondere Kategorien, etwa Religion, ethnische Herkunft oder Gesundheitsdaten über die
+    Schwerbehinderung hinaus, erhebt die Schnittstelle nicht. Das Datenmodell enthält dafür keine Felder.
+
+    ## 5 Datenminimierung
+
+    Das Datenmodell folgt den Formularen des Landes für Wohngeld. Jedes Feld ist einer Vorschrift des WoGG
+    zugeordnet (Spalte „Rechtsgrund“ in der Feldbeschreibung). Felder, die für einen Antrag nicht
+    erforderlich sind, bleiben leer und werden nicht gespeichert:
+
+    - Angaben zum Lastenzuschuss nur, wenn die Wohnung im Eigentum steht.
+    - Angaben zur Schwerbehinderung nur, wenn der Freibetrag beantragt wird.
+    - Angaben zum Aufenthaltstitel nur für Staatsangehörige von Drittstaaten (§ 3 Abs. 5 WoGG).
+    - Die Steuer-Identifikationsnummer wird nicht erhoben.
+
+    Nachweise sind auf die Typen in `NachweisTyp` begrenzt. Freie Uploads ohne Typ nimmt die Schnittstelle
+    nicht an.
+
+    ## 6 Speicherung und Löschung
+
+    Antragsdaten und Nachweise werden im Dokumentenarchiv der Wohngeldstelle in der AWS-Region
+    eu-central-1 (Frankfurt am Main) gespeichert. Die Warteschlange hält einen Antrag höchstens vier Tage;
+    nicht verarbeitbare Nachrichten landen in einer separaten Fehlerwarteschlange und werden dort nach
+    vierzehn Tagen automatisch gelöscht.
+
+    Die Löschfristen sind im Löschkonzept der Wohngeldstelle schriftlich festgelegt (Version 1.3,
+    freigegeben am 02.06.2026 von der Fachbereichsleitung Soziales nach Beteiligung der
+    Datenschutzbeauftragten). Für diese Schnittstelle gelten:
+
+    | Datenart | Löschfrist | Auslösendes Ereignis |
+    |---|---|---|
+    | Antrag mit Nachweisen, bewilligt | 6 Jahre | Ende des Kalenderjahres, in dem der letzte Bewilligungszeitraum endete |
+    | Antrag mit Nachweisen, abgelehnt | 3 Jahre | Ende des Kalenderjahres, in dem der Ablehnungsbescheid bestandskräftig wurde |
+    | Zurückgenommener Antrag | 1 Jahr | Ende des Kalenderjahres der Rücknahme |
+    | Nachweis zur Schwerbehinderung | 6 Jahre | wie der Antrag, zu dem er gehört; bei Wegfall des Freibetrags 1 Jahr nach Ende des Kalenderjahres |
+    | Unvollständiger Antrag ohne Vorgangsnummer | sofort | Abbruch im Bürgerportal; die Schnittstelle speichert ihn nicht |
+    | Nachricht in der Fehlerwarteschlange | 14 Tage | Eingang in der Fehlerwarteschlange |
+
+    Das Dokumentenarchiv löscht automatisch nach Ablauf der Frist. Die Fristen stehen zusätzlich je
+    Datenart im Feld `x-loeschfrist` der Schemas dieser Spezifikation.
+
+    ## 7 Sicherheit der Übertragung und Speicherung
+
+    - Die Schnittstelle ist nur über HTTPS mit TLS 1.2 oder höher erreichbar.
+    - Jede Anfrage ist mit AWS Signature Version 4 signiert; unsignierte Anfragen lehnt die Schnittstelle ab.
+    - Antragsdaten und Nachweise werden im Dokumentenarchiv mit einem kundenverwalteten Schlüssel der
+      Wohngeldstelle verschlüsselt gespeichert.
+    - Nachweise werden vor der Ablage auf Schadsoftware geprüft.
+    - Die Größe eines Nachweises ist auf 5 MB begrenzt, ein Antrag ohne Nachweise auf 256 KB.
+
+    ## 8 Rechte der betroffenen Personen
+
+    Die Datenschutzhinweise nach Art. 13 DSGVO zeigt das Bürgerportal vor dem Absenden des Antrags an. Mit
+    dem Feld `erklaerungen.datenschutzhinweiseZurKenntnisGenommen` bestätigt die antragstellende Person,
+    dass sie die Hinweise erhalten hat. Für Haushaltsmitglieder, deren Daten die antragstellende Person
+    angibt, legt die Wohngeldstelle dem Bescheid ein Informationsblatt nach Art. 14 DSGVO bei.
+
+    ## 9 Fachliche Kennzahlen
+
+    | Kennzahl | Wert |
+    |---|---|
+    | Anträge pro Jahr | ca. 9.400, davon ca. 60 Prozent Weiterleistungsanträge |
+    | Spitzenlast | ca. 900 Anträge im Dezember und Januar |
+    | Nachweise je Antrag | durchschnittlich 6, höchstens 30 |
+    | Anteil Lastenzuschuss | ca. 7 Prozent |
+    | Anteil mit Freibetrag Schwerbehinderung | ca. 12 Prozent |
+
+    ## 10 Glossar
+
+    | Begriff | Bedeutung |
+    |---|---|
+    | Bewilligungszeitraum | Zeitraum, für den Wohngeld bewilligt wird, in der Regel 12 bis 24 Monate (§ 25 WoGG). |
+    | Mietzuschuss | Wohngeld für Mieterinnen und Mieter (§ 3 Abs. 1 WoGG). |
+    | Lastenzuschuss | Wohngeld für Eigentümerinnen und Eigentümer selbst genutzten Wohnraums (§ 3 Abs. 2 WoGG). |
+    | Mietenstufe | Einstufung der Gemeinde nach dem Mietniveau; Musterhausen hat Mietenstufe IV. |
+    | Vorgangsnummer | Eindeutige Kennung eines Antrags, Format `WG-JJJJ-NNNNNN`. |
+servers:
+  - url: https://api.wohngeld.musterhausen.example/v1
+    description: Produktion (AWS-Region eu-central-1)
+  - url: https://api.test.wohngeld.musterhausen.example/v1
+    description: Testumgebung mit fiktiven Daten
+security:
+  - sigv4: []
+tags:
+  - name: Antrag
+    description: Erstanträge und Weiterleistungsanträge auf Wohngeld.
+  - name: Nachweise
+    description: Belege zu einem Antrag, etwa Mietbescheinigung oder Einkommensnachweise.
+  - name: Mitteilungen
+    description: Änderungsmitteilungen und Rücknahmen zu einem bestehenden Antrag.
+paths:
+  /antraege:
+    post:
+      tags: [Antrag]
+      operationId: antragEinreichen
+      summary: Erstantrag auf Wohngeld einreichen
+      description: |
+        Nimmt einen vollständigen Erstantrag auf Wohngeld entgegen. Die Schnittstelle prüft den Antrag nur
+        formal und antwortet sofort mit `202 Accepted`. Der Antrag wird danach asynchron über die
+        Warteschlange in das Dokumentenarchiv übernommen. Nachweise folgen in eigenen Aufrufen.
+
+        Wiederholt das Bürgerportal einen Aufruf mit demselben `Idempotency-Key`, liefert die Schnittstelle
+        dieselbe Vorgangsnummer und legt keinen zweiten Antrag an.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/KorrelationsId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Antrag'
+            examples:
+              mietzuschussFamilie:
+                $ref: '#/components/examples/MietzuschussFamilie'
+              mietzuschussMitFreibetrag:
+                $ref: '#/components/examples/MietzuschussMitFreibetragSchwerbehinderung'
+              lastenzuschuss:
+                $ref: '#/components/examples/LastenzuschussEigentum'
+      responses:
+        '202':
+          $ref: '#/components/responses/Eingangsbestaetigung'
+        '400':
+          $ref: '#/components/responses/UngueltigeAnfrage'
+        '403':
+          $ref: '#/components/responses/NichtBerechtigt'
+        '409':
+          $ref: '#/components/responses/Konflikt'
+        '413':
+          $ref: '#/components/responses/ZuGross'
+        '422':
+          $ref: '#/components/responses/FachlichUnplausibel'
+        '429':
+          $ref: '#/components/responses/ZuVieleAnfragen'
+        '503':
+          $ref: '#/components/responses/VoruebergehendNichtVerfuegbar'
+  /weiterleistungsantraege:
+    post:
+      tags: [Antrag]
+      operationId: weiterleistungsantragEinreichen
+      summary: Weiterleistungsantrag für den nächsten Bewilligungszeitraum einreichen
+      description: |
+        Nimmt einen Antrag auf Weiterleistung nach Ablauf des laufenden Bewilligungszeitraums entgegen
+        (§ 25 WoGG). Der Antrag verweist auf die Vorgangsnummer des laufenden Bewilligungszeitraums und
+        enthält nur die Angaben, die sich geändert haben können. Frühestens zwei Monate vor Beginn des
+        neuen Bewilligungszeitraums; frühere Anträge lehnt die Schnittstelle mit `422` ab.
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/KorrelationsId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Weiterleistungsantrag'
+      responses:
+        '202':
+          $ref: '#/components/responses/Eingangsbestaetigung'
+        '400':
+          $ref: '#/components/responses/UngueltigeAnfrage'
+        '403':
+          $ref: '#/components/responses/NichtBerechtigt'
+        '404':
+          $ref: '#/components/responses/VorgangUnbekannt'
+        '422':
+          $ref: '#/components/responses/FachlichUnplausibel'
+        '429':
+          $ref: '#/components/responses/ZuVieleAnfragen'
+  /antraege/{vorgangsnummer}/nachweise:
+    post:
+      tags: [Nachweise]
+      operationId: nachweisHochladen
+      summary: Nachweis zu einem Antrag übermitteln
+      description: |
+        Übermittelt genau einen Nachweis zu einem Antrag. Der Inhalt ist Base64-kodiert, höchstens 5 MB
+        nach Dekodierung. Zulässig sind PDF, JPEG und PNG. Die Schnittstelle prüft Typ, Größe und
+        Prüfsumme und antwortet mit `202 Accepted`. Die Prüfung auf Schadsoftware und die Ablage im
+        Dokumentenarchiv erfolgen asynchron.
+      parameters:
+        - $ref: '#/components/parameters/Vorgangsnummer'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/KorrelationsId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Nachweis'
+            examples:
+              mietbescheinigung:
+                $ref: '#/components/examples/NachweisMietbescheinigung'
+              schwerbehindertenausweis:
+                $ref: '#/components/examples/NachweisSchwerbehindertenausweis'
+      responses:
+        '202':
+          $ref: '#/components/responses/NachweisAngenommen'
+        '400':
+          $ref: '#/components/responses/UngueltigeAnfrage'
+        '403':
+          $ref: '#/components/responses/NichtBerechtigt'
+        '404':
+          $ref: '#/components/responses/VorgangUnbekannt'
+        '409':
+          $ref: '#/components/responses/Konflikt'
+        '413':
+          $ref: '#/components/responses/ZuGross'
+        '415':
+          $ref: '#/components/responses/FormatNichtUnterstuetzt'
+        '429':
+          $ref: '#/components/responses/ZuVieleAnfragen'
+  /antraege/{vorgangsnummer}/aenderungsmitteilungen:
+    post:
+      tags: [Mitteilungen]
+      operationId: aenderungMitteilen
+      summary: Änderung nach § 27 WoGG mitteilen
+      description: |
+        Nimmt eine Mitteilung über Änderungen während des Bewilligungszeitraums entgegen, etwa Auszug
+        eines Haushaltsmitglieds, Erhöhung des Einkommens um mehr als 15 Prozent oder Senkung der Miete
+        um mehr als 15 Prozent. Die Mitteilung wird wie ein Antrag asynchron übernommen.
+      parameters:
+        - $ref: '#/components/parameters/Vorgangsnummer'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/KorrelationsId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Aenderungsmitteilung'
+      responses:
+        '202':
+          $ref: '#/components/responses/Eingangsbestaetigung'
+        '400':
+          $ref: '#/components/responses/UngueltigeAnfrage'
+        '403':
+          $ref: '#/components/responses/NichtBerechtigt'
+        '404':
+          $ref: '#/components/responses/VorgangUnbekannt'
+        '422':
+          $ref: '#/components/responses/FachlichUnplausibel'
+  /antraege/{vorgangsnummer}/ruecknahme:
+    post:
+      tags: [Mitteilungen]
+      operationId: antragZuruecknehmen
+      summary: Antrag zurücknehmen
+      description: |
+        Die antragstellende Person nimmt ihren Antrag zurück. Das ist nur möglich, solange kein Bescheid
+        ergangen ist; sonst antwortet die Schnittstelle mit `409`. Für zurückgenommene Anträge gilt die
+        Löschfrist von einem Jahr nach Ende des Kalenderjahres der Rücknahme.
+      parameters:
+        - $ref: '#/components/parameters/Vorgangsnummer'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/KorrelationsId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Ruecknahme'
+      responses:
+        '202':
+          $ref: '#/components/responses/Eingangsbestaetigung'
+        '403':
+          $ref: '#/components/responses/NichtBerechtigt'
+        '404':
+          $ref: '#/components/responses/VorgangUnbekannt'
+        '409':
+          $ref: '#/components/responses/Konflikt'
+components:
+  securitySchemes:
+    sigv4:
+      type: apiKey
+      name: Authorization
+      in: header
+      description: |
+        AWS Signature Version 4. Nur die technische Rolle des Bürgerportals darf die Schnittstelle
+        aufrufen. Unsignierte oder falsch signierte Anfragen lehnt die Schnittstelle mit `403` ab.
+      x-amazon-apigateway-authtype: awsSigv4
+  parameters:
+    Vorgangsnummer:
+      name: vorgangsnummer
+      in: path
+      required: true
+      description: "Vorgangsnummer aus der Eingangsbestätigung, Format WG-JJJJ-NNNNNN."
+      schema:
+        $ref: '#/components/schemas/Vorgangsnummer'
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      description: |
+        Vom Bürgerportal erzeugte UUID je fachlichem Vorgang. Wiederholte Aufrufe mit demselben Schlüssel
+        innerhalb von 24 Stunden liefern dieselbe Antwort und erzeugen keinen zweiten Vorgang.
+      schema:
+        type: string
+        format: uuid
+    KorrelationsId:
+      name: X-Korrelations-Id
+      in: header
+      required: false
+      description: |
+        Technische Kennung zur Nachverfolgung eines Aufrufs über Portal und Schnittstelle. Sie enthält
+        keine personenbezogenen Daten und wird vom Bürgerportal zufällig erzeugt.
+      schema:
+        type: string
+        format: uuid
+  headers:
+    RetryAfter:
+      description: "Sekunden bis zum nächsten zulässigen Aufruf."
+      schema:
+        type: integer
+        minimum: 1
+  responses:
+    Eingangsbestaetigung:
+      description: |
+        Der Vorgang wurde formal geprüft und angenommen. Die Übernahme in das Dokumentenarchiv erfolgt
+        asynchron. Die Vorgangsnummer zeigt das Bürgerportal der antragstellenden Person an.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Eingangsbestaetigung'
+    NachweisAngenommen:
+      description: "Der Nachweis wurde angenommen und wird asynchron geprüft und abgelegt."
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/NachweisBestaetigung'
+    UngueltigeAnfrage:
+      description: "Die Anfrage verletzt das Schema, etwa durch fehlende Pflichtfelder oder falsche Formate."
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NichtBerechtigt:
+      description: "Die Anfrage ist nicht oder falsch signiert, oder die aufrufende Rolle ist nicht zugelassen."
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    VorgangUnbekannt:
+      description: "Zur Vorgangsnummer gibt es keinen Vorgang, oder er gehört nicht zu dieser antragstellenden Person."
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Konflikt:
+      description: "Der Vorgang ist in einem Zustand, der die Aktion nicht erlaubt, etwa Rücknahme nach Bescheid."
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    ZuGross:
+      description: "Der Antrag überschreitet 256 KB oder der Nachweis 5 MB."
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    FormatNichtUnterstuetzt:
+      description: "Der Nachweis ist kein PDF, JPEG oder PNG, oder Dateityp und Inhalt passen nicht zusammen."
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    FachlichUnplausibel:
+      description: |
+        Der Antrag ist formal gültig, aber fachlich unplausibel, etwa ein Einzugsdatum in der Zukunft
+        oder ein Weiterleistungsantrag mehr als zwei Monate vor Beginn des Bewilligungszeitraums.
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    ZuVieleAnfragen:
+      description: "Das Bürgerportal hat das Aufruflimit von 50 Anfragen je Sekunde überschritten."
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    VoruebergehendNichtVerfuegbar:
+      description: "Die Schnittstelle ist vorübergehend nicht verfügbar; das Portal wiederholt den Aufruf später."
+      headers:
+        Retry-After:
+          $ref: '#/components/headers/RetryAfter'
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+  schemas:
+    Vorgangsnummer:
+      type: string
+      pattern: '^WG-[0-9]{4}-[0-9]{6}$'
+      description: "Eindeutige Kennung eines Vorgangs. Sie enthält keine personenbezogenen Daten."
+      examples: [WG-2026-004711]
+    Betrag:
+      type: integer
+      minimum: 0
+      description: "Betrag in Euro-Cent, ganzzahlig, um Rundungsfehler zu vermeiden."
+    Personenreferenz:
+      type: string
+      pattern: '^P[0-9]{1,2}$'
+      description: |
+        Verweis auf eine Person innerhalb des Antrags. `P1` ist immer die antragstellende Person,
+        `P2` bis `P20` sind weitere Haushaltsmitglieder in der Reihenfolge der Liste `haushaltsmitglieder`.
+    Antragsart:
+      type: string
+      enum: [mietzuschuss, lastenzuschuss]
+      description: |
+        Mietzuschuss für Mieterinnen und Mieter (§ 3 Abs. 1 WoGG), Lastenzuschuss für Eigentümerinnen
+        und Eigentümer selbst genutzten Wohnraums (§ 3 Abs. 2 WoGG). Nach der Antragsart richtet sich,
+        ob `miete` oder `belastung` angegeben wird.
+    Antrag:
+      type: object
+      description: "Erstantrag auf Wohngeld für einen Haushalt."
+      x-loeschfrist: "6 Jahre nach Ende des letzten Bewilligungszeitraums; bei Ablehnung 3 Jahre; bei Rücknahme 1 Jahr (Löschkonzept 1.3, Abschnitt 6)"
+      required:
+        - antragsart
+        - antragstellendePerson
+        - anschrift
+        - authentisierung
+        - wohnung
+        - einkommen
+        - bankverbindung
+        - bescheidzustellung
+        - erklaerungen
+      properties:
+        antragsart:
+          $ref: '#/components/schemas/Antragsart'
+        gewuenschterBeginn:
+          type: string
+          format: date
+          description: |
+            Monat, ab dem Wohngeld beantragt wird, immer der Erste eines Monats. Wohngeld wird frühestens
+            ab dem Monat des Antragseingangs gezahlt (§ 25 Abs. 2 WoGG).
+          x-rechtsgrund: "§ 25 WoGG"
+        antragstellendePerson:
+          $ref: '#/components/schemas/AntragstellendePerson'
+        anschrift:
+          $ref: '#/components/schemas/Anschrift'
+        kontakt:
+          $ref: '#/components/schemas/Kontakt'
+        authentisierung:
+          $ref: '#/components/schemas/Authentisierung'
+        haushaltsmitglieder:
+          type: array
+          maxItems: 19
+          description: |
+            Weitere Haushaltsmitglieder neben der antragstellenden Person (§ 5 WoGG). Die Reihenfolge
+            bestimmt die Personenreferenzen `P2`, `P3` usw.
+          items:
+            $ref: '#/components/schemas/Haushaltsmitglied'
+          x-rechtsgrund: "§§ 4 bis 8 WoGG"
+        wohnung:
+          $ref: '#/components/schemas/Wohnung'
+        miete:
+          $ref: '#/components/schemas/Miete'
+        belastung:
+          $ref: '#/components/schemas/Belastung'
+        einkommen:
+          type: array
+          minItems: 1
+          maxItems: 100
+          description: |
+            Alle Einkünfte aller Haushaltsmitglieder in den zwölf Monaten ab dem gewünschten Beginn
+            (§§ 14, 15 WoGG). Für Haushaltsmitglieder ohne Einkommen wird ein Eintrag mit der
+            Einkunftsart `keine` angegeben.
+          items:
+            $ref: '#/components/schemas/Einkommen'
+          x-rechtsgrund: "§§ 13 bis 16 WoGG"
+        freibetraege:
+          $ref: '#/components/schemas/Freibetraege'
+        bankverbindung:
+          $ref: '#/components/schemas/Bankverbindung'
+        bescheidzustellung:
+          $ref: '#/components/schemas/Bescheidzustellung'
+        angekuendigteNachweise:
+          type: array
+          maxItems: 30
+          description: |
+            Nachweise, die das Portal im Anschluss übermittelt. Die Wohngeldstelle erkennt daran, ob ein
+            Antrag vollständig eingegangen ist.
+          items:
+            $ref: '#/components/schemas/NachweisTyp'
+        erklaerungen:
+          $ref: '#/components/schemas/Erklaerungen'
+    AntragstellendePerson:
+      type: object
+      description: "Die antragstellende Person, Personenreferenz P1. Sie muss volljährig sein."
+      required: [familienname, vornamen, geburtsdatum, familienstand, staatsangehoerigkeitGruppe]
+      properties:
+        familienname:
+          type: string
+          maxLength: 120
+          x-rechtsgrund: "§ 3 WoGG, Identifikation"
+        vornamen:
+          type: string
+          maxLength: 120
+          x-rechtsgrund: "§ 3 WoGG, Identifikation"
+        geburtsname:
+          type: string
+          maxLength: 120
+          description: "Nur wenn abweichend vom Familiennamen; dient dem Abgleich mit Bescheiden anderer Stellen."
+          x-rechtsgrund: "§ 3 WoGG, Identifikation"
+        geburtsdatum:
+          type: string
+          format: date
+          x-rechtsgrund: "§ 3 WoGG, Volljährigkeit; § 17 WoGG, Altersgrenzen bei Freibeträgen"
+        familienstand:
+          type: string
+          enum: [ledig, verheiratet, eingetragene_lebenspartnerschaft, getrennt_lebend, geschieden, verwitwet]
+          description: "Familienstand zur Bestimmung der Haushaltsmitglieder nach § 5 WoGG."
+          x-rechtsgrund: "§ 5 WoGG"
+        staatsangehoerigkeitGruppe:
+          type: string
+          enum: [deutsch, eu_ewr_schweiz, drittstaat]
+          description: |
+            Nur die Gruppe, nicht die konkrete Staatsangehörigkeit. Bei `drittstaat` ist der
+            Aufenthaltstitel anzugeben (§ 3 Abs. 5 WoGG).
+          x-rechtsgrund: "§ 3 Abs. 5 WoGG"
+        aufenthaltstitel:
+          $ref: '#/components/schemas/Aufenthaltstitel'
+    Aufenthaltstitel:
+      type: object
+      description: "Nur bei Staatsangehörigkeit eines Drittstaats. Sonst nicht angeben."
+      required: [art, gueltigBis]
+      properties:
+        art:
+          type: string
+          enum: [aufenthaltserlaubnis, niederlassungserlaubnis, erlaubnis_daueraufenthalt_eu, blaue_karte_eu, aufenthaltsgestattung, duldung]
+          x-rechtsgrund: "§ 3 Abs. 5 WoGG"
+        gueltigBis:
+          type: string
+          format: date
+          description: "Ende der Gültigkeit; bei unbefristeten Titeln leer lassen."
+    Anschrift:
+      type: object
+      description: "Anschrift der Wohnung, für die Wohngeld beantragt wird. Sie muss in Musterhausen liegen."
+      required: [strasse, hausnummer, postleitzahl, ort]
+      properties:
+        strasse:
+          type: string
+          maxLength: 120
+        hausnummer:
+          type: string
+          maxLength: 12
+        adresszusatz:
+          type: string
+          maxLength: 80
+          description: "Etwa Stockwerk oder Hinterhaus, wenn für die Zustellung nötig."
+        postleitzahl:
+          type: string
+          pattern: '^[0-9]{5}$'
+        ort:
+          type: string
+          const: Musterhausen
+    Kontakt:
+      type: object
+      description: |
+        Freiwillige Kontaktdaten für Rückfragen der Sachbearbeitung. Ohne Kontaktdaten fragt die
+        Wohngeldstelle per Post nach.
+      properties:
+        telefon:
+          type: string
+          maxLength: 30
+        email:
+          type: string
+          format: email
+      x-rechtsgrund: "Art. 6 Abs. 1 lit. a DSGVO, freiwillige Angabe"
+    Authentisierung:
+      type: object
+      description: |
+        Angaben des Bürgerportals zur Anmeldung der antragstellenden Person. Die Schnittstelle speichert
+        keine Zugangsdaten, nur das Vertrauensniveau und eine pseudonyme Postfachreferenz.
+      required: [vertrauensniveau, postfachReferenz]
+      properties:
+        vertrauensniveau:
+          type: string
+          enum: [substanziell, hoch]
+          description: "Vertrauensniveau der Anmeldung im Nutzerkonto; niedriger als substanziell ist nicht zulässig."
+        postfachReferenz:
+          type: string
+          maxLength: 64
+          description: "Pseudonyme Kennung des Postfachs im Nutzerkonto, nur für die Zustellung des Bescheids."
+    Haushaltsmitglied:
+      type: object
+      description: "Ein weiteres Haushaltsmitglied nach § 5 WoGG."
+      required: [familienname, vornamen, geburtsdatum, verwandtschaftsverhaeltnis, imHaushaltSeit]
+      properties:
+        familienname:
+          type: string
+          maxLength: 120
+        vornamen:
+          type: string
+          maxLength: 120
+        geburtsdatum:
+          type: string
+          format: date
+          x-rechtsgrund: "§ 5 WoGG; § 17 WoGG, Altersgrenzen"
+        verwandtschaftsverhaeltnis:
+          type: string
+          enum: [ehegatte, lebenspartner, partner_verantwortungsgemeinschaft, kind, pflegekind, elternteil, geschwister, sonstige_verwandte, schwiegereltern]
+          description: "Verhältnis zur antragstellenden Person."
+          x-rechtsgrund: "§ 5 Abs. 1 WoGG"
+        imHaushaltSeit:
+          type: string
+          format: date
+        voruebergehendAbwesend:
+          type: boolean
+          default: false
+          description: "Etwa wegen Studium oder Wehrdienst; das Mitglied zählt weiter zum Haushalt (§ 5 Abs. 2 WoGG)."
+        bezugTransferleistung:
+          type: string
+          enum: [keine, buergergeld, grundsicherung_alter_erwerbsminderung, hilfe_zum_lebensunterhalt, asylbewerberleistungen, ausbildungsfoerderung_mit_unterkunft]
+          default: keine
+          description: |
+            Bezieht das Mitglied eine Transferleistung, die die Kosten der Unterkunft bereits deckt, ist es
+            vom Wohngeld ausgeschlossen (§ 7 WoGG). Die Angabe ist dafür erforderlich.
+          x-rechtsgrund: "§ 7 WoGG"
+    Wohnung:
+      type: object
+      description: "Angaben zur Wohnung, für die Wohngeld beantragt wird."
+      required: [wohnflaeche, anzahlRaeume, einzugsdatum, nutzungsverhaeltnis]
+      properties:
+        wohnflaeche:
+          type: number
+          minimum: 5
+          maximum: 400
+          description: "Wohnfläche in Quadratmetern."
+          x-rechtsgrund: "§ 11 WoGG"
+        anzahlRaeume:
+          type: integer
+          minimum: 1
+          maximum: 20
+        einzugsdatum:
+          type: string
+          format: date
+        nutzungsverhaeltnis:
+          type: string
+          enum: [hauptmieter, untermieter, heimbewohner, eigentuemer, wohnungsberechtigter]
+          description: "Muss zur Antragsart passen: `eigentuemer` und `wohnungsberechtigter` nur beim Lastenzuschuss."
+          x-rechtsgrund: "§ 3 WoGG"
+        teilweiseGewerblichGenutzt:
+          type: boolean
+          default: false
+          description: "Wird ein Teil der Wohnung gewerblich genutzt, wird die Miete anteilig gekürzt (§ 11 Abs. 2 WoGG)."
+        untervermieteteFlaeche:
+          type: number
+          minimum: 0
+          description: "Untervermietete Fläche in Quadratmetern; die Einnahmen stehen in `miete.einnahmenUntervermietung`."
+        vermieter:
+          $ref: '#/components/schemas/Vermieter'
+    Vermieter:
+      type: object
+      description: |
+        Name und Anschrift der Vermieterin oder des Vermieters. Die Wohngeldstelle braucht sie nur, um die
+        Mietbescheinigung zuzuordnen; sie nimmt mit der Vermieterseite nur Kontakt auf, wenn die
+        Mietbescheinigung fehlt oder unklar ist (§ 23 Abs. 3 WoGG).
+      required: [name, anschrift]
+      properties:
+        name:
+          type: string
+          maxLength: 200
+        anschrift:
+          type: string
+          maxLength: 300
+      x-rechtsgrund: "§ 23 Abs. 3 WoGG"
+    Miete:
+      type: object
+      description: |
+        Monatliche Miete nach § 9 WoGG. Nur beim Mietzuschuss. Heizkosten und Warmwasser werden getrennt
+        angegeben, weil sie nicht zur berücksichtigungsfähigen Miete zählen; die Heizkostenkomponente nach
+        § 12 Abs. 6 WoGG berechnet das Fachverfahren.
+      required: [grundmiete, kalteNebenkosten, heizkostenEnthalten]
+      properties:
+        grundmiete:
+          $ref: '#/components/schemas/Betrag'
+        kalteNebenkosten:
+          $ref: '#/components/schemas/Betrag'
+        heizkostenEnthalten:
+          type: boolean
+          description: "Sind Heizkosten in der Vorauszahlung an die Vermieterseite enthalten?"
+        heizkosten:
+          $ref: '#/components/schemas/Betrag'
+        warmwasserkosten:
+          $ref: '#/components/schemas/Betrag'
+        zuschlagMoeblierung:
+          $ref: '#/components/schemas/Betrag'
+        zuschlagGarageStellplatz:
+          $ref: '#/components/schemas/Betrag'
+        einnahmenUntervermietung:
+          $ref: '#/components/schemas/Betrag'
+        mietvertragVom:
+          type: string
+          format: date
+      x-rechtsgrund: "§§ 9, 11, 12 WoGG"
+    Belastung:
+      type: object
+      description: |
+        Monatliche Belastung aus Kapitaldienst und Bewirtschaftung nach § 10 WoGG. Nur beim Lastenzuschuss.
+        Die Bewirtschaftungskosten setzt das Fachverfahren pauschal an; hier stehen nur die Angaben, die
+        die Wohngeldstelle nicht selbst kennt.
+      required: [darlehen, grundsteuerJaehrlich]
+      properties:
+        darlehen:
+          type: array
+          maxItems: 10
+          items:
+            $ref: '#/components/schemas/Darlehen'
+        grundsteuerJaehrlich:
+          $ref: '#/components/schemas/Betrag'
+        erbbauzinsJaehrlich:
+          $ref: '#/components/schemas/Betrag'
+        verwaltungskostenJaehrlich:
+          $ref: '#/components/schemas/Betrag'
+      x-rechtsgrund: "§ 10 WoGG"
+    Darlehen:
+      type: object
+      description: "Ein Darlehen zur Finanzierung des selbst genutzten Wohnraums."
+      required: [art, zinsenJaehrlich, tilgungJaehrlich]
+      properties:
+        art:
+          type: string
+          enum: [hypothekendarlehen, bauspardarlehen, foerderdarlehen, privatdarlehen]
+        zinsenJaehrlich:
+          $ref: '#/components/schemas/Betrag'
+        tilgungJaehrlich:
+          $ref: '#/components/schemas/Betrag'
+        restschuld:
+          $ref: '#/components/schemas/Betrag'
+    Einkunftsart:
+      type: string
+      enum:
+        - keine
+        - nichtselbstaendige_arbeit
+        - minijob
+        - selbstaendige_arbeit
+        - gesetzliche_rente
+        - betriebsrente
+        - beamtenversorgung
+        - unterhalt
+        - unterhaltsvorschuss
+        - elterngeld
+        - arbeitslosengeld
+        - krankengeld
+        - bafoeg_ohne_unterkunft
+        - kapitalertraege
+        - vermietung_verpachtung
+        - sonstige
+      description: |
+        Art der Einkünfte nach § 14 WoGG. Kindergeld zählt nicht zum Einkommen und wird nicht erfasst.
+        Bei `sonstige` ist eine kurze Bezeichnung in `bezeichnung` Pflicht.
+    Einkommen:
+      type: object
+      description: "Eine Einkunft eines Haushaltsmitglieds im Bewilligungszeitraum."
+      required: [person, art, bruttoJaehrlich]
+      properties:
+        person:
+          $ref: '#/components/schemas/Personenreferenz'
+        art:
+          $ref: '#/components/schemas/Einkunftsart'
+        bezeichnung:
+          type: string
+          maxLength: 100
+          description: "Nur bei `art = sonstige`, etwa „Aufwandsentschädigung Ehrenamt“."
+        bruttoJaehrlich:
+          $ref: '#/components/schemas/Betrag'
+        werbungskostenJaehrlich:
+          $ref: '#/components/schemas/Betrag'
+        steuernEntrichtet:
+          type: boolean
+          description: "Werden Steuern vom Einkommen entrichtet? Grundlage für den pauschalen Abzug nach § 16 WoGG."
+        krankenPflegeversicherungEntrichtet:
+          type: boolean
+          description: "Werden Pflichtbeiträge zur Kranken- und Pflegeversicherung entrichtet? (§ 16 WoGG)"
+        rentenversicherungEntrichtet:
+          type: boolean
+          description: "Werden Pflichtbeiträge zur Rentenversicherung entrichtet? (§ 16 WoGG)"
+        befristetBis:
+          type: string
+          format: date
+          description: "Endet die Einkunft im Bewilligungszeitraum, etwa Elterngeld, das Datum des Endes."
+      x-rechtsgrund: "§§ 14 bis 16 WoGG"
+    Freibetraege:
+      type: object
+      description: |
+        Freibeträge nach § 17 WoGG. Alle Angaben sind freiwillig; ohne Angabe berücksichtigt die
+        Wohngeldstelle den Freibetrag nicht. Nur die Angabe zur Schwerbehinderung ist eine besondere
+        Kategorie personenbezogener Daten (Art. 9 Abs. 1 DSGVO).
+      properties:
+        schwerbehinderung:
+          type: array
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/FreibetragSchwerbehinderung'
+        alleinerziehend:
+          type: boolean
+          default: false
+          description: "Die antragstellende Person lebt allein mit mindestens einem minderjährigen Kind im Haushalt."
+          x-rechtsgrund: "§ 17 WoGG"
+        kinderMitEigenemEinkommen:
+          type: array
+          maxItems: 19
+          description: "Kinder zwischen 16 und 25 Jahren mit eigenem Einkommen."
+          items:
+            $ref: '#/components/schemas/Personenreferenz'
+          x-rechtsgrund: "§ 17 WoGG"
+    FreibetragSchwerbehinderung:
+      type: object
+      description: |
+        Angabe zur Schwerbehinderung eines Haushaltsmitglieds für den Freibetrag nach § 17 Nr. 1 WoGG.
+        Besondere Kategorie personenbezogener Daten nach Art. 9 Abs. 1 DSGVO. Rechtsgrundlage: Art. 9
+        Abs. 2 lit. b DSGVO in Verbindung mit § 67b Abs. 1 SGB X und § 17 Nr. 1 WoGG. Es werden keine
+        Diagnosen erhoben, nur der Grad der Behinderung und die Pflegebedürftigkeit.
+      required: [person, gradDerBehinderung]
+      properties:
+        person:
+          $ref: '#/components/schemas/Personenreferenz'
+        gradDerBehinderung:
+          type: integer
+          minimum: 20
+          maximum: 100
+          multipleOf: 10
+          description: "Grad der Behinderung laut Schwerbehindertenausweis oder Feststellungsbescheid."
+        pflegebeduerftig:
+          type: boolean
+          default: false
+          description: "Nur relevant bei einem GdB unter 100: Pflegebedürftigkeit im Sinne von § 14 SGB XI."
+        haeuslichePflege:
+          type: boolean
+          default: false
+          description: "Nur relevant bei einem GdB unter 100: Die Pflege findet im Haushalt statt."
+        ausweisGueltigBis:
+          type: string
+          format: date
+          description: "Gültigkeit des Ausweises; bei unbefristetem Ausweis leer lassen."
+      x-rechtsgrund: "Art. 9 Abs. 2 lit. b DSGVO, § 67b Abs. 1 SGB X, § 17 Nr. 1 WoGG"
+      x-loeschfrist: "wie der zugehörige Antrag; bei Wegfall des Freibetrags 1 Jahr nach Ende des Kalenderjahres (Löschkonzept 1.3)"
+    Bankverbindung:
+      type: object
+      description: "Konto für die Auszahlung des Wohngelds."
+      required: [kontoinhaber, iban]
+      properties:
+        kontoinhaber:
+          type: string
+          maxLength: 120
+        iban:
+          type: string
+          pattern: '^[A-Z]{2}[0-9]{2}[A-Z0-9]{11,30}$'
+        bic:
+          type: string
+          pattern: '^[A-Z0-9]{8}([A-Z0-9]{3})?$'
+          description: "Nur bei Konten außerhalb Deutschlands erforderlich."
+      x-rechtsgrund: "§ 26 Abs. 1 WoGG, § 47 SGB I"
+    Bescheidzustellung:
+      type: object
+      description: |
+        Weg, auf dem die antragstellende Person den Bescheid erhält. Standard ist die Post. Die Zustellung
+        in das Postfach des Nutzerkontos setzt eine Einwilligung voraus, die jederzeit widerrufen werden kann.
+      required: [kanal]
+      properties:
+        kanal:
+          type: string
+          enum: [post, postfach]
+          default: post
+        einwilligungPostfach:
+          type: boolean
+          description: "Pflicht bei `kanal = postfach`; Zeitpunkt in `einwilligungErteiltAm`."
+        einwilligungErteiltAm:
+          type: string
+          format: date-time
+      x-rechtsgrund: "Art. 6 Abs. 1 lit. a DSGVO"
+    Erklaerungen:
+      type: object
+      description: "Pflichterklärungen der antragstellenden Person vor dem Absenden."
+      required:
+        - angabenVollstaendigUndWahr
+        - mitwirkungspflichtenBekannt
+        - aenderungspflichtBekannt
+        - datenschutzhinweiseZurKenntnisGenommen
+      properties:
+        angabenVollstaendigUndWahr:
+          type: boolean
+          const: true
+        mitwirkungspflichtenBekannt:
+          type: boolean
+          const: true
+          description: "Hinweis auf die Mitwirkungspflichten nach §§ 60 bis 67 SGB I."
+        aenderungspflichtBekannt:
+          type: boolean
+          const: true
+          description: "Hinweis auf die Pflicht, Änderungen nach § 27 WoGG unverzüglich mitzuteilen."
+        datenschutzhinweiseZurKenntnisGenommen:
+          type: boolean
+          const: true
+          description: "Die Datenschutzhinweise nach Art. 13 DSGVO wurden vor dem Absenden angezeigt."
+        abgegebenAm:
+          type: string
+          format: date-time
+    NachweisTyp:
+      type: string
+      enum:
+        - mietbescheinigung
+        - mietvertrag
+        - lohnabrechnung
+        - arbeitgeberbescheinigung
+        - rentenbescheid
+        - versorgungsbezuege
+        - elterngeldbescheid
+        - arbeitslosengeldbescheid
+        - krankengeldbescheinigung
+        - unterhaltsnachweis
+        - unterhaltsvorschussbescheid
+        - einkommensteuerbescheid
+        - schwerbehindertenausweis
+        - feststellungsbescheid_gdb
+        - pflegegradbescheid
+        - darlehensnachweis
+        - grundsteuerbescheid
+        - aufenthaltstitel
+        - immatrikulationsbescheinigung
+      description: |
+        Zulässige Typen von Nachweisen. Kontoauszüge, Arztberichte und Atteste sind ausdrücklich keine
+        zulässigen Nachweise. Beim Schwerbehindertenausweis, beim Feststellungsbescheid und beim
+        Pflegegradbescheid genügt die Seite mit GdB, Pflegegrad und Gültigkeit.
+    Nachweis:
+      type: object
+      description: "Ein einzelner Nachweis zu einem Antrag."
+      x-loeschfrist: "wie der zugehörige Antrag (Löschkonzept 1.3, Abschnitt 6)"
+      required: [typ, person, dateiname, mediaType, sha256, inhaltBase64]
+      properties:
+        typ:
+          $ref: '#/components/schemas/NachweisTyp'
+        person:
+          $ref: '#/components/schemas/Personenreferenz'
+        dateiname:
+          type: string
+          maxLength: 120
+          pattern: '^[A-Za-z0-9._-]+$'
+          description: "Dateiname ohne Pfad; das Portal ersetzt Umlaute und Leerzeichen."
+        mediaType:
+          type: string
+          enum: [application/pdf, image/jpeg, image/png]
+        sha256:
+          type: string
+          pattern: '^[a-f0-9]{64}$'
+          description: "Prüfsumme des dekodierten Inhalts; die Schnittstelle vergleicht sie beim Eingang."
+        inhaltBase64:
+          type: string
+          contentEncoding: base64
+          maxLength: 6990508
+          description: "Inhalt Base64-kodiert, dekodiert höchstens 5 MB."
+    NachweisBestaetigung:
+      type: object
+      required: [vorgangsnummer, nachweisId, eingegangenAm]
+      properties:
+        vorgangsnummer:
+          $ref: '#/components/schemas/Vorgangsnummer'
+        nachweisId:
+          type: string
+          format: uuid
+        eingegangenAm:
+          type: string
+          format: date-time
+        hinweis:
+          type: string
+          description: "Etwa „Der Nachweis wird geprüft und anschließend dem Antrag zugeordnet.“"
+    Weiterleistungsantrag:
+      type: object
+      description: |
+        Antrag auf Wohngeld für den nächsten Bewilligungszeitraum. Er verweist auf den laufenden Vorgang.
+        Haben sich Haushalt, Einkommen oder Miete nicht geändert, genügt `keineAenderungen = true`; die
+        Wohngeldstelle fordert dann nur aktuelle Einkommensnachweise an.
+      x-loeschfrist: "wie Antrag (Löschkonzept 1.3, Abschnitt 6)"
+      required: [laufenderVorgang, keineAenderungen, bankverbindungUnveraendert, erklaerungen]
+      properties:
+        laufenderVorgang:
+          $ref: '#/components/schemas/Vorgangsnummer'
+        keineAenderungen:
+          type: boolean
+        haushaltsmitglieder:
+          type: array
+          maxItems: 19
+          items:
+            $ref: '#/components/schemas/Haushaltsmitglied'
+        miete:
+          $ref: '#/components/schemas/Miete'
+        belastung:
+          $ref: '#/components/schemas/Belastung'
+        einkommen:
+          type: array
+          maxItems: 100
+          items:
+            $ref: '#/components/schemas/Einkommen'
+        freibetraege:
+          $ref: '#/components/schemas/Freibetraege'
+        bankverbindungUnveraendert:
+          type: boolean
+        bankverbindung:
+          $ref: '#/components/schemas/Bankverbindung'
+        erklaerungen:
+          $ref: '#/components/schemas/Erklaerungen'
+    Aenderungsmitteilung:
+      type: object
+      description: "Mitteilung einer Änderung nach § 27 WoGG während des Bewilligungszeitraums."
+      x-loeschfrist: "wie der zugehörige Antrag (Löschkonzept 1.3, Abschnitt 6)"
+      required: [art, wirksamAb]
+      properties:
+        art:
+          type: string
+          enum:
+            - einzug_haushaltsmitglied
+            - auszug_haushaltsmitglied
+            - tod_haushaltsmitglied
+            - einkommen_erhoeht
+            - miete_gesenkt
+            - umzug_innerhalb_musterhausen
+            - umzug_ausserhalb_musterhausen
+            - transferleistung_bewilligt
+        wirksamAb:
+          type: string
+          format: date
+        person:
+          $ref: '#/components/schemas/Personenreferenz'
+        neuesHaushaltsmitglied:
+          $ref: '#/components/schemas/Haushaltsmitglied'
+        neueEinkommen:
+          type: array
+          maxItems: 20
+          items:
+            $ref: '#/components/schemas/Einkommen'
+        neueMiete:
+          $ref: '#/components/schemas/Miete'
+        neueAnschrift:
+          $ref: '#/components/schemas/Anschrift'
+        erlaeuterung:
+          type: string
+          maxLength: 500
+          description: |
+            Kurze Erläuterung, falls die Art allein nicht ausreicht. Das Portal weist darauf hin, hier keine
+            Angaben zur Gesundheit oder zu Dritten außerhalb des Haushalts einzutragen.
+    Ruecknahme:
+      type: object
+      required: [erklaertAm]
+      properties:
+        erklaertAm:
+          type: string
+          format: date-time
+        grund:
+          type: string
+          enum: [kein_bedarf_mehr, antrag_fehlerhaft, umzug, sonstiger_grund]
+          description: "Freiwillige Angabe; ohne Grund ist die Rücknahme ebenso wirksam."
+    Eingangsbestaetigung:
+      type: object
+      required: [vorgangsnummer, eingegangenAm]
+      properties:
+        vorgangsnummer:
+          $ref: '#/components/schemas/Vorgangsnummer'
+        eingegangenAm:
+          type: string
+          format: date-time
+        fehlendeNachweise:
+          type: array
+          description: "Nachweise, die nach den Angaben im Antrag noch erwartet werden."
+          items:
+            $ref: '#/components/schemas/NachweisTyp'
+        naechsteSchritte:
+          type: string
+          description: "Text für die Anzeige im Bürgerportal."
+    Problem:
+      type: object
+      description: |
+        Fehlerbeschreibung nach RFC 9457. Fehlermeldungen enthalten nie Werte aus dem Antrag, nur den Pfad
+        des betroffenen Feldes und einen Fehlercode.
+      required: [type, title, status]
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+        detail:
+          type: string
+        instance:
+          type: string
+        fehler:
+          type: array
+          items:
+            type: object
+            required: [feld, code]
+            properties:
+              feld:
+                type: string
+                description: "JSON-Pointer auf das betroffene Feld, etwa /einkommen/2/bruttoJaehrlich."
+              code:
+                type: string
+                enum: [pflichtfeld_fehlt, format_ungueltig, wert_ausserhalb_bereich, widerspruch, nicht_zulaessig]
+              meldung:
+                type: string
+  examples:
+    MietzuschussFamilie:
+      summary: Mietzuschuss für eine vierköpfige Familie (fiktiv)
+      description: |
+        Ehepaar mit zwei Kindern, ein Einkommen aus nichtselbständiger Arbeit, ein Minijob, Elterngeld
+        bis Mitte des Bewilligungszeitraums. Alle Angaben sind erfunden.
+      value:
+        antragsart: mietzuschuss
+        gewuenschterBeginn: '2026-11-01'
+        antragstellendePerson:
+          familienname: Beispiel
+          vornamen: Jana
+          geburtsdatum: '1991-04-17'
+          familienstand: verheiratet
+          staatsangehoerigkeitGruppe: deutsch
+        anschrift:
+          strasse: Lindenallee
+          hausnummer: '14a'
+          adresszusatz: 3. OG links
+          postleitzahl: '99999'
+          ort: Musterhausen
+        kontakt:
+          email: jana.beispiel@example.org
+        authentisierung:
+          vertrauensniveau: substanziell
+          postfachReferenz: pf-7f3c9a21e4b04d1c
+        haushaltsmitglieder:
+          - familienname: Beispiel
+            vornamen: Tobias
+            geburtsdatum: '1989-09-02'
+            verwandtschaftsverhaeltnis: ehegatte
+            imHaushaltSeit: '2019-03-01'
+          - familienname: Beispiel
+            vornamen: Lea
+            geburtsdatum: '2020-06-23'
+            verwandtschaftsverhaeltnis: kind
+            imHaushaltSeit: '2020-06-23'
+          - familienname: Beispiel
+            vornamen: Noah
+            geburtsdatum: '2026-01-11'
+            verwandtschaftsverhaeltnis: kind
+            imHaushaltSeit: '2026-01-11'
+        wohnung:
+          wohnflaeche: 84.5
+          anzahlRaeume: 4
+          einzugsdatum: '2019-03-01'
+          nutzungsverhaeltnis: hauptmieter
+          vermieter:
+            name: Wohnungsbaugesellschaft Musterhausen mbH
+            anschrift: Am Rathausplatz 1, 99999 Musterhausen
+        miete:
+          grundmiete: 69800
+          kalteNebenkosten: 18500
+          heizkostenEnthalten: true
+          heizkosten: 9500
+          warmwasserkosten: 2400
+          mietvertragVom: '2019-01-15'
+        einkommen:
+          - person: P1
+            art: elterngeld
+            bruttoJaehrlich: 540000
+            befristetBis: '2027-01-10'
+          - person: P1
+            art: minijob
+            bruttoJaehrlich: 216000
+            steuernEntrichtet: false
+            krankenPflegeversicherungEntrichtet: false
+            rentenversicherungEntrichtet: false
+          - person: P2
+            art: nichtselbstaendige_arbeit
+            bruttoJaehrlich: 3420000
+            werbungskostenJaehrlich: 123000
+            steuernEntrichtet: true
+            krankenPflegeversicherungEntrichtet: true
+            rentenversicherungEntrichtet: true
+          - person: P3
+            art: keine
+            bruttoJaehrlich: 0
+          - person: P4
+            art: keine
+            bruttoJaehrlich: 0
+        freibetraege:
+          alleinerziehend: false
+        bankverbindung:
+          kontoinhaber: Jana Beispiel
+          iban: DE00123456780123456789
+        bescheidzustellung:
+          kanal: postfach
+          einwilligungPostfach: true
+          einwilligungErteiltAm: '2026-10-05T18:42:10+02:00'
+        angekuendigteNachweise:
+          - mietbescheinigung
+          - elterngeldbescheid
+          - lohnabrechnung
+          - lohnabrechnung
+          - lohnabrechnung
+          - arbeitgeberbescheinigung
+        erklaerungen:
+          angabenVollstaendigUndWahr: true
+          mitwirkungspflichtenBekannt: true
+          aenderungspflichtBekannt: true
+          datenschutzhinweiseZurKenntnisGenommen: true
+          abgegebenAm: '2026-10-05T18:44:57+02:00'
+    MietzuschussMitFreibetragSchwerbehinderung:
+      summary: Mietzuschuss für ein Ehepaar im Ruhestand mit Freibetrag Schwerbehinderung (fiktiv)
+      description: |
+        Rentnerehepaar, der Ehemann hat einen GdB von 100. Der Freibetrag nach § 17 Nr. 1 WoGG wird
+        beantragt; als Nachweis dient die Vorderseite des Schwerbehindertenausweises. Alle Angaben sind
+        erfunden.
+      value:
+        antragsart: mietzuschuss
+        gewuenschterBeginn: '2026-11-01'
+        antragstellendePerson:
+          familienname: Mustermann
+          vornamen: Gisela
+          geburtsname: Probe
+          geburtsdatum: '1953-02-08'
+          familienstand: verheiratet
+          staatsangehoerigkeitGruppe: deutsch
+        anschrift:
+          strasse: Am Mühlbach
+          hausnummer: '3'
+          postleitzahl: '99999'
+          ort: Musterhausen
+        kontakt:
+          telefon: '+49 9999 123456'
+        authentisierung:
+          vertrauensniveau: hoch
+          postfachReferenz: pf-01b8d6e2c9f34a77
+        haushaltsmitglieder:
+          - familienname: Mustermann
+            vornamen: Werner
+            geburtsdatum: '1950-11-30'
+            verwandtschaftsverhaeltnis: ehegatte
+            imHaushaltSeit: '1976-05-01'
+        wohnung:
+          wohnflaeche: 61.0
+          anzahlRaeume: 2
+          einzugsdatum: '2004-08-01'
+          nutzungsverhaeltnis: hauptmieter
+          vermieter:
+            name: Erbengemeinschaft Beispielhaus
+            anschrift: Postfach 1234, 99999 Musterhausen
+        miete:
+          grundmiete: 47500
+          kalteNebenkosten: 14000
+          heizkostenEnthalten: false
+          mietvertragVom: '2004-06-20'
+        einkommen:
+          - person: P1
+            art: gesetzliche_rente
+            bruttoJaehrlich: 1062000
+            steuernEntrichtet: false
+            krankenPflegeversicherungEntrichtet: true
+            rentenversicherungEntrichtet: false
+          - person: P2
+            art: gesetzliche_rente
+            bruttoJaehrlich: 1488000
+            steuernEntrichtet: false
+            krankenPflegeversicherungEntrichtet: true
+            rentenversicherungEntrichtet: false
+          - person: P2
+            art: betriebsrente
+            bruttoJaehrlich: 216000
+            steuernEntrichtet: false
+            krankenPflegeversicherungEntrichtet: true
+            rentenversicherungEntrichtet: false
+        freibetraege:
+          schwerbehinderung:
+            - person: P2
+              gradDerBehinderung: 100
+        bankverbindung:
+          kontoinhaber: Gisela Mustermann
+          iban: DE00987654320000123456
+        bescheidzustellung:
+          kanal: post
+        angekuendigteNachweise:
+          - mietbescheinigung
+          - rentenbescheid
+          - rentenbescheid
+          - versorgungsbezuege
+          - schwerbehindertenausweis
+        erklaerungen:
+          angabenVollstaendigUndWahr: true
+          mitwirkungspflichtenBekannt: true
+          aenderungspflichtBekannt: true
+          datenschutzhinweiseZurKenntnisGenommen: true
+          abgegebenAm: '2026-10-07T10:15:03+02:00'
+    LastenzuschussEigentum:
+      summary: Lastenzuschuss für eine alleinerziehende Eigentümerin (fiktiv)
+      description: |
+        Alleinerziehende Mutter mit einem Kind in einer Eigentumswohnung, ein Hypothekendarlehen und ein
+        Förderdarlehen, Unterhaltsvorschuss für das Kind. Alle Angaben sind erfunden.
+      value:
+        antragsart: lastenzuschuss
+        gewuenschterBeginn: '2026-12-01'
+        antragstellendePerson:
+          familienname: Test
+          vornamen: Sabine
+          geburtsdatum: '1984-12-03'
+          familienstand: geschieden
+          staatsangehoerigkeitGruppe: eu_ewr_schweiz
+        anschrift:
+          strasse: Birkenweg
+          hausnummer: '27'
+          postleitzahl: '99999'
+          ort: Musterhausen
+        authentisierung:
+          vertrauensniveau: substanziell
+          postfachReferenz: pf-c4e0a9b7d2614f08
+        haushaltsmitglieder:
+          - familienname: Test
+            vornamen: Mia
+            geburtsdatum: '2014-07-19'
+            verwandtschaftsverhaeltnis: kind
+            imHaushaltSeit: '2014-07-19'
+        wohnung:
+          wohnflaeche: 72.3
+          anzahlRaeume: 3
+          einzugsdatum: '2012-10-01'
+          nutzungsverhaeltnis: eigentuemer
+        belastung:
+          darlehen:
+            - art: hypothekendarlehen
+              zinsenJaehrlich: 312000
+              tilgungJaehrlich: 288000
+              restschuld: 8640000
+            - art: foerderdarlehen
+              zinsenJaehrlich: 21000
+              tilgungJaehrlich: 96000
+              restschuld: 1150000
+          grundsteuerJaehrlich: 31200
+          verwaltungskostenJaehrlich: 42000
+        einkommen:
+          - person: P1
+            art: nichtselbstaendige_arbeit
+            bruttoJaehrlich: 2940000
+            werbungskostenJaehrlich: 98000
+            steuernEntrichtet: true
+            krankenPflegeversicherungEntrichtet: true
+            rentenversicherungEntrichtet: true
+          - person: P2
+            art: unterhaltsvorschuss
+            bruttoJaehrlich: 380400
+        freibetraege:
+          alleinerziehend: true
+        bankverbindung:
+          kontoinhaber: Sabine Test
+          iban: DE00555555550000000042
+        bescheidzustellung:
+          kanal: postfach
+          einwilligungPostfach: true
+          einwilligungErteiltAm: '2026-10-08T21:03:44+02:00'
+        angekuendigteNachweise:
+          - darlehensnachweis
+          - darlehensnachweis
+          - grundsteuerbescheid
+          - lohnabrechnung
+          - lohnabrechnung
+          - lohnabrechnung
+          - unterhaltsvorschussbescheid
+        erklaerungen:
+          angabenVollstaendigUndWahr: true
+          mitwirkungspflichtenBekannt: true
+          aenderungspflichtBekannt: true
+          datenschutzhinweiseZurKenntnisGenommen: true
+          abgegebenAm: '2026-10-08T21:05:12+02:00'
+    NachweisMietbescheinigung:
+      summary: Mietbescheinigung als PDF (fiktiv, Inhalt gekürzt)
+      value:
+        typ: mietbescheinigung
+        person: P1
+        dateiname: mietbescheinigung_2026.pdf
+        mediaType: application/pdf
+        sha256: 3b7e5f0c9a1d4e2f8b6c0a9d7e5f3b1c2d4e6f8a0b2c4d6e8f0a1b3c5d7e9f1a
+        inhaltBase64: JVBERi0xLjcKJcfsj6IKMSAwIG9iago8PC9UeXBlL0NhdGFsb2cvUGFnZXMgMiAwIFI+PgplbmRvYmoK
+    NachweisSchwerbehindertenausweis:
+      summary: Vorderseite des Schwerbehindertenausweises als JPEG (fiktiv, Inhalt gekürzt)
+      description: |
+        Nur die Vorderseite mit GdB und Gültigkeit. Die Rückseite mit Merkzeichen wird nicht benötigt
+        und vom Portal nicht angefordert.
+      value:
+        typ: schwerbehindertenausweis
+        person: P2
+        dateiname: sb_ausweis_vorderseite.jpg
+        mediaType: image/jpeg
+        sha256: 9c1f7e3a5b2d4c6e8f0a1b3c5d7e9f2a4b6c8d0e1f3a5b7c9d2e4f6a8b0c1d3e
+        inhaltBase64: /9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAgGBgcGBQgHBwcJCQgKDBQNDAsLDBkSEw8UHRofHh0aHBwg
+    WeiterleistungMitAenderungen:
+      summary: Weiterleistungsantrag mit geändertem Einkommen (fiktiv)
+      description: |
+        Familie Beispiel beantragt die Weiterleistung. Das Elterngeld ist ausgelaufen, die Antragstellerin
+        arbeitet wieder in Teilzeit. Alle Angaben sind erfunden.
+      value:
+        laufenderVorgang: WG-2026-004711
+        keineAenderungen: false
+        einkommen:
+          - person: P1
+            art: nichtselbstaendige_arbeit
+            bruttoJaehrlich: 1680000
+            werbungskostenJaehrlich: 64000
+            steuernEntrichtet: true
+            krankenPflegeversicherungEntrichtet: true
+            rentenversicherungEntrichtet: true
+          - person: P2
+            art: nichtselbstaendige_arbeit
+            bruttoJaehrlich: 3510000
+            werbungskostenJaehrlich: 123000
+            steuernEntrichtet: true
+            krankenPflegeversicherungEntrichtet: true
+            rentenversicherungEntrichtet: true
+          - person: P3
+            art: keine
+            bruttoJaehrlich: 0
+          - person: P4
+            art: keine
+            bruttoJaehrlich: 0
+        bankverbindungUnveraendert: true
+        erklaerungen:
+          angabenVollstaendigUndWahr: true
+          mitwirkungspflichtenBekannt: true
+          aenderungspflichtBekannt: true
+          datenschutzhinweiseZurKenntnisGenommen: true
+          abgegebenAm: '2027-09-02T19:20:31+02:00'
+    AenderungAuszug:
+      summary: Änderungsmitteilung wegen Auszugs eines Haushaltsmitglieds (fiktiv)
+      value:
+        art: auszug_haushaltsmitglied
+        wirksamAb: '2027-03-01'
+        person: P3
+        erlaeuterung: Das Kind ist für die Ausbildung in eine eigene Wohnung gezogen.
+    AenderungEinkommen:
+      summary: Änderungsmitteilung wegen erhöhten Einkommens (fiktiv)
+      value:
+        art: einkommen_erhoeht
+        wirksamAb: '2027-02-01'
+        neueEinkommen:
+          - person: P2
+            art: nichtselbstaendige_arbeit
+            bruttoJaehrlich: 4140000
+            werbungskostenJaehrlich: 123000
+            steuernEntrichtet: true
+            krankenPflegeversicherungEntrichtet: true
+            rentenversicherungEntrichtet: true
+    MietzuschussUntermieteDrittstaat:
+      summary: Mietzuschuss für eine Untermieterin mit Aufenthaltserlaubnis (fiktiv)
+      description: |
+        Alleinlebende Pflegefachkraft in Ausbildung, Staatsangehörige eines Drittstaats mit
+        Aufenthaltserlaubnis, wohnt zur Untermiete in einem möblierten Zimmer. Alle Angaben sind erfunden.
+      value:
+        antragsart: mietzuschuss
+        gewuenschterBeginn: '2026-11-01'
+        antragstellendePerson:
+          familienname: Muster
+          vornamen: Ana Lucía
+          geburtsdatum: '2001-08-14'
+          familienstand: ledig
+          staatsangehoerigkeitGruppe: drittstaat
+          aufenthaltstitel:
+            art: aufenthaltserlaubnis
+            gueltigBis: '2028-09-30'
+        anschrift:
+          strasse: Kastanienstraße
+          hausnummer: '8'
+          adresszusatz: bei Probe, 1. OG
+          postleitzahl: '99999'
+          ort: Musterhausen
+        kontakt:
+          email: a.muster@example.org
+          telefon: '+49 9999 765432'
+        authentisierung:
+          vertrauensniveau: substanziell
+          postfachReferenz: pf-5d2e8b1f7a9c4036
+        wohnung:
+          wohnflaeche: 18.0
+          anzahlRaeume: 1
+          einzugsdatum: '2025-10-01'
+          nutzungsverhaeltnis: untermieter
+          vermieter:
+            name: Hans Probe
+            anschrift: Kastanienstraße 8, 99999 Musterhausen
+        miete:
+          grundmiete: 32000
+          kalteNebenkosten: 6000
+          heizkostenEnthalten: true
+          heizkosten: 4000
+          zuschlagMoeblierung: 5000
+          mietvertragVom: '2025-09-12'
+        einkommen:
+          - person: P1
+            art: nichtselbstaendige_arbeit
+            bezeichnung: Ausbildungsvergütung Pflegefachfrau
+            bruttoJaehrlich: 1488000
+            werbungskostenJaehrlich: 52000
+            steuernEntrichtet: false
+            krankenPflegeversicherungEntrichtet: true
+            rentenversicherungEntrichtet: true
+        bankverbindung:
+          kontoinhaber: Ana Lucía Muster
+          iban: DE00111122220000333344
+        bescheidzustellung:
+          kanal: postfach
+          einwilligungPostfach: true
+          einwilligungErteiltAm: '2026-10-03T12:01:09+02:00'
+        angekuendigteNachweise:
+          - mietbescheinigung
+          - mietvertrag
+          - lohnabrechnung
+          - lohnabrechnung
+          - lohnabrechnung
+          - aufenthaltstitel
+        erklaerungen:
+          angabenVollstaendigUndWahr: true
+          mitwirkungspflichtenBekannt: true
+          aenderungspflichtBekannt: true
+          datenschutzhinweiseZurKenntnisGenommen: true
+          abgegebenAm: '2026-10-03T12:04:40+02:00'
+    MietzuschussPflegeImHaushalt:
+      summary: Mietzuschuss für eine Tochter, die ihre pflegebedürftige Mutter im Haushalt pflegt (fiktiv)
+      description: |
+        Die Mutter hat einen GdB von 80, ist pflegebedürftig und wird im Haushalt gepflegt. Der Freibetrag
+        nach § 17 Nr. 1 WoGG wird beantragt; Nachweise sind der Feststellungsbescheid (Seite mit GdB) und
+        der Pflegegradbescheid (Seite mit Pflegegrad). Alle Angaben sind erfunden.
+      value:
+        antragsart: mietzuschuss
+        gewuenschterBeginn: '2026-12-01'
+        antragstellendePerson:
+          familienname: Beispiel
+          vornamen: Claudia
+          geburtsdatum: '1968-05-27'
+          familienstand: geschieden
+          staatsangehoerigkeitGruppe: deutsch
+        anschrift:
+          strasse: Schillerring
+          hausnummer: '41'
+          postleitzahl: '99999'
+          ort: Musterhausen
+        authentisierung:
+          vertrauensniveau: substanziell
+          postfachReferenz: pf-e81a0c3b5d7f4291
+        haushaltsmitglieder:
+          - familienname: Beispiel
+            vornamen: Ingrid
+            geburtsdatum: '1941-01-09'
+            verwandtschaftsverhaeltnis: elternteil
+            imHaushaltSeit: '2023-04-15'
+        wohnung:
+          wohnflaeche: 79.0
+          anzahlRaeume: 3
+          einzugsdatum: '2010-02-01'
+          nutzungsverhaeltnis: hauptmieter
+          vermieter:
+            name: Genossenschaft Wohnen am Fluss eG
+            anschrift: Uferstraße 2, 99999 Musterhausen
+        miete:
+          grundmiete: 61500
+          kalteNebenkosten: 17000
+          heizkostenEnthalten: true
+          heizkosten: 8800
+          warmwasserkosten: 2100
+          mietvertragVom: '2009-12-10'
+        einkommen:
+          - person: P1
+            art: nichtselbstaendige_arbeit
+            bruttoJaehrlich: 2280000
+            werbungskostenJaehrlich: 123000
+            steuernEntrichtet: true
+            krankenPflegeversicherungEntrichtet: true
+            rentenversicherungEntrichtet: true
+          - person: P2
+            art: gesetzliche_rente
+            bruttoJaehrlich: 1140000
+            steuernEntrichtet: false
+            krankenPflegeversicherungEntrichtet: true
+            rentenversicherungEntrichtet: false
+        freibetraege:
+          schwerbehinderung:
+            - person: P2
+              gradDerBehinderung: 80
+              pflegebeduerftig: true
+              haeuslichePflege: true
+        bankverbindung:
+          kontoinhaber: Claudia Beispiel
+          iban: DE00444455550000666677
+        bescheidzustellung:
+          kanal: post
+        angekuendigteNachweise:
+          - mietbescheinigung
+          - lohnabrechnung
+          - lohnabrechnung
+          - lohnabrechnung
+          - rentenbescheid
+          - feststellungsbescheid_gdb
+          - pflegegradbescheid
+        erklaerungen:
+          angabenVollstaendigUndWahr: true
+          mitwirkungspflichtenBekannt: true
+          aenderungspflichtBekannt: true
+          datenschutzhinweiseZurKenntnisGenommen: true
+          abgegebenAm: '2026-10-09T08:30:22+02:00'
+    WeiterleistungOhneAenderungen:
+      summary: Weiterleistungsantrag ohne Änderungen (fiktiv)
+      value:
+        laufenderVorgang: WG-2026-002390
+        keineAenderungen: true
+        bankverbindungUnveraendert: true
+        erklaerungen:
+          angabenVollstaendigUndWahr: true
+          mitwirkungspflichtenBekannt: true
+          aenderungspflichtBekannt: true
+          datenschutzhinweiseZurKenntnisGenommen: true
+          abgegebenAm: '2027-08-20T17:02:10+02:00'
+    AenderungUmzug:
+      summary: Änderungsmitteilung wegen Umzugs innerhalb von Musterhausen (fiktiv)
+      value:
+        art: umzug_innerhalb_musterhausen
+        wirksamAb: '2027-05-01'
+        neueAnschrift:
+          strasse: Ahornplatz
+          hausnummer: '5'
+          postleitzahl: '99999'
+          ort: Musterhausen
+        neueMiete:
+          grundmiete: 72000
+          kalteNebenkosten: 19000
+          heizkostenEnthalten: true
+          heizkosten: 9900
+          mietvertragVom: '2027-03-18'
+    RuecknahmeOhneGrund:
+      summary: Rücknahme eines Antrags ohne Angabe von Gründen (fiktiv)
+      value:
+        erklaertAm: '2026-10-21T09:12:45+02:00'
+    ProblemPflichtfeldFehlt:
+      summary: Fehlerantwort bei fehlender Mietangabe
+      description: "Die Fehlerantwort nennt nur den Pfad und den Code, nie Werte aus dem Antrag."
+      value:
+        type: https://api.wohngeld.musterhausen.example/probleme/plausibilitaet
+        title: Antrag fachlich unplausibel
+        status: 422
+        detail: Bei Antragsart mietzuschuss fehlt die Angabe zur Miete (PL-03).
+        instance: /v1/antraege
+        fehler:
+          - feld: /miete
+            code: pflichtfeld_fehlt
+            meldung: Bitte die monatliche Miete angeben.
+    ProblemNachweisFormat:
+      summary: Fehlerantwort bei unzulässigem Dateiformat
+      value:
+        type: https://api.wohngeld.musterhausen.example/probleme/format
+        title: Format nicht unterstützt
+        status: 415
+        detail: Der Nachweis ist kein PDF, JPEG oder PNG (PL-30).
+        instance: /v1/antraege/WG-2026-004711/nachweise
+        fehler:
+          - feld: /mediaType
+            code: format_ungueltig
+            meldung: Zulässig sind PDF, JPEG und PNG.
+x-plausibilitaetspruefungen:
+  beschreibung: |
+    Formale Prüfungen, die die Schnittstelle vor der Annahme durchführt. Schlägt eine Prüfung fehl,
+    antwortet die Schnittstelle mit `422` und dem Fehlercode im Feld `fehler[].code`. Die Prüfungen
+    entscheiden nie über den Anspruch; das tut allein die Sachbearbeitung im Fachverfahren.
+  regeln:
+    - id: PL-01
+      pruefung: Die antragstellende Person ist am Tag des Eingangs volljährig.
+      felder: [/antragstellendePerson/geburtsdatum]
+      code: nicht_zulaessig
+    - id: PL-02
+      pruefung: Der gewünschte Beginn ist der Erste eines Monats und liegt nicht vor dem Monat des Eingangs.
+      felder: [/gewuenschterBeginn]
+      code: wert_ausserhalb_bereich
+    - id: PL-03
+      pruefung: Bei Antragsart mietzuschuss ist `miete` angegeben und `belastung` leer.
+      felder: [/antragsart, /miete, /belastung]
+      code: widerspruch
+    - id: PL-04
+      pruefung: Bei Antragsart lastenzuschuss ist `belastung` angegeben und `miete` leer.
+      felder: [/antragsart, /miete, /belastung]
+      code: widerspruch
+    - id: PL-05
+      pruefung: Das Nutzungsverhältnis passt zur Antragsart (eigentuemer und wohnungsberechtigter nur beim Lastenzuschuss).
+      felder: [/wohnung/nutzungsverhaeltnis, /antragsart]
+      code: widerspruch
+    - id: PL-06
+      pruefung: Bei staatsangehoerigkeitGruppe drittstaat ist ein Aufenthaltstitel angegeben; sonst ist er leer.
+      felder: [/antragstellendePerson/staatsangehoerigkeitGruppe, /antragstellendePerson/aufenthaltstitel]
+      code: widerspruch
+    - id: PL-07
+      pruefung: Ein angegebener Aufenthaltstitel ist am gewünschten Beginn noch gültig.
+      felder: [/antragstellendePerson/aufenthaltstitel/gueltigBis]
+      code: wert_ausserhalb_bereich
+    - id: PL-08
+      pruefung: Jedes Haushaltsmitglied hat mindestens einen Eintrag in `einkommen`, gegebenenfalls mit Art keine.
+      felder: [/einkommen, /haushaltsmitglieder]
+      code: pflichtfeld_fehlt
+    - id: PL-09
+      pruefung: Jede Personenreferenz in `einkommen`, `freibetraege` und Nachweisen verweist auf eine vorhandene Person.
+      felder: [/einkommen/*/person, /freibetraege/schwerbehinderung/*/person]
+      code: widerspruch
+    - id: PL-10
+      pruefung: Bei `art = keine` ist `bruttoJaehrlich` gleich 0.
+      felder: [/einkommen/*/bruttoJaehrlich]
+      code: widerspruch
+    - id: PL-11
+      pruefung: Bei `art = sonstige` ist `bezeichnung` angegeben.
+      felder: [/einkommen/*/bezeichnung]
+      code: pflichtfeld_fehlt
+    - id: PL-12
+      pruefung: Werbungskosten sind nicht höher als das Bruttoeinkommen derselben Einkunft.
+      felder: [/einkommen/*/werbungskostenJaehrlich]
+      code: wert_ausserhalb_bereich
+    - id: PL-13
+      pruefung: Ein Haushaltsmitglied mit Transferleistung, die die Unterkunftskosten deckt, ist nicht die antragstellende Person.
+      felder: [/haushaltsmitglieder/*/bezugTransferleistung]
+      code: nicht_zulaessig
+    - id: PL-14
+      pruefung: Die Wohnfläche liegt zwischen 5 und 400 Quadratmetern; die untervermietete Fläche ist kleiner als die Wohnfläche.
+      felder: [/wohnung/wohnflaeche, /wohnung/untervermieteteFlaeche]
+      code: wert_ausserhalb_bereich
+    - id: PL-15
+      pruefung: Das Einzugsdatum liegt nicht in der Zukunft.
+      felder: [/wohnung/einzugsdatum]
+      code: wert_ausserhalb_bereich
+    - id: PL-16
+      pruefung: Bei `heizkostenEnthalten = true` ist `heizkosten` angegeben.
+      felder: [/miete/heizkosten]
+      code: pflichtfeld_fehlt
+    - id: PL-17
+      pruefung: Die Summe aus Grundmiete und kalten Nebenkosten ist größer als 0.
+      felder: [/miete/grundmiete, /miete/kalteNebenkosten]
+      code: wert_ausserhalb_bereich
+    - id: PL-18
+      pruefung: Beim Lastenzuschuss ist mindestens ein Darlehen oder ein Erbbauzins angegeben.
+      felder: [/belastung/darlehen, /belastung/erbbauzinsJaehrlich]
+      code: pflichtfeld_fehlt
+    - id: PL-19
+      pruefung: Ein Freibetrag Schwerbehinderung mit GdB unter 100 setzt `pflegebeduerftig` und `haeuslichePflege` voraus.
+      felder: [/freibetraege/schwerbehinderung/*]
+      code: widerspruch
+    - id: PL-20
+      pruefung: Zu jedem Freibetrag Schwerbehinderung ist ein Nachweis schwerbehindertenausweis oder feststellungsbescheid_gdb angekündigt.
+      felder: [/freibetraege/schwerbehinderung, /angekuendigteNachweise]
+      code: pflichtfeld_fehlt
+    - id: PL-21
+      pruefung: Bei `alleinerziehend = true` gibt es kein Haushaltsmitglied mit Verhältnis ehegatte, lebenspartner oder partner_verantwortungsgemeinschaft.
+      felder: [/freibetraege/alleinerziehend, /haushaltsmitglieder/*/verwandtschaftsverhaeltnis]
+      code: widerspruch
+    - id: PL-22
+      pruefung: Kinder in `kinderMitEigenemEinkommen` sind am gewünschten Beginn zwischen 16 und 25 Jahre alt und haben ein Einkommen.
+      felder: [/freibetraege/kinderMitEigenemEinkommen]
+      code: widerspruch
+    - id: PL-23
+      pruefung: Die IBAN hat eine gültige Prüfziffer. Ausnahme Testumgebung, dort sind fiktive IBAN mit Prüfziffer 00 zulässig.
+      felder: [/bankverbindung/iban]
+      code: format_ungueltig
+    - id: PL-24
+      pruefung: Bei `kanal = postfach` ist `einwilligungPostfach = true` mit Zeitpunkt angegeben.
+      felder: [/bescheidzustellung]
+      code: pflichtfeld_fehlt
+    - id: PL-25
+      pruefung: Alle Pflichterklärungen sind true.
+      felder: [/erklaerungen]
+      code: pflichtfeld_fehlt
+    - id: PL-26
+      pruefung: Ein Weiterleistungsantrag geht frühestens zwei Monate vor Ende des laufenden Bewilligungszeitraums ein.
+      felder: [/laufenderVorgang]
+      code: wert_ausserhalb_bereich
+    - id: PL-27
+      pruefung: Bei `keineAenderungen = true` sind Haushalt, Miete und Belastung leer.
+      felder: [/keineAenderungen]
+      code: widerspruch
+    - id: PL-28
+      pruefung: Eine Rücknahme ist nur möglich, solange kein Bescheid ergangen ist.
+      felder: [/erklaertAm]
+      code: nicht_zulaessig
+    - id: PL-29
+      pruefung: Die Prüfsumme eines Nachweises stimmt mit dem dekodierten Inhalt überein.
+      felder: [/sha256, /inhaltBase64]
+      code: format_ungueltig
+    - id: PL-30
+      pruefung: Der Medientyp eines Nachweises passt zu den ersten Bytes des Inhalts (PDF, JPEG oder PNG).
+      felder: [/mediaType, /inhaltBase64]
+      code: format_ungueltig
+x-feldzuordnung:
+  beschreibung: |
+    Zuordnung der Felder zum Landesformular „Antrag auf Mietzuschuss“ bzw. „Antrag auf Lastenzuschuss“
+    (fiktive Formularnummern WG-1 und WG-2, Stand 2026). Die Sachbearbeitung erkennt so, wo eine Angabe im
+    gewohnten Formular steht.
+  zuordnung:
+    - feld: /antragstellendePerson/familienname
+      formular: WG-1 Zeile 1, WG-2 Zeile 1
+      rechtsgrund: § 3 WoGG
+    - feld: /antragstellendePerson/vornamen
+      formular: WG-1 Zeile 2, WG-2 Zeile 2
+      rechtsgrund: § 3 WoGG
+    - feld: /antragstellendePerson/geburtsname
+      formular: WG-1 Zeile 3, WG-2 Zeile 3
+      rechtsgrund: § 3 WoGG
+    - feld: /antragstellendePerson/geburtsdatum
+      formular: WG-1 Zeile 4, WG-2 Zeile 4
+      rechtsgrund: §§ 3, 17 WoGG
+    - feld: /antragstellendePerson/familienstand
+      formular: WG-1 Zeile 5, WG-2 Zeile 5
+      rechtsgrund: § 5 WoGG
+    - feld: /antragstellendePerson/staatsangehoerigkeitGruppe
+      formular: WG-1 Zeile 6, WG-2 Zeile 6
+      rechtsgrund: § 3 Abs. 5 WoGG
+    - feld: /antragstellendePerson/aufenthaltstitel
+      formular: WG-1 Zeile 7, WG-2 Zeile 7
+      rechtsgrund: § 3 Abs. 5 WoGG
+    - feld: /anschrift
+      formular: WG-1 Zeilen 8 bis 10, WG-2 Zeilen 8 bis 10
+      rechtsgrund: § 3 WoGG, örtliche Zuständigkeit
+    - feld: /kontakt
+      formular: WG-1 Zeile 11, WG-2 Zeile 11 (freiwillig)
+      rechtsgrund: Art. 6 Abs. 1 lit. a DSGVO
+    - feld: /haushaltsmitglieder
+      formular: WG-1 Abschnitt B, WG-2 Abschnitt B
+      rechtsgrund: §§ 4 bis 8 WoGG
+    - feld: /haushaltsmitglieder/*/bezugTransferleistung
+      formular: WG-1 Abschnitt B Spalte 6, WG-2 Abschnitt B Spalte 6
+      rechtsgrund: § 7 WoGG
+    - feld: /wohnung
+      formular: WG-1 Abschnitt C, WG-2 Abschnitt C
+      rechtsgrund: §§ 9 bis 11 WoGG
+    - feld: /wohnung/vermieter
+      formular: WG-1 Abschnitt C Zeile 4
+      rechtsgrund: § 23 Abs. 3 WoGG
+    - feld: /miete
+      formular: WG-1 Abschnitt D
+      rechtsgrund: §§ 9, 11, 12 WoGG
+    - feld: /belastung
+      formular: WG-2 Abschnitt D
+      rechtsgrund: § 10 WoGG
+    - feld: /einkommen
+      formular: WG-1 Abschnitt E, WG-2 Abschnitt E
+      rechtsgrund: §§ 13 bis 16 WoGG
+    - feld: /freibetraege/schwerbehinderung
+      formular: WG-1 Abschnitt F Zeile 1, WG-2 Abschnitt F Zeile 1
+      rechtsgrund: Art. 9 Abs. 2 lit. b DSGVO, § 67b Abs. 1 SGB X, § 17 Nr. 1 WoGG
+    - feld: /freibetraege/alleinerziehend
+      formular: WG-1 Abschnitt F Zeile 3, WG-2 Abschnitt F Zeile 3
+      rechtsgrund: § 17 WoGG
+    - feld: /freibetraege/kinderMitEigenemEinkommen
+      formular: WG-1 Abschnitt F Zeile 4, WG-2 Abschnitt F Zeile 4
+      rechtsgrund: § 17 WoGG
+    - feld: /bankverbindung
+      formular: WG-1 Abschnitt G, WG-2 Abschnitt G
+      rechtsgrund: § 26 Abs. 1 WoGG, § 47 SGB I
+    - feld: /bescheidzustellung
+      formular: nur online
+      rechtsgrund: Art. 6 Abs. 1 lit. a DSGVO
+    - feld: /erklaerungen
+      formular: WG-1 Abschnitt H, WG-2 Abschnitt H
+      rechtsgrund: §§ 60 bis 67 SGB I, § 27 WoGG, Art. 13 DSGVO
+x-betrieb:
+  verfuegbarkeit: Montag bis Sonntag rund um die Uhr; geplante Wartung angekündigt im Bürgerportal, höchstens 4 Stunden im Monat.
+  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.
+  lastgrenzen: 50 Anfragen je Sekunde für das Bürgerportal; Anträge bis 256 KB, Nachweise bis 5 MB.
+  warteschlange: Nachrichten werden höchstens vier Tage gehalten; nach drei fehlgeschlagenen Verarbeitungen gehen sie in die Fehlerwarteschlange (Aufbewahrung 14 Tage).
+  wiederholungen: Das Bürgerportal wiederholt Aufrufe bei 429 und 503 mit dem Header Retry-After und demselben Idempotency-Key.
+  ansprechpartner: IT-Leitstelle der Stadt Musterhausen, it-leitstelle@musterhausen.example
+x-versionshistorie:
+  - version: 1.4.0
+    datum: '2026-09-18'
+    aenderungen: Lastenzuschuss mit Förderdarlehen ergänzt; Plausibilitätsprüfungen PL-18 bis PL-22 ergänzt.
+  - version: 1.3.0
+    datum: '2026-07-01'
+    aenderungen: Löschfristen nach Löschkonzept 1.3 übernommen (Feld x-loeschfrist); Rücknahme ergänzt.
+  - version: 1.2.0
+    datum: '2026-05-12'
+    aenderungen: Steuer-Identifikationsnummer entfernt (nicht erforderlich); Staatsangehörigkeit auf Gruppe reduziert.
+  - version: 1.1.0
+    datum: '2026-03-30'
+    aenderungen: Änderungsmitteilungen nach § 27 WoGG ergänzt; Kontaktdaten freiwillig.
+  - version: 1.0.0
+    datum: '2026-02-16'
+    aenderungen: Erste Fassung mit Erstantrag, Weiterleistungsantrag und Nachweisen.
