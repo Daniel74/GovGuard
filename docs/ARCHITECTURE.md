@@ -9,10 +9,10 @@ Testfrage für jede Aufgabe: **Gibt es genau eine richtige Antwort, die sich ohn
 | Code (deterministisch) | LLM (probabilistisch) |
 |---|---|
 | zählen, sortieren, nachschlagen, vergleichen | verstehen, bewerten, formulieren |
-| Vorfilter, Ranking, Obergrenze | „Ist diese Anforderung prüfbar?“ |
+| Vorfilter, Relevanz, Ranking, Obergrenze | „Ist diese Anforderung prüfbar, und welche Ressourcentypen betrifft sie?“ |
 | Primäranker, Querverweis-IDs prüfen, Archetyp-Dateien laden | Prüfregel-Kriterien und Empfehlungen formulieren |
 | Zitat steht wörtlich in Quelle/Eingabe? Jede Prüfregel genau ein Befund? | „Verstößt diese Spezifikation gegen Art. 9?“ |
-| Gesamtstatus = schlechtester Einzelstatus | Archetyp aus geschlossener Liste wählen |
+| Gesamtstatus = schlechtester Einzelstatus; N/A, wenn der Ressourcentyp im Template fehlt | Archetyp aus geschlossener Liste wählen |
 
 Das LLM sitzt immer **zwischen zwei Code-Schichten**: Der Code bereitet vor (filtern, auswählen), das LLM urteilt, und der Code kontrolliert (Schema, Vollständigkeit, Zitate). Was der Code schon weiß, erzeugt das LLM nicht. Das hält den Anteil klein, der halluzinieren kann.
 
@@ -27,8 +27,8 @@ flowchart TD
   end
   BSI & CIS & DS --> E["1 Extrahieren"]
   E --> F["2 Vorfiltern (deterministisch)"]
-  F --> K["3 LLM: prüfbar ja/nein"]
-  K --> R["4 Ranking + Obergrenze (deterministisch)"]
+  F --> K["3 LLM: prüfbar ja/nein<br/>+ Ressourcentypen"]
+  K --> R["4 Relevanz, gesetzte Plätze,<br/>Ranking + Obergrenze (deterministisch)"]
   R --> P["5 LLM formuliert Prüfregeln + Querverweise"]
   P --> G1{"Gate: Schema, Anker, Zitat"}
   G1 -->|ok| A["6 LLM schreibt CDK-Archetyp"]
@@ -43,7 +43,7 @@ flowchart TD
 
 Die Rauten sind **Gates**: automatische Prüfpunkte, an denen Code das Ergebnis des LLM kontrolliert. Fällt etwas durch, bricht der Build ab, und die alte Wissensbasis bleibt aktiv.
 
-Das Build-Skript liest die Quellen ein und siebt sie in zwei Stufen: Ein deterministischer Vorfilter wirft offensichtlich Irrelevantes weg, dann entscheidet das LLM je Anforderung, ob sie an einer Spezifikation oder an Infrastructure as Code (IaC) prüfbar ist. Ein festes Ranking schneidet auf die Obergrenze des Bounded Catalog ab; erst danach formuliert das LLM daraus Prüfregeln.
+Das Build-Skript liest die Quellen ein und siebt sie in zwei Stufen: Ein deterministischer Vorfilter wirft offensichtlich Irrelevantes weg, dann entscheidet das LLM je Anforderung, ob sie an einer Spezifikation oder an einem CloudFormation-Template prüfbar ist, und nennt bei Architektur die betroffenen Ressourcentypen. Der Code behält nur, was unsere Archetypen betrifft, setzt die Pflichtanker der Presets als gesetzte Plätze und füllt den Rest per Ranking bis zur Obergrenze des Bounded Catalog (ADR 0007). Erst danach formuliert das LLM daraus Prüfregeln.
 
 Das erste Gate prüft jede Prüfregel in drei Punkten:
 
@@ -67,14 +67,16 @@ Jede Quelle durchläuft dieselben drei Stufen; nur die Parameter unterscheiden s
 
 | Quelle | Einheit (Anforderung) | ① Vorfilter (Code) | ② LLM-Frage (ja/nein + Begründung) | ③ Ranking (Code) | Obergrenze |
 |---|---|---|---|---|---|
-| BSI Grundschutz++ | Control im OSCAL-Katalog, z. B. `DET.3.1` | `modal_verb` = MUSS, `sec_level` = normal-SdT, Praktik ∈ DLS, BER, DET, KONF, BES, ARCH | „An einer Architektur / IaC prüfbar?“ | Summe `confidentiality` + `integrity` + `availability` (0–6) absteigend | 12 |
-| CIS AWS v7 | Empfehlung, z. B. `3.1.4` | Kapitel 2 IAM, 3 Storage, 4 Logging | „An einer Architektur / IaC prüfbar?“ | Level 1 vor Level 2, dann *Automated* vor *Manual* | 12 |
-| DSGVO | Artikel | Kapitel II–V (Art. 5–49) | „An einer Spezifikation prüfbar?“ | Bußgeldstufe: Art. 83 Abs. 5 (bis 4 %) vor Abs. 4 (bis 2 %) | 12 |
+| BSI Grundschutz++ | Control im OSCAL-Katalog, z. B. `DET.3.1` | `modal_verb` ∈ MUSS, SOLLTE, `sec_level` = normal-SdT, Praktik ∈ DLS, BER, DET, KONF, BES, ARCH | „An einem einzelnen CloudFormation-Template prüfbar? Welche Ressourcentypen?“ | reihum je Ressourcentyp; innerhalb Summe `confidentiality` + `integrity` + `availability` (0–6) absteigend | 12 |
+| CIS AWS v7 | Empfehlung, z. B. `3.1.4` | Kapitel 2 IAM, 3 Storage, 4 Logging | „An einem einzelnen CloudFormation-Template prüfbar? Welche Ressourcentypen?“ | reihum je Ressourcentyp; innerhalb Level 1 vor Level 2, dann *Automated* vor *Manual* | 12 |
+| DSGVO | Artikel | Kapitel II–V (Art. 5–49) | „An einer Spezifikation prüfbar?“ | reihum je Kapitel; innerhalb Bußgeldstufe: Art. 83 Abs. 5 (bis 4 %) vor Abs. 4 (bis 2 %) | 12 |
 | SDM | Maßnahme, z. B. `M60.D01` | Bausteine Löschen (M60), Trennen (M50), Zugriffe regeln (M51); Ebenen Daten (D) und Systeme (S), nicht Prozesse (P) | „An einer Spezifikation prüfbar?“ | reihum je Baustein, D vor S | 8 |
 
 - **① Vorfilter:** reiner Code auf Metadaten (OSCAL-Props, Kapitelnummern, Artikelnummern, Maßnahmen-IDs). Er ist billig, reproduzierbar und wirft Organisatorisches früh weg.
-- **② LLM:** bekommt **eine** Anforderung und antwortet nur ja/nein mit Begründung (per Tool-Choice, siehe 2.1). Es zählt nicht und wählt nicht aus.
-- **③ Ranking:** sortiert die „Ja“-Anforderungen nach dem Kriterium der Tabelle, bei Gleichstand nach ID aufsteigend, und schneidet bei der Obergrenze ab. Gleiche Eingabe ergibt dieselbe Reihenfolge. Die Auswahlliste liegt versioniert im Repo; Änderungen zwischen zwei Builds sieht man im Git-Diff.
+- **② LLM:** bekommt **eine** Anforderung und antwortet nur ja/nein mit Begründung, bei Architektur zusätzlich mit `cfn_resource_types` (per Tool-Choice, siehe 2.1). Es zählt nicht und wählt nicht aus.
+- **Relevanz (Code, nur Architektur):** Es bleiben nur Anforderungen, deren `cfn_resource_types` sich mit den `resource_types` eines Steckbriefs überschneiden (1.4). Kontoweite Pflichten wie Root-MFA fallen damit heraus, denn sie sind an keinem Template entscheidbar.
+- **Gesetzte Plätze:** Die Pflichtanker der Presets kommen immer in den Katalog, höchstens 4 je Audit-Art, und zählen zur Obergrenze ihrer Quelle.
+- **③ Ranking:** verteilt die freien Plätze reihum auf die Gruppen der Tabelle (Ressourcentyp, Kapitel, Baustein), innerhalb einer Gruppe nach dem Kriterium, bei Gleichstand nach ID. Eine Regel mit mehreren Typen zählt für den ersten Typ ihrer Liste. Gleiche Eingabe ergibt dieselbe Reihenfolge. Die Auswahlliste (`selection_spec.json`, `selection_arch.json`) liegt versioniert im Repo; Änderungen zwischen zwei Builds sieht man im Git-Diff.
 
 ### 1.2 Prüfregel-Schema
 
@@ -94,16 +96,17 @@ Aus jeder ausgewählten Anforderung formuliert das LLM genau eine Prüfregel (Py
   "cfn_resource_types": ["AWS::S3::Bucket"],
   "selection_rationale": "Direkt an der Bucket-Konfiguration im Template prüfbar.",
   "rank": 3,
+  "pinned": false,
   "cross_references": [{ "anchor": "BSI GS++ …", "origin": "ai_suggested" }]
 }
 ```
 
 | Feld | Herkunft | Zweck |
 |---|---|---|
-| `id`, `audit_type`, `source`, `primary_anchor`, `rank` | Code | Identität und Herkunft – das LLM erfindet hier nichts |
+| `id`, `audit_type`, `source`, `primary_anchor`, `rank`, `pinned` | Code | Identität und Herkunft – das LLM erfindet hier nichts |
 | `source_quote` | LLM, vom Code geprüft | Wörtlicher Auszug aus der Quelle (siehe 1.3) |
 | `title`, `compliant_if`, `violation_if`, `recommendation` | LLM | Prüfbare Kriterien für PASS/FAIL und die Abhilfe |
-| `cfn_resource_types` | LLM, nur Architektur | Für welche CloudFormation-Typen die Regel gilt (sperrt N/A, siehe 1.4) |
+| `cfn_resource_types` | LLM aus Stufe ②, nur Architektur | Für welche CloudFormation-Typen die Regel gilt: Relevanz, Ranking und N/A durch den Code (siehe 1.1, 2) |
 | `selection_rationale` | LLM aus Stufe ② | Warum die Anforderung prüfbar ist |
 | `cross_references` | LLM, vom Code geprüft | Bezug auf eine andere Quelle; nur `ai_suggested` (KI-vorgeschlagen), ohne Einfluss auf den Status |
 
@@ -125,8 +128,8 @@ Zusätzlich muss das `source_quote` **wörtlich** im Text genau der verankerten 
 Für Presets legt ein Mensch das Soll fest. Für Archetypen ist es **vollautomatisch** und besteht aus drei Bedingungen, die alle erfüllt sein müssen:
 
 1. **Struktur-Soll:** Das Template enthält die Pflicht-Ressourcentypen aus dem Steckbrief des Archetyps (deterministischer Check).
-2. **Compliance-Soll:** Jede Architektur-Prüfregel ist PASS oder N/A. N/A ist **verboten**, wenn einer ihrer `cfn_resource_types` im Template vorkommt (Code-Check). So kann das LLM eine unbequeme Regel nicht wegdefinieren.
-3. **cdk-nag:** Das Regelpaket AwsSolutions meldet keine Errors. `NagSuppressions` sind im Archetyp-Code verboten (Code-Check).
+2. **Compliance-Soll:** Jede Architektur-Prüfregel ist PASS oder N/A. N/A setzt hier nur der Code, wenn keiner ihrer `cfn_resource_types` im Template vorkommt (Abschnitt 2). Kommt einer vor, ist N/A **verboten**. So kann das LLM eine unbequeme Regel nicht wegdefinieren.
+3. **cdk-nag:** Das Regelpaket AwsSolutions meldet keine Errors außer Ausnahmen aus `data/nag_allowlist.json` (ADR 0007). Die Ausnahmen wendet der Code an; der Archetyp-Code darf kein `Validations.of(...).acknowledge(...)` enthalten (Code-Check, cdk-nag 3).
 
 | Archetyp | Solutions Constructs | Pflicht-Ressourcentypen |
 |---|---|---|
@@ -134,7 +137,15 @@ Für Presets legt ein Mensch das Soll fest. Für Archetypen ist es **vollautomat
 | ARCH-02 Async Document Ingest | `aws-s3-sqs`, `aws-sqs-lambda` | `AWS::S3::Bucket`, `AWS::SQS::Queue`, `AWS::Lambda::Function` |
 | ARCH-03 Audit-Log-Archiv | `aws-kinesisfirehose-s3` | `AWS::KinesisFirehose::DeliveryStream`, `AWS::S3::Bucket` mit `ObjectLockEnabled` |
 
-Die Steckbriefe (Zweck, Constructs, Pflicht-Typen) sind die einzige feste Vorgabe an das LLM. Sie stammen aus [Behörden Cloud-Referenzarchitekturen Analyse](research/Behörden%20Cloud-Referenzarchitekturen%20Analyse.md). ARCH-01 nutzt DynamoDB statt Aurora (wie das Construct-Mapping im Research-Dokument): DynamoDB On-Demand kostet im Leerlauf 0 €.
+Startliste der Ausnahmen (Spike mit cdk-nag 3.0.2 und Solutions Constructs 2.105):
+
+| Regel | Ressource | Begründung |
+|---|---|---|
+| AwsSolutions-COG4 | API-Methoden von ARCH-01 | IAM-Auth (SigV4) für Maschine-zu-Maschine statt Cognito-Login; auch im GovGuard-Stack (ADR 0004) |
+| AwsSolutions-IAM4 | `BucketNotificationsHandler` (ARCH-02) | CDK-interne Hilfs-Lambda für S3-Notifications; die verwaltete Policy erlaubt nur Logs |
+| AwsSolutions-IAM5 | Firehose-Policy `bucket/*` (ARCH-03) | Objektnamen entstehen zur Laufzeit; Rechte auf genau einen Bucket, nur Schreiben |
+
+Die Steckbriefe (Zweck, Constructs, Pflicht-Typen, `resource_types`) sind die einzige feste Vorgabe an das LLM. `resource_types` steuert den Relevanzfilter (1.1): die Pflicht-Typen plus `AWS::IAM::Role`, `AWS::KMS::Key` und `AWS::Logs::LogGroup`. Sie stammen aus [Behörden Cloud-Referenzarchitekturen Analyse](research/Behörden%20Cloud-Referenzarchitekturen%20Analyse.md). ARCH-01 nutzt DynamoDB statt Aurora (wie das Construct-Mapping im Research-Dokument): DynamoDB On-Demand kostet im Leerlauf 0 €.
 
 ## 2. Laufzeit – ein Audit
 
@@ -161,7 +172,7 @@ sequenceDiagram
   L-->>U: Golden Archetype (CDK + Template) + Begründung
 ```
 
-Beim Kaltstart lädt die Lambda-Funktion die Wissensbasis einmal aus S3 in den Speicher, weitere Aufrufe nutzen sie direkt. Für ein Audit schickt sie **alle** Prüfregeln des Bounded Catalog zusammen mit der Eingabe an Bedrock. Das Modell muss über das erzwungene Tool `submit_audit` antworten (Tool-Choice), es kann also nur strukturiertes JSON liefern, keinen Freitext.
+Beim Kaltstart lädt die Lambda-Funktion die Wissensbasis einmal aus S3 in den Speicher, weitere Aufrufe nutzen sie direkt. Für ein Audit schickt sie **alle** Prüfregeln des Bounded Catalog zusammen mit der Eingabe an Bedrock. Einzige Ausnahme: Ist die Eingabe ein CloudFormation-Template (JSON), setzt der Code jede Prüfregel ohne passenden Ressourcentyp im Template vorab auf N/A; diese Regeln gehen nicht ans Modell (ADR 0007). Das Modell muss über das erzwungene Tool `submit_audit` antworten (Tool-Choice), es kann also nur strukturiertes JSON liefern, keinen Freitext.
 
 Danach prüft der Code, nicht das Modell, das Ergebnis. Pydantic validiert das Schema, und zusätzlich muss jede Prüfregel genau einen Befund haben und jeder Beleg wörtlich in der Eingabe stehen. Erst dann wird der Gesamtstatus berechnet.
 
@@ -190,7 +201,7 @@ result = audit_agent.run_sync(catalog_and_input, model=model, deps=deps)
 
 | Tool | Schema (vereinfacht) | Wo |
 |---|---|---|
-| `classify_requirement` | `testable: bool`, `rationale: str` | Build, Stufe ② |
+| `classify_requirement` | `testable: bool`, `rationale: str`, `cfn_resource_types: [str]` (nur Architektur) | Build, Stufe ② |
 | `formulate_rule` | LLM-Felder der Prüfregel (siehe 1.2) | Build, Stufe 5 |
 | `submit_audit` | `findings: [{rule_id, status: PASS\|WARN\|FAIL\|N/A, evidence, rationale, recommendation}]` | Laufzeit, beide Audits |
 | `select_archetype` | `archetype: ARCH-01\|ARCH-02\|ARCH-03\|NONE`, `rationale: str` | Laufzeit, Archetyp-Auswahl |
@@ -214,7 +225,7 @@ flowchart LR
 
 GovGuard wird selbst mit CDK beschrieben und über GitHub Actions ausgerollt. Die Pipeline meldet sich per OIDC bei AWS an und erhält kurzlebige Rechte, es liegen also keine dauerhaften Zugangsschlüssel in GitHub.
 
-Vor jedem Deploy durchläuft der eigene Stack dieselben zwei Prüfungen wie die Golden Archetypes. Erst prüft cdk-nag deterministisch, dann prüft die Audit-Engine das Template gegen die BSI- und CIS-Prüfregeln. Ein FAIL oder WARN blockiert das Deployment.
+Vor jedem Deploy durchläuft der eigene Stack dieselben zwei Prüfungen wie die Golden Archetypes. Erst prüft cdk-nag deterministisch, mit denselben Ausnahmen, dann prüft die Audit-Engine das Template gegen die BSI- und CIS-Prüfregeln. Ein FAIL oder WARN blockiert das Deployment.
 
 So beweist GovGuard an sich selbst, dass seine Regeln erfüllbar sind (Dogfooding).
 
@@ -309,4 +320,7 @@ Der eigene Stack verschlüsselt mit einem kundenverwalteten KMS-Schlüssel (CMK)
 - **SDM ohne Protokollieren (M43):** Der Baustein V2.0 hat ein eigenes ID-Schema (`M43.21.04`) ohne Ebenen D/S und führt ungültige Maßnahmen nur durchgestrichen weiter. Er bräuchte einen eigenen Parser und fehlt bewusst; Protokollierung prüft das Architektur-Audit (BSI DET, CIS Kapitel 4).
 - **DSGVO-Einheit „Artikel“:** Art. 5 ergibt nur eine Prüfregel, obwohl er sechs Grundsätze enthält. Die Grundsätze kommen über das SDM in den Katalog; die SDM-Methode ist genau ihre Operationalisierung (Teil C, „Systematisierung der Anforderungen der DS-GVO durch die Gewährleistungsziele“).
 - **Audit-Protokoll nicht revisionssicher:** CloudWatch Logs sind für Admins löschbar, und gespeichert werden nur Hashes und Status, keine Eingaben und vollständigen Reports (ADR 0006). Ein unlöschbarer Speicher für Inhalte widerspräche dem Recht auf Löschung (Art. 17 DSGVO). Die Build-Historie in Git schützt eine Branch Protection auf `main` gegen Force-Push und Löschen; der GitHub Free Plan bietet sie für öffentliche Repos an.
+- **Keine kontoweiten Pflichten:** Root-MFA, Passwort-Policy oder ein kontoweiter CloudTrail sind an keinem Template entscheidbar und fehlen bewusst (ADR 0007). Dafür gibt es Werkzeuge wie Prowler oder AWS Security Hub.
+- **N/A durch Code nur für CloudFormation-JSON:** YAML-Templates mit Kurzformen wie `!Ref` und Terraform behandelt GovGuard wie Freitext; dort entscheidet das LLM über N/A.
+- **Kein X-Ray:** `xray:Put*` erlaubt keine Ressourcen-ARNs und bräuchte eine weitere Ausnahme. In Produktion: X-Ray mit begründeter Ausnahme.
 - **Umfang:** Höchstens 24 bzw. 20 Prüfregeln und Eingaben bis 100.000 Zeichen. Wie GovGuard darüber hinaus wächst, beschreibt [AUSBAU.md](AUSBAU.md).

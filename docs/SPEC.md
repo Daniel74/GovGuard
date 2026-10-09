@@ -15,12 +15,13 @@
 
 - Die 4 Presets liefern ihren Soll-Gesamtstatus und ihre Pflicht-Befunde.
 - Jeder Audit-Report hat genau einen Befund je Prüfregel; jeder Beleg steht wörtlich in der Eingabe.
+- Jede Architektur-Prüfregel betrifft mindestens einen Ressourcentyp der Golden Archetypes, und die Pflichtanker der Presets stehen im Bounded Catalog (ADR 0007).
 - Das größte Preset (≤ 100.000 Zeichen) ist in unter 29 Sekunden ausgewertet.
 - Ein Audit des größten Presets kostet unter 10 Cent (Haiku 4.5: ca. 1 $ Input / 5 $ Output je Mio. Token); im Leerlauf fallen keine variablen Kosten an, Fixkosten nur für den KMS-Schlüssel (ca. 1 $/Monat).
-- Alle 3 Golden Archetypes sind freigegeben (Architektur-Audit und cdk-nag ohne Beanstandung).
+- Alle 3 Golden Archetypes sind freigegeben: Architektur-Audit ohne FAIL und WARN, cdk-nag ohne Errors außer Ausnahmen (ADR 0007).
 - Jeder Aufruf erzeugt ein Audit-Ereignis in CloudWatch Logs mit `audit_id`, Zeit, `input_sha256`, `catalog_sha256`, `kb_commit`, `model_id` und Ergebnis, ohne Eingabetext.
 
 ## Offene Fragen
 
 - Reicht das Standard-Timeout von 29 Sekunden? Das zeigt die Messung an Tag 2.
-- Wie viele Anforderungen bleiben nach dem Vorfilter übrig (Basis für die Obergrenzen)?
+- Wie viele Anforderungen bleiben nach Vorfilter und Relevanzfilter übrig? Gemessen: BSI 380 nach dem Vorfilter.

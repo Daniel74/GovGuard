@@ -7,15 +7,17 @@ Dieses Dokument legt die **Verträge** zwischen den Tickets fest: Datenformate u
 | Vertrag | Liefert | Nutzt |
 |---|---|---|
 | `Requirement`, `ExtractedSource` (1.1) | #4, #5 | #6 |
-| `Rule` (1.2) | #1 (Modell), #6 (Daten) | #2, #7, #9 |
+| `Selection` (1.2) | #6 | #12 |
+| `Rule` (1.2) | #1 (Modell), #12 (Daten) | #2, #7, #9 |
 | `Archetype` (1.3) | #7 | #10, #11 |
-| `Preset`, `Expected` (1.4) | #3 | #8, #11 |
+| `NagException` (1.3) | Mensch, `data/nag_allowlist.json` | #7, #9, #11 |
+| `Preset`, `Expected` (1.4) | #3 | #6, #8, #11 |
 | `Finding`, `AuditReport` (2.1) | #1 | #2, #7, #8, #9, #11 |
-| `run_audit()` (2.2) | #1 | #2, #6, #7, #9 |
+| `run_audit()` (2.2) | #1 | #2, #7, #8, #9 |
 | `select_archetype()`, `ArchetypeChoice` (2.2) | #10 | #11 |
 | API-JSON (2.3) | #9, #10 | #11 |
 | `Trace`, `AuditEvent` (2.4) | #1 | #9, #10 |
-| `normalize()`, `contains_quote()` (3) | #1 | #4, #5, #6 |
+| `normalize()`, `contains_quote()`, `template_resource_types()` (3) | #1 | #4, #5, #12 |
 
 ## 1. Build-Verträge
 
@@ -73,11 +75,33 @@ def extract(origin: Path | str) -> ExtractedSource   # parsen + normalisieren, I
 def prefilter(req: Requirement) -> bool              # rein, Kriterien aus ARCHITECTURE 1.1
 ```
 
-Das Gate (#6) prüft `source_quote` gegen den `text` **genau der Anforderung**, auf die der Primäranker zeigt, nicht gegen die ganze Quelle.
+Das Gate (#12) prüft `source_quote` gegen den `text` **genau der Anforderung**, auf die der Primäranker zeigt, nicht gegen die ganze Quelle.
 
 ### 1.2 Rule – Prüfregel
 
-Die Felder stehen in ARCHITECTURE 1.2. Das Modell ist zweigeteilt: Was das LLM schreibt, liegt in `RuleDraft`. Aus diesem Modell entsteht auch das Schema des Tools `formulate_rule`. Was der Code weiß, ergänzt `Rule`.
+Stufe ② und das Ranking (#6) schreiben je Audit-Art eine **Auswahlliste** `data/knowledge_base/selection_<spec|arch>.json`. Sie ist der Kontrollpunkt, bevor Prüfregeln formuliert werden (ADR 0007).
+
+```python
+class Classification(BaseModel):         # vom LLM, Schema für Tool classify_requirement
+    testable: bool
+    rationale: str
+    cfn_resource_types: list[str] = []   # nur Architektur; bei Spec immer leer
+
+class SelectedRequirement(BaseModel):
+    requirement_id: str                  # Requirement.id
+    source: Literal["BSI", "CIS", "DSGVO", "SDM"]
+    rationale: str                       # Classification.rationale
+    cfn_resource_types: list[str]        # Classification.cfn_resource_types
+    pinned: bool                         # gesetzter Platz aus einem Preset
+    rank: int                            # 1 = zuerst innerhalb der Quelle
+
+class Selection(BaseModel):              # Datei selection_spec.json bzw. selection_arch.json
+    audit_type: Literal["spec", "architecture"]
+    model_id: str
+    selected: list[SelectedRequirement]
+```
+
+Die Felder der Prüfregel stehen in ARCHITECTURE 1.2. Das Modell ist zweigeteilt: Was das LLM schreibt, liegt in `RuleDraft`. Aus diesem Modell entsteht auch das Schema des Tools `formulate_rule`. Was der Code weiß, ergänzt `Rule`.
 
 ```python
 class CrossReference(BaseModel):
@@ -90,7 +114,6 @@ class RuleDraft(BaseModel):              # vom LLM, Schema für Tool formulate_r
     compliant_if: str
     violation_if: str
     recommendation: str
-    cfn_resource_types: list[str] = []  # nur Architektur; bei Spec immer leer
     cross_references: list[CrossReference] = []
 
 class Rule(RuleDraft):                   # vom Code ergänzt
@@ -98,8 +121,10 @@ class Rule(RuleDraft):                   # vom Code ergänzt
     audit_type: Literal["spec", "architecture"]
     source: Literal["BSI", "CIS", "DSGVO", "SDM"]
     primary_anchor: str                  # aus Requirement übernommen
-    selection_rationale: str             # aus Stufe ② (classify_requirement)
-    rank: int                            # 1 = wichtigste innerhalb der Quelle
+    selection_rationale: str             # aus der Auswahlliste (Stufe ②)
+    cfn_resource_types: list[str] = []   # aus der Auswahlliste; nur Architektur
+    rank: int                            # aus der Auswahlliste
+    pinned: bool = False                 # gesetzter Platz (ADR 0007)
 
 class RuleCatalog(BaseModel):            # Datei rules_spec.json bzw. rules_arch.json
     audit_type: Literal["spec", "architecture"]
@@ -121,10 +146,12 @@ class ArchetypeProfile(BaseModel):       # Datei data/archetype_profiles.json, v
     purpose: str                         # Zweck, deutsch; nutzt auch select_archetype
     constructs: list[str]                # ["aws-apigateway-lambda", "aws-lambda-dynamodb"]
     required_resource_types: list[str]   # Struktur-Soll
+    resource_types: list[str]            # Relevanzfilter: Pflicht-Typen + IAM::Role, KMS::Key, Logs::LogGroup
 
 class Approval(BaseModel):
     audit_report: AuditReport            # Architektur-Audit des Templates: nur PASS / N/A
-    cdk_nag_errors: list[str]            # muss leer sein
+    cdk_nag_errors: list[str]            # nach Abzug der Ausnahmen; muss leer sein
+    nag_exceptions: list[str]            # angewendete Ausnahmen: "<rule_id> <path>"
     rounds: int                          # 1–3 Korrekturrunden
 
 class Archetype(ArchetypeProfile):
@@ -138,6 +165,15 @@ class ArchetypeCatalog(BaseModel):       # Datei archetypes.json
 ```
 
 `rules_arch_sha256` beweist, dass die Archetypen gegen den **aktuellen** Architektur-Katalog freigegeben wurden. Passt der Hash nicht zur Datei `rules_arch.json` daneben, schlägt das Preset-Gate (#8) fehl.
+
+Die **Ausnahmen** pflegt ein Mensch in `data/nag_allowlist.json` (ADR 0007). Sie gelten für Archetypen und den GovGuard-Stack. Angewendet werden sie vom Code (Build bzw. `infra/`), nie vom LLM-Code.
+
+```python
+class NagException(BaseModel):           # ein Eintrag in data/nag_allowlist.json
+    rule_id: str                         # "AwsSolutions-IAM4"
+    path_pattern: str                    # Glob auf den Construct-Pfad, z. B. "*/BucketNotificationsHandler*/Role/Resource"
+    reason: str                          # Begründung, deutsch
+```
 
 ### 1.4 Preset und Expected
 
@@ -165,7 +201,7 @@ Das Preset-Gate gilt als bestanden, wenn drei Bedingungen erfüllt sind:
 - Zu jedem `RequiredFinding` gibt es eine Prüfregel mit diesem Primäranker und genau diesem Status.
 - Der Archetyp stimmt, falls einer angegeben ist.
 
-Weitere Befunde sind frei. Pflicht-Befunde verweisen auf den Primäranker statt auf die Regel-ID, weil ein Mensch ihn direkt aus der Norm kennt.
+Weitere Befunde sind frei. Pflicht-Befunde verweisen auf den Primäranker statt auf die Regel-ID, weil ein Mensch ihn direkt aus der Norm kennt. Die Anker aller `required_findings` einer Audit-Art sind zugleich ihre gesetzten Plätze (#6), höchstens 4.
 
 ## 2. Laufzeit-Verträge
 
@@ -222,9 +258,11 @@ class ArchetypeChoice(BaseModel):        # Schema des Tools select_archetype
     rationale: str
 ```
 
+Vor dem LLM-Aufruf prüft `run_audit()` mit `template_resource_types()` (3), ob die Eingabe ein CloudFormation-Template ist. Falls ja, erhält jede Prüfregel ohne passenden Ressourcentyp im Template vom Code den Befund N/A mit der Begründung „Ressourcentyp nicht im Template“ und geht nicht ans Modell (ADR 0007).
+
 `run_audit()` validiert die LLM-Antwort in dieser Reihenfolge:
 1. Pydantic-Schema (`AuditResponse`), durch Pydantic AI.
-2. Jede `rule_id` des Katalogs kommt genau einmal vor, und es gibt keine unbekannten IDs.
+2. Jede an das Modell gesendete `rule_id` kommt genau einmal vor, und es gibt keine unbekannten IDs. Bei CloudFormation ist N/A vom Modell verboten, denn der Ressourcentyp kommt vor.
 3. Beleg vorhanden, wo er Pflicht ist, und mit `contains_quote()` wörtlich in der Eingabe gefunden (siehe 3).
 
 Die Schritte 2 und 3 laufen im `@agent.output_validator` und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch, wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
@@ -284,6 +322,7 @@ MIN_QUOTE_LENGTH = 15                        # kürzere Zitate wie "S3" beweisen
 
 def normalize(text: str) -> str
 def contains_quote(text: str, quote: str) -> bool  # len >= MIN_QUOTE_LENGTH und normalize(quote) in normalize(text)
+def template_resource_types(text: str) -> set[str] | None  # Typen aus "Resources" eines CloudFormation-JSON, sonst None
 ```
 
 `normalize()` führt fünf Schritte aus, in dieser Reihenfolge:
@@ -294,3 +333,5 @@ def contains_quote(text: str, quote: str) -> bool  # len >= MIN_QUOTE_LENGTH und
 5. Alle Leerzeichen und Zeilenumbrüche zu einem Leerzeichen zusammenfassen.
 
 Groß- und Kleinschreibung bleibt erhalten, denn „wörtlich“ heißt wörtlich. Eine bekannte Grenze: Silbentrennung am Zeilenende („Verarbei- tung“) wird nicht repariert, weil sich echte Bindestriche („Cloud-Dienst“) nicht sicher davon unterscheiden lassen.
+
+`template_resource_types()` erkennt nur JSON. YAML mit Kurzformen wie `!Ref` und Terraform gelten als Freitext; dort entscheidet das LLM über N/A.

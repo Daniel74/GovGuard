@@ -1,5 +1,7 @@
 # 0002 – Bounded Catalog statt Retrieval
 
+_Ergänzt durch [ADR 0007](0007-relevanz-und-ausnahmen.md)._
+
 ## Kontext
 
 Top-K-Retrieval kann relevante Anforderungen übersehen – für ein Audit ist das eine Vollständigkeitslücke. Eine Vektor-Datenbank kostet zudem im Leerlauf Geld. Die Quellen sind groß (BSI Grundschutz++ allein ca. 1.000 Anforderungen).
@@ -8,7 +10,7 @@ Top-K-Retrieval kann relevante Anforderungen übersehen – für ein Audit ist d
 
 - Je Audit-Art gibt es eine fest begrenzte Menge Prüfregeln: Architektur-Audit 12 BSI + 12 CIS, Spec-Audit 20 aus DSGVO und SDM.
 - Der Katalog geht in jedem Audit vollständig in den Prompt; der Code prüft, dass jede Prüfregel genau einen Befund hat.
-- Die Auswahl entsteht zur Build-Zeit für alle Quellen gleich: deterministischer Vorfilter → LLM klassifiziert „prüfbar ja/nein“ mit Begründung → deterministisches Ranking (BSI: Summe der Schutzziel-Werte; CIS: Level 1 vor Level 2) → Obergrenze.
+- Die Auswahl entsteht zur Build-Zeit für alle Quellen gleich: deterministischer Vorfilter → LLM klassifiziert „prüfbar ja/nein“ mit Begründung → deterministische Relevanz, gesetzte Plätze und Ranking reihum je Gruppe → Obergrenze (Details: ADR 0007).
 - Der BSI-Katalog wird auf einen Commit-SHA fixiert (das Repo hat keine Releases).
 
 ## Konsequenzen

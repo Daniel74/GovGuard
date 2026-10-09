@@ -29,6 +29,7 @@ Der Clou: Das LLM kann diese Verträge nicht garantieren. **Der Code prüft sie*
 Fast jedes Kernmodell gibt es in GovGuard doppelt:
 
 ```
+Classification   ──(Code filtert + rankt)──────▶  Selection
 RuleDraft        ──(Code prüft + ergänzt)──────▶  Rule
 FindingDraft     ──(Code prüft + ergänzt)──────▶  Finding
 ArchetypeProfile ──(Build erzeugt + gibt frei)─▶  Archetype
@@ -51,7 +52,7 @@ Jedes Feld hat eine Herkunftsmarke in der Überschrift:
 
 Darunter beantwortet jeder Steckbrief dieselben Fragen: **Wer füllt es?** **Warum existiert es?** **Wer liest es, was beeinflusst es?** Wo ein Feld ein konkretes Risiko abfängt, steht es unter **Risiko**.
 
-> **Annahme: Was geht in den Audit-Prompt?** DESIGN.md sagt nur, dass der Katalog „vollständig in den Prompt“ geht. Dieses Handbuch nimmt an: Zur Laufzeit sieht das LLM je Prüfregel nur `id`, `title`, `compliant_if`, `violation_if`, `recommendation` und `cfn_resource_types` – also alles, was es zum Urteilen braucht. `source_quote`, `selection_rationale`, `rank`, `primary_anchor` und `cross_references` dienen der Nachvollziehbarkeit und bleiben draußen. Weniger Text heißt weniger Tokens und weniger Ablenkung. Die endgültige Entscheidung trifft das Audit-Ticket.
+> **Annahme: Was geht in den Audit-Prompt?** DESIGN.md sagt nur, dass der Katalog „vollständig in den Prompt“ geht. Dieses Handbuch nimmt an: Zur Laufzeit sieht das LLM je Prüfregel nur `id`, `title`, `compliant_if`, `violation_if`, `recommendation` und `cfn_resource_types` – also alles, was es zum Urteilen braucht. `source_quote`, `selection_rationale`, `rank`, `primary_anchor` und `cross_references` dienen der Nachvollziehbarkeit und bleiben draußen. Weniger Text heißt weniger Tokens und weniger Ablenkung. Die endgültige Entscheidung trifft das Audit-Ticket. Bei CloudFormation-Eingabe gehen Prüfregeln ohne passenden Ressourcentyp gar nicht erst in den Prompt (5.6).
 
 ---
 
@@ -61,8 +62,9 @@ Darunter beantwortet jeder Steckbrief dieselben Fragen: **Wer füllt es?** **War
 flowchart LR
   subgraph Build["Build-Zeit (manuell, selten)"]
     SRC["Quellen<br/>BSI, CIS, DSGVO, SDM"] --> EX["ExtractedSource<br/>⚙️ Fakten"]
-    EX --> RD["RuleDraft 🤖"] --> R["Rule ⚙️+🤖<br/>RuleCatalog"]
+    EX --> SEL["Selection ⚙️+🤖<br/>Auswahlliste"] --> RD["RuleDraft 🤖"] --> R["Rule ⚙️+🤖<br/>RuleCatalog"]
     AP["ArchetypeProfile 👤"] --> A["Archetype<br/>+ Approval"]
+    AP -.->|resource_types| SEL
     R --> A
     A --> PG{"Preset-Gate<br/>Expected 👤"}
   end
@@ -171,9 +173,62 @@ Die Reise der Daten hat fünf Stationen. Die Kapitel 2 bis 6 folgen genau dieser
 
 ---
 
-## 3. Station 2 – Die Prüfregel-Fabrik: `RuleDraft` → `Rule`
+## 3. Station 2 – Auswahl und Prüfregel-Fabrik: `Selection` → `RuleDraft` → `Rule`
 
-**Aufgabe:** Aus jeder ausgewählten Anforderung entsteht genau eine prüfbare **Prüfregel**. Vorher hat Stufe ② (Tool `classify_requirement`) entschieden, ob die Anforderung überhaupt prüfbar ist, und Stufe ③ hat deterministisch gerankt und bei der Obergrenze abgeschnitten.
+**Aufgabe:** Aus jeder ausgewählten Anforderung entsteht genau eine prüfbare **Prüfregel**. Welche Anforderungen ausgewählt werden, legt vorher die Auswahlliste fest (3.0).
+
+### 3.0 `Classification` → `Selection` – die Auswahlliste
+
+Bevor Prüfregeln entstehen, legt der Build fest, **welche** Anforderungen in den Bounded Catalog kommen. Das Ergebnis ist die Auswahlliste `data/knowledge_base/selection_<spec|arch>.json`. Sie ist der Kontrollpunkt, an dem ein Mensch die Auswahl im Pull Request prüft, bevor Formulierung und Archetypen Geld kosten (ADR 0007). Der Ablauf je Quelle:
+
+1. **Stufe ② (🤖):** Das LLM füllt je Anforderung das Formular `Classification` (Tool `classify_requirement`).
+2. **Relevanz (⚙️, nur Architektur):** Es bleibt nur, was einen Ressourcentyp aus den Steckbriefen betrifft (`resource_types`, 4.1).
+3. **Gesetzte Plätze (👤 → ⚙️):** Die Pflichtanker der Presets kommen immer hinein (6.2).
+4. **Ranking (⚙️):** Die übrigen Plätze verteilt der Code reihum je Gruppe bis zur Obergrenze.
+
+#### `Classification.testable` · 🤖
+
+**Wer füllt es?** Das LLM: Ist die Anforderung an einer Spezifikation bzw. an einem einzelnen CloudFormation-Template entscheidbar?
+
+**Warum existiert es?** Ob „Sicherheitsrelevante Ereignisse werden protokolliert“ an einem Template prüfbar ist, braucht Sprachverständnis. Zählen und Auswählen macht danach der Code.
+
+**Wer liest es, was beeinflusst es?** Nur „ja“ geht weiter. Ein falsches „nein“ fällt im Review der Auswahlliste auf, ein falsches „ja“ spätestens als Dauer-WARN bei der Freigabe.
+
+#### `Classification.rationale` · 🤖
+
+**Wer füllt es?** Das LLM, als Begründung für „ja“ oder „nein“.
+
+**Warum existiert es?** Ein Ja/Nein ohne Begründung lässt sich nicht überprüfen.
+
+**Wer liest es, was beeinflusst es?** Der Mensch im Pull Request. Bei ausgewählten Anforderungen wird es zu `Rule.selection_rationale` (3.3).
+
+#### `Classification.cfn_resource_types` · 🤖
+
+**Wer füllt es?** Das LLM, nur bei Architektur, z. B. `["AWS::S3::Bucket"]`. Bei Spezifikationen bleibt die Liste leer.
+
+**Warum existiert es?** Es sagt maschinenlesbar, welche CloudFormation-Typen eine Anforderung betrifft. Damit kann der Code drei Dinge ohne Sprachverständnis entscheiden: Relevanz für unsere Archetypen, die Gruppe im Ranking und N/A im Audit.
+
+**Wer liest es, was beeinflusst es?** Der Relevanzfilter (Schnittmenge mit `resource_types`), das Ranking (eine Regel zählt für den ersten Typ ihrer Liste) und später `Rule.cfn_resource_types` (3.3). Eine Anforderung ohne Typ, etwa Root-MFA, fällt heraus: Sie ist an keinem Template entscheidbar.
+
+**Risiko:** Ein falscher Typ führt zu einem stillen N/A, weil der Code die Regel dann für nicht anwendbar hält. Darum stehen die Typen in der Auswahlliste und werden im Pull Request geprüft.
+
+#### `SelectedRequirement.pinned` · ⚙️ (aus 👤)
+
+**Wer füllt es?** Der Code: `true`, wenn der Primäranker in den `required_findings` eines Presets steht.
+
+**Warum existiert es?** Fachlich zentrale Normen wie DSGVO Art. 32 dürfen nicht an einer Hilfsgröße wie der Bußgeldstufe scheitern. Das Feld macht sichtbar, ob eine Regel gesetzt oder gerankt wurde.
+
+**Wer liest es, was beeinflusst es?** Das Ranking vergibt gesetzte Plätze zuerst; sie zählen zur Obergrenze ihrer Quelle. Der Mensch sieht im Pull Request, welche Regeln nicht aus dem Ranking stammen.
+
+**Risiko:** ein Katalog, der nur auf die Tests zugeschnitten ist. Darum gibt es höchstens 4 gesetzte Plätze je Audit-Art.
+
+#### `SelectedRequirement.rank` · ⚙️
+
+**Wer füllt es?** `ranking.py`: zuerst die gesetzten Plätze, dann reihum je Gruppe (Architektur: Ressourcentyp; Spezifikation: DSGVO-Kapitel bzw. SDM-Baustein), innerhalb einer Gruppe nach dem Kriterium aus ARCHITECTURE 1.1, bei Gleichstand nach ID.
+
+**Warum existiert es?** Einfaches Sortieren verzerrt: Beim BSI haben 24 von 30 Kandidaten dieselbe CIA-Summe, dann gewinnt das Alphabet. „Reihum“ sorgt für Breite und bleibt reproduzierbar.
+
+**Wer liest es, was beeinflusst es?** Der Schnitt bei der Obergrenze und später `Rule.rank`.
 
 ### 3.1 `RuleDraft` – was das LLM liefert (Tool `formulate_rule`)
 
@@ -220,16 +275,6 @@ Die Reise der Daten hat fünf Stationen. Die Kapitel 2 bis 6 folgen genau dieser
 **Warum existiert es?** Ein Audit ohne Abhilfe sagt nur, *dass* etwas fehlt. Die vorformulierte Empfehlung hält die Ratschläge über viele Audits hinweg einheitlich.
 
 **Wer liest es, was beeinflusst es?** Das LLM im Audit-Prompt als Vorlage für `FindingDraft.recommendation`, das sie auf die konkrete Eingabe zuschneiden darf. In den Report wird sie nicht direkt kopiert.
-
-#### `cfn_resource_types` · 🤖
-
-**Wer füllt es?** Das LLM, nur bei Architektur-Prüfregeln, z. B. `["AWS::S3::Bucket"]`. Bei Spec-Prüfregeln bleibt die Liste leer.
-
-**Warum existiert es?** Es sagt maschinenlesbar, für welche CloudFormation-Typen die Regel gilt. Damit kann der Code ein bequemes N/A verhindern (Abschnitt 4.2).
-
-**Wer liest es, was beeinflusst es?** Bei der Freigabe der Golden Archetypes prüft der Code: Kommt einer dieser Typen im Template vor, ist N/A **verboten**. Im Audit-Prompt hilft es dem LLM laut Annahme (0.3), die Anwendbarkeit zu beurteilen.
-
-**Risiko:** Das LLM definiert eine unbequeme Regel als „nicht anwendbar“ weg.
 
 #### `cross_references` · 🤖 → ⚙️ geprüft
 
@@ -297,7 +342,7 @@ Die Reise der Daten hat fünf Stationen. Die Kapitel 2 bis 6 folgen genau dieser
 
 #### `selection_rationale` · 🤖 (aus Stufe ②), ⚙️ übernommen
 
-**Wer füllt es?** Ursprünglich das LLM im Tool `classify_requirement`, als Begründung für „prüfbar: ja“. Der Code übernimmt den Text unverändert in die Prüfregel.
+**Wer füllt es?** Ursprünglich das LLM im Tool `classify_requirement`, als Begründung für „prüfbar: ja“. Der Code übernimmt den Text über die Auswahlliste (3.0) unverändert in die Prüfregel.
 
 **Warum existiert es?** **Nachvollziehbarkeit der Auswahl:** Ein Prüfer fragt, warum genau diese 24 Regeln und nicht andere im Katalog stehen. Die Antwort steht direkt an der Regel.
 
@@ -305,11 +350,29 @@ Die Reise der Daten hat fünf Stationen. Die Kapitel 2 bis 6 folgen genau dieser
 
 #### `rank` · ⚙️
 
-**Wer füllt es?** Das deterministische Ranking (`ranking.py`), z. B. nach Schutzziel-Summe bei BSI oder nach Level bei CIS. 1 ist die wichtigste Regel innerhalb der Quelle.
+**Wer füllt es?** Der Code, aus der Auswahlliste übernommen (`SelectedRequirement.rank`, 3.0).
 
 **Warum existiert es?** Es macht die Auswahl reproduzierbar: Gleiche Eingabe ergibt dieselbe Reihenfolge und denselben Schnitt bei der Obergrenze.
 
-**Wer liest es, was beeinflusst es?** Der Build schneidet damit bei der Obergrenze ab, und der Mensch sieht die Priorität. Laut Annahme (0.3) bekommt das LLM den Rang nicht, damit es Regeln mit hohem Rang nicht als „unwichtig“ behandelt.
+**Wer liest es, was beeinflusst es?** Der Mensch sieht die Priorität. Laut Annahme (0.3) bekommt das LLM den Rang nicht, damit es Regeln mit hohem Rang nicht als „unwichtig“ behandelt.
+
+#### `cfn_resource_types` · 🤖 (aus Stufe ②), ⚙️ übernommen
+
+**Wer füllt es?** Der Code, aus der Auswahlliste übernommen (3.0). Bei Spec-Prüfregeln bleibt die Liste leer.
+
+**Warum existiert es?** Zur Laufzeit muss die Prüfregel selbst wissen, für welche CloudFormation-Typen sie gilt.
+
+**Wer liest es, was beeinflusst es?** `run_audit()`: Kommt bei CloudFormation-Eingabe keiner der Typen im Template vor, setzt der **Code** N/A (5.6). Kommt einer vor, ist N/A vom LLM **verboten**. Dieselbe Regel gilt bei der Freigabe der Golden Archetypes. Im Audit-Prompt hilft es dem LLM laut Annahme (0.3), die Anwendbarkeit zu beurteilen.
+
+**Risiko:** Das LLM definiert eine unbequeme Regel als „nicht anwendbar“ weg.
+
+#### `pinned` · ⚙️
+
+**Wer füllt es?** Der Code, aus der Auswahlliste übernommen (3.0).
+
+**Warum existiert es?** Auch im fertigen Katalog soll sichtbar bleiben, welche Prüfregeln ein Preset gesetzt hat.
+
+**Wer liest es, was beeinflusst es?** Nur der Mensch. Auf den Status hat es keinen Einfluss.
 
 ### 3.4 `RuleCatalog` – die Datei `rules_spec.json` bzw. `rules_arch.json`
 
@@ -407,6 +470,16 @@ Der dritte Punkt ist subtil: Ein Zitat aus Art. 5 darf eine Regel zu Art. 32 nic
 
 **Risiko:** Sicherheit durch Weglassen.
 
+#### `resource_types` · 👤
+
+**Wer füllt es?** Ein Mensch: die Pflicht-Typen plus die Typen, die jeder Archetyp mitbringt, also `AWS::IAM::Role`, `AWS::KMS::Key` und `AWS::Logs::LogGroup`.
+
+**Warum existiert es?** Es definiert, was „relevant“ heißt: Nur Anforderungen, die einen dieser Typen betreffen, kommen in den Architektur-Katalog (ADR 0007). Ohne IAM, KMS und Logs wären fast alle Befunde eines Archetyps N/A, und die Freigabe hätte wenig Aussagekraft.
+
+**Wer liest es, was beeinflusst es?** Der Relevanzfilter beim Bau der Auswahlliste (3.0).
+
+**Risiko:** Prüfregeln ohne Bezug zu unseren Bausteinen, die nur N/A oder Dauer-WARN liefern.
+
 ### 4.2 `Archetype` – das Build-Ergebnis
 
 #### `cdk_code` · 🤖
@@ -415,7 +488,7 @@ Der dritte Punkt ist subtil: Ein Zitat aus Art. 5 darf eine Regel zu Art. 32 nic
 
 **Warum existiert es?** Der Nutzer bekommt einen **Startpunkt zum Weiterbauen**, nicht nur ein Bild der Architektur.
 
-**Wer liest es, was beeinflusst es?** `cdk synth` (über `cdk_runner.py`) erzeugt daraus das Template. Ein Code-Check verbietet `NagSuppressions`. Über `POST /archetype/select` geht der Code an den Nutzer.
+**Wer liest es, was beeinflusst es?** `cdk synth` (über `cdk_runner.py`) erzeugt daraus das Template. Ein Code-Check verbietet `Validations.of(...).acknowledge(...)` im LLM-Code (cdk-nag 3); Ausnahmen kommen nur aus der Allowlist (4.5). Über `POST /archetype/select` geht der Code an den Nutzer.
 
 **Risiko:** Das LLM schaltet die Prüfung ab, statt das Problem zu lösen.
 
@@ -425,7 +498,7 @@ Der dritte Punkt ist subtil: Ein Zitat aus Art. 5 darf eine Regel zu Art. 32 nic
 
 **Warum existiert es?** Geprüft wird das **Template, nicht der Code**. Solutions Constructs verbergen ihre Sicherheits-Defaults im Code; erst im Template sieht man, ob ein Bucket wirklich verschlüsselt ist.
 
-**Wer liest es, was beeinflusst es?** Die Audit-Engine, cdk-nag, der Struktur-Check und die N/A-Sperre (über `cfn_resource_types`). Danach geht es zusammen mit dem Code an den Nutzer.
+**Wer liest es, was beeinflusst es?** Die Audit-Engine, cdk-nag, der Struktur-Check sowie N/A durch Code und die N/A-Sperre (über `cfn_resource_types`). Danach geht es zusammen mit dem Code an den Nutzer.
 
 #### `approval` · ⚙️
 
@@ -441,19 +514,27 @@ Der dritte Punkt ist subtil: Ein Zitat aus Art. 5 darf eine Regel zu Art. 32 nic
 
 **Wer füllt es?** Die Audit-Engine – also derselbe `run_audit()` wie zur Laufzeit –, angewandt auf das Template mit dem Architektur-Katalog.
 
-**Warum existiert es?** Es belegt, dass der Archetyp **unsere eigenen Regeln** erfüllt. Erlaubt sind nur PASS und N/A; schon ein WARN verhindert die Freigabe.
+**Warum existiert es?** Es belegt, dass der Archetyp **unsere eigenen Regeln** erfüllt. Erlaubt sind nur PASS und N/A, und N/A setzt dabei nur der Code; schon ein WARN verhindert die Freigabe.
 
 **Wer liest es, was beeinflusst es?** Der Build entscheidet damit über Freigabe oder Korrekturrunde; die Befunde zeigen dem LLM, was es korrigieren soll (Annahme; das Archetyp-Ticket entscheidet die Details). Danach dient es als Nachweis im Pull Request.
 
 #### `cdk_nag_errors` · ⚙️
 
-**Wer füllt es?** cdk-nag mit dem Regelpaket AwsSolutions.
+**Wer füllt es?** cdk-nag mit dem Regelpaket AwsSolutions, nach Abzug der Ausnahmen (4.5).
 
 **Warum existiert es?** Die Audit-Engine nutzt ein LLM. Gäbe sie allein frei, prüfte ein LLM das Werk eines LLM. cdk-nag ist rein regelbasiert und damit **unabhängig**: Vier-Augen-Prinzip für Infrastructure as Code. Die Liste muss leer sein. Eine leere Liste ist trotzdem eine Aussage: „cdk-nag lief und fand nichts“ – ein fehlendes Feld ließe offen, ob es überhaupt lief.
 
 **Wer liest es, was beeinflusst es?** Der Build (leer → weiter, sonst Korrekturrunde) und der Reviewer.
 
 **Risiko:** LLM prüft LLM.
+
+#### `nag_exceptions` · ⚙️
+
+**Wer füllt es?** Der Build: die Ausnahmen, die beim Archetyp tatsächlich gegriffen haben, als `"<rule_id> <path>"`.
+
+**Warum existiert es?** Eine Freigabe „ohne Errors“ ist nur ehrlich, wenn sichtbar ist, welche Errors per Ausnahme erlaubt wurden.
+
+**Wer liest es, was beeinflusst es?** Der Reviewer im Pull Request. Keine Prüflogik hängt daran.
 
 #### `rounds` · ⚙️
 
@@ -485,6 +566,36 @@ Der dritte Punkt ist subtil: Ein Zitat aus Art. 5 darf eine Regel zu Art. 32 nic
 
 **Wer liest es, was beeinflusst es?** Die Lambda-Funktion lädt es beim Kaltstart. `POST /archetype/select` liefert daraus Code und Template.
 
+### 4.5 `NagException` – eine Ausnahme (👤, `data/nag_allowlist.json`)
+
+Mit Solutions Constructs ist „null cdk-nag-Errors“ nicht erreichbar: CDK erzeugt eigene Hilfs-Ressourcen, die unser Code nicht ändern kann (ADR 0007, ARCHITECTURE 1.4). Die Allowlist macht daraus **dokumentierte Abweichungen**. Sie gilt für Archetypen und den GovGuard-Stack.
+
+#### `rule_id` · 👤
+
+**Wer füllt es?** Ein Mensch, z. B. `"AwsSolutions-IAM4"`.
+
+**Warum existiert es?** Eine Ausnahme gilt immer nur für **eine** Regel, nie pauschal.
+
+**Wer liest es, was beeinflusst es?** Der Code, der die Errors von cdk-nag filtert.
+
+#### `path_pattern` · 👤
+
+**Wer füllt es?** Ein Mensch: ein Glob-Muster auf den Construct-Pfad, z. B. `"*/BucketNotificationsHandler*/Role/Resource"`.
+
+**Warum existiert es?** Die Ausnahme soll nur die eine CDK-interne Ressource treffen. Dieselbe Regel an einer eigenen Ressource bleibt ein Error.
+
+**Wer liest es, was beeinflusst es?** Derselbe Filter.
+
+#### `reason` · 👤
+
+**Wer füllt es?** Ein Mensch, auf Deutsch.
+
+**Warum existiert es?** Eine Abweichung ohne Begründung ist im BSI-Sinn nicht dokumentiert. Die Begründung ist die **Risikoakzeptanz**.
+
+**Wer liest es, was beeinflusst es?** Der Reviewer und der Prüfer. Keine Prüflogik hängt daran.
+
+**Risiko:** Das LLM schaltet die Prüfung ab. Darum schreibt nur ein Mensch die Liste, und der Code wendet sie an (**Funktionstrennung**).
+
 ---
 
 ## 5. Station 4 – Das Laufzeit-Audit: `FindingDraft` → `Finding` → `AuditReport`
@@ -510,13 +621,13 @@ Weil der Typ im Tool-Schema steht, kann das LLM keinen Status „OK“ oder „t
 
 **Warum existiert es?** Es ist der **Verknüpfungsschlüssel** zwischen Urteil und Katalog. Auf die Reihenfolge der LLM-Antwort verlässt sich der Code nicht; die explizite ID macht die Zuordnung eindeutig.
 
-**Wer liest es, was beeinflusst es?** `run_audit()` prüft, dass jede ID des Katalogs genau einmal vorkommt und keine unbekannte dabei ist. Danach schlägt der Code über die ID Titel, Anker und Querverweise nach.
+**Wer liest es, was beeinflusst es?** `run_audit()` prüft, dass jede an das Modell gesendete ID genau einmal vorkommt und keine unbekannte dabei ist. Danach schlägt der Code über die ID Titel, Anker und Querverweise nach.
 
 **Risiko:** vergessene oder erfundene Prüfregeln.
 
 #### `status` · 🤖
 
-**Wer füllt es?** Das LLM, auf Basis von `compliant_if` und `violation_if`.
+**Wer füllt es?** Das LLM, auf Basis von `compliant_if` und `violation_if`. Bei CloudFormation-Eingabe setzt N/A nur der Code (5.6).
 
 **Warum existiert es?** Es ist das eigentliche Urteil – die einzige Stelle, an der wirklich Sprachverständnis nötig ist.
 
@@ -613,10 +724,15 @@ Weil der Typ im Tool-Schema steht, kann das LLM keinen Status „OK“ oder „t
 ### 5.6 Die Validierungskette in `run_audit()`
 
 ```
-LLM-Antwort (roher dict)
+Eingabe
+  │
+  ├─ 0. CloudFormation-JSON? Prüfregeln ohne passenden Ressourcentyp → N/A durch Code
+  ▼
+LLM-Antwort (roher dict) für die übrigen Prüfregeln
   │
   ├─ 1. Pydantic: passt das Schema AuditResponse?
-  ├─ 2. Vollständigkeit: jede rule_id genau einmal, keine unbekannten IDs?
+  ├─ 2. Vollständigkeit: jede gesendete rule_id genau einmal, keine unbekannten IDs?
+  │     Bei CloudFormation: kein N/A vom Modell?
   ├─ 3. Beleg: vorhanden, wo Pflicht, und contains_quote(input, evidence)?
   │
   ├─ alles ok ──────────▶ anreichern → AuditReport
@@ -625,6 +741,7 @@ LLM-Antwort (roher dict)
                   └─ Fehler ──▶ AuditValidationError → HTTP 502
 ```
 
+- **Schritt 0** ist deterministisch (ADR 0007): Dasselbe Template ergibt immer dieselben N/A. Das macht Freigabe und Selbst-Audit reproduzierbar und den Prompt kürzer. `template_resource_types()` erkennt nur JSON; YAML und Terraform gelten als Freitext.
 - **Schritt 2** schützt die Kernaussage des Bounded Catalog (ADR 0002): Keine Prüfregel kann still verloren gehen, und keine erfundene Regel kann sich einschleichen.
 - **Schritt 3** ist der Halluzinationsschutz: Ein Beleg, der nicht wörtlich in der Eingabe steht, ist eine Behauptung, kein Beweis.
 - **Wer macht was?** Schritt 1 erledigt Pydantic AI, die Schritte 2 und 3 laufen als `@agent.output_validator` und lösen bei Fehlern `ModelRetry` aus. Den Retry-Loop stellt das Framework, die Prüfung bleibt unser Code.
@@ -633,7 +750,8 @@ LLM-Antwort (roher dict)
 ### 5.7 Die Naht zum LLM: das übergebene Modell
 
 ```python
-def run_audit(catalog: RuleCatalog, input_text: str, model: Model) -> AuditReport
+def run_audit(catalog: RuleCatalog, input_text: str, model: Model,
+              trace: Trace) -> AuditReport
 ```
 
 Die Prüflogik kennt Bedrock nicht. Sie bekommt ein Pydantic-AI-`Model` übergeben (**Dependency Injection**); in Produktion baut es `aws_services.py` mit dem Profil `eu.`. In Tests ersetzen `TestModel` oder `FunctionModel` das LLM. Mit `FunctionModel` lassen sich auch kaputte Antworten gezielt simulieren, etwa ein erfundener Beleg, der den Retry auslöst.
@@ -716,7 +834,7 @@ Die Prüflogik kennt Bedrock nicht. Sie bekommt ein Pydantic-AI-`Model` übergeb
 
 **Warum existiert es?** Ein richtiger Gesamtstatus kann zufällig richtig sein. Pflicht-Befunde stellen sicher, dass er aus dem **richtigen Grund** entsteht. Alle übrigen Befunde sind frei: Das LLM urteilt bei Grenzfällen nicht immer gleich, und ein Test, der jeden der 20–24 Befunde festnagelt, wäre **brüchig** (er schlüge bei harmlosen Änderungen fehl).
 
-**Wer liest es, was beeinflusst es?** Das Preset-Gate: Zu jedem Eintrag muss es einen Befund mit diesem Primäranker und genau diesem Status geben.
+**Wer liest es, was beeinflusst es?** Das Preset-Gate: Zu jedem Eintrag muss es einen Befund mit diesem Primäranker und genau diesem Status geben. Zugleich sind die Anker gesetzte Plätze im Katalog (3.0).
 
 **Risiko:** ein richtiges Ergebnis aus falschem Grund.
 
@@ -736,7 +854,7 @@ Die Prüflogik kennt Bedrock nicht. Sie bekommt ein Pydantic-AI-`Model` übergeb
 
 **Warum existiert es?** Ein Mensch kennt „DSGVO Art. 9“ direkt aus der Norm, nicht aus unserem Katalog. Der Anker ist die **fachliche Bezugsgröße** und bleibt stabil, egal wie der Build die Regel formuliert.
 
-**Wer liest es, was beeinflusst es?** Das Preset-Gate sucht den Befund mit `primary_anchor` gleich diesem Wert. Fehlt er, etwa weil die Regel nicht mehr im Katalog ist, wird das Gate rot – so fällt auch eine falsch gewählte Auswahl auf.
+**Wer liest es, was beeinflusst es?** Das Preset-Gate sucht den Befund mit `primary_anchor` gleich diesem Wert. Weil Pflichtanker gesetzte Plätze sind (3.0), steht die Prüfregel immer im Katalog; das Gate prüft also den Status.
 
 #### `status` · 👤
 
@@ -771,9 +889,13 @@ Zwei kleine Funktionen tragen den ganzen Halluzinationsschutz: den Zitat-Check i
 | Vergessene oder erfundene Prüfregel | genau ein Befund je `rule_id` | ⚙️ `run_audit()` |
 | Erfundene Statuswerte oder Archetypen | `Literal`-Typen im Tool-Schema | ⚙️ Pydantic |
 | Verstoß aus fehlender Information | Beleg-Pflicht bei FAIL; Lücke = WARN | ⚙️ `run_audit()` |
-| Unbequeme Regel wegdefiniert | `cfn_resource_types` sperrt N/A | ⚙️ Freigabe |
+| Unbequeme Regel wegdefiniert | `cfn_resource_types`: N/A nur durch Code, sonst gesperrt | ⚙️ `run_audit()` + Freigabe |
+| Falscher Ressourcentyp führt zu stillem N/A | Typen in der Auswahlliste, Review im Pull Request | 👤 |
+| Prüfregel ohne Bezug zu unseren Archetypen | Relevanzfilter über `resource_types` | ⚙️ Build |
+| Wichtige Norm fällt aus dem Katalog | Gesetzte Plätze aus `required_findings`, höchstens 4 | 👤 + ⚙️ Build |
 | Sicherheit durch Weglassen | `required_resource_types` | ⚙️ Freigabe |
 | LLM prüft LLM | `Approval.cdk_nag_errors` | ⚙️ cdk-nag |
+| LLM schaltet cdk-nag ab | `NagException` nur von Hand, `acknowledge` im LLM-Code verboten | 👤 + ⚙️ Freigabe |
 | Endlosschleife / Kosten | `Approval.rounds` ≤ 3; genau ein Retry zur Laufzeit | ⚙️ Build / `run_audit()` |
 | Veraltete Freigabe | `ArchetypeCatalog.rules_arch_sha256` | ⚙️ Preset-Gate |
 | Zirkulärer Test | `Expected` von Hand, Bezug über `anchor` | 👤 + ⚙️ Preset-Gate |

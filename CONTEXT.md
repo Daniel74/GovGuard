@@ -13,8 +13,10 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 - **Primäranker**: Die eine Anforderung, aus der eine Prüfregel abgeleitet ist. _Code_: `primary_anchor`. _Vermeiden_: Anchor, Referenz
 - **Querverweis**: KI-vorgeschlagener, nicht verifizierter Bezug einer Prüfregel auf eine Anforderung einer anderen Quelle; beeinflusst keinen Status. _Code_: `cross_reference`. _Vermeiden_: Mapping
 - **Bounded Catalog**: Fest begrenzte Menge an Prüfregeln je Audit-Art, die in jedem Audit vollständig bewertet wird. _Code_: `catalog`. _Vermeiden_: Top-K, Retrieval-Set
+- **Gesetzter Platz**: Platz im Bounded Catalog, den der Pflicht-Befund eines Preset unabhängig vom Ranking sichert, höchstens 4 je Katalog. _Code_: `pinned_anchors`. _Vermeiden_: Pin, Pflichtregel
 - **Golden Archetype**: Vorab auditierte und freigegebene Referenzarchitektur für ein wiederkehrendes Behörden-Workload-Muster. _Code_: `Archetype`. _Vermeiden_: Pattern, Blueprint, Vorlage
-- **Freigabe**: Zustand eines Golden Archetype, der das Architektur-Audit und eine unabhängige deterministische Prüfung ohne Beanstandung bestanden hat. _Code_: `approved`
+- **Freigabe**: Zustand eines Golden Archetype, der das Architektur-Audit und eine unabhängige deterministische Prüfung ohne Beanstandung bestanden hat; erlaubt sind nur Ausnahmen. _Code_: `approved`
+- **Ausnahme**: Begründeter, von Hand gepflegter Eintrag in der Allowlist `data/nag_allowlist.json`, der einen nicht behebbaren cdk-nag-Error erlaubt. _Code_: `NagException`. _Vermeiden_: Suppression, Acknowledge
 
 ## Audit
 
