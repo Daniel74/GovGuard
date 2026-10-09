@@ -36,15 +36,18 @@ Gemessen in **„% Weekly“**, also in der Einheit der Usage-Anzeige. Anthropic
 | B: 13.–19.10. | 5 | 100 % |
 | C: 20.–21.10. | 2 | 100 % (Puffer, Präsentation) |
 
-| Klasse (Bauen + Review) | % Weekly | Tickets | Summe |
+| Wer baut | Tickets | % Weekly je Ticket | Summe |
 |---|---|---|---|
-| klein | 5 | #3, #10 | 10 |
-| mittel | 8 | #2, #4, #6, #8, #11, #12 | 48 |
-| groß (Opus, heikel) | 13 | #1, #5, #7, #9 | 52 |
-| Puffer Debugging | +30 % | | 33 |
-| **Bedarf** | | | **ca. 140 %** |
+| 🤖 Claude, groß (Opus, heikel) | #1, #7, #9 | 13 | 39 |
+| 🤖 Claude, mittel/klein | #2 (8), #3 (5) | 5–8 | 13 |
+| 🛠 Junie baut, Claude prüft | #4, #6, #10, #12 | 3 | 12 |
+| 🛠 Junie baut, Claude prüft + Wizard/großes Review | #5, #8 | 4 | 8 |
+| 🛠 Junie (UI), 🤖 Claude (`deploy.yml`) | #11 | 5 | 5 |
+| Puffer Debugging | +30 % | | 23 |
+| **Bedarf** | | | **ca. 100 %** |
 
-**Ergebnis:** Der Bedarf von ca. 140 % ist kleiner als die 185 % in A+B, dazu kommt C als Reserve. Es passt also knapp. Engpass ist eher das 5h-Session-Limit pro Tag als das Weekly-Budget.
+**Ergebnis:** Der Bedarf von ca. 100 % liegt deutlich unter den 185 % in A+B, und C bleibt als Reserve. Ohne Junie wären es ca. 140 %. Engpass ist eher das 5h-Session-Limit pro Tag als das Weekly-Budget.
+**Junie** (PyCharm, GPT-5.2) verbraucht Credits aus dem JetBrains-Abo, nicht aus Claude Pro. Prüfe den Credit-Stand nach #4.
 
 **Kalibrierung:** Notiere den Weekly-Wert vor und nach #1. Kostet #1 mehr als 13 %, multiplizierst du alle Werte mit *Ist ÷ 13*. Liegt der Bedarf dann über 185 %, kürzt du zuerst den Umfang (SDM in #5, UI in #11), bevor die Qualität leidet.
 **Sparen:** Sonnet baut, Opus urteilt; nach jedem Schritt `/clear`; große Dokumente nur abschnittsweise lesen lassen.
