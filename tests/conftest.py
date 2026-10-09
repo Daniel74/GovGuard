@@ -74,3 +74,11 @@ def bucket_template() -> str:
         "Type": "AWS::S3::Bucket",
         "Properties": {"PublicAccessBlockConfiguration": {"BlockPublicAcls": True}},
     }}}, indent=2)
+
+
+@pytest.fixture(autouse=True)
+def fake_aws_credentials(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Tests never touch real AWS credentials or profiles."""
+    monkeypatch.setenv("AWS_ACCESS_KEY_ID", "test")
+    monkeypatch.setenv("AWS_SECRET_ACCESS_KEY", "test")
+    monkeypatch.delenv("AWS_PROFILE", raising=False)
