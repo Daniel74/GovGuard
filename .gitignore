@@ -3,3 +3,7 @@ data/sources/
 
 # CIS full texts must not be redistributed (ADR 0008)
 data/extracted/cis.json
+.venv/
+__pycache__/
+.pytest_cache/
+.ruff_cache/

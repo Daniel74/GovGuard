@@ -4,11 +4,12 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Legende:** 👤 du · 🤖 Claude · 🛠 Junie (PyCharm) · `/…` Befehl zum Eintippen. Claude skizziert jeden kleinen Schritt und wartet auf dein **Go** (CLAUDE.md). Junie arbeitet ein Ticket am Stück ab; dort ersetzt das Claude-Review das Go.
 
-**Rhythmus jedes Eintrags:** *Starten → Bauen → Prüfen → Verstehen → Abschließen.*
+**Rhythmus jedes Eintrags:** _Starten → Bauen → Prüfen → Verstehen → Abschließen._
 
 **Tagesabschluss:** 👤 `/devlog`
 
 **Modell und Session:**
+
 - **Sonnet baut, Opus urteilt.** Sonnet 5.5 für TDD-Zyklen mit klaren Kriterien; Opus 5.5 für Grilling, Review, Security-Review, Diagnose und IHK-Check. Opus baut auch die heiklen Tickets #1 (Fundament), #7 (Freigabe-Schleife) und #9 (IAM, KMS). Wechsel mit `/model sonnet` bzw. `/model opus`.
 - **🆕 = neue Session** (`/clear`). Erste Nachricht: „Lies docs/FAHRPLAN.md Schritt N und Issue #X.“ Jeder Schritt startet frisch. Das Review läuft in einer zweiten frischen Session, damit keine Sitzung ihren eigenen Code prüft (Vier-Augen-Prinzip).
 - Zusätzlich neu starten, wenn eine Session lang wird und Claude Absprachen vergisst oder sich wiederholt. Vorher den Stand committen.
@@ -16,20 +17,20 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Wer baut was:**
 
-| Schritt | Ticket | Baut | Prüft |
-|---|---|---|---|
-| 1 | #1 Prüfkern | 🤖 Opus | 🤖 Opus |
-| 2 | #3 Presets | 👤 + 🤖 Opus | 👤 |
-| 3 | #2 Bedrock + CLI | 🤖 Sonnet | 🤖 Opus |
-| 4 | #4 BSI + CIS | 🛠 Junie | 🤖 Opus |
-| 5 | #5 DSGVO + SDM | 🛠 Junie | 🤖 Opus |
-| 6 | #6 Auswahlliste | 🛠 Junie | 👤 Kontrollpunkt + 🤖 Opus |
-| 7 | #12 Prüfregeln + Gate | 🛠 Junie | 🤖 Opus |
-| 8 | #7 Golden Archetypes | 🤖 Opus | 🤖 Opus |
-| 9 | #8 Preset-Gate + Workflow | 🛠 Junie (Wizard: 🤖) | 🤖 Opus |
-| 10 | #9 Stack + Endpunkte | 🤖 Opus | 🤖 Opus |
-| 11 | #10 Archetyp-Auswahl | 🛠 Junie (Deploy-Test: 🤖) | 🤖 Opus |
-| 12 | #11 Deploy + UI | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus |
+| Schritt | Ticket                    | Baut                                             | Prüft                      |
+| ------- | ------------------------- | ------------------------------------------------ | -------------------------- |
+| 1       | #1 Prüfkern               | 🤖 Opus                                          | 🤖 Opus                    |
+| 2       | #3 Presets                | 👤 + 🤖 Opus                                     | 👤                         |
+| 3       | #2 Bedrock + CLI          | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 4       | #4 BSI + CIS              | 🛠 Junie                                         | 🤖 Opus                    |
+| 5       | #5 DSGVO + SDM            | 🛠 Junie                                         | 🤖 Opus                    |
+| 6       | #6 Auswahlliste           | 🛠 Junie                                         | 👤 Kontrollpunkt + 🤖 Opus |
+| 7       | #12 Prüfregeln + Gate     | 🛠 Junie                                         | 🤖 Opus                    |
+| 8       | #7 Golden Archetypes      | 🤖 Opus                                          | 🤖 Opus                    |
+| 9       | #8 Preset-Gate + Workflow | 🛠 Junie (Wizard: 🤖)                            | 🤖 Opus                    |
+| 10      | #9 Stack + Endpunkte      | 🤖 Opus                                          | 🤖 Opus                    |
+| 11      | #10 Archetyp-Auswahl      | 🛠 Junie (Deploy-Test: 🤖)                       | 🤖 Opus                    |
+| 12      | #11 Deploy + UI           | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
 
 ---
 
@@ -48,9 +49,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Die Prüflogik läuft komplett ohne AWS und ist getestet: Modelle, Validierungskette, Gesamtstatus, N/A durch Code.
 **Voraussetzung:** Schritt 0. Schritt 2 kann parallel laufen.
 
-- [ ] **Starten** 🆕 *Opus* · 👤 `/tdd Issue #1 umsetzen`. 🤖 legt je Zyklus erst einen roten Test an, dann den Code, bis der Test grün ist. 👤 sagt Go. Wiederholen, bis alle Kriterien grün sind.
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #1 umsetzen`. 🤖 legt je Zyklus erst einen roten Test an, dann den Code, bis der Test grün ist. 👤 sagt Go. Wiederholen, bis alle Kriterien grün sind.
       Reihenfolge: `pyproject.toml` + ruff → `text.py` (`normalize`, `contains_quote`, `template_resource_types`) → Gesamtstatus → Validator → `run_audit()` mit `FunctionModel` → boto3-Importtest und Test der Modulgröße
-- [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #1`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #1`
 - [ ] **Verstehen** 👤 `/ihk-check Halluzinationsschutz`
 - [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #1“ → Go → 🤖 postet ins Issue; 👤 committet und pusht
 
@@ -64,7 +65,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** 4 fiktive Presets mit einem Soll, das du festlegst. Das Soll ist der Maßstab für alle späteren Tests.
 **Voraussetzung:** keine; parallel zu Schritt 1.
 
-- [ ] **Starten** 🆕 *Opus* · 👤 `/grilling Presets für #3: 4 fiktive Behördenszenarien, Aufteilung Spec/Architektur, Soll-Gesamtstatus, Pflichtanker (höchstens 4 je Audit-Art)`
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/grilling Presets für #3: 4 fiktive Behördenszenarien, Aufteilung Spec/Architektur, Soll-Gesamtstatus, Pflichtanker (höchstens 4 je Audit-Art)`
 - [ ] **Bauen** 👤 „Lege die Presets nach unseren Antworten an“ → Go → 🤖 schreibt `data/presets/<id>/` (Eingabe + `preset.json`). Ein Architektur-Preset ist CloudFormation-JSON, damit „N/A durch Code“ mitgetestet wird.
 - [ ] **Prüfen** 👤 Lies jede Eingabe und jedes Soll selbst. Die Eingaben enthalten nur fiktive Daten, die größte höchstens 100.000 Zeichen.
 - [ ] **Verstehen** 👤 Erkläre in 2 Sätzen, warum das Soll von dir kommt und nicht aus einem früheren Lauf.
@@ -80,11 +81,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Ein echtes Spec-Audit läuft lokal über Bedrock. Laufzeit und Kosten sind gemessen.
 **Voraussetzung:** Schritt 1. AWS-Login aktiv (`aws sso login`), Zugang zu Claude Haiku 4.5 in Bedrock eu-central-1.
 
-- [ ] **Starten** 🆕 *Sonnet* · 👤 `/tdd Issue #2 umsetzen` (Stubber-Test: Request enthält `toolChoice`; CLI-Ausgabe als JSON)
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #2 umsetzen` (Stubber-Test: Request enthält `toolChoice`; CLI-Ausgabe als JSON)
 - [ ] **Bauen** 👤 „Prüfe die Modell-ID mit `aws bedrock list-inference-profiles --region eu-central-1`“ → 🤖 korrigiert die ID, falls nötig, auch in ADR 0001 und ARCHITECTURE 2.1.
 - [ ] **Messen** 👤 `/run CLI-Audit mit 100.000 Zeichen und 20 Prüfregeln, Laufzeit und Kosten messen` → Go → 🤖 notiert das Ergebnis im Issue
 - [ ] Falls über 29 s: 👤 `/model opus`, dann `/diagnosing-bugs Audit überschreitet 29 s` und den Plan B aus der offenen Frage in #2 entscheiden
-- [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #2`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #2`
 - [ ] **Verstehen** 👤 `/ihk-check Tool-Choice und EU-Inferenz`
 - [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #2“ → Go → 🤖 postet; 👤 committet und pusht
 
@@ -99,10 +100,10 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritt 1 (`normalize()`).
 
 - [ ] **Branch** 👤 `git switch -c ticket-4`
-- [ ] **Spike** 🛠 *Junie* · 👤 „Zeig mir die Struktur von Prowler `cis_7.0_aws.json` und dem BSI-OSCAL: Felder, IDs, Markdown-Zeichen im Text. Nur anschauen, nichts ändern.“
-- [ ] **Starten** 🛠 *Junie* · 👤 „Lies docs/FAHRPLAN.md Schritt 4 und `gh issue view 4`. Setze es per TDD um (ADR 0008).“ Reihenfolge: `data/sources.json` + `source_fetch.py` (Hash-Prüfung, Test mit Fake) → BSI → CIS. Stichproben-Tests: `DET.3.1`, CIS `3.1.4`, jede ID genau einmal, CIS genau 70 Empfehlungen
+- [ ] **Spike** 🛠 _Junie_ · 👤 „Zeig mir die Struktur von Prowler `cis_7.0_aws.json` und dem BSI-OSCAL: Felder, IDs, Markdown-Zeichen im Text. Nur anschauen, nichts ändern.“
+- [ ] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 4 und `gh issue view 4`. Setze es per TDD um (ADR 0008).“ Reihenfolge: `data/sources.json` + `source_fetch.py` (Hash-Prüfung, Test mit Fake) → BSI → CIS. Stichproben-Tests: `DET.3.1`, CIS `3.1.4`, jede ID genau einmal, CIS genau 70 Empfehlungen
 - [ ] **Bauen** 🛠 erzeugt `data/extracted/bsi.json` und `cis.json` (nur lokal). 👤 Prüfe: Bleiben beim BSI nach dem Vorfilter 380 Anforderungen? Stimmen 3 CIS-Texte mit dem lokalen PDF überein?
-- [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #4`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #4`
 - [ ] **Verstehen** 👤 Erkläre in 2 Sätzen, warum der Vorfilter MUSS **und** SOLLTE nimmt.
 - [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #4“ → Go → 🤖 postet; 👤 committet, merged den Ticket-Branch nach `main` und pusht
 
@@ -117,10 +118,10 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritt 1 (`normalize()`).
 
 - [ ] **Branch** 👤 `git switch -c ticket-5`
-- [ ] **Spike** 🛠 *Junie* · 👤 „Zeig mir die Struktur des DSGVO-Formex-XML (`ARTICLE`, `PARAG`, Berichtigungs-Markierungen) und der SDM-Bausteine (Kopfzeilen, Maßnahmen-IDs). Nur anschauen.“
-- [ ] **Starten** 🛠 *Junie* · 👤 „Lies docs/FAHRPLAN.md Schritt 5 und `gh issue view 5`. Setze es per TDD um (ADR 0008).“ DSGVO und SDM kommen in `data/sources.json`. Stichproben-Tests: `Art. 32`, `M60.D01`, jede ID genau einmal, DSGVO genau 99 Artikel
+- [ ] **Spike** 🛠 _Junie_ · 👤 „Zeig mir die Struktur des DSGVO-Formex-XML (`ARTICLE`, `PARAG`, Berichtigungs-Markierungen) und der SDM-Bausteine (Kopfzeilen, Maßnahmen-IDs). Nur anschauen.“
+- [ ] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 5 und `gh issue view 5`. Setze es per TDD um (ADR 0008).“ DSGVO und SDM kommen in `data/sources.json`. Stichproben-Tests: `Art. 32`, `M60.D01`, jede ID genau einmal, DSGVO genau 99 Artikel
 - [ ] **Bauen** 🛠 erzeugt `data/extracted/dsgvo.json` und `sdm.json`
-- [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #5`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #5`
 - [ ] **Verstehen** 👤 Erkläre in 2 Sätzen, warum SDM Protokollieren (M43) bewusst fehlt.
 - [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #5“ → Go → 🤖 postet; 👤 committet, merged den Ticket-Branch nach `main` und pusht
 
@@ -135,13 +136,13 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritte 2–5.
 
 - [ ] **Branch** 👤 `git switch -c ticket-6`
-- [ ] **Starten** 🛠 *Junie* · 👤 „Lies docs/FAHRPLAN.md Schritt 6 und `gh issue view 6`. Setze es per TDD um.“
+- [ ] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 6 und `gh issue view 6`. Setze es per TDD um.“
       Reihenfolge: `archetype_profiles.json` → `ranking.py` (reihum, Gleichstand, gesetzte Plätze) → Relevanzfilter → `curation.py` mit `FunctionModel`
 - [ ] **Echter Lauf** 🛠 👤 „Erzeuge die Auswahllisten mit Bedrock“ (ca. 0,50 $)
 - [ ] **Kontrollpunkt** 👤 Lies `selection_arch.json` und `selection_spec.json` (ca. 10 Minuten):
       Betrifft jede Regel einen Baustein unserer Archetypen? Stimmen die Ressourcentypen? Sind Verschlüsselung, Logging, Zugriffsrechte und die Pflichtanker drin?
-      Falls nein: 🆕 *Opus* · 👤 `/grilling Auswahlliste nachschärfen`, bevor es weitergeht.
-- [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #6`
+      Falls nein: 🆕 _Opus_ · 👤 `/grilling Auswahlliste nachschärfen`, bevor es weitergeht.
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #6`
 - [ ] **Verstehen** 👤 `/ihk-check Bounded Catalog und Ranking`
 - [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #6“ → Go → 🤖 postet; 👤 committet, merged den Ticket-Branch nach `main` und pusht
 
@@ -156,11 +157,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritt 6 inklusive Kontrollpunkt.
 
 - [ ] **Branch** 👤 `git switch -c ticket-12`
-- [ ] **Starten** 🛠 *Junie* · 👤 „Lies docs/FAHRPLAN.md Schritt 7 und `gh issue view 12`. Setze es per TDD um.“
+- [ ] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 7 und `gh issue view 12`. Setze es per TDD um.“
       Reihenfolge: `gates.py` (Schema, Anker, Zitat, Querverweise) → `formulate_rule` mit `FunctionModel`
 - [ ] **Echter Lauf** 🛠 👤 „Formuliere die Prüfregeln mit Bedrock“
 - [ ] **Stichprobe** 👤 Lies 5 Prüfregeln: Sind `compliant_if` und `violation_if` prüfbar? Passt `source_quote` zur Norm?
-- [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #12`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #12`
 - [ ] **Verstehen** 👤 Erkläre in 2 Sätzen, warum der Code den Primäranker setzt und nicht das LLM.
 - [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #12“ → Go → 🤖 postet; 👤 committet, merged den Ticket-Branch nach `main` und pusht
 
@@ -174,11 +175,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** ARCH-01 bis -03 sind als CDK gebaut und freigegeben, mit dokumentierten Ausnahmen.
 **Voraussetzung:** Schritt 7. Node.js und CDK CLI lokal installiert.
 
-- [ ] **Starten** 🆕 *Opus* · 👤 `/tdd Issue #7 umsetzen`
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #7 umsetzen`
       Reihenfolge: Allowlist-Filter → Struktur-Soll → Compliance-Soll (N/A-Sperre) → Schleife mit höchstens 3 Runden (mit Fakes) → `cdk_runner.py`
 - [ ] **Echter Build** 👤 „Baue die 3 Archetypen“ → Go. Bei Fehlern von synth oder cdk-nag: 👤 `/diagnosing-bugs`
 - [ ] **Offene Frage** 👤 „Klär, ob Lambda-Logging `log-group:NAME:*` braucht“ → bei Ja: Ausnahme mit Begründung in `data/nag_allowlist.json`
-- [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #7`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #7`
 - [ ] **Verstehen** 👤 `/ihk-check cdk-nag und Ausnahmen`
 - [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #7“ → Go → 🤖 postet; 👤 committet und pusht
 
@@ -193,11 +194,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritte 2 und 8.
 
 - [ ] **Branch** 👤 `git switch -c ticket-8`
-- [ ] **Starten** 🛠 *Junie* · 👤 „Lies docs/FAHRPLAN.md Schritt 9 und `gh issue view 8`. Setze es per TDD um.“
+- [ ] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 9 und `gh issue view 8`. Setze es per TDD um.“
       Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Archetyp, Hash-Check) → `python -m kb_build` → `build-kb.yml` ohne Logik
-- [ ] **Einrichten** 🆕 *Sonnet* · 👤 `/wizard OIDC-Provider und Rolle für build-kb.yml, nur Bedrock eu.-Profil` → 👤 Wizard ausführen
+- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard OIDC-Provider und Rolle für build-kb.yml, nur Bedrock eu.-Profil` → 👤 Wizard ausführen
 - [ ] **Ausprobieren** 👤 Workflow in GitHub Actions starten → PR lesen, Kosten prüfen
-- [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #8`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #8`
 - [ ] **Verstehen** 👤 Erkläre in 2 Sätzen, warum OIDC besser ist als ein Access Key in GitHub.
 - [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #8“ → Go → 🤖 postet; 👤 committet, merged den Ticket-Branch nach `main` und pusht
 
@@ -211,12 +212,12 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Die Audit-API läuft in eu-central-1 und protokolliert jeden Aufruf.
 **Voraussetzung:** Schritt 3. Für Ausnahmen Schritt 8 abgeschlossen.
 
-- [ ] **Starten** 🆕 *Opus* · 👤 `/tdd Issue #9 umsetzen`
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #9 umsetzen`
       Reihenfolge: `Trace` und `AuditEvent` bauen → `handler.py` → CDK-Stack mit Assertions-Tests (Tests auf das erzeugte Template)
 - [ ] **Sicherheit** 👤 `/security-review` vor dem ersten Deploy
 - [ ] **Einrichten** falls nötig: 👤 `/wizard cdk bootstrap für eu-central-1` → 👤 Wizard ausführen
 - [ ] **Deploy + Test** 👤 „Deploye den Stack und ruf /audit/spec mit einem Preset auf“ → Go → 👤 `/run`
-- [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #9`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #9`
 - [ ] **Verstehen** 👤 `/ihk-check IAM, KMS und Audit-Protokoll`
 - [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #9“ → Go → 🤖 postet; 👤 committet und pusht
 
@@ -231,9 +232,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritte 8 und 10.
 
 - [ ] **Branch** 👤 `git switch -c ticket-10`
-- [ ] **Starten** 🛠 *Junie* · 👤 „Lies docs/FAHRPLAN.md Schritt 11 und `gh issue view 10`. Setze es per TDD um.“ (Auswahl, Ablehnung bei FAIL, `NONE`)
-- [ ] **Deploy + Test** 🆕 *Sonnet* · 👤 „Deploye und ruf /archetype/select mit einem Spec-Preset auf“ → Go → 👤 `/run`
-- [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #10`
+- [ ] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 11 und `gh issue view 10`. Setze es per TDD um.“ (Auswahl, Ablehnung bei FAIL, `NONE`)
+- [ ] **Deploy + Test** 🆕 _Sonnet_ · 👤 „Deploye und ruf /archetype/select mit einem Spec-Preset auf“ → Go → 👤 `/run`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #10`
 - [ ] **Verstehen** 👤 Erkläre in 2 Sätzen, warum „keiner passt“ eine erlaubte Antwort ist.
 - [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #10“ → Go → 🤖 postet; 👤 committet, merged den Ticket-Branch nach `main` und pusht
 
@@ -247,11 +248,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Jeder Push auf `main` rollt GovGuard nach dem Selbst-Audit aus; die Demo-UI ist öffentlich erreichbar.
 **Voraussetzung:** Schritte 7, 10 und 11.
 
-- [ ] **Einrichten** 🆕 *Sonnet* · 👤 `/wizard Einmalige AWS-Einrichtung für deploy.yml: OIDC-Deploy-Rolle, IAM-User für Streamlit, Secrets` → 👤 Wizard ausführen. Der Wizard ist zugleich die Anleitung, die das Ticket verlangt.
-- [ ] **Bauen Pipeline** 🤖 *Sonnet* · 👤 „Setze aus Issue #11 die `deploy.yml` um“ → Schritt für Schritt mit Go
-- [ ] **Bauen UI** 👤 `git switch -c ticket-11-ui` → 🛠 *Junie* · 👤 „Lies docs/FAHRPLAN.md Schritt 12 und `gh issue view 11`. Baue nur die Streamlit-UI in `ui/`.“
+- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard Einmalige AWS-Einrichtung für deploy.yml: OIDC-Deploy-Rolle, IAM-User für Streamlit, Secrets` → 👤 Wizard ausführen. Der Wizard ist zugleich die Anleitung, die das Ticket verlangt.
+- [ ] **Bauen Pipeline** 🤖 _Sonnet_ · 👤 „Setze aus Issue #11 die `deploy.yml` um“ → Schritt für Schritt mit Go
+- [ ] **Bauen UI** 👤 `git switch -c ticket-11-ui` → 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 12 und `gh issue view 11`. Baue nur die Streamlit-UI in `ui/`.“
 - [ ] **Ausprobieren** 👤 `/run Streamlit-UI lokal starten, Preset auditieren, Screenshot`
-- [ ] **Sicherheit** 🆕 *Opus* · 👤 `/security-review`
+- [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review`
 - [ ] **Live** 👤 Pushen → Pipeline beobachten → UI auf Streamlit Community Cloud öffnen
 - [ ] **Prüfen** 👤 `/code-review gegen Issue #11`
 - [ ] **Verstehen** 👤 `/ihk-check Gesamtprojekt`
