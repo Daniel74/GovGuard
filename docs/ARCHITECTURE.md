@@ -167,22 +167,23 @@ Hat das Spec-Audit kein FAIL, kann der Client in einem zweiten Aufruf einen Gold
 
 ### 2.1 Tool-Choice – wie das Modell zur Struktur gezwungen wird
 
-Die Bedrock Converse API erlaubt, dem Modell „Tools“ anzubieten. Jedes Tool hat einen Namen und ein JSON-Schema für seine Eingabe. Mit `toolChoice` erzwingen wir genau **ein** Tool. Das Modell darf dann nicht frei antworten, sondern muss dieses Tool mit schema-konformen Argumenten „aufrufen“. Wir führen dabei nichts aus. **Das Tool ist ein Formular**, und seine Argumente sind unser Ergebnis.
+Die Bedrock Converse API erlaubt, dem Modell „Tools“ anzubieten. Jedes Tool hat einen Namen und ein JSON-Schema für seine Eingabe. Mit `toolChoice` erzwingen wir ein Tool. Das Modell darf dann nicht frei antworten, sondern muss dieses Tool mit schema-konformen Argumenten „aufrufen“. Wir führen dabei nichts aus. **Das Tool ist ein Formular**, und seine Argumente sind unser Ergebnis.
+
+Den Aufruf baut Pydantic AI (ADR 0005): Aus dem Draft-Modell entsteht das Tool-Schema, und weil es nur dieses eine Ausgabe-Tool gibt, sendet das Framework `toolChoice: any`, also „ein Tool ist Pflicht“.
 
 ```python
-response = bedrock.converse(
-    modelId="eu.anthropic.claude-haiku-5-5",              # EU-Profil, ADR 0001
-    system=[{"text": SYSTEM_PROMPT}],                       # Rolle + Regeln für PASS/WARN/FAIL/N/A
-    messages=[{"role": "user", "content": [{"text": katalog_und_eingabe}]}],
-    toolConfig={
-        "tools": [{"toolSpec": {
-            "name": "submit_audit",
-            "description": "Gib genau einen Befund je Prüfregel ab.",
-            "inputSchema": {"json": AuditResponse.model_json_schema()},  # aus Pydantic erzeugt
-        }}],
-        "toolChoice": {"tool": {"name": "submit_audit"}},   # erzwingt genau dieses Tool
-    },
+# aws_services.py – einziger Ort mit boto3
+model = BedrockConverseModel("eu.anthropic.claude-haiku-5-5")   # EU-Profil, ADR 0001
+
+# audit_engine.py – rein, bekommt das Modell übergeben
+audit_agent = Agent(
+    output_type=ToolOutput(AuditResponse, name="submit_audit",
+                           description="Gib genau einen Befund je Prüfregel ab."),
+    instructions=SYSTEM_PROMPT,     # Rolle + Regeln für PASS/WARN/FAIL/N/A
+    deps_type=AuditDeps,            # Katalog + Eingabe für die Code-Checks
+    retries=1,                      # genau ein Retry, 29-s-Timeout
 )
+result = audit_agent.run_sync(catalog_and_input, model=model, deps=deps)
 ```
 
 | Tool | Schema (vereinfacht) | Wo |
@@ -193,9 +194,9 @@ response = bedrock.converse(
 | `select_archetype` | `archetype: ARCH-01\|ARCH-02\|ARCH-03\|NONE`, `rationale: str` | Laufzeit, Archetyp-Auswahl |
 
 - **Enums schließen die Antwortmenge:** Das Modell kann keinen Status „OK“ und keinen Archetyp „ARCH-09“ erfinden.
-- **Tool-Choice ist kein Beweis:** Das Modell kann trotzdem falsche Werte liefern. Deshalb validiert danach Pydantic, und der Code prüft Vollständigkeit und Belege. Bei Fehlern folgt ein erneuter Aufruf mit der Fehlermeldung, danach HTTP 502.
+- **Tool-Choice ist kein Beweis:** Das Modell kann trotzdem falsche Werte liefern. Deshalb validiert danach Pydantic, und der Code prüft Vollständigkeit und Belege (`@agent.output_validator`). Bei Fehlern schickt Pydantic AI die Fehlermeldung einmal zurück ans Modell, danach HTTP 502.
 - **Was der Code weiß, fragt man das Modell nicht:** Primäranker, Querverweise und Gesamtstatus ergänzt der Code aus der Wissensbasis. Das Modell liefert nur Status, Beleg und Begründung.
-- **Modellwahl:** Haiku 5.5 unterstützt erzwungene Tools; Sonnet 5.5 lehnt `toolChoice` = `tool` laut Anthropic-Doku mit HTTP 400 ab.
+- **Modellwahl:** Haiku 5.5 unterstützt erzwungene Tools; Sonnet 5.5 lehnt `toolChoice` = `tool` laut Anthropic-Doku mit HTTP 400 ab. Achtung: Kann ein Modell kein Erzwingen, fällt Pydantic AI still auf `auto` zurück – darum bleibt Haiku 5.5 gesetzt.
 
 ## 3. Deployment – GovGuard prüft sich selbst
 
@@ -222,7 +223,7 @@ Es gibt nur **einen Weg in die Produktion**: `deploy.yml`. Er lädt auch die Wis
 | Komponente | Aufgabe | Technik |
 |---|---|---|
 | Build-Skript | Wissensbasis und Archetypen erzeugen | Python-Paket `kb_build`, CDK CLI |
-| Audit-Engine | Prompt bauen, Bedrock aufrufen, Befunde validieren | Python-Modul, Pydantic |
+| Audit-Engine | Prompt bauen, Bedrock aufrufen, Befunde validieren | Python-Modul, Pydantic, Pydantic AI |
 | API | 3 Endpunkte, IAM-Auth, Throttling | API Gateway REST + Lambda |
 | Wissensbasis | Prüfregeln und Golden Archetypes | JSON in `data/knowledge_base/` (versioniert), per Deploy nach S3 |
 | UI | Eingabe, Ampel, Download | Streamlit Community Cloud (ADR 0004) |
@@ -245,7 +246,7 @@ flowchart TB
     KB["kb_build/: sources/, ranking.py,<br/>gates.py, curation.py, archetypes.py"]
   end
   subgraph A["Adapter – einziger Ort für I/O"]
-    AWS["govguard/aws_services.py<br/>boto3"]
+    AWS["govguard/aws_services.py<br/>boto3, Bedrock-Modell"]
     CDK["kb_build/cdk_runner.py<br/>subprocess"]
   end
   subgraph X["Extern"]
@@ -262,7 +263,7 @@ flowchart TB
   CDK --> CL
 ```
 
-Von der Logik führt **kein Pfeil** zu den Adaptern. Der Einstieg reicht die Adapter-Funktionen hinein (Dependency Injection), Tests reichen Fakes hinein.
+Von der Logik führt **kein Pfeil** zu den Adaptern. Der Einstieg reicht die Adapter hinein, etwa das Bedrock-Modell (Dependency Injection); Tests reichen Fakes bzw. `TestModel` hinein.
 
 Jeder Ordner auf oberster Ebene ist eine eigene Deployment-Einheit oder eine Datenart:
 
@@ -280,7 +281,7 @@ tests/                pytest
 .github/workflows/    build-kb.yml, deploy.yml
 ```
 
-- **Adapter für I/O:** Nur `aws_services.py` importiert boto3, nur `cdk_runner.py` startet Prozesse. Ein Test prüft beides.
+- **Adapter für I/O:** Nur `aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `cdk_runner.py` startet Prozesse. Ein Test prüft beides.
 - **Keine Logik in Klebe-Code:** Einstiegsdateien und Workflow-YAML verbinden nur. Ein Workflow meldet sich an, ruft `python -m …` auf und öffnet den PR. Derselbe Befehl läuft lokal.
 - **src-Layout:** Der CDK-Stack packt mit `Code.from_asset("src/govguard")` genau den Laufzeit-Kern, ohne Build-Code, UI oder Daten.
 
@@ -294,7 +295,7 @@ tests/                pytest
 
 - Getrennte Endpunkte halten jeden Aufruf bei **einem** Bedrock-Call (29-s-Timeout).
 - `/archetype/select` vertraut dem mitgesendeten Report: vertretbar, weil Archetypen öffentlich und vorab freigegeben sind.
-- Scheitert die Validierung, folgt ein erneuter Bedrock-Aufruf mit der Fehlermeldung, danach HTTP 502.
+- Scheitert die Validierung, schickt Pydantic AI die Fehlermeldung einmal zurück ans Modell (`retries=1`), danach HTTP 502.
 
 ## Kosten
 

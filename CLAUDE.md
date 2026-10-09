@@ -7,9 +7,9 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 ## Leitplanken
 
 - AWS: Daten nur in `eu-central-1`, Inferenz nur in der EU (Bedrock-Profil `eu.`, ADR 0001), 100 % serverless, 0 € variable Kosten im Leerlauf; Fixkosten nur für Sicherheit, z. B. KMS-Schlüssel ca. 1 $/Monat (FinOps).
-- Python, Pydantic, Bedrock Converse API mit Tool-Choice, Streamlit-UI.
+- Python, Pydantic, Pydantic AI auf der Bedrock Converse API mit Tool-Choice (ADR 0005), Streamlit-UI.
 - Wissensbasis als JSON in S3 bzw. im Repo, Bounded Catalog ohne Suche, keine Vektor-DB (ADR 0002).
-- Code modular nach `docs/ARCHITECTURE.md` → *Code-Struktur*: boto3 nur in `aws_services.py`, subprocess nur in `src/kb_build/cdk_runner.py`, Prüflogik rein, nie vermischt. Workflow-YAML enthält keine Logik, nur `python -m …`.
+- Code modular nach `docs/ARCHITECTURE.md` → *Code-Struktur*: boto3 und das Bedrock-Modell für Pydantic AI nur in `aws_services.py`, subprocess nur in `src/kb_build/cdk_runner.py`, Prüflogik rein, nie vermischt. Workflow-YAML enthält keine Logik, nur `python -m …`.
 
 `docs/Modul4_Praxisprojekt_Emails.md` ist **Rohmaterial**, voller älterer und widersprüchlicher Ideen. Verbindlich sind `CONTEXT.md` (Glossar) und `docs/adr/`. Fehlen sie, gilt das Gespräch mit mir.
 

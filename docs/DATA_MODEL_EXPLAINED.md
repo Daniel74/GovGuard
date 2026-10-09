@@ -554,7 +554,7 @@ Weil der Typ im Tool-Schema steht, kann das LLM keinen Status „OK“ oder „t
 
 **Wer füllt es?** Das LLM, als Liste von `FindingDraft`.
 
-**Warum existiert es?** Das Eingabeschema eines Bedrock-Tools muss ein JSON-**Objekt** sein, keine nackte Liste. `AuditResponse` ist diese dünne Hülle. Ihr Schema erzeugt Pydantic per `AuditResponse.model_json_schema()`, und es wird zum Formular des Tools `submit_audit`.
+**Warum existiert es?** Das Eingabeschema eines Bedrock-Tools muss ein JSON-**Objekt** sein, keine nackte Liste. `AuditResponse` ist diese dünne Hülle. Als `output_type` des Agenten erzeugt Pydantic AI daraus das Formular des Tools `submit_audit` (ADR 0005).
 
 **Wer liest es, was beeinflusst es?** Schritt 1 der Validierung in `run_audit()`.
 
@@ -612,24 +612,23 @@ LLM-Antwort (roher dict)
   ├─ 3. Beleg: vorhanden, wo Pflicht, und contains_quote(input, evidence)?
   │
   ├─ alles ok ──────────▶ anreichern → AuditReport
-  └─ Fehler ──▶ EIN zweiter Aufruf, Fehlermeldung im Prompt
+  └─ Fehler ──▶ ModelRetry: Pydantic AI schickt die Fehlermeldung EINMAL zurück
                   ├─ ok ──▶ AuditReport
                   └─ Fehler ──▶ AuditValidationError → HTTP 502
 ```
 
 - **Schritt 2** schützt die Kernaussage des Bounded Catalog (ADR 0002): Keine Prüfregel kann still verloren gehen, und keine erfundene Regel kann sich einschleichen.
 - **Schritt 3** ist der Halluzinationsschutz: Ein Beleg, der nicht wörtlich in der Eingabe steht, ist eine Behauptung, kein Beweis.
-- **Genau ein Retry** ist ein bewusster Kompromiss: Viele Fehler behebt das LLM, wenn es die Fehlermeldung sieht. Mehr Runden würden das 29-Sekunden-Limit von API Gateway sprengen. Danach gilt **Fail closed**: lieber ein ehrlicher Fehler (502) als ein ungeprüfter Report.
+- **Wer macht was?** Schritt 1 erledigt Pydantic AI, die Schritte 2 und 3 laufen als `@agent.output_validator` und lösen bei Fehlern `ModelRetry` aus. Den Retry-Loop stellt das Framework, die Prüfung bleibt unser Code.
+- **Genau ein Retry** (`retries=1`) ist ein bewusster Kompromiss: Viele Fehler behebt das LLM, wenn es die Fehlermeldung sieht. Mehr Runden würden das 29-Sekunden-Limit von API Gateway sprengen. Danach gilt **Fail closed**: lieber ein ehrlicher Fehler (502) als ein ungeprüfter Report.
 
-### 5.7 Die Naht zum LLM: `LlmCall`
+### 5.7 Die Naht zum LLM: das übergebene Modell
 
 ```python
-class LlmCall(Protocol):
-    def __call__(self, *, system: str, user: str, tool: str,
-                 schema: type[BaseModel]) -> dict: ...
+def run_audit(catalog: RuleCatalog, input_text: str, model: Model) -> AuditReport
 ```
 
-Die Prüflogik kennt Bedrock nicht. Sie bekommt eine Funktion übergeben (**Dependency Injection**). Der Rückgabetyp ist bewusst `dict`, nicht das Pydantic-Modell: Das Protokoll verspricht nur **rohe, unvalidierte Daten**. Die Validierung gehört der Prüflogik, nicht dem Adapter. In Tests ersetzt ein Fake mit festen Antworten das LLM; so lassen sich auch kaputte Antworten gezielt simulieren.
+Die Prüflogik kennt Bedrock nicht. Sie bekommt ein Pydantic-AI-`Model` übergeben (**Dependency Injection**); in Produktion baut es `aws_services.py` mit dem Profil `eu.`. In Tests ersetzen `TestModel` oder `FunctionModel` das LLM. Mit `FunctionModel` lassen sich auch kaputte Antworten gezielt simulieren, etwa ein erfundener Beleg, der den Retry auslöst.
 
 ### 5.8 `ArchetypeChoice` – die Auswahl (Tool `select_archetype`)
 

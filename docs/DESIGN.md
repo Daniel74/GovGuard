@@ -11,7 +11,7 @@ Dieses Dokument legt die **Verträge** zwischen den Tickets fest: Datenformate u
 | `Archetype` (1.3) | #7 | #10, #11 |
 | `Preset`, `Expected` (1.4) | #3 | #8, #11 |
 | `Finding`, `AuditReport` (2.1) | #1 | #2, #7, #8, #9, #11 |
-| `LlmCall`, `run_audit()` (2.2) | #1 | #2, #6, #7, #9 |
+| `run_audit()` (2.2) | #1 | #2, #6, #7, #9 |
 | `select_archetype()`, `ArchetypeChoice` (2.2) | #10 | #11 |
 | API-JSON (2.3) | #9, #10 | #11 |
 | `normalize()`, `contains_quote()` (3) | #1 | #4, #5, #6 |
@@ -200,23 +200,19 @@ class AuditReport(BaseModel):
 - **Beleg-Pflicht folgt aus dem Glossar:** PASS heißt „Einhaltung belegt“, FAIL heißt „Verstoß belegt“, beide brauchen also ein Zitat. Fehlt etwas in der Eingabe, ist das WARN, nicht FAIL.
 - **Gesamtstatus:** Rangfolge FAIL > WARN > PASS > N/A, der schlechteste Status gewinnt. Sind alle Befunde N/A, ist der Gesamtstatus N/A.
 
-### 2.2 LlmCall, run_audit() und select_archetype()
+### 2.2 run_audit() und select_archetype()
 
-Die Prüflogik kennt Bedrock nicht. Sie bekommt eine Funktion mit dieser Form übergeben (Dependency Injection):
-
-```python
-class LlmCall(Protocol):
-    def __call__(self, *, system: str, user: str, tool: str,
-                 schema: type[BaseModel]) -> dict: ...   # roher Tool-Input, noch nicht validiert
-```
-
-`aws_services.converse_tool()` erfüllt diese Form mit Bedrock, Tests nutzen einen Fake mit festen Antworten.
+Die Prüflogik kennt Bedrock nicht. Sie bekommt ein Pydantic-AI-Modell übergeben (Dependency Injection, ADR 0005). `aws_services.bedrock_model()` baut es mit dem Profil `eu.`, Tests übergeben `TestModel` oder `FunctionModel` von Pydantic AI mit festen Antworten.
 
 ```python
 # src/govguard/audit_engine.py – rein, ohne boto3
-def run_audit(catalog: RuleCatalog, input_text: str, llm: LlmCall) -> AuditReport
+def run_audit(catalog: RuleCatalog, input_text: str, model: Model) -> AuditReport
 def select_archetype(spec_text: str, report: AuditReport,
-                     catalog: ArchetypeCatalog, llm: LlmCall) -> ArchetypeChoice
+                     catalog: ArchetypeCatalog, model: Model) -> ArchetypeChoice
+
+class AuditDeps(BaseModel):              # deps_type des Audit-Agenten
+    catalog: RuleCatalog
+    input_text: str
 
 class ArchetypeChoice(BaseModel):        # Schema des Tools select_archetype
     archetype: Literal["ARCH-01", "ARCH-02", "ARCH-03", "NONE"]
@@ -224,11 +220,11 @@ class ArchetypeChoice(BaseModel):        # Schema des Tools select_archetype
 ```
 
 `run_audit()` validiert die LLM-Antwort in dieser Reihenfolge:
-1. Pydantic-Schema (`AuditResponse`).
+1. Pydantic-Schema (`AuditResponse`), durch Pydantic AI.
 2. Jede `rule_id` des Katalogs kommt genau einmal vor, und es gibt keine unbekannten IDs.
 3. Beleg vorhanden, wo er Pflicht ist, und mit `contains_quote()` wörtlich in der Eingabe gefunden (siehe 3).
 
-Schlägt eine Prüfung fehl, folgt **ein** zweiter Aufruf, an dessen Prompt die Fehlermeldung angehängt wird. Scheitert auch er, wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
+Die Schritte 2 und 3 laufen im `@agent.output_validator` und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch, wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
 
 ### 2.3 API-JSON
 
