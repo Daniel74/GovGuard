@@ -1,0 +1,30 @@
+GovGuard – Quellenvermerke
+
+Die Wissensbasis enthält Auszüge aus folgenden Quellen. Die Quelldateien selbst
+liegen nicht im Repo, der Build lädt sie vom Herausgeber (ADR 0008).
+
+BSI IT-Grundschutz++ (Stand-der-Technik-Bibliothek)
+  Bundesamt für Sicherheit in der Informationstechnik (BSI),
+  https://github.com/BSI-Bund/Stand-der-Technik-Bibliothek
+  Lizenz: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
+  Veränderung: Anforderungen extrahiert, gefiltert und zu Prüfregeln umformuliert.
+  Daraus abgeleitete Dateien (data/extracted/bsi.json, Prüfregeln mit BSI-Anker)
+  stehen ebenfalls unter CC BY-SA 4.0.
+
+Standard-Datenschutzmodell (SDM), Bausteine Löschen und Vernichten, Trennen, Zugriffe regeln
+  Quelle: „Konferenz der unabhängigen Datenschutzaufsichtsbehörden des Bundes und
+  der Länder (Datenschutzkonferenz).“
+  Lizenz: Datenlizenz Deutschland – Namensnennung – Version 2.0
+  (https://www.govdata.de/dl-de/by-2-0)
+  Veränderungshinweis: Maßnahmen aus den PDF-Fassungen extrahiert, gefiltert und
+  zu Prüfregeln umformuliert.
+
+DSGVO – Verordnung (EU) 2016/679, konsolidierte Fassung 02016R0679-20160504
+  © Europäische Union, https://eur-lex.europa.eu
+  Weiterverwendung nach Beschluss 2011/833/EU. Nur die im Amtsblatt der EU
+  veröffentlichten Texte sind verbindlich.
+
+CIS Amazon Web Services Foundations Benchmark v7.0.0
+  © Center for Internet Security, Inc. Volltexte sind nicht im Repo enthalten.
+  Die Prüfregeln zitieren einzelne Sätze als Quellenbeleg. Strukturdaten stammen aus
+  Prowler (https://github.com/prowler-cloud/prowler, Apache-2.0).

@@ -1,0 +1,5 @@
+# Source files are downloaded by the build and verified by SHA-256 (ADR 0008)
+data/sources/
+
+# CIS full texts must not be redistributed (ADR 0008)
+data/extracted/cis.json
