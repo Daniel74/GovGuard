@@ -1,0 +1,18 @@
+{
+  "title": "Online-Anmeldung zur Schuleingangsuntersuchung mit US-Analysedienst",
+  "audit_type": "spec",
+  "input_file": "input.md",
+  "expected": {
+    "overall_status": "FAIL",
+    "required_findings": [
+      {
+        "anchor": "DSGVO Art. 9",
+        "status": "FAIL"
+      },
+      {
+        "anchor": "SDM Löschen M60.P01",
+        "status": "FAIL"
+      }
+    ]
+  }
+}

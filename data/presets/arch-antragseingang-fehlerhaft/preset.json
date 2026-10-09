@@ -1,0 +1,22 @@
+{
+  "title": "Antragseingang mit Sicherheitsmängeln (CloudFormation)",
+  "audit_type": "architecture",
+  "input_file": "template.json",
+  "expected": {
+    "overall_status": "FAIL",
+    "required_findings": [
+      {
+        "anchor": "CIS AWS v7.0.0 3.1.4",
+        "status": "FAIL"
+      },
+      {
+        "anchor": "CIS AWS v7.0.0 4.6",
+        "status": "FAIL"
+      },
+      {
+        "anchor": "BSI GS++ BER.4.1",
+        "status": "FAIL"
+      }
+    ]
+  }
+}

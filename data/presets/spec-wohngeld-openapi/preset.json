@@ -1,0 +1,10 @@
+{
+  "title": "Wohngeld online: Antragsschnittstelle der Stadt Musterhausen (OpenAPI)",
+  "audit_type": "spec",
+  "input_file": "openapi.yaml",
+  "expected": {
+    "overall_status": "WARN",
+    "required_findings": [],
+    "archetype": "ARCH-02"
+  }
+}

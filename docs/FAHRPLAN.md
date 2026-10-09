@@ -65,12 +65,12 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** 4 fiktive Presets mit einem Soll, das du festlegst. Das Soll ist der Maßstab für alle späteren Tests.
 **Voraussetzung:** keine; parallel zu Schritt 1.
 
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/grilling Presets für #3: 4 fiktive Behördenszenarien, Aufteilung Spec/Architektur, Soll-Gesamtstatus, Pflichtanker (höchstens 4 je Audit-Art)`
-- [ ] **Bauen** 👤 „Lege die Presets nach unseren Antworten an“ → Go → 🤖 schreibt die Eingaben unter `data/presets/<id>/`, den Bauplan nach `data/presets/BAUPLAN.local.md` (gitignored) und `data/sources/bsi_gspp_auszug.txt`. Formate: OpenAPI, Freitext, CloudFormation-JSON (damit „N/A durch Code“ mitgetestet wird).
-- [ ] **Blind prüfen** 👤 Gemini (normaler Chat, nicht Deep Research), ein Chat je Preset: Eingabe + Quellen hochladen, Prompt aus `BAUPLAN.local.md`. Ein Anker bleibt nur, wenn Gemini dieselbe Norm mit demselben Status nennt. Ein ungeplanter FAIL in einem WARN-Preset → 🤖 korrigiert die Eingabe.
-- [ ] **Soll festlegen** 👤 nennt je Preset Gesamtstatus und bestätigte Anker → 🤖 schreibt die `preset.json`, Tests grün.
-- [ ] **Verstehen** 👤 `/verstehen 3` (Kernfrage: warum das Soll von dir kommt und nicht aus einem früheren Lauf)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Starten** 🆕 _Opus_ · 👤 `/grilling Presets für #3: 4 fiktive Behördenszenarien, Aufteilung Spec/Architektur, Soll-Gesamtstatus, Pflichtanker (höchstens 4 je Audit-Art)`
+- [x] **Bauen** 👤 „Lege die Presets nach unseren Antworten an“ → Go → 🤖 schreibt die Eingaben unter `data/presets/<id>/`, den Bauplan nach `data/presets/BAUPLAN.local.md` (gitignored) und `data/sources/bsi_gspp_auszug.txt`. Formate: OpenAPI, Freitext, CloudFormation-JSON (damit „N/A durch Code“ mitgetestet wird).
+- [x] **Blind prüfen** 👤 Gemini (normaler Chat, nicht Deep Research), ein Chat je Preset: Eingabe + Quellen hochladen, Prompt aus `BAUPLAN.local.md`. Ein Anker bleibt nur, wenn Gemini dieselbe Norm mit demselben Status nennt (bei CIS genügt der Titel, wenn Gemini keine v7-Nummer kennt). Ein ungeplanter FAIL in einem WARN-Preset → 🤖 korrigiert die Eingabe.
+- [x] **Soll festlegen** 👤 nennt je Preset Gesamtstatus und bestätigte Anker → 🤖 schreibt die `preset.json`, Tests grün.
+- [x] **Verstehen** 👤 `/verstehen 3` (Kernfrage: warum das Soll von dir kommt und nicht aus einem früheren Lauf)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** 4 Ordner unter `data/presets/` liegen, die Pflichtanker auf Normen zeigen und die Lernkarte steht.
 **Fürs Fachgespräch:** Testorakel, zirkulärer Test, gesetzte Plätze.

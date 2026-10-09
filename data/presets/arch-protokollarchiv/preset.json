@@ -1,0 +1,14 @@
+{
+  "title": "Revisionssicheres Protokollarchiv für Fachverfahren",
+  "audit_type": "architecture",
+  "input_file": "input.md",
+  "expected": {
+    "overall_status": "WARN",
+    "required_findings": [
+      {
+        "anchor": "CIS AWS v7.0.0 3.1.4",
+        "status": "PASS"
+      }
+    ]
+  }
+}
