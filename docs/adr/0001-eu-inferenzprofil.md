@@ -6,7 +6,7 @@ Die Leitplanke lautete „nur eu-central-1“. Stand 2026-10-08 ist kein aktuell
 
 ## Entscheidung
 
-- Bedrock wird aus eu-central-1 über das Profil `eu.` aufgerufen (Claude Haiku 5.5, unterstützt erzwungene Tool-Nutzung).
+- Bedrock wird aus eu-central-1 über das Profil `eu.` aufgerufen (Claude Haiku 4.5, unterstützt erzwungene Tool-Nutzung).
 - Persistente Daten liegen ausschließlich in eu-central-1.
 - `global.`-Profile werden per IAM-Policy gesperrt.
 
@@ -14,7 +14,7 @@ Die Leitplanke lautete „nur eu-central-1“. Stand 2026-10-08 ist kein aktuell
 
 - Die Leitplanke lautet neu: „Daten in eu-central-1, Inferenz nur in der EU“.
 - Bedrock speichert Ein- und Ausgaben standardmäßig nicht; CloudTrail protokolliert die tatsächliche Verarbeitungsregion (`inferenceRegion`).
-- Geo-Profile kosten ca. 10 % mehr als `global.` – bei Sub-Cent-Audits vernachlässigbar.
+- Geo-Profile kosten ca. 10 % mehr als `global.` – bei Audits im einstelligen Cent-Bereich vernachlässigbar.
 
 ## Fachgespräch-Satz
 

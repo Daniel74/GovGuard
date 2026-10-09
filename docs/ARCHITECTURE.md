@@ -175,7 +175,7 @@ Den Aufruf baut Pydantic AI (ADR 0005): Aus dem Draft-Modell entsteht das Tool-S
 
 ```python
 # aws_services.py – einziger Ort mit boto3
-model = BedrockConverseModel("eu.anthropic.claude-haiku-5-5")   # EU-Profil, ADR 0001
+model = BedrockConverseModel("eu.anthropic.claude-haiku-4-5-20251001-v1:0")   # EU-Profil, ADR 0001
 
 # audit_engine.py – rein, bekommt das Modell übergeben
 audit_agent = Agent(
@@ -198,7 +198,7 @@ result = audit_agent.run_sync(catalog_and_input, model=model, deps=deps)
 - **Enums schließen die Antwortmenge:** Das Modell kann keinen Status „OK“ und keinen Archetyp „ARCH-09“ erfinden.
 - **Tool-Choice ist kein Beweis:** Das Modell kann trotzdem falsche Werte liefern. Deshalb validiert danach Pydantic, und der Code prüft Vollständigkeit und Belege (`@agent.output_validator`). Bei Fehlern schickt Pydantic AI die Fehlermeldung einmal zurück ans Modell, danach HTTP 502.
 - **Was der Code weiß, fragt man das Modell nicht:** Primäranker, Querverweise und Gesamtstatus ergänzt der Code aus der Wissensbasis. Das Modell liefert nur Status, Beleg und Begründung.
-- **Modellwahl:** Haiku 5.5 unterstützt erzwungene Tools; Sonnet 5.5 lehnt `toolChoice` = `tool` laut Anthropic-Doku mit HTTP 400 ab. Achtung: Kann ein Modell kein Erzwingen, fällt Pydantic AI still auf `auto` zurück – darum bleibt Haiku 5.5 gesetzt.
+- **Modellwahl:** Haiku 4.5 unterstützt erzwungene Tools; Opus 5.5, Sonnet 5.5 und Fable 5.1 lehnen `toolChoice` = `any` bzw. `tool` laut Anthropic-Doku mit HTTP 400 ab. Achtung: Kann ein Modell kein Erzwingen, fällt Pydantic AI still auf `auto` zurück – darum bleibt Haiku 4.5 gesetzt.
 
 ## 3. Deployment – GovGuard prüft sich selbst
 

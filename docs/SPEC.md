@@ -16,7 +16,7 @@
 - Die 4 Presets liefern ihren Soll-Gesamtstatus und ihre Pflicht-Befunde.
 - Jeder Audit-Report hat genau einen Befund je Prüfregel; jeder Beleg steht wörtlich in der Eingabe.
 - Das größte Preset (≤ 100.000 Zeichen) ist in unter 29 Sekunden ausgewertet.
-- Ein Audit kostet unter 1 Cent; im Leerlauf fallen keine variablen Kosten an, Fixkosten nur für den KMS-Schlüssel (ca. 1 $/Monat).
+- Ein Audit des größten Presets kostet unter 10 Cent (Haiku 4.5: ca. 1 $ Input / 5 $ Output je Mio. Token); im Leerlauf fallen keine variablen Kosten an, Fixkosten nur für den KMS-Schlüssel (ca. 1 $/Monat).
 - Alle 3 Golden Archetypes sind freigegeben (Architektur-Audit und cdk-nag ohne Beanstandung).
 - Jeder Aufruf erzeugt ein Audit-Ereignis in CloudWatch Logs mit `audit_id`, Zeit, `input_sha256`, `catalog_sha256`, `kb_commit`, `model_id` und Ergebnis, ohne Eingabetext.
 
