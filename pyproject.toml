@@ -9,6 +9,7 @@ dependencies = [
 
 [dependency-groups]
 build = [
+    "pydantic-ai-slim[groq]==2.54.0",  # build-only Groq fallback, pinned (ADR 0010)
     "pypdf==6.0.0",  # pinned, SDM is only available as PDF (ADR 0008)
 ]
 dev = [

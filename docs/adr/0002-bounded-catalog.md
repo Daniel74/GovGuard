@@ -8,7 +8,7 @@ Top-K-Retrieval kann relevante Anforderungen übersehen – für ein Audit ist d
 
 ## Entscheidung
 
-- Je Audit-Art gibt es eine fest begrenzte Menge Prüfregeln: Architektur-Audit 12 BSI + 12 CIS, Spec-Audit 20 aus DSGVO und SDM.
+- Je Audit-Art gibt es eine fest begrenzte Menge Prüfregeln: Architektur-Audit 12 BSI + 12 CIS, Spec-Audit 24 aus DSGVO (16) und SDM (8). Die DSGVO-Grenze stieg von 12 auf 16, weil Art. 32 (Verschlüsselung) sonst über der Obergrenze lag (SPEC).
 - Der Katalog geht in jedem Audit vollständig in den Prompt; der Code prüft, dass jede Prüfregel genau einen Befund hat.
 - Die Auswahl entsteht zur Build-Zeit für alle Quellen gleich: deterministischer Vorfilter → LLM klassifiziert „prüfbar ja/nein“ mit Begründung → deterministische Relevanz, gesetzte Plätze und Ranking reihum je Gruppe → Obergrenze (Details: ADR 0007).
 - Der BSI-Katalog wird auf einen Commit-SHA fixiert (das Repo hat keine Releases).

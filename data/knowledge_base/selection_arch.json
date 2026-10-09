@@ -1,0 +1,239 @@
+{
+  "audit_type": "architecture",
+  "model_id": "openai/gpt-oss-120b",
+  "selected": [
+    {
+      "requirement_id": "BER.4.1",
+      "source": "BSI",
+      "rationale": "Das Prinzip der geringsten Berechtigungen lässt sich anhand von IAM‑Ressourcen (z. B. AWS::IAM::Policy, AWS::IAM::Role) im CloudFormation‑Template prüfen, indem geprüft wird, ob Berechtigungen zu breit gefasst sind.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::Group",
+        "AWS::IAM::ManagedPolicy"
+      ],
+      "pinned": true,
+      "rank": 1
+    },
+    {
+      "requirement_id": "KONF.6.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand der in einem CloudFormation-Template definierten IAM-Rollen, -Policies, -User und -Group‑Ressourcen geprüft werden, da dort die konkreten Berechtigungen für Anwendungen festgelegt sind.",
+      "cfn_resource_types": [
+        "AWS::IAM::Role",
+        "AWS::IAM::Policy",
+        "AWS::IAM::User",
+        "AWS::IAM::Group"
+      ],
+      "pinned": false,
+      "rank": 2
+    },
+    {
+      "requirement_id": "KONF.6.4",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich anhand von IAM-Rollen, -Policies und -Benutzern im CloudFormation-Template prüfen, ob privilegierte Berechtigungen eingeschränkt sind.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::ManagedPolicy"
+      ],
+      "pinned": false,
+      "rank": 3
+    },
+    {
+      "requirement_id": "BER.7.2",
+      "source": "BSI",
+      "rationale": "Die Vorgabe zur festgelegten Schlüssellänge kann in einem CloudFormation‑Template durch die Angabe des KeySpec‑Parameters bei Ressourcen wie AWS::KMS::Key überprüft werden.",
+      "cfn_resource_types": [
+        "AWS::KMS::Key"
+      ],
+      "pinned": false,
+      "rank": 4
+    },
+    {
+      "requirement_id": "DLS.2.2",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich anhand von Ressourcenkonfigurationen prüfen, z. B. durch Bucket‑Policies, die nur sichere (HTTPS) Übertragungen zulassen, oder Listener‑Konfigurationen, die TLS erzwingen.",
+      "cfn_resource_types": [
+        "AWS::S3::BucketPolicy",
+        "AWS::ElasticLoadBalancingV2::Listener",
+        "AWS::ApiGateway::Stage"
+      ],
+      "pinned": false,
+      "rank": 5
+    },
+    {
+      "requirement_id": "KONF.3.2",
+      "source": "BSI",
+      "rationale": "Die Anforderung verlangt die Verschlüsselung von Speichermedien und kann anhand der Verschlüsselungs‑Parameter in den jeweiligen CloudFormation‑Ressourcen (z. B. ServerSideEncryption für S3, Encrypted für EC2‑Volumes, StorageEncrypted für RDS und Encryption für EFS) überprüft werden.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket",
+        "AWS::EC2::Volume",
+        "AWS::RDS::DBInstance",
+        "AWS::EFS::FileSystem"
+      ],
+      "pinned": false,
+      "rank": 6
+    },
+    {
+      "requirement_id": "BER.4.1.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten IAM‑Rollen, -Benutzer und -Policies geprüft werden, ob Berechtigungen ausschließlich über Rollen zugewiesen werden.",
+      "cfn_resource_types": [
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::Policy"
+      ],
+      "pinned": false,
+      "rank": 7
+    },
+    {
+      "requirement_id": "BER.7.16.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Berechtigungen zur Beglaubigung von Schlüsseln, die in einem CloudFormation‑Template über IAM‑Policies bzw. Rollen geprüft werden kann.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role"
+      ],
+      "pinned": false,
+      "rank": 8
+    },
+    {
+      "requirement_id": "BER.7.9",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann durch die Prüfung der KMS‑Key‑Ressource (AWS::KMS::Key) und ihrer Schlüsselrichtlinie auf Zweckbindungskontrollen verifiziert werden.",
+      "cfn_resource_types": [
+        "AWS::KMS::Key"
+      ],
+      "pinned": false,
+      "rank": 9
+    },
+    {
+      "requirement_id": "KONF.6.6",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten IAM‑Policies bzw. Rollen geprüft werden, ob Zugriffe eines Zugangskontos auf Daten anderer Konten eingeschränkt sind.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::S3::Bucket",
+        "AWS::DynamoDB::Table"
+      ],
+      "pinned": false,
+      "rank": 10
+    },
+    {
+      "requirement_id": "BER.2.2",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf IAM‑Policies, die in CloudFormation‑Ressourcen wie AWS::IAM::Policy, AWS::IAM::Role oder AWS::IAM::User definiert werden und somit im Template auf die Einschränkung von Aktionen zur Identitätsverwaltung geprüft werden können.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::Group"
+      ],
+      "pinned": false,
+      "rank": 11
+    },
+    {
+      "requirement_id": "BER.3.3",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf die Beschränkung von IAM‑Berechtigungen für das Management von Zugangskonten, was in CloudFormation‑Templates durch die Definition von AWS::IAM::Policy‑ bzw. AWS::IAM::Role‑Ressourcen überprüfbar ist.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role"
+      ],
+      "pinned": false,
+      "rank": 12
+    },
+    {
+      "requirement_id": "3.1.4",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand der Einstellung 'PublicAccessBlockConfiguration' im CloudFormation‑Template für den Ressourcentyp AWS::S3::Bucket geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ],
+      "pinned": true,
+      "rank": 1
+    },
+    {
+      "requirement_id": "4.6",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand des CloudFormation-Resources AWS::KMS::Key und dessen Eigenschaft EnableKeyRotation geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::KMS::Key"
+      ],
+      "pinned": true,
+      "rank": 2
+    },
+    {
+      "requirement_id": "2.14",
+      "source": "CIS",
+      "rationale": "Die Anforderung lässt sich prüfen, indem die IAM‑Policy‑Dokumente in den CloudFormation‑Ressourcen (z. B. AWS::IAM::Policy, AWS::IAM::ManagedPolicy, Inline‑Policies in AWS::IAM::Role, AWS::IAM::User, AWS::IAM::Group) auf die Verwendung von \"Action\": \"*\" und \"Resource\": \"*\" untersucht werden.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::ManagedPolicy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::Group"
+      ],
+      "pinned": false,
+      "rank": 3
+    },
+    {
+      "requirement_id": "2.15",
+      "source": "CIS",
+      "rationale": "Die Anforderung bezieht sich auf das Anlegen einer IAM-Rolle, die als CloudFormation-Ressource (AWS::IAM::Role) prüfbar ist.",
+      "cfn_resource_types": [
+        "AWS::IAM::Role"
+      ],
+      "pinned": false,
+      "rank": 4
+    },
+    {
+      "requirement_id": "2.21",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand der in den CloudFormation‑Templates definierten Ressourcen‑Policies (z. B. AWS::S3::BucketPolicy, AWS::SQS::QueuePolicy, AWS::SNS::TopicPolicy, AWS::Lambda::Permission) geprüft werden, ob ein 'Principal': '*' mit 'Effect': 'Allow' vorkommt.",
+      "cfn_resource_types": [
+        "AWS::S3::BucketPolicy",
+        "AWS::SQS::QueuePolicy",
+        "AWS::SNS::TopicPolicy",
+        "AWS::Lambda::Permission"
+      ],
+      "pinned": false,
+      "rank": 5
+    },
+    {
+      "requirement_id": "4.4",
+      "source": "CIS",
+      "rationale": "Die Anforderung bezieht sich auf die Aktivierung des Server‑Access‑Logging für das CloudTrail‑S3‑Bucket, was über die Property LoggingConfiguration des CloudFormation‑Typs AWS::S3::Bucket konfigurierbar und prüfbar ist.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ],
+      "pinned": false,
+      "rank": 6
+    },
+    {
+      "requirement_id": "3.1.1",
+      "source": "CIS",
+      "rationale": "Die Anforderung lässt sich anhand der im CloudFormation‑Template definierten S3‑Bucket‑Policy (AWS::S3::BucketPolicy) prüfen, da dort eine Bedingung zum Verweigern von HTTP‑Zugriffen und zum Erzwingen von HTTPS festgelegt werden kann.",
+      "cfn_resource_types": [
+        "AWS::S3::BucketPolicy",
+        "AWS::S3::Bucket"
+      ],
+      "pinned": false,
+      "rank": 7
+    },
+    {
+      "requirement_id": "3.1.2",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand der Property MfaDelete im AWS::S3::Bucket geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ],
+      "pinned": false,
+      "rank": 8
+    }
+  ]
+}

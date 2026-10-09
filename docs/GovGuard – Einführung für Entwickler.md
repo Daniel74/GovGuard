@@ -141,7 +141,7 @@ Links steht, was passiert, rechts, welches Datenobjekt dabei entsteht oder als E
 | --- | --- | --- | --- | --- |
 | BSI Grundschutz++ | MUSS oder SOLLTE, Schutzniveau normal-SdT, Praktiken DLS, BER, DET, KONF, BES, ARCH | Ressourcentyp | Summe Vertraulichkeit + Integrität + Verfügbarkeit (0–6), absteigend | 12 |
 | CIS AWS v7 | Kapitel 2 IAM, 3 Storage, 4 Logging | Ressourcentyp | Level 1 vor Level 2, dann Automated vor Manual | 12 |
-| DSGVO | Kapitel II–V (Art. 5–49) | Kapitel | Bußgeldstufe: bis 4 % vor bis 2 % (Art. 83) | 12 |
+| DSGVO | Kapitel II–V (Art. 5–49) | Kapitel | Bußgeldstufe: bis 4 % vor bis 2 % (Art. 83) | 16 |
 | SDM | Bausteine Löschen (M60), Trennen (M50), Zugriffe regeln (M51); Ebenen Daten und Systeme | Baustein | Ebene Daten vor Systeme | 8 |
 
 **Ergebnis:** die Auswahlliste `data/knowledge_base/selection_arch.json` bzw. `selection_spec.json`. Jeder Eintrag nennt Anforderung, Begründung, Ressourcentypen, Rang und ob er gesetzt (`pinned`) ist. Die Liste ist ein **Kontrollpunkt**: Ein Mensch sieht im Git-Diff des Pull Requests, was sich gegenüber dem letzten Build geändert hat, bevor teure Schritte folgen.

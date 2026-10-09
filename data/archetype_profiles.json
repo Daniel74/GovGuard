@@ -1,0 +1,86 @@
+[
+  {
+    "id": "ARCH-01",
+    "name": "Sync REST",
+    "purpose": "Synchrone Fachverfahrens-API: API Gateway mit IAM-Auth ruft eine Lambda auf, die Daten in DynamoDB ablegt.",
+    "constructs": [
+      "aws-apigateway-lambda",
+      "aws-lambda-dynamodb"
+    ],
+    "required_types": [
+      "AWS::ApiGateway::RestApi",
+      "AWS::Lambda::Function",
+      "AWS::DynamoDB::Table"
+    ],
+    "resource_types": [
+      "AWS::ApiGateway::RestApi",
+      "AWS::Lambda::Function",
+      "AWS::DynamoDB::Table",
+      "AWS::IAM::Role",
+      "AWS::KMS::Key",
+      "AWS::Logs::LogGroup",
+      "AWS::IAM::Policy",
+      "AWS::ApiGateway::Stage",
+      "AWS::ApiGateway::Method"
+    ]
+  },
+  {
+    "id": "ARCH-02",
+    "name": "Antragseingang",
+    "purpose": "Asynchroner Antragseingang: API Gateway nimmt Anträge an, eine Queue entkoppelt, eine Lambda legt sie in S3 ab.",
+    "constructs": [
+      "aws-apigateway-lambda",
+      "aws-lambda-sqs",
+      "aws-sqs-lambda",
+      "aws-lambda-s3"
+    ],
+    "required_types": [
+      "AWS::ApiGateway::RestApi",
+      "AWS::Lambda::Function",
+      "AWS::SQS::Queue",
+      "AWS::S3::Bucket"
+    ],
+    "resource_types": [
+      "AWS::ApiGateway::RestApi",
+      "AWS::Lambda::Function",
+      "AWS::SQS::Queue",
+      "AWS::S3::Bucket",
+      "AWS::IAM::Role",
+      "AWS::KMS::Key",
+      "AWS::Logs::LogGroup",
+      "AWS::IAM::Policy",
+      "AWS::ApiGateway::Stage",
+      "AWS::ApiGateway::Method",
+      "AWS::S3::BucketPolicy"
+    ]
+  },
+  {
+    "id": "ARCH-03",
+    "name": "Audit-Log-Archiv",
+    "purpose": "Revisionssicheres Protokollarchiv: API Gateway und Lambda schicken Einträge über Firehose in einen S3-Bucket mit Object Lock.",
+    "constructs": [
+      "aws-apigateway-lambda",
+      "aws-lambda-kinesisfirehose",
+      "aws-kinesisfirehose-s3"
+    ],
+    "required_types": [
+      "AWS::ApiGateway::RestApi",
+      "AWS::Lambda::Function",
+      "AWS::KinesisFirehose::DeliveryStream",
+      "AWS::S3::Bucket"
+    ],
+    "resource_types": [
+      "AWS::ApiGateway::RestApi",
+      "AWS::Lambda::Function",
+      "AWS::KinesisFirehose::DeliveryStream",
+      "AWS::S3::Bucket",
+      "AWS::IAM::Role",
+      "AWS::KMS::Key",
+      "AWS::Logs::LogGroup",
+      "AWS::IAM::Policy",
+      "AWS::ApiGateway::Stage",
+      "AWS::ApiGateway::Method",
+      "AWS::S3::BucketPolicy"
+    ]
+  }
+]

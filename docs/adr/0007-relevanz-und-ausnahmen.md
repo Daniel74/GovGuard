@@ -11,7 +11,7 @@ Messungen vor Beginn der Umsetzung (2026-10-09) zeigen Lücken in ADR 0002 und 0
 
 ## Entscheidung
 
-- **Relevanz:** Stufe ② liefert zusätzlich `cfn_resource_types`. Ins Architektur-Ranking kommt nur, was sich mit `resource_types` der Steckbriefe überschneidet.
+- **Relevanz:** Stufe ② liefert zusätzlich `cfn_resource_types`. Ins Architektur-Ranking kommt nur, wessen erster (wichtigster) Typ zu den `resource_types` der Steckbriefe gehört. Ein späterer Treffer genügt nicht (erste Auswahl: CloudTrail-Regeln mit `S3::Bucket` als Zweittyp).
 - **BSI-Vorfilter:** MUSS und SOLLTE bei `sec_level` = normal-SdT.
 - **Gesetzte Plätze:** Die Pflichtanker der Presets stehen immer im Katalog, höchstens 4 je Katalog.
 - **Ranking:** Die Obergrenze gilt je Quelle. Architektur reihum je Ressourcentyp, Spezifikation reihum je DSGVO-Kapitel bzw. SDM-Baustein. Innerhalb einer Gruppe gilt Tabelle 1.1, dann die ID.

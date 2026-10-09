@@ -134,10 +134,10 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Es steht fest, welche Anforderungen in den Bounded Catalog kommen. Du hast die Auswahl gelesen und freigegeben.
 **Voraussetzung:** Schritte 2–5.
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #6 umsetzen` → Plan → Go
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #6 umsetzen` → Plan → Go
       Reihenfolge: `archetype_profiles.json` → `ranking.py` (reihum, Gleichstand, gesetzte Plätze) → Relevanzfilter → `curation.py` mit `FunctionModel`
-- [ ] **Echter Lauf** 🤖 👤 „Erzeuge die Auswahllisten mit Bedrock“ (ca. 0,50 $)
-- [ ] **Kontrollpunkt** 👤 Lies `selection_arch.json` und `selection_spec.json` (ca. 10 Minuten):
+- [x] **Echter Lauf** 🤖 👤 „Erzeuge die Auswahllisten mit Bedrock“ (ca. 0,50 $)
+- [x] **Kontrollpunkt** 👤 Lies `selection_arch.json` und `selection_spec.json` (ca. 10 Minuten):
       Betrifft jede Regel einen Baustein unserer Archetypen? Stimmen die Ressourcentypen? Sind Verschlüsselung, Logging, Zugriffsrechte und die Pflichtanker drin?
       Falls nein: 🆕 _Opus_ · 👤 `/grilling Auswahlliste nachschärfen`, bevor es weitergeht.
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #6`

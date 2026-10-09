@@ -327,7 +327,7 @@ Dazu kommen zwei praktische Nachteile: Eine Vektor-Datenbank kostet auch im Leer
 
 ### Der Bounded Catalog
 
-GovGuard wählt die Regeln **einmal zur Build-Zeit** aus, nicht bei jeder Anfrage. Jede Audit-Art hat eine fest begrenzte Menge: 12 BSI- und 12 CIS-Regeln für Architekturen, 20 aus DSGVO und SDM für Spezifikationen. Dieser Katalog geht in jedem Audit vollständig in den Prompt, und der Code prüft, dass jede Regel genau einen Befund bekommt.
+GovGuard wählt die Regeln **einmal zur Build-Zeit** aus, nicht bei jeder Anfrage. Jede Audit-Art hat eine fest begrenzte Menge: 12 BSI- und 12 CIS-Regeln für Architekturen, 24 aus DSGVO und SDM für Spezifikationen. Dieser Katalog geht in jedem Audit vollständig in den Prompt, und der Code prüft, dass jede Regel genau einen Befund bekommt.
 
 | Kriterium | RAG | Bounded Catalog |
 | --- | --- | --- |
