@@ -2,7 +2,7 @@
 
 Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich: Du brauchst kein anderes Dokument, um ihn abzuarbeiten. Hake die Kästchen im Editor ab.
 
-**Legende:** 👤 du · 🤖 Claude · 🛠 Junie (PyCharm) · `/…` Befehl zum Eintippen. `/verstehen N <Schwerpunkt>` erklärt das Ticket als Lernkarte und fragt sie ab. Claude zeigt pro Ticket einen Plan und arbeitet nach deinem **Go** am Stück (CLAUDE.md). Junie arbeitet ebenfalls am Stück; dort ersetzt das Claude-Review das Go. Alles läuft direkt auf `main`, ohne Branches.
+**Legende:** 👤 du · 🤖 Claude · 🛠 Junie (PyCharm) · `/…` Befehl zum Eintippen. `/verstehen N <Schwerpunkt>` erklärt das Ticket als Lernkarte und fragt sie ab. Claude zeigt pro Ticket einen Plan und arbeitet nach deinem **Go** am Stück (CLAUDE.md). Junie baut nur die UI und gibt bei #12 und #9 eine zweite Meinung. Alles läuft direkt auf `main`, ohne Branches.
 
 **Rhythmus jedes Eintrags:** _Starten → Bauen → Prüfen → Verstehen → Abschließen._
 
@@ -13,7 +13,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - **Sonnet baut, Opus urteilt.** Sonnet 5.5 für TDD-Zyklen mit klaren Kriterien; Opus 5.5 für Grilling, Review, Security-Review, Diagnose und IHK-Check. Opus baut auch die heiklen Tickets #1 (Fundament), #7 (Freigabe-Schleife) und #9 (IAM, KMS). Wechsel mit `/model sonnet` bzw. `/model opus`.
 - **🆕 = neue Session** (`/clear`). Erste Nachricht: „Lies docs/FAHRPLAN.md Schritt N und Issue #X.“ Jeder Schritt startet frisch. Das Review läuft in einer zweiten frischen Session, damit keine Sitzung ihren eigenen Code prüft (Vier-Augen-Prinzip).
 - Zusätzlich neu starten, wenn eine Session lang wird und Claude Absprachen vergisst oder sich wiederholt. Vorher den Stand committen.
-- **Junie baut Routine, Claude prüft.** 🛠-Schritte laufen in PyCharm mit Junie, Modell GPT-5.2; das spart Claude-Budget ([SCHAETZUNG.md](SCHAETZUNG.md)). Junie liest `AGENTS.md`, arbeitet auf `main` und committet nicht. Erste Nachricht an Junie: „Lies docs/FAHRPLAN.md Schritt N und `gh issue view X`. Setze es per TDD um.“ Befunde aus dem Claude-Review gibst du an Junie zurück. Zwei Modellfamilien ergeben ein echtes Vier-Augen-Prinzip.
+- **Junie ist zweite Meinung, nicht Bauer.** Bei #4 und #5 lieferte Junie (GPT-5.2) grüne Tests mit falschen Daten; der Neubau kostete mehr Claude-Budget, als er sparte. Junie baut deshalb nur noch die Streamlit-UI (Fehler sieht man sofort) und prüft bei #12 und #9 den Diff als zweite Modellfamilie (Vier-Augen-Prinzip). Junie liest `AGENTS.md` und committet nicht. Wird das Claude-Budget knapp, bekommt Junie ein Ticket nur mit vorab geschriebenen roten Tests.
 
 **Wer baut was:**
 
@@ -24,12 +24,12 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 3       | #2 Bedrock + CLI          | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 4       | #4 BSI + CIS              | 🛠 Junie                                         | 🤖 Opus                    |
 | 5       | #5 DSGVO + SDM            | 🛠 Junie                                         | 🤖 Opus                    |
-| 6       | #6 Auswahlliste           | 🛠 Junie                                         | 👤 Kontrollpunkt + 🤖 Opus |
-| 7       | #12 Prüfregeln + Gate     | 🛠 Junie                                         | 🤖 Opus                    |
+| 6       | #6 Auswahlliste           | 🤖 Sonnet                                        | 👤 Kontrollpunkt + 🤖 Opus |
+| 7       | #12 Prüfregeln + Gate     | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
 | 8       | #7 Golden Archetypes      | 🤖 Opus                                          | 🤖 Opus                    |
-| 9       | #8 Preset-Gate + Workflow | 🛠 Junie (Wizard: 🤖)                            | 🤖 Opus                    |
-| 10      | #9 Stack + Endpunkte      | 🤖 Opus                                          | 🤖 Opus                    |
-| 11      | #10 Archetyp-Auswahl      | 🛠 Junie (Deploy-Test: 🤖)                       | 🤖 Opus                    |
+| 9       | #8 Preset-Gate + Workflow | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 10      | #9 Stack + Endpunkte      | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
+| 11      | #10 Archetyp-Auswahl      | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 12      | #11 Deploy + UI           | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
 
 ---
@@ -134,9 +134,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Es steht fest, welche Anforderungen in den Bounded Catalog kommen. Du hast die Auswahl gelesen und freigegeben.
 **Voraussetzung:** Schritte 2–5.
 
-- [ ] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 6 und `gh issue view 6`. Setze es per TDD um.“
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #6 umsetzen` → Plan → Go
       Reihenfolge: `archetype_profiles.json` → `ranking.py` (reihum, Gleichstand, gesetzte Plätze) → Relevanzfilter → `curation.py` mit `FunctionModel`
-- [ ] **Echter Lauf** 🛠 👤 „Erzeuge die Auswahllisten mit Bedrock“ (ca. 0,50 $)
+- [ ] **Echter Lauf** 🤖 👤 „Erzeuge die Auswahllisten mit Bedrock“ (ca. 0,50 $)
 - [ ] **Kontrollpunkt** 👤 Lies `selection_arch.json` und `selection_spec.json` (ca. 10 Minuten):
       Betrifft jede Regel einen Baustein unserer Archetypen? Stimmen die Ressourcentypen? Sind Verschlüsselung, Logging, Zugriffsrechte und die Pflichtanker drin?
       Falls nein: 🆕 _Opus_ · 👤 `/grilling Auswahlliste nachschärfen`, bevor es weitergeht.
@@ -154,10 +154,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** `rules_spec.json` und `rules_arch.json` liegen vor; jede Prüfregel hat das Gate bestanden.
 **Voraussetzung:** Schritt 6 inklusive Kontrollpunkt.
 
-- [ ] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 7 und `gh issue view 12`. Setze es per TDD um.“
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #12 umsetzen` → Plan → Go (Prompt-Design ist eine Weichenstellung)
       Reihenfolge: `gates.py` (Schema, Anker, Zitat, Querverweise) → `formulate_rule` mit `FunctionModel`
-- [ ] **Echter Lauf** 🛠 👤 „Formuliere die Prüfregeln mit Bedrock“
+- [ ] **Echter Lauf** 🤖 👤 „Formuliere die Prüfregeln mit Bedrock“
 - [ ] **Stichprobe** 👤 Lies 5 Prüfregeln: Sind `compliant_if` und `violation_if` prüfbar? Passt `source_quote` zur Norm?
+- [ ] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und `gh issue view 12`. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #12`
 - [ ] **Verstehen** 👤 `/verstehen 12` (Kernfrage: warum der Code den Primäranker setzt und nicht das LLM)
 - [ ] **Abschließen** 👤 committet und pusht
@@ -190,7 +191,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Der Build der Wissensbasis läuft per Knopfdruck in GitHub Actions und öffnet nur bei Grün einen Pull Request.
 **Voraussetzung:** Schritte 2 und 8.
 
-- [ ] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 9 und `gh issue view 8`. Setze es per TDD um.“
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #8 umsetzen` → Plan → Go
       Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Archetyp, Hash-Check) → `python -m kb_build` → `build-kb.yml` ohne Logik
 - [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard OIDC-Provider und Rolle für build-kb.yml, nur Bedrock eu.-Profil` → 👤 Wizard ausführen
 - [ ] **Ausprobieren** 👤 Workflow in GitHub Actions starten → PR lesen, Kosten prüfen
@@ -213,6 +214,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [ ] **Sicherheit** 👤 `/security-review` vor dem ersten Deploy
 - [ ] **Einrichten** falls nötig: 👤 `/wizard cdk bootstrap für eu-central-1` → 👤 Wizard ausführen
 - [ ] **Deploy + Test** 👤 „Deploye den Stack und ruf /audit/spec mit einem Preset auf“ → Go → 👤 `/run`
+- [ ] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und `gh issue view 9`. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #9`
 - [ ] **Verstehen** 👤 `/verstehen 9` (Schwerpunkt: IAM, KMS und Audit-Protokoll)
 - [ ] **Abschließen** 👤 committet und pusht
@@ -227,7 +229,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Bei einer Spezifikation ohne FAIL liefert GovGuard ARCH-01, -02, -03 oder „keiner“.
 **Voraussetzung:** Schritte 8 und 10.
 
-- [ ] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 11 und `gh issue view 10`. Setze es per TDD um.“ (Auswahl, Ablehnung bei FAIL, `NONE`)
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #10 umsetzen` → Plan → Go (Auswahl, Ablehnung bei FAIL, `NONE`)
 - [ ] **Deploy + Test** 🆕 _Sonnet_ · 👤 „Deploye und ruf /archetype/select mit einem Spec-Preset auf“ → Go → 👤 `/run`
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #10`
 - [ ] **Verstehen** 👤 `/verstehen 10` (Kernfrage: warum „keiner passt“ eine erlaubte Antwort ist)
