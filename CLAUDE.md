@@ -14,36 +14,24 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 
 `docs/Modul4_Praxisprojekt_Emails.md` ist **Rohmaterial**, voller älterer und widersprüchlicher Ideen. Verbindlich sind `CONTEXT.md` (Glossar) und `docs/adr/`. Fehlen sie, gilt das Gespräch mit mir.
 
-## Arbeitsweise: Schritt für Schritt mit „Go“
+## Arbeitsweise: ein Go pro Ticket
 
-1. Skizziere den nächsten **kleinen** Schritt in 2–4 Zeilen: was, welche Dateien, warum.
-2. Warte auf mein **Go**. Erst dann Dateien ändern.
-3. Setze genau diesen Schritt um und zeige, was sich geändert hat.
+1. Zeig zu Beginn den Plan des Tickets: die TDD-Zyklen als nummerierte Liste, je eine Zeile (was, welche Datei).
+2. Nach meinem **Go** arbeite alle Zyklen am Stück ab. Halte nur an einer **Weichenstellung** an: IAM, Verschlüsselung, Netzwerk, Datenresidenz, Kosten-Trade-off, Prompt-Design. Oder wenn ein Test nach zwei Anläufen rot bleibt.
+3. Zum Schluss: geänderte Dateien, Ergebnis von pytest und ruff, offene Kriterien.
 
-Code entsteht in kleinen Häppchen, die ich in einer Minute lesen kann. Commits mache ich selbst oder sage es explizit.
+Ich arbeite allein und sequentiell direkt auf `main`. Commits mache ich selbst oder sage es explizit.
 
 ## Definition of Done je Ticket
 
-- Alle Akzeptanzkriterien erfüllt, Tests und ruff grün, `/code-review` ohne offene Punkte.
-- **Fachgespräch-Notiz** als Kommentar im Issue, max. 6 Zeilen: *Gebaut* · *Entscheidung + Warum* (Bezug BSI/DSGVO/FinOps) · *Prüfungsbegriffe* · *Fachgespräch-Satz*. Zeige mir den Entwurf; gepostet wird nach meinem Go.
-
-## Prüfer-Modus (Pocock /teach, dosiert)
-
-Du bist wohlwollender IHK-Prüfer und Cloud-Chefarchitekt. Bei **kritischen Entscheidungen** stellst du nach der Umsetzung 1–2 gezielte Verständnisfragen:
-
-- Wahl eines Cloud-Service oder einer Architekturvariante
-- IAM, Verschlüsselung, Netzwerk, Datenresidenz (Security)
-- Kosten-Trade-offs (FinOps)
-- KI-Governance: Halluzinationsschutz, Tool-Choice, Prompt-Design
-
-Beispiel: „Warum diese IAM-Action statt einer Wildcard? Welcher BSI-Baustein greift?“ Bei neuen Konzepten: „Erkläre es in 2 Sätzen mit eigenen Worten.“ Korrigiere meine Antwort und nenne den exakten Prüfungsbegriff. Routine-Code (Imports, Umbenennungen, Formatierung) läuft ohne Fragen. Sage ich „weiter“, geht es ohne Frage weiter.
+- Alle Akzeptanzkriterien erfüllt, Tests und ruff grün, Review ohne offene Punkte.
+- Lernkarte über `/verstehen <Issue-Nr.>` in `learning/lessons/`.
 
 ## Sprache
 
 - Deutsch, einfach und klar, Niveau pragmatischer Senior Engineer.
 - Fachwort beim ersten Auftreten in einem Halbsatz erklären.
 - **Rule of 3**: maximal 3 Bulletpoints, Fließtext maximal 3 Zeilen. Code-Erklärungen: Was macht es? Warum so (Bezug BSI/AWS)? Welcher Begriff ist fürs Fachgespräch wichtig?
-- Ist ein Konzept neu, endet die Antwort mit einer Verständnisfrage statt mit mehr Theorie.
 - **Projektsprache:** Code, Bezeichner, JSON-Felder und Kommentare englisch (Normbezug als Kürzel, z. B. `# Enforces BSI OPS.1.1.2.A3`). LLM-Prompts, Doku, UI und Inhalte der Audit-Reports deutsch. Englische Code-Namen der Fachbegriffe stehen in `CONTEXT.md` (*Code*).
 
 ## Doku: lean
@@ -69,6 +57,6 @@ Standard-Labels: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-hum
 
 Single-context: `CONTEXT.md` im Root und `docs/adr/`. Lies beide vor der Arbeit an einem Bereich, falls vorhanden. Beide entstehen lazy über `/grill-with-docs`.
 
-### Teach-Workspace
+### Lern-Workspace
 
-`/teach` arbeitet im Ordner `learning/` (MISSION.md, lessons/, reference/, learning-records/), nicht im Repo-Root.
+Lernen findet in `learning/` statt: `MISSION.md`, Lernkarten in `lessons/`, Lücken in `learning-records/`. Verständnisfragen gehören in `/verstehen`, nicht in die Bauphase.

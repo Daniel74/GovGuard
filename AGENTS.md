@@ -2,7 +2,7 @@
 
 GovGuard ist ein Compliance-Copilot (DSGVO, BSI IT-Grundschutz) in Python auf AWS. Verbindlich sind `CONTEXT.md` (Begriffe und ihre Code-Namen), `docs/adr/` und `docs/ARCHITECTURE.md` → *Code-Struktur*. Dein Auftrag ist der genannte Schritt in `docs/FAHRPLAN.md` plus das Issue (`gh issue view N`).
 
-- **Branch:** Arbeite nur auf dem Ticket-Branch. Nie auf `main` committen, nicht pushen, keine PRs anlegen.
+- **Git:** Arbeite direkt auf `main` und lass deine Änderungen uncommittet; der Mensch committet nach dem Review. Keine Pushes, keine PRs.
 - **TDD:** Schreib erst einen roten Test, dann den Code; zu jedem Akzeptanzkriterium gehört mindestens ein Test. Fertig ist ein Schritt, wenn `pytest` und `ruff check` grün sind.
 - **I/O nur in Adaptern:** boto3 und das Bedrock-Modell nur in `src/govguard/aws_services.py`, subprocess nur in `src/kb_build/cdk_runner.py`, HTTP-Downloads nur in `src/kb_build/source_fetch.py`. Die Prüflogik bleibt rein; Tests nutzen Fakes bzw. Pydantic AI `FunctionModel`/`TestModel`.
 - **Kleine Einheiten:** Ein Modul hat ca. 200 Zeilen, eine Funktion ca. 30 Zeilen. Wird es größer, teile auf.
