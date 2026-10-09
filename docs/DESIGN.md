@@ -130,7 +130,7 @@ class RuleCatalog(BaseModel):            # Datei rules_spec.json bzw. rules_arch
     audit_type: Literal["spec", "architecture"]
     source_versions: dict[str, str]      # {"CIS": "v7.0.0", "BSI": "<SHA>"}
     model_id: str                        # welches Modell formuliert hat
-    rules: list[Rule]
+    rules: list[Rule] = Field(min_length=1)  # leerer Katalog hätte keinen Gesamtstatus
 ```
 
 Beispiele für IDs: `ARCH-CIS-3.1.4`, `ARCH-BSI-DET.3.1`, `SPEC-DSGVO-Art.32`, `SPEC-SDM-M60.D01`. Der Katalog enthält bewusst keinen Zeitstempel, damit ein unveränderter Build keinen Git-Diff erzeugt.
@@ -252,18 +252,19 @@ def select_archetype(spec_text: str, report: AuditReport,
 class AuditDeps(BaseModel):              # deps_type des Audit-Agenten
     catalog: RuleCatalog
     input_text: str
+    is_template: bool                    # CloudFormation im Architektur-Audit
 
 class ArchetypeChoice(BaseModel):        # Schema des Tools select_archetype
     archetype: Literal["ARCH-01", "ARCH-02", "ARCH-03", "NONE"]
     rationale: str
 ```
 
-Vor dem LLM-Aufruf prüft `run_audit()` mit `template_resource_types()` (3), ob die Eingabe ein CloudFormation-Template ist. Falls ja, erhält jede Prüfregel ohne passenden Ressourcentyp im Template vom Code den Befund N/A mit der Begründung „Ressourcentyp nicht im Template“ und geht nicht ans Modell (ADR 0007).
+Vor dem LLM-Aufruf prüft `run_audit()` im Architektur-Audit mit `template_resource_types()` (3), ob die Eingabe ein CloudFormation-Template ist. Falls ja, erhält jede Prüfregel ohne passenden Ressourcentyp im Template vom Code den Befund N/A mit der Begründung „Ressourcentyp nicht im Template“ und geht nicht ans Modell (ADR 0007). Im Spec-Audit geht auch ein Template vollständig ans Modell, denn ein stilles N/A würde eine falsch eingereichte Eingabe verdecken.
 
 `run_audit()` validiert die LLM-Antwort in dieser Reihenfolge:
 1. Pydantic-Schema (`AuditResponse`), durch Pydantic AI.
-2. Jede an das Modell gesendete `rule_id` kommt genau einmal vor, und es gibt keine unbekannten IDs. Bei CloudFormation ist N/A vom Modell verboten, denn der Ressourcentyp kommt vor.
-3. Beleg vorhanden, wo er Pflicht ist, und mit `contains_quote()` wörtlich in der Eingabe gefunden (siehe 3).
+2. Jede an das Modell gesendete `rule_id` kommt genau einmal vor, und es gibt keine unbekannten IDs. Bei CloudFormation ist N/A vom Modell verboten, denn der Ressourcentyp kommt vor; der Prompt sagt das dem Modell vorab.
+3. Beleg vorhanden, wo er Pflicht ist (PASS, FAIL), und jeder gesetzte Beleg mit `contains_quote()` wörtlich in der Eingabe gefunden (siehe 3). Empfehlung vorhanden bei WARN und FAIL.
 
 Die Schritte 2 und 3 laufen im `@agent.output_validator` und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch, wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
 

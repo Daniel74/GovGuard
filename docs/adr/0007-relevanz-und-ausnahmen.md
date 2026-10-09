@@ -15,7 +15,7 @@ Messungen vor Beginn der Umsetzung (2026-10-09) zeigen Lücken in ADR 0002 und 0
 - **BSI-Vorfilter:** MUSS und SOLLTE bei `sec_level` = normal-SdT.
 - **Gesetzte Plätze:** Die Pflichtanker der Presets stehen immer im Katalog, höchstens 4 je Katalog.
 - **Ranking:** Die Obergrenze gilt je Quelle. Architektur reihum je Ressourcentyp, Spezifikation reihum je DSGVO-Kapitel bzw. SDM-Baustein. Innerhalb einer Gruppe gilt Tabelle 1.1, dann die ID.
-- **N/A:** Bei CloudFormation setzt der Code N/A, wenn kein `cfn_resource_type` der Prüfregel im Template vorkommt.
+- **N/A:** Bei CloudFormation im Architektur-Audit setzt der Code N/A, wenn kein `cfn_resource_type` der Prüfregel im Template vorkommt.
 - **Ausnahmen:** cdk-nag-Errors sind nur über die von Hand gepflegte Allowlist `data/nag_allowlist.json` erlaubt (Regel-ID, Pfad, Begründung). Angewendet wird sie vom Code, nie vom LLM. Das gilt für Archetypen und den GovGuard-Stack. LLM-Code enthält kein `acknowledge`. Startliste: COG4 (IAM-Auth), IAM4 `BucketNotificationsHandler`, IAM5 Firehose `bucket/*`. X-Ray bleibt aus.
 
 ## Konsequenzen
