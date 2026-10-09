@@ -21,11 +21,11 @@ Das LLM sitzt immer **zwischen zwei Code-Schichten**: Der Code bereitet vor (fil
 ```mermaid
 flowchart TD
   subgraph Q[Quellen]
-    BSI["BSI Grundschutz++ OSCAL<br/>(fester Commit)"]
-    CIS["CIS AWS v7 (PDF)"]
-    DS["DSGVO + SDM (PDF)"]
+    BSI["BSI Grundschutz++<br/>OSCAL-JSON (GitHub)"]
+    CIS["CIS AWS v7<br/>Prowler-JSON (GitHub)"]
+    DS["DSGVO Formex-XML (CELLAR)<br/>+ SDM-PDFs (DSK)"]
   end
-  BSI & CIS & DS --> E["1 Extrahieren"]
+  BSI & CIS & DS -->|"gepinnt + SHA-256"| E["1 Extrahieren"]
   E --> F["2 Vorfiltern (deterministisch)"]
   F --> K["3 LLM: prüfbar ja/nein<br/>+ Ressourcentypen"]
   K --> R["4 Relevanz, gesetzte Plätze,<br/>Ranking + Obergrenze (deterministisch)"]
@@ -43,7 +43,7 @@ flowchart TD
 
 Die Rauten sind **Gates**: automatische Prüfpunkte, an denen Code das Ergebnis des LLM kontrolliert. Fällt etwas durch, bricht der Build ab, und die alte Wissensbasis bleibt aktiv.
 
-Das Build-Skript liest die Quellen ein und siebt sie in zwei Stufen: Ein deterministischer Vorfilter wirft offensichtlich Irrelevantes weg, dann entscheidet das LLM je Anforderung, ob sie an einer Spezifikation oder an einem CloudFormation-Template prüfbar ist, und nennt bei Architektur die betroffenen Ressourcentypen. Der Code behält nur, was unsere Archetypen betrifft, setzt die Pflichtanker der Presets als gesetzte Plätze und füllt den Rest per Ranking bis zur Obergrenze des Bounded Catalog (ADR 0007). Erst danach formuliert das LLM daraus Prüfregeln.
+Das Build-Skript lädt jede Quelle vom Herausgeber, wie in `data/sources.json` festgelegt, und bricht ab, wenn die SHA-256-Prüfsumme nicht stimmt. Quelldateien liegen nie im Repo (ADR 0008). Dann siebt es die Quellen in zwei Stufen: Ein deterministischer Vorfilter wirft offensichtlich Irrelevantes weg, dann entscheidet das LLM je Anforderung, ob sie an einer Spezifikation oder an einem CloudFormation-Template prüfbar ist, und nennt bei Architektur die betroffenen Ressourcentypen. Der Code behält nur, was unsere Archetypen betrifft, setzt die Pflichtanker der Presets als gesetzte Plätze und füllt den Rest per Ranking bis zur Obergrenze des Bounded Catalog (ADR 0007). Erst danach formuliert das LLM daraus Prüfregeln.
 
 Das erste Gate prüft jede Prüfregel in drei Punkten:
 
@@ -117,8 +117,8 @@ Der Primäranker ist die **eine** Anforderung, aus der eine Prüfregel stammt. I
 | Quelle | Format | Existenz-Check |
 |---|---|---|
 | BSI | `BSI GS++ DET.3.1` + Commit-SHA des Katalogs | ID existiert im Katalog-JSON |
-| CIS | `CIS AWS v7.0.0 3.1.4` | Nummer und Titel stehen im PDF-Text |
-| DSGVO | `DSGVO Art. 32` (optional Abs./lit.) | Überschrift „Artikel 32“ steht im PDF-Text |
+| CIS | `CIS AWS v7.0.0 3.1.4` | `Id` existiert im Prowler-JSON (fester Commit) |
+| DSGVO | `DSGVO Art. 32` (optional Abs./lit.) | `ARTICLE IDENTIFIER="032"` existiert im Formex-XML |
 | SDM | `SDM Löschen M60.D01` | Maßnahmen-ID steht im Baustein-Text |
 
 Zusätzlich muss das `source_quote` **wörtlich** im Text genau der verankerten Anforderung stehen, nach Normalisierung von Leerzeichen und Zeilenumbrüchen und nach Entfernen von EUR-Lex-Markern wie „►C2“. Das ist dasselbe Prinzip wie der Beleg zur Laufzeit: Zitat statt Behauptung.
@@ -262,19 +262,22 @@ flowchart TB
   subgraph A["Adapter – einziger Ort für I/O"]
     AWS["govguard/aws_services.py<br/>boto3, Bedrock-Modell"]
     CDK["kb_build/cdk_runner.py<br/>subprocess"]
+    FE["kb_build/source_fetch.py<br/>HTTP + SHA-256"]
   end
   subgraph X["Extern"]
     B[("Bedrock eu.")]
     S3[("S3")]
     CL["CDK CLI + cdk-nag"]
+    HG["Herausgeber<br/>GitHub, CELLAR, DSK"]
   end
   H & C --> AE
   H & C --> AWS
   M --> KB
-  M --> AWS & CDK
+  M --> AWS & CDK & FE
   KB --> AE
   AWS --> B & S3
   CDK --> CL
+  FE --> HG
 ```
 
 Von der Logik führt **kein Pfeil** zu den Adaptern. Der Einstieg reicht die Adapter hinein, etwa das Bedrock-Modell (Dependency Injection); Tests reichen Fakes bzw. `TestModel` hinein.
@@ -286,8 +289,9 @@ src/govguard/         Laufzeit-Kern, wird zum Lambda-Paket
 src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, nie umgekehrt)
 infra/                CDK-App des GovGuard-Stacks
 ui/                   Streamlit-App, spricht nur per HTTP mit der API
-data/sources/         Quell-PDFs (CIS, DSGVO, SDM); BSI-OSCAL lädt der Build per Commit-SHA
-data/extracted/       extrahierte Anforderungen (JSON)
+data/sources.json     je Quelle URL, Version, SHA-256, Lizenz (ADR 0008)
+data/sources/         lokaler Download-Cache, in .gitignore
+data/extracted/       extrahierte Anforderungen (JSON); cis.json nur lokal (Lizenz)
 data/knowledge_base/  rules_spec.json, rules_arch.json, archetypes.json
 data/presets/         4 Presets: Eingabedatei + preset.json mit Soll-Ergebnis
 data/archetype_profiles.json  Steckbriefe der 3 Archetypen (von Hand gepflegt)
@@ -295,7 +299,7 @@ tests/                pytest
 .github/workflows/    build-kb.yml, deploy.yml
 ```
 
-- **Adapter für I/O:** Nur `aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `cdk_runner.py` startet Prozesse. Ein Test prüft beides.
+- **Adapter für I/O:** Nur `aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `cdk_runner.py` startet Prozesse, nur `source_fetch.py` lädt Quellen aus dem Netz. Ein Test prüft alle drei.
 - **Keine Logik in Klebe-Code:** Einstiegsdateien und Workflow-YAML verbinden nur. Ein Workflow meldet sich an, ruft `python -m …` auf und öffnet den PR. Derselbe Befehl läuft lokal.
 - **src-Layout:** Der CDK-Stack packt mit `Code.from_asset("src/govguard")` genau den Laufzeit-Kern, ohne Build-Code, UI oder Daten.
 
@@ -318,6 +322,7 @@ Der eigene Stack verschlüsselt mit einem kundenverwalteten KMS-Schlüssel (CMK)
 ## Bekannte Grenzen
 
 - **SDM ohne Protokollieren (M43):** Der Baustein V2.0 hat ein eigenes ID-Schema (`M43.21.04`) ohne Ebenen D/S und führt ungültige Maßnahmen nur durchgestrichen weiter. Er bräuchte einen eigenen Parser und fehlt bewusst; Protokollierung prüft das Architektur-Audit (BSI DET, CIS Kapitel 4).
+- **CIS aus zweiter Hand:** Offiziell maschinenlesbar gibt es den Benchmark nur für CIS-Mitglieder. Wir nutzen deshalb das Prowler-JSON, und eine Stichprobe gegen das lokale PDF sichert die Texttreue ab (ADR 0008).
 - **DSGVO-Einheit „Artikel“:** Art. 5 ergibt nur eine Prüfregel, obwohl er sechs Grundsätze enthält. Die Grundsätze kommen über das SDM in den Katalog; die SDM-Methode ist genau ihre Operationalisierung (Teil C, „Systematisierung der Anforderungen der DS-GVO durch die Gewährleistungsziele“).
 - **Audit-Protokoll nicht revisionssicher:** CloudWatch Logs sind für Admins löschbar, und gespeichert werden nur Hashes und Status, keine Eingaben und vollständigen Reports (ADR 0006). Ein unlöschbarer Speicher für Inhalte widerspräche dem Recht auf Löschung (Art. 17 DSGVO). Die Build-Historie in Git schützt eine Branch Protection auf `main` gegen Force-Push und Löschen; der GitHub Free Plan bietet sie für öffentliche Repos an.
 - **Keine kontoweiten Pflichten:** Root-MFA, Passwort-Policy oder ein kontoweiter CloudTrail sind an keinem Template entscheidbar und fehlen bewusst (ADR 0007). Dafür gibt es Werkzeuge wie Prowler oder AWS Security Hub.

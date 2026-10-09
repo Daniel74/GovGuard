@@ -80,15 +80,15 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** BSI Grundschutz++ und CIS AWS v7 sind deterministisch in Anforderungen zerlegt und vorgefiltert.
 **Voraussetzung:** Schritt 1 (`normalize()`).
 
-- [ ] **Spike** 🆕 *Sonnet* · 👤 „Zeig mir die Struktur des CIS-PDF: Kapitel, Fußzeilen, Wiederholungen. Nur anschauen, nichts committen.“
-- [ ] **Starten** 👤 `/tdd Issue #4 umsetzen`. Stichproben-Tests: `DET.3.1`, CIS `3.1.4`, jede ID genau einmal
-- [ ] **Bauen** 🤖 erzeugt `data/extracted/bsi.json` und `cis.json`. 👤 Prüfe: Bleiben beim BSI nach dem Vorfilter 380 Anforderungen?
+- [ ] **Spike** 🆕 *Sonnet* · 👤 „Zeig mir die Struktur von Prowler `cis_7.0_aws.json` und dem BSI-OSCAL: Felder, IDs, Markdown-Zeichen im Text. Nur anschauen, nichts committen.“
+- [ ] **Starten** 👤 `/tdd Issue #4 umsetzen` (ADR 0008). Reihenfolge: `data/sources.json` + `source_fetch.py` (Hash-Prüfung, Test mit Fake) → BSI → CIS. Stichproben-Tests: `DET.3.1`, CIS `3.1.4`, jede ID genau einmal, CIS genau 70 Empfehlungen
+- [ ] **Bauen** 🤖 erzeugt `data/extracted/bsi.json` und `cis.json` (nur lokal). 👤 Prüfe: Bleiben beim BSI nach dem Vorfilter 380 Anforderungen? Stimmen 3 CIS-Texte mit dem lokalen PDF überein?
 - [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #4`
 - [ ] **Verstehen** 👤 Erkläre in 2 Sätzen, warum der Vorfilter MUSS **und** SOLLTE nimmt.
 - [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #4“ → Go → 🤖 postet; 👤 committet und pusht
 
-**Fertig, wenn:** Beide JSON-Dateien eingecheckt sind, alle Tests grün sind und die CIS-Zahl im Issue steht.
-**Fürs Fachgespräch:** OSCAL, Commit-SHA statt Release, Reproduzierbarkeit.
+**Fertig, wenn:** `bsi.json` eingecheckt ist, `cis.json` per `.gitignore` draußen bleibt, alle Tests grün sind und die CIS-Zahl im Issue steht.
+**Fürs Fachgespräch:** OSCAL, Commit-SHA plus SHA-256, Reproduzierbarkeit, Lizenz (keine CIS-Volltexte im Repo).
 
 ---
 
@@ -97,8 +97,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** DSGVO und die SDM-Bausteine sind deterministisch in Anforderungen zerlegt und vorgefiltert.
 **Voraussetzung:** Schritt 1 (`normalize()`).
 
-- [ ] **Spike** 🆕 *Sonnet* · 👤 „Zeig mir die Struktur von DSGVO-PDF und SDM-Bausteinen: Kopfzeilen, EUR-Lex-Marker, Maßnahmen-IDs. Nur anschauen.“
-- [ ] **Starten** 👤 `/tdd Issue #5 umsetzen`. Stichproben-Tests: `Art. 32`, `M60.D01`, jede ID genau einmal
+- [ ] **Spike** 🆕 *Sonnet* · 👤 „Zeig mir die Struktur des DSGVO-Formex-XML (`ARTICLE`, `PARAG`, Berichtigungs-Markierungen) und der SDM-Bausteine (Kopfzeilen, Maßnahmen-IDs). Nur anschauen.“
+- [ ] **Starten** 👤 `/tdd Issue #5 umsetzen` (ADR 0008). DSGVO und SDM kommen in `data/sources.json`. Stichproben-Tests: `Art. 32`, `M60.D01`, jede ID genau einmal, DSGVO genau 99 Artikel
 - [ ] **Bauen** 🤖 erzeugt `data/extracted/dsgvo.json` und `sdm.json`
 - [ ] **Prüfen** 🆕 *Opus* · 👤 `/code-review gegen Issue #5`
 - [ ] **Verstehen** 👤 Erkläre in 2 Sätzen, warum SDM Protokollieren (M43) bewusst fehlt.
