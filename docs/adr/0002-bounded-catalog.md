@@ -15,6 +15,7 @@ Top-K-Retrieval kann relevante Anforderungen übersehen – für ein Audit ist d
 
 - Keine Suche, keine Embeddings, keine Vektor-DB.
 - Die Abdeckung ist bewusst begrenzt; die Auswahlliste liegt versioniert im Repo.
+- SDM ohne Protokollieren (M43): eigenes ID-Schema in V2.0, Aufwand zu hoch; Protokollierung deckt das Architektur-Audit ab.
 - Ausbau später per Map-Reduce: mehrere Teilkataloge parallel auswerten.
 
 ## Fachgespräch-Satz
