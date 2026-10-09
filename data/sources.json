@@ -12,5 +12,33 @@
     "sha256": "74c83838c42976cba609a3097820189edfd03eb63bc1120630e9a43cf2ae0449",
     "license": "Apache-2.0 (Prowler JSON). CIS PDF Terms of Use apply to the original benchmark.",
     "filename": "cis_7.0_aws_prowler.json"
+  },
+  "dsgvo_formex": {
+    "url": "http://publications.europa.eu/resource/cellar/5f2552c2-cc45-11e6-ad7c-01aa75ed71a1.0001.01/DOC_6",
+    "version": "000.003",
+    "sha256": "bf2ca89192b2f865fb6b6131221a3a3064d0c61d65d4c403393fcf9559a59310",
+    "license": "EU law (EUR-Lex/CELLAR Open Data)",
+    "filename": "dsgvo_02016R0679-20160504.xml"
+  },
+  "sdm_m60_loeschen_pdf": {
+    "url": "https://www.datenschutz-mv.de/static/DS/Dateien/Datenschutzmodell/SDM-V2.0_L%C3%B6schen_und_Vernichten_V1.0a.pdf",
+    "version": "V1.0a",
+    "sha256": "e4ce79e5b15eadad4b307c680305fc84ca57e9f236e31c8ab692340e2e8c7f52",
+    "license": "dl-de/by-2-0",
+    "filename": "SDM-V2.0_L\u00f6schen_und_Vernichten_V1.0a.pdf"
+  },
+  "sdm_m50_trennen_pdf": {
+    "url": "https://www.datenschutz-mv.de/static/DS/Dateien/Datenschutzmodell/SDM-V2.0_Trennen_V1.0.pdf",
+    "version": "V1.0",
+    "sha256": "3392f4a7990c8b24cc538a406490fc309f8118059d6c7c5dbd8b311ae8d78993",
+    "license": "dl-de/by-2-0",
+    "filename": "SDM-V2.0_Trennen_V1.0.pdf"
+  },
+  "sdm_m51_zugriffe_regeln_pdf": {
+    "url": "https://www.datenschutz-mv.de/static/DS/Dateien/Datenschutzmodell/SDM-V2.0b_Zugriffe_regeln_V1.0.pdf",
+    "version": "V1.0",
+    "sha256": "65bf5e79641869fb71641be30e4ddbbc16eafa3752a6c5d834edf200b1bf14a6",
+    "license": "dl-de/by-2-0",
+    "filename": "SDM-V2.0b_Zugriffe_regeln_V1.0.pdf"
   }
 }

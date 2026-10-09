@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from kb_build.source_fetch import SourceHashMismatchError, SourceSpec, fetch_to_cache
+from kb_build.source_fetch import SourceHashMismatchError, SourceSpec, fetch_to_cache, read_cached
 
 
 def test_fetch_to_cache_rejects_wrong_sha256(tmp_path: Path) -> None:
@@ -64,3 +64,10 @@ def test_fetch_to_cache_accepts_matching_sha256_and_caches(tmp_path: Path) -> No
     path2 = fetch_to_cache(spec, cache_dir=tmp_path, fetcher=fake_fetch)
     assert path2 == path1
     assert calls == [spec.url]
+
+
+def test_read_cached_parses_json_and_keeps_other_formats_as_bytes(tmp_path: Path) -> None:
+    (tmp_path / "cis.json").write_text('{"Requirements": []}', encoding="utf-8")
+    (tmp_path / "sdm.pdf").write_bytes(b"%PDF-1.4")
+    assert read_cached(tmp_path / "cis.json") == {"Requirements": []}
+    assert read_cached(tmp_path / "sdm.pdf") == b"%PDF-1.4"

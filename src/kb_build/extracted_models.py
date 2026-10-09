@@ -35,3 +35,15 @@ def mark_prefilter(
 ) -> list[Requirement]:
     """Stores each adapter's prefilter verdict in `prefilter_passed` (ARCHITECTURE 1.1)."""
     return [r.model_copy(update={"prefilter_passed": prefilter(r)}) for r in requirements]
+
+
+def merge_sources(parts: list[ExtractedSource]) -> ExtractedSource:
+    """One output file per source; SDM ships one PDF per module (ADR 0008)."""
+    if len(parts) == 1:
+        return parts[0]
+    return ExtractedSource(
+        source=parts[0].source,
+        version=", ".join(p.version for p in parts),
+        origin=", ".join(p.origin for p in parts),
+        requirements=[r for p in parts for r in p.requirements],
+    )

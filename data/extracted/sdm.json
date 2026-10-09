@@ -1,0 +1,1624 @@
+{
+  "source": "SDM",
+  "version": "V1.0a, V1.0, V1.0",
+  "origin": "data/sources/SDM-V2.0_Löschen_und_Vernichten_V1.0a.pdf, data/sources/SDM-V2.0_Trennen_V1.0.pdf, data/sources/SDM-V2.0b_Zugriffe_regeln_V1.0.pdf",
+  "requirements": [
+    {
+      "id": "M60.D01",
+      "title": "Datenstrukturen und Speicherarten, die das Löschen der Inhalte einzelner Datenfelder, Datensätze oder vorher definierter Gruppen von Daten in einer vom Schutzbedarf abhängigen Granularität ermöglichen",
+      "text": "Datenstrukturen und Speicherarten, die das Löschen der Inhalte einzelner Datenfelder, Datensätze oder vorher definierter Gruppen von Daten in einer vom Schutzbedarf abhängigen Granularität ermöglichen",
+      "primary_anchor": "SDM Löschen M60.D01",
+      "attributes": {
+        "module": "M60",
+        "layer": "D"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.D02",
+      "title": "Strukturen von Daten und Datenmodellen dergestalt, dass das Löschen der Inhalte einzelner Datenfelder, Datensätze oder vorher definierter Gruppen von Daten die Integrität der verbleibenden Daten nicht gefährdet",
+      "text": "Strukturen von Daten und Datenmodellen dergestalt, dass das Löschen der Inhalte einzelner Datenfelder, Datensätze oder vorher definierter Gruppen von Daten die Integrität der verbleibenden Daten nicht gefährdet",
+      "primary_anchor": "SDM Löschen M60.D02",
+      "attributes": {
+        "module": "M60",
+        "layer": "D"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.S01",
+      "title": "Überschreiben von Daten, Datenfeldern, Datenattributen oder kompletten Datenträgern mit speziellen Löschprogrammen (Wipe-Tools)",
+      "text": "Überschreiben von Daten, Datenfeldern, Datenattributen oder kompletten Datenträgern mit speziellen Löschprogrammen (Wipe-Tools)",
+      "primary_anchor": "SDM Löschen M60.S01",
+      "attributes": {
+        "module": "M60",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.S02",
+      "title": "Schreddern zur Vernichtung von Datenträgern jeder Art",
+      "text": "Schreddern zur Vernichtung von Datenträgern jeder Art",
+      "primary_anchor": "SDM Löschen M60.S02",
+      "attributes": {
+        "module": "M60",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.S03",
+      "title": "Einschmelzen oder Verbrennen von Datenträgern jeder Art",
+      "text": "Einschmelzen oder Verbrennen von Datenträgern jeder Art",
+      "primary_anchor": "SDM Löschen M60.S03",
+      "attributes": {
+        "module": "M60",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.S04",
+      "title": "Integritätssicherung beim Löschen",
+      "text": "Integritätssicherung beim Löschen",
+      "primary_anchor": "SDM Löschen M60.S04",
+      "attributes": {
+        "module": "M60",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.S05",
+      "title": "Protokollierung von Löschungen",
+      "text": "Protokollierung von Löschungen",
+      "primary_anchor": "SDM Löschen M60.S05",
+      "attributes": {
+        "module": "M60",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.S06",
+      "title": "Datensparsame Ausgestaltung der Protokollie rung von Löschungen",
+      "text": "Datensparsame Ausgestaltung der Protokollie rung von Löschungen",
+      "primary_anchor": "SDM Löschen M60.S06",
+      "attributes": {
+        "module": "M60",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.S07",
+      "title": "Automatisierte Überwachung von Löschfristen unter Nutzung von Zeitstempelsystemen oder Auswertungen entsprechender Löschattribute",
+      "text": "Automatisierte Überwachung von Löschfristen unter Nutzung von Zeitstempelsystemen oder Auswertungen entsprechender Löschattribute",
+      "primary_anchor": "SDM Löschen M60.S07",
+      "attributes": {
+        "module": "M60",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.S08",
+      "title": "Möglichkeiten der Zuordnung zwischen Daten und dem zeitlichen Anknüpfungspunkt für die Löschverpflichtung",
+      "text": "Möglichkeiten der Zuordnung zwischen Daten und dem zeitlichen Anknüpfungspunkt für die Löschverpflichtung",
+      "primary_anchor": "SDM Löschen M60.S08",
+      "attributes": {
+        "module": "M60",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.S09",
+      "title": "Technische Systeme zur automatisierten, zeitgesteuerten Löschung unter Nutzung von Zeitstempelsystemen oder durch Auswertungen anderer Zuordnungssysteme oder entsprechende Löschattribute",
+      "text": "Technische Systeme zur automatisierten, zeitgesteuerten Löschung unter Nutzung von Zeitstempelsystemen oder durch Auswertungen anderer Zuordnungssysteme oder entsprechende Löschattribute",
+      "primary_anchor": "SDM Löschen M60.S09",
+      "attributes": {
+        "module": "M60",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.S10",
+      "title": "Technische Systeme, die bei einer Rücksiche rung von Datenbeständen aus Backups oder Datensicherungen sicherstellen, dass Daten, die im Original gelöscht wurden, nicht weiter genutzt oder verarbeitet werden",
+      "text": "Technische Systeme, die bei einer Rücksiche rung von Datenbeständen aus Backups oder Datensicherungen sicherstellen, dass Daten, die im Original gelöscht wurden, nicht weiter genutzt oder verarbeitet werden",
+      "primary_anchor": "SDM Löschen M60.S10",
+      "attributes": {
+        "module": "M60",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M60.P01",
+      "title": "Festlegung von Löschfristen",
+      "text": "Festlegung von Löschfristen",
+      "primary_anchor": "SDM Löschen M60.P01",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P02",
+      "title": "Dokumentation von Löschfristen (ggf. im Ver zeichnis von Verarbeitungstätigkeiten)",
+      "text": "Dokumentation von Löschfristen (ggf. im Ver zeichnis von Verarbeitungstätigkeiten)",
+      "primary_anchor": "SDM Löschen M60.P02",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P03",
+      "title": "Löschkonzept",
+      "text": "Löschkonzept",
+      "primary_anchor": "SDM Löschen M60.P03",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P04",
+      "title": "Regelungen mit besonderen Löschvorgaben für Protokolldaten unter Berücksichtigung der speziellen Aufbewahrungs- und Zweckbindungsvorgaben",
+      "text": "Regelungen mit besonderen Löschvorgaben für Protokolldaten unter Berücksichtigung der speziellen Aufbewahrungs- und Zweckbindungsvorgaben",
+      "primary_anchor": "SDM Löschen M60.P04",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P05",
+      "title": "Regelungen zum Löschen von Daten, die im Ra hmen der Datenverarbeitung im Auftrag bei Auftragnehmern gespeichert sind",
+      "text": "Regelungen zum Löschen von Daten, die im Ra hmen der Datenverarbeitung im Auftrag bei Auftragnehmern gespeichert sind",
+      "primary_anchor": "SDM Löschen M60.P05",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P06",
+      "title": "Prozess zur zeitgesteuerten, automatisierte n Löschung von Daten",
+      "text": "Prozess zur zeitgesteuerten, automatisierte n Löschung von Daten",
+      "primary_anchor": "SDM Löschen M60.P06",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P07",
+      "title": "Einbeziehung des Löschgrundes in die Auswahl eines Löschprozesses",
+      "text": "Einbeziehung des Löschgrundes in die Auswahl eines Löschprozesses",
+      "primary_anchor": "SDM Löschen M60.P07",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P08",
+      "title": "Prozess zur Überwachung der Rücksicherung hinsichtlich möglicher Löschpflichten",
+      "text": "Prozess zur Überwachung der Rücksicherung hinsichtlich möglicher Löschpflichten",
+      "primary_anchor": "SDM Löschen M60.P08",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P09",
+      "title": "Regelungen zum Umgang mit Verschlüsselungsschlüsseln von zu löschenden (verschlüsselten) Daten",
+      "text": "Regelungen zum Umgang mit Verschlüsselungsschlüsseln von zu löschenden (verschlüsselten) Daten",
+      "primary_anchor": "SDM Löschen M60.P09",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P10",
+      "title": "Regeln zum Löschen von Verschlüsselungsschl üsseln",
+      "text": "Regeln zum Löschen von Verschlüsselungsschl üsseln",
+      "primary_anchor": "SDM Löschen M60.P10",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P11",
+      "title": "Regelungen zur Dokumentation von Veröffentl ichung von Daten",
+      "text": "Regelungen zur Dokumentation von Veröffentl ichung von Daten",
+      "primary_anchor": "SDM Löschen M60.P11",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P12",
+      "title": "Prozess zur Protokollierung der Übermittlun g personenbezogener Daten",
+      "text": "Prozess zur Protokollierung der Übermittlun g personenbezogener Daten",
+      "primary_anchor": "SDM Löschen M60.P12",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P13",
+      "title": "Prozess zur Information möglicher Datenempf änger über die Pflicht zur Löschung dieser Daten",
+      "text": "Prozess zur Information möglicher Datenempf änger über die Pflicht zur Löschung dieser Daten",
+      "primary_anchor": "SDM Löschen M60.P13",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M60.P14",
+      "title": "Dokumentation der Anzahl und des Speicherortes von Kopien",
+      "text": "Dokumentation der Anzahl und des Speicherortes von Kopien",
+      "primary_anchor": "SDM Löschen M60.P14",
+      "attributes": {
+        "module": "M60",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.D01",
+      "title": "Zweckbeschreibung, Zwecktrennung und Zweckbindung durchführen und dokumentieren",
+      "text": "Zweckbeschreibung, Zwecktrennung und Zweckbindung durchführen und dokumentieren",
+      "primary_anchor": "SDM Trennen M50.D01",
+      "attributes": {
+        "module": "M50",
+        "layer": "D"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.D02",
+      "title": "Prüfung der Rechtsgrundlage für jede Datenübermittlung",
+      "text": "Prüfung der Rechtsgrundlage für jede Datenübermittlung",
+      "primary_anchor": "SDM Trennen M50.D02",
+      "attributes": {
+        "module": "M50",
+        "layer": "D"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.D03",
+      "title": "Vertragliche Festlegung der Suchkriterien für zu übermittelnde Daten",
+      "text": "Vertragliche Festlegung der Suchkriterien für zu übermittelnde Daten",
+      "primary_anchor": "SDM Trennen M50.D03",
+      "attributes": {
+        "module": "M50",
+        "layer": "D"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.D04",
+      "title": "Protokollierung jeder Datenübermittlung",
+      "text": "Protokollierung jeder Datenübermittlung",
+      "primary_anchor": "SDM Trennen M50.D04",
+      "attributes": {
+        "module": "M50",
+        "layer": "D"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S01",
+      "title": "Nachweis der Prüffähigkeit der von ihm betriebenen Systeme bzgl. der Wirksamkeit der Trennung zu anderen Verarbeitungen und Organisation durch den Dienstleister",
+      "text": "Nachweis der Prüffähigkeit der von ihm betriebenen Systeme bzgl. der Wirksamkeit der Trennung zu anderen Verarbeitungen und Organisation durch den Dienstleister",
+      "primary_anchor": "SDM Trennen M50.S01",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S02",
+      "title": "Nachweis der Abgeschlossenheit eines Mandanten",
+      "text": "Nachweis der Abgeschlossenheit eines Mandanten",
+      "primary_anchor": "SDM Trennen M50.S02",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S03",
+      "title": "Sicherheitstechnische Isolation eines Mandanten",
+      "text": "Sicherheitstechnische Isolation eines Mandanten",
+      "primary_anchor": "SDM Trennen M50.S03",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S04",
+      "title": "Mandantenspezifische Benutzerkennungen",
+      "text": "Mandantenspezifische Benutzerkennungen",
+      "primary_anchor": "SDM Trennen M50.S04",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S05",
+      "title": "Getrennte Systeme zur Berechtigungsvergabe",
+      "text": "Getrennte Systeme zur Berechtigungsvergabe",
+      "primary_anchor": "SDM Trennen M50.S05",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S06",
+      "title": "Konfigurierbarkeit der Nutzungsprotokollierung",
+      "text": "Konfigurierbarkeit der Nutzungsprotokollierung",
+      "primary_anchor": "SDM Trennen M50.S06",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S07",
+      "title": "Protokollierung der (mandantenspezifischen und mandantenübergreifenden) Administrationsaktivitäten",
+      "text": "Protokollierung der (mandantenspezifischen und mandantenübergreifenden) Administrationsaktivitäten",
+      "primary_anchor": "SDM Trennen M50.S07",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S08",
+      "title": "Mandantentrennung innerhalb einer relationalen Datenbank",
+      "text": "Mandantentrennung innerhalb einer relationalen Datenbank",
+      "primary_anchor": "SDM Trennen M50.S08",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S09",
+      "title": "Festlegung von Funktionen, die verarbeitungs- oder systemübergreifend zur Verwaltung von Personen und technischen Ressourcen genutzt werden dürfen",
+      "text": "Festlegung von Funktionen, die verarbeitungs- oder systemübergreifend zur Verwaltung von Personen und technischen Ressourcen genutzt werden dürfen",
+      "primary_anchor": "SDM Trennen M50.S09",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S10",
+      "title": "Trennung von Datenbeständen, IT-Komponenten oder Netzen für die Sachbearbeitung, für die Administration sowie für besondere Services wie bspw. Drucker bei hohem Schutzbedarf",
+      "text": "Trennung von Datenbeständen, IT-Komponenten oder Netzen für die Sachbearbeitung, für die Administration sowie für besondere Services wie bspw. Drucker bei hohem Schutzbedarf",
+      "primary_anchor": "SDM Trennen M50.S10",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S11",
+      "title": "Mandantenspezifisch abgeschlossene Berechtigungsvergabe",
+      "text": "Mandantenspezifisch abgeschlossene Berechtigungsvergabe",
+      "primary_anchor": "SDM Trennen M50.S11",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S12",
+      "title": "Mandantenspezifisch abgeschlossene Rollendefinitionen",
+      "text": "Mandantenspezifisch abgeschlossene Rollendefinitionen",
+      "primary_anchor": "SDM Trennen M50.S12",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S13",
+      "title": "Mandantenspezifische Protokollierung",
+      "text": "Mandantenspezifische Protokollierung",
+      "primary_anchor": "SDM Trennen M50.S13",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S14",
+      "title": "Mandantenübergreifende Protokollierung der Administration",
+      "text": "Mandantenübergreifende Protokollierung der Administration",
+      "primary_anchor": "SDM Trennen M50.S14",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S15",
+      "title": "Definition der Revisionsaktivitäten über das Gesamtsystem",
+      "text": "Definition der Revisionsaktivitäten über das Gesamtsystem",
+      "primary_anchor": "SDM Trennen M50.S15",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S16",
+      "title": "Mandantenübergreifende Datenzugriffe müssen definiert und mit Rechtsgrundlage ausgestattet sein",
+      "text": "Mandantenübergreifende Datenzugriffe müssen definiert und mit Rechtsgrundlage ausgestattet sein",
+      "primary_anchor": "SDM Trennen M50.S16",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.S17",
+      "title": "Es darf keine zusätzlich eingesetzte Softwarekomponente eine bereits durchgesetzte Mandantentrennung aufheben.",
+      "text": "Es darf keine zusätzlich eingesetzte Softwarekomponente eine bereits durchgesetzte Mandantentrennung aufheben.",
+      "primary_anchor": "SDM Trennen M50.S17",
+      "attributes": {
+        "module": "M50",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M50.P01",
+      "title": "Mandantenübergreifendes Administrationskonzept",
+      "text": "Mandantenübergreifendes Administrationskonzept",
+      "primary_anchor": "SDM Trennen M50.P01",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P02",
+      "title": "Mandantenspezifisches- und mandantenübergreifendes Berichtswesen",
+      "text": "Mandantenspezifisches- und mandantenübergreifendes Berichtswesen",
+      "primary_anchor": "SDM Trennen M50.P02",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P03",
+      "title": "Angemessene Auswahl eines zur Umsetzung von Trennungsgeboten geeigneten Auftragsverarbeiters (bspw. Rechenzentrum als Dienstleister)",
+      "text": "Angemessene Auswahl eines zur Umsetzung von Trennungsgeboten geeigneten Auftragsverarbeiters (bspw. Rechenzentrum als Dienstleister)",
+      "primary_anchor": "SDM Trennen M50.P03",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P04",
+      "title": "Definition von Prozessen für das mandantenspezifische und das mandantenübergreifende Changemanagement",
+      "text": "Definition von Prozessen für das mandantenspezifische und das mandantenübergreifende Changemanagement",
+      "primary_anchor": "SDM Trennen M50.P04",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P05",
+      "title": "Überwachung von Managementprozessen einschließlich der Korrektur bei Abweichungen",
+      "text": "Überwachung von Managementprozessen einschließlich der Korrektur bei Abweichungen",
+      "primary_anchor": "SDM Trennen M50.P05",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P06",
+      "title": "Einbindung des gemeinsamen, mandantenübergreifenden Datenschutz- und Sicherheitsmanagement in die betrieblichen Prozesse der gemeinsam genutzten Informationstechnik",
+      "text": "Einbindung des gemeinsamen, mandantenübergreifenden Datenschutz- und Sicherheitsmanagement in die betrieblichen Prozesse der gemeinsam genutzten Informationstechnik",
+      "primary_anchor": "SDM Trennen M50.P06",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P07",
+      "title": "Regelmäßige Überprüfung der mandantenübergreifend genutzten Informationstechnik durch das Datenschutzmanagement",
+      "text": "Regelmäßige Überprüfung der mandantenübergreifend genutzten Informationstechnik durch das Datenschutzmanagement",
+      "primary_anchor": "SDM Trennen M50.P07",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P08",
+      "title": "P27 Prüfung der Rechtsgrundlage bei Datenübermittlung zwischen Mandanten",
+      "text": "P27 Prüfung der Rechtsgrundlage bei Datenübermittlung zwischen Mandanten",
+      "primary_anchor": "SDM Trennen M50.P08",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P09",
+      "title": "Notfall-Konzept mit gestufter Aufgabe von Trennungen",
+      "text": "Notfall-Konzept mit gestufter Aufgabe von Trennungen",
+      "primary_anchor": "SDM Trennen M50.P09",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P10",
+      "title": "Dokumentation von Restrisiken",
+      "text": "Dokumentation von Restrisiken",
+      "primary_anchor": "SDM Trennen M50.P10",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P11",
+      "title": "Getrennte Einrichtung von IT-Komponenten und Diensten",
+      "text": "Getrennte Einrichtung von IT-Komponenten und Diensten",
+      "primary_anchor": "SDM Trennen M50.P11",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P12",
+      "title": "Dokumentation von Restrisiken durch alle an der getrennten Datenverarbeitung beteiligten Verantwortlichen",
+      "text": "Dokumentation von Restrisiken durch alle an der getrennten Datenverarbeitung beteiligten Verantwortlichen",
+      "primary_anchor": "SDM Trennen M50.P12",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P13",
+      "title": "Mandantenübergreifendes Datenschutz- und Sicherheitsmanagement",
+      "text": "Mandantenübergreifendes Datenschutz- und Sicherheitsmanagement",
+      "primary_anchor": "SDM Trennen M50.P13",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P14",
+      "title": "Dokumentation der Wirksamkeit der Trennungsmaßnahmen anhand von Protokollen",
+      "text": "Dokumentation der Wirksamkeit der Trennungsmaßnahmen anhand von Protokollen",
+      "primary_anchor": "SDM Trennen M50.P14",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P15",
+      "title": "Vereinbarungen zwischen Beteiligten an gemeinsam genutzter Informationstechnik gem. Art. 26 DS-GVO treffen",
+      "text": "Vereinbarungen zwischen Beteiligten an gemeinsam genutzter Informationstechnik gem. Art. 26 DS-GVO treffen",
+      "primary_anchor": "SDM Trennen M50.P15",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P16",
+      "title": "Verträge zwischen Verantwortlichen und Auftragsverarbeitern gem. Art. 28 DS-GVO schließen",
+      "text": "Verträge zwischen Verantwortlichen und Auftragsverarbeitern gem. Art. 28 DS-GVO schließen",
+      "primary_anchor": "SDM Trennen M50.P16",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M50.P17",
+      "title": "Prüfen der Übermittlung zwischen Mandanten im Hinblick auf Erhalt der Integrität",
+      "text": "Prüfen der Übermittlung zwischen Mandanten im Hinblick auf Erhalt der Integrität",
+      "primary_anchor": "SDM Trennen M50.P17",
+      "attributes": {
+        "module": "M50",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.D01",
+      "title": "Festlegen und dokumentieren der personenbezogenen Daten in den einzelnen Verarbeitungsvorgängen",
+      "text": "Festlegen und dokumentieren der personenbezogenen Daten in den einzelnen Verarbeitungsvorgängen",
+      "primary_anchor": "SDM Zugriffe regeln M51.D01",
+      "attributes": {
+        "module": "M51",
+        "layer": "D"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.D02",
+      "title": "Festlegen und dokumentieren, zu welchen Zeitpunkten personenbezogene Daten verarbeitet werden dürfen (Fristen)",
+      "text": "Festlegen und dokumentieren, zu welchen Zeitpunkten personenbezogene Daten verarbeitet werden dürfen (Fristen)",
+      "primary_anchor": "SDM Zugriffe regeln M51.D02",
+      "attributes": {
+        "module": "M51",
+        "layer": "D"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.D03",
+      "title": "Festlegen und dokumentieren der personenbezogenen Daten zur Authentisierung und Autorisierung",
+      "text": "Festlegen und dokumentieren der personenbezogenen Daten zur Authentisierung und Autorisierung",
+      "primary_anchor": "SDM Zugriffe regeln M51.D03",
+      "attributes": {
+        "module": "M51",
+        "layer": "D"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.D04",
+      "title": "Festlegen und dokumentieren, welche personenbezogenen Daten in welchen Speicherorten bzw. in welchen jeweiligen Systemen und Diensten verarbeitet werden",
+      "text": "Festlegen und dokumentieren, welche personenbezogenen Daten in welchen Speicherorten bzw. in welchen jeweiligen Systemen und Diensten verarbeitet werden",
+      "primary_anchor": "SDM Zugriffe regeln M51.D04",
+      "attributes": {
+        "module": "M51",
+        "layer": "D"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.D05",
+      "title": "Identifizieren und Festlegen von Rollen in Systemen und Diensten mit den hierfür benötigten Daten, korrekte Umsetzung der Benutzerrollen und deren Berechtigungen in Systemen und Diensten testen und freigeben",
+      "text": "Identifizieren und Festlegen von Rollen in Systemen und Diensten mit den hierfür benötigten Daten, korrekte Umsetzung der Benutzerrollen und deren Berechtigungen in Systemen und Diensten testen und freigeben",
+      "primary_anchor": "SDM Zugriffe regeln M51.D05",
+      "attributes": {
+        "module": "M51",
+        "layer": "D"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S01",
+      "title": "Modellieren und Dokumentieren der Verknüpfung zwischen Prozess- und Benutzerrollen",
+      "text": "Modellieren und Dokumentieren der Verknüpfung zwischen Prozess- und Benutzerrollen",
+      "primary_anchor": "SDM Zugriffe regeln M51.S01",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S02",
+      "title": "Trennen von Verarbeitungen mit unterschiedlichen Zwecken und Aufgaben auf fachlicher und auch entsprechend auf technischer Ebene",
+      "text": "Trennen von Verarbeitungen mit unterschiedlichen Zwecken und Aufgaben auf fachlicher und auch entsprechend auf technischer Ebene",
+      "primary_anchor": "SDM Zugriffe regeln M51.S02",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S03",
+      "title": "Absichern der wirksamen Umsetzung des RZB und RBK durch technische und organisatorische Maßnahmen",
+      "text": "Absichern der wirksamen Umsetzung des RZB und RBK durch technische und organisatorische Maßnahmen",
+      "primary_anchor": "SDM Zugriffe regeln M51.S03",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S04",
+      "title": "Erstellen eines Rollen und Berechtigungskonzepts, in dem Aufgaben das RZK und mit den technischen Funktionen des RBK verbunden werden",
+      "text": "Erstellen eines Rollen und Berechtigungskonzepts, in dem Aufgaben das RZK und mit den technischen Funktionen des RBK verbunden werden",
+      "primary_anchor": "SDM Zugriffe regeln M51.S04",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S05",
+      "title": "Authentifizieren und Autorisierung umsetzen",
+      "text": "Authentifizieren und Autorisierung umsetzen",
+      "primary_anchor": "SDM Zugriffe regeln M51.S05",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S06",
+      "title": "Konfigurieren der Systeme, Dienste und Prozesse beim Übergang von Projektbetrieb in Linienbetrieb",
+      "text": "Konfigurieren der Systeme, Dienste und Prozesse beim Übergang von Projektbetrieb in Linienbetrieb",
+      "primary_anchor": "SDM Zugriffe regeln M51.S06",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S07",
+      "title": "Dokumentieren der Verbindungen und Datenflüssen zwischen allen Systemen in Netzplänen",
+      "text": "Dokumentieren der Verbindungen und Datenflüssen zwischen allen Systemen in Netzplänen",
+      "primary_anchor": "SDM Zugriffe regeln M51.S07",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S08",
+      "title": "Dokumentieren der Datenflüsse (Schnittstellen, Protokolle, Flussrichtungen, Absicherungs- maßnahmen)",
+      "text": "Dokumentieren der Datenflüsse (Schnittstellen, Protokolle, Flussrichtungen, Absicherungs- maßnahmen)",
+      "primary_anchor": "SDM Zugriffe regeln M51.S08",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S09",
+      "title": "Protokollieren von Administrationszugriffen",
+      "text": "Protokollieren von Administrationszugriffen",
+      "primary_anchor": "SDM Zugriffe regeln M51.S09",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S10",
+      "title": "Evaluieren der Systeme und Dienste, spätestens nach einem Update der Systeme und Dienste",
+      "text": "Evaluieren der Systeme und Dienste, spätestens nach einem Update der Systeme und Dienste",
+      "primary_anchor": "SDM Zugriffe regeln M51.S10",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S11",
+      "title": "Authentifizierung per Single-Sign-On (SSO)",
+      "text": "Authentifizierung per Single-Sign-On (SSO)",
+      "primary_anchor": "SDM Zugriffe regeln M51.S11",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S12",
+      "title": "Verwalten von Benutzern für Computer für spezielle Zwecke (oft \"Stand-Alone-Computer\")",
+      "text": "Verwalten von Benutzern für Computer für spezielle Zwecke (oft \"Stand-Alone-Computer\")",
+      "primary_anchor": "SDM Zugriffe regeln M51.S12",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S13",
+      "title": "Revisionssicher nachweisen, zu welchem Zeitpunkt welchem Benutzer welche Rolle(n) zugewiesen oder entzogen wurden",
+      "text": "Revisionssicher nachweisen, zu welchem Zeitpunkt welchem Benutzer welche Rolle(n) zugewiesen oder entzogen wurden",
+      "primary_anchor": "SDM Zugriffe regeln M51.S13",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S14",
+      "title": "Sichtbarmachung, Berechtigen und Protokollieren von technischen Systemnutzern",
+      "text": "Sichtbarmachung, Berechtigen und Protokollieren von technischen Systemnutzern",
+      "primary_anchor": "SDM Zugriffe regeln M51.S14",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S15",
+      "title": "Etablierung von Prozessen und Systemen für die Registrierung bei direktem IT-Zugang für betroffene Personen",
+      "text": "Etablierung von Prozessen und Systemen für die Registrierung bei direktem IT-Zugang für betroffene Personen",
+      "primary_anchor": "SDM Zugriffe regeln M51.S15",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S16",
+      "title": "Befristen der Rollen bei Verarbeitungen mit hohem Risiko (zeitlich oder auch ereignisgesteuert)",
+      "text": "Befristen der Rollen bei Verarbeitungen mit hohem Risiko (zeitlich oder auch ereignisgesteuert)",
+      "primary_anchor": "SDM Zugriffe regeln M51.S16",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.S17",
+      "title": "Protokollieren temporärer Befugnisse",
+      "text": "Protokollieren temporärer Befugnisse",
+      "primary_anchor": "SDM Zugriffe regeln M51.S17",
+      "attributes": {
+        "module": "M51",
+        "layer": "S"
+      },
+      "prefilter_passed": true
+    },
+    {
+      "id": "M51.P01",
+      "title": "Standardisieren der Aufgaben und Aktivitäten mit Hilfe von IT-gestützten Prozessen",
+      "text": "Standardisieren der Aufgaben und Aktivitäten mit Hilfe von IT-gestützten Prozessen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P01",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P02",
+      "title": "Analysieren und Dokumentieren der Verarbeitungstätigkeit mit den Aktivitäten, Betriebsmitteln, personenbezogene Daten, Systemen und Diensten",
+      "text": "Analysieren und Dokumentieren der Verarbeitungstätigkeit mit den Aktivitäten, Betriebsmitteln, personenbezogene Daten, Systemen und Diensten",
+      "primary_anchor": "SDM Zugriffe regeln M51.P02",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P03",
+      "title": "Definieren und Dokumentieren von Verarbeitungsvorgängen",
+      "text": "Definieren und Dokumentieren von Verarbeitungsvorgängen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P03",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P04",
+      "title": "Definieren und Dokumentieren von Aufgaben und Funktionen, strukturiert nach Abteilungen bzw. Referaten sowie innerhalb dieser",
+      "text": "Definieren und Dokumentieren von Aufgaben und Funktionen, strukturiert nach Abteilungen bzw. Referaten sowie innerhalb dieser",
+      "primary_anchor": "SDM Zugriffe regeln M51.P04",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P05",
+      "title": "Definieren und Dokumentieren der Prozessrollen, mit denen Aufgaben erledigt werden",
+      "text": "Definieren und Dokumentieren der Prozessrollen, mit denen Aufgaben erledigt werden",
+      "primary_anchor": "SDM Zugriffe regeln M51.P05",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P06",
+      "title": "Definieren und Dokumentieren der Benutzerrollen",
+      "text": "Definieren und Dokumentieren der Benutzerrollen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P06",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P07",
+      "title": "Spezifizieren, wie die Verarbeitungstätigkeiten mit der Unterstützung von eingesetzten Systemen und Diensten realisiert werden",
+      "text": "Spezifizieren, wie die Verarbeitungstätigkeiten mit der Unterstützung von eingesetzten Systemen und Diensten realisiert werden",
+      "primary_anchor": "SDM Zugriffe regeln M51.P07",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P08",
+      "title": "Begründen, rechtlich Beurteilen und Dokumentieren, falls fachliche Anforderungen an die Verarbeitungstätigkeit nicht vollständig in die technische Ebene transformiert werden können",
+      "text": "Begründen, rechtlich Beurteilen und Dokumentieren, falls fachliche Anforderungen an die Verarbeitungstätigkeit nicht vollständig in die technische Ebene transformiert werden können",
+      "primary_anchor": "SDM Zugriffe regeln M51.P08",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P09",
+      "title": "Dokumentieren von Verarbeitungsvorgängen und die daraus abgeleiteten Aufgaben und Prozessrollen bereits in der Planungsphase",
+      "text": "Dokumentieren von Verarbeitungsvorgängen und die daraus abgeleiteten Aufgaben und Prozessrollen bereits in der Planungsphase",
+      "primary_anchor": "SDM Zugriffe regeln M51.P09",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P10",
+      "title": "Festlegen, welche Verarbeitung durch welche Person ausgeführt wird, mittels Vergabe von Prozess- und Benutzerrollen",
+      "text": "Festlegen, welche Verarbeitung durch welche Person ausgeführt wird, mittels Vergabe von Prozess- und Benutzerrollen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P10",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P11",
+      "title": "Festlegen eines Ablaufs für die Zuweisung (und den Entzug) von Zuständigkeiten und Berechtigungen",
+      "text": "Festlegen eines Ablaufs für die Zuweisung (und den Entzug) von Zuständigkeiten und Berechtigungen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P11",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P12",
+      "title": "Einrichtung einer Rolle, die für die Zuordnung, Änderung und den Entzug von Personen zu Rollen zuständig ist",
+      "text": "Einrichtung einer Rolle, die für die Zuordnung, Änderung und den Entzug von Personen zu Rollen zuständig ist",
+      "primary_anchor": "SDM Zugriffe regeln M51.P12",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P13",
+      "title": "Vermeiden von Vertretungen aus Bereichen mit anderen Verarbeitungszwecken",
+      "text": "Vermeiden von Vertretungen aus Bereichen mit anderen Verarbeitungszwecken",
+      "primary_anchor": "SDM Zugriffe regeln M51.P13",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P14",
+      "title": "Einschränken der Rechte von Vertretungen nach dem \"need to know\"-Prinzip",
+      "text": "Einschränken der Rechte von Vertretungen nach dem \"need to know\"-Prinzip",
+      "primary_anchor": "SDM Zugriffe regeln M51.P14",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P15",
+      "title": "Regelmäßige Revision des RZB und RBK im Change Management integrieren",
+      "text": "Regelmäßige Revision des RZB und RBK im Change Management integrieren",
+      "primary_anchor": "SDM Zugriffe regeln M51.P15",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P16",
+      "title": "Entziehen von Zuständigkeiten und Berechtigung nach dem Entzug von organisationsspezifischen Befugnissen",
+      "text": "Entziehen von Zuständigkeiten und Berechtigung nach dem Entzug von organisationsspezifischen Befugnissen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P16",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P17",
+      "title": "Prüfen und ggf. Entziehen von Prozess- und Benutzerrollen, wenn die Verarbeitungstätigkeit verändert oder eingestellt wird",
+      "text": "Prüfen und ggf. Entziehen von Prozess- und Benutzerrollen, wenn die Verarbeitungstätigkeit verändert oder eingestellt wird",
+      "primary_anchor": "SDM Zugriffe regeln M51.P17",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P18",
+      "title": "Identifizieren und Festlegen der Prozessrollen zusammen mit ihren Aktivitäten durch Analyse der Aufgaben und organisatorischen Verantwortung",
+      "text": "Identifizieren und Festlegen der Prozessrollen zusammen mit ihren Aktivitäten durch Analyse der Aufgaben und organisatorischen Verantwortung",
+      "primary_anchor": "SDM Zugriffe regeln M51.P18",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P19",
+      "title": "Zuweisen von Aufgaben und Funktionen an Prozessrollen",
+      "text": "Zuweisen von Aufgaben und Funktionen an Prozessrollen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P19",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P20",
+      "title": "Regeln der Auftragsverarbeitung und Zuordnung von Aufgaben zusammen mit den entsprechenden Prozessrollen",
+      "text": "Regeln der Auftragsverarbeitung und Zuordnung von Aufgaben zusammen mit den entsprechenden Prozessrollen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P20",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P21",
+      "title": "Zuweisen von Personen und automatisiertern Prozessen zu Prozessrollen",
+      "text": "Zuweisen von Personen und automatisiertern Prozessen zu Prozessrollen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P21",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P22",
+      "title": "Erstellen eines Berechtigungskonzepts für Notfall- Management",
+      "text": "Erstellen eines Berechtigungskonzepts für Notfall- Management",
+      "primary_anchor": "SDM Zugriffe regeln M51.P22",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P23",
+      "title": "Konkretisieren externer Richtlinien für interne Verhältnisse, so dass sie organisationsspezifisch sind",
+      "text": "Konkretisieren externer Richtlinien für interne Verhältnisse, so dass sie organisationsspezifisch sind",
+      "primary_anchor": "SDM Zugriffe regeln M51.P23",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P24",
+      "title": "Prüfen und ggfs. Umsetzen (veränderter) gesetzlicher Regelungen sowie des (veränderten) Stands der Technik",
+      "text": "Prüfen und ggfs. Umsetzen (veränderter) gesetzlicher Regelungen sowie des (veränderten) Stands der Technik",
+      "primary_anchor": "SDM Zugriffe regeln M51.P24",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P25",
+      "title": "Unterweisen der Beschäftigten, wie personenbezogen Daten im Zuständigkeitsbereich verarbeitet werden",
+      "text": "Unterweisen der Beschäftigten, wie personenbezogen Daten im Zuständigkeitsbereich verarbeitet werden",
+      "primary_anchor": "SDM Zugriffe regeln M51.P25",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P26",
+      "title": "Schulen von Beschäftigten, auch zur Steigerung der Sensibilität",
+      "text": "Schulen von Beschäftigten, auch zur Steigerung der Sensibilität",
+      "primary_anchor": "SDM Zugriffe regeln M51.P26",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P27",
+      "title": "Dokumentieren (Nachweisen), dass Beschäftigte über geltende Vorgaben informiert wurden",
+      "text": "Dokumentieren (Nachweisen), dass Beschäftigte über geltende Vorgaben informiert wurden",
+      "primary_anchor": "SDM Zugriffe regeln M51.P27",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P28",
+      "title": "Informieren der betroffenen Beteiligten und Beschäftigten über Änderungen im Betriebsablauf",
+      "text": "Informieren der betroffenen Beteiligten und Beschäftigten über Änderungen im Betriebsablauf",
+      "primary_anchor": "SDM Zugriffe regeln M51.P28",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P29",
+      "title": "Berücksichtigen der Anforderungen des Beschäftigten- Datenschutzes",
+      "text": "Berücksichtigen der Anforderungen des Beschäftigten- Datenschutzes",
+      "primary_anchor": "SDM Zugriffe regeln M51.P29",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P30",
+      "title": "Informieren der Benutzer von Systemen und Diensten über die jeweils gültigen Nutzungsvorgaben",
+      "text": "Informieren der Benutzer von Systemen und Diensten über die jeweils gültigen Nutzungsvorgaben",
+      "primary_anchor": "SDM Zugriffe regeln M51.P30",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P31",
+      "title": "Ausweisen im Rollen- und Berechtigungskonzept die Berechtigungen der einzelnen Benutzerrollen, die Protokollierungsart der Aktionen der Benutzer und das Verfahren, mit dem Benutzer und Benutzerrollen verwaltet und Berechtigungen für den Zugriff auf Daten, Systeme und Dienste vergeben bzw. entzogen werden",
+      "text": "Ausweisen im Rollen- und Berechtigungskonzept die Berechtigungen der einzelnen Benutzerrollen, die Protokollierungsart der Aktionen der Benutzer und das Verfahren, mit dem Benutzer und Benutzerrollen verwaltet und Berechtigungen für den Zugriff auf Daten, Systeme und Dienste vergeben bzw. entzogen werden",
+      "primary_anchor": "SDM Zugriffe regeln M51.P31",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P32",
+      "title": "Berücksichtigung ggf. der besonderen Anforderungen im Falle einer Auftragsverarbeitung bei der Maßnahme M51.P31",
+      "text": "Berücksichtigung ggf. der besonderen Anforderungen im Falle einer Auftragsverarbeitung bei der Maßnahme M51.P31",
+      "primary_anchor": "SDM Zugriffe regeln M51.P32",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P33",
+      "title": "Testen des vorläufiges RBK in Bezug auf eine jeweils bestimmte Verarbeitung",
+      "text": "Testen des vorläufiges RBK in Bezug auf eine jeweils bestimmte Verarbeitung",
+      "primary_anchor": "SDM Zugriffe regeln M51.P33",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P34",
+      "title": "Kontrolliertes Überführen der Konfigurationen aus der Entwicklungs- in die Produktionsphase; Überprüfen und Abnahme des RBK in der Pilotierungsphase",
+      "text": "Kontrolliertes Überführen der Konfigurationen aus der Entwicklungs- in die Produktionsphase; Überprüfen und Abnahme des RBK in der Pilotierungsphase",
+      "primary_anchor": "SDM Zugriffe regeln M51.P34",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P35",
+      "title": "Gewährleisten, dass die Kombination unterschiedlicher Benutzerrollen nicht zu einer unzulässigen Gesamtberechtigung führen",
+      "text": "Gewährleisten, dass die Kombination unterschiedlicher Benutzerrollen nicht zu einer unzulässigen Gesamtberechtigung führen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P35",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P36",
+      "title": "Erstellen eines Kapitels im Berechtigungskonzept für Querschnittsaufgaben",
+      "text": "Erstellen eines Kapitels im Berechtigungskonzept für Querschnittsaufgaben",
+      "primary_anchor": "SDM Zugriffe regeln M51.P36",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P37",
+      "title": "Absichern von gemeinsamen Berechtigungen unterschiedlicher Rollenträger bei Querschnittaufgaben durch Vier-Augen-Prinzip",
+      "text": "Absichern von gemeinsamen Berechtigungen unterschiedlicher Rollenträger bei Querschnittaufgaben durch Vier-Augen-Prinzip",
+      "primary_anchor": "SDM Zugriffe regeln M51.P37",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P38",
+      "title": "Rollen managen beim Übergang von Projektbetrieb in Linienbetrieb, z. B. Berechtigungen der Entwicklungsabteilung entziehen",
+      "text": "Rollen managen beim Übergang von Projektbetrieb in Linienbetrieb, z. B. Berechtigungen der Entwicklungsabteilung entziehen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P38",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P39",
+      "title": "Umsetzung von Schutzmaßnahmen zur Verhinderung der Umgehung festgelegter Berechtigungen",
+      "text": "Umsetzung von Schutzmaßnahmen zur Verhinderung der Umgehung festgelegter Berechtigungen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P39",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P40",
+      "title": "Absichern und Beschränken der Berechtigungen von technischen Systemnutzern und Standard-Benutzern im Auslieferungszustand von Systemen und Diensten",
+      "text": "Absichern und Beschränken der Berechtigungen von technischen Systemnutzern und Standard-Benutzern im Auslieferungszustand von Systemen und Diensten",
+      "primary_anchor": "SDM Zugriffe regeln M51.P40",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P41",
+      "title": "Festlegen von gesonderten Regelungen für administrative Aufgaben im RBK",
+      "text": "Festlegen von gesonderten Regelungen für administrative Aufgaben im RBK",
+      "primary_anchor": "SDM Zugriffe regeln M51.P41",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P42",
+      "title": "Striktes Trennen administrativer Rollen",
+      "text": "Striktes Trennen administrativer Rollen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P42",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P43",
+      "title": "Zuweisen von Benutzerrollen und der organisatorischen Verantwortlichkeit für automatisierte Abläufe",
+      "text": "Zuweisen von Benutzerrollen und der organisatorischen Verantwortlichkeit für automatisierte Abläufe",
+      "primary_anchor": "SDM Zugriffe regeln M51.P43",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P44",
+      "title": "Berücksichtigen von Verarbeitungsänderungen bei automatisierten Abläufen",
+      "text": "Berücksichtigen von Verarbeitungsänderungen bei automatisierten Abläufen",
+      "primary_anchor": "SDM Zugriffe regeln M51.P44",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P45",
+      "title": "Evaluieren und Dokumentieren der vergebenen Berechtigungen sowie Sicherstellen, dass Personen und technische Systemnutzer mit ihren Benutzerrollen korrekt verknüpft sind",
+      "text": "Evaluieren und Dokumentieren der vergebenen Berechtigungen sowie Sicherstellen, dass Personen und technische Systemnutzer mit ihren Benutzerrollen korrekt verknüpft sind",
+      "primary_anchor": "SDM Zugriffe regeln M51.P45",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P46",
+      "title": "Identifizieren und Bearbeiten von Schutzmaßnahmen mit Bezug zu Zuständigkeiten und Berechtigungen im Rahmen einer DSFA",
+      "text": "Identifizieren und Bearbeiten von Schutzmaßnahmen mit Bezug zu Zuständigkeiten und Berechtigungen im Rahmen einer DSFA",
+      "primary_anchor": "SDM Zugriffe regeln M51.P46",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P47",
+      "title": "Turnusmäßiges Überprüfen und Dokumentieren der Zuweisungen von Personen zu Rollen und Berechtigungen, die zur Durchführung einer verarbeitungsspezifischen Aktivität benötigt werden",
+      "text": "Turnusmäßiges Überprüfen und Dokumentieren der Zuweisungen von Personen zu Rollen und Berechtigungen, die zur Durchführung einer verarbeitungsspezifischen Aktivität benötigt werden",
+      "primary_anchor": "SDM Zugriffe regeln M51.P47",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P48",
+      "title": "Informieren Personen mit sensiblen Rollen und Prüfen, welche Personen auf Verschwiegenheit zu verpflichten sind",
+      "text": "Informieren Personen mit sensiblen Rollen und Prüfen, welche Personen auf Verschwiegenheit zu verpflichten sind",
+      "primary_anchor": "SDM Zugriffe regeln M51.P48",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P49",
+      "title": "Prüfen, ob Personen zusätzlich einer Sicherheitsprüfung zu unterziehen sind",
+      "text": "Prüfen, ob Personen zusätzlich einer Sicherheitsprüfung zu unterziehen sind",
+      "primary_anchor": "SDM Zugriffe regeln M51.P49",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P50",
+      "title": "Entscheiden und Dokumentieren, ob Externe Verarbeitungen mit hohem Risiko ausführen dürfen; wenn ja, ist festzulegen, welche diese sind",
+      "text": "Entscheiden und Dokumentieren, ob Externe Verarbeitungen mit hohem Risiko ausführen dürfen; wenn ja, ist festzulegen, welche diese sind",
+      "primary_anchor": "SDM Zugriffe regeln M51.P50",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P51",
+      "title": "Standardisieren von sehr engen und klaren Aktivitäten bei Verarbeitungen mit hohem Risiko",
+      "text": "Standardisieren von sehr engen und klaren Aktivitäten bei Verarbeitungen mit hohem Risiko",
+      "primary_anchor": "SDM Zugriffe regeln M51.P51",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P52",
+      "title": "Berücksichtigen der Funktionstrennung sowohl bei der Zuordnung der Berechtigungen zu einer Benutzerrolle als auch bei der Zuordnung von Personen zur Benutzerrolle",
+      "text": "Berücksichtigen der Funktionstrennung sowohl bei der Zuordnung der Berechtigungen zu einer Benutzerrolle als auch bei der Zuordnung von Personen zur Benutzerrolle",
+      "primary_anchor": "SDM Zugriffe regeln M51.P52",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P53",
+      "title": "Leichte Zugänglichmachen der Vorgaben für die Aktivitäten sowie den System- und Dienstebetrieb für alle befassten Beschäftigten",
+      "text": "Leichte Zugänglichmachen der Vorgaben für die Aktivitäten sowie den System- und Dienstebetrieb für alle befassten Beschäftigten",
+      "primary_anchor": "SDM Zugriffe regeln M51.P53",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P54",
+      "title": "Schützen des RBK und der Vorgaben vor unberechtigter Kenntnisnahme",
+      "text": "Schützen des RBK und der Vorgaben vor unberechtigter Kenntnisnahme",
+      "primary_anchor": "SDM Zugriffe regeln M51.P54",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P55",
+      "title": "Formulieren und Aktuellhalten von Vertretungsregeln (auch Vertretung für Vertretung)",
+      "text": "Formulieren und Aktuellhalten von Vertretungsregeln (auch Vertretung für Vertretung)",
+      "primary_anchor": "SDM Zugriffe regeln M51.P55",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P56",
+      "title": "Definieren, Regeln und Protokollieren von Befugnissen, in denen Hierarchien aufgehoben werden",
+      "text": "Definieren, Regeln und Protokollieren von Befugnissen, in denen Hierarchien aufgehoben werden",
+      "primary_anchor": "SDM Zugriffe regeln M51.P56",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P57",
+      "title": "Sicherstellen der Fortschreibung des RBK und der Vorgaben durch die zur Fortschreibung Befugten",
+      "text": "Sicherstellen der Fortschreibung des RBK und der Vorgaben durch die zur Fortschreibung Befugten",
+      "primary_anchor": "SDM Zugriffe regeln M51.P57",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P58",
+      "title": "Revisionsfestes Dokumentieren und Protokollieren von Änderungen im RBK",
+      "text": "Revisionsfestes Dokumentieren und Protokollieren von Änderungen im RBK",
+      "primary_anchor": "SDM Zugriffe regeln M51.P58",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P59",
+      "title": "Revisionsfestes Dokumentieren und Protokollieren von Organisations- und Arbeitsstrukturänderungen, sofern diese sich auf Rollendefinitionen und Zugriffsrechte auswirken",
+      "text": "Revisionsfestes Dokumentieren und Protokollieren von Organisations- und Arbeitsstrukturänderungen, sofern diese sich auf Rollendefinitionen und Zugriffsrechte auswirken",
+      "primary_anchor": "SDM Zugriffe regeln M51.P59",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P60",
+      "title": "Vorlegen des RBK mit spezifischem Bezug zur Administration durch Auftragsverarbeiter",
+      "text": "Vorlegen des RBK mit spezifischem Bezug zur Administration durch Auftragsverarbeiter",
+      "primary_anchor": "SDM Zugriffe regeln M51.P60",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    },
+    {
+      "id": "M51.P61",
+      "title": "Identifizieren, Bearbeiten und Dokumentieren von Verstößen gegen das RBK",
+      "text": "Identifizieren, Bearbeiten und Dokumentieren von Verstößen gegen das RBK",
+      "primary_anchor": "SDM Zugriffe regeln M51.P61",
+      "attributes": {
+        "module": "M51",
+        "layer": "P"
+      },
+      "prefilter_passed": false
+    }
+  ]
+}

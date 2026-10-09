@@ -4,7 +4,7 @@ import hashlib
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Callable
+from typing import Any, Callable
 from urllib.request import Request, urlopen
 
 
@@ -75,6 +75,13 @@ def fetch_to_cache(
     cache_path.parent.mkdir(parents=True, exist_ok=True)
     cache_path.write_bytes(data)
     return cache_path
+
+
+def read_cached(path: Path) -> Any:
+    """Raw adapter input: JSON sources as dict, XML and PDF sources as bytes."""
+    if path.suffix == ".json":
+        return json.loads(path.read_text(encoding="utf-8"))
+    return path.read_bytes()
 
 
 def _verify(spec: SourceSpec, data: bytes) -> None:

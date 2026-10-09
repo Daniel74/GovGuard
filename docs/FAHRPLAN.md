@@ -117,12 +117,12 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** DSGVO und die SDM-Bausteine sind deterministisch in Anforderungen zerlegt und vorgefiltert.
 **Voraussetzung:** Schritt 1 (`normalize()`).
 
-- [ ] **Spike** 🛠 _Junie_ · 👤 „Zeig mir die Struktur des DSGVO-Formex-XML (`ARTICLE`, `PARAG`, Berichtigungs-Markierungen) und der SDM-Bausteine (Kopfzeilen, Maßnahmen-IDs). Nur anschauen.“
-- [ ] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 5 und `gh issue view 5`. Setze es per TDD um (ADR 0008).“ DSGVO und SDM kommen in `data/sources.json`. Stichproben-Tests: `Art. 32`, `M60.D01`, jede ID genau einmal, DSGVO genau 99 Artikel
-- [ ] **Bauen** 🛠 erzeugt `data/extracted/dsgvo.json` und `sdm.json`
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #5`
-- [ ] **Verstehen** 👤 `/verstehen 5` (Kernfrage: warum SDM Protokollieren (M43) bewusst fehlt)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Spike** 🛠 _Junie_ · 👤 „Zeig mir die Struktur des DSGVO-Formex-XML (`ARTICLE`, `PARAG`, Berichtigungs-Markierungen) und der SDM-Bausteine (Kopfzeilen, Maßnahmen-IDs). Nur anschauen.“
+- [x] **Starten** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 5 und `gh issue view 5`. Setze es per TDD um (ADR 0008).“ DSGVO und SDM kommen in `data/sources.json`. Stichproben-Tests: `Art. 32`, `M60.D01`, jede ID genau einmal, DSGVO genau 99 Artikel
+- [x] **Bauen** 🛠 erzeugt `data/extracted/dsgvo.json` und `sdm.json`
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #5`
+- [x] **Verstehen** 👤 `/verstehen 5` (Kernfrage: warum SDM Protokollieren (M43) bewusst fehlt)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Beide JSON-Dateien eingecheckt sind und alle Tests grün sind.
 **Fürs Fachgespräch:** SDM als Umsetzung der DSGVO-Grundsätze, Bußgeldstufen nach Art. 83.

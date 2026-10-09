@@ -8,10 +8,16 @@ dependencies = [
 ]
 
 [dependency-groups]
+build = [
+    "pypdf==6.0.0",  # pinned, SDM is only available as PDF (ADR 0008)
+]
 dev = [
     "pytest==9.1.1",
     "ruff==0.16.10",
 ]
+
+[tool.uv]
+default-groups = ["build", "dev"]  # kb_build needs pypdf, the deployed app does not
 
 [build-system]
 requires = ["hatchling"]
