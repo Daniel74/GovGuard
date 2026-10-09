@@ -1,0 +1,16 @@
+{
+  "bsi_gspp_oscal": {
+    "url": "https://raw.githubusercontent.com/BSI-Bund/Stand-der-Technik-Bibliothek/c96d9f575e369df7e392220003b032d731f0e26d/control_layer/Grundschutz++/Grundschutz++-resolved_catalog.json",
+    "version": "c96d9f575e369df7e392220003b032d731f0e26d",
+    "sha256": "27a9d50092bd6c8fef5c0f83495e125bd54383a1ebf5d4f763803fce0380c645",
+    "license": "CC BY-SA 4.0",
+    "filename": "bsi_grundschutzpp_resolved_catalog.json"
+  },
+  "cis_aws_v7_prowler": {
+    "url": "https://raw.githubusercontent.com/prowler-cloud/prowler/e2b2e568a6/prowler/compliance/aws/cis_7.0_aws.json",
+    "version": "v7.0.0",
+    "sha256": "74c83838c42976cba609a3097820189edfd03eb63bc1120630e9a43cf2ae0449",
+    "license": "Apache-2.0 (Prowler JSON). CIS PDF Terms of Use apply to the original benchmark.",
+    "filename": "cis_7.0_aws_prowler.json"
+  }
+}

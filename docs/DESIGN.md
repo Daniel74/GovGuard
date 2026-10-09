@@ -71,9 +71,11 @@ Die `attributes` liefert der Adapter als reine Fakten. Gefiltert und gerankt wir
 Funktionen je Adapter:
 
 ```python
-def extract(origin: Path | str) -> ExtractedSource   # parsen + normalisieren, I/O nur Datei lesen
+def extract(origin: str, raw: dict, version: str) -> ExtractedSource  # rein: parsen + normalisieren
 def prefilter(req: Requirement) -> bool              # rein, Kriterien aus ARCHITECTURE 1.1
 ```
+
+Datei lesen und `version` aus `data/sources.json` holen übernimmt `python -m kb_build`; so bleiben die Adapter ohne I/O testbar.
 
 Das Gate (#12) prüft `source_quote` gegen den `text` **genau der Anforderung**, auf die der Primäranker zeigt, nicht gegen die ganze Quelle.
 
