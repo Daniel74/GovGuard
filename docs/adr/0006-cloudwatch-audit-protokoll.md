@@ -9,10 +9,12 @@ Ein Auditor soll jeden Aufruf nachvollziehen können: wann, mit welcher Wissensb
 - Je Aufruf schreibt der Lambda-Handler genau ein JSON-Ereignis `AuditEvent` in die Log-Gruppe der Funktion, auch bei 422 und 502.
 - Inhalt: IDs, Hashes (`input_sha256`, `catalog_sha256`), `kb_commit`, `model_id` und Status je Prüfregel. Kein Eingabetext, keine Belege und Begründungen, denn sie zitieren die Eingabe.
 - Die Log-Gruppe ist mit dem vorhandenen KMS-Schlüssel verschlüsselt und hält die Ereignisse 365 Tage. Ausgewertet wird mit Logs Insights; der Auditor darf per IAM nur diese Log-Gruppe lesen.
+- API Gateway loggt ohne `dataTrace`, damit keine Request-Bodies (Eingaben) in CloudWatch landen.
+- Ein CloudTrail-Trail mit Log-Datei-Validierung (CIS 4.1, 4.2) protokolliert die AWS-API-Aufrufe, auch die Verarbeitungsregion von Bedrock (ADR 0001), über die 90-Tage-Historie hinaus.
 
 ## Konsequenzen
 
-- 0 € im Leerlauf, je Ereignis ca. 2 KB, also Bruchteile eines Cents; kein boto3-Aufruf, der Handler loggt nur.
+- 0 € im Leerlauf, je Ereignis ca. 2 KB, also Bruchteile eines Cents; kein boto3-Aufruf, der Handler loggt nur. Der erste Trail ist für Management-Events kostenlos; es bleiben Cent-Beträge für S3-Speicher (Fixkosten für Sicherheit).
 - Nicht revisionssicher: Wer `logs:DeleteLogGroup` darf, kann löschen. In Produktion übernimmt ARCH-03 (S3 Object Lock).
 - Die KMS-Key-Policy muss dem Dienst `logs.eu-central-1.amazonaws.com` die Nutzung erlauben.
 
