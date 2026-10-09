@@ -9,6 +9,7 @@
 3. Als Architekt erhalte ich bei einer Spezifikation ohne FAIL einen Golden Archetype (CDK-Code + Template) mit Begründung – oder „kein passender Archetyp“.
 4. Als CI-Pipeline rufe ich die Audit-API (IAM-Auth) auf und werte den Gesamtstatus maschinell aus.
 5. Als Projektbetreiber starte ich den Build der Wissensbasis manuell; nur bei grünen Gates öffnet er einen Pull Request, und erst dessen Merge rollt die Wissensbasis aus.
+6. Als Auditor kann ich zu jedem Aufruf nachvollziehen, wann er lief, mit welcher Wissensbasis und welchem Modell geprüft wurde und mit welchem Ergebnis.
 
 ## Akzeptanzkriterien
 
@@ -17,6 +18,7 @@
 - Das größte Preset (≤ 100.000 Zeichen) ist in unter 29 Sekunden ausgewertet.
 - Ein Audit kostet unter 1 Cent; im Leerlauf fallen keine variablen Kosten an, Fixkosten nur für den KMS-Schlüssel (ca. 1 $/Monat).
 - Alle 3 Golden Archetypes sind freigegeben (Architektur-Audit und cdk-nag ohne Beanstandung).
+- Jeder Aufruf erzeugt ein Audit-Ereignis in CloudWatch Logs mit `audit_id`, Zeit, `input_sha256`, `catalog_sha256`, `kb_commit`, `model_id` und Ergebnis, ohne Eingabetext.
 
 ## Offene Fragen
 

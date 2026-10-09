@@ -145,12 +145,14 @@ sequenceDiagram
   participant L as Lambda (Audit-Engine)
   participant S3 as S3
   participant B as Bedrock (eu.)
+  participant CW as CloudWatch Logs
   Note over L,S3: Kaltstart: Wissensbasis in den Speicher laden
   U->>API: POST /audit/spec (SigV4)
   API->>L: Spezifikation
   L->>B: Converse, Tool submit_audit (alle Prüfregeln + Eingabe)
   B-->>L: Befunde (JSON)
   L->>L: Pydantic + Code-Checks (1 Befund je Regel, Belege wörtlich)
+  L->>CW: Audit-Ereignis (Hashes + Status, ohne Eingabe)
   L-->>U: Audit-Report
   U->>API: POST /archetype/select (Spezifikation + Audit-Report)
   API->>L: weiterleiten
@@ -227,6 +229,7 @@ Es gibt nur **einen Weg in die Produktion**: `deploy.yml`. Er lädt auch die Wis
 | API | 3 Endpunkte, IAM-Auth, Throttling | API Gateway REST + Lambda |
 | Wissensbasis | Prüfregeln und Golden Archetypes | JSON in `data/knowledge_base/` (versioniert), per Deploy nach S3 |
 | UI | Eingabe, Ampel, Download | Streamlit Community Cloud (ADR 0004) |
+| Audit-Protokoll | ein Ereignis je Aufruf, für Auditoren | CloudWatch Logs, KMS, 365 Tage (ADR 0006) |
 | Build-Workflow | manuell: Build-Skript ausführen, PR öffnen | GitHub Actions `build-kb.yml` |
 | Deploy-Workflow | bei Push: Selbst-Audit, Deploy, Wissensbasis nach S3 | GitHub Actions `deploy.yml`, CDK |
 
@@ -299,10 +302,11 @@ tests/                pytest
 
 ## Kosten
 
-Der eigene Stack verschlüsselt mit einem kundenverwalteten KMS-Schlüssel (CMK), ca. 1 $/Monat. Regel: **0 € variable Kosten im Leerlauf; Fixkosten nur für Sicherheit.** Satz für die Verteidigung: „Sicherheit hat einen Preis, und ich kann ihn auf den Cent beziffern.“
+Der eigene Stack verschlüsselt mit einem kundenverwalteten KMS-Schlüssel (CMK), ca. 1 $/Monat; derselbe Schlüssel schützt auch das Audit-Protokoll. Ein Audit-Ereignis (ca. 2 KB) kostet Bruchteile eines Cents. Regel: **0 € variable Kosten im Leerlauf; Fixkosten nur für Sicherheit.** Satz für die Verteidigung: „Sicherheit hat einen Preis, und ich kann ihn auf den Cent beziffern.“
 
 ## Bekannte Grenzen
 
 - **SDM ohne Protokollieren (M43):** Der Baustein V2.0 hat ein eigenes ID-Schema (`M43.21.04`) ohne Ebenen D/S und führt ungültige Maßnahmen nur durchgestrichen weiter. Er bräuchte einen eigenen Parser und fehlt bewusst; Protokollierung prüft das Architektur-Audit (BSI DET, CIS Kapitel 4).
 - **DSGVO-Einheit „Artikel“:** Art. 5 ergibt nur eine Prüfregel, obwohl er sechs Grundsätze enthält. Die Grundsätze kommen über das SDM in den Katalog; die SDM-Methode ist genau ihre Operationalisierung (Teil C, „Systematisierung der Anforderungen der DS-GVO durch die Gewährleistungsziele“).
+- **Audit-Protokoll nicht revisionssicher:** CloudWatch Logs sind für Admins löschbar, und gespeichert werden nur Hashes und Status, keine Eingaben und vollständigen Reports (ADR 0006). Ein unlöschbarer Speicher für Inhalte widerspräche dem Recht auf Löschung (Art. 17 DSGVO). Auch die Build-Historie in Git ist nicht geschützt: Best Practice wäre eine Branch Protection auf `main` gegen Force-Push und Löschen; sie ist bewusst nicht aktiv, weil der GitHub Free Plan sie für private Repos nicht anbietet.
 - **Umfang:** Höchstens 24 bzw. 20 Prüfregeln und Eingaben bis 100.000 Zeichen. Wie GovGuard darüber hinaus wächst, beschreibt [AUSBAU.md](AUSBAU.md).

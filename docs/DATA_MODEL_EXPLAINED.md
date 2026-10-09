@@ -602,6 +602,14 @@ Weil der Typ im Tool-Schema steht, kann das LLM keinen Status „OK“ oder „t
 
 **Wer liest es, was beeinflusst es?** Der Mensch bei Nachfragen. Keine Prüflogik hängt daran.
 
+#### `trace` · ⚙️
+
+**Wer füllt es?** Handler bzw. CLI, vor dem Audit: `audit_id`, `input_sha256`, `catalog_sha256`, `kb_commit` (DESIGN 2.4). `run_audit()` legt den Trace nur in den Report.
+
+**Warum existiert es?** **Rückverfolgung:** Ein Report führt über `catalog_sha256` und `kb_commit` eindeutig zur Katalogdatei in Git und von dort über `source_versions` zur Regelwerksversion. Die Eingabe steht nur als Hash darin (Datenminimierung).
+
+**Wer liest es, was beeinflusst es?** Der Auditor (User Story 6), der den Report mit dem Audit-Ereignis in CloudWatch Logs abgleicht. Keine Prüflogik hängt daran.
+
 ### 5.6 Die Validierungskette in `run_audit()`
 
 ```
@@ -770,6 +778,8 @@ Zwei kleine Funktionen tragen den ganzen Halluzinationsschutz: den Zitat-Check i
 | Veraltete Freigabe | `ArchetypeCatalog.rules_arch_sha256` | ⚙️ Preset-Gate |
 | Zirkulärer Test | `Expected` von Hand, Bezug über `anchor` | 👤 + ⚙️ Preset-Gate |
 | Richtiges Ergebnis aus falschem Grund | `Expected.required_findings` | 👤 + ⚙️ Preset-Gate |
+| Nicht nachvollziehbares Urteil | `AuditReport.trace` + `AuditEvent` je Aufruf (ADR 0006) | ⚙️ Handler |
+| Personendaten im Protokoll | `AuditEvent` nur mit Hashes und Status, ohne Text und Belege | ⚙️ by design |
 | Scheinpräzision bei Mappings | `CrossReference.origin = "ai_suggested"`, ohne Einfluss auf den Status | ⚙️ by design |
 
 **Fachgespräch-Satz:**

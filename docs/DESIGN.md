@@ -14,6 +14,7 @@ Dieses Dokument legt die **Verträge** zwischen den Tickets fest: Datenformate u
 | `run_audit()` (2.2) | #1 | #2, #6, #7, #9 |
 | `select_archetype()`, `ArchetypeChoice` (2.2) | #10 | #11 |
 | API-JSON (2.3) | #9, #10 | #11 |
+| `Trace`, `AuditEvent` (2.4) | #1 | #9, #10 |
 | `normalize()`, `contains_quote()` (3) | #1 | #4, #5, #6 |
 
 ## 1. Build-Verträge
@@ -195,6 +196,7 @@ class AuditReport(BaseModel):
     overall_status: Status
     findings: list[Finding]              # genau einer je Prüfregel, Reihenfolge wie im Katalog
     model_id: str
+    trace: Trace                         # Rückverfolgung, siehe 2.4
 ```
 
 - **Beleg-Pflicht folgt aus dem Glossar:** PASS heißt „Einhaltung belegt“, FAIL heißt „Verstoß belegt“, beide brauchen also ein Zitat. Fehlt etwas in der Eingabe, ist das WARN, nicht FAIL.
@@ -206,7 +208,8 @@ Die Prüflogik kennt Bedrock nicht. Sie bekommt ein Pydantic-AI-Modell übergebe
 
 ```python
 # src/govguard/audit_engine.py – rein, ohne boto3
-def run_audit(catalog: RuleCatalog, input_text: str, model: Model) -> AuditReport
+def run_audit(catalog: RuleCatalog, input_text: str, model: Model,
+              trace: Trace) -> AuditReport
 def select_archetype(spec_text: str, report: AuditReport,
                      catalog: ArchetypeCatalog, model: Model) -> ArchetypeChoice
 
@@ -244,6 +247,32 @@ Die Schritte 2 und 3 laufen im `@agent.output_validator` und lösen bei Fehlern 
 | 504 | Länger als 29 Sekunden (API Gateway) | von AWS |
 
 Die Texte in `message` sind deutsch. Eine CI-Pipeline wertet nur `overall_status` aus (User Story 4).
+
+### 2.4 Trace und AuditEvent – Audit-Protokoll (ADR 0006)
+
+Handler bzw. CLI bauen den `Trace` vor dem Audit; `run_audit()` legt ihn unverändert in den Report. Nach jedem Aufruf, auch bei 422 und 502, loggt der Handler genau ein `AuditEvent` als JSON-Zeile.
+
+```python
+class Trace(BaseModel):
+    audit_id: str                        # Lambda-Request-ID, in der CLI eine UUID
+    input_sha256: str                    # Hash der Eingabe, nie der Text selbst
+    catalog_sha256: str                  # Hash der geladenen Datei: rules_*.json bzw. archetypes.json
+    kb_commit: str                       # Git-Commit des Deploys, Umgebungsvariable aus deploy.yml
+
+class AuditEvent(BaseModel):             # eine JSON-Zeile in CloudWatch Logs
+    event: Literal["audit_event"] = "audit_event"   # Filter für Logs Insights
+    timestamp: datetime                  # UTC
+    endpoint: Literal["/audit/spec", "/audit/architecture", "/archetype/select"]
+    outcome: Literal["ok", "rejected", "validation_failed"]   # 200, 422, 502
+    trace: Trace
+    model_id: str
+    overall_status: Status | None        # None bei /archetype/select und bei Fehlern
+    statuses: dict[str, Status]          # rule_id → Status; ohne Belege und Begründungen
+    archetype: str | None                # nur /archetype/select
+```
+
+- **Keine Zitate im Ereignis:** Belege sind wörtliche Auszüge der Eingabe; im Ereignis stehen nur IDs, Hashes und Status (Datenminimierung, Art. 5 Abs. 1 lit. c DSGVO).
+- **Kette zum Regelwerk:** `catalog_sha256` → Katalogdatei im Commit `kb_commit` → `source_versions` (z. B. CIS v7.0.0, BSI-Commit-SHA).
 
 ## 3. Gemeinsame Funktionen
 

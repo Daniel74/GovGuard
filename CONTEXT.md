@@ -27,4 +27,6 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 - **Beleg**: Wörtliches Zitat aus der Eingabe, auf das sich ein Befund stützt. _Code_: `evidence`. _Vermeiden_: Evidence, Nachweis
 - **Gesamtstatus**: Der schlechteste Status aller Befunde eines Audits. _Code_: `overall_status`
 - **Audit-Report**: Gesamtstatus plus genau ein Befund je Prüfregel des Bounded Catalog. _Code_: `AuditReport`. _Vermeiden_: Prüfbericht, Ergebnis
+- **Rückverfolgung**: Angaben, die einen Audit-Report eindeutig mit Eingabe (nur als Hash), Wissensbasis-Version und Deploy verbinden. _Code_: `Trace`. _Vermeiden_: Tracing, Metadaten
+- **Audit-Ereignis**: Protokolleintrag zu genau einem Aufruf mit Rückverfolgung und Status je Prüfregel, ohne Eingabetext und ohne Belege. _Code_: `AuditEvent`. _Vermeiden_: Log, Logeintrag, Audit-Log
 - **Preset**: Fiktive Beispiel-Eingabe mit festgelegtem Soll-Ergebnis für Demo und Test. _Code_: `Preset`. _Vermeiden_: Testfall, Beispiel
