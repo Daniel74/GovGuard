@@ -52,8 +52,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #1 umsetzen`. 🤖 legt je Zyklus erst einen roten Test an, dann den Code, bis der Test grün ist. 👤 sagt Go. Wiederholen, bis alle Kriterien grün sind.
       Reihenfolge: `pyproject.toml` + ruff → `text.py` (`normalize`, `contains_quote`, `template_resource_types`) → Gesamtstatus → Validator → `run_audit()` mit `FunctionModel` → boto3-Importtest und Test der Modulgröße
 - [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #1`
-- [ ] **Verstehen** 👤 `/ihk-check Halluzinationsschutz`
-- [ ] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #1“ → Go → 🤖 postet ins Issue; 👤 committet und pusht
+- [x] **Verstehen** 👤 `/ihk-check Halluzinationsschutz`
+- [x] **Abschließen** 👤 „Schreib die Fachgespräch-Notiz für #1“ → Go → 🤖 postet ins Issue; 👤 committet und pusht
 
 **Fertig, wenn:** `pytest` und `ruff check` grün sind, die Notiz im Issue steht und der Commit gepusht ist.
 **Fürs Fachgespräch:** Draft-Pattern, Fail closed, Beleg-Pflicht, warum der Code N/A setzt.
