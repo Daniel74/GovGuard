@@ -10,7 +10,7 @@ from pydantic import BaseModel, Field, model_validator
 
 Status = Literal["PASS", "WARN", "FAIL", "N/A"]
 AuditType = Literal["spec", "architecture"]
-SourceName = Literal["BSI", "CIS", "DSGVO", "SDM"]
+SourceName = Literal["BSI", "C5", "CIS", "DSGVO", "FSBP", "SDM"]
 ArchetypeId = Literal["ARCH-01", "ARCH-02", "ARCH-03", "NONE"]
 
 

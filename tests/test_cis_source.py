@@ -40,10 +40,21 @@ def test_version_comes_from_sources_json_not_prowler() -> None:
 
 @pytest.mark.parametrize(
     ("rid", "passed"),
-    [("1.1", False), ("2.1.1", True), ("3.1.4", True), ("4.1", True), ("5.1", False)],
+    [
+        ("1.1", False), ("2.1.1", True), ("3.1.4", True), ("4.1", True), ("5.1", False),
+        ("6.3", True),
+    ],
 )
-def test_prefilter_keeps_chapters_2_3_4(rid: str, passed: bool) -> None:
+def test_prefilter_keeps_chapters_2_3_4_6(rid: str, passed: bool) -> None:
     assert extract_by_id(rid)[rid].prefilter_passed is passed
+
+
+def test_prefilter_reason_names_the_chapter_rule() -> None:
+    reqs = extract_by_id("5.1", "6.3")
+    assert reqs["5.1"].prefilter_reason == (
+        "Kapitel gehört nicht zu 2 IAM, 3 Storage, 4 Logging, 6 Networking."
+    )
+    assert reqs["6.3"].prefilter_reason is None  # security groups, needed for Aurora
 
 
 def test_duplicate_ids_are_rejected() -> None:

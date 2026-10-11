@@ -30,10 +30,27 @@ def test_bsi_all_1000_controls_and_380_candidates() -> None:
     assert sum(r.prefilter_passed for r in reqs) == 380
 
 
-def test_cis_exactly_70_recommendations_and_45_candidates() -> None:
+def test_cis_exactly_70_recommendations_and_54_candidates() -> None:
     reqs = extract_cached("cis.json").requirements
     assert len(reqs) == 70
-    assert sum(r.prefilter_passed for r in reqs) == 45
+    assert sum(r.prefilter_passed for r in reqs) == 54  # chapters 2, 3, 4 and 6
+
+
+def test_fsbp_all_286_controls_and_150_candidates() -> None:
+    reqs = {r.id: r for r in extract_cached("fsbp.json").requirements}
+    assert len(reqs) == 286
+    assert sum(r.prefilter_passed for r in reqs.values()) == 150  # 125 + 25 EC2 (VPC types)
+    assert reqs["SNS.1"].primary_anchor == "AWS FSBP SNS.1"
+    assert reqs["EC2.2"].prefilter_passed  # default security group
+    assert not reqs["CloudFront.1"].prefilter_passed
+
+
+def test_c5_all_610_criteria_and_300_candidates() -> None:
+    reqs = {r.id: r for r in extract_cached("c5.json").requirements}
+    assert len(reqs) == 610
+    assert sum(r.prefilter_passed for r in reqs.values()) == 300
+    assert reqs["CRY-03.01B"].primary_anchor == "BSI C5 CRY-03.01B"
+    assert reqs["CRY-03.01B"].prefilter_passed
 
 
 def test_dsgvo_exactly_99_articles_and_chapters_2_to_5_as_candidates() -> None:

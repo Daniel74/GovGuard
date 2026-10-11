@@ -23,24 +23,24 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Wer baut was:**
 
-| Schritt | Prio | Ticket                         | Baut                                             | Prüft                      |
-| ------- | ---- | ------------------------------ | ------------------------------------------------ | -------------------------- |
-| 1       | –    | #1 Prüfkern                    | 🤖 Opus                                          | 🤖 Opus                    |
-| 2       | –    | #3 Presets                     | 👤 + 🤖 Opus                                     | 👤                         |
-| 3       | –    | #2 Bedrock + CLI               | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 4       | –    | #4 BSI + CIS                   | 🛠 Junie                                         | 🤖 Opus                    |
-| 5       | –    | #5 DSGVO + SDM                 | 🛠 Junie                                         | 🤖 Opus                    |
-| 6       | A    | #13 Quellen FSBP + C5          | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 7       | A    | #6 Bounded Catalog             | 🤖 Sonnet                                        | 👤 Kontrollpunkt + 🤖 Opus |
-| 8       | A    | #15 5. Preset                  | 👤 + 🤖 Opus                                     | 👤                         |
-| 9       | A    | #12 Prüfregeln + Gate          | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
-| 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                         | 🤖 Opus                    |
-| 11      | A    | #8 Preset-Gate + Workflow      | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 12      | A    | #9 Stack + Endpunkte           | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
-| 13      | A    | #11 Deploy + UI                | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
-| 14      | A    | #16 Doku nachziehen            | 👤 + 🤖 Sonnet                                   | 👤                         |
-| 15      | B    | #7 Golden Archetypes           | 🤖 Opus                                          | 🤖 Opus                    |
-| 16      | B    | #10 Archetyp-Auswahl           | 🤖 Sonnet                                        | 🤖 Opus                    |
+| Schritt | Prio | Ticket                          | Baut                                             | Prüft                      |
+| ------- | ---- | ------------------------------- | ------------------------------------------------ | -------------------------- |
+| 1       | –    | #1 Prüfkern                     | 🤖 Opus                                          | 🤖 Opus                    |
+| 2       | –    | #3 Presets                      | 👤 + 🤖 Opus                                     | 👤                         |
+| 3       | –    | #2 Bedrock + CLI                | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 4       | –    | #4 BSI + CIS                    | 🛠 Junie                                         | 🤖 Opus                    |
+| 5       | –    | #5 DSGVO + SDM                  | 🛠 Junie                                         | 🤖 Opus                    |
+| 6       | A    | #13 Quellen FSBP + C5           | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 7       | A    | #6 Bounded Catalog              | 🤖 Sonnet                                        | 👤 Kontrollpunkt + 🤖 Opus |
+| 8       | A    | #15 5. Preset                   | 👤 + 🤖 Opus                                     | 👤                         |
+| 9       | A    | #12 Prüfregeln + Gate           | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
+| 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
+| 11      | A    | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 12      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
+| 13      | A    | #11 Deploy + UI                 | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
+| 14      | A    | #16 Doku nachziehen             | 👤 + 🤖 Sonnet                                   | 👤                         |
+| 15      | B    | #7 Golden Archetypes            | 🤖 Opus                                          | 🤖 Opus                    |
+| 16      | B    | #10 Archetyp-Auswahl            | 🤖 Sonnet                                        | 🤖 Opus                    |
 
 ---
 
@@ -48,7 +48,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Ziel:** Die Tickets verlinken auf ADR 0011 und den Fahrplan; beides muss auf GitHub liegen.
 
-- [ ] 👤 Alle Doku-Änderungen committen und pushen, z. B. `ADR 0011: full catalog, scope, FSBP and C5; FAHRPLAN priorities`
+- [x] 👤 Alle Doku-Änderungen committen und pushen, z. B. `ADR 0011: full catalog, scope, FSBP and C5; FAHRPLAN priorities`
 
 **Fertig, wenn:** `git status` sauber ist und ADR 0011 auf GitHub lesbar ist.
 
@@ -146,12 +146,12 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** FSBP und C5 sind deterministisch in Anforderungen zerlegt und vorgefiltert; CIS, FSBP und C5 teilen einen Prowler-Parser.
 **Voraussetzung:** Schritt 0.
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #13 umsetzen` → Plan → Go
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #13 umsetzen` → Plan → Go
       Reihenfolge: `prowler.py` (gemeinsamer Parser, CIS-Tests bleiben grün) → `fsbp.py` → `c5.py` → Vorfilter aller Quellen mit Begründungssatz → `sources.json` auf Prowler `5.44.0`
-- [ ] **Bauen** 🤖 erzeugt `fsbp.json` und `c5.json` (nur lokal). 👤 Prüfe: Wie viele Anforderungen bleiben je Quelle nach dem Vorfilter? Steht die Zahl im Issue?
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #13`
-- [ ] **Verstehen** 👤 `/verstehen 13` (Kernfrage: warum wir nur die Texte aus Prowler nehmen, nicht die Check-Zuordnung)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Bauen** 🤖 erzeugt `fsbp.json` und `c5.json` (nur lokal). 👤 Prüfe: Wie viele Anforderungen bleiben je Quelle nach dem Vorfilter? Steht die Zahl im Issue?
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #13`
+- [x] **Verstehen** 👤 `/verstehen 13` (Kernfrage: warum wir nur die Texte aus Prowler nehmen, nicht die Check-Zuordnung)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Alle Tests grün sind, `fsbp.json` und `c5.json` per `.gitignore` draußen bleiben und die Zahlen im Issue stehen.
 **Fürs Fachgespräch:** abgeleitete Quelle, gepinnter Commit, Lizenz, Rezept „neue Quelle“.
@@ -302,7 +302,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ## Priorität B – Golden Archetypes (nur wenn Zeit bleibt)
 
-Start nur nach der Regel *Stichtag* oben.
+Start nur nach der Regel _Stichtag_ oben.
 
 ### Schritt 15 – #7 Golden Archetypes mit Freigabe
 

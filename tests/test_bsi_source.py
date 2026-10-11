@@ -73,3 +73,19 @@ def test_version_is_catalog_commit_sha() -> None:
 def test_duplicate_ids_are_rejected() -> None:
     with pytest.raises(ValueError, match="DET.3.1"):
         extract_by_id(control("DET.3.1"), control("DET.3.1"))
+
+
+@pytest.mark.parametrize(
+    ("rejected", "reason"),
+    [
+        (control("DET.3.2", modal="KANN"), "Modalverb ist weder MUSS noch SOLLTE."),
+        (control("DET.3.3", sec_level="erhöht"), "Sicherheitsniveau ist nicht normal-SdT."),
+        (control("SENS.1.1"), "Praktik gehört nicht zu ARCH, BER, BES, DET, DLS, KONF."),
+    ],
+)
+def test_prefilter_names_the_reason_for_every_rejection(rejected: dict, reason: str) -> None:
+    assert extract_by_id(rejected)[rejected["id"]].prefilter_reason == reason
+
+
+def test_prefilter_has_no_reason_for_a_kept_control() -> None:
+    assert extract_by_id(control("DET.3.1"))["DET.3.1"].prefilter_reason is None

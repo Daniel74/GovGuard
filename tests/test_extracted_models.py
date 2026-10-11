@@ -1,7 +1,12 @@
 import pytest
 from pydantic import ValidationError
 
-from kb_build.extracted_models import ExtractedSource, Requirement, merge_sources
+from kb_build.extracted_models import (
+    ExtractedSource,
+    Requirement,
+    mark_prefilter,
+    merge_sources,
+)
 
 
 def requirement(rid: str, **attributes) -> Requirement:
@@ -40,3 +45,13 @@ def test_merge_sources_joins_sdm_modules_into_one_source() -> None:
 def test_merge_sources_keeps_a_single_source_unchanged() -> None:
     bsi = ExtractedSource(source="BSI", version="sha", origin="o", requirements=[])
     assert merge_sources([bsi]) == bsi
+
+
+def test_mark_prefilter_stores_the_reason_of_every_rejected_requirement() -> None:
+    def prefilter(r: Requirement) -> str | None:
+        return None if r.id == "A" else f"{r.id} verworfen"
+
+    marked = mark_prefilter([requirement("A"), requirement("B")], prefilter)
+    assert [(r.prefilter_passed, r.prefilter_reason) for r in marked] == [
+        (True, None), (False, "B verworfen"),
+    ]

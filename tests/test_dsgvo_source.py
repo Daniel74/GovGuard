@@ -58,3 +58,9 @@ def test_fine_tier_follows_art_83_paragraphs_4_and_5(article: int, tier: int) ->
     xml = FORMEX.replace(b'"032"', f'"{article:03d}"'.encode())
     reqs = {r.id: r for r in extract("memory://dsgvo.xml", xml, "000.003").requirements}
     assert reqs[f"Art. {article}"].attributes["fine_tier"] == tier
+
+
+def test_prefilter_reason_names_the_chapter_rule() -> None:
+    reqs = extract_by_id()
+    assert reqs["Art. 4"].prefilter_reason == "Kapitel gehört nicht zu II–V (Art. 5–49)."
+    assert reqs["Art. 32"].prefilter_reason is None

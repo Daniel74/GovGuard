@@ -2,9 +2,10 @@
 
 from collections import Counter
 from collections.abc import Callable
-from typing import Literal
 
 from pydantic import BaseModel, model_validator
+
+from govguard.models import SourceName
 
 
 class Requirement(BaseModel):
@@ -14,10 +15,11 @@ class Requirement(BaseModel):
     primary_anchor: str
     attributes: dict[str, str | int | bool]
     prefilter_passed: bool
+    prefilter_reason: str | None = None  # fixed sentence if the prefilter rejected it (ADR 0011)
 
 
 class ExtractedSource(BaseModel):
-    source: Literal["BSI", "CIS", "DSGVO", "SDM"]
+    source: SourceName
     version: str
     origin: str
     requirements: list[Requirement]
@@ -30,11 +32,18 @@ class ExtractedSource(BaseModel):
         return self
 
 
-def mark_prefilter(
-    requirements: list[Requirement], prefilter: Callable[[Requirement], bool]
-) -> list[Requirement]:
-    """Stores each adapter's prefilter verdict in `prefilter_passed` (ARCHITECTURE 1.1)."""
-    return [r.model_copy(update={"prefilter_passed": prefilter(r)}) for r in requirements]
+# None keeps the requirement, a fixed sentence rejects it (ARCHITECTURE 1.1)
+Prefilter = Callable[[Requirement], str | None]
+
+
+def mark_prefilter(requirements: list[Requirement], prefilter: Prefilter) -> list[Requirement]:
+    """Stores each adapter's verdict: `None` keeps the requirement, a sentence rejects it."""
+    marked = []
+    for requirement in requirements:
+        reason = prefilter(requirement)
+        update = {"prefilter_passed": reason is None, "prefilter_reason": reason}
+        marked.append(requirement.model_copy(update=update))
+    return marked
 
 
 def merge_sources(parts: list[ExtractedSource]) -> ExtractedSource:

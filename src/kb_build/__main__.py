@@ -11,12 +11,14 @@ from kb_build.extracted_models import merge_sources
 from kb_build.groq_services import groq_model
 from kb_build.selection_run import select_all
 from kb_build.source_fetch import fetch_to_cache, load_sources_json, read_cached
-from kb_build.sources import bsi, cis, dsgvo, sdm
+from kb_build.sources import bsi, c5, cis, dsgvo, fsbp, sdm
 
-# output file -> (adapter, sources.json keys); cis.json stays local (ADR 0008, .gitignore)
+# output file -> (adapter, sources.json keys); cis/fsbp/c5.json stay local (ADR 0008, .gitignore)
 ADAPTERS = {
     "bsi.json": (bsi, ["bsi_gspp_oscal"]),
     "cis.json": (cis, ["cis_aws_v7_prowler"]),
+    "fsbp.json": (fsbp, ["fsbp_aws_prowler"]),
+    "c5.json": (c5, ["c5_aws_prowler"]),
     "dsgvo.json": (dsgvo, ["dsgvo_formex"]),
     "sdm.json": (
         sdm, ["sdm_m60_loeschen_pdf", "sdm_m50_trennen_pdf", "sdm_m51_zugriffe_regeln_pdf"]

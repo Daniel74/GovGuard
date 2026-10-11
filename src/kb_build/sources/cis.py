@@ -2,50 +2,44 @@
 
 from typing import Any
 
-from govguard.text import normalize
-from kb_build.extracted_models import ExtractedSource, Requirement, mark_prefilter
+from kb_build.extracted_models import ExtractedSource, Requirement
+from kb_build.sources import prowler
+from kb_build.sources.prowler import ProwlerFormat, strip_markdown
 
-CHAPTERS = frozenset({2, 3, 4})  # IAM, Storage, Logging (ARCHITECTURE 1.1)
+# Networking holds the security groups for Aurora (ARCHITECTURE 1.1)
+CHAPTERS = {2: "IAM", 3: "Storage", 4: "Logging", 6: "Networking"}
 LEVELS = {"Level 1": 1, "Level 2": 2}
 ASSESSMENT = {"Automated": True, "Manual": False}
 
 
-def _strip_markdown(text: str) -> str:
-    # ADR 0008: anchors are checked against the Prowler text without markdown markers
-    return normalize(text.replace("**", "").replace("`", ""))
-
-
-def _attributes(rid: str, details: dict[str, Any]) -> dict[str, int | bool]:
+def _attributes(entry: dict[str, Any]) -> dict[str, int | bool]:
+    details = entry["Attributes"][0]
     facts = {
-        "chapter": int(rid.split(".", 1)[0]),
+        "chapter": int(entry["Id"].split(".", 1)[0]),
         "level": LEVELS.get(details.get("Profile")),
         "automated": ASSESSMENT.get(details.get("AssessmentStatus")),
     }
     return {key: value for key, value in facts.items() if value is not None}
 
 
-def _requirement(entry: dict[str, Any], version: str) -> Requirement:
-    rid = entry["Id"]
-    details = entry["Attributes"][0]
-    return Requirement(
-        id=rid,
-        title=_strip_markdown(entry["Description"]),
-        text=_strip_markdown(details["Description"]),
-        primary_anchor=f"CIS AWS {version} {rid}",
-        attributes=_attributes(rid, details),
-        prefilter_passed=False,
-    )
+def prefilter(requirement: Requirement) -> str | None:
+    """Keeps chapters 2 IAM, 3 Storage, 4 Logging and 6 Networking (ARCHITECTURE 1.1)."""
+    if requirement.attributes.get("chapter") in CHAPTERS:
+        return None
+    chapters = ", ".join(f"{number} {name}" for number, name in CHAPTERS.items())
+    return f"Kapitel gehört nicht zu {chapters}."
 
 
-def prefilter(requirement: Requirement) -> bool:
-    """Keeps chapters 2 IAM, 3 Storage and 4 Logging (ARCHITECTURE 1.1)."""
-    return requirement.attributes.get("chapter") in CHAPTERS
+FORMAT = ProwlerFormat(
+    source="CIS",
+    anchor=lambda rid, version: f"CIS AWS {version} {rid}",
+    title=lambda entry: strip_markdown(entry["Description"]),
+    text=lambda entry: strip_markdown(entry["Attributes"][0]["Description"]),
+    attributes=_attributes,
+    prefilter=prefilter,
+)
 
 
-def extract(origin: str, prowler: dict[str, Any], version: str) -> ExtractedSource:
+def extract(origin: str, data: dict[str, Any], version: str) -> ExtractedSource:
     """All 70 recommendations; `version` from data/sources.json, Prowler only says "7.0"."""
-    requirements = [_requirement(entry, version) for entry in prowler["Requirements"]]
-    return ExtractedSource(
-        source="CIS", version=version, origin=origin,
-        requirements=mark_prefilter(requirements, prefilter),
-    )
+    return prowler.extract(FORMAT, origin, data, version)

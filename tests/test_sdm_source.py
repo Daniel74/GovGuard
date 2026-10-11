@@ -77,3 +77,9 @@ def test_duplicate_ids_are_rejected() -> None:
 def test_missing_measure_table_fails_loudly() -> None:
     with pytest.raises(ValueError, match="measure table"):
         parse("M60.D01 nur Fließtext")
+
+
+def test_prefilter_reason_names_the_layer_rule() -> None:
+    reqs = parse_by_id()
+    assert reqs["M51.P32"].prefilter_reason == "Ebene ist weder Daten (D) noch Systeme (S)."
+    assert reqs["M60.S02"].prefilter_reason is None

@@ -54,14 +54,16 @@ def _requirement(control: dict[str, Any]) -> Requirement:
     )
 
 
-def prefilter(requirement: Requirement) -> bool:
+def prefilter(requirement: Requirement) -> str | None:
     """Keeps MUSS/SOLLTE at normal-SdT in architecture practices (ARCHITECTURE 1.1)."""
     facts = requirement.attributes
-    return (
-        facts.get("modal_verb") in MODAL_VERBS
-        and facts.get("sec_level") == "normal-SdT"
-        and facts.get("practice") in PRACTICES
-    )
+    if facts.get("modal_verb") not in MODAL_VERBS:
+        return "Modalverb ist weder MUSS noch SOLLTE."
+    if facts.get("sec_level") != "normal-SdT":
+        return "Sicherheitsniveau ist nicht normal-SdT."
+    if facts.get("practice") not in PRACTICES:
+        return f"Praktik gehört nicht zu {', '.join(sorted(PRACTICES))}."
+    return None
 
 
 def extract(origin: str, catalog: dict[str, Any], version: str) -> ExtractedSource:

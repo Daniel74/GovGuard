@@ -7,11 +7,25 @@
     "filename": "bsi_grundschutzpp_resolved_catalog.json"
   },
   "cis_aws_v7_prowler": {
-    "url": "https://raw.githubusercontent.com/prowler-cloud/prowler/e2b2e568a6/prowler/compliance/aws/cis_7.0_aws.json",
+    "url": "https://raw.githubusercontent.com/prowler-cloud/prowler/499fd637/prowler/compliance/aws/cis_7.0_aws.json",
     "version": "v7.0.0",
-    "sha256": "74c83838c42976cba609a3097820189edfd03eb63bc1120630e9a43cf2ae0449",
+    "sha256": "c50f0aaed3caf4bd9df74b1a8f899862b087016b2a38cfbf3664bc290ba30bd6",
     "license": "Apache-2.0 (Prowler JSON). CIS PDF Terms of Use apply to the original benchmark.",
     "filename": "cis_7.0_aws_prowler.json"
+  },
+  "fsbp_aws_prowler": {
+    "url": "https://raw.githubusercontent.com/prowler-cloud/prowler/499fd637/prowler/compliance/aws/aws_foundational_security_best_practices_aws.json",
+    "version": "5.44.0",
+    "sha256": "8462b45bf7e2b1c9781ce6b83e5a1ab0369aae34364790cda978f55a7619a900",
+    "license": "Apache-2.0 (Prowler JSON). Texts by AWS, license unclear: treated like CIS (ADR 0008).",
+    "filename": "fsbp_aws_prowler.json"
+  },
+  "c5_aws_prowler": {
+    "url": "https://raw.githubusercontent.com/prowler-cloud/prowler/499fd637/prowler/compliance/aws/c5_aws.json",
+    "version": "5.44.0",
+    "sha256": "434b65db5bb9e0190070ce91ee6076c51a87af1c12d93f2b18fbad6229b605bf",
+    "license": "Apache-2.0 (Prowler JSON). Texts by BSI, license unclear: treated like CIS (ADR 0008).",
+    "filename": "c5_aws_prowler.json"
   },
   "dsgvo_formex": {
     "url": "http://publications.europa.eu/resource/cellar/5f2552c2-cc45-11e6-ad7c-01aa75ed71a1.0001.01/DOC_6",

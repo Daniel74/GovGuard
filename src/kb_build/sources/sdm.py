@@ -58,9 +58,11 @@ def _requirement(rid: str, measure: str) -> Requirement:
     )
 
 
-def prefilter(requirement: Requirement) -> bool:
+def prefilter(requirement: Requirement) -> str | None:
     """Keeps layers Daten and Systeme (ARCHITECTURE 1.1)."""
-    return requirement.attributes.get("layer") in LAYERS
+    if requirement.attributes.get("layer") in LAYERS:
+        return None
+    return "Ebene ist weder Daten (D) noch Systeme (S)."
 
 
 def extract_from_text(origin: str, text: str, version: str) -> ExtractedSource:

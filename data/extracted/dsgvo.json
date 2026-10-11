@@ -12,7 +12,8 @@
         "chapter": 1,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 2",
@@ -23,7 +24,8 @@
         "chapter": 1,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 3",
@@ -34,7 +36,8 @@
         "chapter": 1,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 4",
@@ -45,7 +48,8 @@
         "chapter": 1,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 5",
@@ -56,7 +60,8 @@
         "chapter": 2,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 6",
@@ -67,7 +72,8 @@
         "chapter": 2,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 7",
@@ -78,7 +84,8 @@
         "chapter": 2,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 8",
@@ -89,7 +96,8 @@
         "chapter": 2,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 9",
@@ -100,7 +108,8 @@
         "chapter": 2,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 10",
@@ -111,7 +120,8 @@
         "chapter": 2,
         "fine_tier": 0
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 11",
@@ -122,7 +132,8 @@
         "chapter": 2,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 12",
@@ -133,7 +144,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 13",
@@ -144,7 +156,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 14",
@@ -155,7 +168,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 15",
@@ -166,7 +180,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 16",
@@ -177,7 +192,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 17",
@@ -188,7 +204,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 18",
@@ -199,7 +216,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 19",
@@ -210,7 +228,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 20",
@@ -221,7 +240,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 21",
@@ -232,7 +252,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 22",
@@ -243,7 +264,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 23",
@@ -254,7 +276,8 @@
         "chapter": 3,
         "fine_tier": 0
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 24",
@@ -265,7 +288,8 @@
         "chapter": 4,
         "fine_tier": 0
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 25",
@@ -276,7 +300,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 26",
@@ -287,7 +312,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 27",
@@ -298,7 +324,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 28",
@@ -309,7 +336,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 29",
@@ -320,7 +348,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 30",
@@ -331,7 +360,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 31",
@@ -342,7 +372,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 32",
@@ -353,7 +384,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 33",
@@ -364,7 +396,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 34",
@@ -375,7 +408,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 35",
@@ -386,7 +420,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 36",
@@ -397,7 +432,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 37",
@@ -408,7 +444,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 38",
@@ -419,7 +456,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 39",
@@ -430,7 +468,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 40",
@@ -441,7 +480,8 @@
         "chapter": 4,
         "fine_tier": 0
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 41",
@@ -452,7 +492,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 42",
@@ -463,7 +504,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 43",
@@ -474,7 +516,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 44",
@@ -485,7 +528,8 @@
         "chapter": 5,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 45",
@@ -496,7 +540,8 @@
         "chapter": 5,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 46",
@@ -507,7 +552,8 @@
         "chapter": 5,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 47",
@@ -518,7 +564,8 @@
         "chapter": 5,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 48",
@@ -529,7 +576,8 @@
         "chapter": 5,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 49",
@@ -540,7 +588,8 @@
         "chapter": 5,
         "fine_tier": 4
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 50",
@@ -551,7 +600,8 @@
         "chapter": 5,
         "fine_tier": 0
       },
-      "prefilter_passed": true
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "Art. 51",
@@ -562,7 +612,8 @@
         "chapter": 6,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 52",
@@ -573,7 +624,8 @@
         "chapter": 6,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 53",
@@ -584,7 +636,8 @@
         "chapter": 6,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 54",
@@ -595,7 +648,8 @@
         "chapter": 6,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 55",
@@ -606,7 +660,8 @@
         "chapter": 6,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 56",
@@ -617,7 +672,8 @@
         "chapter": 6,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 57",
@@ -628,7 +684,8 @@
         "chapter": 6,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 58",
@@ -639,7 +696,8 @@
         "chapter": 6,
         "fine_tier": 4
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 59",
@@ -650,7 +708,8 @@
         "chapter": 6,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 60",
@@ -661,7 +720,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 61",
@@ -672,7 +732,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 62",
@@ -683,7 +744,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 63",
@@ -694,7 +756,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 64",
@@ -705,7 +768,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 65",
@@ -716,7 +780,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 66",
@@ -727,7 +792,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 67",
@@ -738,7 +804,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 68",
@@ -749,7 +816,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 69",
@@ -760,7 +828,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 70",
@@ -771,7 +840,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 71",
@@ -782,7 +852,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 72",
@@ -793,7 +864,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 73",
@@ -804,7 +876,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 74",
@@ -815,7 +888,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 75",
@@ -826,7 +900,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 76",
@@ -837,7 +912,8 @@
         "chapter": 7,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 77",
@@ -848,7 +924,8 @@
         "chapter": 8,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 78",
@@ -859,7 +936,8 @@
         "chapter": 8,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 79",
@@ -870,7 +948,8 @@
         "chapter": 8,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 80",
@@ -881,7 +960,8 @@
         "chapter": 8,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 81",
@@ -892,7 +972,8 @@
         "chapter": 8,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 82",
@@ -903,7 +984,8 @@
         "chapter": 8,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 83",
@@ -914,7 +996,8 @@
         "chapter": 8,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 84",
@@ -925,7 +1008,8 @@
         "chapter": 8,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 85",
@@ -936,7 +1020,8 @@
         "chapter": 9,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 86",
@@ -947,7 +1032,8 @@
         "chapter": 9,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 87",
@@ -958,7 +1044,8 @@
         "chapter": 9,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 88",
@@ -969,7 +1056,8 @@
         "chapter": 9,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 89",
@@ -980,7 +1068,8 @@
         "chapter": 9,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 90",
@@ -991,7 +1080,8 @@
         "chapter": 9,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 91",
@@ -1002,7 +1092,8 @@
         "chapter": 9,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 92",
@@ -1013,7 +1104,8 @@
         "chapter": 10,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 93",
@@ -1024,7 +1116,8 @@
         "chapter": 10,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 94",
@@ -1035,7 +1128,8 @@
         "chapter": 11,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 95",
@@ -1046,7 +1140,8 @@
         "chapter": 11,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 96",
@@ -1057,7 +1152,8 @@
         "chapter": 11,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 97",
@@ -1068,7 +1164,8 @@
         "chapter": 11,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 98",
@@ -1079,7 +1176,8 @@
         "chapter": 11,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     },
     {
       "id": "Art. 99",
@@ -1090,7 +1188,8 @@
         "chapter": 11,
         "fine_tier": 0
       },
-      "prefilter_passed": false
+      "prefilter_passed": false,
+      "prefilter_reason": "Kapitel gehört nicht zu II–V (Art. 5–49)."
     }
   ]
 }

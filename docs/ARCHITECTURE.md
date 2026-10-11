@@ -70,7 +70,7 @@ Jede Quelle durchläuft dieselben Stufen; nur die Parameter unterscheiden sich. 
 | BSI Grundschutz++ | Control im OSCAL-Katalog, z. B. `DET.3.1` | `modal_verb` ∈ MUSS, SOLLTE, `sec_level` = normal-SdT, Praktik ∈ DLS, BER, DET, KONF, BES, ARCH | „An einer Architektur aus Diensten des Prüfumfangs prüfbar? Welche Ressourcentypen?“ |
 | BSI C5:2025 | Kriterium, z. B. `CRY-03.01B` | Bereiche OPS, IAM, CRY, COS, PSS | wie BSI Grundschutz++ |
 | CIS AWS v7 | Empfehlung, z. B. `3.1.4` | Kapitel 2 IAM, 3 Storage, 4 Logging, 6 Networking (Security Groups für Aurora) | wie BSI Grundschutz++ |
-| AWS FSBP | Control, z. B. `SNS.1` | Dienst (`Service`) gehört zum Prüfumfang, z. B. Lambda, ECS, ECR, ELB, RDS | wie BSI Grundschutz++ |
+| AWS FSBP | Control, z. B. `SNS.1` | Dienst (`Service`) gehört zum Prüfumfang, z. B. Lambda, ECS, ECR, ELB, RDS; EC2 wegen der VPC-Controls, Instanzen und Classic LB sortiert die Relevanz aus | wie BSI Grundschutz++ |
 | DSGVO | Artikel | Kapitel II–V (Art. 5–49) | „An einer Spezifikation prüfbar?“ |
 | SDM | Maßnahme, z. B. `M60.D01` | Bausteine Löschen (M60), Trennen (M50), Zugriffe regeln (M51); Ebenen Daten (D) und Systeme (S), nicht Prozesse (P) | „An einer Spezifikation prüfbar?“ |
 
@@ -295,7 +295,7 @@ infra/                CDK-App des GovGuard-Stacks
 ui/                   Streamlit-App, spricht nur per HTTP mit der API
 data/sources.json     je Quelle URL, Version, SHA-256, Lizenz (ADR 0008)
 data/sources/         lokaler Download-Cache, in .gitignore
-data/extracted/       extrahierte Anforderungen (JSON); cis.json nur lokal (Lizenz)
+data/extracted/       extrahierte Anforderungen (JSON); cis.json, fsbp.json, c5.json nur lokal (Lizenz)
 data/knowledge_base/  rules_spec.json, rules_arch.json, archetypes.json
 data/presets/         5 Presets: Eingabedatei + preset.json mit Soll-Ergebnis
 data/scope.json       Prüfumfang: CloudFormation-Namensräume der geprüften Dienste (ADR 0011)
@@ -311,9 +311,9 @@ tests/                pytest
 ### Neue Quelle hinzufügen
 
 1. `data/sources.json`: URL, Version (Commit oder Tag), SHA-256, Lizenz (ADR 0008).
-2. Adapter `src/kb_build/sources/<quelle>.py` mit `extract()` und `prefilter()`. Der Vorfilter gibt für jede verworfene Anforderung einen Begründungssatz zurück (Auswahlprotokoll). Prowler-Quellen (CIS, FSBP, C5) nutzen den gemeinsamen Parser `prowler.py`.
-3. Je ein Eintrag in `ADAPTERS` (`__main__.py`), `SourceName` (`models.py`) und `SELECTIONS` (`selection_run.py`).
-4. Lizenz: offen → Extrakt einchecken, Vermerk in `NOTICE`; sonst Extrakt in `.gitignore`.
+2. Adapter `src/kb_build/sources/<quelle>.py` mit `extract()` und `prefilter()`. Der Vorfilter gibt `None` zurück oder für jede verworfene Anforderung einen festen Begründungssatz (Auswahlprotokoll). Prowler-Quellen (CIS, FSBP, C5) beschreiben nur ihr `ProwlerFormat` (Anker, Titel, Text, Attribute, Vorfilter); gelesen wird im gemeinsamen Parser `prowler.py`.
+3. Je ein Eintrag in `ADAPTERS` (`__main__.py`) und `SourceName` (`models.py`). In `SELECTIONS` (`selection_run.py`) kommt die Quelle mit #6, weil dort Ranking und Obergrenzen entfallen.
+4. Lizenz: offen → Extrakt einchecken, Vermerk in `NOTICE`; sonst Extrakt in `.gitignore` (CIS, FSBP, C5).
 5. Test mit kleinem Fixture: Anzahl, Stichprobe, Vorfilter mit Begründung.
 
 ## Endpunkte

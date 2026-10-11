@@ -1,8 +1,10 @@
 # Source files are downloaded by the build and verified by SHA-256 (ADR 0008)
 data/sources/
 
-# CIS full texts must not be redistributed (ADR 0008)
+# CIS, FSBP and C5 full texts must not be redistributed (ADR 0008)
 data/extracted/cis.json
+data/extracted/fsbp.json
+data/extracted/c5.json
 .venv/
 __pycache__/
 .pytest_cache/

@@ -58,9 +58,11 @@ def _requirement(article: ET.Element, chapter: int) -> Requirement:
     )
 
 
-def prefilter(requirement: Requirement) -> bool:
+def prefilter(requirement: Requirement) -> str | None:
     """Keeps chapters II-V, Art. 5-49 (ARCHITECTURE 1.1)."""
-    return requirement.attributes.get("chapter") in CHAPTERS
+    if requirement.attributes.get("chapter") in CHAPTERS:
+        return None
+    return "Kapitel gehört nicht zu II–V (Art. 5–49)."
 
 
 def extract(origin: str, xml: bytes, version: str) -> ExtractedSource:
