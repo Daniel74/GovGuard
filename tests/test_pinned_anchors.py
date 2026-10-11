@@ -1,11 +1,11 @@
-"""Pinned anchors come from the human-made presets (ADR 0007, DESIGN 1.4)."""
+"""Pinned anchors come from the human-made presets (ADR 0011, DESIGN 1.4)."""
 
 from pathlib import Path
 
 import pytest
 
 from govguard.models import Preset
-from kb_build.curation import MAX_PINNED, pinned_anchors
+from kb_build.curation import pinned_anchors
 from kb_build.extracted_models import ExtractedSource
 
 ROOT = Path(__file__).parent.parent
@@ -23,11 +23,6 @@ def test_architecture_audit_pins_each_anchor_once() -> None:
     assert pinned_anchors(PRESETS, "architecture") == {
         "CIS AWS v7.0.0 3.1.4", "CIS AWS v7.0.0 4.6", "BSI GS++ BER.4.1",
     }
-
-
-@pytest.mark.parametrize("audit_type", ["spec", "architecture"])
-def test_at_most_four_pinned_anchors(audit_type: str) -> None:
-    assert len(pinned_anchors(PRESETS, audit_type)) <= MAX_PINNED
 
 
 @pytest.mark.parametrize("source", ["bsi", "cis", "dsgvo", "sdm"])

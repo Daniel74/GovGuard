@@ -18,8 +18,6 @@ class SelectedRequirement(BaseModel):
     source: SourceName
     rationale: str  # Classification.rationale
     cfn_resource_types: list[str]
-    pinned: bool  # pinned anchor from a preset (ADR 0007)
-    rank: int  # 1 = first within the source
 
 
 class Selection(BaseModel):  # file selection_spec.json or selection_arch.json
@@ -28,13 +26,13 @@ class Selection(BaseModel):  # file selection_spec.json or selection_arch.json
     selected: list[SelectedRequirement]
 
 
-class Verdict(BaseModel):  # local report for the checkpoint: what the LLM said, what the code did
+Outcome = Literal["selected", "prefiltered", "not_relevant", "not_testable", "llm_error"]
+
+
+class Verdict(BaseModel):  # file verdicts_*.json: one entry per requirement of every source (SPEC)
     source: SourceName
     requirement_id: str
     title: str
-    testable: bool
-    rationale: str
+    outcome: Outcome
+    rationale: str  # from the LLM or a fixed sentence of the code
     cfn_resource_types: list[str]
-    outcome: Literal[
-        "pinned", "selected", "over_cap", "not_relevant", "not_testable", "llm_error"
-    ]

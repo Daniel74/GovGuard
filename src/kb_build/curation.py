@@ -1,27 +1,25 @@
-"""Selection of the bounded catalog: the LLM judges, the code selects (ADR 0007).
+"""Selection of the bounded catalog: the LLM judges, the code selects (ADR 0011).
 
-Pure logic: gets the Pydantic AI model injected (ADR 0005), no boto3.
+Pure logic: gets the Judge injected (ADR 0005), no boto3. There is no ranking and no cap.
 """
 
 import logging
 from dataclasses import dataclass
 
-from pydantic_ai.models import Model
-
 from govguard.models import AuditType, Preset, SourceName
-from kb_build.archetype_profiles import ArchetypeProfile, relevant_resource_types
 from kb_build.classify import Judge
-from kb_build.extracted_models import ExtractedSource
-from kb_build.ranking import Candidate, is_relevant, rank_source
+from kb_build.extracted_models import ExtractedSource, Requirement
+from kb_build.relevance import is_relevant
 from kb_build.selection_models import SelectedRequirement, Selection, Verdict
 
 logger = logging.getLogger("kb_build")
 
-MAX_PINNED = 4  # pinned anchors per audit type (ADR 0007)
+LLM_ERROR = "Die Antwort des Modells blieb auch nach zwei Wiederholungen ungültig."
+NO_REASON = "Vom Vorfilter verworfen."
 
 
 def pinned_anchors(presets: list[Preset], audit_type: AuditType) -> set[str]:
-    """Required findings of the presets are the pinned slots of their audit type."""
+    """Required findings of the presets must end up in the catalog (gate, ADR 0011)."""
     return {
         finding.anchor
         for preset in presets if preset.audit_type == audit_type
@@ -29,86 +27,83 @@ def pinned_anchors(presets: list[Preset], audit_type: AuditType) -> set[str]:
     }
 
 
-def _classified(source: ExtractedSource, pinned: set[str], judge: Judge) -> list[Candidate]:
-    """Only prefiltered and pinned requirements are asked; the rest never reaches the LLM."""
-    asked = [r for r in source.requirements if r.prefilter_passed or r.primary_anchor in pinned]
-    candidates = []
-    for number, requirement in enumerate(asked, start=1):
-        classification = judge(source.source, requirement)
-        verdict = "testable" if classification.testable else "not testable"
-        logger.info("%s %d/%d %s %s", source.source, number, len(asked), requirement.id, verdict)
-        candidates.append(Candidate(requirement, classification))
-    return candidates
-
-
-def _check_pinned(pinned: set[str], sources: list[ExtractedSource], judge: Judge) -> None:
-    """Fail fast: pinned anchors are classified first, before ~500 other requirements are paid."""
-    if len(pinned) > MAX_PINNED:
-        raise ValueError(f"{len(pinned)} pinned anchors, at most {MAX_PINNED} allowed")
-    known = {r.primary_anchor for s in sources for r in s.requirements}
-    if pinned - known:
-        raise ValueError(f"pinned anchors not found in the sources: {sorted(pinned - known)}")
-    untestable = [
-        r.primary_anchor for s in sources for r in s.requirements
-        if r.primary_anchor in pinned and not judge(s.source, r).testable
-    ]
-    if untestable:
-        raise ValueError(f"pinned anchors are not testable: {sorted(untestable)}")
-
-
-def _verdict(
-    source: SourceName, candidate: Candidate, kept: dict[str, SelectedRequirement], judge: Judge,
-    relevant: set[str] | None,
+def _decide(
+    source: SourceName, requirement: Requirement, judge: Judge, scope: frozenset[str]
 ) -> Verdict:
-    classification, requirement = candidate.classification, candidate.requirement
-    if requirement.id in kept:
-        outcome = "pinned" if kept[requirement.id].pinned else "selected"
-    elif (source, requirement.id) in judge.failed:
-        outcome = "llm_error"
-    elif not classification.testable:
-        outcome = "not_testable"
-    elif relevant is not None and not is_relevant(candidate, relevant):
-        outcome = "not_relevant"
-    else:
-        outcome = "over_cap"
-    return Verdict(
-        source=source, requirement_id=requirement.id, title=requirement.title,
-        testable=classification.testable, rationale=classification.rationale,
-        cfn_resource_types=classification.cfn_resource_types, outcome=outcome,
-    )
+    """One verdict per requirement; only the testable question goes to the LLM."""
+    fields = {"source": source, "requirement_id": requirement.id, "title": requirement.title}
+    if not requirement.prefilter_passed:
+        reason = requirement.prefilter_reason or NO_REASON
+        return Verdict(**fields, outcome="prefiltered", rationale=reason, cfn_resource_types=[])
+    answer = judge(source, requirement)
+    fields["cfn_resource_types"] = answer.cfn_resource_types
+    if (source, requirement.id) in judge.failed:
+        return Verdict(**fields, outcome="llm_error", rationale=LLM_ERROR)
+    if not answer.testable:
+        return Verdict(**fields, outcome="not_testable", rationale=answer.rationale)
+    if judge.audit_type == "architecture" and not is_relevant(answer, scope):
+        first = answer.cfn_resource_types[0]
+        sentence = f"Der erste Ressourcentyp {first} liegt nicht im Prüfumfang."
+        return Verdict(**fields, outcome="not_relevant", rationale=sentence)
+    return Verdict(**fields, outcome="selected", rationale=answer.rationale)
 
 
-def _select_source(
-    source: ExtractedSource, pinned: set[str], relevant: set[str] | None, judge: Judge
-) -> tuple[list[SelectedRequirement], list[Verdict]]:
-    candidates = _classified(source, pinned, judge)
-    pinned_ids = {c.requirement.id for c in candidates if c.requirement.primary_anchor in pinned}
-    testable = [c for c in candidates if c.classification.testable]
-    selected = rank_source(source.source, testable, relevant, pinned_ids=pinned_ids)
-    kept = {s.requirement_id: s for s in selected}
-    return selected, [_verdict(source.source, c, kept, judge, relevant) for c in candidates]
+def _check_pinned(
+    pinned: set[str], sources: list[ExtractedSource], judge: Judge, scope: frozenset[str]
+) -> None:
+    """Fail fast: pinned anchors are decided first, before ~800 other requirements are paid."""
+    by_anchor = {r.primary_anchor: (s.source, r) for s in sources for r in s.requirements}
+    missing = sorted(pinned - by_anchor.keys())
+    if missing:
+        raise ValueError(f"pinned anchors not found in the sources: {missing}")
+    outcomes = {a: _decide(*by_anchor[a], judge, scope).outcome for a in sorted(pinned)}
+    rejected = [f"{a} ({o})" for a, o in outcomes.items() if o != "selected"]
+    if rejected:
+        raise ValueError(f"pinned anchors are not selected: {rejected}")
+
+
+def _source_verdicts(source: ExtractedSource, judge: Judge, scope: frozenset[str]) -> list[Verdict]:
+    total, asked = sum(r.prefilter_passed for r in source.requirements), 0
+    verdicts = []
+    for requirement in source.requirements:
+        verdict = _decide(source.source, requirement, judge, scope)
+        if requirement.prefilter_passed:
+            asked += 1
+            tested = "not testable" if verdict.outcome == "not_testable" else "testable"
+            logger.info("%s %d/%d %s %s", source.source, asked, total, requirement.id, tested)
+        verdicts.append(verdict)
+    return verdicts
+
+
+def _check_coverage(components: frozenset[str], selected: list[SelectedRequirement]) -> None:
+    """Every component of the archetypes needs at least one rule, else the build stops."""
+    covered = {t for s in selected for t in s.cfn_resource_types}
+    uncovered = sorted(components - covered)
+    if uncovered:
+        raise ValueError(f"components without a selected requirement: {uncovered}")
 
 
 @dataclass(frozen=True)
 class CurationResult:
     selection: Selection
-    verdicts: list[Verdict]  # every requirement the LLM saw, for the human checkpoint
+    verdicts: list[Verdict]  # every requirement of every source, for the human checkpoint
 
 
 def curate(
-    audit_type: AuditType,
-    sources: list[ExtractedSource],
-    pinned_anchors: set[str],
-    profiles: list[ArchetypeProfile],
-    model: Model,
+    judge: Judge, sources: list[ExtractedSource], pinned_anchors: set[str], scope: frozenset[str],
+    components: frozenset[str] = frozenset(),
 ) -> CurationResult:
-    """The LLM judges, the code selects: relevance, pinned slots, ranking, cap (ADR 0007)."""
-    judge = Judge(audit_type, model)
-    _check_pinned(pinned_anchors, sources, judge)
-    relevant = relevant_resource_types(profiles) if audit_type == "architecture" else None
-    per_source = [_select_source(s, pinned_anchors, relevant, judge) for s in sources]
-    selection = Selection(
-        audit_type=audit_type, model_id=model.model_name,
-        selected=[entry for selected, _ in per_source for entry in selected],
-    )
-    return CurationResult(selection, [v for _, verdicts in per_source for v in verdicts])
+    """The LLM judges, the code selects: prefilter, testable, relevant; then the two gates."""
+    _check_pinned(pinned_anchors, sources, judge, scope)
+    verdicts = [v for s in sources for v in _source_verdicts(s, judge, scope)]
+    selected = [
+        SelectedRequirement(
+            requirement_id=v.requirement_id, source=v.source, rationale=v.rationale,
+            cfn_resource_types=v.cfn_resource_types,
+        )
+        for v in verdicts if v.outcome == "selected"
+    ]
+    if judge.audit_type == "architecture":
+        _check_coverage(components, selected)
+    return CurationResult(Selection(audit_type=judge.audit_type, model_id=judge.model_id,
+                                    selected=selected), verdicts)

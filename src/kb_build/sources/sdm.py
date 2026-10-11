@@ -13,7 +13,7 @@ from pypdf import PdfReader
 from govguard.text import normalize
 from kb_build.extracted_models import ExtractedSource, Requirement, mark_prefilter
 
-LAYERS = frozenset({"D", "S"})  # Daten, Systeme; not Prozesse (ARCHITECTURE 1.1)
+LAYERS = frozenset({"D", "S", "P"})  # Daten, Systeme, Prozesse (ARCHITECTURE 1.1)
 # Modules in data/sources.json; Protokollieren (M43) is left out on purpose (ARCHITECTURE 1.1)
 MODULE_NAMES = {"M60": "Löschen", "M50": "Trennen", "M51": "Zugriffe regeln"}
 
@@ -59,10 +59,10 @@ def _requirement(rid: str, measure: str) -> Requirement:
 
 
 def prefilter(requirement: Requirement) -> str | None:
-    """Keeps layers Daten and Systeme (ARCHITECTURE 1.1)."""
+    """Keeps all layers; Löschfristen sit on layer P (ARCHITECTURE 1.1)."""
     if requirement.attributes.get("layer") in LAYERS:
         return None
-    return "Ebene ist weder Daten (D) noch Systeme (S)."
+    return "Ebene ist weder Daten (D), Systeme (S) noch Prozesse (P)."
 
 
 def extract_from_text(origin: str, text: str, version: str) -> ExtractedSource:

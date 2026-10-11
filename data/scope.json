@@ -1,0 +1,145 @@
+{
+  "API Gateway": [
+    "AWS::ApiGateway::RestApi",
+    "AWS::ApiGateway::Stage",
+    "AWS::ApiGateway::Method",
+    "AWS::ApiGateway::Resource",
+    "AWS::ApiGateway::Deployment",
+    "AWS::ApiGateway::Authorizer",
+    "AWS::ApiGateway::UsagePlan",
+    "AWS::ApiGateway::ApiKey",
+    "AWS::ApiGateway::DomainName",
+    "AWS::ApiGateway::ClientCertificate",
+    "AWS::ApiGateway::RequestValidator",
+    "AWS::ApiGateway::Account",
+    "AWS::ApiGatewayV2::Api",
+    "AWS::ApiGatewayV2::Stage",
+    "AWS::ApiGatewayV2::Route",
+    "AWS::ApiGatewayV2::Integration",
+    "AWS::ApiGatewayV2::Authorizer",
+    "AWS::ApiGatewayV2::DomainName"
+  ],
+  "Lambda": [
+    "AWS::Lambda::Function",
+    "AWS::Lambda::Permission",
+    "AWS::Lambda::EventSourceMapping",
+    "AWS::Lambda::LayerVersion",
+    "AWS::Lambda::Url",
+    "AWS::Lambda::Alias",
+    "AWS::Lambda::Version",
+    "AWS::Lambda::CodeSigningConfig",
+    "AWS::Lambda::EventInvokeConfig"
+  ],
+  "DynamoDB": [
+    "AWS::DynamoDB::Table",
+    "AWS::DynamoDB::GlobalTable"
+  ],
+  "SQS": [
+    "AWS::SQS::Queue",
+    "AWS::SQS::QueuePolicy"
+  ],
+  "SNS": [
+    "AWS::SNS::Topic",
+    "AWS::SNS::TopicPolicy",
+    "AWS::SNS::Subscription"
+  ],
+  "S3": [
+    "AWS::S3::Bucket",
+    "AWS::S3::BucketPolicy",
+    "AWS::S3::AccessPoint",
+    "AWS::S3::MultiRegionAccessPoint"
+  ],
+  "Kinesis Data Firehose": [
+    "AWS::KinesisFirehose::DeliveryStream"
+  ],
+  "Kinesis Data Streams": [
+    "AWS::Kinesis::Stream"
+  ],
+  "Step Functions": [
+    "AWS::StepFunctions::StateMachine",
+    "AWS::StepFunctions::Activity"
+  ],
+  "EventBridge": [
+    "AWS::Events::Rule",
+    "AWS::Events::EventBus",
+    "AWS::Events::EventBusPolicy"
+  ],
+  "Cognito": [
+    "AWS::Cognito::UserPool",
+    "AWS::Cognito::UserPoolClient",
+    "AWS::Cognito::IdentityPool"
+  ],
+  "Secrets Manager": [
+    "AWS::SecretsManager::Secret",
+    "AWS::SecretsManager::ResourcePolicy",
+    "AWS::SecretsManager::RotationSchedule"
+  ],
+  "WAF": [
+    "AWS::WAFv2::WebACL",
+    "AWS::WAFv2::WebACLAssociation",
+    "AWS::WAFv2::LoggingConfiguration"
+  ],
+  "KMS": [
+    "AWS::KMS::Key",
+    "AWS::KMS::Alias"
+  ],
+  "IAM": [
+    "AWS::IAM::Role",
+    "AWS::IAM::Policy",
+    "AWS::IAM::ManagedPolicy",
+    "AWS::IAM::User",
+    "AWS::IAM::Group",
+    "AWS::IAM::AccessKey"
+  ],
+  "CloudWatch Logs": [
+    "AWS::Logs::LogGroup",
+    "AWS::Logs::MetricFilter",
+    "AWS::Logs::ResourcePolicy",
+    "AWS::Logs::SubscriptionFilter"
+  ],
+  "RDS/Aurora": [
+    "AWS::RDS::DBInstance",
+    "AWS::RDS::DBCluster",
+    "AWS::RDS::DBProxy",
+    "AWS::RDS::DBSubnetGroup",
+    "AWS::RDS::DBParameterGroup",
+    "AWS::RDS::DBClusterParameterGroup",
+    "AWS::RDS::OptionGroup",
+    "AWS::RDS::EventSubscription"
+  ],
+  "ECS Fargate": [
+    "AWS::ECS::Cluster",
+    "AWS::ECS::Service",
+    "AWS::ECS::TaskDefinition"
+  ],
+  "ECR": [
+    "AWS::ECR::Repository",
+    "AWS::ECR::RegistryScanningConfiguration",
+    "AWS::ECR::ReplicationConfiguration"
+  ],
+  "Application/Network Load Balancer": [
+    "AWS::ElasticLoadBalancingV2::LoadBalancer",
+    "AWS::ElasticLoadBalancingV2::Listener",
+    "AWS::ElasticLoadBalancingV2::ListenerRule",
+    "AWS::ElasticLoadBalancingV2::ListenerCertificate",
+    "AWS::ElasticLoadBalancingV2::TargetGroup"
+  ],
+  "VPC": [
+    "AWS::EC2::VPC",
+    "AWS::EC2::Subnet",
+    "AWS::EC2::SecurityGroup",
+    "AWS::EC2::SecurityGroupIngress",
+    "AWS::EC2::SecurityGroupEgress",
+    "AWS::EC2::RouteTable",
+    "AWS::EC2::Route",
+    "AWS::EC2::NetworkAcl",
+    "AWS::EC2::NetworkAclEntry",
+    "AWS::EC2::InternetGateway",
+    "AWS::EC2::NatGateway",
+    "AWS::EC2::VPCEndpoint",
+    "AWS::EC2::FlowLog",
+    "AWS::EC2::VPCGatewayAttachment",
+    "AWS::EC2::SubnetRouteTableAssociation",
+    "AWS::EC2::SubnetNetworkAclAssociation"
+  ]
+}

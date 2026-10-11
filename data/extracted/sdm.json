@@ -156,8 +156,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P02",
@@ -168,8 +168,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P03",
@@ -180,8 +180,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P04",
@@ -192,8 +192,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P05",
@@ -204,8 +204,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P06",
@@ -216,8 +216,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P07",
@@ -228,8 +228,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P08",
@@ -240,8 +240,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P09",
@@ -252,8 +252,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P10",
@@ -264,8 +264,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P11",
@@ -276,8 +276,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P12",
@@ -288,8 +288,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P13",
@@ -300,8 +300,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M60.P14",
@@ -312,8 +312,8 @@
         "module": "M60",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.D01",
@@ -576,8 +576,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P02",
@@ -588,8 +588,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P03",
@@ -600,8 +600,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P04",
@@ -612,8 +612,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P05",
@@ -624,8 +624,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P06",
@@ -636,8 +636,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P07",
@@ -648,8 +648,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P08",
@@ -660,8 +660,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P09",
@@ -672,8 +672,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P10",
@@ -684,8 +684,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P11",
@@ -696,8 +696,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P12",
@@ -708,8 +708,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P13",
@@ -720,8 +720,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P14",
@@ -732,8 +732,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P15",
@@ -744,8 +744,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P16",
@@ -756,8 +756,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M50.P17",
@@ -768,8 +768,8 @@
         "module": "M50",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.D01",
@@ -1044,8 +1044,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P02",
@@ -1056,8 +1056,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P03",
@@ -1068,8 +1068,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P04",
@@ -1080,8 +1080,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P05",
@@ -1092,8 +1092,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P06",
@@ -1104,8 +1104,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P07",
@@ -1116,8 +1116,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P08",
@@ -1128,8 +1128,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P09",
@@ -1140,8 +1140,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P10",
@@ -1152,8 +1152,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P11",
@@ -1164,8 +1164,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P12",
@@ -1176,8 +1176,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P13",
@@ -1188,8 +1188,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P14",
@@ -1200,8 +1200,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P15",
@@ -1212,8 +1212,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P16",
@@ -1224,8 +1224,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P17",
@@ -1236,8 +1236,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P18",
@@ -1248,8 +1248,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P19",
@@ -1260,8 +1260,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P20",
@@ -1272,8 +1272,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P21",
@@ -1284,8 +1284,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P22",
@@ -1296,8 +1296,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P23",
@@ -1308,8 +1308,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P24",
@@ -1320,8 +1320,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P25",
@@ -1332,8 +1332,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P26",
@@ -1344,8 +1344,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P27",
@@ -1356,8 +1356,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P28",
@@ -1368,8 +1368,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P29",
@@ -1380,8 +1380,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P30",
@@ -1392,8 +1392,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P31",
@@ -1404,8 +1404,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P32",
@@ -1416,8 +1416,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P33",
@@ -1428,8 +1428,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P34",
@@ -1440,8 +1440,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P35",
@@ -1452,8 +1452,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P36",
@@ -1464,8 +1464,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P37",
@@ -1476,8 +1476,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P38",
@@ -1488,8 +1488,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P39",
@@ -1500,8 +1500,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P40",
@@ -1512,8 +1512,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P41",
@@ -1524,8 +1524,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P42",
@@ -1536,8 +1536,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P43",
@@ -1548,8 +1548,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P44",
@@ -1560,8 +1560,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P45",
@@ -1572,8 +1572,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P46",
@@ -1584,8 +1584,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P47",
@@ -1596,8 +1596,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P48",
@@ -1608,8 +1608,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P49",
@@ -1620,8 +1620,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P50",
@@ -1632,8 +1632,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P51",
@@ -1644,8 +1644,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P52",
@@ -1656,8 +1656,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P53",
@@ -1668,8 +1668,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P54",
@@ -1680,8 +1680,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P55",
@@ -1692,8 +1692,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P56",
@@ -1704,8 +1704,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P57",
@@ -1716,8 +1716,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P58",
@@ -1728,8 +1728,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P59",
@@ -1740,8 +1740,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P60",
@@ -1752,8 +1752,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     },
     {
       "id": "M51.P61",
@@ -1764,8 +1764,8 @@
         "module": "M51",
         "layer": "P"
       },
-      "prefilter_passed": false,
-      "prefilter_reason": "Ebene ist weder Daten (D) noch Systeme (S)."
+      "prefilter_passed": true,
+      "prefilter_reason": null
     }
   ]
 }

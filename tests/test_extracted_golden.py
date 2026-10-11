@@ -63,10 +63,10 @@ def test_dsgvo_exactly_99_articles_and_chapters_2_to_5_as_candidates() -> None:
     assert reqs["Art. 32"].text.startswith("(1) Unter Berücksichtigung des Stands der Technik")
 
 
-def test_sdm_all_147_measures_and_55_data_or_system_candidates() -> None:
+def test_sdm_all_147_measures_pass_the_prefilter() -> None:
     reqs = {r.id: r for r in extract_cached("sdm.json").requirements}
     assert len(reqs) == 147
-    assert sum(r.prefilter_passed for r in reqs.values()) == 55
+    assert sum(r.prefilter_passed for r in reqs.values()) == 147  # all layers D, S, P
     assert reqs["M60.D01"].text.startswith("Datenstrukturen und Speicherarten, die das Löschen")
     assert reqs["M60.D01"].primary_anchor == "SDM Löschen M60.D01"
 

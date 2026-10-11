@@ -72,7 +72,7 @@ Jede Quelle durchläuft dieselben Stufen; nur die Parameter unterscheiden sich. 
 | CIS AWS v7 | Empfehlung, z. B. `3.1.4` | Kapitel 2 IAM, 3 Storage, 4 Logging, 6 Networking (Security Groups für Aurora) | wie BSI Grundschutz++ |
 | AWS FSBP | Control, z. B. `SNS.1` | Dienst (`Service`) gehört zum Prüfumfang, z. B. Lambda, ECS, ECR, ELB, RDS; EC2 wegen der VPC-Controls, Instanzen und Classic LB sortiert die Relevanz aus | wie BSI Grundschutz++ |
 | DSGVO | Artikel | Kapitel II–V (Art. 5–49) | „An einer Spezifikation prüfbar?“ |
-| SDM | Maßnahme, z. B. `M60.D01` | Bausteine Löschen (M60), Trennen (M50), Zugriffe regeln (M51); Ebenen Daten (D) und Systeme (S), nicht Prozesse (P) | „An einer Spezifikation prüfbar?“ |
+| SDM | Maßnahme, z. B. `M60.D01` | Bausteine Löschen (M60), Trennen (M50), Zugriffe regeln (M51); alle Ebenen (Daten, Systeme, Prozesse), denn Löschfristen stehen auf Ebene P | „An einer Spezifikation prüfbar?“ |
 
 - **① Vorfilter:** reiner Code auf Metadaten (OSCAL-Props, Kapitel, Bereiche, Dienste, Maßnahmen-IDs). Er ist billig, reproduzierbar und wirft Organisatorisches früh weg. Für jede verworfene Anforderung schreibt er einen festen Begründungssatz ins Auswahlprotokoll.
 - **② LLM:** bekommt **eine** Anforderung und den Prüfumfang und antwortet nur ja/nein mit Begründung, bei Architektur zusätzlich mit `cfn_resource_types` (per Tool-Choice, siehe 2.1). Es zählt nicht und wählt nicht aus. Das Urteil wird gecacht (Text-Hash, Prompt-Version, `model_id`); ein neuer Lauf fragt nur neue oder geänderte Anforderungen.

@@ -57,15 +57,15 @@ def test_id_reference_on_its_own_line_continues_the_row() -> None:
     assert reqs["M51.P32"].text.endswith("bei der Maßnahme M51.P31")
 
 
-def test_prefilter_keeps_data_and_systems_but_not_processes() -> None:
+def test_prefilter_keeps_all_three_layers() -> None:
+    # Löschfristen (M60.P01) sit on layer P and are a typical spec topic (issue #6, ADR 0011)
     reqs = parse_by_id()
-    assert reqs["M60.S02"].prefilter_passed
-    assert not reqs["M51.P32"].prefilter_passed
+    assert all(r.prefilter_passed and r.prefilter_reason is None for r in reqs.values())
 
 
 def test_layers_are_pinned_to_architecture_1_1() -> None:
     # Changing this set changes the rule, not just the code: update ARCHITECTURE 1.1 first.
-    assert LAYERS == {"D", "S"}
+    assert LAYERS == {"D", "S", "P"}
 
 
 def test_duplicate_ids_are_rejected() -> None:
@@ -77,9 +77,3 @@ def test_duplicate_ids_are_rejected() -> None:
 def test_missing_measure_table_fails_loudly() -> None:
     with pytest.raises(ValueError, match="measure table"):
         parse("M60.D01 nur Fließtext")
-
-
-def test_prefilter_reason_names_the_layer_rule() -> None:
-    reqs = parse_by_id()
-    assert reqs["M51.P32"].prefilter_reason == "Ebene ist weder Daten (D) noch Systeme (S)."
-    assert reqs["M60.S02"].prefilter_reason is None
