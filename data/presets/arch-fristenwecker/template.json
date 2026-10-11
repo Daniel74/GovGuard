@@ -1,0 +1,143 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Fristenwecker des Bauamts der fiktiven Stadt Musterhausen: Step Functions wartet bis zum Fristende eines Bauantrags und benachrichtigt die Sachbearbeitung per SNS. Fiktives Beispiel.",
+  "Resources": {
+    "FristTopic": {
+      "Type": "AWS::SNS::Topic",
+      "Properties": {
+        "TopicName": "musterhausen-bauamt-fristen",
+        "DisplayName": "Bauamt Fristen"
+      }
+    },
+    "FristSubscription": {
+      "Type": "AWS::SNS::Subscription",
+      "Properties": {
+        "TopicArn": {
+          "Ref": "FristTopic"
+        },
+        "Protocol": "email",
+        "Endpoint": "fristen@bauamt.musterhausen.example"
+      }
+    },
+    "WorkflowLogs": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": "/aws/vendedlogs/states/musterhausen-fristenwecker",
+        "RetentionInDays": 90
+      }
+    },
+    "WorkflowRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "Description": "Rolle des Fristenweckers: Benachrichtigung senden und Ausfuehrungen protokollieren",
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "states.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole",
+              "Condition": {
+                "StringEquals": {
+                  "aws:SourceAccount": {
+                    "Ref": "AWS::AccountId"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "Policies": [
+          {
+            "PolicyName": "fristenwecker",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Sid": "PublishFristTopic",
+                  "Effect": "Allow",
+                  "Action": "sns:Publish",
+                  "Resource": {
+                    "Ref": "FristTopic"
+                  }
+                },
+                {
+                  "Sid": "LogDeliveryRequiresWildcard",
+                  "Effect": "Allow",
+                  "Action": [
+                    "logs:CreateLogDelivery",
+                    "logs:GetLogDelivery",
+                    "logs:UpdateLogDelivery",
+                    "logs:DeleteLogDelivery",
+                    "logs:ListLogDeliveries",
+                    "logs:PutResourcePolicy",
+                    "logs:DescribeResourcePolicies",
+                    "logs:DescribeLogGroups"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "Fristenwecker": {
+      "Type": "AWS::StepFunctions::StateMachine",
+      "Properties": {
+        "StateMachineName": "musterhausen-fristenwecker",
+        "StateMachineType": "STANDARD",
+        "RoleArn": {
+          "Fn::GetAtt": [
+            "WorkflowRole",
+            "Arn"
+          ]
+        },
+        "LoggingConfiguration": {
+          "Level": "ALL",
+          "IncludeExecutionData": false,
+          "Destinations": [
+            {
+              "CloudWatchLogsLogGroup": {
+                "LogGroupArn": {
+                  "Fn::GetAtt": [
+                    "WorkflowLogs",
+                    "Arn"
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "DefinitionSubstitutions": {
+          "FristTopicArn": {
+            "Ref": "FristTopic"
+          }
+        },
+        "Definition": {
+          "Comment": "Wartet bis zum Fristende und benachrichtigt die Sachbearbeitung",
+          "StartAt": "WarteBisFristende",
+          "States": {
+            "WarteBisFristende": {
+              "Type": "Wait",
+              "TimestampPath": "$.fristende",
+              "Next": "BenachrichtigeSachbearbeitung"
+            },
+            "BenachrichtigeSachbearbeitung": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::sns:publish",
+              "Parameters": {
+                "TopicArn": "${FristTopicArn}",
+                "Subject": "Frist laeuft heute ab",
+                "Message.$": "States.Format('Die Frist zum Bauantrag {} endet heute.', $.aktenzeichen)"
+              },
+              "End": true
+            }
+          }
+        }
+      }
+    }
+  }
+}

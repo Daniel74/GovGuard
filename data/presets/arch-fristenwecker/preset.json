@@ -1,0 +1,18 @@
+{
+  "title": "Fristenwecker im Bauamt (CloudFormation)",
+  "audit_type": "architecture",
+  "input_file": "template.json",
+  "expected": {
+    "overall_status": "FAIL",
+    "required_findings": [
+      {
+        "anchor": "AWS FSBP SNS.1",
+        "status": "FAIL"
+      },
+      {
+        "anchor": "AWS FSBP StepFunctions.1",
+        "status": "PASS"
+      }
+    ]
+  }
+}

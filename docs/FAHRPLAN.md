@@ -183,8 +183,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Ein Preset belegt, dass GovGuard auch Architekturen auditiert, die keinem Archetyp ähneln.
 **Voraussetzung:** Schritt 6 (Anker-Format `AWS FSBP …`). Parallel zu Schritt 7.
 
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/grilling Preset für #15: Step Functions + SNS ohne KMS, Soll-Gesamtstatus, Pflichtanker`
-- [ ] **Bauen** 👤 „Lege das Preset nach unseren Antworten an“ → Go → 🤖 schreibt das CloudFormation-Template unter `data/presets/<id>/`
+- [x] **Starten** 🆕 _Opus_ · 👤 `/grilling Preset für #15: Step Functions + SNS ohne KMS, Soll-Gesamtstatus, Pflichtanker`
+- [x] **Bauen** 👤 „Lege das Preset nach unseren Antworten an“ → Go → 🤖 schreibt das CloudFormation-Template unter `data/presets/<id>/`
 - [ ] **Blind prüfen** 👤 Gemini wie in Schritt 2
 - [ ] **Soll festlegen** 👤 nennt Gesamtstatus und bestätigte Anker → 🤖 schreibt `preset.json`, Tests grün
 - [ ] **Abschließen** 👤 committet und pusht
