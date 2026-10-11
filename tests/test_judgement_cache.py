@@ -2,6 +2,8 @@
 
 from pathlib import Path
 
+import pytest
+from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelResponse, ToolCallPart
 from pydantic_ai.models.function import FunctionModel
 
@@ -89,3 +91,26 @@ def test_the_cache_survives_a_file_roundtrip(tmp_path: Path) -> None:
 
 def test_a_missing_cache_file_gives_an_empty_cache(tmp_path: Path) -> None:
     assert JudgementCache.load(tmp_path / "nope.json").size == 0
+
+
+def refusing_model(status_code: int) -> FunctionModel:
+    def respond(messages, info):
+        raise ModelHTTPError(status_code, "model-a", {"error": {"code": "output_parse_failed"}})
+
+    return FunctionModel(respond, model_name="model-a")
+
+
+def test_a_rejected_generation_excludes_the_requirement_but_not_the_run() -> None:
+    # Groq answers HTTP 400 output_parse_failed if the model talks instead of calling the tool
+    judge = Judge("architecture", refusing_model(400), cache=JudgementCache())
+
+    judge("CIS", requirement())
+
+    assert ("CIS", "3.1.4") in judge.failed
+
+
+def test_other_http_errors_still_abort_the_run() -> None:
+    judge = Judge("architecture", refusing_model(401), cache=JudgementCache())
+
+    with pytest.raises(ModelHTTPError):
+        judge("CIS", requirement())

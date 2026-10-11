@@ -3,196 +3,772 @@
   "model_id": "openai/gpt-oss-120b",
   "selected": [
     {
-      "requirement_id": "Art. 9",
-      "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf rechtliche Bedingungen (Einwilligung, Zweckbindung, Garantien usw.), die in einer Spezifikation als Metadaten angegeben werden können, sodass geprüft werden kann, ob die Verarbeitung zulässig ist.",
-      "cfn_resource_types": [],
-      "pinned": true,
-      "rank": 1
-    },
-    {
       "requirement_id": "Art. 5",
       "source": "DSGVO",
-      "rationale": "Die Anforderung enthält prüfbare Aspekte wie Zweckbindung, Speicherbegrenzung, Datenminimierung, Integrität und Vertraulichkeit, die in einer Spezifikation (z. B. OpenAPI) angegeben und automatisiert überprüft werden können.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 2
-    },
-    {
-      "requirement_id": "Art. 12",
-      "source": "DSGVO",
-      "rationale": "Die Anforderung verlangt konkrete Informationsbereitstellung, Fristen und Formate, die in einer Spezifikation (z. B. OpenAPI) festgehalten werden können, sodass geprüft werden kann, ob sie erfüllt oder verletzt ist.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 3
-    },
-    {
-      "requirement_id": "Art. 44",
-      "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf die Datenübermittlung in Drittländer und kann durch Angaben in einer Spezifikation (z. B. Übermittlungsland, Rechtsgrundlage, Vorhandensein von Standardvertragsklauseln) geprüft werden.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 4
-    },
-    {
-      "requirement_id": "Art. 25",
-      "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf technische und organisatorische Maßnahmen wie Pseudonymisierung, Datenminimierung und Voreinstellungen, die in einer Spezifikation (z. B. OpenAPI) dokumentiert werden können, sodass geprüft werden kann, ob sie angegeben sind.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 5
+      "rationale": "Die Anforderung enthält prüfbare Aspekte wie Zweckbindung, Löschfristen, Sicherheitsmaßnahmen und Rechenschaftspflicht, die in einer Spezifikation angegeben werden können.",
+      "cfn_resource_types": []
     },
     {
       "requirement_id": "Art. 6",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf Rechtsgrundlagen, Zwecke und weitere Angaben, die in einer Spezifikation dokumentiert werden können, sodass ihre Erfüllung prüfbar ist.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 6
-    },
-    {
-      "requirement_id": "Art. 13",
-      "source": "DSGVO",
-      "rationale": "Die Anforderung enthält konkrete Angaben, die in einer Spezifikation als zu liefernde Informationen modelliert werden können, sodass geprüft werden kann, ob sie umgesetzt ist.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 7
-    },
-    {
-      "requirement_id": "Art. 45",
-      "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf die Datenübermittlung in Drittländer und kann anhand einer Spezifikation, die die zulässigen Länder bzw. den Vorhandensein eines Angemessenheitsbeschlusses angibt, überprüft werden.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 8
-    },
-    {
-      "requirement_id": "Art. 27",
-      "source": "DSGVO",
-      "rationale": "Die Anforderung kann durch Angabe eines in der Union niedergelassenen Vertreters im System bzw. in der Spezifikation geprüft werden.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 9
+      "rationale": "Die Anforderung verlangt die Angabe einer Rechtsgrundlage, des Verarbeitungszwecks und weiterer Bedingungen, die in einer Spezifikation dokumentiert werden können, sodass die Erfüllung geprüft werden kann.",
+      "cfn_resource_types": []
     },
     {
       "requirement_id": "Art. 7",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf nachweisbare Prozesse wie die Dokumentation von Einwilligungen und deren Widerruf, die in einer Spezifikation (z. B. OpenAPI) beschrieben und automatisiert geprüft werden können.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 10
-    },
-    {
-      "requirement_id": "Art. 14",
-      "source": "DSGVO",
-      "rationale": "Die Anforderung verlangt die Bereitstellung von Informationspflichten, die in einer Spezifikation (z. B. als Textfelder oder API‑Endpunkte) dokumentiert werden können, sodass geprüft werden kann, ob die geforderten Angaben enthalten sind.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 11
-    },
-    {
-      "requirement_id": "Art. 46",
-      "source": "DSGVO",
-      "rationale": "Die Anforderung verlangt nach dokumentierten Garantien, Verträgen oder Zertifizierungen für Datenübermittlungen, die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob diese Voraussetzungen erfüllt sind.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 12
-    },
-    {
-      "requirement_id": "Art. 28",
-      "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf vertragliche und technische Maßnahmen, die in einer Spezifikation bzw. im Auftragsverarbeitungsvertrag nachweislich dokumentiert werden können, sodass sie prüfbar ist.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 13
+      "rationale": "Die Anforderung bezieht sich auf nachweisbare Prozesse wie Speicherung von Einwilligungen, klare Formulierung und Widerruf, die in einer Spezifikation beschrieben und geprüft werden können.",
+      "cfn_resource_types": []
     },
     {
       "requirement_id": "Art. 8",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf Altersprüfung und Einwilligungsnachweis, die in einer Spezifikation eindeutig geprüft werden können.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 14
+      "rationale": "Die Anforderung bezieht sich auf die Einholung und Dokumentation der Einwilligung von Kindern bzw. deren Eltern, was durch Spezifikationen wie Altersprüfung und Consent‑Nachweis prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 9",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt Angaben zu Rechtsgrundlagen, Einwilligung und Zwecken der Verarbeitung besonderer Datenkategorien, die in einer Spezifikation dokumentiert werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 11",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Notwendigkeit der Identifizierung und kann anhand einer Spezifikation, die den Verarbeitungszweck und die Notwendigkeit einer Identifizierung angibt, überprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 12",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung enthält technische Aspekte wie die elektronische, maschinenlesbare Bereitstellung von Informationen, die in einer OpenAPI‑Spezifikation beschrieben werden können, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zu den zu übermittelnden Informationspflichten (z. B. Name, Kontaktdaten, Zwecke, Rechtsgrundlage usw.) enthalten kann, sodass geprüft werden kann, ob diese Informationen bereitgestellt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung beschreibt Informationspflichten, die in einer Spezifikation (z. B. als Beschreibung von Datenschutzhinweisen, Kontaktdaten, Zwecken, Rechtsgrundlagen) angegeben werden können, sodass geprüft werden kann, ob sie erfüllt oder verletzt ist.",
+      "cfn_resource_types": []
     },
     {
       "requirement_id": "Art. 15",
       "source": "DSGVO",
-      "rationale": "Die Anforderung lässt sich durch Angaben in einer Spezifikation (z. B. OpenAPI‑Beschreibung eines DSAR‑Endpoints) prüfen, weil dort festgelegt werden kann, welche Informationen bereitgestellt werden müssen.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 15
+      "rationale": "Die Anforderung enthält prüfbare Angaben (z. B. zu Verarbeitungszwecken, Datenkategorien, Empfängern, Speicherfristen, Übermittlung in Drittländer), die in einer Spezifikation (Freitext oder OpenAPI) dokumentiert und automatisiert überprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 17",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt konkrete Löschmaßnahmen und -fristen, die in einer Spezifikation (z. B. OpenAPI oder Freitext) beschrieben werden können, sodass die Erfüllung überprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 19",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung beschreibt einen Benachrichtigungsprozess, der in einer Spezifikation (z. B. als Hinweis auf ein entsprechendes Verfahren) angegeben werden kann, sodass geprüft werden kann, ob er umgesetzt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 20",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf technische Umsetzung (Export in strukturiertem, maschinenlesbarem Format, direkte Übermittlung), die in einer Spezifikation beschrieben und damit geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 21",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf technische und organisatorische Maßnahmen (z. B. Hinweis, Widerspruchs‑Mechanismus), die in einer Spezifikation beschrieben und damit geprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 22",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung kann anhand von Spezifikationsangaben geprüft werden, etwa ob Entscheidungen ausschließlich automatisiert getroffen werden, ob ein menschliches Eingreifen vorgesehen ist und ob besondere Kategorien personenbezogener Daten verwendet werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 23",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt, dass in einer Spezifikation Angaben zu Zwecken, Datenkategorien, Umfang der Beschränkungen, Garantien usw. enthalten sind, sodass geprüft werden kann, ob diese Informationen vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 24",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt konkrete technische und organisatorische Maßnahmen, die in einer Spezifikation (z. B. als Freitext oder OpenAPI‑Erweiterungen) beschrieben werden können, sodass geprüft werden kann, ob sie umgesetzt und nachgewiesen sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 25",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf technische und organisatorische Maßnahmen wie Pseudonymisierung, Datenminimierung und Voreinstellungen, die in einer Spezifikation (z. B. OpenAPI) durch Angaben zu Datenmodellen, Standardwerten, Zugriffskontrollen oder Verschlüsselung dokumentiert werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt nach vertraglichen und technischen Maßnahmen zum Auftragsverarbeiter, die in einer Spezifikation dokumentiert werden können, sodass ihre Erfüllung geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 29",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung lässt sich anhand von Spezifikationen prüfen, weil sie festlegt, dass die Verarbeitung nur auf Weisung des Verantwortlichen erfolgt und dies in Dokumentation oder technischen Vorgaben nachweisbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 30",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt ein Verzeichnis mit definierten Angaben, das in einer Spezifikation (z. B. als Datenmodell) abgebildet werden kann, sodass geprüft werden kann, ob die geforderten Felder vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 32",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt technische und organisatorische Maßnahmen wie Verschlüsselung, Zugriffskontrollen und regelmäßige Prüfungen, die in einer Spezifikation (z. B. OpenAPI) durch entsprechende Angaben dokumentiert und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 33",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung lässt sich durch prüfbare Angaben in einer Spezifikation (z. B. Felder für Meldungszeitpunkt, erforderliche Informationen) verifizieren.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 34",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung enthält prüfbare Kriterien wie Vorhandensein von Verschlüsselung, technischen und organisatorischen Maßnahmen sowie Benachrichtigungsprozesse, die in einer Spezifikation angegeben werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 35",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt, dass in der Spezifikation Angaben zu den geplanten Verarbeitungsvorgängen, Zwecken, Risikobewertung und geplanten Abhilfemaßnahmen enthalten sind, sodass geprüft werden kann, ob eine Datenschutz‑Folgenabschätzung durchgeführt wurde.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 38",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf organisatorische Vorgaben, die in einer Spezifikation (z. B. Freitext) dokumentiert werden können, sodass geprüft werden kann, ob der Datenschutzbeauftragte eingebunden, mit Ressourcen ausgestattet und unabhängig ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 44",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Datenübermittlung in Drittländer und kann durch Angaben zu Rechtsgrundlagen, Übermittlungsbedingungen, Auftragsverarbeitern usw. in einer Spezifikation geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 45",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Übermittlung personenbezogener Daten in Drittländer und kann anhand von Angaben im System‑Spec, z. B. ob ein Angemessenheitsbeschluss vorliegt, geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 46",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Datenübermittlung in Drittländer und kann anhand von Angaben zu Garantien, Verträgen oder Zertifizierungen in der Spezifikation geprüft werden.",
+      "cfn_resource_types": []
     },
     {
       "requirement_id": "Art. 47",
       "source": "DSGVO",
-      "rationale": "Die Anforderung enthält zahlreiche konkrete Angaben (z. B. Datenübermittlungen, Zwecke, Rechtsgrundlagen, Sicherheitsmaßnahmen, Rechte der Betroffenen), die in einer Spezifikation dokumentiert und damit automatisiert geprüft werden können.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 16
+      "rationale": "Die Anforderung enthält zahlreiche konkrete Angaben (z. B. Datenübermittlungen, Rechtsgrundlagen, Speicherfristen, Zugriffsrechte, Auftragsverarbeiter), die in einer Spezifikation erfasst und damit auf Erfüllung oder Verletzung geprüft werden können.",
+      "cfn_resource_types": []
     },
     {
-      "requirement_id": "M60.P01",
-      "source": "SDM",
-      "rationale": "Die Anforderung ist testbar, weil in einer Spezifikation die festgelegten Löschfristen angegeben werden können, sodass geprüft werden kann, ob sie eingehalten werden.",
-      "cfn_resource_types": [],
-      "pinned": true,
-      "rank": 1
-    },
-    {
-      "requirement_id": "M50.D01",
-      "source": "SDM",
-      "rationale": "Die Anforderung verlangt die Durchführung und Dokumentation von Zweckbeschreibung, Zwecktrennung und Zweckbindung, was in einer Spezifikation angegeben werden kann und somit prüfbar ist.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 2
-    },
-    {
-      "requirement_id": "M51.D01",
-      "source": "SDM",
-      "rationale": "Die Anforderung bezieht sich auf die Dokumentation der verarbeiteten personenbezogenen Daten, was in einer Spezifikation (z. B. OpenAPI) angegeben werden kann und somit prüfbar ist.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 3
+      "requirement_id": "Art. 49",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung enthält prüfbare Bedingungen (z. B. Einwilligung, Vertrag, öffentliches Interesse, Dokumentation), die in einer Spezifikation angegeben werden können.",
+      "cfn_resource_types": []
     },
     {
       "requirement_id": "M60.D01",
       "source": "SDM",
-      "rationale": "Die Anforderung bezieht sich auf technische Datenlösch‑Funktionen, die in einer Spezifikation (z. B. Datenmodell‑ oder API‑Beschreibung) eindeutig beschrieben und damit überprüfbar sind.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 4
-    },
-    {
-      "requirement_id": "M50.D02",
-      "source": "SDM",
-      "rationale": "Die Anforderung verlangt die Angabe der Rechtsgrundlage für jede Datenübermittlung, was in einer Spezifikation (z. B. OpenAPI) dokumentiert werden kann und somit prüfbar ist.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 5
-    },
-    {
-      "requirement_id": "M51.D02",
-      "source": "SDM",
-      "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Verarbeitungsfristen, die in einer Spezifikation festgehalten werden können und somit prüfbar ist.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 6
+      "rationale": "Die Anforderung bezieht sich auf technische Eigenschaften (Löschgranularität), die in einer Spezifikation (z. B. OpenAPI) durch entsprechende Delete‑Operationen oder Feldbeschreibungen nachgewiesen werden können.",
+      "cfn_resource_types": []
     },
     {
       "requirement_id": "M60.D02",
       "source": "SDM",
       "rationale": "Die Anforderung bezieht sich auf die Datenstruktur und kann anhand von Modellbeschreibungen oder OpenAPI‑Spezifikationen geprüft werden, ob Löschvorgänge die Datenintegrität wahren.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 7
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.S01",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die technische Umsetzung der Datenlöschung, die in einer Spezifikation durch Angaben zu verwendeten Wipe-Tools und Verfahren geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.S03",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die konkrete technische Maßnahme zur Datenvernichtung, die in einer Spezifikation eindeutig beschrieben und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.S04",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf technische Maßnahmen zur Integritätssicherung beim Löschen, die in einer Spezifikation (z. B. OpenAPI) beschrieben und damit überprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.S05",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Protokollierung von Löschungen, die in einer Spezifikation (z. B. OpenAPI) als Log‑Eintrag definiert werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.S06",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Protokollierung von Löschungen und kann anhand einer Spezifikation (z. B. OpenAPI) geprüft werden, ob die beschriebenen Log‑Einträge datensparsam gestaltet sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.S07",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf eine funktionale Spezifikation (Automatisierte Überwachung von Löschfristen), die in einer Freitext‑ oder OpenAPI‑Spezifikation beschrieben werden kann und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.S08",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Zuordnung von Daten zu einem Löschzeitpunkt, was in einer Spezifikation durch Angaben zu Löschfristen oder Zeitstempeln geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.S09",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf technische Löschmechanismen, die in einer Spezifikation (z. B. OpenAPI) beschrieben und damit geprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.S10",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf ein technisches Verhalten, das in einer Spezifikation (z. B. als Hinweis zu Löschfristen oder Datenintegritäts‑Checks) beschrieben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P01",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe von Löschfristen, die in einer Spezifikation eindeutig definiert und damit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P02",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe von Löschfristen, die in einer Spezifikation (z. B. im Verzeichnis von Verarbeitungstätigkeiten) dokumentiert werden können, sodass geprüft werden kann, ob sie vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P04",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Löschfristen und Zweckbindung, die in einer Spezifikation (z. B. OpenAPI) als Vorgaben definiert werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P05",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Löschfristen und -prozesse, die in einer Spezifikation (z. B. OpenAPI‑Beschreibung oder vertragliche Vorgaben) angegeben werden können, sodass geprüft werden kann, ob die Vorgaben eingehalten werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P06",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Implementierung eines automatisierten, zeitgesteuerten Löschprozesses, der in einer Spezifikation beschrieben und damit überprüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P07",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe im System, ob der Löschgrund bei der Auswahl des Löschprozesses berücksichtigt wird, was in einer Spezifikation geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P09",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf den Umgang mit Verschlüsselungsschlüsseln und kann durch Vorgaben in einer Spezifikation geprüft werden, ob die Schlüssel ordnungsgemäß gelöscht oder verwaltet werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P10",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Löschung von Verschlüsselungsschlüsseln, die in einer Spezifikation beschrieben werden kann, sodass geprüft werden kann, ob entsprechende Regeln implementiert sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P11",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Dokumentationspflichten, die in einer Spezifikation (z. B. OpenAPI) durch entsprechende Metadaten oder Beschreibungen angegeben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P12",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf einen zu implementierenden Protokollierungsprozess, der in einer Spezifikation durch Angaben zu Log‑Einträgen, Aufbewahrungsfristen etc. überprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P13",
+      "source": "SDM",
+      "rationale": "Die Anforderung beschreibt einen Prozess, der in einer Spezifikation (z. B. Freitext oder OpenAPI) festgehalten werden kann und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M60.P14",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Anzahl und Speicherort von Kopien, die in einer Spezifikation eindeutig angegeben werden kann und somit überprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.D01",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Zweckbeschreibung, -trennung und -bindung, die in einer Spezifikation als Freitext oder in den Metadaten von OpenAPI angegeben werden kann, sodass geprüft werden kann, ob sie vorhanden ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.D02",
+      "source": "SDM",
+      "rationale": "Die Anforderung verlangt die Angabe einer Rechtsgrundlage für jede Datenübermittlung, was in einer Spezifikation (z. B. OpenAPI) vermerkt werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.D03",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die vertragliche Festlegung von Suchkriterien, die in einer Spezifikation (z. B. OpenAPI) beschrieben werden kann und damit prüfbar ist.",
+      "cfn_resource_types": []
     },
     {
       "requirement_id": "M50.D04",
       "source": "SDM",
-      "rationale": "Die Anforderung bezieht sich auf die Protokollierung von Datenübermittlungen, die in einer Spezifikation (z. B. OpenAPI) durch entsprechende Logging‑Mechanismen oder Hinweise auf Log‑Einträge beschrieben werden kann, sodass geprüft werden kann, ob sie umgesetzt ist.",
-      "cfn_resource_types": [],
-      "pinned": false,
-      "rank": 8
+      "rationale": "Die Anforderung lässt sich anhand von Protokollierungsfunktionen und Log‑Einträgen prüfen, ob jede Datenübermittlung erfasst wird.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S02",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf einen nachweisbaren Zustand des Mandanten, der in einer Spezifikation (z. B. als Statusfeld oder Log‑Eintrag) beschrieben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S03",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die technische Isolation eines Mandanten, die in einer Spezifikation durch Angaben zu Zugriffsrechten, Netzwerksegmentierung oder Mandantentrennung beschrieben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S04",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die technische Umsetzung von Benutzerkennungen pro Mandant und kann durch Angaben in einer Spezifikation (z. B. OpenAPI) geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S05",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Trennung von Systemen zur Berechtigungsvergabe, was in einer Spezifikation durch die Angabe eines eigenen Berechtigungs‑Service erkennbar ist und damit prüfbar.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S06",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Konfigurierbarkeit der Nutzungsprotokollierung, die in einer Spezifikation (z. B. OpenAPI oder Freitext) durch definierte Konfigurationsparameter beschrieben werden kann, sodass geprüft werden kann, ob die Vorgaben erfüllt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S07",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Protokollierung von Administrationsaktivitäten, die in einer Spezifikation konkretisiert werden kann (z. B. Log‑Einträge, Felder, Aufbewahrungsfristen), sodass geprüft werden kann, ob die Protokollierung erfolgt oder fehlt.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S08",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die technische Umsetzung der Mandantentrennung, die in einer Spezifikation (z. B. OpenAPI oder Freitext) beschrieben und durch Prüfung der Datenbankstruktur und Zugriffsrechte verifiziert werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S09",
+      "source": "SDM",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation die zulässigen Funktionen auflisten kann, sodass die Einhaltung anhand der dokumentierten Funktionen verifiziert werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S10",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Trennung von Datenbeständen, IT‑Komponenten oder Netzen, was in einer technischen Spezifikation (z. B. Netzwerk‑ oder Architektur‑Diagramm) eindeutig beschrieben und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S12",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Definition von Rollen im System, die in einer Spezifikation (z. B. OpenAPI) beschrieben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S13",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Protokollierung und kann durch Angaben im Pflichtenheft bzw. in einer OpenAPI‑Spezifikation (z. B. Log‑Einträge mit Mandanten‑ID) geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S14",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf ein konkretes technisches Verhalten (mandantenübergreifende Protokollierung), das in einer Spezifikation (z. B. OpenAPI oder Freitext) beschrieben und damit überprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S16",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Definition von mandantenübergreifenden Datenzugriffen und die Angabe einer Rechtsgrundlage, was in einer Spezifikation (z. B. Freitext oder OpenAPI) dokumentiert und damit überprüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.S17",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Einhaltung der Mandantentrennung und kann anhand von Architekturbeschreibungen oder Spezifikationen der eingesetzten Komponenten geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.P03",
+      "source": "SDM",
+      "rationale": "Die Anforderung verlangt die Angabe eines geeigneten Auftragsverarbeiters, was in einer Spezifikation (z. B. als Auftragsverarbeiter‑Eintrag) dokumentiert werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.P04",
+      "source": "SDM",
+      "rationale": "Die Anforderung verlangt die Definition von Prozessen, die in einer Spezifikation (z. B. Freitext) beschrieben werden können und deren Vorhandensein überprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.P08",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe der Rechtsgrundlage für die Datenübermittlung, die in einer Spezifikation dokumentiert werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.P10",
+      "source": "SDM",
+      "rationale": "Die Anforderung verlangt die Dokumentation von Restrisiken, was anhand von Vorhandensein und Inhalt entsprechender Dokumente in der Spezifikation geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.P11",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Trennung von IT‑Komponenten und -Diensten, was in einer Spezifikation durch Angaben zur Architektur, zu getrennten Instanzen oder zu Netzwerksegmentierung nachgewiesen oder verneint werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M50.P17",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf technische Integritätsprüfungen, die in einer Spezifikation (z. B. OpenAPI) beschrieben und automatisiert geprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.D01",
+      "source": "SDM",
+      "rationale": "Die Anforderung ist prüfbar, da in einer Spezifikation dokumentiert werden kann, welche personenbezogenen Daten in jedem Verarbeitungsvorgang verarbeitet werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.D02",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe von Fristen für die Verarbeitung personenbezogener Daten, die in einer Spezifikation (z. B. als Dokumentation oder OpenAPI‑Erweiterung) festgehalten werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.D03",
+      "source": "SDM",
+      "rationale": "Die Anforderung kann durch die Angabe in einer Spezifikation geprüft werden, ob die personenbezogenen Daten für Authentisierung und Autorisierung festgelegt und dokumentiert sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.D04",
+      "source": "SDM",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation oder Dokumentation angegeben werden kann, welche personenbezogenen Daten in welchen Speicherorten und Systemen verarbeitet werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.D05",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Rollen und Berechtigungen, die in einer Spezifikation (z. B. OpenAPI) beschrieben werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S01",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Modellierung und Dokumentation von Rollenverknüpfungen, die in einer Spezifikation (z. B. als Modell oder Beschreibung) nachgewiesen werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S02",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Trennung von Verarbeitungsvorgängen, was in einer technischen Spezifikation (z. B. OpenAPI) durch separate Endpunkte, Datenbanken oder Zugriffsrechte beschrieben werden kann, sodass die Erfüllung geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S05",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Authentifizierung und Autorisierung, die in einer Spezifikation (z. B. OpenAPI) durch Security Schemes und Zugriffsrechte beschrieben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S07",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Verbindungen und Datenflüssen, die in einer Spezifikation als Hinweis (z. B. ein Verweis auf Netzpläne) angegeben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S08",
+      "source": "SDM",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation (z. B. OpenAPI) die Schnittstellen, Protokolle, Flussrichtungen und Absicherungsmaßnahmen dokumentiert werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S09",
+      "source": "SDM",
+      "rationale": "Die Anforderung lässt sich anhand von Protokollierungs- und Zugriffskontroll-Settings prüfen, ob Administrationszugriffe geloggt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S11",
+      "source": "SDM",
+      "rationale": "Die Anforderung lässt sich durch Angaben im Spezifikationsdokument (z. B. OpenAPI‑Security‑Scheme) prüfen, ob SSO verwendet wird.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S12",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Verwaltung von Benutzern, was in einer Spezifikation (z. B. OpenAPI) durch Angaben zu Zugriffsrechten, Rollen und Benutzerkonten beschrieben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S13",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Protokollierung von Rollenänderungen, die in einer Spezifikation (z. B. OpenAPI) als Log‑Eintrag definiert werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S14",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Sichtbarmachung, Berechtigung und Protokollierung von Systemnutzern, die in einer Spezifikation (z. B. OpenAPI oder Freitext) konkretisiert werden können, sodass geprüft werden kann, ob die geforderten Maßnahmen umgesetzt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S15",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Prozesse und Systeme, die in einer Spezifikation beschrieben werden können, sodass geprüft werden kann, ob die Registrierung bei direktem IT‑Zugang implementiert ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.S16",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die zeitliche oder ereignisgesteuerte Begrenzung von Rollen bei risikoreichen Verarbeitungen, was in einer Spezifikation (z. B. OpenAPI) durch Angaben zu Rollen‑Laufzeiten oder Triggern dokumentiert werden kann, sodass geprüft werden kann, ob die Vorgabe erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P02",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Verarbeitungstätigkeiten, die in einer Spezifikation als Freitext oder als Teil der API-Beschreibung angegeben werden kann, sodass geprüft werden kann, ob entsprechende Angaben vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P03",
+      "source": "SDM",
+      "rationale": "Die Anforderung verlangt, dass Verarbeitungsvorgänge definiert und dokumentiert werden, was in einer Spezifikation (z. B. als Freitext‑Beschreibung oder OpenAPI‑Dokumentation) nachgewiesen werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P05",
+      "source": "SDM",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation Rollen definiert und dokumentiert werden können, sodass man prüfen kann, ob die geforderten Prozessrollen vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P06",
+      "source": "SDM",
+      "rationale": "Die Anforderung lässt sich anhand der Spezifikation prüfen, weil dort die definierten Rollen und deren Dokumentation nachgeprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P07",
+      "source": "SDM",
+      "rationale": "Die Anforderung verlangt eine Spezifikation der Verarbeitungstätigkeiten, die in einer Dokumentation oder OpenAPI-Beschreibung geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P09",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Verarbeitungsvorgängen, Aufgaben und Rollen, die in einer Spezifikation (z. B. Freitext) angegeben werden kann und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P10",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Prozess- und Benutzerrollen, was in einer Spezifikation (z. B. OpenAPI Security Schemes oder Freitext) dokumentiert und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P11",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Festlegung eines dokumentierten Ablaufs für Zuweisung und Entzug von Zuständigkeiten und Berechtigungen, der in einer Spezifikation nachgewiesen werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P12",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Einrichtung einer spezifischen Rolle im System, was durch die Systemdokumentation oder das Rollen‑ und Berechtigungskonzept nachgewiesen werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P14",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Zugriffsrechte, die in einer Spezifikation (z. B. Rollen‑ und Berechtigungsdefinitionen) geprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P19",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Aufgaben und Funktionen zu Prozessrollen, was in einer Spezifikation (z. B. als Rollen‑ und Berechtigungsmodell) eindeutig beschrieben und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P20",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Auftragsverarbeitungs‑Regeln und die Zuordnung von Aufgaben zu Prozessrollen, die in einer Spezifikation (z. B. OpenAPI‑Beschreibung oder Prozessmodell) festgehalten werden können, sodass geprüft werden kann, ob die definierten Rollen und Aufgaben vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P21",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Personen und Prozessen zu Rollen, was in einer Spezifikation (z. B. OpenAPI) durch entsprechende Endpunkte oder Beschreibungen geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P26",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Schulungen von Beschäftigten, die in einer Spezifikation als Dokumentation oder Beschreibung der Maßnahmen angegeben werden können, sodass geprüft werden kann, ob sie umgesetzt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P30",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung von Informationen, die in einer Spezifikation (z. B. als Hinweistext, Dokumentationslink oder API‑Beschreibung) angegeben werden kann, sodass geprüft werden kann, ob die Nutzungsvorgaben bereitgestellt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P31",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf ein Rollen‑ und Berechtigungskonzept, das in einer Spezifikation beschrieben werden kann, sodass geprüft werden kann, ob die Berechtigungen, die Protokollierungsart und das Verwaltungsverfahren angegeben sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P32",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Auftragsverarbeitung, zu der in einer Spezifikation Angaben zu Auftragsverarbeitern, Zwecken, Löschfristen etc. gemacht werden können, sodass geprüft werden kann, ob die besonderen Anforderungen berücksichtigt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P35",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Definition und Prüfung von Rollen und Berechtigungen, die in einer Spezifikation (z. B. OpenAPI) festgehalten und automatisiert geprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P36",
+      "source": "SDM",
+      "rationale": "Die Anforderung verlangt das Vorhandensein eines Kapitels im Berechtigungskonzept, was durch Prüfung des Dokuments verifiziert werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P37",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Zugriffsrechte und das Vier‑Augen‑Prinzip, die in einer Spezifikation (z. B. OpenAPI‑Security‑Schemes oder Berechtigungskonzept) eindeutig beschrieben und damit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P38",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Zugriffsrechte, die in einer Spezifikation (z. B. Rollen‑ und Berechtigungsdefinitionen) angegeben werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P39",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Zugriffskontrollen, die in einer Spezifikation (z. B. OpenAPI) durch Definition von Berechtigungen und Prüfungen beschrieben werden können, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P40",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf Zugriffsrechte, die in einer Spezifikation (z. B. OpenAPI‑Security‑Schemes oder Freitext) beschrieben und damit überprüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P42",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Trennung von administrativen Rollen, die in einer Spezifikation (z. B. OpenAPI‑Security‑Schemes oder Freitext‑Beschreibung) eindeutig definiert und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P43",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Rollen und Verantwortlichkeiten, die in einer Spezifikation (z. B. OpenAPI oder Freitext) beschrieben und im System nachgeprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P45",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Vergabe und Dokumentation von Zugriffsrechten, die in einer Spezifikation (z. B. Rollen‑ und Berechtigungskonzept) nachgeprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P47",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Dokumentation und periodische Überprüfung von Rollen- und Berechtigungszuweisungen, die in einer Spezifikation beschrieben und nachgeprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P50",
+      "source": "SDM",
+      "rationale": "Die Anforderung lässt sich durch Angaben im Pflichtenheft bzw. in der OpenAPI‑Spezifikation prüfen, indem dort vermerkt wird, ob externe Verarbeitungen mit hohem Risiko erlaubt sind und welche konkret zulässig sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P52",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Zuordnung von Berechtigungen und Personen zu Rollen, die in einer Spezifikation (z. B. OpenAPI oder Freitext) beschrieben und damit geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P53",
+      "source": "SDM",
+      "rationale": "Die Anforderung lässt sich prüfen, indem geprüft wird, ob die Vorgaben für Aktivitäten und den System‑ und Dienstbetrieb in einer für alle betroffenen Beschäftigten leicht zugänglichen Form (z. B. Intranet, Dokumentationsportal) bereitgestellt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P54",
+      "source": "SDM",
+      "rationale": "Die Anforderung verlangt Schutz vor unberechtigter Kenntnisnahme, was durch Vorgaben zu Zugriffsrechten, Verschlüsselung und ähnlichen Sicherheitsmaßnahmen in einer Spezifikation überprüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P58",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Protokollierung von Änderungen, die in einer Spezifikation durch Vorgaben zu Log‑Einträgen, Aufbewahrungsfristen und Nachvollziehbarkeit beschrieben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "M51.P59",
+      "source": "SDM",
+      "rationale": "Die Anforderung bezieht sich auf die Dokumentation und Protokollierung von Änderungen an Rollen und Zugriffsrechten, was durch Vorgaben in einer Spezifikation (z. B. Log‑ und Audit‑Pflichten) überprüfbar ist.",
+      "cfn_resource_types": []
     }
   ]
 }

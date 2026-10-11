@@ -7,6 +7,7 @@ import logging
 from dataclasses import dataclass
 
 from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput, UnexpectedModelBehavior
+from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.models import Model
 
 from govguard.models import AuditType, SourceName
@@ -136,7 +137,9 @@ class Judge:
         try:
             return classify_requirement(
                 requirement, source, self.audit_type, self._model, self._scope)
-        except UnexpectedModelBehavior as error:
+        except (UnexpectedModelBehavior, ModelHTTPError) as error:
+            if isinstance(error, ModelHTTPError) and error.status_code != 400:
+                raise  # 401, 429 and server errors are no verdict on the requirement
             logger.warning("%s %s: invalid answer after retries: %s", source, requirement.id, error)
             self.failed.add((source, requirement.id))
             return Classification(testable=False, rationale="Antwort des Modells ungültig")

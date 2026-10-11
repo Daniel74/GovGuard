@@ -3,237 +3,1670 @@
   "model_id": "openai/gpt-oss-120b",
   "selected": [
     {
+      "requirement_id": "DLS.2.2",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich anhand von Ressourcenkonfigurationen wie S3‑Bucket‑Policies, API‑Gateway‑Endpoints oder Load‑Balancer‑Listeners prüfen, ob TLS/HTTPS für die Datenübertragung erzwungen wird.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket",
+        "AWS::ApiGateway::RestApi",
+        "AWS::ElasticLoadBalancingV2::LoadBalancer"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.2.2",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf die Konfiguration von Netzwerksegmenten, die in CloudFormation über VPC-, Subnet-, SecurityGroup- oder NetworkAcl-Ressourcen definiert werden können und somit im Template prüfbar ist.",
+      "cfn_resource_types": [
+        "AWS::EC2::VPC",
+        "AWS::EC2::Subnet",
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::NetworkAcl"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.2.2.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf die Konfiguration von VPC‑Ressourcen (z. B. Internet‑Gateway, NAT‑Gateway, VPC‑Endpoints, Routing‑Tabellen), die in einem CloudFormation‑Template geprüft werden können.",
+      "cfn_resource_types": [
+        "AWS::EC2::InternetGateway",
+        "AWS::EC2::VPC",
+        "AWS::EC2::NatGateway",
+        "AWS::EC2::VPCEndpoint",
+        "AWS::EC2::RouteTable"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.2.2.2",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich anhand von VPC‑Ressourcen wie SecurityGroups, NetworkAcls oder Subnet‑Konfigurationen im CloudFormation‑Template prüfen, da dort festgelegt wird, welche Verbindungen zwischen Gast‑ und internen Netzen erlaubt sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::NetworkAcl",
+        "AWS::EC2::Subnet",
+        "AWS::EC2::VPC"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.2.2.3",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf die Netzwerksegmentierung, die über VPC‑, Subnet‑, Security‑Group‑ oder Network‑ACL‑Ressourcen im CloudFormation‑Template konfiguriert werden kann.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::NetworkAcl",
+        "AWS::EC2::Subnet",
+        "AWS::EC2::VPC"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.4.2",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf die Konfiguration von Routing‑Verbindungen, die in einem CloudFormation‑Template über Ressourcen wie AWS::EC2::Route oder AWS::EC2::RouteTable geprüft werden kann.",
+      "cfn_resource_types": [
+        "AWS::EC2::Route",
+        "AWS::EC2::RouteTable"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.5.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand von SecurityGroup- und NetworkACL-Ressourcen im CloudFormation-Template geprüft werden, da dort die zulässigen Verbindungen definiert werden.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::NetworkAcl",
+        "AWS::EC2::VPC",
+        "AWS::EC2::Subnet"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.5.1.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand von SecurityGroup- oder NetworkAcl-Regeln im CloudFormation-Template geprüft werden, da dort die erlaubten bzw. blockierten Protokolle definiert werden.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::NetworkAcl"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.5.1.4",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand von SecurityGroup‑ oder NetworkAcl‑Einträgen im CloudFormation‑Template geprüft werden, da dort UDP‑Regeln definiert und damit bekannte UDP‑Angriffe blockiert werden können.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::NetworkAcl",
+        "AWS::EC2::NetworkAclEntry"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.5.1.6",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten SecurityGroups (bzw. Network ACLs) geprüft werden, ob sie eingehende Verbindungen zu Management‑Schnittstellen von externen Netzwerken blockieren.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::NetworkAcl"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.5.1.7",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand von NetworkAclEntry‑Einträgen im CloudFormation‑Template geprüft werden, ob Protokolle für dynamisches Routing blockiert werden.",
+      "cfn_resource_types": [
+        "AWS::EC2::NetworkAclEntry",
+        "AWS::EC2::NetworkAcl",
+        "AWS::EC2::SecurityGroup"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.5.1.10.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann durch das Vorhandensein und die Konfiguration von AWS WAF (z. B. AWS::WAFv2::WebACL) geprüft werden, da dort Regeln zur Blockierung bekannter schädlicher Inhalte definiert werden können.",
+      "cfn_resource_types": [
+        "AWS::WAFv2::WebACL"
+      ]
+    },
+    {
+      "requirement_id": "ARCH.5.2",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand von VPC‑Ressourcen (z. B. InternetGateway, VPCGatewayAttachment und Route‑Einträgen) im CloudFormation‑Template geprüft werden, ob direkte öffentliche Verbindungen blockiert sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::VPCGatewayAttachment",
+        "AWS::EC2::InternetGateway",
+        "AWS::EC2::Route",
+        "AWS::EC2::Subnet",
+        "AWS::EC2::NetworkAcl",
+        "AWS::EC2::SecurityGroup"
+      ]
+    },
+    {
+      "requirement_id": "BER.2.2",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf IAM‑Berechtigungen, die in CloudFormation‑Ressourcen wie AWS::IAM::Policy, AWS::IAM::Role oder AWS::IAM::User definiert werden und somit anhand der im Template angegebenen Policy‑Dokumente geprüft werden können.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::Group"
+      ]
+    },
+    {
+      "requirement_id": "BER.3.3",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf IAM‑Berechtigungen, die in einem CloudFormation‑Template über IAM‑Rollen, -Gruppen oder -Policies definiert und geprüft werden können.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::Group",
+        "AWS::IAM::User"
+      ]
+    },
+    {
+      "requirement_id": "BER.3.16",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann geprüft werden, indem im CloudFormation‑Template nach Ressourcen vom Typ AWS::IAM::Group gesucht wird; deren Vorhandensein würde eine Gruppenkonto‑Nutzung anzeigen.",
+      "cfn_resource_types": [
+        "AWS::IAM::Group"
+      ]
+    },
+    {
       "requirement_id": "BER.4.1",
       "source": "BSI",
-      "rationale": "Das Prinzip der geringsten Berechtigungen lässt sich anhand von IAM‑Ressourcen (z. B. AWS::IAM::Policy, AWS::IAM::Role) im CloudFormation‑Template prüfen, indem geprüft wird, ob Berechtigungen zu breit gefasst sind.",
+      "rationale": "Das Prinzip der geringsten Berechtigungen lässt sich anhand der in einem CloudFormation‑Template definierten IAM‑Rollen, -Policies, -Benutzer und -Gruppen prüfen, da dort die zugewiesenen Berechtigungen explizit angegeben sind.",
       "cfn_resource_types": [
         "AWS::IAM::Policy",
         "AWS::IAM::Role",
         "AWS::IAM::User",
         "AWS::IAM::Group",
         "AWS::IAM::ManagedPolicy"
-      ],
-      "pinned": true,
-      "rank": 1
-    },
-    {
-      "requirement_id": "KONF.6.1",
-      "source": "BSI",
-      "rationale": "Die Anforderung kann anhand der in einem CloudFormation-Template definierten IAM-Rollen, -Policies, -User und -Group‑Ressourcen geprüft werden, da dort die konkreten Berechtigungen für Anwendungen festgelegt sind.",
-      "cfn_resource_types": [
-        "AWS::IAM::Role",
-        "AWS::IAM::Policy",
-        "AWS::IAM::User",
-        "AWS::IAM::Group"
-      ],
-      "pinned": false,
-      "rank": 2
-    },
-    {
-      "requirement_id": "KONF.6.4",
-      "source": "BSI",
-      "rationale": "Die Anforderung lässt sich anhand von IAM-Rollen, -Policies und -Benutzern im CloudFormation-Template prüfen, ob privilegierte Berechtigungen eingeschränkt sind.",
-      "cfn_resource_types": [
-        "AWS::IAM::Policy",
-        "AWS::IAM::Role",
-        "AWS::IAM::User",
-        "AWS::IAM::ManagedPolicy"
-      ],
-      "pinned": false,
-      "rank": 3
-    },
-    {
-      "requirement_id": "BER.7.2",
-      "source": "BSI",
-      "rationale": "Die Vorgabe zur festgelegten Schlüssellänge kann in einem CloudFormation‑Template durch die Angabe des KeySpec‑Parameters bei Ressourcen wie AWS::KMS::Key überprüft werden.",
-      "cfn_resource_types": [
-        "AWS::KMS::Key"
-      ],
-      "pinned": false,
-      "rank": 4
-    },
-    {
-      "requirement_id": "DLS.2.2",
-      "source": "BSI",
-      "rationale": "Die Anforderung lässt sich anhand von Ressourcenkonfigurationen prüfen, z. B. durch Bucket‑Policies, die nur sichere (HTTPS) Übertragungen zulassen, oder Listener‑Konfigurationen, die TLS erzwingen.",
-      "cfn_resource_types": [
-        "AWS::S3::BucketPolicy",
-        "AWS::ElasticLoadBalancingV2::Listener",
-        "AWS::ApiGateway::Stage"
-      ],
-      "pinned": false,
-      "rank": 5
-    },
-    {
-      "requirement_id": "KONF.3.2",
-      "source": "BSI",
-      "rationale": "Die Anforderung verlangt die Verschlüsselung von Speichermedien und kann anhand der Verschlüsselungs‑Parameter in den jeweiligen CloudFormation‑Ressourcen (z. B. ServerSideEncryption für S3, Encrypted für EC2‑Volumes, StorageEncrypted für RDS und Encryption für EFS) überprüft werden.",
-      "cfn_resource_types": [
-        "AWS::S3::Bucket",
-        "AWS::EC2::Volume",
-        "AWS::RDS::DBInstance",
-        "AWS::EFS::FileSystem"
-      ],
-      "pinned": false,
-      "rank": 6
+      ]
     },
     {
       "requirement_id": "BER.4.1.1",
       "source": "BSI",
-      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten IAM‑Rollen, -Benutzer und -Policies geprüft werden, ob Berechtigungen ausschließlich über Rollen zugewiesen werden.",
+      "rationale": "Die Anforderung kann geprüft werden, indem im CloudFormation‑Template nach IAM‑User‑Ressourcen gesucht wird; wenn keine AWS::IAM::User‑Einträge vorhanden sind und stattdessen nur AWS::IAM::Role‑Ressourcen verwendet werden, werden Berechtigungen rollenbasiert zugewiesen.",
       "cfn_resource_types": [
-        "AWS::IAM::Role",
         "AWS::IAM::User",
-        "AWS::IAM::Policy"
-      ],
-      "pinned": false,
-      "rank": 7
+        "AWS::IAM::Role"
+      ]
     },
     {
-      "requirement_id": "BER.7.16.1",
+      "requirement_id": "BER.4.4",
       "source": "BSI",
-      "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Berechtigungen zur Beglaubigung von Schlüsseln, die in einem CloudFormation‑Template über IAM‑Policies bzw. Rollen geprüft werden kann.",
+      "rationale": "Die Anforderung lässt sich prüfen, indem die in dem CloudFormation‑Template definierten IAM‑Rollen, -Policies, -User‑ und -Group‑Zuweisungen sowie servicebezogene Berechtigungen (z. B. Bucket‑Policies) auf übermäßige bzw. nicht notwendige Rechte untersucht werden.",
       "cfn_resource_types": [
         "AWS::IAM::Policy",
-        "AWS::IAM::Role"
-      ],
-      "pinned": false,
-      "rank": 8
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::Group",
+        "AWS::S3::BucketPolicy",
+        "AWS::Lambda::Permission",
+        "AWS::KMS::Key"
+      ]
+    },
+    {
+      "requirement_id": "BER.5.9",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand von IAM‑Rollen, -Benutzern oder -Policies, die eine MFA‑Bedingung (z. B. aws:MultiFactorAuthPresent) enthalten, im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::ManagedPolicy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User"
+      ]
+    },
+    {
+      "requirement_id": "BER.5.10",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf die Beschränkung von Lese‑ und Schreibrechten auf Authentifizierungsmittel und kann anhand von IAM‑Policies bzw. Ressourcen‑Policies, die in einem CloudFormation‑Template definiert sind, geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::SecretsManager::Secret",
+        "AWS::SSM::Parameter"
+      ]
+    },
+    {
+      "requirement_id": "BER.5.11",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand von IAM‑Rollen/Policies und Secrets‑Manager‑Ressourcen im CloudFormation‑Template geprüft werden, ob nur lesender bzw. schreibender Zugriff auf Authentifizierungsmittel gewährt wird.",
+      "cfn_resource_types": [
+        "AWS::IAM::Role",
+        "AWS::IAM::Policy",
+        "AWS::SecretsManager::Secret"
+      ]
+    },
+    {
+      "requirement_id": "BER.7.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf die zu verwendenden kryptografischen Algorithmen, die in CloudFormation über die Eigenschaften von AWS::KMS::Key (z. B. CustomerMasterKeySpec) konfiguriert werden können, sodass ein Verstoß im Template erkennbar ist.",
+      "cfn_resource_types": [
+        "AWS::KMS::Key"
+      ]
+    },
+    {
+      "requirement_id": "BER.7.2",
+      "source": "BSI",
+      "rationale": "Die Vorgabe lässt sich prüfen, indem in einem CloudFormation‑Template die Eigenschaft KeySpec des Typs AWS::KMS::Key auf die geforderte Schlüssellänge (z. B. RSA_2048, RSA_3072, RSA_4096) gesetzt wird.",
+      "cfn_resource_types": [
+        "AWS::KMS::Key"
+      ]
+    },
+    {
+      "requirement_id": "BER.7.6",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand von TLS‑Policy‑Einstellungen in den jeweiligen CloudFormation‑Ressourcen (z. B. Listener, API‑Gateway‑Domain) geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ElasticLoadBalancingV2::Listener",
+        "AWS::ApiGateway::DomainName"
+      ]
     },
     {
       "requirement_id": "BER.7.9",
       "source": "BSI",
-      "rationale": "Die Anforderung kann durch die Prüfung der KMS‑Key‑Ressource (AWS::KMS::Key) und ihrer Schlüsselrichtlinie auf Zweckbindungskontrollen verifiziert werden.",
+      "rationale": "Die Anforderung kann anhand der Konfiguration von AWS::KMS::Key‑Ressourcen geprüft werden, da in deren KeyPolicy festgelegt werden kann, welche Zwecke (z. B. ENCRYPT_DECRYPT, SIGN_VERIFY) und unter welchen Bedingungen Schlüssel verwendet werden dürfen.",
       "cfn_resource_types": [
         "AWS::KMS::Key"
-      ],
-      "pinned": false,
-      "rank": 9
+      ]
+    },
+    {
+      "requirement_id": "BER.7.16.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf eine Berechtigung zur Beglaubigung von Schlüsseln, die durch IAM‑Policies oder Rollen im CloudFormation‑Template geprüft werden kann.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User"
+      ]
+    },
+    {
+      "requirement_id": "DET.3.1.4",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich prüfen, indem in der CloudFormation‑Vorlage nach Ressourcen gesucht wird, die Fehlermeldungen in CloudWatch Logs protokollieren (z. B. LogGroup‑Definitionen oder Logging‑Einstellungen von Diensten).",
+      "cfn_resource_types": [
+        "AWS::Logs::LogGroup",
+        "AWS::Lambda::Function",
+        "AWS::ApiGateway::Stage",
+        "AWS::S3::Bucket",
+        "AWS::KinesisFirehose::DeliveryStream"
+      ]
+    },
+    {
+      "requirement_id": "KONF.1.5",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand der Verschlüsselungs‑Einstellungen von Ressourcen wie AWS::SecretsManager::Secret, AWS::SSM::Parameter oder AWS::S3::Bucket im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::SecretsManager::Secret",
+        "AWS::SSM::Parameter",
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "KONF.3.2",
+      "source": "BSI",
+      "rationale": "Die Anforderung ist prüfbar, weil in einem CloudFormation‑Template die Verschlüsselungs‑Properties (z. B. BucketEncryption, SSESpecification, StorageEncrypted, Encrypted) der genannten Ressourcen ausgewertet werden können.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket",
+        "AWS::DynamoDB::Table",
+        "AWS::RDS::DBInstance",
+        "AWS::EFS::FileSystem",
+        "AWS::EC2::Volume"
+      ]
+    },
+    {
+      "requirement_id": "KONF.6.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich prüfen, indem die IAM‑Rollen, -Policies, -User und -Groups im CloudFormation‑Template auf übermäßige Berechtigungen untersucht werden.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::Group"
+      ]
+    },
+    {
+      "requirement_id": "KONF.6.4",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich prüfen, indem in den CloudFormation‑Templates nach IAM‑Rollen, -Policies oder -Benutzern gesucht wird, die privilegierte Aktionen erlauben, und überprüft wird, ob diese Berechtigungen eingeschränkt sind (Prinzip der geringsten Rechte).",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User"
+      ]
     },
     {
       "requirement_id": "KONF.6.6",
       "source": "BSI",
-      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten IAM‑Policies bzw. Rollen geprüft werden, ob Zugriffe eines Zugangskontos auf Daten anderer Konten eingeschränkt sind.",
+      "rationale": "Die Anforderung kann anhand von IAM‑Policies oder Ressourcenkonfigurationen, die im CloudFormation‑Template definiert sind, geprüft werden, da sie den Zugriff eines Zugangskontos auf Daten anderer Konten regelt.",
       "cfn_resource_types": [
         "AWS::IAM::Policy",
         "AWS::IAM::Role",
         "AWS::S3::Bucket",
         "AWS::DynamoDB::Table"
-      ],
-      "pinned": false,
-      "rank": 10
+      ]
     },
     {
-      "requirement_id": "BER.2.2",
+      "requirement_id": "KONF.6.7",
       "source": "BSI",
-      "rationale": "Die Anforderung bezieht sich auf IAM‑Policies, die in CloudFormation‑Ressourcen wie AWS::IAM::Policy, AWS::IAM::Role oder AWS::IAM::User definiert werden und somit im Template auf die Einschränkung von Aktionen zur Identitätsverwaltung geprüft werden können.",
-      "cfn_resource_types": [
-        "AWS::IAM::Policy",
-        "AWS::IAM::Role",
-        "AWS::IAM::User",
-        "AWS::IAM::Group"
-      ],
-      "pinned": false,
-      "rank": 11
-    },
-    {
-      "requirement_id": "BER.3.3",
-      "source": "BSI",
-      "rationale": "Die Anforderung bezieht sich auf die Beschränkung von IAM‑Berechtigungen für das Management von Zugangskonten, was in CloudFormation‑Templates durch die Definition von AWS::IAM::Policy‑ bzw. AWS::IAM::Role‑Ressourcen überprüfbar ist.",
+      "rationale": "Die Anforderung kann durch Prüfung der in einem CloudFormation‑Template definierten IAM‑Rollen und -Policies auf übermäßige bzw. privilegierte Berechtigungen überprüft werden.",
       "cfn_resource_types": [
         "AWS::IAM::Policy",
         "AWS::IAM::Role"
-      ],
-      "pinned": false,
-      "rank": 12
+      ]
     },
     {
-      "requirement_id": "3.1.4",
-      "source": "CIS",
-      "rationale": "Die Anforderung kann anhand der Einstellung 'PublicAccessBlockConfiguration' im CloudFormation‑Template für den Ressourcentyp AWS::S3::Bucket geprüft werden.",
+      "requirement_id": "KONF.6.11",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann durch die Prüfung von WAF‑WebACL‑Regeln (z. B. AWS::WAFv2::WebACL) oder ALB‑Listener‑Einstellungen, die die maximale Request‑Body‑Größe festlegen, im CloudFormation‑Template überprüft werden.",
       "cfn_resource_types": [
+        "AWS::WAFv2::WebACL",
+        "AWS::ElasticLoadBalancingV2::Listener"
+      ]
+    },
+    {
+      "requirement_id": "KONF.7.15",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich prüfen, weil sie sich auf die Konfiguration von Sicherheitsgruppen bzw. Netzwerk‑ACLs bezieht, die in einem CloudFormation‑Template als Ressourcen definiert werden.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::NetworkAcl"
+      ]
+    },
+    {
+      "requirement_id": "KONF.11.5",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich prüfen, indem die Inbound‑Regeln von Sicherheitsgruppen, Netzwerk‑ACLs oder API‑Gateway‑Authorisierungen im CloudFormation‑Template auf unauthentifizierte Zugriffe untersucht werden.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::NetworkAcl",
+        "AWS::ApiGateway::RestApi"
+      ]
+    },
+    {
+      "requirement_id": "KONF.11.7.2.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich anhand von Security‑Group‑Regeln oder VPC‑Endpoint‑Konfigurationen im CloudFormation‑Template prüfen, weil dort festgelegt wird, welche externen Gegenstellen für die TK‑Anwendung zulässig sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::VPCEndpoint",
+        "AWS::ApiGateway::RestApi"
+      ]
+    },
+    {
+      "requirement_id": "KONF.12.1.7",
+      "source": "BSI",
+      "rationale": "Die Anforderung kann anhand der Konfiguration eines AWS::WAFv2::WebACL im CloudFormation‑Template geprüft werden, da dort die Aktivierung von Regelgruppen zur Filterung schädlicher Inhalte definiert wird.",
+      "cfn_resource_types": [
+        "AWS::WAFv2::WebACL"
+      ]
+    },
+    {
+      "requirement_id": "KONF.12.1.10",
+      "source": "BSI",
+      "rationale": "Die Anforderung bezieht sich auf die Konfiguration von HTTP-Response-Headern, die in CloudFormation über Ressourcen wie AWS::ApiGateway::Stage, AWS::ElasticLoadBalancingV2::LoadBalancer oder AWS::CloudFront::Distribution festgelegt werden kann.",
+      "cfn_resource_types": [
+        "AWS::ApiGateway::Stage",
+        "AWS::ElasticLoadBalancingV2::LoadBalancer",
+        "AWS::CloudFront::Distribution"
+      ]
+    },
+    {
+      "requirement_id": "KONF.14.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich anhand der Konfiguration von Ressourcen wie Load Balancer Listenern, API‑Gateway‑Stages oder S3‑Bucket‑Policies prüfen, da dort festgelegt wird, ob die Kommunikation über TLS/HTTPS erfolgt.",
+      "cfn_resource_types": [
+        "AWS::ElasticLoadBalancingV2::Listener",
+        "AWS::ApiGateway::Stage",
         "AWS::S3::Bucket"
-      ],
-      "pinned": true,
-      "rank": 1
+      ]
     },
     {
-      "requirement_id": "4.6",
-      "source": "CIS",
-      "rationale": "Die Anforderung kann anhand des CloudFormation-Resources AWS::KMS::Key und dessen Eigenschaft EnableKeyRotation geprüft werden.",
+      "requirement_id": "KONF.14.1.1",
+      "source": "BSI",
+      "rationale": "Die Anforderung lässt sich prüfen, indem in einem CloudFormation‑Template nach Ressourcen gesucht wird, deren Eigenschaften unverschlüsselte Protokolle (z. B. HTTP, TCP) aktivieren; das Fehlen solcher Einstellungen bzw. das Vorhandensein von TLS‑Only‑Konfigurationen zeigt die Einhaltung.",
       "cfn_resource_types": [
-        "AWS::KMS::Key"
-      ],
-      "pinned": true,
-      "rank": 2
+        "AWS::ElasticLoadBalancingV2::Listener",
+        "AWS::ApiGateway::Stage",
+        "AWS::ApiGateway::DomainName",
+        "AWS::S3::Bucket"
+      ]
     },
     {
-      "requirement_id": "2.14",
-      "source": "CIS",
-      "rationale": "Die Anforderung lässt sich prüfen, indem die IAM‑Policy‑Dokumente in den CloudFormation‑Ressourcen (z. B. AWS::IAM::Policy, AWS::IAM::ManagedPolicy, Inline‑Policies in AWS::IAM::Role, AWS::IAM::User, AWS::IAM::Group) auf die Verwendung von \"Action\": \"*\" und \"Resource\": \"*\" untersucht werden.",
+      "requirement_id": "OPS-14.02B",
+      "source": "C5",
+      "rationale": "Die Anforderung lässt sich anhand von Ressourcen‑Konfigurationen prüfen, z. B. über das Attribut RetentionInDays bei AWS::Logs::LogGroup oder Lifecycle‑Regeln bei AWS::S3::Bucket, die das automatische Löschen von Log‑Daten nach Ablauf einer Frist sicherstellen.",
+      "cfn_resource_types": [
+        "AWS::Logs::LogGroup",
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "OPS-16.01B",
+      "source": "C5",
+      "rationale": "Die Anforderung lässt sich durch die Prüfung von IAM‑Rollen, -Gruppen oder -Policies, die MFA‑Bedingungen (aws:MultiFactorAuthPresent) für den Zugriff auf Logging‑ und Monitoring‑Dienste enthalten, in einem CloudFormation‑Template nachweisen.",
       "cfn_resource_types": [
         "AWS::IAM::Policy",
-        "AWS::IAM::ManagedPolicy",
         "AWS::IAM::Role",
         "AWS::IAM::User",
         "AWS::IAM::Group"
-      ],
-      "pinned": false,
-      "rank": 3
+      ]
+    },
+    {
+      "requirement_id": "OPS-26.04B",
+      "source": "C5",
+      "rationale": "Die Anforderung lässt sich prüfen, indem in der CloudFormation‑Template geprüft wird, ob für Ressourcen, die Konfigurations‑ und Log‑Dateien speichern (z. B. S3‑Buckets oder CloudWatch‑Log‑Gruppen), eine Aufbewahrungs‑ bzw. Lifecycle‑Policy definiert ist.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket",
+        "AWS::Logs::LogGroup"
+      ]
+    },
+    {
+      "requirement_id": "IAM-09.02B",
+      "source": "C5",
+      "rationale": "Die Anforderung lässt sich prüfen, indem IAM-Policy‑Ressourcen (z. B. AWS::IAM::Policy) im CloudFormation‑Template auf die Bedingung aws:MultiFactorAuthPresent geprüft werden, um sicherzustellen, dass MFA für den Zugriff auf Produktionsressourcen erforderlich ist.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::User",
+        "AWS::IAM::Role"
+      ]
+    },
+    {
+      "requirement_id": "IAM-10.01B",
+      "source": "C5",
+      "rationale": "Die Anforderung bezieht sich auf die Kontrolle von Zugriffsrechten und kann anhand von IAM‑Rollen, -Policies, -Benutzern und -Gruppen, die im CloudFormation‑Template definiert sind, überprüft werden.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::Group"
+      ]
+    },
+    {
+      "requirement_id": "CRY-04.01B",
+      "source": "C5",
+      "rationale": "Die Anforderung bezieht sich auf die Verschlüsselung und Authentifizierung von Datenübertragungen, die in CloudFormation‑Templates über Eigenschaften wie die Durchsetzung von TLS in S3‑Bucket‑Policies, HTTPS‑Listener in Load‑Balancern oder HTTPS‑Endpunkten von API‑Gateway geprüft werden kann.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket",
+        "AWS::ApiGateway::RestApi",
+        "AWS::ElasticLoadBalancingV2::Listener",
+        "AWS::CloudFront::Distribution"
+      ]
+    },
+    {
+      "requirement_id": "CRY-05.01B",
+      "source": "C5",
+      "rationale": "Die Anforderung bezieht sich auf die Verschlüsselung von Daten in einzelnen Ressourcen, die in einem CloudFormation‑Template konfiguriert werden kann (z. B. Server‑Side‑Encryption bei S3‑Buckets, KMS‑Verschlüsselung bei DynamoDB‑Tabellen, RDS‑Instanzen etc.).",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket",
+        "AWS::DynamoDB::Table",
+        "AWS::RDS::DBInstance",
+        "AWS::KMS::Key",
+        "AWS::SecretsManager::Secret",
+        "AWS::EFS::FileSystem",
+        "AWS::EC2::Volume"
+      ]
+    },
+    {
+      "requirement_id": "CRY-05.01AC",
+      "source": "C5",
+      "rationale": "Die Anforderung lässt sich anhand der Verschlüsselungs‑Einstellungen von Ressourcen im CloudFormation‑Template prüfen, da viele AWS‑Ressourcen (z. B. S3‑Buckets, DynamoDB‑Tabellen, RDS‑Instanzen, KMS‑Keys) explizit ein Verschlüsselungs‑Flag besitzen, das im Template konfiguriert wird.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket",
+        "AWS::DynamoDB::Table",
+        "AWS::RDS::DBInstance",
+        "AWS::KMS::Key",
+        "AWS::EFS::FileSystem",
+        "AWS::Lambda::Function",
+        "AWS::SQS::Queue",
+        "AWS::SNS::Topic"
+      ]
+    },
+    {
+      "requirement_id": "CRY-07.01B",
+      "source": "C5",
+      "rationale": "Die Anforderung lässt sich prüfen, indem in CloudFormation‑Templates die Eigenschaft EnableKeyRotation von AWS::KMS::Key‑Ressourcen ausgewertet wird; ist die Rotation nicht aktiviert, liegt ein Verstoß vor.",
+      "cfn_resource_types": [
+        "AWS::KMS::Key"
+      ]
+    },
+    {
+      "requirement_id": "COS-03.02B",
+      "source": "C5",
+      "rationale": "Die Anforderung lässt sich anhand von CloudFormation‑Ressourcen wie VPC, Security Groups, Network ACLs und Flow Logs prüfen, da diese die Netzwerkverbindungen zu vertrauenswürdigen bzw. nicht vertrauenswürdigen Netzen einschränken und deren Monitoring ermöglichen.",
+      "cfn_resource_types": [
+        "AWS::EC2::VPC",
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::NetworkAcl",
+        "AWS::EC2::Subnet",
+        "AWS::EC2::FlowLog"
+      ]
+    },
+    {
+      "requirement_id": "COS-06.01B",
+      "source": "C5",
+      "rationale": "Die Anforderung kann anhand von VPC‑, Subnet‑ und Netzwerk‑ACL‑ bzw. Security‑Group‑Definitionen im CloudFormation‑Template geprüft werden, da dort die Trennung des Datenverkehrs auf Netzwerkebene konfiguriert wird.",
+      "cfn_resource_types": [
+        "AWS::EC2::VPC",
+        "AWS::EC2::Subnet",
+        "AWS::EC2::NetworkAcl",
+        "AWS::EC2::SecurityGroup"
+      ]
+    },
+    {
+      "requirement_id": "PSS-04.04B",
+      "source": "C5",
+      "rationale": "Die Anforderung kann anhand von CloudFormation-Ressourcen wie AWS::Logs::LogGroup (Zugriffsrechte, KMS-Verschlüsselung, Löschoptionen) geprüft werden, da dort der Schutz und die Löschbarkeit von Protokolldaten konfiguriert wird.",
+      "cfn_resource_types": [
+        "AWS::Logs::LogGroup",
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "PSS-08.02B",
+      "source": "C5",
+      "rationale": "Die Anforderung bezieht sich auf IAM‑Rollen, -Gruppen und -Policies, die in einem CloudFormation‑Template definiert werden und deren Berechtigungen auf das Prinzip der geringsten Rechte sowie die Trennung von Aufgaben geprüft werden können.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::Group"
+      ]
+    },
+    {
+      "requirement_id": "PSS-09.01AC",
+      "source": "C5",
+      "rationale": "Die Anforderung lässt sich prüfen, indem in den IAM‑Ressourcen (z. B. AWS::IAM::Policy oder AWS::IAM::Role) nach Bedingungen gesucht wird, die Attribut‑basierten Zugriff (z. B. aws:PrincipalTag, aws:RequestTag, aws:SourceIp) implementieren.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role"
+      ]
+    },
+    {
+      "requirement_id": "2.10",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand von AWS::IAM::User und AWS::IAM::VirtualMFADevice im CloudFormation‑Template geprüft werden, indem geprüft wird, ob für jeden IAM‑User mit LoginProfile ein zugehöriges VirtualMFADevice definiert ist.",
+      "cfn_resource_types": [
+        "AWS::IAM::User",
+        "AWS::IAM::VirtualMFADevice"
+      ]
+    },
+    {
+      "requirement_id": "2.13",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten AWS::IAM::User‑Ressourcen geprüft werden, da dort Inline‑Policies und direkt zugeordnete ManagedPolicyArns ersichtlich sind.",
+      "cfn_resource_types": [
+        "AWS::IAM::User",
+        "AWS::IAM::Group"
+      ]
     },
     {
       "requirement_id": "2.15",
       "source": "CIS",
-      "rationale": "Die Anforderung bezieht sich auf das Anlegen einer IAM-Rolle, die als CloudFormation-Ressource (AWS::IAM::Role) prüfbar ist.",
+      "rationale": "Die Anforderung bezieht sich auf die Erstellung einer IAM‑Rolle, die in einem CloudFormation‑Template als AWS::IAM::Role erkennbar ist.",
       "cfn_resource_types": [
         "AWS::IAM::Role"
-      ],
-      "pinned": false,
-      "rank": 4
+      ]
+    },
+    {
+      "requirement_id": "2.20",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand von IAM‑Ressourcen im CloudFormation‑Template geprüft werden, indem geprüft wird, ob die verwaltete Richtlinie AWSCloudShellFullAccess an Rollen, Benutzern oder Gruppen angehängt ist.",
+      "cfn_resource_types": [
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::Group",
+        "AWS::IAM::ManagedPolicy"
+      ]
     },
     {
       "requirement_id": "2.21",
       "source": "CIS",
-      "rationale": "Die Anforderung kann anhand der in den CloudFormation‑Templates definierten Ressourcen‑Policies (z. B. AWS::S3::BucketPolicy, AWS::SQS::QueuePolicy, AWS::SNS::TopicPolicy, AWS::Lambda::Permission) geprüft werden, ob ein 'Principal': '*' mit 'Effect': 'Allow' vorkommt.",
+      "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten Ressourcen‑Policies geprüft werden, weil die Policy‑Dokumente (z. B. für S3‑Buckets, SQS‑Queues, SNS‑Topics, Lambda‑Functions) im Template enthalten sind und dort nach einem Allow‑Statement mit Principal \"*\" gesucht werden kann.",
       "cfn_resource_types": [
         "AWS::S3::BucketPolicy",
         "AWS::SQS::QueuePolicy",
         "AWS::SNS::TopicPolicy",
         "AWS::Lambda::Permission"
-      ],
-      "pinned": false,
-      "rank": 5
-    },
-    {
-      "requirement_id": "4.4",
-      "source": "CIS",
-      "rationale": "Die Anforderung bezieht sich auf die Aktivierung des Server‑Access‑Logging für das CloudTrail‑S3‑Bucket, was über die Property LoggingConfiguration des CloudFormation‑Typs AWS::S3::Bucket konfigurierbar und prüfbar ist.",
-      "cfn_resource_types": [
-        "AWS::S3::Bucket"
-      ],
-      "pinned": false,
-      "rank": 6
+      ]
     },
     {
       "requirement_id": "3.1.1",
       "source": "CIS",
-      "rationale": "Die Anforderung lässt sich anhand der im CloudFormation‑Template definierten S3‑Bucket‑Policy (AWS::S3::BucketPolicy) prüfen, da dort eine Bedingung zum Verweigern von HTTP‑Zugriffen und zum Erzwingen von HTTPS festgelegt werden kann.",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten Bucket‑Policy (AWS::S3::BucketPolicy) geprüft werden, weil dort ein Statement mit Deny für Nicht‑HTTPS‑Requests angegeben sein muss.",
       "cfn_resource_types": [
         "AWS::S3::BucketPolicy",
         "AWS::S3::Bucket"
-      ],
-      "pinned": false,
-      "rank": 7
+      ]
     },
     {
-      "requirement_id": "3.1.2",
+      "requirement_id": "3.1.4",
       "source": "CIS",
-      "rationale": "Die Anforderung kann anhand der Property MfaDelete im AWS::S3::Bucket geprüft werden.",
+      "rationale": "Die Anforderung kann anhand der Einstellung 'PublicAccessBlockConfiguration' im CloudFormation‑Template des S3‑Buckets geprüft werden.",
       "cfn_resource_types": [
         "AWS::S3::Bucket"
-      ],
-      "pinned": false,
-      "rank": 8
+      ]
+    },
+    {
+      "requirement_id": "3.2.1",
+      "source": "CIS",
+      "rationale": "Die Anforderung lässt sich anhand des Properties \"StorageEncrypted\" (bzw. \"KmsKeyId\") in den CloudFormation‑Ressourcen AWS::RDS::DBInstance (und optional AWS::RDS::DBCluster) prüfen.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "3.2.2",
+      "source": "CIS",
+      "rationale": "Die Einstellung AutoMinorVersionUpgrade ist eine Eigenschaft des CloudFormation‑Ressourcentyps AWS::RDS::DBInstance und kann daher im Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance"
+      ]
+    },
+    {
+      "requirement_id": "3.2.3",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand des CloudFormation-Parameters \"PubliclyAccessible\" des Typs AWS::RDS::DBInstance sowie der zugehörigen Sicherheitsgruppen geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance"
+      ]
+    },
+    {
+      "requirement_id": "3.2.4",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand des MultiAZ-Parameters in den RDS‑Ressourcen des CloudFormation‑Templates geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "4.4",
+      "source": "CIS",
+      "rationale": "Die Anforderung ist prüfbar, weil das Aktivieren des Server‑Access‑Logging über die Eigenschaft LoggingConfiguration des CloudFormation‑Typs AWS::S3::Bucket konfiguriert wird.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "4.6",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand des CloudFormation-Parameters EnableKeyRotation des Typs AWS::KMS::Key geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::KMS::Key"
+      ]
+    },
+    {
+      "requirement_id": "4.7",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand des Vorhandenseins von AWS::EC2::FlowLog-Ressourcen im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::EC2::FlowLog",
+        "AWS::EC2::VPC"
+      ]
+    },
+    {
+      "requirement_id": "4.10",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand der Logging‑ bzw. AccessLogSettings‑Eigenschaften der jeweiligen CloudFormation‑Ressourcen (z. B. AWS::ElasticLoadBalancingV2::LoadBalancer, AWS::CloudFront::Distribution, AWS::ApiGateway::Stage, AWS::ApiGatewayV2::Stage) geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ElasticLoadBalancingV2::LoadBalancer",
+        "AWS::CloudFront::Distribution",
+        "AWS::ApiGateway::Stage",
+        "AWS::ApiGatewayV2::Stage"
+      ]
+    },
+    {
+      "requirement_id": "6.1.2",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann über die Inbound‑Regeln von AWS::EC2::SecurityGroup (Port 445) geprüft werden, ob nur vertrauenswürdige CIDR‑Bereiche zugelassen sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup"
+      ]
+    },
+    {
+      "requirement_id": "6.2",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten AWS::EC2::NetworkAclEntry‑Einträge geprüft werden, weil dort die CIDR‑Blöcke, Protokolle und Portbereiche festgelegt sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::NetworkAclEntry",
+        "AWS::EC2::NetworkAcl"
+      ]
+    },
+    {
+      "requirement_id": "6.3",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten AWS::EC2::SecurityGroup‑ bzw. SecurityGroupIngress‑Einträge geprüft werden, weil dort die CIDR‑ und Port‑Angaben festgelegt sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::SecurityGroupIngress"
+      ]
+    },
+    {
+      "requirement_id": "6.4",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand der SecurityGroup‑ bzw. SecurityGroupIngress‑Ressourcen im CloudFormation‑Template geprüft werden, weil dort die Ingress‑Regeln definiert sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::SecurityGroupIngress"
+      ]
+    },
+    {
+      "requirement_id": "6.6",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten Route‑ und RouteTable‑Ressourcen geprüft werden, ob die Peering‑Routen nur die minimal notwendigen CIDR‑Blöcke enthalten.",
+      "cfn_resource_types": [
+        "AWS::EC2::Route",
+        "AWS::EC2::RouteTable",
+        "AWS::EC2::VPCPeeringConnection"
+      ]
+    },
+    {
+      "requirement_id": "6.8",
+      "source": "CIS",
+      "rationale": "Die Anforderung kann anhand der Konfiguration von VPC‑Endpoint‑Ressourcen (AWS::EC2::VPCEndpoint) im CloudFormation‑Template geprüft werden, da deren Vorhandensein zeigt, dass der Zugriff auf AWS‑Services über private Endpunkte erfolgt.",
+      "cfn_resource_types": [
+        "AWS::EC2::VPCEndpoint"
+      ]
+    },
+    {
+      "requirement_id": "APIGateway.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaften LoggingLevel bzw. AccessLogSettings in den Ressourcen AWS::ApiGateway::Stage und AWS::ApiGatewayV2::Stage geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ApiGateway::Stage",
+        "AWS::ApiGatewayV2::Stage"
+      ]
+    },
+    {
+      "requirement_id": "APIGateway.2",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des CloudFormation‑Resources AWS::ApiGateway::Stage geprüft werden, da dort das Attribut ClientCertificateId angegeben werden muss, um ein SSL‑Zertifikat für die Backend‑Authentifizierung zu konfigurieren.",
+      "cfn_resource_types": [
+        "AWS::ApiGateway::Stage"
+      ]
+    },
+    {
+      "requirement_id": "APIGateway.3",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaft TracingEnabled des Ressourcen Typs AWS::ApiGateway::Stage im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ApiGateway::Stage"
+      ]
+    },
+    {
+      "requirement_id": "APIGateway.4",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Vorhandenseins einer WebACLAssociation‑Ressource, die eine API‑Gateway‑Stage referenziert, im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::WAFv2::WebACLAssociation",
+        "AWS::ApiGateway::Stage"
+      ]
+    },
+    {
+      "requirement_id": "APIGateway.5",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaft CacheDataEncrypted des CloudFormation‑Typs AWS::ApiGateway::Stage geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ApiGateway::Stage"
+      ]
+    },
+    {
+      "requirement_id": "APIGateway.8",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Property AuthorizationType in den API‑Gateway‑Ressourcen des CloudFormation‑Templates geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ApiGatewayV2::Route",
+        "AWS::ApiGateway::Method"
+      ]
+    },
+    {
+      "requirement_id": "APIGateway.9",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der AccessLogSettings im CloudFormation‑Ressourcentyp AWS::ApiGatewayV2::Stage geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ApiGatewayV2::Stage"
+      ]
+    },
+    {
+      "requirement_id": "Cognito.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Einstellung 'UserPoolAddOns.AdvancedSecurityMode' im CloudFormation‑Template des Cognito‑User‑Pools geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::Cognito::UserPool"
+      ]
+    },
+    {
+      "requirement_id": "DynamoDB.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten DynamoDB‑Tabellen‑ und Auto‑Scaling‑Ressourcen geprüft werden, weil dort der BillingMode oder die Auto‑Scaling‑Konfiguration angegeben ist.",
+      "cfn_resource_types": [
+        "AWS::DynamoDB::Table",
+        "AWS::ApplicationAutoScaling::ScalableTarget",
+        "AWS::ApplicationAutoScaling::ScalingPolicy"
+      ]
+    },
+    {
+      "requirement_id": "DynamoDB.2",
+      "source": "FSBP",
+      "rationale": "Die Anforderung ist prüfbar, weil die Aktivierung von Point‑in‑Time‑Recovery als Property 'PointInTimeRecoverySpecification' im CloudFormation‑Typ AWS::DynamoDB::Table konfiguriert wird.",
+      "cfn_resource_types": [
+        "AWS::DynamoDB::Table"
+      ]
+    },
+    {
+      "requirement_id": "DynamoDB.4",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten DynamoDB‑Tabellen und der zugehörigen AWS::Backup::BackupSelection geprüft werden, ob die Tabellen in einem Backup‑Plan enthalten sind.",
+      "cfn_resource_types": [
+        "AWS::DynamoDB::Table",
+        "AWS::Backup::BackupPlan",
+        "AWS::Backup::BackupSelection"
+      ]
+    },
+    {
+      "requirement_id": "DynamoDB.6",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des CloudFormation-Parameters DeletionProtectionEnabled der Ressource AWS::DynamoDB::Table geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::DynamoDB::Table"
+      ]
+    },
+    {
+      "requirement_id": "EC2.6",
+      "source": "FSBP",
+      "rationale": "Die Anforderung ist prüfbar, weil ein FlowLog als AWS::EC2::FlowLog im CloudFormation‑Template definiert sein muss, um VPC‑Flow‑Logs für ein VPC zu aktivieren.",
+      "cfn_resource_types": [
+        "AWS::EC2::FlowLog"
+      ]
+    },
+    {
+      "requirement_id": "EC2.10",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Vorhandenseins von AWS::EC2::VPCEndpoint‑Ressourcen im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::EC2::VPCEndpoint"
+      ]
+    },
+    {
+      "requirement_id": "EC2.13",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Konfiguration von AWS::EC2::SecurityGroup (bzw. AWS::EC2::SecurityGroupIngress) im CloudFormation‑Template geprüft werden, da dort Ingress‑Regeln und CIDR‑Blöcke definiert sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::SecurityGroupIngress"
+      ]
+    },
+    {
+      "requirement_id": "EC2.14",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten Security‑Group‑Ressourcen geprüft werden, weil dort die Ingress‑Regeln inkl. CIDR‑Block und Port angegeben sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::SecurityGroupIngress"
+      ]
+    },
+    {
+      "requirement_id": "EC2.15",
+      "source": "FSBP",
+      "rationale": "Die Einstellung MapPublicIpOnLaunch eines AWS::EC2::Subnet kann im CloudFormation‑Template geprüft werden und gibt an, ob beim Starten von Instanzen automatisch öffentliche IP‑Adressen zugewiesen werden.",
+      "cfn_resource_types": [
+        "AWS::EC2::Subnet"
+      ]
+    },
+    {
+      "requirement_id": "EC2.16",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten AWS::EC2::NetworkAcl und deren Zuordnungen zu Subnetzen geprüft werden, sodass ungenutzte ACLs erkennbar sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::NetworkAcl",
+        "AWS::EC2::SubnetNetworkAclAssociation"
+      ]
+    },
+    {
+      "requirement_id": "EC2.18",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der in der Vorlage definierten Security‑Group‑Ressourcen geprüft werden, da die eingehenden Regeln, CIDR‑Bereiche und Ports im CloudFormation‑Template festgelegt sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup"
+      ]
+    },
+    {
+      "requirement_id": "EC2.19",
+      "source": "FSBP",
+      "rationale": "Ja, weil die Anforderung anhand der in einem CloudFormation‑Template definierten AWS::EC2::SecurityGroup‑ bzw. AWS::EC2::SecurityGroupIngress‑Einträge geprüft werden kann, ob ein Ingress von 0.0.0.0/0 für risikoreiche Ports definiert ist.",
+      "cfn_resource_types": [
+        "AWS::EC2::SecurityGroup",
+        "AWS::EC2::SecurityGroupIngress"
+      ]
+    },
+    {
+      "requirement_id": "EC2.21",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten AWS::EC2::NetworkAclEntry‑Ressourcen geprüft werden, weil dort die CIDR‑ und Port‑Angaben für eingehende Regeln festgelegt sind.",
+      "cfn_resource_types": [
+        "AWS::EC2::NetworkAclEntry",
+        "AWS::EC2::NetworkAcl"
+      ]
+    },
+    {
+      "requirement_id": "EC2.22",
+      "source": "FSBP",
+      "rationale": "Ja, weil die Regel anhand der in einem CloudFormation‑Template definierten NetworkAclEntry‑Ressourcen geprüft werden kann, ob ein Eintrag für Port 22 oder 3389 die CIDR 0.0.0.0/0 bzw. ::/0 verwendet.",
+      "cfn_resource_types": [
+        "AWS::EC2::NetworkAclEntry",
+        "AWS::EC2::NetworkAcl"
+      ]
+    },
+    {
+      "requirement_id": "ECR.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Property ImageScanningConfiguration des Ressourcen Typs AWS::ECR::Repository im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ECR::Repository"
+      ]
+    },
+    {
+      "requirement_id": "ECR.2",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaft ImageTagMutability des CloudFormation‑Typs AWS::ECR::Repository geprüft werden, da dort festgelegt wird, ob Tag‑Immutability aktiviert ist.",
+      "cfn_resource_types": [
+        "AWS::ECR::Repository"
+      ]
+    },
+    {
+      "requirement_id": "ECR.3",
+      "source": "FSBP",
+      "rationale": "Ja, weil das Vorhandensein einer LifecyclePolicy im AWS::ECR::Repository-Resource definiert werden kann und damit in einem einzelnen CloudFormation-Template geprüft werden kann.",
+      "cfn_resource_types": [
+        "AWS::ECR::Repository"
+      ]
+    },
+    {
+      "requirement_id": "ECS.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaften NetworkMode, Privileged und User im CloudFormation‑Ressourcentyp AWS::ECS::TaskDefinition geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ECS::TaskDefinition"
+      ]
+    },
+    {
+      "requirement_id": "ECS.2",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Property AssignPublicIp im CloudFormation‑Typ AWS::ECS::Service geprüft werden, da dort festgelegt wird, ob öffentliche IP‑Adressen automatisch zugewiesen werden.",
+      "cfn_resource_types": [
+        "AWS::ECS::Service"
+      ]
+    },
+    {
+      "requirement_id": "ECS.3",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des CloudFormation‑Ressourcentyps AWS::ECS::TaskDefinition und dessen Eigenschaft LinuxParameters.PidMode geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ECS::TaskDefinition"
+      ]
+    },
+    {
+      "requirement_id": "ECS.4",
+      "source": "FSBP",
+      "rationale": "Der privilegierte Modus ist in der ContainerDefinition des CloudFormation‑Ressourcentyps AWS::ECS::TaskDefinition konfigurierbar und kann somit im Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ECS::TaskDefinition"
+      ]
+    },
+    {
+      "requirement_id": "ECS.5",
+      "source": "FSBP",
+      "rationale": "Die Anforderung lässt sich anhand des Parameters ReadonlyRootFilesystem in den ContainerDefinitions einer AWS::ECS::TaskDefinition prüfen, der im CloudFormation‑Template konfiguriert wird.",
+      "cfn_resource_types": [
+        "AWS::ECS::TaskDefinition"
+      ]
+    },
+    {
+      "requirement_id": "ECS.8",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Umgebungseinstellungen in AWS::ECS::TaskDefinition geprüft werden, weil die Umgebungsvariablen im CloudFormation‑Template definiert sind.",
+      "cfn_resource_types": [
+        "AWS::ECS::TaskDefinition"
+      ]
+    },
+    {
+      "requirement_id": "ECS.9",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der LogConfiguration‑Eigenschaft im AWS::ECS::TaskDefinition‑Resource geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ECS::TaskDefinition"
+      ]
+    },
+    {
+      "requirement_id": "ECS.10",
+      "source": "FSBP",
+      "rationale": "Die Plattformversion eines ECS‑Fargate‑Service ist im CloudFormation‑Template über die Eigenschaft PlatformVersion des Typs AWS::ECS::Service festlegbar, sodass geprüft werden kann, ob sie auf 'LATEST' gesetzt ist.",
+      "cfn_resource_types": [
+        "AWS::ECS::Service"
+      ]
+    },
+    {
+      "requirement_id": "ECS.12",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Property ClusterSettings des Typs AWS::ECS::Cluster im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ECS::Cluster"
+      ]
+    },
+    {
+      "requirement_id": "ELB.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Listener‑Ressourcen im CloudFormation‑Template geprüft werden, weil die HTTP‑zu‑HTTPS‑Weiterleitung über die Property DefaultActions mit Typ \"redirect\" definiert wird.",
+      "cfn_resource_types": [
+        "AWS::ElasticLoadBalancingV2::Listener",
+        "AWS::ElasticLoadBalancingV2::LoadBalancer"
+      ]
+    },
+    {
+      "requirement_id": "ELB.4",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Attributs routing.http.drop_invalid_header_fields.enabled im CloudFormation‑Ressourcentyp AWS::ElasticLoadBalancingV2::LoadBalancer geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ElasticLoadBalancingV2::LoadBalancer"
+      ]
+    },
+    {
+      "requirement_id": "ELB.5",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der LoadBalancer‑Attribute im CloudFormation‑Template geprüft werden, weil das Logging über das Attribut access_logs.s3.enabled konfiguriert wird.",
+      "cfn_resource_types": [
+        "AWS::ElasticLoadBalancingV2::LoadBalancer",
+        "AWS::ElasticLoadBalancing::LoadBalancer"
+      ]
+    },
+    {
+      "requirement_id": "ELB.6",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Attributs 'deletion_protection.enabled' im CloudFormation‑Ressourcentyp AWS::ElasticLoadBalancingV2::LoadBalancer geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ElasticLoadBalancingV2::LoadBalancer"
+      ]
+    },
+    {
+      "requirement_id": "ELB.12",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Attributs routing.http.desync_mitigation_mode im CloudFormation‑Ressourcentyp AWS::ElasticLoadBalancingV2::LoadBalancer geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::ElasticLoadBalancingV2::LoadBalancer"
+      ]
+    },
+    {
+      "requirement_id": "ELB.13",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Subnets‑Parameters des AWS::ElasticLoadBalancingV2::LoadBalancer geprüft werden, da die Angabe von Subnetzen in mindestens zwei verschiedenen Availability Zones nachweist, dass der Load Balancer mehrere AZs nutzt.",
+      "cfn_resource_types": [
+        "AWS::ElasticLoadBalancingV2::LoadBalancer"
+      ]
+    },
+    {
+      "requirement_id": "ELB.16",
+      "source": "FSBP",
+      "rationale": "Die Zuordnung eines Application Load Balancers zu einem AWS WAF Web ACL kann über die CloudFormation‑Ressource AWS::WAFv2::WebACLAssociation geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::WAFv2::WebACLAssociation"
+      ]
+    },
+    {
+      "requirement_id": "EventBridge.3",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten AWS::Events::EventBus und einer zugehörigen AWS::Events::EventBusPolicy geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::Events::EventBus",
+        "AWS::Events::EventBusPolicy"
+      ]
+    },
+    {
+      "requirement_id": "IAM.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Definition von AWS::IAM::ManagedPolicy im CloudFormation‑Template geprüft werden, weil dort die Policy‑Dokumente enthalten sind und ein Statement mit Action '*' und Resource '*' erkennbar ist.",
+      "cfn_resource_types": [
+        "AWS::IAM::ManagedPolicy"
+      ]
+    },
+    {
+      "requirement_id": "IAM.2",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand von AWS::IAM::User und zugehörigen Policy‑Ressourcen im CloudFormation‑Template geprüft werden, weil dort ersichtlich ist, ob einem Benutzer Inline‑ oder Managed‑Policies zugewiesen sind.",
+      "cfn_resource_types": [
+        "AWS::IAM::User",
+        "AWS::IAM::UserPolicy",
+        "AWS::IAM::Policy",
+        "AWS::IAM::ManagedPolicy"
+      ]
+    },
+    {
+      "requirement_id": "IAM.21",
+      "source": "FSBP",
+      "rationale": "Die Anforderung lässt sich anhand der in einem CloudFormation‑Template definierten IAM‑Policies (z. B. AWS::IAM::ManagedPolicy, AWS::IAM::Policy oder Inline‑Policies in AWS::IAM::Role) prüfen, da dort die Action‑Angaben sichtbar sind.",
+      "cfn_resource_types": [
+        "AWS::IAM::ManagedPolicy",
+        "AWS::IAM::Policy",
+        "AWS::IAM::Role"
+      ]
+    },
+    {
+      "requirement_id": "KMS.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten IAM‑Managed‑Policy‑Ressourcen geprüft werden, ob sie die Aktionen kms:Decrypt bzw. kms:ReEncryptFrom mit Resource \"*\" erlauben.",
+      "cfn_resource_types": [
+        "AWS::IAM::ManagedPolicy"
+      ]
+    },
+    {
+      "requirement_id": "KMS.2",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten Inline‑Policies von IAM‑Rollen, -Benutzern oder -Gruppen geprüft werden, da dort die erlaubten KMS‑Aktionen und Ressourcen sichtbar sind.",
+      "cfn_resource_types": [
+        "AWS::IAM::Role",
+        "AWS::IAM::User",
+        "AWS::IAM::Group"
+      ]
+    },
+    {
+      "requirement_id": "KMS.4",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Parameters EnableKeyRotation im CloudFormation‑Ressourcentyp AWS::KMS::Key geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::KMS::Key"
+      ]
+    },
+    {
+      "requirement_id": "KMS.5",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten AWS::KMS::Key‑Ressourcen und deren KeyPolicy geprüft werden, ob ein öffentlicher Zugriff erlaubt ist.",
+      "cfn_resource_types": [
+        "AWS::KMS::Key"
+      ]
+    },
+    {
+      "requirement_id": "Kinesis.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaft StreamEncryption im CloudFormation‑Template des Typs AWS::Kinesis::Stream geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::Kinesis::Stream"
+      ]
+    },
+    {
+      "requirement_id": "Lambda.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der im Template definierten AWS::Lambda::Permission‑Ressourcen geprüft werden, da ein öffentlicher Zugriff durch den Principal \"*\" erkennbar ist.",
+      "cfn_resource_types": [
+        "AWS::Lambda::Permission",
+        "AWS::Lambda::Function"
+      ]
+    },
+    {
+      "requirement_id": "Lambda.2",
+      "source": "FSBP",
+      "rationale": "Die Laufzeit einer Lambda-Funktion ist im Property Runtime des Ressourcen Typs AWS::Lambda::Function definiert und kann im CloudFormation-Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::Lambda::Function"
+      ]
+    },
+    {
+      "requirement_id": "Lambda.3",
+      "source": "FSBP",
+      "rationale": "Die Anforderung ist prüfbar, weil das Vorhandensein des Attributs VpcConfig im CloudFormation‑Ressourcentyp AWS::Lambda::Function eindeutig zeigt, ob die Lambda‑Funktion in einer VPC bereitgestellt wird.",
+      "cfn_resource_types": [
+        "AWS::Lambda::Function"
+      ]
+    },
+    {
+      "requirement_id": "Lambda.5",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der VPCConfig.SubnetIds des AWS::Lambda::Function‑Resources geprüft werden, ob Subnetze aus mehreren Availability Zones verwendet werden.",
+      "cfn_resource_types": [
+        "AWS::Lambda::Function"
+      ]
+    },
+    {
+      "requirement_id": "RDS.2",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Properties PubliclyAccessible in den CloudFormation‑Ressourcen AWS::RDS::DBInstance (und ggf. AWS::RDS::DBCluster) geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.3",
+      "source": "FSBP",
+      "rationale": "Die Anforderung lässt sich prüfen, weil die Verschlüsselung bei Ruhe in den Eigenschaften von AWS::RDS::DBInstance (und ggf. AWS::RDS::DBCluster) im CloudFormation‑Template angegeben wird.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.4",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaften StorageEncrypted von AWS::RDS::DBInstance bzw. AWS::RDS::DBCluster im CloudFormation‑Template geprüft werden, da verschlüsselte Snapshots nur von verschlüsselten Datenbanken erzeugt werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.5",
+      "source": "FSBP",
+      "rationale": "Ja, weil das MultiAZ-Attribut der Ressource AWS::RDS::DBInstance in einem CloudFormation‑Template prüfbar ist.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance"
+      ]
+    },
+    {
+      "requirement_id": "RDS.6",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaften MonitoringInterval und MonitoringRoleArn der Ressourcen AWS::RDS::DBInstance bzw. AWS::RDS::DBCluster im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.7",
+      "source": "FSBP",
+      "rationale": "Die Anforderung lässt sich anhand der Eigenschaft DeletionProtection in den CloudFormation-Ressourcen AWS::RDS::DBCluster (und AWS::RDS::DBInstance) prüfen.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBCluster",
+        "AWS::RDS::DBInstance"
+      ]
+    },
+    {
+      "requirement_id": "RDS.8",
+      "source": "FSBP",
+      "rationale": "Die Anforderung lässt sich anhand der Eigenschaft DeletionProtection des CloudFormation‑Typs AWS::RDS::DBInstance prüfen.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance"
+      ]
+    },
+    {
+      "requirement_id": "RDS.9",
+      "source": "FSBP",
+      "rationale": "Ja, weil die Einstellung EnableCloudwatchLogsExports im CloudFormation‑Template für die RDS‑Instanz (AWS::RDS::DBInstance) konfigurierbar ist und damit geprüft werden kann, ob Logs nach CloudWatch Logs veröffentlicht werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.10",
+      "source": "FSBP",
+      "rationale": "Die Anforderung ist prüfbar, weil die IAM-Datenbankauthentifizierung über die Eigenschaft EnableIAMDatabaseAuthentication des CloudFormation‑Typs AWS::RDS::DBInstance (bzw. AWS::RDS::DBCluster) konfiguriert werden kann.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.11",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des CloudFormation-Parameters BackupRetentionPeriod des Typs AWS::RDS::DBInstance geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance"
+      ]
+    },
+    {
+      "requirement_id": "RDS.12",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Attributs EnableIAMDatabaseAuthentication im CloudFormation‑Ressourcentyp AWS::RDS::DBCluster geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.13",
+      "source": "FSBP",
+      "rationale": "Die Anforderung ist prüfbar, weil das CloudFormation-Attribut AutoMinorVersionUpgrade bei AWS::RDS::DBInstance (bzw. DBCluster) den automatischen Minor‑Version‑Upgrade steuert.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.14",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaft BacktrackWindow (bzw. EnableBacktrack) des Ressourcen Typs AWS::RDS::DBCluster im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.15",
+      "source": "FSBP",
+      "rationale": "Die Anforderung ist prüfbar, weil in einem CloudFormation‑Template das Property AvailabilityZones (bzw. MultiAZ) des Typs AWS::RDS::DBCluster angegeben wird und damit ermittelt werden kann, ob das DB‑Cluster in mehreren Availability Zones bereitgestellt wird.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.16",
+      "source": "FSBP",
+      "rationale": "Die Anforderung ist prüfbar, weil das CloudFormation-Attribut CopyTagsToSnapshot des Typs AWS::RDS::DBCluster die Kopie von Tags zu Snapshots konfiguriert.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.17",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Property CopyTagsToSnapshot des CloudFormation‑Typs AWS::RDS::DBInstance geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance"
+      ]
+    },
+    {
+      "requirement_id": "RDS.18",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaften des AWS::RDS::DBInstance (z. B. DBSubnetGroupName) im CloudFormation‑Template geprüft werden, ob die Instanz einer VPC zugeordnet ist.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBSubnetGroup"
+      ]
+    },
+    {
+      "requirement_id": "RDS.19",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Vorhandenseins und der Konfiguration von AWS::RDS::EventSubscription im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::EventSubscription"
+      ]
+    },
+    {
+      "requirement_id": "RDS.20",
+      "source": "FSBP",
+      "rationale": "Die Anforderung lässt sich prüfen, indem im CloudFormation‑Template nach dem Ressourcentyp AWS::RDS::EventSubscription gesucht wird und geprüft wird, ob die gewünschten kritischen Ereigniskategorien konfiguriert sind.",
+      "cfn_resource_types": [
+        "AWS::RDS::EventSubscription"
+      ]
+    },
+    {
+      "requirement_id": "RDS.21",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Vorhandenseins und der Konfiguration eines AWS::RDS::EventSubscription‑Ressourcentyps im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::EventSubscription"
+      ]
+    },
+    {
+      "requirement_id": "RDS.22",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des CloudFormation‑Ressourcentyps AWS::RDS::EventSubscription geprüft werden, weil die Konfiguration der Event‑Subscription im Template sichtbar ist.",
+      "cfn_resource_types": [
+        "AWS::RDS::EventSubscription"
+      ]
+    },
+    {
+      "requirement_id": "RDS.23",
+      "source": "FSBP",
+      "rationale": "Die Einstellung des Ports ist in den CloudFormation-Ressourcen AWS::RDS::DBInstance und AWS::RDS::DBCluster konfigurierbar und kann somit im Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.24",
+      "source": "FSBP",
+      "rationale": "Die Anforderung ist prüfbar, weil das MasterUsername‑Attribut des CloudFormation‑Typs AWS::RDS::DBCluster im Template angegeben oder weggelassen werden kann und damit erkennbar ist, ob der Standard‑Administratorname verwendet wird.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.25",
+      "source": "FSBP",
+      "rationale": "Ja, weil das MasterUsername-Attribut einer AWS::RDS::DBInstance im CloudFormation-Template geprüft werden kann, ob es vom Standardwert abweicht.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.26",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten Ressourcen AWS::RDS::DBInstance sowie AWS::Backup::BackupPlan und AWS::Backup::BackupSelection geprüft werden, ob das DB‑Instance in einem Backup‑Plan enthalten ist.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::Backup::BackupPlan",
+        "AWS::Backup::BackupSelection"
+      ]
+    },
+    {
+      "requirement_id": "RDS.27",
+      "source": "FSBP",
+      "rationale": "Die Verschlüsselung kann über das Property StorageEncrypted des AWS::RDS::DBCluster geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.34",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaft EnableCloudwatchLogsExports des DBCluster‑Resources geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.36",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaft EnableCloudwatchLogsExports des CloudFormation‑Typs AWS::RDS::DBInstance geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance"
+      ]
+    },
+    {
+      "requirement_id": "RDS.37",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaft EnableCloudwatchLogsExports des CloudFormation‑Typs AWS::RDS::DBCluster geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBCluster"
+      ]
+    },
+    {
+      "requirement_id": "RDS.38",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten AWS::RDS::DBInstance und des zugehörigen AWS::RDS::DBParameterGroup geprüft werden, indem geprüft wird, ob der Parameter rds.force_ssl auf 1 gesetzt ist.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBParameterGroup"
+      ]
+    },
+    {
+      "requirement_id": "RDS.39",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des in einem CloudFormation‑Template definierten DBParameterGroup‑Parameters rds.require_secure_transport für die zugehörige AWS::RDS::DBInstance geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::RDS::DBInstance",
+        "AWS::RDS::DBParameterGroup"
+      ]
+    },
+    {
+      "requirement_id": "S3.2",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten S3‑Bucket‑Ressourcen und zugehörigen BucketPolicy/ACLs geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket",
+        "AWS::S3::BucketPolicy"
+      ]
+    },
+    {
+      "requirement_id": "S3.3",
+      "source": "FSBP",
+      "rationale": "Die Anforderung lässt sich anhand der Konfiguration von AWS::S3::Bucket (z. B. BlockPublicAcls, PublicAccessBlockConfiguration, AccessControl) und ggf. zugehöriger AWS::S3::BucketPolicy im CloudFormation‑Template prüfen, da dort festgelegt wird, ob Schreibzugriff öffentlich erlaubt ist.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket",
+        "AWS::S3::BucketPolicy"
+      ]
+    },
+    {
+      "requirement_id": "S3.5",
+      "source": "FSBP",
+      "rationale": "Ja, weil die Anforderung über die BucketPolicy des S3-Buckets im CloudFormation‑Template geprüft werden kann.",
+      "cfn_resource_types": [
+        "AWS::S3::BucketPolicy",
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.6",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der im CloudFormation‑Template definierten AWS::S3::BucketPolicy geprüft werden, da dort die Berechtigungen für fremde AWS‑Konten festgelegt sind.",
+      "cfn_resource_types": [
+        "AWS::S3::BucketPolicy",
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.7",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der ReplicationConfiguration eines AWS::S3::Bucket im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.8",
+      "source": "FSBP",
+      "rationale": "Ja, weil das BlockPublicAccess-Setting über die Property PublicAccessBlockConfiguration des AWS::S3::Bucket im CloudFormation-Template konfiguriert werden kann.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.9",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaften des CloudFormation‑Ressourcentyps AWS::S3::Bucket (LoggingConfiguration und ggf. LifecycleConfiguration) geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.10",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaften VersioningConfiguration und LifecycleConfiguration des Ressourcen Typs AWS::S3::Bucket im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.11",
+      "source": "FSBP",
+      "rationale": "Die Anforderung lässt sich anhand der Property NotificationConfiguration im CloudFormation‑Template des Typs AWS::S3::Bucket prüfen, da dort festgelegt wird, ob Event‑Benachrichtigungen konfiguriert sind.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.12",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des CloudFormation‑Parameters AccessControl des Typs AWS::S3::Bucket geprüft werden, weil dort festgelegt wird, ob ACLs verwendet werden.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.13",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der LifecycleConfiguration eines AWS::S3::Bucket im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.14",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Property VersioningConfiguration im CloudFormation‑Template des Typs AWS::S3::Bucket geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.15",
+      "source": "FSBP",
+      "rationale": "Die Anforderung lässt sich anhand der Property 'ObjectLockEnabled' im CloudFormation‑Template des S3‑Buckets prüfen.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.17",
+      "source": "FSBP",
+      "rationale": "Die Anforderung lässt sich anhand der BucketEncryption‑Einstellung im CloudFormation‑Template prüfen, da dort festgelegt wird, ob ein S3‑Bucket mit einem KMS‑Schlüssel (SSE‑KMS) verschlüsselt ist.",
+      "cfn_resource_types": [
+        "AWS::S3::Bucket"
+      ]
+    },
+    {
+      "requirement_id": "S3.19",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Property PublicAccessBlockConfiguration des CloudFormation‑Typs AWS::S3::AccessPoint geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::S3::AccessPoint"
+      ]
+    },
+    {
+      "requirement_id": "SNS.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Property KmsMasterKeyId des Ressourcen Typs AWS::SNS::Topic im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::SNS::Topic"
+      ]
+    },
+    {
+      "requirement_id": "SNS.2",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand des Attributs DeliveryStatusLogging des SNS‑Topic in einem CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::SNS::Topic"
+      ]
+    },
+    {
+      "requirement_id": "SNS.4",
+      "source": "FSBP",
+      "rationale": "Ja, weil die Zugriffsrichtlinie eines SNS‑Topic in einem CloudFormation‑Template (AWS::SNS::TopicPolicy bzw. die Policy‑Eigenschaft des Topics) geprüft werden kann, ob ein öffentlicher Principal definiert ist.",
+      "cfn_resource_types": [
+        "AWS::SNS::TopicPolicy",
+        "AWS::SNS::Topic"
+      ]
+    },
+    {
+      "requirement_id": "SQS.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaften des SQS‑Queue‑Resources (AWS::SQS::Queue) im CloudFormation‑Template geprüft werden, da die Verschlüsselung über das Attribut KmsMasterKeyId bzw. SqsManagedSseEnabled konfiguriert wird.",
+      "cfn_resource_types": [
+        "AWS::SQS::Queue"
+      ]
+    },
+    {
+      "requirement_id": "SecretsManager.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der Eigenschaften des CloudFormation‑Ressourcentyps AWS::SecretsManager::RotationSchedule (bzw. RotationLambdaARN/RotationRules im AWS::SecretsManager::Secret) geprüft werden, da dort die automatische Rotation eines Secrets konfiguriert wird.",
+      "cfn_resource_types": [
+        "AWS::SecretsManager::RotationSchedule",
+        "AWS::SecretsManager::Secret"
+      ]
+    },
+    {
+      "requirement_id": "SecretsManager.4",
+      "source": "FSBP",
+      "rationale": "Die Rotation von Secrets kann über das Attribut RotationRules.AutomaticallyAfterDays im CloudFormation‑Typ AWS::SecretsManager::Secret konfiguriert werden und lässt sich somit im Template prüfen.",
+      "cfn_resource_types": [
+        "AWS::SecretsManager::Secret"
+      ]
+    },
+    {
+      "requirement_id": "StepFunctions.1",
+      "source": "FSBP",
+      "rationale": "Die Anforderung kann anhand der LoggingConfiguration des AWS::StepFunctions::StateMachine‑Resources im CloudFormation‑Template geprüft werden.",
+      "cfn_resource_types": [
+        "AWS::StepFunctions::StateMachine"
+      ]
     }
   ]
 }
