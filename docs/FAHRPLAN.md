@@ -185,9 +185,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Starten** 🆕 _Opus_ · 👤 `/grilling Preset für #15: Step Functions + SNS ohne KMS, Soll-Gesamtstatus, Pflichtanker`
 - [x] **Bauen** 👤 „Lege das Preset nach unseren Antworten an“ → Go → 🤖 schreibt das CloudFormation-Template unter `data/presets/<id>/`
-- [ ] **Blind prüfen** 👤 Gemini wie in Schritt 2
-- [ ] **Soll festlegen** 👤 nennt Gesamtstatus und bestätigte Anker → 🤖 schreibt `preset.json`, Tests grün
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Blind prüfen** 👤 Gemini wie in Schritt 2
+- [x] **Soll festlegen** 👤 nennt Gesamtstatus und bestätigte Anker → 🤖 schreibt `preset.json`, Tests grün
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Das Preset liegt vor, und sein Pflichtanker steht im Bounded Catalog.
 

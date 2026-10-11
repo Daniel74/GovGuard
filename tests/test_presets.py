@@ -50,6 +50,7 @@ def test_foreign_preset_shares_no_component_with_the_archetypes() -> None:  # AD
 
 
 def test_foreign_preset_carries_its_required_findings_as_properties() -> None:
-    by_type = {r["Type"]: r.get("Properties", {}) for r in resources("arch-fristenwecker").values()}
-    assert "KmsMasterKeyId" not in by_type["AWS::SNS::Topic"]  # FSBP SNS.1 = FAIL
-    assert by_type["AWS::StepFunctions::StateMachine"]["LoggingConfiguration"]["Level"] == "ALL"
+    template = resources("arch-fristenwecker")
+    topic, state_machine = template["FristTopic"], template["Fristenwecker"]
+    assert "KmsMasterKeyId" not in topic["Properties"]  # FSBP SNS.1 = FAIL
+    assert state_machine["Properties"]["LoggingConfiguration"]["Level"] == "ALL"  # StepFunctions.1
