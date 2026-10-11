@@ -5,8 +5,8 @@ from pathlib import Path
 import pytest
 
 from govguard.models import Preset
-from kb_build.curation import pinned_anchors
 from kb_build.extracted_models import ExtractedSource
+from kb_build.gates import pinned_anchors
 
 ROOT = Path(__file__).parent.parent
 PRESETS = [

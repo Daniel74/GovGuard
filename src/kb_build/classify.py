@@ -3,17 +3,20 @@
 Pure logic: gets the Pydantic AI model injected (ADR 0005), no boto3.
 """
 
+import json
 import logging
 from dataclasses import dataclass
 
 from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput, UnexpectedModelBehavior
 from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.models import Model
+from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, SourceName
 from kb_build.cfn_types import load_cfn_types
 from kb_build.extracted_models import Requirement
-from kb_build.judgement_cache import JudgementCache, cache_key
+from kb_build.judgement_cache import JudgementCache, cache_key, prompt_version
+from kb_build.scope import Scope
 from kb_build.selection_models import Classification
 
 logger = logging.getLogger("kb_build")
@@ -31,6 +34,8 @@ wenn sie sich an Ressourcen festmachen lassen. Nein gilt bei Konto- oder Organis
   der wichtigste zuerst. Ist die Anforderung nicht prüfbar, bleibt die Liste leer.""",
     "spec": """\
 Du bewertest genau eine Anforderung aus einem Regelwerk für Behörden-IT.
+Eine Spezifikation ist die fachliche Beschreibung eines Vorhabens, nicht nur die technische:
+Sie nennt z. B. Zwecke, Rechtsgrundlagen, Rollen, Abläufe und Auftragsverarbeiter.
 Frage: Kann eine Spezifikation (Freitext oder OpenAPI) Hinweise enthalten, ob die Anforderung
 erfüllt oder verletzt wird, oder sich dazu bewusst ausschweigen? Dann ist sie prüfbar; fehlende
 Angaben ergeben später eine Warnung. Beispiele: Rechtsgrundlagen, Zwecke, Löschfristen,
@@ -46,37 +51,48 @@ Der Prüfumfang (Dienste, für die wir Prüfregeln führen) umfasst: {services}.
 Nenne den wichtigsten Typ zuerst, auch wenn er außerhalb des Prüfumfangs liegt;
 über die Relevanz entscheidet danach der Code."""
 
+USER_PROMPT = "Quelle: {source}\nID: {id}\nTitel: {title}\n<anforderung>\n{text}\n</anforderung>"
+TOOL_NAME = "classify_requirement"
+TOOL_DESCRIPTION = "Gib an, ob die Anforderung prüfbar ist."
+
 
 @dataclass(frozen=True)
-class Brief:
+class ClassifyDeps:
+    """Run dependencies of the agent (ADR 0005): built once per audit type."""
+
     audit_type: AuditType
     instructions: str
 
 
-def build_brief(audit_type: AuditType, scope: dict[str, list[str]] | None = None) -> Brief:
+def build_deps(audit_type: AuditType, scope: Scope | None = None) -> ClassifyDeps:
     """The scope belongs to the architecture prompt only (ADR 0011)."""
     text = PROMPTS[audit_type]
-    if audit_type == "architecture" and scope:
-        text += "\n" + SCOPE_PROMPT.format(services=", ".join(scope))
-    return Brief(audit_type, text)
+    if audit_type == "architecture" and scope is not None:
+        text += "\n" + SCOPE_PROMPT.format(services=", ".join(scope.services))
+    return ClassifyDeps(audit_type, text)
+
+
+def request_version(deps: ClassifyDeps) -> str:
+    """Prompt version of the cache key: instructions, user message and tool definition."""
+    schema = json.dumps(Classification.model_json_schema(), sort_keys=True)
+    return prompt_version(deps.instructions, USER_PROMPT, TOOL_NAME, TOOL_DESCRIPTION, schema)
 
 
 classify_agent = Agent(
-    output_type=ToolOutput(Classification, name="classify_requirement",
-                           description="Gib an, ob die Anforderung prüfbar ist."),
-    deps_type=Brief,
+    output_type=ToolOutput(Classification, name=TOOL_NAME, description=TOOL_DESCRIPTION),
+    deps_type=ClassifyDeps,
     retries=2,  # build only, no 29 s timeout (ADR 0005 limits the runtime agents to one retry)
     model_settings={"temperature": 0},  # same input, same selection (ARCHITECTURE 1.1)
 )
 
 
 @classify_agent.instructions
-def _instructions(ctx: RunContext[Brief]) -> str:
+def _instructions(ctx: RunContext[ClassifyDeps]) -> str:
     return ctx.deps.instructions
 
 
 @classify_agent.output_validator
-def _validate(ctx: RunContext[Brief], answer: Classification) -> Classification:
+def _validate(ctx: RunContext[ClassifyDeps], answer: Classification) -> Classification:
     if ctx.deps.audit_type == "spec" or not answer.testable:
         return answer.model_copy(update={"cfn_resource_types": []})
     invalid = [t for t in answer.cfn_resource_types if t not in load_cfn_types()]
@@ -89,57 +105,56 @@ def _validate(ctx: RunContext[Brief], answer: Classification) -> Classification:
 
 
 def classify_requirement(
-    requirement: Requirement, source: SourceName, audit_type: AuditType, model: Model,
-    scope: dict[str, list[str]] | None = None,
+    requirement: Requirement, source: SourceName, deps: ClassifyDeps, model: Model,
+    usage: RunUsage | None = None,
 ) -> Classification:
-    prompt = (
-        f"Quelle: {source}\nID: {requirement.id}\nTitel: {requirement.title}\n"
-        f"<anforderung>\n{requirement.text}\n</anforderung>"
-    )
-    return classify_agent.run_sync(prompt, model=model, deps=build_brief(audit_type, scope)).output
+    prompt = USER_PROMPT.format(
+        source=source, id=requirement.id, title=requirement.title, text=requirement.text)
+    return classify_agent.run_sync(prompt, model=model, deps=deps, usage=usage).output
 
 
 class Judge:
     """Asks the LLM once per requirement; a known answer comes from the cache (ADR 0011).
 
-    An answer that stays invalid after the retries excludes the requirement and shows up as
-    `llm_error` in the report; it does not abort the whole run, and it is never cached.
+    An answer that stays invalid after the retries gives `None` (outcome `llm_error`);
+    it does not abort the whole run, and it is never cached.
     """
 
     def __init__(
         self, audit_type: AuditType, model: Model,
-        scope: dict[str, list[str]] | None = None, cache: JudgementCache | None = None,
+        scope: Scope | None = None, cache: JudgementCache | None = None,
     ) -> None:
         self.audit_type, self.model_id = audit_type, model.model_name
-        self._model, self._scope = model, scope
-        self._brief = build_brief(audit_type, scope)
+        self._model, self._deps = model, build_deps(audit_type, scope)
+        self._version = request_version(self._deps)
         self._cache = cache if cache is not None else JudgementCache()
-        self._answers: dict[tuple[SourceName, str], Classification] = {}
-        self.failed: set[tuple[SourceName, str]] = set()
+        self._answers: dict[tuple[SourceName, str], Classification | None] = {}
+        self.usage = RunUsage()  # tokens of the calls the cache could not answer
 
-    def __call__(self, source: SourceName, requirement: Requirement) -> Classification:
+    def __call__(self, source: SourceName, requirement: Requirement) -> Classification | None:
         key = (source, requirement.id)
         if key not in self._answers:
             self._answers[key] = self._cached_or_ask(source, requirement)
         return self._answers[key]
 
-    def _cached_or_ask(self, source: SourceName, requirement: Requirement) -> Classification:
-        cache_key_ = cache_key(requirement, self._brief.instructions, self.model_id)
-        known = self._cache.get(cache_key_)
+    def _cached_or_ask(self, source: SourceName, requirement: Requirement) -> Classification | None:
+        key = cache_key(requirement, self._version, self.model_id)
+        known = self._cache.get(key)
         if known is not None:
             return known
         answer = self._ask(source, requirement)
-        if (source, requirement.id) not in self.failed:
-            self._cache.put(cache_key_, answer)
+        if answer is not None:
+            self._cache.put(key, answer)
         return answer
 
-    def _ask(self, source: SourceName, requirement: Requirement) -> Classification:
+    def _ask(self, source: SourceName, requirement: Requirement) -> Classification | None:
+        usage = RunUsage()  # one per call: Pydantic AI checks its request limit against it
         try:
-            return classify_requirement(
-                requirement, source, self.audit_type, self._model, self._scope)
+            return classify_requirement(requirement, source, self._deps, self._model, usage)
         except (UnexpectedModelBehavior, ModelHTTPError) as error:
             if isinstance(error, ModelHTTPError) and error.status_code != 400:
                 raise  # 401, 429 and server errors are no verdict on the requirement
             logger.warning("%s %s: invalid answer after retries: %s", source, requirement.id, error)
-            self.failed.add((source, requirement.id))
-            return Classification(testable=False, rationale="Antwort des Modells ungültig")
+            return None
+        finally:
+            self.usage.incr(usage)  # failed retries cost tokens too

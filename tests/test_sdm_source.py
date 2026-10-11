@@ -1,6 +1,6 @@
 import pytest
 
-from kb_build.sources.sdm import LAYERS, extract_from_text
+from kb_build.sources.sdm import extract_from_text
 
 # pypdf text of the measure tables (section 5 of each module), cut to the tricky rows
 TABLE = """Einleitung mit Verweis im Fließtext
@@ -62,10 +62,6 @@ def test_prefilter_keeps_all_three_layers() -> None:
     reqs = parse_by_id()
     assert all(r.prefilter_passed and r.prefilter_reason is None for r in reqs.values())
 
-
-def test_layers_are_pinned_to_architecture_1_1() -> None:
-    # Changing this set changes the rule, not just the code: update ARCHITECTURE 1.1 first.
-    assert LAYERS == {"D", "S", "P"}
 
 
 def test_duplicate_ids_are_rejected() -> None:

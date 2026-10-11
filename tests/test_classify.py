@@ -5,14 +5,17 @@ from pydantic_ai import UnexpectedModelBehavior
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from kb_build.classify import classify_requirement
+from kb_build.classify import build_deps, classify_requirement
 from kb_build.extracted_models import Requirement
+from kb_build.scope import Scope
 from kb_build.selection_models import Classification
 
 REQUIREMENT = Requirement(
     id="3.1.4", title="Block Public Access", text="Ensure that S3 blocks public access.",
     primary_anchor="CIS AWS v7.0.0 3.1.4", attributes={}, prefilter_passed=True,
 )
+
+ARCH, SPEC = build_deps("architecture"), build_deps("spec")
 
 
 def answer_in_turns(*turns: dict, seen: list | None = None) -> FunctionModel:
@@ -35,7 +38,7 @@ def test_architecture_classification_keeps_resource_types() -> None:
     seen: list = []
 
     model = answer_in_turns(BUCKET, seen=seen)
-    result = classify_requirement(REQUIREMENT, "CIS", "architecture", model)
+    result = classify_requirement(REQUIREMENT, "CIS", ARCH, model)
 
     assert result == Classification(**BUCKET)
     assert "Ensure that S3 blocks public access." in str(seen[0])  # the requirement is asked about
@@ -45,7 +48,7 @@ def test_architecture_classification_keeps_resource_types() -> None:
 def test_spec_classification_never_has_resource_types() -> None:
     seen: list = []
 
-    result = classify_requirement(REQUIREMENT, "DSGVO", "spec", answer_in_turns(BUCKET, seen=seen))
+    result = classify_requirement(REQUIREMENT, "DSGVO", SPEC, answer_in_turns(BUCKET, seen=seen))
 
     assert result.testable is True
     assert result.cfn_resource_types == []
@@ -56,7 +59,7 @@ def test_architecture_answer_without_valid_resource_types_gets_one_retry() -> No
     seen: list = []
     wrong = {"testable": True, "rationale": "x", "cfn_resource_types": ["S3 bucket"]}
 
-    result = classify_requirement(REQUIREMENT, "CIS", "architecture",
+    result = classify_requirement(REQUIREMENT, "CIS", ARCH,
                                   answer_in_turns(wrong, BUCKET, seen=seen))
 
     assert len(seen) == 2
@@ -68,14 +71,14 @@ def test_architecture_answer_stays_invalid_after_the_retry_fails_closed() -> Non
     wrong = {"testable": True, "rationale": "x", "cfn_resource_types": []}
 
     with pytest.raises(UnexpectedModelBehavior):
-        classify_requirement(REQUIREMENT, "CIS", "architecture", answer_in_turns(wrong))
+        classify_requirement(REQUIREMENT, "CIS", ARCH, answer_in_turns(wrong))
 
 
 def test_not_testable_requirement_has_no_resource_types() -> None:
     no = {"testable": False, "rationale": "Organisatorisch.",
           "cfn_resource_types": ["AWS::S3::Bucket"]}
 
-    result = classify_requirement(REQUIREMENT, "CIS", "architecture", answer_in_turns(no))
+    result = classify_requirement(REQUIREMENT, "CIS", ARCH, answer_in_turns(no))
 
     assert result.testable is False
     assert result.cfn_resource_types == []
@@ -85,7 +88,7 @@ def test_architecture_prompt_counts_general_principles_that_show_in_resources() 
     # BER.4.1 was judged "not testable" with the stricter wording (issue #6, first real run)
     seen: list = []
 
-    classify_requirement(REQUIREMENT, "CIS", "architecture", answer_in_turns(BUCKET, seen=seen))
+    classify_requirement(REQUIREMENT, "CIS", ARCH, answer_in_turns(BUCKET, seen=seen))
 
     assert "geringste Berechtigungen" in str(seen[0])
     assert "IAM-Policies" in str(seen[0])
@@ -95,7 +98,7 @@ def test_spec_prompt_counts_requirements_a_spec_can_show_evidence_for() -> None:
     # Art. 9 and M60.P01 were judged "not testable" with the stricter wording (first real run)
     seen: list = []
 
-    classify_requirement(REQUIREMENT, "DSGVO", "spec", answer_in_turns(BUCKET, seen=seen))
+    classify_requirement(REQUIREMENT, "DSGVO", SPEC, answer_in_turns(BUCKET, seen=seen))
 
     assert "bewusst ausschweigen" in str(seen[0])
     assert "Löschfristen" in str(seen[0])
@@ -107,7 +110,7 @@ def test_architecture_answer_with_an_invented_resource_type_gets_one_retry() -> 
     invented = {"testable": True, "rationale": "x",
                 "cfn_resource_types": ["AWS::S3::BucketPublicAccessBlock"]}
 
-    result = classify_requirement(REQUIREMENT, "CIS", "architecture",
+    result = classify_requirement(REQUIREMENT, "CIS", ARCH,
                                   answer_in_turns(invented, BUCKET, seen=seen))
 
     assert len(seen) == 2
@@ -118,7 +121,7 @@ def test_architecture_answer_with_an_invented_resource_type_gets_one_retry() -> 
 def test_architecture_prompt_excludes_account_wide_duties() -> None:
     seen: list = []
 
-    classify_requirement(REQUIREMENT, "CIS", "architecture", answer_in_turns(BUCKET, seen=seen))
+    classify_requirement(REQUIREMENT, "CIS", ARCH, answer_in_turns(BUCKET, seen=seen))
 
     assert "Support-Rolle" in str(seen[0])
 
@@ -131,17 +134,17 @@ def test_classification_runs_at_temperature_zero_for_reproducible_selections() -
         settings.append(info.model_settings)
         return ModelResponse(parts=[ToolCallPart("classify_requirement", BUCKET)])
 
-    classify_requirement(REQUIREMENT, "CIS", "architecture", FunctionModel(respond))
+    classify_requirement(REQUIREMENT, "CIS", ARCH, FunctionModel(respond))
 
     assert settings[0]["temperature"] == 0
 
 
 def test_architecture_prompt_names_the_services_of_the_scope() -> None:
     seen: list = []
-    scope = {"Lambda": ["AWS::Lambda::Function"], "DynamoDB": ["AWS::DynamoDB::Table"]}
+    scope = Scope({"Lambda": ["AWS::Lambda::Function"], "DynamoDB": ["AWS::DynamoDB::Table"]})
 
-    classify_requirement(REQUIREMENT, "CIS", "architecture",
-                         answer_in_turns(BUCKET, seen=seen), scope)
+    classify_requirement(REQUIREMENT, "CIS", build_deps("architecture", scope),
+                         answer_in_turns(BUCKET, seen=seen))
 
     assert "Prüfumfang" in str(seen[0])
     assert "Lambda, DynamoDB" in str(seen[0])
@@ -149,8 +152,20 @@ def test_architecture_prompt_names_the_services_of_the_scope() -> None:
 
 def test_spec_prompt_does_not_mention_the_scope() -> None:
     seen: list = []
-    scope = {"Lambda": ["AWS::Lambda::Function"]}
+    scope = Scope({"Lambda": ["AWS::Lambda::Function"]})
 
-    classify_requirement(REQUIREMENT, "DSGVO", "spec", answer_in_turns(BUCKET, seen=seen), scope)
+    classify_requirement(REQUIREMENT, "DSGVO", build_deps("spec", scope),
+                         answer_in_turns(BUCKET, seen=seen))
 
     assert "Prüfumfang" not in str(seen[0])
+
+
+def test_spec_prompt_defines_a_spec_as_a_functional_description() -> None:
+    # Run 2026-10-11: 44 of 72 "not testable" spec verdicts argued "no technical specification"
+    seen: list = []
+
+    classify_requirement(REQUIREMENT, "DSGVO", SPEC, answer_in_turns(BUCKET, seen=seen))
+
+    assert "fachliche Beschreibung eines Vorhabens" in str(seen[0])
+    assert "Auftragsverarbeiter" in str(seen[0])
+

@@ -27,7 +27,6 @@ def make_rule(requirement_id: str, title: str, cfn_resource_types: list[str] | N
         cross_references=[CrossReference(anchor="BSI GS++ KONF.1.1", origin="ai_suggested")],
         selection_rationale="An einer Spezifikation prüfbar.",
         cfn_resource_types=cfn_resource_types or [],
-        rank=1,
     )
 
 

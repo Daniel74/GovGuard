@@ -22,7 +22,7 @@ _Seit ADR 0011 im MVP: Quellen-Adapter, Cache, Pruning per Ressourceninventar un
 
 | Phase | Anpassung | Ausführende Schicht |
 |---|---|---|
-| **Build** | **Quellen-Adapter:** Neue Kataloge (wie BSI C5) erhalten standardisierte Schnittstellen zum Auslesen, Vorfiltern und Ranken. | Code |
+| **Build** | **Quellen-Adapter:** Neue Kataloge (wie BSI C5) erhalten standardisierte Schnittstellen zum Auslesen und Vorfiltern. | Code |
 | **Build** | **Inkrementeller Build:** Bereits klassifizierte Anforderungen werden gecacht. Das LLM bewertet nur noch Delta-Änderungen (geänderte/neue Regeln). | Code & LLM |
 | **Laufzeit** | **Deterministisches Pruning:** Fehlt eine Ressource im IaC-Template (z.B. kein S3-Bucket), setzt der Code alle S3-Prüfregeln sofort auf `N/A`, ohne diese an das LLM zu senden. Im MVP für CloudFormation-JSON umgesetzt (ADR 0007); Ausbau: Terraform und YAML. | Code |
 | **Laufzeit** | **Map-Reduce-Evaluierung:** Der Katalog wird in thematische Pakete à 20 Regeln zerlegt. Eigene LLM-Aufrufe evaluieren diese Pakete parallel; der Code führt die Befunde final zusammen. | Code & LLM |

@@ -1,6 +1,7 @@
 """select_all(): real extracted data and presets, fake LLM that finds everything testable."""
 
 import itertools
+import re
 from pathlib import Path
 
 import pytest
@@ -9,7 +10,7 @@ from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart, User
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from kb_build.selection_models import Selection, Verdict
-from kb_build.selection_run import select_all
+from kb_build.selection_run import BuildPaths, select_all
 
 DATA = Path(__file__).parent.parent / "data"
 ARCHITECTURE_SOURCES = ("BSI", "CIS", "FSBP", "C5")
@@ -17,6 +18,10 @@ COMPONENTS = [  # the fake LLM names the archetype components in turn, so the co
     "AWS::ApiGateway::RestApi", "AWS::Lambda::Function", "AWS::DynamoDB::Table",
     "AWS::SQS::Queue", "AWS::S3::Bucket", "AWS::KinesisFirehose::DeliveryStream",
 ]
+
+
+def paths_in(tmp: Path) -> BuildPaths:
+    return BuildPaths(DATA, tmp / "knowledge_base", tmp / "judgement_cache.json")
 
 
 def fake_model(calls: list[int] | None = None) -> FunctionModel:
@@ -38,9 +43,9 @@ def fake_model(calls: list[int] | None = None) -> FunctionModel:
 def written(tmp_path_factory: pytest.TempPathFactory) -> Path:
     if not all((DATA / "extracted" / f"{s.lower()}.json").exists() for s in ARCHITECTURE_SOURCES):
         pytest.skip("cis, fsbp and c5 are not extracted on this machine")  # local only (ADR 0008)
-    out = tmp_path_factory.mktemp("knowledge_base")
-    select_all(fake_model(), DATA, out)
-    return out
+    paths = paths_in(tmp_path_factory.mktemp("build"))
+    select_all(fake_model(), paths)
+    return paths.out_dir
 
 
 def load(out: Path, name: str) -> Selection:
@@ -84,18 +89,19 @@ def test_the_selection_has_no_cap_and_keeps_the_pinned_anchors(written) -> None:
 
 
 def test_only_the_requested_audit_type_is_selected(tmp_path: Path) -> None:
-    select_all(fake_model(), DATA, tmp_path, only="spec")
+    select_all(fake_model(), paths_in(tmp_path), only="spec")
 
-    assert sorted(p.name for p in tmp_path.iterdir()) == [
-        "judgement_cache.json", "selection_spec.json", "verdicts_spec.json"]
+    assert sorted(p.name for p in (tmp_path / "knowledge_base").iterdir()) == [
+        "selection_spec.json", "verdicts_spec.json"]  # the cache is no part of the deployment
+    assert (tmp_path / "judgement_cache.json").exists()
 
 
 def test_a_second_run_with_the_same_cache_asks_the_llm_nothing(tmp_path: Path) -> None:
     calls: list[int] = []
-    select_all(fake_model(calls), DATA, tmp_path, only="spec")
+    select_all(fake_model(calls), paths_in(tmp_path), only="spec")
     first = len(calls)
 
-    select_all(fake_model(calls), DATA, tmp_path, only="spec")
+    select_all(fake_model(calls), paths_in(tmp_path), only="spec")
 
     assert first > 0
     assert len(calls) == first
@@ -107,8 +113,20 @@ def test_the_paid_answers_are_saved_even_if_a_gate_aborts_the_build(tmp_path: Pa
         return ModelResponse(parts=[ToolCallPart("classify_requirement", answer)])
 
     with pytest.raises(ValueError, match="components without a selected requirement"):
-        select_all(FunctionModel(only_s3, model_name="fake-model"), DATA, tmp_path,
+        select_all(FunctionModel(only_s3, model_name="fake-model"), paths_in(tmp_path),
                    only="architecture")
 
     assert (tmp_path / "judgement_cache.json").exists()
-    assert not (tmp_path / "selection_arch.json").exists()
+    assert not (tmp_path / "knowledge_base" / "selection_arch.json").exists()
+
+
+def test_the_run_logs_the_tokens_per_audit_type(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    with caplog.at_level("INFO", logger="kb_build"):
+        select_all(fake_model(), paths_in(tmp_path), only="spec")
+
+    usage = [r.getMessage() for r in caplog.records if "tokens" in r.getMessage()]
+    assert len(usage) == 1
+    assert re.fullmatch(r"spec: [1-9]\d* requests, [1-9]\d* input tokens, \d+ output tokens",
+                        usage[0])

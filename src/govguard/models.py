@@ -35,8 +35,6 @@ class Rule(RuleDraft):  # completed by the code
     primary_anchor: str
     selection_rationale: str
     cfn_resource_types: list[str] = []  # architecture only
-    rank: int
-    pinned: bool = False
 
 
 class RuleCatalog(BaseModel):  # file rules_spec.json or rules_arch.json

@@ -299,6 +299,7 @@ data/extracted/       extrahierte Anforderungen (JSON); cis.json, fsbp.json, c5.
 data/knowledge_base/  rules_spec.json, rules_arch.json, archetypes.json
 data/presets/         5 Presets: Eingabedatei + preset.json mit Soll-Ergebnis
 data/scope.json       Prüfumfang: CloudFormation-Namensräume der geprüften Dienste (ADR 0011)
+data/judgement_cache.json  LLM-Urteile der Auswahl (ADR 0011), bleibt beim Deploy außen vor
 data/archetype_profiles.json  Steckbriefe der 3 Archetypen (von Hand gepflegt)
 tests/                pytest
 .github/workflows/    build-kb.yml, deploy.yml
@@ -312,7 +313,7 @@ tests/                pytest
 
 1. `data/sources.json`: URL, Version (Commit oder Tag), SHA-256, Lizenz (ADR 0008).
 2. Adapter `src/kb_build/sources/<quelle>.py` mit `extract()` und `prefilter()`. Der Vorfilter gibt `None` zurück oder für jede verworfene Anforderung einen festen Begründungssatz (Auswahlprotokoll). Prowler-Quellen (CIS, FSBP, C5) beschreiben nur ihr `ProwlerFormat` (Anker, Titel, Text, Attribute, Vorfilter); gelesen wird im gemeinsamen Parser `prowler.py`.
-3. Je ein Eintrag in `ADAPTERS` (`__main__.py`) und `SourceName` (`models.py`). In `SELECTIONS` (`selection_run.py`) kommt die Quelle mit #6, weil dort Ranking und Obergrenzen entfallen.
+3. Je ein Eintrag in `ADAPTERS` (`__main__.py`) und `SourceName` (`models.py`). In `SELECTIONS` (`selection_run.py`) kommt die Quelle zu ihrer Audit-Art.
 4. Lizenz: offen → Extrakt einchecken, Vermerk in `NOTICE`; sonst Extrakt in `.gitignore` (CIS, FSBP, C5).
 5. Test mit kleinem Fixture: Anzahl, Stichprobe, Vorfilter mit Begründung.
 

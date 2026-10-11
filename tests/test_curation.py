@@ -7,8 +7,11 @@ from pydantic_ai.models.function import AgentInfo, FunctionModel
 from kb_build.classify import Judge
 from kb_build.curation import curate
 from kb_build.extracted_models import ExtractedSource, Requirement
+from kb_build.scope import Scope
 
-SCOPE = frozenset({"AWS::S3::Bucket", "AWS::IAM::Role", "AWS::KMS::Key"})
+SCOPE = Scope({"S3": ["AWS::S3::Bucket"], "IAM": ["AWS::IAM::Role"], "KMS": ["AWS::KMS::Key"]})
+NO_SCOPE = Scope({})
+NO_COMPONENTS: frozenset[str] = frozenset()
 
 
 def req(rid: str, prefilter: bool = True, reason: str | None = None, **attributes) -> Requirement:
@@ -47,7 +50,7 @@ INVENTED = {"testable": True, "rationale": "x", "cfn_resource_types": ["AWS::SES
 def curate_cis(source: ExtractedSource, answers: dict, pinned: set[str] = frozenset()):
     asked: list[str] = []
     judge = Judge("architecture", fake_llm(answers, asked))
-    return curate(judge, [source], pinned, SCOPE), asked
+    return curate(judge, [source], pinned, SCOPE, NO_COMPONENTS), asked
 
 
 def outcomes(result) -> dict[str, str]:
@@ -125,7 +128,7 @@ def test_curate_spec_has_no_relevance_filter_and_no_resource_types() -> None:
     source = ExtractedSource(source="DSGVO", version="v", origin="o", requirements=[req("Art. 32")])
     judge = Judge("spec", fake_llm({"Art. 32": can_test("AWS::S3::Bucket")}, []))
 
-    result = curate(judge, [source], set(), frozenset())
+    result = curate(judge, [source], set(), NO_SCOPE, NO_COMPONENTS)
 
     assert [(s.requirement_id, s.cfn_resource_types) for s in result.selection.selected] == [
         ("Art. 32", [])]
@@ -193,7 +196,7 @@ def test_pinned_anchors_are_checked_before_anything_else_is_classified() -> None
     judge = Judge("architecture", fake_llm(answers, asked))
 
     with pytest.raises(ValueError, match="A 4.6"):
-        curate(judge, [bsi, cis], {"A BER.4.1", "A 4.6"}, SCOPE)
+        curate(judge, [bsi, cis], {"A BER.4.1", "A 4.6"}, SCOPE, NO_COMPONENTS)
 
     assert "DET.3.1" not in asked  # failed fast: the other requirements are never paid for
 
@@ -205,7 +208,7 @@ def curate_components(components: set[str], *answers: dict):
     ids_ = [f"3.1.{n}" for n in range(1, len(answers) + 1)]
     source = cis_source(*[req(i) for i in ids_])
     judge = Judge("architecture", fake_llm(dict(zip(ids_, answers)), []))
-    return curate(judge, [source], set(), SCOPE, components)
+    return curate(judge, [source], set(), SCOPE, frozenset(components))
 
 
 def test_the_build_passes_if_every_component_has_a_selected_requirement() -> None:
@@ -233,4 +236,4 @@ def test_the_spec_audit_has_no_components_to_cover() -> None:
     source = ExtractedSource(source="DSGVO", version="v", origin="o", requirements=[req("Art. 32")])
     judge = Judge("spec", fake_llm({"Art. 32": can_test()}, []))
 
-    curate(judge, [source], set(), frozenset(), {"AWS::SQS::Queue"})
+    curate(judge, [source], set(), NO_SCOPE, frozenset({"AWS::SQS::Queue"}))

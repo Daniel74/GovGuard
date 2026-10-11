@@ -13,12 +13,11 @@ from pypdf import PdfReader
 from govguard.text import normalize
 from kb_build.extracted_models import ExtractedSource, Requirement, mark_prefilter
 
-LAYERS = frozenset({"D", "S", "P"})  # Daten, Systeme, Prozesse (ARCHITECTURE 1.1)
 # Modules in data/sources.json; Protokollieren (M43) is left out on purpose (ARCHITECTURE 1.1)
 MODULE_NAMES = {"M60": "Löschen", "M50": "Trennen", "M51": "Zugriffe regeln"}
 
 TABLE_HEADER = "Nr. Maßnahme"
-ROW_START = re.compile(r"(M\d{2}\.[DSP]\d{2}) (.+)")
+ROW_START = re.compile(r"(M\d{2}\.[DSP]\d{2}) (.+)")  # Daten, Systeme, Prozesse
 # A row ends with the PDCA column (may be empty) and the validity column, e.g. "P, D V1.0"
 ROW_END = re.compile(r"(.*?)(?:\s+[PDCA](?:,\s*[PDCA])*)?\s+V\d+\.\d+[a-z]?")
 
@@ -58,11 +57,9 @@ def _requirement(rid: str, measure: str) -> Requirement:
     )
 
 
-def prefilter(requirement: Requirement) -> str | None:
-    """Keeps all layers; Löschfristen sit on layer P (ARCHITECTURE 1.1)."""
-    if requirement.attributes.get("layer") in LAYERS:
-        return None
-    return "Ebene ist weder Daten (D), Systeme (S) noch Prozesse (P)."
+def prefilter(requirement: Requirement) -> None:
+    """Keeps every measure: all layers count, Löschfristen sit on layer P (ARCHITECTURE 1.1)."""
+    return None
 
 
 def extract_from_text(origin: str, text: str, version: str) -> ExtractedSource:

@@ -1,14 +1,12 @@
-"""The Prüfumfang (ADR 0011): hand-maintained AWS services of the architecture audit."""
+"""The scope (ADR 0011): hand-maintained AWS services of the architecture audit. Pure code."""
 
-import json
-from pathlib import Path
-
-SCOPE_FILE = Path("data/scope.json")  # service name -> CloudFormation resource types
+from dataclasses import dataclass
 
 
-def load_scope(path: Path = SCOPE_FILE) -> dict[str, list[str]]:
-    return json.loads(path.read_text(encoding="utf-8"))
+@dataclass(frozen=True)
+class Scope:
+    services: dict[str, list[str]]  # service name -> CloudFormation resource types (scope.json)
 
-
-def scope_types(path: Path = SCOPE_FILE) -> frozenset[str]:
-    return frozenset(t for types in load_scope(path).values() for t in types)
+    @property
+    def types(self) -> frozenset[str]:
+        return frozenset(t for types in self.services.values() for t in types)

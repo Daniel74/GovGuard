@@ -1,9 +1,10 @@
-"""Relevance (ADR 0011): the first resource type of a requirement lies in the Prüfumfang."""
+"""Relevance (ADR 0011): the first resource type of a requirement lies in the scope."""
 
 from kb_build.relevance import is_relevant
+from kb_build.scope import Scope
 from kb_build.selection_models import Classification
 
-SCOPE = frozenset({"AWS::S3::Bucket", "AWS::Lambda::Function"})
+SCOPE = Scope({"S3": ["AWS::S3::Bucket"], "Lambda": ["AWS::Lambda::Function"]})
 
 
 def classification(*types: str) -> Classification:
