@@ -1,6 +1,6 @@
-# GovGuard – Ausbau in fünf Szenarien (Post-MVP)
+# GovGuard – Ausbau in acht Szenarien (Post-MVP)
 
-Das GovGuard-MVP operiert bewusst mit definierten Limits: maximal 24 bzw. 20 Prüfregeln, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt fünf Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
+Das GovGuard-MVP operiert bewusst mit definierten Limits: ein Prüfumfang aus Serverless-Diensten, RDS/Aurora und Fargate, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt acht Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
 
 Drei fundamentale Prinzipien bleiben in jedem Ausbauszenario konstant:
 
@@ -11,6 +11,8 @@ Drei fundamentale Prinzipien bleiben in jedem Ausbauszenario konstant:
 - Das LLM urteilt ausschließlich, während der Code die Vorbereitung (Filtern, Clustern) und die Endkontrolle übernimmt.
 
 ## Szenario 1: Skalierung der Regelbasis (z. B. auf 80 Regeln oder BSI C5)
+
+_Seit ADR 0011 im MVP: Quellen-Adapter, Cache, Pruning per Ressourceninventar und parallele Pakete. Offen bleibt der Umbau auf Asynchronität (unten)._
 
 - **Auslöser:** Die Wissensbasis überschreitet ca. 50 Regeln oder die API-Antwortzeit nähert sich dem 29-Sekunden-Timeout des API Gateways.
 
@@ -81,6 +83,29 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 | **CloudFront ohne Drittlandtransfer** (z. B. in der ESC, Edge-Standorte nur in der EU) | **Portal-Archetyp:** `aws-cloudfront-s3` vor einer bestehenden Kette, z. B. ARCH-02. Bürger melden sich per Cognito an, die Ausnahme COG4 entfällt dann für diese API. Freigabe wie bisher (ADR 0003). Vorher prüfen: Wo terminiert TLS, wo liegen Logs und Cache? | Mensch & Code |
 | **Umzug in die ESC** | **Region und Partition** als Konfiguration statt fest `eu-central-1`; ARNs über `Aws.PARTITION`. Alle Gates laufen in der ESC neu. | Code |
 | **Kein Claude in der ESC** | **Modellwechsel** (ADR 0001 ersetzen): Nova Pro oder ein Open-Weight-Modell. Das Preset-Gate misst Qualität, Laufzeit (< 29 s) und Kosten neu, bevor gewechselt wird. | Code & LLM |
+
+## Szenario 6: Relationale Datenbank (Aurora Serverless v2)
+
+- **Auslöser:** Ein Fachverfahren braucht SQL, etwa für Berichte oder Fremdschlüssel. Auditiert wird Aurora schon im MVP (Prüfumfang), gebaut wird noch kein Archetyp.
+- **Was bricht:** Aurora läuft immer in einer VPC. Die Archetypen kennen bisher keine VPC.
+
+| Hürde | Anpassung | Ausführende Schicht |
+|---|---|---|
+| **Aufwachen aus der Pause** (0 ACU: bis 15 s, nach über 24 h Pause 30 s oder mehr, laut AWS-Doku) | Der erste Aufruf kann das 29-s-Timeout reißen. Mindestkapazität > 0 kostet Leerlaufkosten, sonst Wiederholung im Client. | Mensch |
+| **VPC ist Pflicht** | VPC ohne NAT-Gateway; Lambda greift über die RDS Data API zu, nicht aus der VPC. | Code |
+| **FSBP `Lambda.3`** (Lambda in VPC) | Ausnahme mit Begründung „Data API, keine Lambda in der VPC“ (ADR 0011). | Mensch |
+
+## Szenario 7: Leerlaufkosten fremder Architekturen prüfen
+
+- **Auslöser:** Behörden wollen wissen, ob eine Architektur ohne Last Geld kostet (provisioniertes RDS, NAT-Gateway, WAF).
+- **Was bricht:** Jede Prüfregel braucht einen Primäranker. Keine Quelle im MVP hat Kostenregeln; ein Hinweis ohne Normanker wäre eine GovGuard-Meinung, kein Befund.
+- **Anpassung:** Eine neue Quelle, z. B. die *Cost Optimization*-Säule des AWS Well-Architected Framework (nicht recherchiert), über das Rezept für neue Quellen (ARCHITECTURE, *Code-Struktur*).
+
+## Szenario 8: Container-Archetyp (Fargate)
+
+- **Auslöser:** Ein Fachverfahren liegt schon als Container vor oder braucht lange Laufzeiten über 15 Minuten. Auditiert wird Fargate schon im MVP (Prüfumfang), gebaut wird kein Archetyp.
+- **Was bricht:** Ein Fargate-Dienst läuft dauerhaft und hat damit Leerlaufkosten. Er braucht eine VPC und meist einen Application Load Balancer, der selbst Leerlaufkosten hat.
+- **Anpassung:** Ein Container-Archetyp nur mit bewusst akzeptierten Leerlaufkosten, dokumentiert als Ausnahme von der FinOps-Leitplanke (neuer ADR). Vorher prüfen: Reicht ein ereignisgesteuerter Fargate-Task (z. B. Step Functions oder EventBridge startet ihn), der ohne Last nicht läuft?
 
 ## Systemweite Auswirkungen: Der Weg zu Asynchronität
 

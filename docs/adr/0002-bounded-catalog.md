@@ -1,6 +1,6 @@
 # 0002 – Bounded Catalog statt Retrieval
 
-_Ergänzt durch [ADR 0007](0007-relevanz-und-ausnahmen.md)._
+_Ersetzt durch [ADR 0011](0011-vollstaendiger-katalog.md). Ergänzt durch [ADR 0007](0007-relevanz-und-ausnahmen.md)._
 
 ## Kontext
 

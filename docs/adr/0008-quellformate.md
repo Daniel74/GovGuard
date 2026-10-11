@@ -11,11 +11,14 @@
 | Quelle | Der Build lädt von | Gepinnt auf | Extrakt im Repo |
 |---|---|---|---|
 | BSI Grundschutz++ | GitHub `BSI-Bund/Stand-der-Technik-Bibliothek`, OSCAL | Commit-SHA | ja, CC BY-SA 4.0 |
-| CIS AWS v7.0.0 | GitHub `prowler-cloud/prowler`, `cis_7.0_aws.json` | Commit `e2b2e568a6` + SHA-256 | nein |
+| CIS AWS v7.0.0 | GitHub `prowler-cloud/prowler`, `cis_7.0_aws.json` | Tag `5.44.0` (Commit `499fd637`) + SHA-256 | nein |
+| AWS FSBP | GitHub `prowler-cloud/prowler`, `aws_foundational_security_best_practices_aws.json` | Tag `5.44.0` (Commit `499fd637`) + SHA-256 | nein |
+| BSI C5:2025 | GitHub `prowler-cloud/prowler`, `c5_aws.json` | Tag `5.44.0` (Commit `499fd637`) + SHA-256 | nein |
 | DSGVO | CELLAR, Formex, CELEX `02016R0679-20160504` | Fassung 000.003 + SHA-256 | ja, EU-Rechtstext |
 | SDM | datenschutz-mv.de, PDFs Löschen, Trennen, Zugriffe regeln | SHA-256 | ja, dl-de/by-2-0 |
 
 - **Keine Quelldatei im Repo.** `data/sources.json` nennt je Quelle URL, Version, SHA-256 und Lizenz. Der Build lädt jede Datei, prüft den Hash und bricht bei einer Abweichung ab. `data/sources/` ist nur ein lokaler Cache und steht in `.gitignore`.
+- **Prowler-Familie:** CIS, FSBP und C5 haben dasselbe Schema und hängen am selben Prowler-Tag (ADR 0011). Die Texte von FSBP (AWS) und C5 (BSI) behandeln wir wie CIS, solange ihre Lizenz nicht geklärt ist.
 - **Extrakte nur bei offener Lizenz.** Die Quellenvermerke stehen in `NOTICE`, beim SDM mit Veränderungshinweis. CIS-Volltexte kommen nie ins Repo: `cis.json` erzeugt der Build, eingecheckt werden nur Prüfregeln mit kurzem `source_quote`.
 - **CIS-Anker** prüft der Existenz-Check gegen den Prowler-Text, und zwar nach `normalize()` ohne Markdown-Zeichen. DSGVO-Anker prüft er gegen `ARTICLE IDENTIFIER` im XML.
 

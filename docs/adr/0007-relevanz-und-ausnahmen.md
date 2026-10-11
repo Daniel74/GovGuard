@@ -1,5 +1,7 @@
 # 0007 – Relevante Prüfregeln und begründete Ausnahmen
 
+_Relevanz, Gesetzte Plätze und Ranking ersetzt durch [ADR 0011](0011-vollstaendiger-katalog.md); N/A und Ausnahmen gelten weiter._
+
 ## Kontext
 
 Messungen vor Beginn der Umsetzung (2026-10-09) zeigen Lücken in ADR 0002 und 0003:

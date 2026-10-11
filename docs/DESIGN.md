@@ -31,11 +31,11 @@ class Requirement(BaseModel):
     title: str
     text: str                # Volltext, mit normalize() bereinigt (siehe 3)
     primary_anchor: str      # Format nach ARCHITECTURE 1.3, z. B. "CIS AWS v7.0.0 3.1.4"
-    attributes: dict[str, str | int | bool]  # Fakten der Quelle für Vorfilter und Ranking
+    attributes: dict[str, str | int | bool]  # Fakten der Quelle für den Vorfilter
     prefilter_passed: bool
 
 class ExtractedSource(BaseModel):
-    source: Literal["BSI", "CIS", "DSGVO", "SDM"]
+    source: Literal["BSI", "C5", "CIS", "FSBP", "DSGVO", "SDM"]
     version: str             # "v7.0.0", BSI-Commit-SHA, PDF-Version
     origin: str              # Pfad in data/sources/ oder URL
     requirements: list[Requirement]
@@ -59,7 +59,7 @@ Beispiel (gekürzt):
 }
 ```
 
-Die `attributes` liefert der Adapter als reine Fakten. Gefiltert und gerankt wird erst danach, in `prefilter()` und `ranking.py`.
+Die `attributes` liefert der Adapter als reine Fakten. Gefiltert wird erst danach, in `prefilter()`.
 
 | Quelle | `attributes` |
 |---|---|
@@ -67,12 +67,14 @@ Die `attributes` liefert der Adapter als reine Fakten. Gefiltert und gerankt wir
 | CIS | `chapter`, `level` (1/2), `automated` |
 | DSGVO | `chapter`, `fine_tier` (4, 2 oder 0 % nach Art. 83) |
 | SDM | `module` („M60“), `layer` („D“, „S“, „P“) |
+| C5 | `section` („OPS“), `type` („Basic“, „Additional“) |
+| FSBP | `service` („SNS“), `severity` |
 
 Funktionen je Adapter:
 
 ```python
 def extract(origin: str, raw: dict, version: str) -> ExtractedSource  # rein: parsen + normalisieren
-def prefilter(req: Requirement) -> bool              # rein, Kriterien aus ARCHITECTURE 1.1
+def prefilter(req: Requirement) -> str | None       # rein, ARCHITECTURE 1.1: None = bestanden, sonst Begründungssatz
 ```
 
 Datei lesen und `version` aus `data/sources.json` holen übernimmt `python -m kb_build`; so bleiben die Adapter ohne I/O testbar.
@@ -81,7 +83,7 @@ Das Gate (#12) prüft `source_quote` gegen den `text` **genau der Anforderung**,
 
 ### 1.2 Rule – Prüfregel
 
-Stufe ② und das Ranking (#6) schreiben je Audit-Art eine **Auswahlliste** `data/knowledge_base/selection_<spec|arch>.json`. Sie ist der Kontrollpunkt, bevor Prüfregeln formuliert werden (ADR 0007).
+Stufe ② und die Relevanz (#6) schreiben je Audit-Art eine **Auswahlliste** `data/knowledge_base/selection_<spec|arch>.json` und das **Auswahlprotokoll** `verdicts_<spec|arch>.json`. Beide sind der Kontrollpunkt, bevor Prüfregeln formuliert werden (ADR 0011).
 
 ```python
 class Classification(BaseModel):         # vom LLM, Schema für Tool classify_requirement
@@ -91,16 +93,24 @@ class Classification(BaseModel):         # vom LLM, Schema für Tool classify_re
 
 class SelectedRequirement(BaseModel):
     requirement_id: str                  # Requirement.id
-    source: Literal["BSI", "CIS", "DSGVO", "SDM"]
+    source: Literal["BSI", "C5", "CIS", "FSBP", "DSGVO", "SDM"]
     rationale: str                       # Classification.rationale
     cfn_resource_types: list[str]        # Classification.cfn_resource_types
-    pinned: bool                         # gesetzter Platz aus einem Preset
-    rank: int                            # 1 = zuerst innerhalb der Quelle
 
 class Selection(BaseModel):              # Datei selection_spec.json bzw. selection_arch.json
     audit_type: Literal["spec", "architecture"]
     model_id: str
     selected: list[SelectedRequirement]
+
+class Verdict(BaseModel):                # ein Eintrag im Auswahlprotokoll, je Anforderung genau einer
+    source: Literal["BSI", "C5", "CIS", "FSBP", "DSGVO", "SDM"]
+    requirement_id: str
+    title: str
+    text_sha256: str                     # Cache-Schlüssel, zusammen mit Prompt-Version und model_id
+    testable: bool | None                # None, wenn der Vorfilter verworfen hat
+    rationale: str                       # vom LLM oder fester Satz des Codes
+    cfn_resource_types: list[str] = []
+    outcome: Literal["selected", "prefiltered", "not_relevant", "not_testable", "llm_error"]
 ```
 
 Die Felder der Prüfregel stehen in ARCHITECTURE 1.2. Das Modell ist zweigeteilt: Was das LLM schreibt, liegt in `RuleDraft`. Aus diesem Modell entsteht auch das Schema des Tools `formulate_rule`. Was der Code weiß, ergänzt `Rule`.
@@ -121,12 +131,10 @@ class RuleDraft(BaseModel):              # vom LLM, Schema für Tool formulate_r
 class Rule(RuleDraft):                   # vom Code ergänzt
     id: str                              # "<SPEC|ARCH>-<SOURCE>-<Requirement.id ohne Leerzeichen>"
     audit_type: Literal["spec", "architecture"]
-    source: Literal["BSI", "CIS", "DSGVO", "SDM"]
+    source: Literal["BSI", "C5", "CIS", "FSBP", "DSGVO", "SDM"]
     primary_anchor: str                  # aus Requirement übernommen
     selection_rationale: str             # aus der Auswahlliste (Stufe ②)
     cfn_resource_types: list[str] = []   # aus der Auswahlliste; nur Architektur
-    rank: int                            # aus der Auswahlliste
-    pinned: bool = False                 # gesetzter Platz (ADR 0007)
 
 class RuleCatalog(BaseModel):            # Datei rules_spec.json bzw. rules_arch.json
     audit_type: Literal["spec", "architecture"]
@@ -201,9 +209,9 @@ class Preset(BaseModel):                 # Datei preset.json
 Das Preset-Gate gilt als bestanden, wenn drei Bedingungen erfüllt sind:
 - Der Gesamtstatus stimmt.
 - Zu jedem `RequiredFinding` gibt es eine Prüfregel mit diesem Primäranker und genau diesem Status.
-- Der Archetyp stimmt, falls einer angegeben ist.
+- Der Archetyp stimmt, falls einer angegeben ist (Priorität B, #10).
 
-Weitere Befunde sind frei. Ein Anker wird nur Pflicht-Befund, wenn der Bauplan der Eingabe und eine blinde Zweitprüfung mit einem anderen Modell übereinstimmen (FAHRPLAN Schritt 2). Pflicht-Befunde verweisen auf den Primäranker statt auf die Regel-ID, weil ein Mensch ihn direkt aus der Norm kennt. Die Anker aller `required_findings` einer Audit-Art sind zugleich ihre gesetzten Plätze (#6), höchstens 4.
+Weitere Befunde sind frei. Ein Anker wird nur Pflicht-Befund, wenn der Bauplan der Eingabe und eine blinde Zweitprüfung mit einem anderen Modell übereinstimmen (FAHRPLAN Schritt 2). Pflicht-Befunde verweisen auf den Primäranker statt auf die Regel-ID, weil ein Mensch ihn direkt aus der Norm kennt. Die Anker aller `required_findings` müssen im Bounded Catalog stehen, sonst bricht der Build ab (#6).
 
 ## 2. Laufzeit-Verträge
 

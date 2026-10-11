@@ -15,32 +15,42 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - Zusätzlich neu starten, wenn eine Session lang wird und Claude Absprachen vergisst oder sich wiederholt. Vorher den Stand committen.
 - **Junie ist zweite Meinung, nicht Bauer.** Bei #4 und #5 lieferte Junie (GPT-5.2) grüne Tests mit falschen Daten; der Neubau kostete mehr Claude-Budget, als er sparte. Junie baut deshalb nur noch die Streamlit-UI (Fehler sieht man sofort) und prüft bei #12 und #9 den Diff als zweite Modellfamilie (Vier-Augen-Prinzip). Junie liest `AGENTS.md` und committet nicht. Wird das Claude-Budget knapp, bekommt Junie ein Ticket nur mit vorab geschriebenen roten Tests.
 
+**Priorität:** Erst die Audits, dann die Architektur-Generierung.
+
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Deploy, Selbst-Audit und Demo-UI; dazu passt die Doku. Schritte 6–14.
+- **B – Golden Archetypes (nur wenn Zeit bleibt):** Archetypen bauen und freigeben (#7), Archetyp-Auswahl (#10). Schritte 15–16.
+- **Stichtag:** B beginnt nur, wenn A fertig ist und bis zur Abgabe am 21.10. noch mindestens 3 Arbeitstage bleiben, also spätestens am Freitag, 16.10. Sonst gehen die Resttage in Stabilisierung und Präsentation. Im Fachgespräch ist B dann Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
+
 **Wer baut was:**
 
-| Schritt | Ticket                    | Baut                                             | Prüft                      |
-| ------- | ------------------------- | ------------------------------------------------ | -------------------------- |
-| 1       | #1 Prüfkern               | 🤖 Opus                                          | 🤖 Opus                    |
-| 2       | #3 Presets                | 👤 + 🤖 Opus                                     | 👤                         |
-| 3       | #2 Bedrock + CLI          | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 4       | #4 BSI + CIS              | 🛠 Junie                                         | 🤖 Opus                    |
-| 5       | #5 DSGVO + SDM            | 🛠 Junie                                         | 🤖 Opus                    |
-| 6       | #6 Auswahlliste           | 🤖 Sonnet                                        | 👤 Kontrollpunkt + 🤖 Opus |
-| 7       | #12 Prüfregeln + Gate     | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
-| 8       | #7 Golden Archetypes      | 🤖 Opus                                          | 🤖 Opus                    |
-| 9       | #8 Preset-Gate + Workflow | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 10      | #9 Stack + Endpunkte      | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
-| 11      | #10 Archetyp-Auswahl      | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 12      | #11 Deploy + UI           | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
+| Schritt | Prio | Ticket                         | Baut                                             | Prüft                      |
+| ------- | ---- | ------------------------------ | ------------------------------------------------ | -------------------------- |
+| 1       | –    | #1 Prüfkern                    | 🤖 Opus                                          | 🤖 Opus                    |
+| 2       | –    | #3 Presets                     | 👤 + 🤖 Opus                                     | 👤                         |
+| 3       | –    | #2 Bedrock + CLI               | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 4       | –    | #4 BSI + CIS                   | 🛠 Junie                                         | 🤖 Opus                    |
+| 5       | –    | #5 DSGVO + SDM                 | 🛠 Junie                                         | 🤖 Opus                    |
+| 6       | A    | #13 Quellen FSBP + C5          | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 7       | A    | #6 Bounded Catalog             | 🤖 Sonnet                                        | 👤 Kontrollpunkt + 🤖 Opus |
+| 8       | A    | #15 5. Preset                  | 👤 + 🤖 Opus                                     | 👤                         |
+| 9       | A    | #12 Prüfregeln + Gate          | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
+| 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                         | 🤖 Opus                    |
+| 11      | A    | #8 Preset-Gate + Workflow      | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 12      | A    | #9 Stack + Endpunkte           | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
+| 13      | A    | #11 Deploy + UI                | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
+| 14      | A    | #16 Doku nachziehen            | 👤 + 🤖 Sonnet                                   | 👤                         |
+| 15      | B    | #7 Golden Archetypes           | 🤖 Opus                                          | 🤖 Opus                    |
+| 16      | B    | #10 Archetyp-Auswahl           | 🤖 Sonnet                                        | 🤖 Opus                    |
 
 ---
 
 ### Schritt 0 – Stand sichern
 
-**Ziel:** Die Tickets verlinken auf ADR 0007 und den Fahrplan; beides muss auf GitHub liegen.
+**Ziel:** Die Tickets verlinken auf ADR 0011 und den Fahrplan; beides muss auf GitHub liegen.
 
-- [ ] 👤 Alle Doku-Änderungen committen und pushen, z. B. `ADR 0007: relevance filter, pinned anchors, cdk-nag exceptions`
+- [ ] 👤 Alle Doku-Änderungen committen und pushen, z. B. `ADR 0011: full catalog, scope, FSBP and C5; FAHRPLAN priorities`
 
-**Fertig, wenn:** `git status` sauber ist und ADR 0007 auf GitHub lesbar ist.
+**Fertig, wenn:** `git status` sauber ist und ADR 0011 auf GitHub lesbar ist.
 
 ---
 
@@ -129,35 +139,69 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-### Schritt 6 – #6 Auswahlliste (Kontrollpunkt)
+## Priorität A – Audits
 
-**Ziel:** Es steht fest, welche Anforderungen in den Bounded Catalog kommen. Du hast die Auswahl gelesen und freigegeben.
-**Voraussetzung:** Schritte 2–5.
+### Schritt 6 – #13 Quellen FSBP und C5
 
-- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #6 umsetzen` → Plan → Go
-      Reihenfolge: `archetype_profiles.json` → `ranking.py` (reihum, Gleichstand, gesetzte Plätze) → Relevanzfilter → `curation.py` mit `FunctionModel`
-- [x] **Echter Lauf** 🤖 👤 „Erzeuge die Auswahllisten mit Bedrock“ (ca. 0,50 $)
-- [x] **Kontrollpunkt** 👤 Lies `selection_arch.json` und `selection_spec.json` (ca. 10 Minuten):
-      Betrifft jede Regel einen Baustein unserer Archetypen? Stimmen die Ressourcentypen? Sind Verschlüsselung, Logging, Zugriffsrechte und die Pflichtanker drin?
-      Falls nein: 🆕 _Opus_ · 👤 `/grilling Auswahlliste nachschärfen`, bevor es weitergeht.
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #6`
-- [ ] **Verstehen** 👤 `/verstehen 6` (Schwerpunkt: Bounded Catalog und Ranking)
+**Ziel:** FSBP und C5 sind deterministisch in Anforderungen zerlegt und vorgefiltert; CIS, FSBP und C5 teilen einen Prowler-Parser.
+**Voraussetzung:** Schritt 0.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #13 umsetzen` → Plan → Go
+      Reihenfolge: `prowler.py` (gemeinsamer Parser, CIS-Tests bleiben grün) → `fsbp.py` → `c5.py` → Vorfilter aller Quellen mit Begründungssatz → `sources.json` auf Prowler `5.44.0`
+- [ ] **Bauen** 🤖 erzeugt `fsbp.json` und `c5.json` (nur lokal). 👤 Prüfe: Wie viele Anforderungen bleiben je Quelle nach dem Vorfilter? Steht die Zahl im Issue?
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #13`
+- [ ] **Verstehen** 👤 `/verstehen 13` (Kernfrage: warum wir nur die Texte aus Prowler nehmen, nicht die Check-Zuordnung)
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Beide Auswahllisten eingecheckt sind, du sie freigegeben hast und die Kosten im Issue stehen.
-**Fürs Fachgespräch:** Vollständigkeit statt Top-K, „Das LLM urteilt, der Code wählt aus“, gesetzte Plätze.
+**Fertig, wenn:** Alle Tests grün sind, `fsbp.json` und `c5.json` per `.gitignore` draußen bleiben und die Zahlen im Issue stehen.
+**Fürs Fachgespräch:** abgeleitete Quelle, gepinnter Commit, Lizenz, Rezept „neue Quelle“.
 
 ---
 
-### Schritt 7 – #12 Prüfregeln formulieren und Gate
+### Schritt 7 – #6 Bounded Catalog und Auswahlprotokoll (Kontrollpunkt)
+
+**Ziel:** Es steht fest, welche Anforderungen in den Bounded Catalog kommen, und zu jeder Anforderung gibt es eine Begründung. Du hast das Auswahlprotokoll gelesen und freigegeben.
+**Voraussetzung:** Schritt 6. Der erste Lauf vom 09.10. (mit Ranking und Obergrenze) ist durch ADR 0011 überholt.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #6 umsetzen` → Plan → Go (der Prompt von Stufe ② ist eine Weichenstellung)
+      Reihenfolge: `data/scope.json` → Relevanz (erster Typ im Prüfumfang) → Ranking und Obergrenzen entfernen → Auswahlprotokoll für alle Anforderungen → Cache → Gates (Pflichtanker, Abdeckung)
+- [ ] **Echter Lauf** 🤖 👤 „Erzeuge Auswahlliste und Auswahlprotokoll“ (Groq, ADR 0010, bis Bedrock läuft)
+- [ ] **Kontrollpunkt** 👤 Lies `verdicts_arch.json` und `verdicts_spec.json` (ca. 15 Minuten):
+      Hat jede Komponente (API Gateway, Lambda, DynamoDB, SQS, S3, Firehose) Prüfregeln? Sind Art. 32 und Art. 17 drin? Sind die Begründungen bei `not_testable` und `not_relevant` plausibel?
+      Falls nein: 🆕 _Opus_ · 👤 `/grilling Auswahlprotokoll nachschärfen`, bevor es weitergeht.
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #6`
+- [ ] **Verstehen** 👤 `/verstehen 6` (Schwerpunkt: Bounded Catalog, Prüfumfang und Auswahlprotokoll)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Auswahlliste und Auswahlprotokoll eingecheckt sind, du sie freigegeben hast und Kosten und Regelanzahl im Issue stehen.
+**Fürs Fachgespräch:** Vollständigkeit statt Top-K und statt Obergrenze, „Das LLM urteilt, der Code wählt aus“, Begründung je Anforderung.
+
+---
+
+### Schritt 8 – #15 5. Preset: fremde Serverless-Architektur (deine Handarbeit)
+
+**Ziel:** Ein Preset belegt, dass GovGuard auch Architekturen auditiert, die keinem Archetyp ähneln.
+**Voraussetzung:** Schritt 6 (Anker-Format `AWS FSBP …`). Parallel zu Schritt 7.
+
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/grilling Preset für #15: Step Functions + SNS ohne KMS, Soll-Gesamtstatus, Pflichtanker`
+- [ ] **Bauen** 👤 „Lege das Preset nach unseren Antworten an“ → Go → 🤖 schreibt das CloudFormation-Template unter `data/presets/<id>/`
+- [ ] **Blind prüfen** 👤 Gemini wie in Schritt 2
+- [ ] **Soll festlegen** 👤 nennt Gesamtstatus und bestätigte Anker → 🤖 schreibt `preset.json`, Tests grün
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Das Preset liegt vor, und sein Pflichtanker steht im Bounded Catalog.
+
+---
+
+### Schritt 9 – #12 Prüfregeln formulieren und Gate
 
 **Ziel:** `rules_spec.json` und `rules_arch.json` liegen vor; jede Prüfregel hat das Gate bestanden.
-**Voraussetzung:** Schritt 6 inklusive Kontrollpunkt.
+**Voraussetzung:** Schritt 7 inklusive Kontrollpunkt.
 
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #12 umsetzen` → Plan → Go (Prompt-Design ist eine Weichenstellung)
       Reihenfolge: `gates.py` (Schema, Anker, Zitat, Querverweise) → `formulate_rule` mit `FunctionModel`
-- [ ] **Echter Lauf** 🤖 👤 „Formuliere die Prüfregeln mit Bedrock“
-- [ ] **Stichprobe** 👤 Lies 5 Prüfregeln: Sind `compliant_if` und `violation_if` prüfbar? Passt `source_quote` zur Norm?
+- [ ] **Echter Lauf** 🤖 👤 „Formuliere die Prüfregeln“
+- [ ] **Stichprobe** 👤 Lies 5 Prüfregeln, davon mindestens eine aus FSBP und eine aus C5: Sind `compliant_if` und `violation_if` prüfbar? Passt `source_quote` zur Norm?
 - [ ] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und `gh issue view 12`. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #12`
 - [ ] **Verstehen** 👤 `/verstehen 12` (Kernfrage: warum der Code den Primäranker setzt und nicht das LLM)
@@ -168,31 +212,30 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-### Schritt 8 – #7 Golden Archetypes mit Freigabe
+### Schritt 10 – #14 Audit-Engine: Ressourceninventar und parallele Pakete
 
-**Ziel:** ARCH-01 bis -03 sind als CDK gebaut und freigegeben, mit dokumentierten Ausnahmen.
-**Voraussetzung:** Schritt 7. Node.js und CDK CLI lokal installiert.
+**Ziel:** Die Audit-Engine bewertet den vollständigen Katalog: N/A über das Ressourceninventar, die anwendbaren Prüfregeln in parallelen Paketen.
+**Voraussetzung:** Schritt 9.
 
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #7 umsetzen`
-      Reihenfolge: Allowlist-Filter → Struktur-Soll → Compliance-Soll (N/A-Sperre) → Schleife mit höchstens 3 Runden (mit Fakes) → `cdk_runner.py`
-- [ ] **Echter Build** 👤 „Baue die 3 Archetypen“ → Go. Bei Fehlern von synth oder cdk-nag: 👤 `/diagnosing-bugs`
-- [ ] **Offene Frage** 👤 „Klär, ob Lambda-Logging `log-group:NAME:*` braucht“ → bei Ja: Ausnahme mit Begründung in `data/nag_allowlist.json`
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #7`
-- [ ] **Verstehen** 👤 `/verstehen 7` (Schwerpunkt: cdk-nag und Ausnahmen)
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #14 umsetzen` → Plan → Go (der Freitext-Vorlauf ist eine Prompt-Weiche)
+      Reihenfolge: Terraform-Zuordnungstabelle → Freitext-Vorlauf mit Beleg → Pakete parallel → Zusammenführen (ein Befund je Prüfregel) → Sortierung nach Ressourcentyp
+- [ ] **Messen** 👤 `/run CLI-Audit des größten Presets mit vollem Katalog, Laufzeit und Kosten messen` → 🤖 notiert das Ergebnis im Issue und setzt das Kostenziel in SPEC
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #14`
+- [ ] **Verstehen** 👤 `/verstehen 14` (Kernfrage: warum ein übersehener Dienst sichtbar bleiben muss)
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** `archetypes.json` 3 freigegebene Archetypen mit `approval` enthält.
-**Fürs Fachgespräch:** Vier-Augen-Prinzip, Risikoakzeptanz, Funktionstrennung, Least Privilege.
+**Fertig, wenn:** Alle Tests grün sind und Laufzeit und Kosten im Issue stehen.
+**Fürs Fachgespräch:** Pruning per Code, Map-Reduce, Vollständigkeit trotz Aufteilung.
 
 ---
 
-### Schritt 9 – #8 Preset-Gate und Build-Workflow
+### Schritt 11 – #8 Preset-Gate und Build-Workflow
 
 **Ziel:** Der Build der Wissensbasis läuft per Knopfdruck in GitHub Actions und öffnet nur bei Grün einen Pull Request.
-**Voraussetzung:** Schritte 2 und 8.
+**Voraussetzung:** Schritte 8 und 10.
 
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #8 umsetzen` → Plan → Go
-      Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Archetyp, Hash-Check) → `python -m kb_build` → `build-kb.yml` ohne Logik
+      Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Hash-Check; den Soll-Archetyp prüft erst #10) → `python -m kb_build` → `build-kb.yml` ohne Logik
 - [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard OIDC-Provider und Rolle für build-kb.yml, nur Bedrock eu.-Profil` → 👤 Wizard ausführen
 - [ ] **Ausprobieren** 👤 Workflow in GitHub Actions starten → PR lesen, Kosten prüfen
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #8`
@@ -204,50 +247,34 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-### Schritt 10 – #9 GovGuard-Stack und Audit-Endpunkte
+### Schritt 12 – #9 GovGuard-Stack und Audit-Endpunkte
 
-**Ziel:** Die Audit-API läuft in eu-central-1 und protokolliert jeden Aufruf.
-**Voraussetzung:** Schritt 3. Für Ausnahmen Schritt 8 abgeschlossen.
+**Ziel:** Die Audit-API läuft in eu-central-1, protokolliert jeden Aufruf und bleibt unter 29 s.
+**Voraussetzung:** Schritt 10.
 
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #9 umsetzen`
       Reihenfolge: `Trace` und `AuditEvent` bauen → `handler.py` → CDK-Stack mit Assertions-Tests (Tests auf das erzeugte Template)
 - [ ] **Sicherheit** 👤 `/security-review` vor dem ersten Deploy
 - [ ] **Einrichten** falls nötig: 👤 `/wizard cdk bootstrap für eu-central-1` → 👤 Wizard ausführen
-- [ ] **Deploy + Test** 👤 „Deploye den Stack und ruf /audit/spec mit einem Preset auf“ → Go → 👤 `/run`
+- [ ] **Deploy + Test** 👤 „Deploye den Stack und ruf /audit/architecture mit dem größten Preset auf“ → Go → 👤 `/run`. Über 29 s: 👤 `/model opus`, dann `/diagnosing-bugs` und Plan B aus ADR 0011 entscheiden
 - [ ] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und `gh issue view 9`. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #9`
 - [ ] **Verstehen** 👤 `/verstehen 9` (Schwerpunkt: IAM, KMS und Audit-Protokoll)
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Ein Aufruf einen Audit-Report liefert und das Audit-Ereignis in CloudWatch Logs steht, ohne Eingabetext.
-**Fürs Fachgespräch:** Least Privilege, KMS-CMK, Datenminimierung, Rückverfolgung, 0 € im Leerlauf.
+**Fertig, wenn:** Ein Aufruf einen Audit-Report liefert, das Audit-Ereignis in CloudWatch Logs steht (ohne Eingabetext) und die Laufzeit im Issue steht.
+**Fürs Fachgespräch:** Least Privilege, KMS-CMK, Datenminimierung, Rückverfolgung, 0 € Leerlaufkosten.
 
 ---
 
-### Schritt 11 – #10 Archetyp-Auswahl
+### Schritt 13 – #11 Deploy-Pipeline und Demo-UI
 
-**Ziel:** Bei einer Spezifikation ohne FAIL liefert GovGuard ARCH-01, -02, -03 oder „keiner“.
-**Voraussetzung:** Schritte 8 und 10.
-
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #10 umsetzen` → Plan → Go (Auswahl, Ablehnung bei FAIL, `NONE`)
-- [ ] **Deploy + Test** 🆕 _Sonnet_ · 👤 „Deploye und ruf /archetype/select mit einem Spec-Preset auf“ → Go → 👤 `/run`
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #10`
-- [ ] **Verstehen** 👤 `/verstehen 10` (Kernfrage: warum „keiner passt“ eine erlaubte Antwort ist)
-- [ ] **Abschließen** 👤 committet und pusht
-
-**Fertig, wenn:** Das Preset liefert den Soll-Archetyp, und ein Report mit FAIL wird mit HTTP 422 abgelehnt.
-**Fürs Fachgespräch:** geschlossene Antwortmenge, keine Generierung zur Laufzeit.
-
----
-
-### Schritt 12 – #11 Deploy-Pipeline und Demo-UI
-
-**Ziel:** Jeder Push auf `main` rollt GovGuard nach dem Selbst-Audit aus; die Demo-UI ist öffentlich erreichbar.
-**Voraussetzung:** Schritte 7, 10 und 11.
+**Ziel:** Jeder Push auf `main` rollt GovGuard nach dem Selbst-Audit aus; die Demo-UI auditiert Spezifikationen und Architekturen öffentlich.
+**Voraussetzung:** Schritte 9 und 12.
 
 - [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard Einmalige AWS-Einrichtung für deploy.yml: OIDC-Deploy-Rolle, IAM-User für Streamlit, Secrets` → 👤 Wizard ausführen. Der Wizard ist zugleich die Anleitung, die das Ticket verlangt.
-- [ ] **Bauen Pipeline** 🤖 _Sonnet_ · 👤 „Setze aus Issue #11 die `deploy.yml` um“ → Plan → Go
-- [ ] **Bauen UI** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 12 und `gh issue view 11`. Baue nur die Streamlit-UI in `ui/`.“
+- [ ] **Bauen Pipeline** 🤖 _Sonnet_ · 👤 „Setze aus Issue #11 die `deploy.yml` um“ → Plan → Go. Die Ausnahmen für Prüfregeln (z. B. FSBP `APIGateway.4`, `Lambda.3`) entstehen hier, mit Begründung (Weichenstellung).
+- [ ] **Bauen UI** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 13 und `gh issue view 11`. Baue nur die Streamlit-UI in `ui/`, ohne Archetyp-Abruf.“
 - [ ] **Ausprobieren** 👤 `/run Streamlit-UI lokal starten, Preset auditieren, Screenshot`
 - [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review`
 - [ ] **Live** 👤 Pushen → Pipeline beobachten → UI auf Streamlit Community Cloud öffnen
@@ -256,4 +283,56 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [ ] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Ein Push den Deploy mit Selbst-Audit auslöst und die öffentliche UI ein Preset auditiert.
-**Fürs Fachgespräch:** Dogfooding, ein einziger Weg in die Produktion, bewusstes US-Hosting nur mit fiktiven Daten.
+**Fürs Fachgespräch:** Dogfooding, begründete Ausnahmen, ein einziger Weg in die Produktion, bewusstes US-Hosting nur mit fiktiven Daten.
+
+---
+
+### Schritt 14 – #16 Doku nachziehen
+
+**Ziel:** README und die drei Erklär-Dokumente beschreiben den gebauten Stand nach ADR 0011.
+**Voraussetzung:** Schritte 7, 9 und 10 (#6, #12, #14).
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 16` und zieh die vier Dokumente auf den Code-Stand nach“ → Plan → Go
+- [ ] **Prüfen** 👤 `grep` aus dem Issue, dann jedes Dokument querlesen (je ca. 2 Minuten)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Das `grep` aus #16 nichts Veraltetes mehr findet. Damit ist Priorität A erledigt.
+
+---
+
+## Priorität B – Golden Archetypes (nur wenn Zeit bleibt)
+
+Start nur nach der Regel *Stichtag* oben.
+
+### Schritt 15 – #7 Golden Archetypes mit Freigabe
+
+**Ziel:** ARCH-01 bis -03 sind als CDK gebaut und freigegeben, mit dokumentierten Ausnahmen.
+**Voraussetzung:** Schritt 14. Node.js und CDK CLI lokal installiert.
+
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #7 umsetzen`
+      Reihenfolge: Allowlist-Filter (cdk-nag und Prüfregeln, aus Schritt 13) → Struktur-Soll → Compliance-Soll (N/A-Sperre) → Schleife mit höchstens 3 Runden (mit Fakes) → `cdk_runner.py`
+- [ ] **Echter Build** 👤 „Baue die 3 Archetypen“ → Go. Bei Fehlern von synth oder cdk-nag: 👤 `/diagnosing-bugs`
+- [ ] **Offene Frage** 👤 „Klär, ob Lambda-Logging `log-group:NAME:*` braucht“ → bei Ja: Ausnahme mit Begründung in `data/nag_allowlist.json`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #7`
+- [ ] **Verstehen** 👤 `/verstehen 7` (Schwerpunkt: cdk-nag und Ausnahmen)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** `archetypes.json` 3 freigegebene Archetypen mit `approval` enthält.
+**Fürs Fachgespräch:** Vier-Augen-Prinzip, Risikoakzeptanz, Funktionstrennung, Least Privilege.
+
+---
+
+### Schritt 16 – #10 Archetyp-Auswahl
+
+**Ziel:** Bei einer Spezifikation ohne FAIL liefert GovGuard ARCH-01, -02, -03 oder „keiner“; die UI zeigt den Archetyp.
+**Voraussetzung:** Schritt 15.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #10 umsetzen` → Plan → Go (Auswahl, Ablehnung bei FAIL, `NONE`, Soll-Archetyp im Preset-Gate)
+- [ ] **UI** 🛠 _Junie_ · 👤 „Ergänze in `ui/` den Archetyp-Abruf nach Issue #10.“
+- [ ] **Deploy + Test** 🆕 _Sonnet_ · 👤 „Deploye und ruf /archetype/select mit einem Spec-Preset auf“ → Go → 👤 `/run`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #10`
+- [ ] **Verstehen** 👤 `/verstehen 10` (Kernfrage: warum „keiner passt“ eine erlaubte Antwort ist)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Das Preset liefert den Soll-Archetyp, und ein Report mit FAIL wird mit HTTP 422 abgelehnt.
+**Fürs Fachgespräch:** geschlossene Antwortmenge, keine Generierung zur Laufzeit.
