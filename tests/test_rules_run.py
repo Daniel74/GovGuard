@@ -25,12 +25,13 @@ def paths_in(tmp: Path) -> BuildPaths:
 
 
 def quoting_model(quote: str | None = None) -> FunctionModel:
-    """Quotes the whole requirement text from the prompt, or always `quote`."""
+    """Quotes the whole requirement text from the prompt, or always `quote`; names the types."""
 
     def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
         prompt = next(p for p in messages[0].parts if isinstance(p, UserPromptPart)).content
         text = prompt.split("<anforderung>\n")[1].split("\n</anforderung>")[0]
-        answer = {"source_quote": quote or text, "title": "Titel", "compliant_if": "konform",
+        types = prompt.partition("Ressourcentypen: ")[2].partition("\n")[0]
+        answer = {"source_quote": quote or text, "title": "Titel", "compliant_if": f"{types} ok",
                   "violation_if": "Verstoß", "recommendation": "Abhilfe"}
         return ModelResponse(parts=[ToolCallPart("formulate_rule", answer)])
 

@@ -9,6 +9,7 @@ from pydantic_ai.models import Model
 
 from govguard.models import AuditType
 from kb_build.curation import formulate_rules
+from kb_build.quality import quality_report
 from kb_build.selection_models import Selection
 from kb_build.selection_run import SELECTIONS, BuildPaths, read_sources
 
@@ -34,3 +35,5 @@ def formulate_all(
         rules_file = paths.out_dir / filename.replace("selection_", "rules_")
         rules_file.write_text(catalog.model_dump_json(indent=2) + "\n", encoding="utf-8")
         logger.info("%s: %d rules written to %s", audit_type, len(catalog.rules), rules_file)
+        for source, counts in quality_report(catalog).items():
+            logger.info("%s quality %s: %s", audit_type, source, counts)

@@ -34,6 +34,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 7       | A    | #6 Bounded Catalog              | 🤖 Sonnet                                        | 👤 Kontrollpunkt + 🤖 Opus |
 | 8       | A    | #15 5. Preset                   | 👤 + 🤖 Opus                                     | 👤                         |
 | 9       | A    | #12 Prüfregeln + Gate           | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
+| 9a      | A    | #18 Kontoweite Pflichten        | 🤖 Sonnet                                        | 👤 Kontrollpunkt + 🤖 Opus |
+| 9b      | A    | #17 Gate Eigenschaftsnamen      | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
 | 11      | A    | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 12      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
@@ -200,15 +202,50 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #12 umsetzen` → Plan → Go (Prompt-Design ist eine Weichenstellung)
       Reihenfolge: `gates.py` (Schema, Anker, Zitat, Querverweise) → `formulate_rule` mit `FunctionModel`
-- [ ] **Echter Lauf** 🤖 👤 „Formuliere die Prüfregeln“
-- [ ] **Stichprobe** 👤 Lies 5 Prüfregeln, davon mindestens eine aus FSBP und eine aus C5: Sind `compliant_if` und `violation_if` prüfbar? Passt `source_quote` zur Norm?
-- [ ] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und `gh issue view 12`. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
+- [x] **Echter Lauf** 🤖 👤 „Formuliere die Prüfregeln“
+- [x] **Stichprobe** 👤 Lies 5 Prüfregeln, davon mindestens eine aus FSBP und eine aus C5: Sind `compliant_if` und `violation_if` prüfbar? Passt `source_quote` zur Norm?
+- [-] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und `gh issue view 12`. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #12`
 - [ ] **Verstehen** 👤 `/verstehen 12` (Kernfrage: warum der Code den Primäranker setzt und nicht das LLM)
 - [ ] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Beide Kataloge eingecheckt sind, das Gate grün ist und die Stichprobe gepasst hat.
 **Fürs Fachgespräch:** Zitat statt Behauptung, erfundene Fundstellen, Draft-Pattern im Build.
+
+---
+
+### Schritt 9a – #18 Stufe ② verwirft kontoweite Pflichten (CloudTrail-Lücke)
+
+**Ziel:** In den Bounded Catalog kommen nur Anforderungen, deren Pflicht am Template hängt, nicht an Konto, Organisation, Personen oder Cloud-Anbieter (Stichprobe aus #12: CIS 4.4, C5 OPS-16.01B).
+**Voraussetzung:** Schritt 9.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #18 umsetzen` → Plan → Go (der Prompt von Stufe ② ist eine Weichenstellung)
+      Reihenfolge: Feld `scope_level` in `Classification` → Code setzt `not_relevant` mit festem Satz → Prompt von Stufe ②
+- [ ] **Echter Lauf** 🤖 👤 „Erzeuge die Architektur-Auswahl neu“ (`--provider groq`, Schlüssel aus `.env`; die Prompt-Version ändert sich, alle ca. 884 Urteile werden neu bezahlt)
+- [ ] **Kontrollpunkt** 👤 `git diff data/knowledge_base/selection_arch.json`: Sind CIS 4.4 und C5 OPS-16.01B raus? Was ist sonst noch herausgefallen, und ist die Begründung plausibel?
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #18`
+- [ ] **Verstehen** 👤 `/verstehen 18` (Kernfrage: warum „prüfbar“ und „relevant“ nicht reichen, wenn die Pflicht für jemand anderen gilt)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Die neue Auswahl eingecheckt ist, beide Gates grün sind und du den Diff freigegeben hast.
+**Fürs Fachgespräch:** Shared Responsibility Model (Anbieter, Konto, Workload), „Das LLM urteilt, der Code wählt aus“.
+
+---
+
+### Schritt 9b – #17 Gate gegen erfundene CloudFormation-Eigenschaften
+
+**Ziel:** Architektur-Prüfregeln nennen nur Eigenschaften, die es am Ressourcentyp wirklich gibt (Stichprobe aus #12: CIS 4.4 verlangt `TargetPrefix` statt `LogFilePrefix`).
+**Voraussetzung:** Schritt 9a. Der Lauf hier formuliert die Prüfregeln für die neue Auswahl aus 9a.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #17 umsetzen` → Plan → Go (die Erkennung der Eigenschaftsnamen im Freitext ist eine Weichenstellung, siehe offene Fragen im Issue)
+      Reihenfolge: Schnappschuss `data/cfn_properties.json` → reine Prüffunktion → Validator von `formulate_rule` → Qualitätsbericht `unknown_properties`
+- [ ] **Echter Lauf** 🤖 👤 „Formuliere die Architektur-Prüfregeln neu“ (`--provider bedrock-global`, falls `eu.` keine Kapazität hat, ADR 0012). 👤 Prüfe: Zeigt der Qualitätsbericht 0 unbekannte Eigenschaften und `account_level` 0?
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #17`
+- [ ] **Verstehen** 👤 `/verstehen 17` (Kernfrage: warum ein Schema-Abgleich mehr beweist als ein strengerer Prompt)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** `rules_arch.json` neu eingecheckt ist und der Qualitätsbericht 0 unbekannte Eigenschaften zeigt.
+**Fürs Fachgespräch:** deterministische Gegenprobe gegen eine Referenz (wie Zitat und Typliste), Grenzen von Prompt-Regeln.
 
 ---
 
@@ -232,7 +269,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 ### Schritt 11 – #8 Preset-Gate und Build-Workflow
 
 **Ziel:** Der Build der Wissensbasis läuft per Knopfdruck in GitHub Actions und öffnet nur bei Grün einen Pull Request.
-**Voraussetzung:** Schritte 8 und 10.
+**Voraussetzung:** Schritte 8, 9b und 10.
 
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #8 umsetzen` → Plan → Go
       Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Hash-Check; den Soll-Archetyp prüft erst #10) → `python -m kb_build` → `build-kb.yml` ohne Logik

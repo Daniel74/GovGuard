@@ -7,11 +7,15 @@ from pydantic_ai.providers.bedrock import BedrockProvider
 REGION = "eu-central-1"
 # `eu.` profile: inference stays in the EU (ADR 0001); Haiku 4.5 supports forced tool use
 MODEL_ID = "eu.anthropic.claude-haiku-4-5-20251001-v1:0"
+# `global.` profile: build only, explicit opt-in while `eu.` lacks capacity (ADR 0012)
+GLOBAL_MODEL_ID = "global.anthropic.claude-haiku-4-5-20251001-v1:0"
 
 
-def bedrock_model(client: BaseClient | None = None) -> BedrockConverseModel:
+def bedrock_model(
+    client: BaseClient | None = None, model_id: str = MODEL_ID
+) -> BedrockConverseModel:
     """Build the Pydantic AI model; tests inject a stubbed `bedrock-runtime` client."""
     provider = (
         BedrockProvider(bedrock_client=client) if client else BedrockProvider(region_name=REGION)
     )
-    return BedrockConverseModel(MODEL_ID, provider=provider)
+    return BedrockConverseModel(model_id, provider=provider)

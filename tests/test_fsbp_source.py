@@ -29,6 +29,15 @@ def test_sns_1_has_facts_anchor_and_clean_text() -> None:
     assert sns.text == "This control checks SNS.1."
 
 
+def test_double_encoded_utf8_from_prowler_is_repaired() -> None:
+    # ECS.3 in Prowler 5.44.0: the apostrophe arrives as UTF-8 bytes read as Latin-1
+    ecs = control("ECS.3", "ECS")
+    ecs["Description"] = (
+        "share a host\u00e2\u0080\u0099s process namespace \u00e2\u0080\u0093 always")
+
+    assert extract_by_id(ecs)["ECS.3"].text == "share a host's process namespace - always"
+
+
 def test_source_is_fsbp_and_version_comes_from_sources_json() -> None:
     extracted = extract("memory://fsbp", {"Requirements": [control("SNS.1", "SNS")]}, VERSION)
     assert (extracted.source, extracted.version) == ("FSBP", VERSION)

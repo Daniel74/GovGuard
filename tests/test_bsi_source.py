@@ -89,3 +89,15 @@ def test_prefilter_names_the_reason_for_every_rejection(rejected: dict, reason: 
 
 def test_prefilter_has_no_reason_for_a_kept_control() -> None:
     assert extract_by_id(control("DET.3.1"))["DET.3.1"].prefilter_reason is None
+
+
+def test_parameter_placeholders_are_replaced_by_their_label() -> None:
+    # BER.4.4 in the catalog; an unresolved placeholder made every quote of it fail the gate
+    ber = control("BER.4.4")
+    ber["params"] = [{"id": "ber.4.4-prm1", "label": "regelmäßig"}]
+    ber["parts"][0]["prose"] = (
+        "Berechtigung SOLLTE vergebene Berechtigungen {{ insert: param, ber.4.4-prm1 }} "
+        "auf Erforderlichkeit überprüfen.")
+
+    assert extract_by_id(ber)["BER.4.4"].text == (
+        "Berechtigung SOLLTE vergebene Berechtigungen regelmäßig auf Erforderlichkeit überprüfen.")

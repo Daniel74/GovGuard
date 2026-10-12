@@ -102,7 +102,8 @@ def _rule(
     model: Model, anchors: Anchors,
 ) -> Rule:
     """The LLM writes the draft; identity and origin come from the selection, never the LLM."""
-    deps = FormulateDeps(audit_type, selected.source, requirement, anchors)
+    types = tuple(selected.cfn_resource_types)
+    deps = FormulateDeps(audit_type, selected.source, requirement, anchors, types)
     try:
         draft = formulate_rule(selected, deps, model)
     except UnexpectedModelBehavior as error:  # fail closed: no rule may silently go missing

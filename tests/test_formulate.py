@@ -30,7 +30,8 @@ SOURCES = [
 
 def draft(rid: str, **changes) -> dict:
     return {"source_quote": f"The text of {rid}", "title": f"Titel {rid}",
-            "compliant_if": "konform", "violation_if": "Verstoß", "recommendation": "Abhilfe",
+            "compliant_if": "AWS::S3::Bucket setzt BucketEncryption.",
+            "violation_if": "BucketEncryption fehlt.", "recommendation": "Abhilfe",
             "cross_references": []} | changes
 
 
@@ -133,3 +134,49 @@ def test_a_spec_rule_drops_spaces_from_the_id_and_has_no_resource_types() -> Non
         "SPEC-DSGVO-Art.32", "spec", [])
     assert catalog.source_versions == {"DSGVO": "000.003"}
     assert "Spec-Audit einer fachlichen Spezifikation" in seen[0]
+
+
+def test_the_retry_names_where_the_quote_deviates_and_what_the_text_says() -> None:
+    # DSGVO Art. 46: the model wrote "der Verantwortlicher" three times instead of "Verantwortliche"
+    sent_back: list[str] = []
+    first = draft("3.1.4", source_quote="The text of 3.1.4 should be quoted.")
+
+    formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
+
+    assert "„should be quoted.“" in sent_back[0]
+    assert "„must be quoted.“" in sent_back[0]
+
+
+def test_vague_words_in_architecture_criteria_are_sent_back_and_named() -> None:
+    # BSI KONF.6.1: "nicht erforderlich" cannot be decided from a template
+    sent_back: list[str] = []
+    first = draft("3.1.4", violation_if="Policies gewähren Rechte, die nicht erforderlich sind.")
+
+    catalog = formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
+
+    assert catalog.rules[0].violation_if == "BucketEncryption fehlt."
+    assert "„erforderlich“" in sent_back[0]
+
+
+def test_architecture_criteria_without_a_resource_type_of_the_rule_are_sent_back() -> None:
+    sent_back: list[str] = []
+    first = draft("3.1.4", compliant_if="Alle Daten sind verschlüsselt.",
+                  violation_if="Daten liegen im Klartext.")
+
+    formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
+
+    assert "AWS::S3::Bucket, AWS::KMS::Key" in sent_back[0]
+
+
+def test_spec_criteria_may_use_the_words_of_the_law() -> None:
+    # DSGVO Art. 32 itself demands "geeignete" and "angemessene" measures
+    dsgvo = ExtractedSource(source="DSGVO", version="v", origin="o",
+                            requirements=[req("Art. 32", "DSGVO Art. 32")])
+    selection = Selection(audit_type="spec", model_id="s", selected=[SelectedRequirement(
+        requirement_id="Art. 32", source="DSGVO", rationale="prüfbar", cfn_resource_types=[])])
+    lawful = draft("Art. 32", compliant_if="Die Spezifikation nennt angemessene Maßnahmen.")
+    asked: list[str] = []
+
+    formulate_rules(fake_llm({"Art. 32": [lawful]}, asked), selection, [dsgvo])
+
+    assert asked == ["Art. 32"]  # accepted at the first attempt

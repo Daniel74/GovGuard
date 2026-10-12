@@ -1516,7 +1516,7 @@
     "requirement_id": "BES.1.1.2",
     "title": "Zuweisung der Aufgaben",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Aufgaben im Beschaffungsmanagement und betrifft Prozesse/Personal, nicht die Konfiguration von CloudFormation-Ressourcen.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die Zuweisung von Aufgaben an Personen oder Rollen und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -1532,7 +1532,7 @@
     "requirement_id": "BES.1.2",
     "title": "Regelmäßige Überprüfung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und kann nicht anhand von CloudFormation-Ressourcen geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse des Beschaffungsmanagements und nicht auf konfigurierbare Cloud-Ressourcen, sodass sie nicht anhand eines CloudFormation-Templates geprüft werden kann.",
     "cfn_resource_types": []
   },
   {
@@ -1572,7 +1572,7 @@
     "requirement_id": "BES.1.5",
     "title": "Autorisierung des Bereitstellungsmodells",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf das Beschaffungs‑ und Genehmigungs‑Management und nicht auf konfigurierbare Eigenschaften einzelner CloudFormation‑Ressourcen.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die Autorisierung durch Personen/Rollen und kann nicht anhand von Ressourcen‑Konfigurationen in einem CloudFormation‑Template geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -1772,7 +1772,7 @@
     "requirement_id": "BES.4.2",
     "title": "Dokumentation der Beschaffungskriterien",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Beschaffungskriterien und damit auf Prozesse und Richtlinien, nicht auf konfigurierbare Cloud-Ressourcen im CloudFormation-Template.",
+    "rationale": "Die Anforderung bezieht sich auf das Beschaffungsmanagement und die Dokumentation von Kriterien, was Prozesse und Verträge betrifft und nicht auf die Konfiguration von CloudFormation‑Ressourcen.",
     "cfn_resource_types": []
   },
   {
@@ -1916,7 +1916,7 @@
     "requirement_id": "BES.5.2",
     "title": "Service Level Agreement",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf vertragliche Vereinbarungen und nicht auf konfigurierbare Cloud-Ressourcen.",
+    "rationale": "Die Anforderung bezieht sich auf vertragliche Service Level Agreements im Outsourcing und lässt sich nicht anhand von CloudFormation-Ressourcen prüfen.",
     "cfn_resource_types": []
   },
   {
@@ -1956,7 +1956,7 @@
     "requirement_id": "BES.5.5.2",
     "title": "Autorisierung der Zugriffsberechtigung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf Beschaffungs- und Prozessregelungen für Lieferantenpersonal und ist nicht anhand von CloudFormation-Ressourcen konfigurierbar.",
+    "rationale": "Die Anforderung bezieht sich auf das Beschaffungsmanagement und vertragliche Regelungen für das Personal des Lieferanten und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -2180,7 +2180,7 @@
     "requirement_id": "BES.7.1",
     "title": "Eingangskontrolle",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf Prozesse im Beschaffungsmanagement und kann nicht anhand von CloudFormation-Ressourcen geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf Beschaffungs- und Prozessaspekte und kann nicht anhand von CloudFormation-Ressourcen geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -2388,7 +2388,7 @@
     "requirement_id": "DLS.1.1.2",
     "title": "Zuweisung der Aufgaben",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf organisatorische Aufgabenverteilung und kann nicht anhand von CloudFormation-Ressourcen geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf die organisatorische Zuweisung von Aufgaben und Rollen und kann nicht anhand von CloudFormation-Ressourcen geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -2404,7 +2404,7 @@
     "requirement_id": "DLS.1.2",
     "title": "Regelmäßige Überprüfung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die Überprüfung von Verfahren, die nicht aus den Ressourcen einer CloudFormation-Vorlage ableitbar sind.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und nicht auf konfigurierbare Ressourcen im CloudFormation‑Template.",
     "cfn_resource_types": []
   },
   {
@@ -2419,9 +2419,14 @@
     "source": "BSI",
     "requirement_id": "DLS.2.2",
     "title": "Transportverschlüsselung",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Transportverschlüsselung bei der Datenübertragung zum Anbieter und kann nicht eindeutig anhand einer einzelnen CloudFormation‑Ressource geprüft werden.",
-    "cfn_resource_types": []
+    "outcome": "selected",
+    "rationale": "Die Anforderung lässt sich anhand von Ressourcen wie AWS::S3::BucketPolicy, AWS::ApiGateway::DomainName oder LoadBalancer‑Konfigurationen prüfen, ob TLS/HTTPS für die Datenübertragung erzwungen wird.",
+    "cfn_resource_types": [
+      "AWS::S3::BucketPolicy",
+      "AWS::ApiGateway::DomainName",
+      "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "AWS::CloudFront::Distribution"
+    ]
   },
   {
     "source": "BSI",
@@ -2436,7 +2441,7 @@
     "requirement_id": "DLS.3.1",
     "title": "Einhaltung der Sicherheitsvorgaben",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Überprüfung der Sicherheitsvorgaben durch den Dienstleister und nicht auf konfigurierbare CloudFormation‑Ressourcen.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Kontrollen und nicht auf die Konfiguration von CloudFormation-Ressourcen.",
     "cfn_resource_types": []
   },
   {
@@ -2444,7 +2449,7 @@
     "requirement_id": "DLS.3.1.1",
     "title": "Audit oder Zertifikat",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Dienstleistersteuerung und die Überprüfung von Sicherheitsvorgaben durch Audits oder Zertifikate, was Prozesse und vertragliche Regelungen betrifft und nicht aus der Konfiguration einzelner CloudFormation‑Ressourcen ableitbar ist.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Kontrollen und Audits und kann nicht anhand von Ressourcen im CloudFormation-Template geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -4116,7 +4121,7 @@
     "requirement_id": "ARCH.1.1.2",
     "title": "Zuweisung der Aufgaben",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die organisatorische Zuweisung von Aufgaben und kann nicht anhand von Ressourcen‑Konfigurationen in einem CloudFormation‑Template geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf die organisatorische Zuweisung von Aufgaben an Personen oder Rollen und kann nicht anhand von CloudFormation‑Ressourcenkonfigurationen geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -4132,7 +4137,7 @@
     "requirement_id": "ARCH.1.2",
     "title": "Regelmäßige Überprüfung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die regelmäßige Überprüfung von Verfahren und Regelungen und ist nicht anhand von CloudFormation-Ressourcen konfigurierbar.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse zur regelmäßigen Überprüfung von Verfahren und Regelungen und kann nicht anhand von CloudFormation‑Ressourcenkonfigurationen nachgewiesen werden.",
     "cfn_resource_types": []
   },
   {
@@ -4151,13 +4156,13 @@
     "requirement_id": "ARCH.2.2",
     "title": "Einschränkung von Verbindungen zwischen Segmenten",
     "outcome": "selected",
-    "rationale": "Die Anforderung kann anhand von VPC‑Subnetzen, Routing‑Tabellen, Security‑Groups oder Network‑ACLs im CloudFormation‑Template geprüft werden, da dort die Verbindungen zwischen Segmenten definiert werden.",
+    "rationale": "Die Anforderung kann anhand von VPC‑, Subnet‑, Security‑Group‑ und Network‑ACL‑Ressourcen im CloudFormation‑Template geprüft werden, ob Verbindungen zwischen Netzsegmenten eingeschränkt sind.",
     "cfn_resource_types": [
       "AWS::EC2::SecurityGroup",
       "AWS::EC2::NetworkAcl",
-      "AWS::EC2::RouteTable",
       "AWS::EC2::Subnet",
-      "AWS::EC2::VPC"
+      "AWS::EC2::VPC",
+      "AWS::EC2::VPCPeeringConnection"
     ]
   },
   {
@@ -4306,7 +4311,7 @@
     "requirement_id": "ARCH.2.6",
     "title": "Topologieüberwachung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Überwachung der Netzarchitektur und kann nicht anhand einzelner CloudFormation‑Ressourcen geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf die regelmäßige Überprüfung der Netzarchitektur und ist ein organisatorischer Prozess, nicht auf konfigurierbare Ressourcen in einem CloudFormation-Template.",
     "cfn_resource_types": []
   },
   {
@@ -4338,7 +4343,7 @@
     "requirement_id": "ARCH.3.4",
     "title": "Verschlüsselte Netzanbindung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Verschlüsselung der WLAN‑Netzanbindung und kann nicht anhand von CloudFormation‑Ressourcen in einem einzelnen Template geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf die Verschlüsselung der WLAN‑Netzanbindung und nicht auf konfigurierbare AWS‑Ressourcen, sodass sie nicht anhand eines CloudFormation‑Templates geprüft werden kann.",
     "cfn_resource_types": []
   },
   {
@@ -4354,7 +4359,7 @@
     "requirement_id": "ARCH.4.1.1",
     "title": "Dynamische Netzzugangskontrolle",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die dynamische Authentifizierung von Netzwerkzugriffen und kann nicht allein anhand einzelner CloudFormation‑Ressourcen geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf dynamische Zugriffsentscheidungen und organisatorische Prozesse, die nicht allein durch die Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden können.",
     "cfn_resource_types": []
   },
   {
@@ -4369,12 +4374,9 @@
     "source": "BSI",
     "requirement_id": "ARCH.4.2",
     "title": "Autorisiertes Routing",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf die Autorisierung von Routing‑Verbindungen, die in CloudFormation über Ressourcen wie AWS::EC2::Route und AWS::EC2::RouteTable konfiguriert werden und daher im Template überprüfbar ist.",
-    "cfn_resource_types": [
-      "AWS::EC2::Route",
-      "AWS::EC2::RouteTable"
-    ]
+    "outcome": "not_testable",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Genehmigungsprozesse und lässt sich nicht aus den Eigenschaften einzelner CloudFormation‑Ressourcen ableiten.",
+    "cfn_resource_types": []
   },
   {
     "source": "BSI",
@@ -4490,9 +4492,11 @@
     "source": "BSI",
     "requirement_id": "ARCH.5.1.10",
     "title": "Webfilterung",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die generelle Webfilterung von externen Netzanschlüssen und lässt sich nicht eindeutig einer einzelnen CloudFormation‑Ressource zuordnen.",
-    "cfn_resource_types": []
+    "outcome": "selected",
+    "rationale": "Die Anforderung kann anhand der Existenz und Konfiguration von AWS::WAFv2::WebACL im CloudFormation‑Template geprüft werden, da damit Webinhalte nach Kriterien gefiltert werden können.",
+    "cfn_resource_types": [
+      "AWS::WAFv2::WebACL"
+    ]
   },
   {
     "source": "BSI",
@@ -4570,16 +4574,19 @@
     "requirement_id": "ARCH.6.2",
     "title": "Verschlüsselung von Weiterverkehrsverbindungen",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Architektur von externen Netzwerkverbindungen und lässt sich nicht eindeutig anhand einzelner CloudFormation‑Ressourcen prüfen.",
+    "rationale": "Die Anforderung bezieht sich auf die Verschlüsselung von Weiterverkehrsverbindungen und lässt sich nicht eindeutig anhand einzelner CloudFormation‑Ressourcen prüfen.",
     "cfn_resource_types": []
   },
   {
     "source": "BSI",
     "requirement_id": "ARCH.7.1",
     "title": "Dedizierte Hostsysteme für Server",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die physische Bereitstellung von dedizierten Hostsystemen und kann nicht anhand von CloudFormation-Ressourcen geprüft werden.",
-    "cfn_resource_types": []
+    "outcome": "not_relevant",
+    "rationale": "Der erste Ressourcentyp AWS::EC2::Host liegt nicht im Prüfumfang.",
+    "cfn_resource_types": [
+      "AWS::EC2::Host",
+      "AWS::EC2::Instance"
+    ]
   },
   {
     "source": "BSI",
@@ -4682,7 +4689,7 @@
     "requirement_id": "BER.1.1.2",
     "title": "Zuweisung der Aufgaben",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die organisatorische Zuweisung von Aufgaben zu Berechtigungen und kann nicht anhand einzelner CloudFormation‑Ressourcen geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf die Zuordnung von Aufgaben zu Personen oder Rollen und ist ein organisatorisches Prinzip, das nicht anhand einzelner CloudFormation-Ressourcen geprüft werden kann.",
     "cfn_resource_types": []
   },
   {
@@ -4743,7 +4750,7 @@
     "requirement_id": "BER.2.3",
     "title": "Stammdatenprüfung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und Prüfungen von Identitätsstammdaten und kann nicht anhand einer einzelnen CloudFormation‑Ressource geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die regelmäßige Überprüfung von Stammdaten, die nicht aus der Konfiguration einzelner CloudFormation‑Ressourcen ableitbar sind.",
     "cfn_resource_types": []
   },
   {
@@ -4782,9 +4789,13 @@
     "source": "BSI",
     "requirement_id": "BER.3.2",
     "title": "Autorisierung neuer Zugangskonten",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die Autorisierung von Kontoerstellungen, nicht auf konfigurierbare CloudFormation‑Ressourcen.",
-    "cfn_resource_types": []
+    "outcome": "selected",
+    "rationale": "Die Anforderung bezieht sich auf IAM‑Policies, die das Recht zum Anlegen von IAM‑Usern bzw. -Rollen regeln und kann daher anhand der im Template definierten AWS::IAM::Policy‑ bzw. AWS::IAM::Role‑Ressourcen geprüft werden.",
+    "cfn_resource_types": [
+      "AWS::IAM::Policy",
+      "AWS::IAM::Role",
+      "AWS::IAM::User"
+    ]
   },
   {
     "source": "BSI",
@@ -4854,7 +4865,7 @@
     "requirement_id": "BER.3.10",
     "title": "Anmeldeversuchsgrenze am System",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf das Blockieren von Anmeldeversuchen nach einer festgelegten Anzahl fehlgeschlagener Versuche, was in AWS nicht über eine einzelne CloudFormation‑Ressource konfigurierbar ist, sondern nur auf Konto‑ oder Service‑Ebene (z. B. IAM‑Passwortrichtlinie, Cognito) umgesetzt werden kann.",
+    "rationale": "Die Anforderung bezieht sich auf ein konto- oder serviceweites Verhalten (z. B. Passwort‑Policy) und lässt sich nicht anhand einer einzelnen CloudFormation‑Ressource prüfen.",
     "cfn_resource_types": []
   },
   {
@@ -4862,7 +4873,7 @@
     "requirement_id": "BER.3.11",
     "title": "Anmeldeversuchsgrenze an der Anwendung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf das Verhalten einer Anwendung und kann nicht eindeutig anhand einer einzelnen CloudFormation‑Ressource geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf das Laufzeitverhalten von Anwendungen (z. B. Sperrung nach fehlgeschlagenen Anmeldeversuchen) und kann nicht eindeutig aus den Eigenschaften einzelner CloudFormation‑Ressourcen abgeleitet werden.",
     "cfn_resource_types": []
   },
   {
@@ -4870,7 +4881,7 @@
     "requirement_id": "BER.3.12",
     "title": "Systemsperre bei Inaktivität",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf eine Systemsperre bei Inaktivität, die nicht über eine CloudFormation‑Ressource konfiguriert werden kann.",
+    "rationale": "Die Anforderung bezieht sich auf eine Systemsperre bei Inaktivität, die nicht über die Konfiguration einzelner CloudFormation‑Ressourcen, sondern über Betriebssystem‑ oder Anwendungseinstellungen bzw. Kontoeinstellungen gesteuert wird.",
     "cfn_resource_types": []
   },
   {
@@ -4878,7 +4889,7 @@
     "requirement_id": "BER.3.13",
     "title": "Sperre der Anwendung bei Inaktivität",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf das Laufzeitverhalten einer Anwendung (Inaktivitätssperre) und kann nicht anhand von CloudFormation‑Ressourcen‑Konfigurationen in einem einzelnen Template geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf das Verhalten einer Anwendung (Inaktivitätssperre) und kann nicht anhand von CloudFormation‑Ressourcen‑Konfigurationen geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -4886,7 +4897,7 @@
     "requirement_id": "BER.3.14",
     "title": "Kein Recycling von Zugängen",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf das Management von Benutzerkonten und deren Wiederverwendung, was nicht durch die Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden kann.",
+    "rationale": "Die Anforderung bezieht sich auf die Wiederverwendung von Zugangskonten und ist ein Konto‑ bzw. Organisations‑Aspekt, der nicht durch die Konfiguration einzelner CloudFormation‑Ressourcen prüfbar ist.",
     "cfn_resource_types": []
   },
   {
@@ -5015,9 +5026,14 @@
     "source": "BSI",
     "requirement_id": "BER.4.2",
     "title": "Autorisierung von Berechtigungen",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Autorisierung von Berechtigungszuweisungen und ist ein Prozess‑ bzw. Organisationsaspekt, der nicht aus den Eigenschaften einzelner CloudFormation‑Ressourcen ersichtlich ist.",
-    "cfn_resource_types": []
+    "outcome": "selected",
+    "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten IAM‑Rollen, -Benutzer und -Policies geprüft werden, ob nur bestimmte Rollen Berechtigungen zuweisen dürfen.",
+    "cfn_resource_types": [
+      "AWS::IAM::Role",
+      "AWS::IAM::User",
+      "AWS::IAM::Policy",
+      "AWS::IAM::Group"
+    ]
   },
   {
     "source": "BSI",
@@ -5031,23 +5047,16 @@
     "source": "BSI",
     "requirement_id": "BER.4.4",
     "title": "Überprüfung von Berechtigungen",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf die Prüfung, ob in den im CloudFormation‑Template definierten IAM‑Policies und Ressourcen‑Policies nur notwendige Berechtigungen vergeben sind, was anhand der dort konfigurierten Berechtigungen automatisiert überprüft werden kann.",
-    "cfn_resource_types": [
-      "AWS::IAM::Policy",
-      "AWS::IAM::Role",
-      "AWS::IAM::User",
-      "AWS::IAM::Group",
-      "AWS::S3::BucketPolicy",
-      "AWS::KMS::Key"
-    ]
+    "outcome": "not_testable",
+    "rationale": "Die Anforderung bezieht sich auf einen laufenden Prüfprozess und kann nicht allein anhand der im CloudFormation‑Template definierten Ressourcenkonfiguration ermittelt werden.",
+    "cfn_resource_types": []
   },
   {
     "source": "BSI",
     "requirement_id": "BER.4.4.1",
     "title": "Überprüfung tatsächlicher Berechtigungen",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf den Abgleich von dokumentierten und tatsächlich vergebenen Berechtigungen und kann nicht allein anhand der Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf einen regelmäßigen Abgleich von dokumentierten und tatsächlich vergebenen Berechtigungen und ist ein Prozess, der nicht anhand einzelner CloudFormation-Ressourcen konfiguriert werden kann.",
     "cfn_resource_types": []
   },
   {
@@ -5119,7 +5128,7 @@
     "requirement_id": "BER.5.4",
     "title": "Nur etablierte Kryptographie",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Auswahl etablierter kryptografischer Algorithmen bei Authentifizierungsmechanismen, die in einem einzelnen CloudFormation‑Template nicht eindeutig konfigurierbar oder prüfbar ist.",
+    "rationale": "Die Anforderung bezieht sich auf die Auswahl von kryptografischen Algorithmen, die nicht in den Eigenschaften von CloudFormation‑Ressourcen festgelegt werden können, daher ist sie nicht prüfbar.",
     "cfn_resource_types": []
   },
   {
@@ -5227,8 +5236,8 @@
     "source": "BSI",
     "requirement_id": "BER.6.2",
     "title": "Blockieren von Passwort Recycling",
-    "outcome": "llm_error",
-    "rationale": "Die Antwort des Modells blieb auch nach zwei Wiederholungen ungültig.",
+    "outcome": "not_testable",
+    "rationale": "Die Anforderung bezieht sich auf die Passwort‑Richtlinie, die auf Kontoebene konfiguriert wird und nicht über einzelne CloudFormation‑Ressourcen im Template prüfbar ist.",
     "cfn_resource_types": []
   },
   {
@@ -5260,7 +5269,7 @@
     "requirement_id": "BER.6.6",
     "title": "Monitoring von Zugangsdaten",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Überwachung von Zugangsdaten und erfordert organisatorische Prozesse bzw. Dienste, die nicht durch die Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden können.",
+    "rationale": "Die Anforderung bezieht sich auf einen laufenden Überwachungsprozess von Zugangsdaten und kann nicht allein anhand der Konfiguration einzelner CloudFormation‑Ressourcen nachgewiesen werden.",
     "cfn_resource_types": []
   },
   {
@@ -5268,7 +5277,7 @@
     "requirement_id": "BER.7.1",
     "title": "Etablierte Algorithmen bei der Schlüsselerzeugung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die zulässigen kryptografischen Algorithmen bei der Schlüsselerzeugung und lässt sich nicht eindeutig anhand einer einzelnen CloudFormation‑Ressource prüfen.",
+    "rationale": "Die Anforderung bezieht sich auf die zulässigen kryptografischen Algorithmen bei der Schlüsselerzeugung und lässt sich nicht eindeutig anhand einzelner CloudFormation‑Ressourcen prüfen, da sie eher eine organisationsweite Richtlinie bzw. Berechtigung betrifft.",
     "cfn_resource_types": []
   },
   {
@@ -5276,7 +5285,7 @@
     "requirement_id": "BER.7.2",
     "title": "Schlüssellänge",
     "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf die festgelegte Schlüssellänge bei der Erzeugung von KMS‑Schlüsseln, die in einem CloudFormation‑Template über den Parameter KeySpec des Typs AWS::KMS::Key konfiguriert werden kann.",
+    "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten KMS‑Key‑Ressourcen (AWS::KMS::Key) geprüft werden, da dort die Schlüssel‑Spec (z. B. RSA_2048) angegeben wird, die die Schlüssellänge festlegt.",
     "cfn_resource_types": [
       "AWS::KMS::Key"
     ]
@@ -5302,7 +5311,7 @@
     "requirement_id": "BER.7.5",
     "title": "Kriterien für die Qualität von Zufallszahlen",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Qualität von Zufallszahlen bei der Schlüsselerzeugung und lässt sich nicht anhand von CloudFormation‑Ressourcen prüfen.",
+    "rationale": "Die Anforderung bezieht sich auf die Qualität von Zufallszahlen bei der Schlüsselerzeugung und ist kein konfigurierbares Attribut einer einzelnen CloudFormation‑Ressource, sondern ein generelles kryptografisches Prinzip.",
     "cfn_resource_types": []
   },
   {
@@ -5378,7 +5387,7 @@
     "requirement_id": "BER.7.14",
     "title": "Schlüssel vor Ablauf prüfen",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf eine laufende Prüfung von Schlüsselabläufen und kann nicht allein durch die Konfiguration von CloudFormation‑Ressourcen nachgewiesen werden.",
+    "rationale": "Die Anforderung bezieht sich auf einen laufenden Prüfprozess und kann nicht allein anhand der Konfiguration einzelner CloudFormation‑Ressourcen ermittelt werden.",
     "cfn_resource_types": []
   },
   {
@@ -5402,11 +5411,11 @@
     "requirement_id": "BER.7.16.1",
     "title": "Zertifizierungsstelle",
     "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Berechtigungen zur Beglaubigung von Schlüsseln, was über IAM‑Policies oder Rollen im CloudFormation‑Template konfigurierbar und prüfbar ist.",
+    "rationale": "Die Anforderung lässt sich prüfen, indem in einem CloudFormation‑Template die IAM‑Rollen/Policies oder KMS‑Key‑Policies auf die zugewiesene Berechtigung zur Schlüsselbeglaubigung für eine bestimmte Person oder Rolle untersucht werden.",
     "cfn_resource_types": [
+      "AWS::KMS::Key",
       "AWS::IAM::Policy",
-      "AWS::IAM::Role",
-      "AWS::KMS::Key"
+      "AWS::IAM::Role"
     ]
   },
   {
@@ -5766,7 +5775,7 @@
     "requirement_id": "DET.1.1.2",
     "title": "Zuweisung der Aufgaben",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Aufgaben und Prozesse und kann nicht anhand von CloudFormation-Ressourcen konfiguriert werden.",
+    "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Aufgaben zu Personen oder Rollen und betrifft Prozesse bzw. organisatorische Maßnahmen, nicht die Konfiguration von CloudFormation‑Ressourcen.",
     "cfn_resource_types": []
   },
   {
@@ -5782,7 +5791,7 @@
     "requirement_id": "DET.1.2",
     "title": "Regelmäßige Überprüfung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die regelmäßige Überprüfung von Verfahren und Regelungen und ist nicht an die Konfiguration einzelner CloudFormation‑Ressourcen geknüpft.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse zur regelmäßigen Überprüfung von Verfahren und Regelungen und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen nachgewiesen werden.",
     "cfn_resource_types": []
   },
   {
@@ -5837,9 +5846,11 @@
     "source": "BSI",
     "requirement_id": "DET.3.1",
     "title": "Protokollierung sicherheitsrelevanter Ereignisse",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Protokollierung sicherheitsrelevanter Ereignisse in Anwendungen und lässt sich nicht eindeutig anhand einzelner CloudFormation‑Ressourcen prüfen.",
-    "cfn_resource_types": []
+    "outcome": "selected",
+    "rationale": "Die Anforderung lässt sich prüfen, indem im CloudFormation‑Template nach LogGroup‑Ressourcen gesucht und deren RetentionInDays‑Wert auf die geforderte Mindestfrist überprüft wird.",
+    "cfn_resource_types": [
+      "AWS::Logs::LogGroup"
+    ]
   },
   {
     "source": "BSI",
@@ -5960,7 +5971,7 @@
     "requirement_id": "DET.3.4",
     "title": "Speicherkapazität",
     "outcome": "not_testable",
-    "rationale": "Die verfügbare Speicherkapazität für die Protokollierung ist kein konfigurierbarer Parameter eines einzelnen CloudFormation‑Ressourcentyps, sondern ein Laufzeit‑ bzw. Kontozustand und kann daher nicht aus dem Template geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf das laufende Monitoring des genutzten Speicherplatzes und kann nicht anhand der in einem CloudFormation‑Template definierten Ressourcenkonfiguration geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -5992,7 +6003,7 @@
     "requirement_id": "DET.4.2",
     "title": "Automatische Angriffserkennung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Aktivierung von Angriffserkennungsdiensten und ist nicht eindeutig einer einzelnen CloudFormation‑Ressource zuzuordnen.",
+    "rationale": "Die Anforderung bezieht sich auf den Betrieb/Monitoring und kann nicht anhand einzelner CloudFormation‑Ressourcen geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -6106,9 +6117,11 @@
     "source": "BSI",
     "requirement_id": "DET.4.12",
     "title": "Monitoring der Netzverfügbarkeit",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Überwachung der Netzverfügbarkeit und lässt sich nicht eindeutig anhand einer einzelnen Ressourcenkonfiguration im CloudFormation‑Template prüfen.",
-    "cfn_resource_types": []
+    "outcome": "not_relevant",
+    "rationale": "Der erste Ressourcentyp AWS::CloudWatch::Alarm liegt nicht im Prüfumfang.",
+    "cfn_resource_types": [
+      "AWS::CloudWatch::Alarm"
+    ]
   },
   {
     "source": "BSI",
@@ -6123,7 +6136,7 @@
     "requirement_id": "DET.4.13",
     "title": "Verfügbarkeit des Hostsystems",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Überwachung der Netzwerkerreichbarkeit von Hostsystemen und kann nicht allein anhand der Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf die Überwachung der Netz­erreichbarkeit von Hostsystemen und nicht auf konfigurierbare Eigenschaften einzelner CloudFormation‑Ressourcen.",
     "cfn_resource_types": []
   },
   {
@@ -6131,16 +6144,18 @@
     "requirement_id": "DET.4.14",
     "title": "Verfügbarkeit der Anwendung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Überwachung der Netzerreichbarkeit und ist nicht eindeutig einer CloudFormation‑Ressource zuzuordnen.",
+    "rationale": "Die Anforderung bezieht sich auf die Überwachung der Netzerreichbarkeit und ist ein operatives Monitoring, das nicht allein aus der Konfiguration einzelner CloudFormation‑Ressourcen ableitbar ist.",
     "cfn_resource_types": []
   },
   {
     "source": "BSI",
     "requirement_id": "DET.4.15",
     "title": "Ressourcenauslastung von Hostsystemen",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die laufende Überwachung der Ressourcenauslastung von Hostsystemen und kann nicht allein anhand der Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden.",
-    "cfn_resource_types": []
+    "outcome": "not_relevant",
+    "rationale": "Der erste Ressourcentyp AWS::CloudWatch::Alarm liegt nicht im Prüfumfang.",
+    "cfn_resource_types": [
+      "AWS::CloudWatch::Alarm"
+    ]
   },
   {
     "source": "BSI",
@@ -6211,7 +6226,7 @@
     "requirement_id": "DET.5.3.1",
     "title": "Autorisierung kritischer Scans",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse/Autorisation von Scans und kann nicht anhand einzelner CloudFormation‑Ressourcen geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die Autorisierung von Scans, die nicht durch einzelne CloudFormation‑Ressourcen konfigurierbar sind.",
     "cfn_resource_types": []
   },
   {
@@ -6267,7 +6282,7 @@
     "requirement_id": "DET.5.8",
     "title": "Bedrohungsanalyse",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Durchführung einer Bedrohungsanalyse und nicht auf konfigurierbare Ressourcen im CloudFormation-Template, sodass sie nicht anhand von CFN‑Ressourcen geprüft werden kann.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und kann nicht anhand von Ressourcen‑Konfigurationen in einem CloudFormation‑Template geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -6323,7 +6338,7 @@
     "requirement_id": "DET.5.10.2",
     "title": "Automatisierte Überwachung von Systemupdates",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Überwachung des Patch‑Status und nicht auf konfigurierbare Eigenschaften einzelner CloudFormation‑Ressourcen.",
+    "rationale": "Die Anforderung bezieht sich auf die Überwachung des Patch‑Status von IT‑Systemen und nicht auf konfigurierbare Eigenschaften einzelner CloudFormation‑Ressourcen, sodass sie nicht anhand eines CFN‑Templates prüfbar ist.",
     "cfn_resource_types": []
   },
   {
@@ -6355,7 +6370,7 @@
     "requirement_id": "DET.6.1",
     "title": "Beurteilung von Ereignissen",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf ein Verfahren zur Beurteilung von sicherheitsrelevanten Ereignissen und kann nicht anhand von CloudFormation‑Ressourcen geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf ein Verfahren zur Beurteilung von sicherheitsrelevanten Ereignissen und ist ein organisatorisches bzw. prozessuales Kriterium, das nicht aus der Konfiguration einzelner CloudFormation-Ressourcen ableitbar ist.",
     "cfn_resource_types": []
   },
   {
@@ -6363,16 +6378,20 @@
     "requirement_id": "DET.6.1.1",
     "title": "Automatisierte Feststellung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf Prozesse und organisatorische Vorgaben zur Protokollierung kritischer Vorfälle und kann nicht anhand einzelner CloudFormation-Ressourcen konfiguriert oder geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf die Implementierung eines automatisierten Erkennungs- und Protokollierungsmechanismus und lässt sich nicht allein anhand der Konfiguration einzelner CloudFormation‑Ressourcen prüfen.",
     "cfn_resource_types": []
   },
   {
     "source": "BSI",
     "requirement_id": "DET.6.1.2",
     "title": "Automatische Alarmierung",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf Prozesse/Alarmierungsabläufe und nicht auf konfigurierbare Eigenschaften einzelner CloudFormation‑Ressourcen.",
-    "cfn_resource_types": []
+    "outcome": "not_relevant",
+    "rationale": "Der erste Ressourcentyp AWS::CloudWatch::Alarm liegt nicht im Prüfumfang.",
+    "cfn_resource_types": [
+      "AWS::CloudWatch::Alarm",
+      "AWS::SNS::Topic",
+      "AWS::Events::Rule"
+    ]
   },
   {
     "source": "BSI",
@@ -6611,7 +6630,7 @@
     "requirement_id": "KONF.1.1.2",
     "title": "Zuweisung der Aufgaben",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Aufgaben und organisatorische Prozesse, die nicht aus der Konfiguration einzelner CloudFormation‑Ressourcen ableitbar sind.",
+    "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Aufgaben an Personen oder Rollen und ist nicht anhand von Ressourcen‑Konfigurationen im CloudFormation‑Template prüfbar.",
     "cfn_resource_types": []
   },
   {
@@ -6627,7 +6646,7 @@
     "requirement_id": "KONF.1.2",
     "title": "Regelmäßige Überprüfung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die regelmäßige Überprüfung von Verfahren und Regelungen und ist ein Prozess‑ bzw. Organisationsaspekt, nicht auf die Konfiguration einzelner CloudFormation‑Ressourcen anwendbar.",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und kann nicht anhand einzelner CloudFormation‑Ressourcen geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -6678,9 +6697,15 @@
     "source": "BSI",
     "requirement_id": "KONF.2.2",
     "title": "Kryptographische Verfahren in IT-Systemen",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung ist zu allgemein und bezieht sich auf das Gesamtsystem, nicht auf einzelne CloudFormation‑Ressourcen.",
-    "cfn_resource_types": []
+    "outcome": "selected",
+    "rationale": "Die Anforderung lässt sich anhand von Verschlüsselungs‑ und KMS‑Einstellungen in einzelnen CloudFormation‑Ressourcen prüfen, z. B. BucketEncryption bei S3, SSESpecification bei DynamoDB oder StorageEncrypted bei RDS.",
+    "cfn_resource_types": [
+      "AWS::KMS::Key",
+      "AWS::S3::Bucket",
+      "AWS::DynamoDB::Table",
+      "AWS::RDS::DBInstance",
+      "AWS::SecretsManager::Secret"
+    ]
   },
   {
     "source": "BSI",
@@ -6719,7 +6744,7 @@
     "requirement_id": "KONF.2.5",
     "title": "Überprüfung der Konfiguration",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf einen generellen Prüfprozess und kann nicht anhand einzelner CloudFormation‑Ressourcen ermittelt werden.",
+    "rationale": "Die Anforderung bezieht sich auf einen laufenden Prüfprozess und nicht auf konkrete Ressourcenkonfigurationen, sodass sie nicht anhand eines einzelnen CloudFormation-Templates erkennbar ist.",
     "cfn_resource_types": []
   },
   {
@@ -6872,7 +6897,7 @@
     "requirement_id": "KONF.4.2.1",
     "title": "DNS-Verschlüsselung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Verschlüsselung von DNS-Verbindungen, die nicht über einzelne CloudFormation‑Ressourcen konfigurierbar ist.",
+    "rationale": "Die Anforderung bezieht sich auf die Verschlüsselung von DNS-Verbindungen, was typischerweise clientseitig (z. B. DoT/DoH) konfiguriert wird und nicht durch einzelne CloudFormation‑Ressourcen wie IAM‑Policies oder Service‑Einstellungen prüfbar ist.",
     "cfn_resource_types": []
   },
   {
@@ -7328,7 +7353,7 @@
     "requirement_id": "KONF.10.2",
     "title": "Kryptographische Verfahren in Anwendungen",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich allgemein auf kryptographische Verfahren in Anwendungen und das Identitäts‑ und Berechtigungsmanagement, nicht auf konkrete CloudFormation‑Ressourcen‑Eigenschaften, sodass sie nicht anhand eines einzelnen Templates geprüft werden kann.",
+    "rationale": "Die Anforderung bezieht sich allgemein auf kryptographische Verfahren in Anwendungen und deren Abstimmung mit dem Identitäts‑ und Berechtigungsmanagement und lässt sich nicht eindeutig anhand einzelner CloudFormation‑Ressourcen prüfen.",
     "cfn_resource_types": []
   },
   {
@@ -7352,7 +7377,7 @@
     "requirement_id": "KONF.10.5",
     "title": "Überprüfung der Konfiguration",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf einen Prüfprozess und nicht auf eine konkrete Ressourcenkonfiguration im CloudFormation-Template.",
+    "rationale": "Die Anforderung bezieht sich auf einen laufenden Prüfprozess und nicht auf konkrete Ressourcenkonfigurationen, sodass sie nicht anhand eines einzelnen CloudFormation-Templates erkennbar ist.",
     "cfn_resource_types": []
   },
   {
@@ -7402,17 +7427,18 @@
     "outcome": "not_relevant",
     "rationale": "Der erste Ressourcentyp AWS::Route53::HostedZone liegt nicht im Prüfumfang.",
     "cfn_resource_types": [
-      "AWS::Route53::HostedZone",
-      "AWS::Route53::RecordSet"
+      "AWS::Route53::HostedZone"
     ]
   },
   {
     "source": "BSI",
     "requirement_id": "KONF.11.4",
     "title": "Erraten von Zugriffslinks",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf das Verhalten der Webanwendung und kann nicht anhand einzelner CloudFormation‑Ressourcen geprüft werden.",
-    "cfn_resource_types": []
+    "outcome": "selected",
+    "rationale": "Die Anforderung kann anhand der Konfiguration von AWS WAF (z. B. AWS::WAFv2::WebACL) geprüft werden, ob Regeln zum Blockieren von automatisierten Link‑Guessing definiert sind.",
+    "cfn_resource_types": [
+      "AWS::WAFv2::WebACL"
+    ]
   },
   {
     "source": "BSI",
@@ -7487,7 +7513,7 @@
     "requirement_id": "KONF.12.1",
     "title": "Eingabevalidierung",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Validierung von Eingabedaten in der Anwendung und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf die Validierung von Eingabedaten in der Anwendung und nicht auf konfigurierbare CloudFormation‑Ressourcen.",
     "cfn_resource_types": []
   },
   {
@@ -7612,7 +7638,7 @@
     "requirement_id": "KONF.12.4",
     "title": "Speicherung von Zugangsdaten",
     "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Konfiguration von Webbrowsern und nicht auf CloudFormation‑Ressourcen, daher kann sie nicht anhand eines einzelnen CFN‑Templates geprüft werden.",
+    "rationale": "Die Anforderung bezieht sich auf die Konfiguration von Webbrowsern und nicht auf AWS-Ressourcen, sodass sie in einem CloudFormation-Template nicht prüfbar ist.",
     "cfn_resource_types": []
   },
   {
@@ -7835,13 +7861,13 @@
     "requirement_id": "KONF.14.1",
     "title": "Verschlüsselung beim Transport",
     "outcome": "selected",
-    "rationale": "Die Anforderung lässt sich anhand von Ressourcen, die das Transport‑Protokoll (z. B. HTTPS, TLS) festlegen, im CloudFormation‑Template prüfen.",
+    "rationale": "Die Anforderung lässt sich anhand von Ressourcen prüfen, die Transportverschlüsselung konfigurieren, z. B. Listener mit HTTPS, API‑Gateway‑Domain mit TLS‑Policy oder S3‑Bucket‑Policies, die SecureTransport erzwingen.",
     "cfn_resource_types": [
       "AWS::ElasticLoadBalancingV2::Listener",
       "AWS::ApiGateway::DomainName",
       "AWS::S3::Bucket",
-      "AWS::KinesisFirehose::DeliveryStream",
-      "AWS::Lambda::Function"
+      "AWS::CloudFront::Distribution",
+      "AWS::KinesisFirehose::DeliveryStream"
     ]
   },
   {
@@ -10056,8 +10082,8 @@
     "source": "C5",
     "requirement_id": "OPS-19.01B",
     "title": "OPS-19 Managing Incidents and Crashes - Concept",
-    "outcome": "llm_error",
-    "rationale": "Die Antwort des Modells blieb auch nach zwei Wiederholungen ungültig.",
+    "outcome": "not_testable",
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und Richtlinien zur Incident‑Management und nicht auf konfigurierbare Eigenschaften einzelner CloudFormation‑Ressourcen.",
     "cfn_resource_types": []
   },
   {
@@ -11274,8 +11300,8 @@
     "source": "C5",
     "requirement_id": "CRY-14.01B",
     "title": "CRY-14 Secure Deactivation of Cryptographic Keys",
-    "outcome": "llm_error",
-    "rationale": "Die Antwort des Modells blieb auch nach zwei Wiederholungen ungültig.",
+    "outcome": "not_testable",
+    "rationale": "Die Anforderung bezieht sich auf betriebliche Verfahren zur Deaktivierung und Vernichtung von Krypto‑Schlüsseln nach Ablauf, die nicht durch Eigenschaften einzelner CloudFormation‑Ressourcen (z. B. AWS::KMS::Key) abgebildet werden können; sie liegen auf Prozessebene und nicht in der Template‑Konfiguration.",
     "cfn_resource_types": []
   },
   {
@@ -11370,8 +11396,8 @@
     "source": "C5",
     "requirement_id": "COS-02.01B",
     "title": "COS-02 Security Requirements for Connections in the Cloud Service Provider's Network",
-    "outcome": "llm_error",
-    "rationale": "Die Antwort des Modells blieb auch nach zwei Wiederholungen ungültig.",
+    "outcome": "not_testable",
+    "rationale": "Die Anforderung bezieht sich auf Netzwerkzonen und Kommunikationsregeln des CSP und kann nicht anhand einzelner CloudFormation‑Ressourcen geprüft werden.",
     "cfn_resource_types": []
   },
   {
@@ -13295,9 +13321,15 @@
     "source": "CIS",
     "requirement_id": "2.14",
     "title": "Ensure IAM policies that allow full \"*:*\" administrative privileges are not attached",
-    "outcome": "llm_error",
-    "rationale": "Die Antwort des Modells blieb auch nach zwei Wiederholungen ungültig.",
-    "cfn_resource_types": []
+    "outcome": "selected",
+    "rationale": "Die Anforderung kann anhand der IAM‑Policy‑Ressourcen im CloudFormation‑Template geprüft werden, weil dort die definierten Aktionen und Ressourcen (z. B. Action: '*', Resource: '*') ersichtlich sind.",
+    "cfn_resource_types": [
+      "AWS::IAM::Policy",
+      "AWS::IAM::ManagedPolicy",
+      "AWS::IAM::Role",
+      "AWS::IAM::User",
+      "AWS::IAM::Group"
+    ]
   },
   {
     "source": "CIS",
@@ -14340,8 +14372,8 @@
     "source": "FSBP",
     "requirement_id": "EC2.1",
     "title": "Amazon EBS snapshots should not be public, determined by the ability to be restorable by anyone",
-    "outcome": "llm_error",
-    "rationale": "Die Antwort des Modells blieb auch nach zwei Wiederholungen ungültig.",
+    "outcome": "not_testable",
+    "rationale": "Die öffentliche Freigabe von EBS‑Snapshots wird über die CreateVolumePermission‑Einstellung gesteuert, die nicht über ein CloudFormation‑Resource konfigurierbar ist, sodass die Anforderung nicht anhand eines einzelnen Templates prüfbar ist.",
     "cfn_resource_types": []
   },
   {
@@ -14639,7 +14671,7 @@
     "requirement_id": "ECS.3",
     "title": "ECS task definitions should not share the host's process namespace",
     "outcome": "selected",
-    "rationale": "Die Anforderung kann anhand des CloudFormation‑Resources AWS::ECS::TaskDefinition und dessen Eigenschaft LinuxParameters.PidMode geprüft werden.",
+    "rationale": "Die Anforderung kann anhand des CloudFormation‑Ressourcentyps AWS::ECS::TaskDefinition und dessen Eigenschaft LinuxParameters.PidMode geprüft werden.",
     "cfn_resource_types": [
       "AWS::ECS::TaskDefinition"
     ]
@@ -15180,8 +15212,8 @@
     "source": "FSBP",
     "requirement_id": "IAM.10",
     "title": "Password policies for IAM users should have strong AWS Configurations",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Konto‑Passwortpolicy, die nicht über einzelne CloudFormation‑Ressourcen, sondern über die Kontoeinstellung definiert wird und daher im Template nicht prüfbar ist.",
+    "outcome": "llm_error",
+    "rationale": "Die Antwort des Modells blieb auch nach zwei Wiederholungen ungültig.",
     "cfn_resource_types": []
   },
   {

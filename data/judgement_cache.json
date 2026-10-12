@@ -9,6 +9,11 @@
     "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Konfigurationswerkzeugen, Verwendungszweck und Herkunft und ist ein Prozess‑ bzw. Organisationsaspekt, der nicht aus den Eigenschaften einzelner CloudFormation‑Ressourcen ableitbar ist.",
     "cfn_resource_types": []
   },
+  "00a04e23f80b08c4dedb24214960c07662b1de49d3ee2aea94a73d98e40b4c34|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse zur regelmäßigen Überprüfung von Verfahren und Regelungen und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen nachgewiesen werden.",
+    "cfn_resource_types": []
+  },
   "00e3aaf9f87c8bbd61db016fb94601f546765a84ee1943d015aef88665062bb2|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung ist allgemein gehalten und bezieht sich auf Systemfunktionen zum Schutz vor bekannten Sicherheitslücken, ohne konkrete CloudFormation‑Ressourcen oder konfigurierbare Parameter zu nennen, sodass sie nicht anhand eines einzelnen CFN‑Templates prüfbar ist.",
@@ -34,6 +39,15 @@
     "rationale": "Die Anforderung bezieht sich auf vertragliche und dokumentationsbezogene Aspekte (Backup-Vertrag und Transparenz in der Systembeschreibung) und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen geprüft werden.",
     "cfn_resource_types": []
   },
+  "0203aabe886e7ce5bf1319de891f941cb8847cadd9ab4f3c7f220105d4777419|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung bezieht sich auf IAM‑Policies, die das Recht zum Anlegen von IAM‑Usern bzw. -Rollen regeln und kann daher anhand der im Template definierten AWS::IAM::Policy‑ bzw. AWS::IAM::Role‑Ressourcen geprüft werden.",
+    "cfn_resource_types": [
+      "AWS::IAM::Policy",
+      "AWS::IAM::Role",
+      "AWS::IAM::User"
+    ]
+  },
   "020dee265e3ef90b07ed6f245397c6d22c5368786a247cad40d1ce64aeccc4cc|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Prozesse zur Identifizierung, Aufzeichnung, Klassifizierung und Priorisierung von Vorfällen und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen geprüft werden.",
@@ -42,6 +56,11 @@
   "02225e252b96ecae7148b4a2f0a337b6812ba6b2acda9fa16d540800262941a2|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf den Inhalt von Logeinträgen (Zeitpunkt, Quelle, Zielobjekt) und nicht auf konfigurierbare Eigenschaften von CloudFormation‑Ressourcen, sodass sie nicht anhand eines einzelnen CFN‑Templates prüfbar ist.",
+    "cfn_resource_types": []
+  },
+  "022b490ad32d749ea9a4ea10b1e854640d76f9074fccd228c5f899929446e6a2|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf ein Verfahren zur Beurteilung von sicherheitsrelevanten Ereignissen und ist ein organisatorisches bzw. prozessuales Kriterium, das nicht aus der Konfiguration einzelner CloudFormation-Ressourcen ableitbar ist.",
     "cfn_resource_types": []
   },
   "024d1edd913da400a9f43447db9c14d5121ace95b253c898a204fc4b28a5f61a|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -179,6 +198,11 @@
       "AWS::ElasticLoadBalancingV2::LoadBalancer"
     ]
   },
+  "05a91676f9381604f97329f106db72b59f3417ee208c443e4d71d2b48caa9f3d|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf einen laufenden Prüfprozess und nicht auf konkrete Ressourcenkonfigurationen, sodass sie nicht anhand eines einzelnen CloudFormation-Templates erkennbar ist.",
+    "cfn_resource_types": []
+  },
   "0648744eec734f4580d825823598b562328a9f44c6b6b9de5ee234ab50ce4c95|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Prozesse und Verifizierungen bei der Schlüsselbereitstellung und kann nicht allein anhand der Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden.",
@@ -251,6 +275,11 @@
   "097ec382f760e33c5dcfe2387f462f1bb312a6753c90c1344ee6dd14436ea566|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf das generelle Verhalten des Cloud‑Service‑Providers und die zentrale, unveränderliche Aufbewahrung von Log‑Daten, was nicht allein durch die Konfiguration einzelner CloudFormation‑Ressourcen nachweisbar ist.",
+    "cfn_resource_types": []
+  },
+  "09831d1b3bf928c04a50ce9f2affff188e65fc3af7e51735b37d5518755cd6ba|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und nicht auf konfigurierbare Ressourcen im CloudFormation‑Template.",
     "cfn_resource_types": []
   },
   "09ce599d8398b77b39d63c5edbe7863f9f7cfff68ecb3decb173b1ac8f9b6abe|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -457,6 +486,11 @@
     "rationale": "Die Anforderung bezieht sich auf den Prozess der Meldung von Schwachstellen nach dem CSAF und BSI‑Richtlinien und kann nicht anhand der Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden.",
     "cfn_resource_types": []
   },
+  "1016ed4813c9ceb9c51d76a8d388877efa827820cd45514f63008889ebc946af|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf das Verhalten einer Anwendung (Inaktivitätssperre) und kann nicht anhand von CloudFormation‑Ressourcen‑Konfigurationen geprüft werden.",
+    "cfn_resource_types": []
+  },
   "10483ce91e12b94f6f374af55a9e3e64e43ae44d0d28cd2476cdcf5e6bccbdbf|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Verfahren und Regelungen und kann nicht anhand von CloudFormation-Ressourcen geprüft werden.",
@@ -509,6 +543,11 @@
       "AWS::IAM::Group"
     ]
   },
+  "120b3b548d39f0d6b8c0ad0b8fd7dd157c3743d41cd8cce3e17d938a6116ed4d|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf eine Systemsperre bei Inaktivität, die nicht über die Konfiguration einzelner CloudFormation‑Ressourcen, sondern über Betriebssystem‑ oder Anwendungseinstellungen bzw. Kontoeinstellungen gesteuert wird.",
+    "cfn_resource_types": []
+  },
   "12acf3b7f202140d91a6688062c0af5b334a1e37f1b3b332222d03b31ba03685|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Deaktivierung von einfacher Biometrie auf IT‑Systemen und lässt sich nicht anhand von CloudFormation‑Ressourcen in einem Template prüfen.",
@@ -517,6 +556,11 @@
   "12baf6e633e728a9bd39eed30de1a5aa36eb4b2b7f1562791546c51b65b95300|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf organisatorische Vorgaben zur Nutzung von IT‑Systemen mit gleichwertigem Schutzniveau bei der Schlüsselerzeugung und kann nicht anhand einzelner CloudFormation‑Ressourcen konfiguriert oder geprüft werden.",
+    "cfn_resource_types": []
+  },
+  "12dc11de1b89611fcaffd1311241b474f0d2b3b1f2acba52c39292d2640ea4fe|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Passwort‑Richtlinie, die auf Kontoebene konfiguriert wird und nicht über einzelne CloudFormation‑Ressourcen im Template prüfbar ist.",
     "cfn_resource_types": []
   },
   "12f5e87db66f92c835ffffd63248514cdf7e9f48182b9b09b92aad2beac5d913|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -557,6 +601,11 @@
   "140a10b055e0acd9f1e008e990fc90878b588b82e04009a7ad1828a488eb4ea2|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Prozesse und Beschaffungsmanagement vor Netzanbindung und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen geprüft werden.",
+    "cfn_resource_types": []
+  },
+  "1466c1dbd5dfb98670bf148e320c84b74905a3357dfe5f23a68a8ad756f5b64b|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf den Betrieb/Monitoring und kann nicht anhand einzelner CloudFormation‑Ressourcen geprüft werden.",
     "cfn_resource_types": []
   },
   "1470e4a828abc6cb1f4cb52c016ad6e532b938ea1fa30ff09f7b4515d76f0c5e|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -928,6 +977,11 @@
       "AWS::RDS::DBSubnetGroup"
     ]
   },
+  "1d6968f08b80333671f955cf97eae65dc8a5b33e633c98af338c39d1e5a1a821|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Überwachung der Netzerreichbarkeit und ist ein operatives Monitoring, das nicht allein aus der Konfiguration einzelner CloudFormation‑Ressourcen ableitbar ist.",
+    "cfn_resource_types": []
+  },
   "1d9ff626a61398292ef5869ae70a89f5b9150f018cb6b3c7a74ff59e81555138|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Qualität von Zufallszahlen bei der Schlüsselerzeugung und lässt sich nicht anhand von CloudFormation‑Ressourcen prüfen.",
@@ -1042,6 +1096,13 @@
     "rationale": "Die Anforderung bezieht sich auf die technische Isolation eines Mandanten, die in einer Spezifikation durch Angaben zu Mandanten‑Trennung, Netzwerk‑ oder Datenbank‑Isolation beschrieben und damit prüfbar ist.",
     "cfn_resource_types": []
   },
+  "2206db778f9dbcc4fde49810fc05eac1734467de31d4feb87eab1ba9a8e56bd4|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung lässt sich prüfen, indem im CloudFormation‑Template nach LogGroup‑Ressourcen gesucht und deren RetentionInDays‑Wert auf die geforderte Mindestfrist überprüft wird.",
+    "cfn_resource_types": [
+      "AWS::Logs::LogGroup"
+    ]
+  },
   "2264c0e705bec17a68dd62b50d8d9c0f4501ca9d57e3364ebe9ef6adb2574340|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": true,
     "rationale": "Die Anforderung lässt sich anhand von Ressourcenkonfigurationen prüfen, weil in CloudFormation z. B. für API‑Gateways, Load‑Balancer‑Listener oder S3‑Bucket‑Policies Einstellungen existieren, die die Nutzung von TLS/HTTPS (SecureTransport) erzwingen.",
@@ -1082,6 +1143,15 @@
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die organisatorische Zuweisung von Aufgaben und kann nicht anhand von Ressourcen‑Konfigurationen in einem CloudFormation‑Template geprüft werden.",
     "cfn_resource_types": []
+  },
+  "235f29d7df1e8f990d23262c56e198b72f3dfdc282403795312ee5216076758d|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung lässt sich prüfen, indem in einem CloudFormation‑Template die IAM‑Rollen/Policies oder KMS‑Key‑Policies auf die zugewiesene Berechtigung zur Schlüsselbeglaubigung für eine bestimmte Person oder Rolle untersucht werden.",
+    "cfn_resource_types": [
+      "AWS::KMS::Key",
+      "AWS::IAM::Policy",
+      "AWS::IAM::Role"
+    ]
   },
   "23830c63f7f862335ef1a8eced2acb826053f51bb6811ccbd5adfb167760fc8d|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
@@ -1157,6 +1227,11 @@
   "26cafb73e20462b5f0b7f427039c3f34e2fe7ed654101130e93c8ff9a3cbad0d|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Entdeckung und Klassifizierung von Daten, was nicht durch die Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden kann.",
+    "cfn_resource_types": []
+  },
+  "26ea90f7e0e1e0a19b228097104e4ec03f36cc960c8be33e50d60b07b9014c87|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf das Beschaffungsmanagement und die Dokumentation von Kriterien, was Prozesse und Verträge betrifft und nicht auf die Konfiguration von CloudFormation‑Ressourcen.",
     "cfn_resource_types": []
   },
   "26f44506cadafe1fefbeee6590f357029c4bb4105c36a104550c61c76bd5ab4b|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -1269,9 +1344,19 @@
     "rationale": "Die Anforderung verlangt konkrete Löschfristen und -verfahren, die in einer Spezifikation festgehalten werden können, sodass geprüft werden kann, ob die Löschung umgesetzt wird.",
     "cfn_resource_types": []
   },
+  "2ab33a4f36c9afa18c5a1d3d8490c1cb2f1cc46d89084e417e6a3c207ed5ffad|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Wiederverwendung von Zugangskonten und ist ein Konto‑ bzw. Organisations‑Aspekt, der nicht durch die Konfiguration einzelner CloudFormation‑Ressourcen prüfbar ist.",
+    "cfn_resource_types": []
+  },
   "2b2eac1692b73de8f4299382401f7aafbcd1772c25ed26668c3eea42d820d962|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung ist zu allgemein und bezieht sich auf das Gesamtsystem, nicht auf einzelne CloudFormation‑Ressourcen.",
+    "cfn_resource_types": []
+  },
+  "2b64b9bc1b7b9bc0b510e64042e5517bfbe831885c2fb12e38d4e98b2151da62|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Verschlüsselung der WLAN‑Netzanbindung und nicht auf konfigurierbare AWS‑Ressourcen, sodass sie nicht anhand eines CloudFormation‑Templates geprüft werden kann.",
     "cfn_resource_types": []
   },
   "2b8d833e83f1af897b910465acc1eaac91fbf5fbf7ce8f3d6f5182eb2f2fb244|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -1366,6 +1451,11 @@
     "rationale": "Die Anforderung bezieht sich auf die Aktivierung von MFA für das Root‑Benutzerkonto, was eine Kontoeinstellung ist und nicht in einem CloudFormation‑Template konfigurierbar ist.",
     "cfn_resource_types": []
   },
+  "2f4ebd1f524f54764a6dedac7dc8e77f4cf52206fd2e8a02773785a6b6098d76|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Aufgaben an Personen oder Rollen und ist nicht anhand von Ressourcen‑Konfigurationen im CloudFormation‑Template prüfbar.",
+    "cfn_resource_types": []
+  },
   "2f5c80ee9f8b219670339c0efb5773af32d043681112982d16168d864b225b86|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die architektonische Planung und Dimensionierung der Netzanbindung und lässt sich nicht anhand einzelner CloudFormation-Ressourcen prüfen.",
@@ -1453,6 +1543,11 @@
     "rationale": "Die Anforderung bezieht sich auf organisatorische Regelungen und Protokollierung von Befugnissen und berührt keine technische Spezifikation, daher kann sie nicht anhand einer Freitext‑ oder OpenAPI‑Spezifikation geprüft werden.",
     "cfn_resource_types": []
   },
+  "317002c9b3b28f23f41465cb6166cdf9dc33732646acd5ea4bd24cdf72690d68|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Kontrollen und nicht auf die Konfiguration von CloudFormation-Ressourcen.",
+    "cfn_resource_types": []
+  },
   "3197a4a742859919b25713aab203fd7bdb5faa497a406c5c016590f71f5461ee|6d06b0abd0dc|openai/gpt-oss-120b": {
     "testable": true,
     "rationale": "Die Anforderung verlangt ein Verzeichnis mit definierten Angaben, das in einer Spezifikation beschrieben werden kann und somit prüfbar ist.",
@@ -1479,6 +1574,11 @@
   "32394aa35047db090c5de98cdc8c11a06c9754e9ee12e6e4316fc7b07f0b3e61|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und Genehmigungen und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen geprüft werden.",
+    "cfn_resource_types": []
+  },
+  "325ad7362ccd5a02753f01b957f345d37dfb11e2be59ae72bae92aa10e1b740e|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf einen laufenden Prüfprozess und kann nicht allein anhand der im CloudFormation‑Template definierten Ressourcenkonfiguration ermittelt werden.",
     "cfn_resource_types": []
   },
   "3261b4faf209dd3dd68f49cf56f0c928aca0914b2cd006c8698ba8f72ce3016f|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -1584,6 +1684,13 @@
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die zentrale Verwaltung von IAM‑Benutzern über die Konten‑ oder Organisationsebene und kann nicht anhand einzelner CloudFormation‑Ressourcen im Template geprüft werden.",
     "cfn_resource_types": []
+  },
+  "359d558760b11e93c94286354e3761da4fef7468d6ef5bdc2f6b8708183c8c49|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten KMS‑Key‑Ressourcen (AWS::KMS::Key) geprüft werden, da dort die Schlüssel‑Spec (z. B. RSA_2048) angegeben wird, die die Schlüssellänge festlegt.",
+    "cfn_resource_types": [
+      "AWS::KMS::Key"
+    ]
   },
   "359e0c7f85901ab3f53f84174a0d96c30d8d94a62b49819a5ec7d266594fba6e|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
@@ -1840,6 +1947,14 @@
     "rationale": "Die Anforderung bezieht sich auf die Passwort‑Qualität, die über die Konten‑ bzw. Organisationsebene (Passwort‑Richtlinie) gesteuert wird und nicht durch einzelne CloudFormation‑Ressourcen im Template prüfbar ist.",
     "cfn_resource_types": []
   },
+  "3feab7775e6974ef791b8361edf11902b533ebb7a09eb7fdcbe9b0d528249f4e|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung lässt sich prüfen, indem in einem CloudFormation‑Template nach Ressourcen mit dedizierten Host‑ oder Tenancy‑Einstellungen (z. B. AWS::EC2::Host oder AWS::EC2::Instance mit Tenancy=dedicated) gesucht wird.",
+    "cfn_resource_types": [
+      "AWS::EC2::Host",
+      "AWS::EC2::Instance"
+    ]
+  },
   "402b057cb0dc054bbd75c025c8ee518f800b67ce12dd30d9c37180771728f605|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und kann nicht anhand von CloudFormation-Ressourcen geprüft werden.",
@@ -1959,6 +2074,16 @@
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Monitoring‑Maßnahmen und Prozesse und lässt sich nicht eindeutig anhand einzelner CloudFormation‑Ressourcen prüfen.",
     "cfn_resource_types": []
+  },
+  "42ad87a3f14ac0df2d5c44c578b6bab319945fade39ce99430e878bf62bb45f1|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung kann anhand der in einem CloudFormation‑Template definierten IAM‑Rollen, -Benutzer und -Policies geprüft werden, ob nur bestimmte Rollen Berechtigungen zuweisen dürfen.",
+    "cfn_resource_types": [
+      "AWS::IAM::Role",
+      "AWS::IAM::User",
+      "AWS::IAM::Policy",
+      "AWS::IAM::Group"
+    ]
   },
   "42dbcae9de606054e2ebe0b6a361d4b0d38ef3e401e20facef83388ab4bd0bdb|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
@@ -2141,6 +2266,11 @@
       "AWS::ElasticLoadBalancing::LoadBalancer"
     ]
   },
+  "494a4c522fa588bb4328aa5579229d46c34564184ea3b238c69798a56ef25cb3|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die Autorisierung von Scans, die nicht durch einzelne CloudFormation‑Ressourcen konfigurierbar sind.",
+    "cfn_resource_types": []
+  },
   "495086c6573ac76312ec6b7bff66cd1073865def08b925bd9c32349025870c7b|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Browser‑Seite und die im HTML eingebetteten Subresource‑Integrity‑Attribute und kann nicht anhand von CloudFormation‑Ressourcen geprüft werden.",
@@ -2213,6 +2343,13 @@
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse zur ereignisgesteuerten Deaktivierung von Zugangskonten und kann nicht anhand von CloudFormation‑Ressourcen konfiguriert oder geprüft werden.",
     "cfn_resource_types": []
+  },
+  "4af32ddbef6d4975c710e6aa4ff7f495ab90602d7e69ab0e43f058eb428940e5|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung kann anhand der Existenz und Konfiguration von AWS::WAFv2::WebACL im CloudFormation‑Template geprüft werden, da damit Webinhalte nach Kriterien gefiltert werden können.",
+    "cfn_resource_types": [
+      "AWS::WAFv2::WebACL"
+    ]
   },
   "4b004b257e45b1436cb0ef4350d6105f370ee8a4628df5493409dae922464242|6d06b0abd0dc|openai/gpt-oss-120b": {
     "testable": true,
@@ -2312,6 +2449,16 @@
     "rationale": "Die Anforderung bezieht sich auf eine architektonische Vorgabe für externe Netzanschlüsse und ist nicht direkt auf einzelne CloudFormation‑Ressourcen wie IAM‑Policies, Verschlüsselung oder Logging abbildbar.",
     "cfn_resource_types": []
   },
+  "4e3d756229faf43753e843ccdd106f77393bdfb962522d05be11e5306106bde7|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung lässt sich anhand von Ressourcen wie AWS::S3::BucketPolicy, AWS::ApiGateway::DomainName oder LoadBalancer‑Konfigurationen prüfen, ob TLS/HTTPS für die Datenübertragung erzwungen wird.",
+    "cfn_resource_types": [
+      "AWS::S3::BucketPolicy",
+      "AWS::ApiGateway::DomainName",
+      "AWS::ElasticLoadBalancingV2::LoadBalancer",
+      "AWS::CloudFront::Distribution"
+    ]
+  },
   "4ebe135f61731f9f691411f940832169a5d9854874b69fdead8a4c6d727b23fd|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": true,
     "rationale": "Die Anforderung kann anhand der Konfiguration von AWS::EC2::SecurityGroup (bzw. AWS::EC2::SecurityGroupIngress) im CloudFormation‑Template geprüft werden, da dort die erlaubten Ingress‑Quellen und Ports definiert sind.",
@@ -2358,6 +2505,11 @@
     "rationale": "Die Anforderung bezieht sich auf die Datenübermittlung in Drittländer und kann anhand einer Spezifikation, die das Vorhandensein eines Angemessenheitsbeschlusses und die regelmäßige Überprüfung dokumentiert, geprüft werden.",
     "cfn_resource_types": []
   },
+  "50c0b1e901733fa291bd0abb9e0db3ce37e497db54b646894ee73380ea152dcd|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Verschlüsselung von DNS-Verbindungen, was typischerweise clientseitig (z. B. DoT/DoH) konfiguriert wird und nicht durch einzelne CloudFormation‑Ressourcen wie IAM‑Policies oder Service‑Einstellungen prüfbar ist.",
+    "cfn_resource_types": []
+  },
   "50c686386a3c52ec1d500fc6fdc396e34cfabd7fb31a37dc0c4226970c8525b1|6d06b0abd0dc|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die laufende betriebliche Pflicht zur Protokollierung von Datenübermittlungen und nicht auf eine fachliche Spezifikation eines Vorhabens, daher ist sie nicht prüfbar im Sinne einer Spezifikation.",
@@ -2381,6 +2533,11 @@
   "5178511e1da61fb4f49731b1d6ca8ba8f6ff85bb7308b2bf4055c2a0f2b11a00|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Aktivierung von MFA für IAM‑Benutzer, was nicht über Eigenschaften eines einzelnen CloudFormation‑Templates geprüft werden kann.",
+    "cfn_resource_types": []
+  },
+  "51a43734294919cf8aaee51a87471d8a41f8d364a25002d33838447f7fd9ee2f|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die regelmäßige Überprüfung der Netzarchitektur und ist ein organisatorischer Prozess, nicht auf konfigurierbare Ressourcen in einem CloudFormation-Template.",
     "cfn_resource_types": []
   },
   "51bd7fb2d7f32fcff23da74bfb02239ce8750a0487542ee00736bd4ddec8f541|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -2566,6 +2723,13 @@
     "rationale": "Die Anforderung bezieht sich auf die Bereitstellung dokumentierter Schnittstellen zur SIEM‑Integration und ist nicht anhand der Konfiguration einzelner Ressourcen in einem CloudFormation‑Template prüfbar.",
     "cfn_resource_types": []
   },
+  "587fbc0261976aafcdd496a380550a9a61b447bd79441e30aa49e900475d5cd7|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung kann anhand des CloudFormation‑Resources AWS::Route53::HostedZone geprüft werden, da dort festgelegt werden kann, ob die Zone privat ist und damit die Veröffentlichung von Domain‑Informationen eingeschränkt wird.",
+    "cfn_resource_types": [
+      "AWS::Route53::HostedZone"
+    ]
+  },
   "5895a1d0293b29aa2115038ccd8a803b15e723b737a0d5d3d5951d7296f59211|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": true,
     "rationale": "In einem CloudFormation-Template kann geprüft werden, ob ein definiertes AWS::EC2::EIP über eine zugehörige AWS::EC2::EIPAssociation mit einer Instanz oder ENI verknüpft ist; fehlt diese Association, ist das EIP ungenutzt.",
@@ -2610,6 +2774,11 @@
   "59d8b6956cb106bffdf737d082df5175c4fc79d6048c465478fbd34a8cb256f1|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf alle IAM‑Benutzer, während MFA in CloudFormation nicht als Eigenschaft eines AWS::IAM::User festgelegt wird und nur über separate MFA‑Device‑Ressourcen erkennbar ist; ein einzelnes Template kann nicht prüfen, ob sämtliche Benutzer MFA besitzen.",
+    "cfn_resource_types": []
+  },
+  "59e454d40dec440478e74a8014f2e504dc6de307e20e9bb19f736fc1c5f8526e|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und nicht auf konfigurierbare Ressourcen im CloudFormation-Template.",
     "cfn_resource_types": []
   },
   "59e8e5d250044b38ce5b0570d9ba02de55e8b45f4a71e7734509b0da3515000d|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -2732,6 +2901,11 @@
   "5c777a52a2a3640bcdcdde26bfef3987cef0e1a0c0f062096bb9161c198c3e90|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf allgemeine technische Maßnahmen zum Schutz der Datenübertragung und deren regelmäßige Überprüfung, nicht auf konkrete Ressourcenkonfigurationen, die in einem einzelnen CloudFormation‑Template geprüft werden können.",
+    "cfn_resource_types": []
+  },
+  "5ca71083d57e930f9551ec628dc2e255c97adafb1a2b52da8eabdb2acd0e60b6|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Konfiguration von Webbrowsern und nicht auf AWS-Ressourcen, sodass sie in einem CloudFormation-Template nicht prüfbar ist.",
     "cfn_resource_types": []
   },
   "5dbac87ffa90c35b95e855a00a70cbd35ea1df77ac4efdcc1213e7c43ac02167|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -2889,6 +3063,11 @@
     "rationale": "Die Anforderung bezieht sich auf das Verhalten von Anwendungen und nicht auf konfigurierbare Eigenschaften von einzelnen CloudFormation‑Ressourcen, daher kann sie nicht anhand eines einzelnen Templates geprüft werden.",
     "cfn_resource_types": []
   },
+  "62195ece778fd057ab4ff722c9ca2c7fb5dd5b7fb67ae8ea50156c72f25ab169|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf einen laufenden Überwachungsprozess von Zugangsdaten und kann nicht allein anhand der Konfiguration einzelner CloudFormation‑Ressourcen nachgewiesen werden.",
+    "cfn_resource_types": []
+  },
   "621a7a2aeb7d5a955d1fb86748ad5c7dd5f2e7b4608a0f2491467b5a56a2b622|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": true,
     "rationale": "Die Anforderung kann anhand der BucketEncryption‑Eigenschaft im AWS::S3::Bucket‑Ressourcenblock geprüft werden, ob SSE‑KMS (oder DSSE‑KMS) verwendet wird.",
@@ -2977,6 +3156,11 @@
     "rationale": "Die Anforderung verlangt eine Begründung, rechtliche Bewertung und Dokumentation, die nicht durch eine technische Spezifikation überprüfbar ist.",
     "cfn_resource_types": []
   },
+  "64d51e7ca754d4873c7b56984a2de6c7586168f7702e3d50c19839340066c8ee|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Validierung von Eingabedaten in der Anwendung und nicht auf konfigurierbare CloudFormation‑Ressourcen.",
+    "cfn_resource_types": []
+  },
   "654b5fc227e0b1ca1a0a76b6123f6a8dd8a7c3124d87a3dbfef2cd71e2630694|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Authentifizierungsmechanismen für interne und externe Mitarbeitende des Cloud‑Service‑Providers und nicht auf konfigurierbare Ressourcen in einem einzelnen CloudFormation‑Template.",
@@ -3019,6 +3203,13 @@
     "rationale": "Die Anforderung kann anhand des CloudFormation-Resources AWS::S3::Bucket und dessen AccessControl‑Eigenschaft geprüft werden, ob ACLs zur Zugriffsteuerung verwendet werden.",
     "cfn_resource_types": [
       "AWS::S3::Bucket"
+    ]
+  },
+  "66070c9c38ec27d22007cbe5fc2ecc4d6554bfec5b9751411deb9449d9d89cfc|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung bezieht sich auf die Überwachung der Ressourcenauslastung, die über CloudWatch‑Alarme konfiguriert werden kann und somit in einem CloudFormation‑Template prüfbar ist.",
+    "cfn_resource_types": [
+      "AWS::CloudWatch::Alarm"
     ]
   },
   "6618b39dcbea608d7fec1dca721f7158b0671a3935bbfa3cbf9b5d9c678bf58f|6d06b0abd0dc|openai/gpt-oss-120b": {
@@ -3110,6 +3301,11 @@
     "rationale": "Die Anforderung bezieht sich auf das Management von Benutzerkonten und deren Wiederverwendung, was nicht durch die Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden kann.",
     "cfn_resource_types": []
   },
+  "68a4be880304f6fc1c6fa530c265c5ffb5c3ba71fdea46c49ef4a23234f36902|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Zuordnung von Aufgaben zu Personen oder Rollen und ist ein organisatorisches Prinzip, das nicht anhand einzelner CloudFormation-Ressourcen geprüft werden kann.",
+    "cfn_resource_types": []
+  },
   "68ee741d54842b032e6b3ffdd8c52225b50d41f80c2d6ad7f70abed44a4914fa|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf vertragliche Offenlegung von Zugriffsstellen des Anbieters und nicht auf konfigurierbare Ressourcen im CloudFormation-Template.",
@@ -3137,6 +3333,11 @@
       "AWS::WAFv2::WebACLAssociation",
       "AWS::ApiGateway::Stage"
     ]
+  },
+  "695986ea419972a6dcd016505c4791c55846584417d0a40d822019b57bcf6917|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die organisatorische Zuweisung von Aufgaben und Rollen und kann nicht anhand von CloudFormation-Ressourcen geprüft werden.",
+    "cfn_resource_types": []
   },
   "69b3da641d6a7dbc2b8600359c917948d5db70bfa45bc807e75b0205fe38120d|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
@@ -3216,6 +3417,11 @@
     "cfn_resource_types": [
       "AWS::KMS::Key"
     ]
+  },
+  "6d24dd3bca066ebb75635153e7a5440900829cca5c60b9e9712b1e92b95e2977|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf Beschaffungs- und Prozessaspekte und kann nicht anhand von CloudFormation-Ressourcen geprüft werden.",
+    "cfn_resource_types": []
   },
   "6d78906bc0e84aea77079005792454e91452c33e4e9bdf3556b7d00ac284008f|6d06b0abd0dc|openai/gpt-oss-120b": {
     "testable": false,
@@ -3402,6 +3608,11 @@
     "rationale": "Die Anforderung bezieht sich auf die Dokumentation eines Prozesses, der in einer Spezifikation beschrieben werden kann, sodass geprüft werden kann, ob ein entsprechender Ablauf definiert ist.",
     "cfn_resource_types": []
   },
+  "747c6ba171a94d066bbc7b7238cadc4a58112a2732c5e9bad1f623636f48c4f1|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf einen regelmäßigen Abgleich von dokumentierten und tatsächlich vergebenen Berechtigungen und ist ein Prozess, der nicht anhand einzelner CloudFormation-Ressourcen konfiguriert werden kann.",
+    "cfn_resource_types": []
+  },
   "74f0d8597f5e9ae01e7eda31912c9182de59ac6bce450d5860b658673c962f35|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf einen generellen Prüfprozess und kann nicht anhand einzelner CloudFormation‑Ressourcen ermittelt werden.",
@@ -3544,6 +3755,11 @@
     "rationale": "Die Anforderung verlangt einen Nachweis, der in einer Spezifikation (z. B. OpenAPI) beschrieben werden kann und damit prüfbar ist.",
     "cfn_resource_types": []
   },
+  "77a4dcf2417490c3ec202272b30250445fe99913e0c896ec2c54204852bcbf4a|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf das Beschaffungsmanagement und vertragliche Regelungen für das Personal des Lieferanten und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen geprüft werden.",
+    "cfn_resource_types": []
+  },
   "77a6ee553e57d56a68af391aef98959ac41afd02d2d6316d014a97d4b0f0edaf|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Authentifizierung und Verschlüsselung der Kommunikation zwischen Logging-Servern und zu protokollierenden Assets, was nicht durch einzelne CloudFormation‑Ressourcen‑Eigenschaften prüfbar ist.",
@@ -3597,6 +3813,15 @@
       "AWS::IAM::UserPolicy",
       "AWS::IAM::Policy",
       "AWS::IAM::ManagedPolicy"
+    ]
+  },
+  "78155065cc4e19cdd654c186dcec09806d5a391b7bf00e495cfa7249796d6506|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung bezieht sich auf die Konfiguration von Alarmierungs‑Ressourcen (z. B. AWS::CloudWatch::Alarm, AWS::SNS::Topic, AWS::Events::Rule), die in einem CloudFormation‑Template geprüft werden können.",
+    "cfn_resource_types": [
+      "AWS::CloudWatch::Alarm",
+      "AWS::SNS::Topic",
+      "AWS::Events::Rule"
     ]
   },
   "782d292616d6333a7b7ff75d47dda9906116c176e27ebda807ed85d48988664d|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -3699,6 +3924,11 @@
     "rationale": "Die Anforderung bezieht sich auf organisatorische Aufgabenverteilung und kann nicht anhand von CloudFormation-Ressourcen geprüft werden.",
     "cfn_resource_types": []
   },
+  "7b609196dcce62d9509b1346a1ccd53ea69ecaf7ea8dca03b7fe24578bad84ed|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich allgemein auf kryptographische Verfahren in Anwendungen und deren Abstimmung mit dem Identitäts‑ und Berechtigungsmanagement und lässt sich nicht eindeutig anhand einzelner CloudFormation‑Ressourcen prüfen.",
+    "cfn_resource_types": []
+  },
   "7b764b4d82bd4444d6a32216381d879c66c7acb7071b227165cb21d0945d199b|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf dokumentierte Prozesse und Genehmigungen für Schlüsselübergänge und kann nicht allein anhand der Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden.",
@@ -3781,6 +4011,11 @@
   "7cc3caafc884f60bf24771710a562cf6cb690aa34cb1f3c526c049f44a75556b|c651a116e5cf|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die interne Analyse und Festlegung von Prozessrollen und Aktivitäten und wird nicht durch eine technische Spezifikation nachweisbar, daher ist sie nicht prüfbar.",
+    "cfn_resource_types": []
+  },
+  "7d17f1b851d38747ad94d0e664fa02ccda744f0fae031b88aca2cae022262a83|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die zulässigen kryptografischen Algorithmen bei der Schlüsselerzeugung und lässt sich nicht eindeutig anhand einzelner CloudFormation‑Ressourcen prüfen, da sie eher eine organisationsweite Richtlinie bzw. Berechtigung betrifft.",
     "cfn_resource_types": []
   },
   "7d63e0051a19304b40c3e1608ed532d896440b5d4029b2c911871316a9e75783|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -3903,6 +4138,13 @@
     "testable": true,
     "rationale": "Die Anforderung lässt sich durch Angaben in einer Spezifikation zu den Informationspflichten (z. B. Felder für Name, Kontaktdaten, Zwecke, Rechtsgrundlage, Speicherfristen etc.) prüfen.",
     "cfn_resource_types": []
+  },
+  "81eac0d77d3decfb69fd3a78ae6263e25fd6498c2c38dcf6bdf67ad43d04d30b|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung lässt sich prüfen, indem nach einem CloudWatch‑Alarm‑Ressourcentyp gesucht wird, der Netzwerk‑Metriken mit definierten Schwellwerten überwacht.",
+    "cfn_resource_types": [
+      "AWS::CloudWatch::Alarm"
+    ]
   },
   "82b5b3976675901059c50f611c41c8e8a6246e961294760503672788a26de172|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": true,
@@ -4187,6 +4429,11 @@
     "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die Überprüfung von Verfahren, die nicht aus den Ressourcen einer CloudFormation-Vorlage ableitbar sind.",
     "cfn_resource_types": []
   },
+  "8acb37070408a18dc9b80a51f61023aa1e59ab13a56de11482bae53b3ddbf886|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Überwachung des Patch‑Status von IT‑Systemen und nicht auf konfigurierbare Eigenschaften einzelner CloudFormation‑Ressourcen, sodass sie nicht anhand eines CFN‑Templates prüfbar ist.",
+    "cfn_resource_types": []
+  },
   "8af088d3aa5bd7651bd9256f90f95e96f8ae71ad7d0133e3323ea93464290b2d|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Penetrationstests und Risikoanalysen, die Prozesse und organisatorische Maßnahmen betreffen und nicht auf konfigurierbare CloudFormation‑Ressourcen.",
@@ -4250,6 +4497,11 @@
   "8bc4424c7f5155be6618441a05375c92a68c239a0441e90c7c9e8415d95dff2f|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Spam-Filter für zwischenmenschliche Kommunikation und lässt sich nicht anhand von CloudFormation-Ressourcen wie IAM-Policies, Verschlüsselung oder Logging prüfen.",
+    "cfn_resource_types": []
+  },
+  "8c000ef8825b2673edf139d61cecfe154091e42c5663a11a2d54a3c96e055890|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf ein konto- oder serviceweites Verhalten (z. B. Passwort‑Policy) und lässt sich nicht anhand einer einzelnen CloudFormation‑Ressource prüfen.",
     "cfn_resource_types": []
   },
   "8c310278abd8507e201a15962b41ca582c2f7e83c8431bedeb96dd2a582b2608|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -4432,6 +4684,11 @@
   "90c162c5ca96a5f0df0271b107e4d7d3413ab0bd5d77296f27a92f268373e43c|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf einen Prozess zum automatischen Melden von Abweichungen an den Cloud‑Service‑Provider und kann nicht anhand von Ressourcen‑Konfigurationen in einem einzelnen CloudFormation‑Template geprüft werden.",
+    "cfn_resource_types": []
+  },
+  "90c7220f6211c62223bda9f860e83eb97f43dc16c74c89919a61d64e8a7ae613|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und kann nicht anhand von Ressourcen‑Konfigurationen in einem CloudFormation‑Template geprüft werden.",
     "cfn_resource_types": []
   },
   "90ff601be1bdb02e103d6941fc3964558926fc565d8453911b74af841f700faa|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -5031,6 +5288,11 @@
     "rationale": "Die Anforderung bezieht sich auf vertragliche Vereinbarungen im Beschaffungsmanagement und nicht auf konfigurierbare CloudFormation‑Ressourcen.",
     "cfn_resource_types": []
   },
+  "a0111253fa609de15935b2876493b0980faff08b994b35ca07c7e8d4555d63d8|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse des Beschaffungsmanagements und nicht auf konfigurierbare Cloud-Ressourcen, sodass sie nicht anhand eines CloudFormation-Templates geprüft werden kann.",
+    "cfn_resource_types": []
+  },
   "a055d609777c82f39c7b66fca227bd2e2744e2faf266ef3b233099bc24fa544c|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Prozesse und Vorgaben zum Umgang mit kritischen Schwachstellen und ist nicht anhand von CloudFormation-Ressourcen konfigurierbar.",
@@ -5182,6 +5444,16 @@
     "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation angeben kann, welche Informationsfelder bereitgestellt werden und damit überprüft werden kann, ob alle geforderten Angaben enthalten sind.",
     "cfn_resource_types": []
   },
+  "a5f73eaba3f97274139b9561292fc021f952e3ea66e966d954a28ccbea422bd9|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die öffentliche Freigabe von EBS‑Snapshots wird über die CreateVolumePermission‑Einstellung gesteuert, die nicht über ein CloudFormation‑Resource konfigurierbar ist, sodass die Anforderung nicht anhand eines einzelnen Templates prüfbar ist.",
+    "cfn_resource_types": []
+  },
+  "a60d85dff3ee6fbbd64feae7f5e30acf4eb4beffe93bdcc1071c55625489d269|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Implementierung eines automatisierten Erkennungs- und Protokollierungsmechanismus und lässt sich nicht allein anhand der Konfiguration einzelner CloudFormation‑Ressourcen prüfen.",
+    "cfn_resource_types": []
+  },
   "a67947ef065419fa8350d7a282b0c7fe23a4901f75adbf6d61b6efda825e78c8|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Netzwerkzugangskontrolle und die Authentifizierung von Systemen, was nicht durch die Konfiguration einzelner CloudFormation‑Ressourcen prüfbar ist.",
@@ -5290,6 +5562,17 @@
     "rationale": "Die Anforderung bezieht sich auf die Berücksichtigung besonderer Auftragsverarbeitungs‑Anforderungen und enthält keine prüfbaren Angaben in einer Spezifikation.",
     "cfn_resource_types": []
   },
+  "aa1ee15c6e5fd5d137b5426bbae1da88f1356c22f54930c245efe59c06b3b5dc|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung kann anhand der IAM‑Policy‑Ressourcen im CloudFormation‑Template geprüft werden, weil dort die definierten Aktionen und Ressourcen (z. B. Action: '*', Resource: '*') ersichtlich sind.",
+    "cfn_resource_types": [
+      "AWS::IAM::Policy",
+      "AWS::IAM::ManagedPolicy",
+      "AWS::IAM::Role",
+      "AWS::IAM::User",
+      "AWS::IAM::Group"
+    ]
+  },
   "aa5226e53c246bc5ca8616fced7ce4ed9a44f5974a42bcbbed10c4605445ebf2|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": true,
     "rationale": "Die Anforderung kann durch die Prüfung von IAM‑Ressourcen (z. B. AWS::IAM::Policy, AWS::IAM::Role) auf das Vorhandensein einer Bedingung aws:MultiFactorAuthPresent für weitreichende Berechtigungen überprüft werden.",
@@ -5328,6 +5611,11 @@
   "aab3962de6986e3b49eaa661317f3c78cf718faeead618f1267482727cdd8f1a|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Konten‑ bzw. Organisationsebene (IAM‑Passwortpolicy) und kann nicht anhand einzelner CloudFormation‑Ressourcen konfiguriert werden.",
+    "cfn_resource_types": []
+  },
+  "aaec70db554bbd5cfb84d6fc54984de32316638a142240aa0b7b0c49d2acdc04|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf das laufende Monitoring des genutzten Speicherplatzes und kann nicht anhand der in einem CloudFormation‑Template definierten Ressourcenkonfiguration geprüft werden.",
     "cfn_resource_types": []
   },
   "ab1232ee446218a57beed5e08f9f405e36aef3e6e46dd3148cec895cdbaed347|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -5858,6 +6146,11 @@
     "rationale": "Die Anforderung bezieht sich auf organisatorische Prüfungen und Rollen der Cloud‑Provider‑Mitarbeiter und kann nicht anhand von Ressourcen‑Konfigurationen in einem CloudFormation‑Template geprüft werden.",
     "cfn_resource_types": []
   },
+  "bacf8a486a1fe54770f43233f70f95b3b307265913b45caa5b79d22b30e3ac26|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf einen laufenden Prüfprozess und nicht auf konkrete Ressourcenkonfigurationen, sodass sie nicht anhand eines einzelnen CloudFormation-Templates erkennbar ist.",
+    "cfn_resource_types": []
+  },
   "baef38e92133de459a8ff90e9325dd3d8334feccb56e5c0d41af4110e152166a|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Bereitstellung von Dokumentation über Risiken und ist nicht anhand von CloudFormation-Ressourcen konfigurierbar.",
@@ -5900,6 +6193,11 @@
       "AWS::ApiGateway::RestApi"
     ]
   },
+  "bbcf9f6ddd894c401d3ed1c1dd3d7a734f7b8e52ed3c6427de8d87127151afa9|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf vertragliche Service Level Agreements im Outsourcing und lässt sich nicht anhand von CloudFormation-Ressourcen prüfen.",
+    "cfn_resource_types": []
+  },
   "bbee3a1ee6123ea8be082255d5491f483ee3bb91f32affeda0e238935cc741ba|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Kontaktdaten des AWS‑Kontos und kann nicht aus einem CloudFormation‑Template ermittelt werden.",
@@ -5918,6 +6216,11 @@
   "bc979b5209c54c88450c31e00958247429e376a737c78b6d6c3dc99646ecc551|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Prozesse und Berichte zu Schwachstellen (CVE, CVSS, EPSS, SSVC, VEX, CSAF) und nicht auf konfigurierbare Eigenschaften einzelner CloudFormation‑Ressourcen.",
+    "cfn_resource_types": []
+  },
+  "bc9e00c54b33ba742b8aa7e65381ff3132f15be73df161cfe435a7f13809b7ad|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse zur regelmäßigen Überprüfung von Verfahren und Regelungen und kann nicht anhand von CloudFormation‑Ressourcenkonfigurationen nachgewiesen werden.",
     "cfn_resource_types": []
   },
   "bca34607f9fb043af3920c5bd9f147f19a78fd4cbae1a69eb632c68db6527d2c|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -6019,6 +6322,11 @@
   "be7d5ac333382f05f8e260633e797591b172061b57ff100ca0325c0424c9f1e1|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf das Design von Redundanz und Fehlertoleranz von Logging‑ und Monitoring‑Komponenten und lässt sich nicht anhand einzelner CloudFormation‑Ressourcen prüfen.",
+    "cfn_resource_types": []
+  },
+  "be915ac0161ea11eec09eaee75b8e3d9be9efdc1fde21985977667513b8b9a62|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf dynamische Zugriffsentscheidungen und organisatorische Prozesse, die nicht allein durch die Konfiguration einzelner CloudFormation‑Ressourcen geprüft werden können.",
     "cfn_resource_types": []
   },
   "bea4a6a598535a3c2e2dfbd565079abce30282c76765695f333866a34557200d|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -6166,6 +6474,11 @@
       "AWS::ApiGateway::ClientCertificate"
     ]
   },
+  "c275b123623974e95168aef080bbf81121a0e6b566fc30c3687c3c1850bcffaa|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf betriebliche Verfahren zur Deaktivierung und Vernichtung von Krypto‑Schlüsseln nach Ablauf, die nicht durch Eigenschaften einzelner CloudFormation‑Ressourcen (z. B. AWS::KMS::Key) abgebildet werden können; sie liegen auf Prozessebene und nicht in der Template‑Konfiguration.",
+    "cfn_resource_types": []
+  },
   "c2af056664b6aec08ce9ca5ca9a0cd7ceb44d65466412231d2e611ae485802f5|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Beschaffungs- und Prozessregelungen für Lieferantenpersonal und ist nicht anhand von CloudFormation-Ressourcen konfigurierbar.",
@@ -6193,6 +6506,11 @@
       "AWS::ApiGateway::Stage",
       "AWS::ApiGatewayV2::Stage"
     ]
+  },
+  "c36f5f9449b75ec436744c895e14c671042595ac4a8e9bdcd1c9bb006415c817|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf einen laufenden Prüfprozess und kann nicht allein anhand der Konfiguration einzelner CloudFormation‑Ressourcen ermittelt werden.",
+    "cfn_resource_types": []
   },
   "c3817569d6d23e7213951cb456b237144abad7b44e2835a85e934b0bd9c65002|6d06b0abd0dc|openai/gpt-oss-120b": {
     "testable": false,
@@ -6328,6 +6646,11 @@
     "rationale": "Die Anforderung bezieht sich auf Prozesse und Bildverwaltung, die nicht durch einzelne CloudFormation‑Ressourcen konfigurierbar sind.",
     "cfn_resource_types": []
   },
+  "c6c6e5023a67799e9840c63aee195a944f97acccf65244023c76d4d930259aa5|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die Autorisierung durch Personen/Rollen und kann nicht anhand von Ressourcen‑Konfigurationen in einem CloudFormation‑Template geprüft werden.",
+    "cfn_resource_types": []
+  },
   "c6ef091bc4160c978b890a34fa86270f4e45c6fa05ebee0f6d3e50f2f75a7a2b|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf das Blockieren von Anmeldeversuchen nach einer festgelegten Anzahl fehlgeschlagener Versuche, was in AWS nicht über eine einzelne CloudFormation‑Ressource konfigurierbar ist, sondern nur auf Konto‑ oder Service‑Ebene (z. B. IAM‑Passwortrichtlinie, Cognito) umgesetzt werden kann.",
@@ -6459,6 +6782,17 @@
     "cfn_resource_types": [
       "AWS::EC2::SecurityGroup",
       "AWS::EC2::NetworkAcl"
+    ]
+  },
+  "cc04a75535cba337f0cb3af9914818169cbc47c3114907a05e87ee13ee1fea5e|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung lässt sich anhand von Ressourcen prüfen, die Transportverschlüsselung konfigurieren, z. B. Listener mit HTTPS, API‑Gateway‑Domain mit TLS‑Policy oder S3‑Bucket‑Policies, die SecureTransport erzwingen.",
+    "cfn_resource_types": [
+      "AWS::ElasticLoadBalancingV2::Listener",
+      "AWS::ApiGateway::DomainName",
+      "AWS::S3::Bucket",
+      "AWS::CloudFront::Distribution",
+      "AWS::KinesisFirehose::DeliveryStream"
     ]
   },
   "cc37983ad85365c5a2007a6bd3afd7680309f989aeaf9f8f40a96f32204f97d7|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -6598,6 +6932,11 @@
     "rationale": "Die Anforderung bezieht sich auf die Erstellung und Analyse von Berichten und damit auf Prozesse, nicht auf konfigurierbare CloudFormation‑Ressourcen.",
     "cfn_resource_types": []
   },
+  "cfb172a9d210a5438867671fa9ddec81a67ab4dd03205bf2fb8de8759b022f4a|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf Netzwerkzonen und Kommunikationsregeln des CSP und kann nicht anhand einzelner CloudFormation‑Ressourcen geprüft werden.",
+    "cfn_resource_types": []
+  },
   "cff8a9f5e628860626d72b9ee1805e78a850735630067440c4c0b7e10bed3555|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die Information von Personen oder Rollen, nicht auf konfigurierbare CloudFormation‑Ressourcen.",
@@ -6717,6 +7056,11 @@
     "rationale": "Die Existenz eines Root‑User‑Access‑Key kann in einem CloudFormation‑Template nicht ermittelt werden, da sie nicht als Ressource definiert wird.",
     "cfn_resource_types": []
   },
+  "d2f07740829daf2718c13301a60bf7c6687ee694ed434ea7b9f3f2c51dde4c57|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Kontrollen und Audits und kann nicht anhand von Ressourcen im CloudFormation-Template geprüft werden.",
+    "cfn_resource_types": []
+  },
   "d3613837f8e5e715820a014b92a5c369317e21d79c03b1112110efe1aa9d2f90|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Beschaffungsprozesse und nicht auf die Konfiguration von CloudFormation-Ressourcen.",
@@ -6770,6 +7114,13 @@
     "rationale": "Die Anforderung bezieht sich auf organisatorische Maßnahmen zur Schwachstellenprüfung des Cloud‑Dienstes und nicht auf konfigurierbare Eigenschaften einzelner CloudFormation‑Ressourcen.",
     "cfn_resource_types": []
   },
+  "d695a68a01c1d812ab0b4b5f0a28968e995faadcb5a6c08df12a0954a9a362a1|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung kann anhand des CloudFormation‑Ressourcentyps AWS::ECS::TaskDefinition und dessen Eigenschaft LinuxParameters.PidMode geprüft werden.",
+    "cfn_resource_types": [
+      "AWS::ECS::TaskDefinition"
+    ]
+  },
   "d6a8998634dfda75a12108320be6d13c911e96db70041e958de9e0e08e2d181e|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Betriebssystem‑Prozessrechte und lässt sich nicht aus den in einem CloudFormation‑Template definierten Ressourcen ableiten.",
@@ -6783,6 +7134,18 @@
   "d719489923b49a9e5e64876c4e16d38e2c774ab51161d1f6e6b2f0d9792f3f1c|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Beschaffungsprozesse und Dokumentation des Bedarfs und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen geprüft werden.",
+    "cfn_resource_types": []
+  },
+  "d7639bd0dac4142699b986773fe7459d51d6e80d514877ba2e51dac43b122551|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung kann anhand der Konfiguration von AWS WAF (z. B. AWS::WAFv2::WebACL) geprüft werden, ob Regeln zum Blockieren von automatisierten Link‑Guessing definiert sind.",
+    "cfn_resource_types": [
+      "AWS::WAFv2::WebACL"
+    ]
+  },
+  "d7819b027269b2d45e335f7230bf39153f194ed9bc1785581baa403ffdb9e9c0|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Qualität von Zufallszahlen bei der Schlüsselerzeugung und ist kein konfigurierbares Attribut einer einzelnen CloudFormation‑Ressource, sondern ein generelles kryptografisches Prinzip.",
     "cfn_resource_types": []
   },
   "d7ce0e93143b20585c6273c41fecfd476b515c196cccd2ea62a943ef86759f98|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -6803,6 +7166,11 @@
   "d82862d01065e7f00a78674f4018a0e063ed04ce343990dfca8f2c195d7ee7c7|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Vergabe und Änderung von privilegierten Zugriffsrechten nach einer übergeordneten Richtlinie und kann nicht allein anhand der in einem einzelnen CloudFormation‑Template definierten IAM‑Ressourcen geprüft werden.",
+    "cfn_resource_types": []
+  },
+  "d84f3f136fb8a340a71af415db8a13b5ce374b360a4ccba5a0eb1cfdb14acf93|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und Richtlinien zur Incident‑Management und nicht auf konfigurierbare Eigenschaften einzelner CloudFormation‑Ressourcen.",
     "cfn_resource_types": []
   },
   "d87de07f57cf1e48e24c44df8a7460d3c5bf372d561215ed15d302419d08dab9|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -6840,6 +7208,17 @@
     "rationale": "Die Anforderung bezieht sich auf die Protokollierung von Rollenänderungen, die in einer Spezifikation (z. B. als Log‑Eintrag) eindeutig angegeben werden kann und somit prüfbar ist.",
     "cfn_resource_types": []
   },
+  "d8cefe2c627357c6e179d09397bd535b3fb92ed1f1e81b22dc1a009e7383e6e5|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung kann anhand von VPC‑, Subnet‑, Security‑Group‑ und Network‑ACL‑Ressourcen im CloudFormation‑Template geprüft werden, ob Verbindungen zwischen Netzsegmenten eingeschränkt sind.",
+    "cfn_resource_types": [
+      "AWS::EC2::SecurityGroup",
+      "AWS::EC2::NetworkAcl",
+      "AWS::EC2::Subnet",
+      "AWS::EC2::VPC",
+      "AWS::EC2::VPCPeeringConnection"
+    ]
+  },
   "d9db57b8245b08609859af83c95d16aff148888435d8f6458d4b693a9e9f4189|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf das Protokollieren von Peripheriegeräten, was nicht über CloudFormation‑Ressourcen konfigurierbar ist.",
@@ -6864,6 +7243,17 @@
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf den Prozess der Bewertung von Schwachstellen und nicht auf konfigurierbare Ressourcen im CloudFormation-Template.",
     "cfn_resource_types": []
+  },
+  "dadd2816606804f526de46630f24cc38ded354e9322e8fe9a3e27856e8b6f77d|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung lässt sich anhand von Verschlüsselungs‑ und KMS‑Einstellungen in einzelnen CloudFormation‑Ressourcen prüfen, z. B. BucketEncryption bei S3, SSESpecification bei DynamoDB oder StorageEncrypted bei RDS.",
+    "cfn_resource_types": [
+      "AWS::KMS::Key",
+      "AWS::S3::Bucket",
+      "AWS::DynamoDB::Table",
+      "AWS::RDS::DBInstance",
+      "AWS::SecretsManager::Secret"
+    ]
   },
   "db034a861c645889196153198f9b06e7b47e28f330133e9d620e1305d7ac338f|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
@@ -6905,6 +7295,11 @@
   "dba54ea92ab4ca76b73b183f12ed68ca7815f684a5d9f23282cf01032259caf7|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf dokumentierte Richtlinien und Prozesse zur Passwortverwaltung und kann nicht anhand von Ressourcen‑Konfigurationen in einem CloudFormation‑Template geprüft werden.",
+    "cfn_resource_types": []
+  },
+  "dbc722a958bd6fedfceb68c535cc2665993a9d61f2cce6b7c439b73c23d209a8|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und kann nicht anhand einzelner CloudFormation‑Ressourcen geprüft werden.",
     "cfn_resource_types": []
   },
   "dbdba629e13158100e625f4dd2fb16297e3c8dd3a8de366e9019ee8548e36a98|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -7157,6 +7552,11 @@
       "AWS::EC2::Volume"
     ]
   },
+  "e4ff3d147df2f7b6fbfed2108ebe484bef4d98120c133eef4cc7e4d46287941c|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die Zuweisung von Aufgaben an Personen oder Rollen und kann nicht anhand von CloudFormation-Ressourcenkonfigurationen geprüft werden.",
+    "cfn_resource_types": []
+  },
   "e5611a889df0d568d10f38430df76254e85f6a51e52c573e67f4887156a5b172|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Konfiguration von Cookie-Attributen in der Anwendungsebene und kann nicht eindeutig anhand einer einzelnen CloudFormation‑Ressource geprüft werden.",
@@ -7321,6 +7721,11 @@
     "rationale": "Die Anforderung verlangt einen Nachweis der Wirksamkeit der Trennung, der nicht in einer technischen Spezifikation (Freitext oder OpenAPI) vermerkt werden kann, sondern ein separates Prüf‑ bzw. Berichtsergebnis erfordert, sodass sie nicht prüfbar ist.",
     "cfn_resource_types": []
   },
+  "eb1777459239fd3e40ddf984d8d4bfd19283f3623bdc72228c71b8676ef04775|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Genehmigungsprozesse und lässt sich nicht aus den Eigenschaften einzelner CloudFormation‑Ressourcen ableiten.",
+    "cfn_resource_types": []
+  },
   "eb26d51f57b7a6cbe2c06496d7f7f6b6fbf926fee05e8a5e3f37ac7cb0372337|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Verfahrensweisen beim Rollenwechsel und temporären Zugriffsrechten und kann nicht anhand von CloudFormation‑Ressourcenkonfigurationen geprüft werden.",
@@ -7329,6 +7734,11 @@
   "eb5ccf771161b2cb6c0dc291b4fdd5a0e1b6673de3debc2819109002d00cb6f0|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf das Beschaffungs‑ und Dokumentationsverfahren und nicht auf konfigurierbare Cloud‑Ressourcen, daher kann sie nicht anhand eines CloudFormation‑Templates geprüft werden.",
+    "cfn_resource_types": []
+  },
+  "eb9266b5ce0f66c14890fba43d9f0a293cb904724a09dcd1fc4809a77ee6a240|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die organisatorische Zuweisung von Aufgaben an Personen oder Rollen und kann nicht anhand von CloudFormation‑Ressourcenkonfigurationen geprüft werden.",
     "cfn_resource_types": []
   },
   "ebb32c3f5bdd685859f6175c225f59e508cbf844527dc862b2b9d7998a4b6480|6d06b0abd0dc|openai/gpt-oss-120b": {
@@ -7404,6 +7814,11 @@
       "AWS::Route53::RecordSet"
     ]
   },
+  "ed4b12fc74757a9be3518eb1d6f144703ee91304c4d3566edfc2d6142379d703|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Verschlüsselung von Weiterverkehrsverbindungen und lässt sich nicht eindeutig anhand einzelner CloudFormation‑Ressourcen prüfen.",
+    "cfn_resource_types": []
+  },
   "ed5cb754e7f826efb53f7ee1083337c54559a4aff689b2744ba4d19c28af15d0|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": true,
     "rationale": "Ja, die Anforderung kann anhand des Vorhandenseins und der Konfiguration von AWS::EC2::FlowLog‑Ressourcen im Template geprüft werden.",
@@ -7450,6 +7865,11 @@
   "ee7ae55e7cc6501c9cb2c15145343e2b6aefaca757d1411ab128d7f66acab4ba|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf das Aktivieren von regelmäßigen Datei-Scans, was nicht durch eine einzelne CloudFormation-Ressource konfigurierbar ist.",
+    "cfn_resource_types": []
+  },
+  "eea1fda16a54eb006b01daeb1ee3789dea935a9164dd3a060656ed16b892cf32|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse und die regelmäßige Überprüfung von Stammdaten, die nicht aus der Konfiguration einzelner CloudFormation‑Ressourcen ableitbar sind.",
     "cfn_resource_types": []
   },
   "ef29ae6f4db8c922b1fa1e8f286b87a50f34362fba3e34bdfaff5453a72562de|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -7716,6 +8136,16 @@
     "rationale": "Die Anforderung bezieht sich auf die Aktivierung von Mehr‑Faktor‑Authentifizierung auf Konto‑ oder Organisationsebene und kann nicht anhand einzelner CloudFormation‑Ressourcen im Template geprüft werden.",
     "cfn_resource_types": []
   },
+  "f81ff27efc0a8e8b603fba6aeee2a4b7e68494e98140b07043774ce434eafc3a|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Überwachung der Netz­erreichbarkeit von Hostsystemen und nicht auf konfigurierbare Eigenschaften einzelner CloudFormation‑Ressourcen.",
+    "cfn_resource_types": []
+  },
+  "f8833bc59a89795e70e7b1706b00ee610237eee1d240f55ffb7efcffadb27cf9|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf das Laufzeitverhalten von Anwendungen (z. B. Sperrung nach fehlgeschlagenen Anmeldeversuchen) und kann nicht eindeutig aus den Eigenschaften einzelner CloudFormation‑Ressourcen abgeleitet werden.",
+    "cfn_resource_types": []
+  },
   "f98f02ca7b2a0b834071f20a5b8f7aaf082f4be5d82d73ebfc30f1ef49a7a06e|6d06b0abd0dc|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung betrifft ein technisches Löschverfahren im laufenden Betrieb und wird nicht in einer Fachspezifikation beschrieben, daher ist sie nicht prüfbar.",
@@ -7805,6 +8235,11 @@
   "fc029c84e64ec8c47639f9e093c6c55ff8394e06896878313c7e79546720e41f|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Prozesse und regelmäßige Aktualisierungen, die nicht aus der Konfiguration eines einzelnen CloudFormation‑Templates ersichtlich sind.",
+    "cfn_resource_types": []
+  },
+  "fc296f5343b9744921c52b722f83421f700be1ca4e23985543a2b4ab0292946b|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Zuweisung von Aufgaben zu Personen oder Rollen und betrifft Prozesse bzw. organisatorische Maßnahmen, nicht die Konfiguration von CloudFormation‑Ressourcen.",
     "cfn_resource_types": []
   },
   "fca1bf5ab937e941f35b2e7607f3625e9a5364f5ecd8ac4e506371f402c0a8c6|b7fe41b6852f|openai/gpt-oss-120b": {
@@ -7915,6 +8350,11 @@
     "cfn_resource_types": [
       "AWS::EC2::Subnet"
     ]
+  },
+  "ff8bdc7547006f9be41de2e297e2e2bf1712030e4b641b746317664e573253cc|b7fe41b6852f|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Auswahl von kryptografischen Algorithmen, die nicht in den Eigenschaften von CloudFormation‑Ressourcen festgelegt werden können, daher ist sie nicht prüfbar.",
+    "cfn_resource_types": []
   },
   "ffe9fa218dc693348f7877c4bb8a6c3a2d22f36ce8413fc5b4985677e42ec8b6|b7fe41b6852f|openai/gpt-oss-120b": {
     "testable": true,

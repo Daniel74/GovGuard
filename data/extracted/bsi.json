@@ -6,7 +6,7 @@
     {
       "id": "GC.1.1",
       "title": "Errichtung und Aufrechterhaltung eines ISMS",
-      "text": "Governance und Compliance MUSS Verfahren und Regelungen zur Errichtung und Aufrechterhaltung eines ISMS nach {{ insert: param, gc.1.1-prm1 }} verankern.",
+      "text": "Governance und Compliance MUSS Verfahren und Regelungen zur Errichtung und Aufrechterhaltung eines ISMS nach BSI Grundschutz++ verankern.",
       "primary_anchor": "BSI GS++ GC.1.1",
       "attributes": {
         "practice": "GC",
@@ -328,7 +328,7 @@
     {
       "id": "GC.9.1.1",
       "title": "Festlegung von Rollen und Zuständigkeiten",
-      "text": "Governance und Compliance MUSS die {{ insert: param, gc.9.1.1-prm1 }} im Rahmen des ISMS inklusive ihrer Kompetenzen bzw. Befugnisse zuweisen.",
+      "text": "Governance und Compliance MUSS die Rollen und Zuständigkeiten im Rahmen des ISMS inklusive ihrer Kompetenzen bzw. Befugnisse zuweisen.",
       "primary_anchor": "BSI GS++ GC.9.1.1",
       "attributes": {
         "practice": "GC",
@@ -342,7 +342,7 @@
     {
       "id": "GC.9.1.1.1",
       "title": "Informationssicherheitsbeauftragter",
-      "text": "Governance und Compliance MUSS die Zuständigkeit für Informationssicherheit {{ insert: param, gc.9.1.1.1-prm1 }} , welche unmittelbar der Institutionsleitung unterstellt ist, zuweisen.",
+      "text": "Governance und Compliance MUSS die Zuständigkeit für Informationssicherheit einer unabhängigen Person , welche unmittelbar der Institutionsleitung unterstellt ist, zuweisen.",
       "primary_anchor": "BSI GS++ GC.9.1.1.1",
       "attributes": {
         "practice": "GC",
@@ -454,7 +454,7 @@
     {
       "id": "GC.10.1.2",
       "title": "Kommunikation im Projektmanagement",
-      "text": "Governance und Compliance MUSS bei sicherheitsrelevanten Projekten die Beteiligung {{ insert: param, gc.10.1.2-prm1 }} zu festgelegten Zeitpunkten im Projektverlauf verankern.",
+      "text": "Governance und Compliance MUSS bei sicherheitsrelevanten Projekten die Beteiligung der relevanten Sicherheitsorgane zu festgelegten Zeitpunkten im Projektverlauf verankern.",
       "primary_anchor": "BSI GS++ GC.10.1.2",
       "attributes": {
         "practice": "GC",
@@ -482,7 +482,7 @@
     {
       "id": "GC.12.1",
       "title": "Methodik für das Risikomanagement",
-      "text": "Governance und Compliance MUSS {{ insert: param, gc.12.1-prm1 }} für das Informationssicherheitsrisikomanagement unter Berücksichtigungen von Kontext, Geschäftsprozessanalyse und interessierten Parteien verankern.",
+      "text": "Governance und Compliance MUSS eine einheitliche Methodik für das Informationssicherheitsrisikomanagement unter Berücksichtigungen von Kontext, Geschäftsprozessanalyse und interessierten Parteien verankern.",
       "primary_anchor": "BSI GS++ GC.12.1",
       "attributes": {
         "practice": "GC",
@@ -706,7 +706,7 @@
     {
       "id": "UMS.1.1",
       "title": "Ermittlung des Umsetzungsstatus",
-      "text": "Umsetzung MUSS den Umsetzungsstatus der Anforderungen im Anforderungspaket vollständig {{ insert: param, ums.1.1-prm1 }} überprüfen.",
+      "text": "Umsetzung MUSS den Umsetzungsstatus der Anforderungen im Anforderungspaket vollständig regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ UMS.1.1",
       "attributes": {
         "practice": "UMS",
@@ -790,7 +790,7 @@
     {
       "id": "UMS.5.1",
       "title": "Autorisierung von Ausnahmen",
-      "text": "Umsetzung MUSS Ausnahmegenehmigungen für Verpflichtungen durch {{ insert: param, ums.5.1-prm1 }} autorisieren.",
+      "text": "Umsetzung MUSS Ausnahmegenehmigungen für Verpflichtungen durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ UMS.5.1",
       "attributes": {
         "practice": "UMS",
@@ -888,7 +888,7 @@
     {
       "id": "VRB.2.2",
       "title": "Anpassung des ISMS",
-      "text": "Verbesserung MUSS die Notwendigkeit zur Anpassung des ISMS hinsichtlich der Nicht-Konformitäten {{ insert: param, vrb.2.2-prm1 }} überprüfen.",
+      "text": "Verbesserung MUSS die Notwendigkeit zur Anpassung des ISMS hinsichtlich der Nicht-Konformitäten regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ VRB.2.2",
       "attributes": {
         "practice": "VRB",
@@ -958,7 +958,7 @@
     {
       "id": "VRB.6.1",
       "title": "Überprüfung der erreichten Verbesserung",
-      "text": "Verbesserung MUSS die Wirksamkeit der umgesetzten Korrektur- und Verbesserungsmaßnahmen {{ insert: param, vrb.6.1-prm1 }} testen.",
+      "text": "Verbesserung MUSS die Wirksamkeit der umgesetzten Korrektur- und Verbesserungsmaßnahmen regelmäßig testen.",
       "primary_anchor": "BSI GS++ VRB.6.1",
       "attributes": {
         "practice": "VRB",
@@ -1014,7 +1014,7 @@
     {
       "id": "PERF.1.2",
       "title": "Evaluation des Umsetzungsplans",
-      "text": "Monitoring-Evaluation MUSS die {{ insert: param, perf.1.2-prm1 }} Überprüfung und Fortschreibung des Umsetzungsplans in Bezug auf Fortschritt, Fristeinhaltung und inhaltlicher Korrektheit verankern.",
+      "text": "Monitoring-Evaluation MUSS die regelmäßige Überprüfung und Fortschreibung des Umsetzungsplans in Bezug auf Fortschritt, Fristeinhaltung und inhaltlicher Korrektheit verankern.",
       "primary_anchor": "BSI GS++ PERF.1.2",
       "attributes": {
         "practice": "PERF",
@@ -1028,7 +1028,7 @@
     {
       "id": "PERF.1.3",
       "title": "Aktualität der Anforderungen",
-      "text": "Monitoring-Evaluation MUSS die Aktualität der Anforderungen {{ insert: param, perf.1.3-prm1 }} überprüfen.",
+      "text": "Monitoring-Evaluation MUSS die Aktualität der Anforderungen regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ PERF.1.3",
       "attributes": {
         "practice": "PERF",
@@ -1042,7 +1042,7 @@
     {
       "id": "PERF.2.1",
       "title": "Überprüfung der Einhaltung von Verpflichtungen",
-      "text": "Monitoring-Evaluation SOLLTE die Einhaltung von Verpflichtungen {{ insert: param, perf.2.1-prm1 }} sowie anlassbezogen überprüfen.",
+      "text": "Monitoring-Evaluation SOLLTE die Einhaltung von Verpflichtungen regelmäßig sowie anlassbezogen überprüfen.",
       "primary_anchor": "BSI GS++ PERF.2.1",
       "attributes": {
         "practice": "PERF",
@@ -1168,7 +1168,7 @@
     {
       "id": "PERF.4.1",
       "title": "Eignungsprüfung",
-      "text": "Monitoring-Evaluation MUSS Ergebnisse der Überprüfungen der Eignung, Angemessenheit und Wirksamkeit des ISMS der Institution {{ insert: param, perf.4.1-prm1 }} sowie anlassbezogen in einem Managementbericht dokumentieren.",
+      "text": "Monitoring-Evaluation MUSS Ergebnisse der Überprüfungen der Eignung, Angemessenheit und Wirksamkeit des ISMS der Institution regelmäßig sowie anlassbezogen in einem Managementbericht dokumentieren.",
       "primary_anchor": "BSI GS++ PERF.4.1",
       "attributes": {
         "practice": "PERF",
@@ -1308,7 +1308,7 @@
     {
       "id": "PERF.4.2",
       "title": "Bericht an die Institutionsleitung",
-      "text": "Monitoring-Evaluation MUSS die Institutionsleitung über den Stand des Managementsystems {{ insert: param, perf.4.2-prm1 }} anhand des Managementberichtes informieren.",
+      "text": "Monitoring-Evaluation MUSS die Institutionsleitung über den Stand des Managementsystems regelmäßig anhand des Managementberichtes informieren.",
       "primary_anchor": "BSI GS++ PERF.4.2",
       "attributes": {
         "practice": "PERF",
@@ -1322,7 +1322,7 @@
     {
       "id": "PERF.5.1",
       "title": "Methoden und Tools",
-      "text": "Monitoring-Evaluation MUSS effektive Monitoring-Methoden und -tools zur {{ insert: param, perf.5.1-prm1 }} Überwachung der Informationssicherheit verankern.",
+      "text": "Monitoring-Evaluation MUSS effektive Monitoring-Methoden und -tools zur regelmäßigen Überwachung der Informationssicherheit verankern.",
       "primary_anchor": "BSI GS++ PERF.5.1",
       "attributes": {
         "practice": "PERF",
@@ -1336,7 +1336,7 @@
     {
       "id": "RISK.1.1",
       "title": "Methodik für das Risikomanagement",
-      "text": "Risikomanagement MUSS einheitliche Methoden nach {{ insert: param, risk.1.1-prm1 }} verankern.",
+      "text": "Risikomanagement MUSS einheitliche Methoden nach einem anerkannten Standard verankern.",
       "primary_anchor": "BSI GS++ RISK.1.1",
       "attributes": {
         "practice": "RISK",
@@ -1420,7 +1420,7 @@
     {
       "id": "ASST.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Informationen und Assets MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, asst.1.1.2-prm1 }} zuweisen.",
+      "text": "Informationen und Assets MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ ASST.1.1.2",
       "attributes": {
         "practice": "ASST",
@@ -1448,7 +1448,7 @@
     {
       "id": "ASST.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Informationen und Assets MUSS die Verfahren und Regelungen {{ insert: param, asst.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Informationen und Assets MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ ASST.1.2",
       "attributes": {
         "practice": "ASST",
@@ -1476,7 +1476,7 @@
     {
       "id": "ASST.2.1.1",
       "title": "Informationsverantwortung",
-      "text": "Informationen und Assets für Daten SOLLTE die Zuständigkeit für deren Verarbeitung {{ insert: param, asst.2.1.1-prm1 }} zuweisen.",
+      "text": "Informationen und Assets für Daten SOLLTE die Zuständigkeit für deren Verarbeitung einer zuständigen Person oder Rolle zuweisen.",
       "primary_anchor": "BSI GS++ ASST.2.1.1",
       "attributes": {
         "practice": "ASST",
@@ -1532,7 +1532,7 @@
     {
       "id": "ASST.2.3.1",
       "title": "Autorisierung von Anwendungen",
-      "text": "Informationen und Assets für IT-Systeme SOLLTE die Nutzung von Anwendungen auf diesen durch {{ insert: param, asst.2.3.1-prm1 }} autorisieren.",
+      "text": "Informationen und Assets für IT-Systeme SOLLTE die Nutzung von Anwendungen auf diesen durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ ASST.2.3.1",
       "attributes": {
         "practice": "ASST",
@@ -1560,7 +1560,7 @@
     {
       "id": "ASST.2.3.2.1",
       "title": "Software Discovery",
-      "text": "Informationen und Assets KANN die Aktualität des Inventars der Anwendungen durch ein automatisiertes Verfahren {{ insert: param, asst.2.3.2.1-prm1 }} überprüfen.",
+      "text": "Informationen und Assets KANN die Aktualität des Inventars der Anwendungen durch ein automatisiertes Verfahren regelmäßig oder bei Änderungen überprüfen.",
       "primary_anchor": "BSI GS++ ASST.2.3.2.1",
       "attributes": {
         "practice": "ASST",
@@ -1728,7 +1728,7 @@
     {
       "id": "ASST.3.10",
       "title": "Autorisierung von Datenlokationen",
-      "text": "Informationen und Assets für Daten SOLLTE Datenlokationen durch {{ insert: param, asst.3.10-prm1 }} autorisieren.",
+      "text": "Informationen und Assets für Daten SOLLTE Datenlokationen durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ ASST.3.10",
       "attributes": {
         "practice": "ASST",
@@ -1742,7 +1742,7 @@
     {
       "id": "ASST.3.11",
       "title": "Autorisierung von Systemen",
-      "text": "Informationen und Assets für Daten SOLLTE für die Informationsverarbeitung verwendete Systeme durch {{ insert: param, asst.3.11-prm1 }} autorisieren.",
+      "text": "Informationen und Assets für Daten SOLLTE für die Informationsverarbeitung verwendete Systeme durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ ASST.3.11",
       "attributes": {
         "practice": "ASST",
@@ -1826,7 +1826,7 @@
     {
       "id": "ASST.4.1",
       "title": "Autorisierung von Schnittstellen",
-      "text": "Informationen und Assets für Daten KANN Schnittstellen, über die Informationen ausgetauscht werden, durch {{ insert: param, asst.4.1-prm1 }} autorisieren.",
+      "text": "Informationen und Assets für Daten KANN Schnittstellen, über die Informationen ausgetauscht werden, durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ ASST.4.1",
       "attributes": {
         "practice": "ASST",
@@ -1854,7 +1854,7 @@
     {
       "id": "ASST.4.3",
       "title": "Autorisierung von Veröffentlichungen",
-      "text": "Informationen und Assets SOLLTE Veröffentlichungen durch {{ insert: param, asst.4.3-prm1 }} autorisieren.",
+      "text": "Informationen und Assets SOLLTE Veröffentlichungen durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ ASST.4.3",
       "attributes": {
         "practice": "ASST",
@@ -1910,7 +1910,7 @@
     {
       "id": "ASST.5.2",
       "title": "Geregelte Wartungen",
-      "text": "Informationen und Assets für IT-Systeme SOLLTE die Wartung {{ insert: param, asst.5.2-prm1 }} ausführen.",
+      "text": "Informationen und Assets für IT-Systeme SOLLTE die Wartung regelmäßig oder prädiktiv ausführen.",
       "primary_anchor": "BSI GS++ ASST.5.2",
       "attributes": {
         "practice": "ASST",
@@ -1924,7 +1924,7 @@
     {
       "id": "ASST.5.3",
       "title": "Autorisierung von Wartungen",
-      "text": "Informationen und Assets für IT-Systeme KANN Wartungen durch {{ insert: param, asst.5.3-prm1 }} autorisieren.",
+      "text": "Informationen und Assets für IT-Systeme KANN Wartungen durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ ASST.5.3",
       "attributes": {
         "practice": "ASST",
@@ -2064,7 +2064,7 @@
     {
       "id": "ASST.7.2",
       "title": "Aufbewahrungs- und Löschfristen",
-      "text": "Informationen und Assets für Daten SOLLTE die Aufbewahrung für {{ insert: param, asst.7.2-prm1 }} verankern.",
+      "text": "Informationen und Assets für Daten SOLLTE die Aufbewahrung für eine bestimmte Frist verankern.",
       "primary_anchor": "BSI GS++ ASST.7.2",
       "attributes": {
         "practice": "ASST",
@@ -2078,7 +2078,7 @@
     {
       "id": "ASST.7.2.1",
       "title": "Langfristige Archivierung",
-      "text": "Informationen und Assets für Daten KANN die langfristige Archivierung mindestens für {{ insert: param, asst.7.2.1-prm1 }} verankern.",
+      "text": "Informationen und Assets für Daten KANN die langfristige Archivierung mindestens für eine bestimmte Frist verankern.",
       "primary_anchor": "BSI GS++ ASST.7.2.1",
       "attributes": {
         "practice": "ASST",
@@ -2092,7 +2092,7 @@
     {
       "id": "ASST.7.3",
       "title": "Geregeltes Löschen oder Vernichten",
-      "text": "Informationen und Assets für Daten SOLLTE diese bei Erreichen der Aufbewahrungs- und Löschfrist durch {{ insert: param, asst.7.3-prm1 }} löschen.",
+      "text": "Informationen und Assets für Daten SOLLTE diese bei Erreichen der Aufbewahrungs- und Löschfrist durch kryptografisches löschen, überschreiben oder vernichten des Speichermediums löschen.",
       "primary_anchor": "BSI GS++ ASST.7.3",
       "attributes": {
         "practice": "ASST",
@@ -2106,7 +2106,7 @@
     {
       "id": "ASST.7.3.1",
       "title": "Standardisierte Vernichtung",
-      "text": "Informationen und Assets für Daten SOLLTE ein standardisiertes Verfahren zur Vernichtung bei Veräußerung nach {{ insert: param, asst.7.3.1-prm1 }} gemäß {{ insert: param, asst.7.3.1-prm2 }} verankern.",
+      "text": "Informationen und Assets für Daten SOLLTE ein standardisiertes Verfahren zur Vernichtung bei Veräußerung nach einem anerkannten Standard gemäß einer Sicherheitsstufe verankern.",
       "primary_anchor": "BSI GS++ ASST.7.3.1",
       "attributes": {
         "practice": "ASST",
@@ -2134,7 +2134,7 @@
     {
       "id": "ASST.7.3.3",
       "title": "Zugelassene Löschanwendungen",
-      "text": "Informationen und Assets für Daten KANN die Daten durch {{ insert: param, asst.7.3.3-prm1 }} löschen.",
+      "text": "Informationen und Assets für Daten KANN die Daten durch eine vom BSI zugelassene Löschanwendung löschen.",
       "primary_anchor": "BSI GS++ ASST.7.3.3",
       "attributes": {
         "practice": "ASST",
@@ -2176,7 +2176,7 @@
     {
       "id": "ASST.7.6",
       "title": "Autorisierung von Veräußerungen",
-      "text": "Informationen und Assets SOLLTE Veräußerungen von Assets durch {{ insert: param, asst.7.6-prm1 }} autorisieren.",
+      "text": "Informationen und Assets SOLLTE Veräußerungen von Assets durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ ASST.7.6",
       "attributes": {
         "practice": "ASST",
@@ -2232,7 +2232,7 @@
     {
       "id": "PERS.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Personal MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, pers.1.1.2-prm1 }} zuweisen.",
+      "text": "Personal MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ PERS.1.1.2",
       "attributes": {
         "practice": "PERS",
@@ -2260,7 +2260,7 @@
     {
       "id": "PERS.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Personal MUSS die Verfahren und Regelungen {{ insert: param, pers.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Personal MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ PERS.1.2",
       "attributes": {
         "practice": "PERS",
@@ -2498,7 +2498,7 @@
     {
       "id": "PERS.4.1",
       "title": "Qualifikationsbedarf",
-      "text": "Personal für Mitarbeitende SOLLTE den Bedarf an Qualifikationsmaßnahmen anhand der Aufgaben {{ insert: param, pers.4.1-prm1 }} überprüfen.",
+      "text": "Personal für Mitarbeitende SOLLTE den Bedarf an Qualifikationsmaßnahmen anhand der Aufgaben regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ PERS.4.1",
       "attributes": {
         "practice": "PERS",
@@ -2512,7 +2512,7 @@
     {
       "id": "PERS.4.2",
       "title": "Rollenspezifische Schulungen und Sensibilisierungen",
-      "text": "Personal für Nutzende SOLLTE rollenspezifische Schulungen und Sensibilisierungen im Einklang mit den Anforderungen der Praktik Sensibilisierung bei Neuzugang und {{ insert: param, pers.4.2-prm1 }} ausführen.",
+      "text": "Personal für Nutzende SOLLTE rollenspezifische Schulungen und Sensibilisierungen im Einklang mit den Anforderungen der Praktik Sensibilisierung bei Neuzugang und regelmäßig ausführen.",
       "primary_anchor": "BSI GS++ PERS.4.2",
       "attributes": {
         "practice": "PERS",
@@ -2568,7 +2568,7 @@
     {
       "id": "PERS.5.3",
       "title": "Vertrauens-Check sicherheitskritischer Rollen",
-      "text": "Personal SOLLTE die Vertrauenswürdigkeit für {{ insert: param, pers.5.3-prm1 }} {{ insert: param, pers.5.3-prm2 }} und anlassbezogen überprüfen.",
+      "text": "Personal SOLLTE die Vertrauenswürdigkeit für definierte sicherheitskritische Rollen regelmäßig und anlassbezogen überprüfen.",
       "primary_anchor": "BSI GS++ PERS.5.3",
       "attributes": {
         "practice": "PERS",
@@ -2652,7 +2652,7 @@
     {
       "id": "BES.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Beschaffungsmanagement MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, bes.1.1.2-prm1 }} zuweisen.",
+      "text": "Beschaffungsmanagement MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ BES.1.1.2",
       "attributes": {
         "practice": "BES",
@@ -2680,7 +2680,7 @@
     {
       "id": "BES.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Beschaffungsmanagement MUSS die Verfahren und Regelungen {{ insert: param, bes.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Beschaffungsmanagement MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ BES.1.2",
       "attributes": {
         "practice": "BES",
@@ -2750,7 +2750,7 @@
     {
       "id": "BES.1.5",
       "title": "Autorisierung des Bereitstellungsmodells",
-      "text": "Beschaffungsmanagement für Cloud-Dienste SOLLTE für jeden Cloud-Dienst das Bereitstellungsmodell durch {{ insert: param, bes.1.5-prm1 }} autorisieren.",
+      "text": "Beschaffungsmanagement für Cloud-Dienste SOLLTE für jeden Cloud-Dienst das Bereitstellungsmodell durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ BES.1.5",
       "attributes": {
         "practice": "BES",
@@ -3100,7 +3100,7 @@
     {
       "id": "BES.4.2",
       "title": "Dokumentation der Beschaffungskriterien",
-      "text": "Beschaffungsmanagement für Einkäufe SOLLTE {{ insert: param, bes.4.2-prm1 }} für die Beschaffung dokumentieren.",
+      "text": "Beschaffungsmanagement für Einkäufe SOLLTE Kriterien für die Beschaffung dokumentieren.",
       "primary_anchor": "BSI GS++ BES.4.2",
       "attributes": {
         "practice": "BES",
@@ -3268,7 +3268,7 @@
     {
       "id": "BES.4.8.1",
       "title": "Zertifizierung",
-      "text": "Beschaffungsmanagement für Einkäufe KANN ein Zertifikat oder Testat nach {{ insert: param, bes.4.8.1-prm1 }} vereinbaren.",
+      "text": "Beschaffungsmanagement für Einkäufe KANN ein Zertifikat oder Testat nach einem passenden Sicherheitsstandard vereinbaren.",
       "primary_anchor": "BSI GS++ BES.4.8.1",
       "attributes": {
         "practice": "BES",
@@ -3352,7 +3352,7 @@
     {
       "id": "BES.5.2",
       "title": "Service Level Agreement",
-      "text": "Beschaffungsmanagement für Outsourcing SOLLTE die Einhaltung einer bestimmten Dienstgüte anhand von {{ insert: param, bes.5.2-prm1 }} vereinbaren.",
+      "text": "Beschaffungsmanagement für Outsourcing SOLLTE die Einhaltung einer bestimmten Dienstgüte anhand von Kriterien vereinbaren.",
       "primary_anchor": "BSI GS++ BES.5.2",
       "attributes": {
         "practice": "BES",
@@ -3422,7 +3422,7 @@
     {
       "id": "BES.5.5.2",
       "title": "Autorisierung der Zugriffsberechtigung",
-      "text": "Beschaffungsmanagement für Dienstleistungen SOLLTE Regelungen zur Autorisierung der Zugriffsberechtigung für Personal des Lieferanten anhand von {{ insert: param, bes.5.5.2-prm1 }} vereinbaren.",
+      "text": "Beschaffungsmanagement für Dienstleistungen SOLLTE Regelungen zur Autorisierung der Zugriffsberechtigung für Personal des Lieferanten anhand von Kriterien vereinbaren.",
       "primary_anchor": "BSI GS++ BES.5.5.2",
       "attributes": {
         "practice": "BES",
@@ -3478,7 +3478,7 @@
     {
       "id": "BES.5.6.3",
       "title": "Nachverfolgbarkeit der Lieferkette",
-      "text": "Beschaffungsmanagement für IT-Produkte KANN die Nachverfolgbarkeit der gesamten Lieferkette bis zum Hersteller für {{ insert: param, bes.5.6.3-prm1 }} vereinbaren.",
+      "text": "Beschaffungsmanagement für IT-Produkte KANN die Nachverfolgbarkeit der gesamten Lieferkette bis zum Hersteller für kritische Komponenten vereinbaren.",
       "primary_anchor": "BSI GS++ BES.5.6.3",
       "attributes": {
         "practice": "BES",
@@ -3604,7 +3604,7 @@
     {
       "id": "BES.5.10.3.1",
       "title": "Schwachstellenmeldeprozess",
-      "text": "Beschaffungsmanagement für IT-Produkte KANN einen Schwachstellenmeldeprozess nach {{ insert: param, bes.5.10.3.1-prm1 }} vereinbaren.",
+      "text": "Beschaffungsmanagement für IT-Produkte KANN einen Schwachstellenmeldeprozess nach einem anerkannten Standard vereinbaren.",
       "primary_anchor": "BSI GS++ BES.5.10.3.1",
       "attributes": {
         "practice": "BES",
@@ -3814,7 +3814,7 @@
     {
       "id": "BES.7.1",
       "title": "Eingangskontrolle",
-      "text": "Beschaffungsmanagement für Einkäufe SOLLTE erbrachte oder gelieferte Leistungen anhand von {{ insert: param, bes.7.1-prm1 }} vor der ersten Verwendung testen.",
+      "text": "Beschaffungsmanagement für Einkäufe SOLLTE erbrachte oder gelieferte Leistungen anhand von Kriterien zur Akzeptanz vor der ersten Verwendung testen.",
       "primary_anchor": "BSI GS++ BES.7.1",
       "attributes": {
         "practice": "BES",
@@ -3954,7 +3954,7 @@
     {
       "id": "BES.7.4.4.1",
       "title": "Software Bill of Materials (SBOM)",
-      "text": "Beschaffungsmanagement für IT-Produkte KANN für jede gelieferte Software die entsprechende Software Bill of Materials (SBOM) nach {{ insert: param, bes.7.4.4.1-prm1 }} dokumentieren.",
+      "text": "Beschaffungsmanagement für IT-Produkte KANN für jede gelieferte Software die entsprechende Software Bill of Materials (SBOM) nach einem anerkannten Standard dokumentieren.",
       "primary_anchor": "BSI GS++ BES.7.4.4.1",
       "attributes": {
         "practice": "BES",
@@ -4066,7 +4066,7 @@
     {
       "id": "BES.7.4.12",
       "title": "Software Bill of Materials (SBOM) - Cloud",
-      "text": "Beschaffungsmanagement für Cloud-Dienste KANN für jede gelieferte Software-as-a-Service (SaaS) die entsprechende Software Bill of Materials (SBOM) nach {{ insert: param, bes.7.4.12-prm1 }} dokumentieren.",
+      "text": "Beschaffungsmanagement für Cloud-Dienste KANN für jede gelieferte Software-as-a-Service (SaaS) die entsprechende Software Bill of Materials (SBOM) nach einem anerkannten Standard dokumentieren.",
       "primary_anchor": "BSI GS++ BES.7.4.12",
       "attributes": {
         "practice": "BES",
@@ -4178,7 +4178,7 @@
     {
       "id": "DLS.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Dienstleistersteuerung für Dienstleistungen MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, dls.1.1.2-prm1 }} zuweisen.",
+      "text": "Dienstleistersteuerung für Dienstleistungen MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ DLS.1.1.2",
       "attributes": {
         "practice": "DLS",
@@ -4206,7 +4206,7 @@
     {
       "id": "DLS.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Dienstleistersteuerung für Dienstleistungen MUSS die Verfahren und Regelungen {{ insert: param, dls.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Dienstleistersteuerung für Dienstleistungen MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ DLS.1.2",
       "attributes": {
         "practice": "DLS",
@@ -4234,7 +4234,7 @@
     {
       "id": "DLS.2.2",
       "title": "Transportverschlüsselung",
-      "text": "Dienstleistersteuerung für Daten SOLLTE den Transport bei der Übertragung zum Anbieter nach {{ insert: param, dls.2.2-prm1 }} verschlüsseln.",
+      "text": "Dienstleistersteuerung für Daten SOLLTE den Transport bei der Übertragung zum Anbieter nach einem anerkannten Standard verschlüsseln.",
       "primary_anchor": "BSI GS++ DLS.2.2",
       "attributes": {
         "practice": "DLS",
@@ -4262,7 +4262,7 @@
     {
       "id": "DLS.3.1",
       "title": "Einhaltung der Sicherheitsvorgaben",
-      "text": "Dienstleistersteuerung für Dienstleistungen SOLLTE die Einhaltung der Sicherheitsvorgaben durch den Dienstleister {{ insert: param, dls.3.1-prm1 }} überprüfen.",
+      "text": "Dienstleistersteuerung für Dienstleistungen SOLLTE die Einhaltung der Sicherheitsvorgaben durch den Dienstleister regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DLS.3.1",
       "attributes": {
         "practice": "DLS",
@@ -4276,7 +4276,7 @@
     {
       "id": "DLS.3.1.1",
       "title": "Audit oder Zertifikat",
-      "text": "Dienstleistersteuerung für Outsourcing SOLLTE die Einhaltung der Sicherheitsvorgaben anhand eines {{ insert: param, dls.3.1.1-prm1 }} {{ insert: param, dls.3.1.1-prm2 }} überprüfen.",
+      "text": "Dienstleistersteuerung für Outsourcing SOLLTE die Einhaltung der Sicherheitsvorgaben anhand eines Audits, Zertifikates oder vergleichbaren Sicherheitsnachweises regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DLS.3.1.1",
       "attributes": {
         "practice": "DLS",
@@ -4290,7 +4290,7 @@
     {
       "id": "DLS.3.2",
       "title": "Checkup",
-      "text": "Dienstleistersteuerung für Outsourcing KANN die risikoorientierte Entscheidung über Outsourcing auf Grundlage der Geschäftsprozessprofile auf Änderungen der Gefährdungslage oder Prozessinhalte {{ insert: param, dls.3.2-prm1 }} überprüfen.",
+      "text": "Dienstleistersteuerung für Outsourcing KANN die risikoorientierte Entscheidung über Outsourcing auf Grundlage der Geschäftsprozessprofile auf Änderungen der Gefährdungslage oder Prozessinhalte regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DLS.3.2",
       "attributes": {
         "practice": "DLS",
@@ -4346,7 +4346,7 @@
     {
       "id": "DLS.3.6",
       "title": "Portabilität",
-      "text": "Dienstleistersteuerung für Outsourcing KANN die Portabilität des ausgelagerten Prozesses {{ insert: param, dls.3.6-prm1 }} überprüfen.",
+      "text": "Dienstleistersteuerung für Outsourcing KANN die Portabilität des ausgelagerten Prozesses regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DLS.3.6",
       "attributes": {
         "practice": "DLS",
@@ -4402,7 +4402,7 @@
     {
       "id": "TEST.1.1",
       "title": "Verfahren und Regelungen",
-      "text": "Änderungen und Tests MUSS Verfahren und Regelungen zum Management von Neueinführungen, Änderungen oder der Entfernung von Komponenten {{ insert: param, test.1.1-prm1 }} verankern.",
+      "text": "Änderungen und Tests MUSS Verfahren und Regelungen zum Management von Neueinführungen, Änderungen oder der Entfernung von Komponenten für den Informationsverbund, pro Geschäftsprozess oder pro IT-System verankern.",
       "primary_anchor": "BSI GS++ TEST.1.1",
       "attributes": {
         "practice": "TEST",
@@ -4430,7 +4430,7 @@
     {
       "id": "TEST.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Änderungen und Tests MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, test.1.1.2-prm1 }} zuweisen.",
+      "text": "Änderungen und Tests MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ TEST.1.1.2",
       "attributes": {
         "practice": "TEST",
@@ -4458,7 +4458,7 @@
     {
       "id": "TEST.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Änderungen und Tests MUSS die Verfahren und Regelungen {{ insert: param, test.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Änderungen und Tests MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ TEST.1.2",
       "attributes": {
         "practice": "TEST",
@@ -4724,7 +4724,7 @@
     {
       "id": "TEST.3.2",
       "title": "Testabdeckung",
-      "text": "Änderungen und Tests SOLLTE die Testabdeckung {{ insert: param, test.3.2-prm1 }} überprüfen.",
+      "text": "Änderungen und Tests SOLLTE die Testabdeckung regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ TEST.3.2",
       "attributes": {
         "practice": "TEST",
@@ -4892,7 +4892,7 @@
     {
       "id": "TEST.5.5",
       "title": "Rückblick",
-      "text": "Änderungen und Tests SOLLTE die Erreichung der Bereitstellungsziele {{ insert: param, test.5.5-prm1 }} überprüfen.",
+      "text": "Änderungen und Tests SOLLTE die Erreichung der Bereitstellungsziele regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ TEST.5.5",
       "attributes": {
         "practice": "TEST",
@@ -4934,7 +4934,7 @@
     {
       "id": "GEB.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Gebäudemanagement für Standorte MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, geb.1.1.2-prm1 }} zuweisen.",
+      "text": "Gebäudemanagement für Standorte MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ GEB.1.1.2",
       "attributes": {
         "practice": "GEB",
@@ -4962,7 +4962,7 @@
     {
       "id": "GEB.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Gebäudemanagement für Standorte MUSS die Verfahren und Regelungen {{ insert: param, geb.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Gebäudemanagement für Standorte MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ GEB.1.2",
       "attributes": {
         "practice": "GEB",
@@ -4990,7 +4990,7 @@
     {
       "id": "GEB.1.3.1",
       "title": "Abnahme von Standorten",
-      "text": "Gebäudemanagement für Standorte SOLLTE Standorte vor Autorisierung anhand von {{ insert: param, geb.1.3.1-prm1 }} testen.",
+      "text": "Gebäudemanagement für Standorte SOLLTE Standorte vor Autorisierung anhand von Kriterien testen.",
       "primary_anchor": "BSI GS++ GEB.1.3.1",
       "attributes": {
         "practice": "GEB",
@@ -5158,7 +5158,7 @@
     {
       "id": "GEB.3.3.1",
       "title": "Zugangskontrollanlage",
-      "text": "Gebäudemanagement für Standorte KANN Zutritte durch {{ insert: param, geb.3.3.1-prm1 }} im Einklang mit den Festlegungen des Identitäts- und Berechtigungsmanagements authentifizieren.",
+      "text": "Gebäudemanagement für Standorte KANN Zutritte durch einen automatiserten Mechanismus im Einklang mit den Festlegungen des Identitäts- und Berechtigungsmanagements authentifizieren.",
       "primary_anchor": "BSI GS++ GEB.3.3.1",
       "attributes": {
         "practice": "GEB",
@@ -5186,7 +5186,7 @@
     {
       "id": "GEB.3.3.3",
       "title": "Besucheranmeldung",
-      "text": "Gebäudemanagement für Standorte SOLLTE Besuche durch {{ insert: param, geb.3.3.3-prm1 }} autorisieren.",
+      "text": "Gebäudemanagement für Standorte SOLLTE Besuche durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ GEB.3.3.3",
       "attributes": {
         "practice": "GEB",
@@ -5214,7 +5214,7 @@
     {
       "id": "GEB.3.5",
       "title": "Einbruchhemmung",
-      "text": "Gebäudemanagement für Standorte KANN einbruchhemmende Bauteile nach {{ insert: param, geb.3.5-prm1 }} installieren.",
+      "text": "Gebäudemanagement für Standorte KANN einbruchhemmende Bauteile nach einer entsprechenden Norm installieren.",
       "primary_anchor": "BSI GS++ GEB.3.5",
       "attributes": {
         "practice": "GEB",
@@ -5228,7 +5228,7 @@
     {
       "id": "GEB.3.6",
       "title": "Einbruchmeldeanlagen",
-      "text": "Gebäudemanagement für Standorte KANN Einbrüche nach {{ insert: param, geb.3.6-prm1 }} überwachen.",
+      "text": "Gebäudemanagement für Standorte KANN Einbrüche nach einer entsprechenden Norm überwachen.",
       "primary_anchor": "BSI GS++ GEB.3.6",
       "attributes": {
         "practice": "GEB",
@@ -5242,7 +5242,7 @@
     {
       "id": "GEB.3.7",
       "title": "Kontrolle der Zutrittskontrolle",
-      "text": "Gebäudemanagement für Standorte SOLLTE die angewendeten Zutrittskontrollmaßnahmen {{ insert: param, geb.3.7-prm1 }} überprüfen.",
+      "text": "Gebäudemanagement für Standorte SOLLTE die angewendeten Zutrittskontrollmaßnahmen regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ GEB.3.7",
       "attributes": {
         "practice": "GEB",
@@ -5270,7 +5270,7 @@
     {
       "id": "GEB.4.2",
       "title": "Gesonderte Autorisierung",
-      "text": "Gebäudemanagement für Standorte KANN die Zutrittsberechtigung zu diesem Sicherheitsbereich durch {{ insert: param, geb.4.2-prm1 }} autorisieren.",
+      "text": "Gebäudemanagement für Standorte KANN die Zutrittsberechtigung zu diesem Sicherheitsbereich durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ GEB.4.2",
       "attributes": {
         "practice": "GEB",
@@ -5410,7 +5410,7 @@
     {
       "id": "GEB.6.4",
       "title": "Normgerechte Rechenzentren",
-      "text": "Gebäudemanagement für Serverräume KANN diese ausschließlich in Rechenzentren nach {{ insert: param, geb.6.4-prm1 }} platzieren.",
+      "text": "Gebäudemanagement für Serverräume KANN diese ausschließlich in Rechenzentren nach einer anerkannten Norm platzieren.",
       "primary_anchor": "BSI GS++ GEB.6.4",
       "attributes": {
         "practice": "GEB",
@@ -5424,7 +5424,7 @@
     {
       "id": "GEB.7.1",
       "title": "Schlüsselbeauftragte",
-      "text": "Gebäudemanagement für Standorte SOLLTE die Verwaltung von Schlüsseln {{ insert: param, geb.7.1-prm1 }} zuweisen.",
+      "text": "Gebäudemanagement für Standorte SOLLTE die Verwaltung von Schlüsseln zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ GEB.7.1",
       "attributes": {
         "practice": "GEB",
@@ -5452,7 +5452,7 @@
     {
       "id": "GEB.7.3",
       "title": "Schlüsselaudit",
-      "text": "Gebäudemanagement für Standorte SOLLTE die vorhandenen Schlüssel {{ insert: param, geb.7.3-prm1 }} überprüfen.",
+      "text": "Gebäudemanagement für Standorte SOLLTE die vorhandenen Schlüssel regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ GEB.7.3",
       "attributes": {
         "practice": "GEB",
@@ -5508,7 +5508,7 @@
     {
       "id": "GEB.8.3",
       "title": "Schutz der Datenträger vor Brandschäden",
-      "text": "Gebäudemanagement für Standorte KANN feuerfeste Behältnisse nach {{ insert: param, geb.8.3-prm1 }} installieren.",
+      "text": "Gebäudemanagement für Standorte KANN feuerfeste Behältnisse nach einem anerkannten Standard installieren.",
       "primary_anchor": "BSI GS++ GEB.8.3",
       "attributes": {
         "practice": "GEB",
@@ -5522,7 +5522,7 @@
     {
       "id": "GEB.8.4",
       "title": "Überwachung schonender Klimatisierung",
-      "text": "Gebäudemanagement für Archiv KANN für die Datenträger schonende Temperatur und Luftfeuchtigkeit anhand von {{ insert: param, geb.8.4-prm1 }} überwachen.",
+      "text": "Gebäudemanagement für Archiv KANN für die Datenträger schonende Temperatur und Luftfeuchtigkeit anhand von Schwellwerten überwachen.",
       "primary_anchor": "BSI GS++ GEB.8.4",
       "attributes": {
         "practice": "GEB",
@@ -5550,7 +5550,7 @@
     {
       "id": "GEB.9.1.1",
       "title": "Vorausschauende Lastanalyse",
-      "text": "Gebäudemanagement für Standorte KANN die bedarfsgerechte Stromversorgung {{ insert: param, geb.9.1.1-prm1 }} vorausschauend überprüfen.",
+      "text": "Gebäudemanagement für Standorte KANN die bedarfsgerechte Stromversorgung regelmäßig vorausschauend überprüfen.",
       "primary_anchor": "BSI GS++ GEB.9.1.1",
       "attributes": {
         "practice": "GEB",
@@ -5578,7 +5578,7 @@
     {
       "id": "GEB.9.1.3",
       "title": "Redundante Stromversorgung",
-      "text": "Gebäudemanagement für Standorte KANN eine redundante Stromversorgung für {{ insert: param, geb.9.1.3-prm1 }} installieren.",
+      "text": "Gebäudemanagement für Standorte KANN eine redundante Stromversorgung für eine Stützzeit installieren.",
       "primary_anchor": "BSI GS++ GEB.9.1.3",
       "attributes": {
         "practice": "GEB",
@@ -5592,7 +5592,7 @@
     {
       "id": "GEB.9.1.4",
       "title": "Langanhaltende Sekundärversorgung",
-      "text": "Gebäudemanagement für Standorte KANN eine redundante Stromversorgung für {{ insert: param, geb.9.1.4-prm1 }} installieren.",
+      "text": "Gebäudemanagement für Standorte KANN eine redundante Stromversorgung für eine längere Stützzeit installieren.",
       "primary_anchor": "BSI GS++ GEB.9.1.4",
       "attributes": {
         "practice": "GEB",
@@ -5606,7 +5606,7 @@
     {
       "id": "GEB.9.2",
       "title": "Lasttest",
-      "text": "Gebäudemanagement für Standorte KANN die Belastbarkeit der Stromversorgung {{ insert: param, geb.9.2-prm1 }} überprüfen.",
+      "text": "Gebäudemanagement für Standorte KANN die Belastbarkeit der Stromversorgung regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ GEB.9.2",
       "attributes": {
         "practice": "GEB",
@@ -5676,7 +5676,7 @@
     {
       "id": "GEB.9.6",
       "title": "Zugang zu Räumen für technische Infrastruktur",
-      "text": "Gebäudemanagement für Räume für technische Infrastruktur SOLLTE den Zugang zu Räumen für technische Infrastruktur auf {{ insert: param, geb.9.6-prm1 }} einschränken.",
+      "text": "Gebäudemanagement für Räume für technische Infrastruktur SOLLTE den Zugang zu Räumen für technische Infrastruktur auf für den Betrieb zuständige Personen oder Rollen einschränken.",
       "primary_anchor": "BSI GS++ GEB.9.6",
       "attributes": {
         "practice": "GEB",
@@ -5704,7 +5704,7 @@
     {
       "id": "GEB.10.1",
       "title": "Klimatisierung",
-      "text": "Gebäudemanagement für Standorte SOLLTE eine ausreichende Klimatisierung von Räumlichkeiten anhand von {{ insert: param, geb.10.1-prm1 }} installieren.",
+      "text": "Gebäudemanagement für Standorte SOLLTE eine ausreichende Klimatisierung von Räumlichkeiten anhand von Schwellwerten installieren.",
       "primary_anchor": "BSI GS++ GEB.10.1",
       "attributes": {
         "practice": "GEB",
@@ -5718,7 +5718,7 @@
     {
       "id": "GEB.10.1.1",
       "title": "Luftstrom-Analyse",
-      "text": "Gebäudemanagement für Serverräume KANN den Klimatisierungsbedarf anhand einer Luftstrom-Analyse {{ insert: param, geb.10.1.1-prm1 }} überprüfen.",
+      "text": "Gebäudemanagement für Serverräume KANN den Klimatisierungsbedarf anhand einer Luftstrom-Analyse regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ GEB.10.1.1",
       "attributes": {
         "practice": "GEB",
@@ -5732,7 +5732,7 @@
     {
       "id": "GEB.10.1.2",
       "title": "Klimamessung",
-      "text": "Gebäudemanagement für Serverräume SOLLTE Lufttemperatur und Luftfeuchtigkeit anhand von {{ insert: param, geb.10.1.2-prm1 }} überwachen.",
+      "text": "Gebäudemanagement für Serverräume SOLLTE Lufttemperatur und Luftfeuchtigkeit anhand von Schwellwerten überwachen.",
       "primary_anchor": "BSI GS++ GEB.10.1.2",
       "attributes": {
         "practice": "GEB",
@@ -5816,7 +5816,7 @@
     {
       "id": "GEB.10.2.4",
       "title": "Brandwiderstandsklassen",
-      "text": "Gebäudemanagement für Räume KANN feuerfeste Materialen für alle raumbildenden Teile , sodass sie Feuern für {{ insert: param, geb.10.2.4-prm1 }} standhalten, installieren.",
+      "text": "Gebäudemanagement für Räume KANN feuerfeste Materialen für alle raumbildenden Teile , sodass sie Feuern für eine bestimmte Frist standhalten, installieren.",
       "primary_anchor": "BSI GS++ GEB.10.2.4",
       "attributes": {
         "practice": "GEB",
@@ -5858,7 +5858,7 @@
     {
       "id": "GEB.10.2.7",
       "title": "Brandschutzprüfung",
-      "text": "Gebäudemanagement für Standorte SOLLTE die Wirksamkeit der Brandschutzmaßnahmen {{ insert: param, geb.10.2.7-prm1 }} überprüfen.",
+      "text": "Gebäudemanagement für Standorte SOLLTE die Wirksamkeit der Brandschutzmaßnahmen regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ GEB.10.2.7",
       "attributes": {
         "practice": "GEB",
@@ -5914,7 +5914,7 @@
     {
       "id": "GEB.10.4",
       "title": "Blitzschutzeinrichtungen",
-      "text": "Gebäudemanagement für Standorte SOLLTE Blitzschutzeinrichtungen nach {{ insert: param, geb.10.4-prm1 }} installieren.",
+      "text": "Gebäudemanagement für Standorte SOLLTE Blitzschutzeinrichtungen nach einem anerkannten Standard installieren.",
       "primary_anchor": "BSI GS++ GEB.10.4",
       "attributes": {
         "practice": "GEB",
@@ -5928,7 +5928,7 @@
     {
       "id": "GEB.10.4.1",
       "title": "Niederohmigkeit",
-      "text": "Gebäudemanagement für Standorte KANN Blitzschutzeinrichtungen {{ insert: param, geb.10.4.1-prm1 }} auf Niederohmigkeit überprüfen.",
+      "text": "Gebäudemanagement für Standorte KANN Blitzschutzeinrichtungen regelmäßig auf Niederohmigkeit überprüfen.",
       "primary_anchor": "BSI GS++ GEB.10.4.1",
       "attributes": {
         "practice": "GEB",
@@ -5984,7 +5984,7 @@
     {
       "id": "SENS.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Sensibilisierung MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, sens.1.1.2-prm1 }} zuweisen.",
+      "text": "Sensibilisierung MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ SENS.1.1.2",
       "attributes": {
         "practice": "SENS",
@@ -6012,7 +6012,7 @@
     {
       "id": "SENS.1.2",
       "title": "Erfolgsmessung",
-      "text": "Sensibilisierung SOLLTE den Erfolg der Sensibilisierung anhand {{ insert: param, sens.1.2-prm1 }} {{ insert: param, sens.1.2-prm2 }} überprüfen.",
+      "text": "Sensibilisierung SOLLTE den Erfolg der Sensibilisierung anhand objektivierter Kriterien regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ SENS.1.2",
       "attributes": {
         "practice": "SENS",
@@ -7202,7 +7202,7 @@
     {
       "id": "ARCH.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Architektur MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, arch.1.1.2-prm1 }} zuweisen.",
+      "text": "Architektur MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ ARCH.1.1.2",
       "attributes": {
         "practice": "ARCH",
@@ -7230,7 +7230,7 @@
     {
       "id": "ARCH.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Architektur MUSS die Verfahren und Regelungen {{ insert: param, arch.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Architektur MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ ARCH.1.2",
       "attributes": {
         "practice": "ARCH",
@@ -7258,7 +7258,7 @@
     {
       "id": "ARCH.2.2",
       "title": "Einschränkung von Verbindungen zwischen Segmenten",
-      "text": "Architektur für Netze SOLLTE Verbindungen zwischen Netzsegmenten anhand von {{ insert: param, arch.2.2-prm1 }} einschränken.",
+      "text": "Architektur für Netze SOLLTE Verbindungen zwischen Netzsegmenten anhand von Kriterien einschränken.",
       "primary_anchor": "BSI GS++ ARCH.2.2",
       "attributes": {
         "practice": "ARCH",
@@ -7482,7 +7482,7 @@
     {
       "id": "ARCH.2.6",
       "title": "Topologieüberwachung",
-      "text": "Architektur für Netze SOLLTE die Einhaltung der Netzarchitektur {{ insert: param, arch.2.6-prm1 }} überprüfen.",
+      "text": "Architektur für Netze SOLLTE die Einhaltung der Netzarchitektur regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ ARCH.2.6",
       "attributes": {
         "practice": "ARCH",
@@ -7538,7 +7538,7 @@
     {
       "id": "ARCH.3.4",
       "title": "Verschlüsselte Netzanbindung",
-      "text": "Architektur für WLANs SOLLTE die Netzanbindung {{ insert: param, arch.3.4-prm1 }} verschlüsseln.",
+      "text": "Architektur für WLANs SOLLTE die Netzanbindung nach einem anerkannten Standard verschlüsseln.",
       "primary_anchor": "BSI GS++ ARCH.3.4",
       "attributes": {
         "practice": "ARCH",
@@ -7566,7 +7566,7 @@
     {
       "id": "ARCH.4.1.1",
       "title": "Dynamische Netzzugangskontrolle",
-      "text": "Architektur für Interne Netzsegmente SOLLTE den Zugriff von IT-Systemen auf das Netzsegment anhand {{ insert: param, arch.4.1.1-prm1 }} im Einklang mit den zugehörigen Anforderungen des Identitäts- und Berechtigungsmanagements authentifizieren.",
+      "text": "Architektur für Interne Netzsegmente SOLLTE den Zugriff von IT-Systemen auf das Netzsegment anhand dynamischer Kriterien im Einklang mit den zugehörigen Anforderungen des Identitäts- und Berechtigungsmanagements authentifizieren.",
       "primary_anchor": "BSI GS++ ARCH.4.1.1",
       "attributes": {
         "practice": "ARCH",
@@ -7594,7 +7594,7 @@
     {
       "id": "ARCH.4.2",
       "title": "Autorisiertes Routing",
-      "text": "Architektur für Netze SOLLTE Routing-Verbindungen durch {{ insert: param, arch.4.2-prm1 }} autorisieren.",
+      "text": "Architektur für Netze SOLLTE Routing-Verbindungen durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ ARCH.4.2",
       "attributes": {
         "practice": "ARCH",
@@ -7762,7 +7762,7 @@
     {
       "id": "ARCH.5.1.10",
       "title": "Webfilterung",
-      "text": "Architektur für Externe Netzanschlüsse SOLLTE den Zugriff auf Webinhalte anhand von {{ insert: param, arch.5.1.10-prm1 }} einschränken.",
+      "text": "Architektur für Externe Netzanschlüsse SOLLTE den Zugriff auf Webinhalte anhand von Kriterien einschränken.",
       "primary_anchor": "BSI GS++ ARCH.5.1.10",
       "attributes": {
         "practice": "ARCH",
@@ -7874,7 +7874,7 @@
     {
       "id": "ARCH.6.1",
       "title": "Kontrollierte Verbindungsführung",
-      "text": "Architektur für Externe Netzanschlüsse KANN eine {{ insert: param, arch.6.1-prm1 }} kontrollierte Verbindungsführung für Weitverkehrsverbindungen aktivieren.",
+      "text": "Architektur für Externe Netzanschlüsse KANN eine physisch oder logisch kontrollierte Verbindungsführung für Weitverkehrsverbindungen aktivieren.",
       "primary_anchor": "BSI GS++ ARCH.6.1",
       "attributes": {
         "practice": "ARCH",
@@ -7888,7 +7888,7 @@
     {
       "id": "ARCH.6.2",
       "title": "Verschlüsselung von Weiterverkehrsverbindungen",
-      "text": "Architektur für Externe Netzanschlüsse SOLLTE Verbindungen ins Weitverkehrsnetz nach {{ insert: param, arch.6.2-prm1 }} verschlüsseln.",
+      "text": "Architektur für Externe Netzanschlüsse SOLLTE Verbindungen ins Weitverkehrsnetz nach einem anerkannten Standard verschlüsseln.",
       "primary_anchor": "BSI GS++ ARCH.6.2",
       "attributes": {
         "practice": "ARCH",
@@ -7902,7 +7902,7 @@
     {
       "id": "ARCH.7.1",
       "title": "Dedizierte Hostsysteme für Server",
-      "text": "Architektur für Anwendungen SOLLTE Serverdienste ausschließlich auf für die Anwendung dedizierten {{ insert: param, arch.7.1-prm1 }} Hostsystemen platzieren.",
+      "text": "Architektur für Anwendungen SOLLTE Serverdienste ausschließlich auf für die Anwendung dedizierten virtuellen oder physischen Hostsystemen platzieren.",
       "primary_anchor": "BSI GS++ ARCH.7.1",
       "attributes": {
         "practice": "ARCH",
@@ -8000,7 +8000,7 @@
     {
       "id": "ARCH.9.2",
       "title": "Lastverteilung",
-      "text": "Architektur für Anwendungen KANN eine {{ insert: param, arch.9.2-prm1 }} automatische Lastverteilung aktivieren.",
+      "text": "Architektur für Anwendungen KANN eine netzbasierte oder serverbasierte automatische Lastverteilung aktivieren.",
       "primary_anchor": "BSI GS++ ARCH.9.2",
       "attributes": {
         "practice": "ARCH",
@@ -8014,7 +8014,7 @@
     {
       "id": "ARCH.9.3",
       "title": "Automatische Skalierung",
-      "text": "Architektur für Anwendungen KANN eine automatische Skalierung der von der Anwendung verwendeten Computerinstanzen anhand von {{ insert: param, arch.9.3-prm1 }} aktivieren.",
+      "text": "Architektur für Anwendungen KANN eine automatische Skalierung der von der Anwendung verwendeten Computerinstanzen anhand von Schwellwerten aktivieren.",
       "primary_anchor": "BSI GS++ ARCH.9.3",
       "attributes": {
         "practice": "ARCH",
@@ -8084,7 +8084,7 @@
     {
       "id": "BER.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Berechtigung MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, ber.1.1.2-prm1 }} zuweisen.",
+      "text": "Berechtigung MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ BER.1.1.2",
       "attributes": {
         "practice": "BER",
@@ -8112,7 +8112,7 @@
     {
       "id": "BER.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Berechtigung MUSS die Verfahren und Regelungen {{ insert: param, ber.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Berechtigung MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ BER.1.2",
       "attributes": {
         "practice": "BER",
@@ -8182,7 +8182,7 @@
     {
       "id": "BER.2.3",
       "title": "Stammdatenprüfung",
-      "text": "Berechtigung SOLLTE Stammdaten einer Identität anhand allgemeiner Stammdaten {{ insert: param, ber.2.3-prm1 }} überprüfen.",
+      "text": "Berechtigung SOLLTE Stammdaten einer Identität anhand allgemeiner Stammdaten regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ BER.2.3",
       "attributes": {
         "practice": "BER",
@@ -8252,7 +8252,7 @@
     {
       "id": "BER.3.2",
       "title": "Autorisierung neuer Zugangskonten",
-      "text": "Berechtigung SOLLTE die Einrichtung von Zugangskonten durch {{ insert: param, ber.3.2-prm1 }} autorisieren.",
+      "text": "Berechtigung SOLLTE die Einrichtung von Zugangskonten durch bestimmte Personen oder Rollen autorisieren.",
       "primary_anchor": "BSI GS++ BER.3.2",
       "attributes": {
         "practice": "BER",
@@ -8364,7 +8364,7 @@
     {
       "id": "BER.3.10",
       "title": "Anmeldeversuchsgrenze am System",
-      "text": "Berechtigung für IT-Systeme SOLLTE weitere Anmeldeversuche nach Erreichen von {{ insert: param, ber.3.10-prm1 }} fehlgeschlagenen Versuchen vorübergehend blockieren.",
+      "text": "Berechtigung für IT-Systeme SOLLTE weitere Anmeldeversuche nach Erreichen von einem maximalen Schwellwert an fehlgeschlagenen Versuchen vorübergehend blockieren.",
       "primary_anchor": "BSI GS++ BER.3.10",
       "attributes": {
         "practice": "BER",
@@ -8378,7 +8378,7 @@
     {
       "id": "BER.3.11",
       "title": "Anmeldeversuchsgrenze an der Anwendung",
-      "text": "Berechtigung für Anwendungen SOLLTE weitere Anmeldeversuche nach Erreichen von {{ insert: param, ber.3.11-prm1 }} fehlgeschlagenen Versuchen vorübergehend blockieren.",
+      "text": "Berechtigung für Anwendungen SOLLTE weitere Anmeldeversuche nach Erreichen von einem maximalen Schwellwert an fehlgeschlagenen Versuchen vorübergehend blockieren.",
       "primary_anchor": "BSI GS++ BER.3.11",
       "attributes": {
         "practice": "BER",
@@ -8392,7 +8392,7 @@
     {
       "id": "BER.3.12",
       "title": "Systemsperre bei Inaktivität",
-      "text": "Berechtigung für IT-Systeme SOLLTE eine Sperre bei Inaktivität nach {{ insert: param, ber.3.12-prm1 }} aktivieren.",
+      "text": "Berechtigung für IT-Systeme SOLLTE eine Sperre bei Inaktivität nach einer Frist aktivieren.",
       "primary_anchor": "BSI GS++ BER.3.12",
       "attributes": {
         "practice": "BER",
@@ -8406,7 +8406,7 @@
     {
       "id": "BER.3.13",
       "title": "Sperre der Anwendung bei Inaktivität",
-      "text": "Berechtigung für Anwendungen SOLLTE eine Sperre bei Inaktivität nach {{ insert: param, ber.3.13-prm1 }} aktivieren.",
+      "text": "Berechtigung für Anwendungen SOLLTE eine Sperre bei Inaktivität nach einer Frist aktivieren.",
       "primary_anchor": "BSI GS++ BER.3.13",
       "attributes": {
         "practice": "BER",
@@ -8420,7 +8420,7 @@
     {
       "id": "BER.3.14",
       "title": "Kein Recycling von Zugängen",
-      "text": "Berechtigung SOLLTE die Wiederverwendung von Zugangskonten für {{ insert: param, ber.3.14-prm1 }} blockieren.",
+      "text": "Berechtigung SOLLTE die Wiederverwendung von Zugangskonten für einen bestimmten Zeitraum blockieren.",
       "primary_anchor": "BSI GS++ BER.3.14",
       "attributes": {
         "practice": "BER",
@@ -8616,7 +8616,7 @@
     {
       "id": "BER.4.1.2",
       "title": "JIT‑/JEA‑Berechtigungen",
-      "text": "Berechtigung KANN die Berechtigung zum Zeitpunkt des Zugriffs für {{ insert: param, ber.4.1.2-prm1 }} aktivieren.",
+      "text": "Berechtigung KANN die Berechtigung zum Zeitpunkt des Zugriffs für besonders kritische Ressourcen oder Zugänge aktivieren.",
       "primary_anchor": "BSI GS++ BER.4.1.2",
       "attributes": {
         "practice": "BER",
@@ -8630,7 +8630,7 @@
     {
       "id": "BER.4.2",
       "title": "Autorisierung von Berechtigungen",
-      "text": "Berechtigung SOLLTE die Zuweisung von Berechtigungen durch {{ insert: param, ber.4.2-prm1 }} autorisieren.",
+      "text": "Berechtigung SOLLTE die Zuweisung von Berechtigungen durch bestimmte Personen oder Rollen autorisieren.",
       "primary_anchor": "BSI GS++ BER.4.2",
       "attributes": {
         "practice": "BER",
@@ -8658,7 +8658,7 @@
     {
       "id": "BER.4.4",
       "title": "Überprüfung von Berechtigungen",
-      "text": "Berechtigung SOLLTE vergebene Berechtigungen {{ insert: param, ber.4.4-prm1 }} auf Erforderlichkeit überprüfen.",
+      "text": "Berechtigung SOLLTE vergebene Berechtigungen regelmäßig auf Erforderlichkeit überprüfen.",
       "primary_anchor": "BSI GS++ BER.4.4",
       "attributes": {
         "practice": "BER",
@@ -8672,7 +8672,7 @@
     {
       "id": "BER.4.4.1",
       "title": "Überprüfung tatsächlicher Berechtigungen",
-      "text": "Berechtigung SOLLTE dokumentierte und tatsächlich vergebene Berechtigungen {{ insert: param, ber.4.4.1-prm1 }} auf Übereinstimmung überprüfen.",
+      "text": "Berechtigung SOLLTE dokumentierte und tatsächlich vergebene Berechtigungen regelmäßig auf Übereinstimmung überprüfen.",
       "primary_anchor": "BSI GS++ BER.4.4.1",
       "attributes": {
         "practice": "BER",
@@ -8798,7 +8798,7 @@
     {
       "id": "BER.5.4",
       "title": "Nur etablierte Kryptographie",
-      "text": "Berechtigung SOLLTE bei kryptografischen Authentifizierungsmitteln die ausschließliche Verwendung etablierter kryptografischer Algorithmen nach {{ insert: param, ber.5.4-prm1 }} verankern.",
+      "text": "Berechtigung SOLLTE bei kryptografischen Authentifizierungsmitteln die ausschließliche Verwendung etablierter kryptografischer Algorithmen nach einem oder mehreren anerkannten Standards verankern.",
       "primary_anchor": "BSI GS++ BER.5.4",
       "attributes": {
         "practice": "BER",
@@ -9022,7 +9022,7 @@
     {
       "id": "BER.6.6",
       "title": "Monitoring von Zugangsdaten",
-      "text": "Berechtigung SOLLTE Zugangsdaten auf Kompromittierung durch {{ insert: param, ber.6.6-prm1 }} überwachen.",
+      "text": "Berechtigung SOLLTE Zugangsdaten auf Kompromittierung durch einen automatisierten Mechanismus überwachen.",
       "primary_anchor": "BSI GS++ BER.6.6",
       "attributes": {
         "practice": "BER",
@@ -9036,7 +9036,7 @@
     {
       "id": "BER.7.1",
       "title": "Etablierte Algorithmen bei der Schlüsselerzeugung",
-      "text": "Berechtigung SOLLTE die ausschließliche Verwendung etablierter kryptografischer Algorithmen bei der Schlüsselerzeugung nach {{ insert: param, ber.7.1-prm1 }} verankern.",
+      "text": "Berechtigung SOLLTE die ausschließliche Verwendung etablierter kryptografischer Algorithmen bei der Schlüsselerzeugung nach einem anerkannten Standard verankern.",
       "primary_anchor": "BSI GS++ BER.7.1",
       "attributes": {
         "practice": "BER",
@@ -9050,7 +9050,7 @@
     {
       "id": "BER.7.2",
       "title": "Schlüssellänge",
-      "text": "Berechtigung SOLLTE die Schlüssellängen nach {{ insert: param, ber.7.2-prm1 }} bei der Schlüsselerzeugung zuweisen.",
+      "text": "Berechtigung SOLLTE die Schlüssellängen nach einem anerkannten Standard bei der Schlüsselerzeugung zuweisen.",
       "primary_anchor": "BSI GS++ BER.7.2",
       "attributes": {
         "practice": "BER",
@@ -9092,7 +9092,7 @@
     {
       "id": "BER.7.5",
       "title": "Kriterien für die Qualität von Zufallszahlen",
-      "text": "Berechtigung SOLLTE {{ insert: param, ber.7.5-prm1 }} für die Qualität von Zufallszahlen bei der Schlüsselerzeugung verankern.",
+      "text": "Berechtigung SOLLTE Kriterien für die Qualität von Zufallszahlen bei der Schlüsselerzeugung verankern.",
       "primary_anchor": "BSI GS++ BER.7.5",
       "attributes": {
         "practice": "BER",
@@ -9120,7 +9120,7 @@
     {
       "id": "BER.7.7",
       "title": "Kein Transport privater Schlüssel",
-      "text": "Berechtigung KANN den Export privater Schlüssel durch {{ insert: param, ber.7.7-prm1 }} autorisieren.",
+      "text": "Berechtigung KANN den Export privater Schlüssel durch eine zuständige Person oder Rolle autorisieren.",
       "primary_anchor": "BSI GS++ BER.7.7",
       "attributes": {
         "practice": "BER",
@@ -9218,7 +9218,7 @@
     {
       "id": "BER.7.14",
       "title": "Schlüssel vor Ablauf prüfen",
-      "text": "Berechtigung SOLLTE Schlüssel auf das baldige Auslaufen der Nutzungszeit {{ insert: param, ber.7.14-prm1 }} überprüfen.",
+      "text": "Berechtigung SOLLTE Schlüssel auf das baldige Auslaufen der Nutzungszeit regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ BER.7.14",
       "attributes": {
         "practice": "BER",
@@ -9260,7 +9260,7 @@
     {
       "id": "BER.7.16.1",
       "title": "Zertifizierungsstelle",
-      "text": "Berechtigung SOLLTE die Beglaubigung von Schlüsseln {{ insert: param, ber.7.16.1-prm1 }} zuweisen.",
+      "text": "Berechtigung SOLLTE die Beglaubigung von Schlüsseln einer zuständigen Person oder Rolle zuweisen.",
       "primary_anchor": "BSI GS++ BER.7.16.1",
       "attributes": {
         "practice": "BER",
@@ -9372,7 +9372,7 @@
     {
       "id": "NOT.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Notfallplanung MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, not.1.1.2-prm1 }} zuweisen.",
+      "text": "Notfallplanung MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ NOT.1.1.2",
       "attributes": {
         "practice": "NOT",
@@ -9400,7 +9400,7 @@
     {
       "id": "NOT.1.1.4",
       "title": "Business Continuity Management System",
-      "text": "Notfallplanung KANN ein {{ insert: param, not.1.1.4-prm1 }}BCMS nach {{ insert: param, not.1.1.4-prm2 }} verankern.",
+      "text": "Notfallplanung KANN ein Reaktiv-, Aufbau- oder Standard-BCMS nach BSI-Standard 200-4 verankern.",
       "primary_anchor": "BSI GS++ NOT.1.1.4",
       "attributes": {
         "practice": "NOT",
@@ -9414,7 +9414,7 @@
     {
       "id": "NOT.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Notfallplanung MUSS die Verfahren und Regelungen {{ insert: param, not.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Notfallplanung MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ NOT.1.2",
       "attributes": {
         "practice": "NOT",
@@ -9442,7 +9442,7 @@
     {
       "id": "NOT.2.1.1",
       "title": "Rollen",
-      "text": "Notfallplanung SOLLTE Aufgaben für die BAO einschließlich BAO-Stab und Notfallteams {{ insert: param, not.2.1.1-prm1 }} zuweisen.",
+      "text": "Notfallplanung SOLLTE Aufgaben für die BAO einschließlich BAO-Stab und Notfallteams zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ NOT.2.1.1",
       "attributes": {
         "practice": "NOT",
@@ -9484,7 +9484,7 @@
     {
       "id": "NOT.2.1.4",
       "title": "Stabsübung",
-      "text": "Notfallplanung KANN die Funktionsfähigkeit der BAO {{ insert: param, not.2.1.4-prm1 }} durch Stabsübungen überprüfen.",
+      "text": "Notfallplanung KANN die Funktionsfähigkeit der BAO regelmäßig durch Stabsübungen überprüfen.",
       "primary_anchor": "BSI GS++ NOT.2.1.4",
       "attributes": {
         "practice": "NOT",
@@ -9540,7 +9540,7 @@
     {
       "id": "NOT.3.4",
       "title": "Funktionstest",
-      "text": "Notfallplanung KANN die tatsächliche Funktionstüchtigkeit von Notfallplänen {{ insert: param, not.3.4-prm1 }} überprüfen.",
+      "text": "Notfallplanung KANN die tatsächliche Funktionstüchtigkeit von Notfallplänen regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ NOT.3.4",
       "attributes": {
         "practice": "NOT",
@@ -9596,7 +9596,7 @@
     {
       "id": "NOT.4.2",
       "title": "Sicherung des Systems",
-      "text": "Notfallplanung für IT-Systeme SOLLTE deren Datensicherung {{ insert: param, not.4.2-prm1 }} ausführen.",
+      "text": "Notfallplanung für IT-Systeme SOLLTE deren Datensicherung regelmäßig ausführen.",
       "primary_anchor": "BSI GS++ NOT.4.2",
       "attributes": {
         "practice": "NOT",
@@ -9610,7 +9610,7 @@
     {
       "id": "NOT.4.3",
       "title": "Sicherung der Anwendung",
-      "text": "Notfallplanung für Anwendungen SOLLTE deren Datensicherung {{ insert: param, not.4.3-prm1 }} ausführen.",
+      "text": "Notfallplanung für Anwendungen SOLLTE deren Datensicherung regelmäßig ausführen.",
       "primary_anchor": "BSI GS++ NOT.4.3",
       "attributes": {
         "practice": "NOT",
@@ -9624,7 +9624,7 @@
     {
       "id": "NOT.4.4",
       "title": "Automatische Datensicherung",
-      "text": "Notfallplanung für Daten SOLLTE die Datensicherung durch {{ insert: param, not.4.4-prm1 }} ausführen.",
+      "text": "Notfallplanung für Daten SOLLTE die Datensicherung durch einen automatisierten Mechanismus ausführen.",
       "primary_anchor": "BSI GS++ NOT.4.4",
       "attributes": {
         "practice": "NOT",
@@ -9638,7 +9638,7 @@
     {
       "id": "NOT.4.5",
       "title": "Archivierung langfristig benötigter Daten",
-      "text": "Notfallplanung für Daten SOLLTE die Archivierung langfristig benötigter Daten {{ insert: param, not.4.5-prm1 }} ausführen.",
+      "text": "Notfallplanung für Daten SOLLTE die Archivierung langfristig benötigter Daten regelmäßig ausführen.",
       "primary_anchor": "BSI GS++ NOT.4.5",
       "attributes": {
         "practice": "NOT",
@@ -9652,7 +9652,7 @@
     {
       "id": "NOT.4.5.1",
       "title": "Zum Archiv gehörende Assets",
-      "text": "Notfallplanung für Daten SOLLTE die Archivierung von Assets, die zur Verwendung von archivierten Daten erforderlich sind, {{ insert: param, not.4.5.1-prm1 }} ausführen.",
+      "text": "Notfallplanung für Daten SOLLTE die Archivierung von Assets, die zur Verwendung von archivierten Daten erforderlich sind, regelmäßig ausführen.",
       "primary_anchor": "BSI GS++ NOT.4.5.1",
       "attributes": {
         "practice": "NOT",
@@ -9666,7 +9666,7 @@
     {
       "id": "NOT.4.5.2",
       "title": "Zum Archiv gehörende Dokumentation",
-      "text": "Notfallplanung für Daten SOLLTE die Archivierung von Dokumentationen, die zur Verwendung von archivierten Daten erforderlich sind, {{ insert: param, not.4.5.2-prm1 }} ausführen.",
+      "text": "Notfallplanung für Daten SOLLTE die Archivierung von Dokumentationen, die zur Verwendung von archivierten Daten erforderlich sind, regelmäßig ausführen.",
       "primary_anchor": "BSI GS++ NOT.4.5.2",
       "attributes": {
         "practice": "NOT",
@@ -9708,7 +9708,7 @@
     {
       "id": "NOT.4.8",
       "title": "Verschlüsselte Datensicherung",
-      "text": "Notfallplanung SOLLTE die Datensicherung durch {{ insert: param, not.4.8-prm1 }} verschlüsseln.",
+      "text": "Notfallplanung SOLLTE die Datensicherung durch einen anerkannten kryptographischen Algorithmus verschlüsseln.",
       "primary_anchor": "BSI GS++ NOT.4.8",
       "attributes": {
         "practice": "NOT",
@@ -9778,7 +9778,7 @@
     {
       "id": "NOT.4.13",
       "title": "Datensouveränität",
-      "text": "Notfallplanung für Outsourcing SOLLTE die Datensicherung von Daten, die bei einem Dienstleister verarbeitet werden, nach {{ insert: param, not.4.13-prm1 }} {{ insert: param, not.4.13-prm2 }} ausführen.",
+      "text": "Notfallplanung für Outsourcing SOLLTE die Datensicherung von Daten, die bei einem Dienstleister verarbeitet werden, nach einem anerkannten Standard regelmäßig ausführen.",
       "primary_anchor": "BSI GS++ NOT.4.13",
       "attributes": {
         "practice": "NOT",
@@ -9792,7 +9792,7 @@
     {
       "id": "NOT.4.14",
       "title": "Offline-Kopie",
-      "text": "Notfallplanung für Daten SOLLTE eine Offline-Kopie {{ insert: param, not.4.14-prm1 }} ausführen.",
+      "text": "Notfallplanung für Daten SOLLTE eine Offline-Kopie regelmäßig ausführen.",
       "primary_anchor": "BSI GS++ NOT.4.14",
       "attributes": {
         "practice": "NOT",
@@ -9820,7 +9820,7 @@
     {
       "id": "NOT.4.16",
       "title": "Test der Datensicherung",
-      "text": "Notfallplanung für Daten SOLLTE den Erfolg der Datensicherung {{ insert: param, not.4.16-prm1 }} überprüfen.",
+      "text": "Notfallplanung für Daten SOLLTE den Erfolg der Datensicherung regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ NOT.4.16",
       "attributes": {
         "practice": "NOT",
@@ -9834,7 +9834,7 @@
     {
       "id": "NOT.4.16.1",
       "title": "Test der Wiederherstellung",
-      "text": "Notfallplanung für Daten SOLLTE die Wiederherstellung mindestens anhand von repräsentativen Stichproben {{ insert: param, not.4.16.1-prm1 }} überprüfen.",
+      "text": "Notfallplanung für Daten SOLLTE die Wiederherstellung mindestens anhand von repräsentativen Stichproben regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ NOT.4.16.1",
       "attributes": {
         "practice": "NOT",
@@ -9848,7 +9848,7 @@
     {
       "id": "NOT.4.17",
       "title": "Anwendungstest",
-      "text": "Notfallplanung für Anwendungen KANN deren Funktionsfähigkeit nach Wiederherstellung {{ insert: param, not.4.17-prm1 }} überprüfen.",
+      "text": "Notfallplanung für Anwendungen KANN deren Funktionsfähigkeit nach Wiederherstellung regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ NOT.4.17",
       "attributes": {
         "practice": "NOT",
@@ -9890,7 +9890,7 @@
     {
       "id": "DET.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Detektion MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, det.1.1.2-prm1 }} zuweisen.",
+      "text": "Detektion MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ DET.1.1.2",
       "attributes": {
         "practice": "DET",
@@ -9918,7 +9918,7 @@
     {
       "id": "DET.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Detektion MUSS die Verfahren und Regelungen {{ insert: param, det.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Detektion MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ DET.1.2",
       "attributes": {
         "practice": "DET",
@@ -9988,7 +9988,7 @@
     {
       "id": "DET.2.2",
       "title": "Security Operations Center",
-      "text": "Detektion KANN die Erkennung, Beurteilung und initiale Behandlung von Vorfällen {{ insert: param, det.2.2-prm1 }} zuweisen.",
+      "text": "Detektion KANN die Erkennung, Beurteilung und initiale Behandlung von Vorfällen dediziertem Personal zuweisen.",
       "primary_anchor": "BSI GS++ DET.2.2",
       "attributes": {
         "practice": "DET",
@@ -10016,7 +10016,7 @@
     {
       "id": "DET.3.1",
       "title": "Protokollierung sicherheitsrelevanter Ereignisse",
-      "text": "Detektion für Anwendungen SOLLTE Sicherheitsrelevante Ereignisse mindestens für {{ insert: param, det.3.1-prm1 }} protokollieren.",
+      "text": "Detektion für Anwendungen SOLLTE Sicherheitsrelevante Ereignisse mindestens für eine bestimmte Frist protokollieren.",
       "primary_anchor": "BSI GS++ DET.3.1",
       "attributes": {
         "practice": "DET",
@@ -10100,7 +10100,7 @@
     {
       "id": "DET.3.1.6",
       "title": "Systemspezifische Ereignisse",
-      "text": "Detektion für IT-Systeme KANN {{ insert: param, det.3.1.6-prm1 }} protokollieren.",
+      "text": "Detektion für IT-Systeme KANN bestimmte systemspezifische Ereignisse protokollieren.",
       "primary_anchor": "BSI GS++ DET.3.1.6",
       "attributes": {
         "practice": "DET",
@@ -10170,7 +10170,7 @@
     {
       "id": "DET.3.1.11",
       "title": "Anwendungsspezifische Ereignisse",
-      "text": "Detektion für Anwendungen KANN {{ insert: param, det.3.1.11-prm1 }} protokollieren.",
+      "text": "Detektion für Anwendungen KANN bestimmte anwendungsspezifische Ereignisse protokollieren.",
       "primary_anchor": "BSI GS++ DET.3.1.11",
       "attributes": {
         "practice": "DET",
@@ -10212,7 +10212,7 @@
     {
       "id": "DET.3.3",
       "title": "Filterung nicht benötigter Inhalte",
-      "text": "Detektion KANN die Protokollierung nicht benötigter Inhalte anhand von {{ insert: param, det.3.3-prm1 }} einschränken.",
+      "text": "Detektion KANN die Protokollierung nicht benötigter Inhalte anhand von Kriterien einschränken.",
       "primary_anchor": "BSI GS++ DET.3.3",
       "attributes": {
         "practice": "DET",
@@ -10226,7 +10226,7 @@
     {
       "id": "DET.3.4",
       "title": "Speicherkapazität",
-      "text": "Detektion SOLLTE den für die Protokollierung zur Verfügung stehenden Speicherplatz {{ insert: param, det.3.4-prm1 }} überprüfen.",
+      "text": "Detektion SOLLTE den für die Protokollierung zur Verfügung stehenden Speicherplatz bei Erreichen eines bestimmten Schwellwertes oder regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DET.3.4",
       "attributes": {
         "practice": "DET",
@@ -10254,7 +10254,7 @@
     {
       "id": "DET.3.6",
       "title": "Unbestreitbarkeit",
-      "text": "Detektion für Daten KANN Nachweise für den Zusammenhang {{ insert: param, det.3.6-prm1 }} mit {{ insert: param, det.3.6-prm2 }} dokumentieren.",
+      "text": "Detektion für Daten KANN Nachweise für den Zusammenhang bestimter Ereignisse mit einer bestimmten Person oder Rolle dokumentieren.",
       "primary_anchor": "BSI GS++ DET.3.6",
       "attributes": {
         "practice": "DET",
@@ -10282,7 +10282,7 @@
     {
       "id": "DET.4.2",
       "title": "Automatische Angriffserkennung",
-      "text": "Detektion für IT-Systeme SOLLTE diese auf Anzeichen für Angriffe durch {{ insert: param, det.4.2-prm1 }} überwachen.",
+      "text": "Detektion für IT-Systeme SOLLTE diese auf Anzeichen für Angriffe durch einen automatisierten Mechanismus überwachen.",
       "primary_anchor": "BSI GS++ DET.4.2",
       "attributes": {
         "practice": "DET",
@@ -10394,7 +10394,7 @@
     {
       "id": "DET.4.9",
       "title": "Manipulations-Checkup",
-      "text": "Detektion für IT-Systeme KANN das System auf Manipulationsversuche {{ insert: param, det.4.9-prm1 }} überprüfen.",
+      "text": "Detektion für IT-Systeme KANN das System auf Manipulationsversuche regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DET.4.9",
       "attributes": {
         "practice": "DET",
@@ -10436,7 +10436,7 @@
     {
       "id": "DET.4.11.1",
       "title": "Authentifizierungsversuche an externen Schnittstellen",
-      "text": "Detektion für Externe Netzanschlüsse KANN Authentifizierungsversuche auf unauthorisierte Verbindungen {{ insert: param, det.4.11.1-prm1 }} überprüfen.",
+      "text": "Detektion für Externe Netzanschlüsse KANN Authentifizierungsversuche auf unauthorisierte Verbindungen regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DET.4.11.1",
       "attributes": {
         "practice": "DET",
@@ -10464,7 +10464,7 @@
     {
       "id": "DET.4.11.3",
       "title": "Netzverkehrsfluss",
-      "text": "Detektion für Netze KANN auf kritische Netzverkehrsflüsse anhand von {{ insert: param, det.4.11.3-prm1 }} überwachen.",
+      "text": "Detektion für Netze KANN auf kritische Netzverkehrsflüsse anhand von Kriterien überwachen.",
       "primary_anchor": "BSI GS++ DET.4.11.3",
       "attributes": {
         "practice": "DET",
@@ -10478,7 +10478,7 @@
     {
       "id": "DET.4.12",
       "title": "Monitoring der Netzverfügbarkeit",
-      "text": "Detektion für Netze SOLLTE die Verfügbarkeit des Netzes anhand von {{ insert: param, det.4.12-prm1 }} überwachen.",
+      "text": "Detektion für Netze SOLLTE die Verfügbarkeit des Netzes anhand von Schwellwerten überwachen.",
       "primary_anchor": "BSI GS++ DET.4.12",
       "attributes": {
         "practice": "DET",
@@ -10492,7 +10492,7 @@
     {
       "id": "DET.4.12.1",
       "title": "Auslastung des Netzes",
-      "text": "Detektion für Netze SOLLTE die Auslastung des Netzes anhand von {{ insert: param, det.4.12.1-prm1 }} überwachen.",
+      "text": "Detektion für Netze SOLLTE die Auslastung des Netzes anhand von Schwellwerten überwachen.",
       "primary_anchor": "BSI GS++ DET.4.12.1",
       "attributes": {
         "practice": "DET",
@@ -10506,7 +10506,7 @@
     {
       "id": "DET.4.13",
       "title": "Verfügbarkeit des Hostsystems",
-      "text": "Detektion für Hostsysteme SOLLTE die Netzerreichbarkeit anhand von {{ insert: param, det.4.13-prm1 }} überwachen.",
+      "text": "Detektion für Hostsysteme SOLLTE die Netzerreichbarkeit anhand von Schwellwerten überwachen.",
       "primary_anchor": "BSI GS++ DET.4.13",
       "attributes": {
         "practice": "DET",
@@ -10520,7 +10520,7 @@
     {
       "id": "DET.4.14",
       "title": "Verfügbarkeit der Anwendung",
-      "text": "Detektion für Anwendungen SOLLTE die Netzerreichbarkeit anhand von {{ insert: param, det.4.14-prm1 }} überwachen.",
+      "text": "Detektion für Anwendungen SOLLTE die Netzerreichbarkeit anhand von Schwellwerten überwachen.",
       "primary_anchor": "BSI GS++ DET.4.14",
       "attributes": {
         "practice": "DET",
@@ -10534,7 +10534,7 @@
     {
       "id": "DET.4.15",
       "title": "Ressourcenauslastung von Hostsystemen",
-      "text": "Detektion für Hostsysteme SOLLTE die Ressourcenauslastung anhand von {{ insert: param, det.4.15-prm1 }} überwachen.",
+      "text": "Detektion für Hostsysteme SOLLTE die Ressourcenauslastung anhand von Schwellwerten überwachen.",
       "primary_anchor": "BSI GS++ DET.4.15",
       "attributes": {
         "practice": "DET",
@@ -10548,7 +10548,7 @@
     {
       "id": "DET.4.16",
       "title": "Ressourcenauslastung der Server-Dienste",
-      "text": "Detektion für Anwendungen KANN die Ressourcenauslastung der für die Anwendung verwendeten Server-Dienste anhand von {{ insert: param, det.4.16-prm1 }} überwachen.",
+      "text": "Detektion für Anwendungen KANN die Ressourcenauslastung der für die Anwendung verwendeten Server-Dienste anhand von Schwellwerten überwachen.",
       "primary_anchor": "BSI GS++ DET.4.16",
       "attributes": {
         "practice": "DET",
@@ -10562,7 +10562,7 @@
     {
       "id": "DET.4.17",
       "title": "Anwendungsbasiertes Kapazitätsmanagement",
-      "text": "Detektion für Anwendungen KANN die Ressourcenauslastung systemübergreifend anhand von {{ insert: param, det.4.17-prm1 }} überwachen.",
+      "text": "Detektion für Anwendungen KANN die Ressourcenauslastung systemübergreifend anhand von Schwellwerten überwachen.",
       "primary_anchor": "BSI GS++ DET.4.17",
       "attributes": {
         "practice": "DET",
@@ -10576,7 +10576,7 @@
     {
       "id": "DET.4.18",
       "title": "Öffentliche Blocklisten",
-      "text": "Detektion für E-Mail KANN öffentliche Blocklisten auf Einträge für eigene E-Mail-Server {{ insert: param, det.4.18-prm1 }} überprüfen.",
+      "text": "Detektion für E-Mail KANN öffentliche Blocklisten auf Einträge für eigene E-Mail-Server regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DET.4.18",
       "attributes": {
         "practice": "DET",
@@ -10590,7 +10590,7 @@
     {
       "id": "DET.4.19",
       "title": "Unautorisierte Sendeanlagen",
-      "text": "Detektion für Räume KANN diesen nach unautorisierten Sendeanlagen durch {{ insert: param, det.4.19-prm1 }} überwachen.",
+      "text": "Detektion für Räume KANN diesen nach unautorisierten Sendeanlagen durch einen automatisierten Mechanismus überwachen.",
       "primary_anchor": "BSI GS++ DET.4.19",
       "attributes": {
         "practice": "DET",
@@ -10618,7 +10618,7 @@
     {
       "id": "DET.5.1.1",
       "title": "Risikobasierte Priorisierung",
-      "text": "Detektion KANN erkannte Schwachstellen anhand von {{ insert: param, det.5.1.1-prm1 }} innerhalb {{ insert: param, det.5.1.1-prm2 }} überprüfen.",
+      "text": "Detektion KANN erkannte Schwachstellen anhand von risikobasierten Kriterien innerhalb einer Frist überprüfen.",
       "primary_anchor": "BSI GS++ DET.5.1.1",
       "attributes": {
         "practice": "DET",
@@ -10660,7 +10660,7 @@
     {
       "id": "DET.5.3.1",
       "title": "Autorisierung kritischer Scans",
-      "text": "Detektion SOLLTE kritische Scans durch {{ insert: param, det.5.3.1-prm1 }} autorisieren.",
+      "text": "Detektion SOLLTE kritische Scans durch zuständige Personen oder Rollen autorisieren.",
       "primary_anchor": "BSI GS++ DET.5.3.1",
       "attributes": {
         "practice": "DET",
@@ -10702,7 +10702,7 @@
     {
       "id": "DET.5.4",
       "title": "Regelmäßige Penetrationstests",
-      "text": "Detektion für IT-Systeme KANN die tatsächliche Abwehrfähigkeit nach {{ insert: param, det.5.4-prm1 }} {{ insert: param, det.5.4-prm2 }} überprüfen.",
+      "text": "Detektion für IT-Systeme KANN die tatsächliche Abwehrfähigkeit nach einer anerkannten Vorgehensweise regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DET.5.4",
       "attributes": {
         "practice": "DET",
@@ -10716,7 +10716,7 @@
     {
       "id": "DET.5.5",
       "title": "Red Teaming",
-      "text": "Detektion für IT-Systeme KANN die tatsächliche Abwehrfähigkeit {{ insert: param, det.5.5-prm1 }} durch unabhängig agierende Sicherheitsexperten überprüfen.",
+      "text": "Detektion für IT-Systeme KANN die tatsächliche Abwehrfähigkeit regelmäßig durch unabhängig agierende Sicherheitsexperten überprüfen.",
       "primary_anchor": "BSI GS++ DET.5.5",
       "attributes": {
         "practice": "DET",
@@ -10730,7 +10730,7 @@
     {
       "id": "DET.5.6",
       "title": "Threat Hunting",
-      "text": "Detektion KANN den Informationsverbund durch Sicherheitsexperten auf Anzeichen für Angriffe {{ insert: param, det.5.6-prm1 }} überprüfen.",
+      "text": "Detektion KANN den Informationsverbund durch Sicherheitsexperten auf Anzeichen für Angriffe regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DET.5.6",
       "attributes": {
         "practice": "DET",
@@ -10744,7 +10744,7 @@
     {
       "id": "DET.5.7",
       "title": "Analyse verdeckter Kanäle",
-      "text": "Detektion KANN den Informationsverbund auf verdeckte Kommunikationskanäle {{ insert: param, det.5.7-prm1 }} überprüfen.",
+      "text": "Detektion KANN den Informationsverbund auf verdeckte Kommunikationskanäle bei Sicherheitsvorfällen mit verdeckten Kanälen und regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DET.5.7",
       "attributes": {
         "practice": "DET",
@@ -10758,7 +10758,7 @@
     {
       "id": "DET.5.8",
       "title": "Bedrohungsanalyse",
-      "text": "Detektion SOLLTE verfügbare Informationen zu Bedrohungen, die für den Informationsverbund relevant sind, {{ insert: param, det.5.8-prm1 }} überprüfen.",
+      "text": "Detektion SOLLTE verfügbare Informationen zu Bedrohungen, die für den Informationsverbund relevant sind, regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DET.5.8",
       "attributes": {
         "practice": "DET",
@@ -10772,7 +10772,7 @@
     {
       "id": "DET.5.8.1",
       "title": "Auswertung öffentlicher Quellen",
-      "text": "Detektion KANN öffentliche Quellen auf Hinweise zu eigenen Schwachstellen anhand von {{ insert: param, det.5.8.1-prm1 }} {{ insert: param, det.5.8.1-prm2 }} überprüfen.",
+      "text": "Detektion KANN öffentliche Quellen auf Hinweise zu eigenen Schwachstellen anhand von Kriterien zur Suche regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ DET.5.8.1",
       "attributes": {
         "practice": "DET",
@@ -10856,7 +10856,7 @@
     {
       "id": "DET.5.10.2",
       "title": "Automatisierte Überwachung von Systemupdates",
-      "text": "Detektion für IT-Systeme SOLLTE den Patchstatus durch {{ insert: param, det.5.10.2-prm1 }} überwachen.",
+      "text": "Detektion für IT-Systeme SOLLTE den Patchstatus durch einen automatisierten Mechanismus überwachen.",
       "primary_anchor": "BSI GS++ DET.5.10.2",
       "attributes": {
         "practice": "DET",
@@ -10870,7 +10870,7 @@
     {
       "id": "DET.5.10.3",
       "title": "Automatisierte Überwachung von Anwendungsupdates",
-      "text": "Detektion für Anwendungen KANN den Patchstatus durch {{ insert: param, det.5.10.3-prm1 }} überwachen.",
+      "text": "Detektion für Anwendungen KANN den Patchstatus durch einen automatisierten Mechanismus überwachen.",
       "primary_anchor": "BSI GS++ DET.5.10.3",
       "attributes": {
         "practice": "DET",
@@ -10912,7 +10912,7 @@
     {
       "id": "DET.6.1",
       "title": "Beurteilung von Ereignissen",
-      "text": "Detektion SOLLTE ein Verfahren zur Beurteilung von sicherheitsrelevanten Ereignissen anhand von {{ insert: param, det.6.1-prm1 }} verankern.",
+      "text": "Detektion SOLLTE ein Verfahren zur Beurteilung von sicherheitsrelevanten Ereignissen anhand von Kriterien verankern.",
       "primary_anchor": "BSI GS++ DET.6.1",
       "attributes": {
         "practice": "DET",
@@ -10926,7 +10926,7 @@
     {
       "id": "DET.6.1.1",
       "title": "Automatisierte Feststellung",
-      "text": "Detektion SOLLTE kritische Vorfälle anhand von {{ insert: param, det.6.1.1-prm1 }} durch {{ insert: param, det.6.1.1-prm2 }} protokollieren.",
+      "text": "Detektion SOLLTE kritische Vorfälle anhand von Kriterien durch einen automatisierten Mechanismus protokollieren.",
       "primary_anchor": "BSI GS++ DET.6.1.1",
       "attributes": {
         "practice": "DET",
@@ -10940,7 +10940,7 @@
     {
       "id": "DET.6.1.2",
       "title": "Automatische Alarmierung",
-      "text": "Detektion SOLLTE bei sicherheitskritischen Ereignissen eine Alarmierung von {{ insert: param, det.6.1.2-prm1 }} durch {{ insert: param, det.6.1.2-prm2 }} ausführen.",
+      "text": "Detektion SOLLTE bei sicherheitskritischen Ereignissen eine Alarmierung von für die Vorfallsbehandlung zuständigen Personen oder Rollen durch einen automatisierten Mechanismus ausführen.",
       "primary_anchor": "BSI GS++ DET.6.1.2",
       "attributes": {
         "practice": "DET",
@@ -11038,7 +11038,7 @@
     {
       "id": "REA.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Sicherheitsvorfallsbehandlung MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, rea.1.1.2-prm1 }} zuweisen.",
+      "text": "Sicherheitsvorfallsbehandlung MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ REA.1.1.2",
       "attributes": {
         "practice": "REA",
@@ -11066,7 +11066,7 @@
     {
       "id": "REA.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Sicherheitsvorfallsbehandlung MUSS die Verfahren und Regelungen {{ insert: param, rea.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Sicherheitsvorfallsbehandlung MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ REA.1.2",
       "attributes": {
         "practice": "REA",
@@ -11080,7 +11080,7 @@
     {
       "id": "REA.1.3",
       "title": "Übungen zur Vorfallsbehandlung",
-      "text": "Sicherheitsvorfallsbehandlung KANN die Abwehrfähigkeit durch Übungen {{ insert: param, rea.1.3-prm1 }} überprüfen.",
+      "text": "Sicherheitsvorfallsbehandlung KANN die Abwehrfähigkeit durch Übungen regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ REA.1.3",
       "attributes": {
         "practice": "REA",
@@ -11150,7 +11150,7 @@
     {
       "id": "REA.2.5",
       "title": "IT-Forensik",
-      "text": "Sicherheitsvorfallsbehandlung SOLLTE eine forensische Analyse bei Vorfällen, die {{ insert: param, rea.2.5-prm1 }} erfüllen, ausführen.",
+      "text": "Sicherheitsvorfallsbehandlung SOLLTE eine forensische Analyse bei Vorfällen, die bestimmte Kriterien erfüllen, ausführen.",
       "primary_anchor": "BSI GS++ REA.2.5",
       "attributes": {
         "practice": "REA",
@@ -11192,7 +11192,7 @@
     {
       "id": "REA.2.5.3",
       "title": "Forensik-Dienstleister",
-      "text": "Sicherheitsvorfallsbehandlung KANN die Bereitschaft eines Forensik-Dienstleisters binnen {{ insert: param, rea.2.5.3-prm1 }} vereinbaren.",
+      "text": "Sicherheitsvorfallsbehandlung KANN die Bereitschaft eines Forensik-Dienstleisters binnen einer Frist vereinbaren.",
       "primary_anchor": "BSI GS++ REA.2.5.3",
       "attributes": {
         "practice": "REA",
@@ -11304,7 +11304,7 @@
     {
       "id": "REA.3.1",
       "title": "Verbesserung durch Erkenntnisse",
-      "text": "Sicherheitsvorfallsbehandlung SOLLTE bisherige Maßnahmen anhand von Erkenntnissen aus Informationssicherheitsvorfällen {{ insert: param, rea.3.1-prm1 }} überprüfen.",
+      "text": "Sicherheitsvorfallsbehandlung SOLLTE bisherige Maßnahmen anhand von Erkenntnissen aus Informationssicherheitsvorfällen regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ REA.3.1",
       "attributes": {
         "practice": "REA",
@@ -11360,7 +11360,7 @@
     {
       "id": "KONF.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Konfiguration MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, konf.1.1.2-prm1 }} zuweisen.",
+      "text": "Konfiguration MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ KONF.1.1.2",
       "attributes": {
         "practice": "KONF",
@@ -11388,7 +11388,7 @@
     {
       "id": "KONF.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Konfiguration MUSS die Verfahren und Regelungen {{ insert: param, konf.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Konfiguration MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ KONF.1.2",
       "attributes": {
         "practice": "KONF",
@@ -11472,7 +11472,7 @@
     {
       "id": "KONF.2.2",
       "title": "Kryptographische Verfahren in IT-Systemen",
-      "text": "Konfiguration für IT-Systeme SOLLTE kryptographische Verfahren nach {{ insert: param, konf.2.2-prm1 }} im Einklang mit den zugehörigen Anforderungen zum Identitäts- und Berechtigungsmanagement aktivieren.",
+      "text": "Konfiguration für IT-Systeme SOLLTE kryptographische Verfahren nach anerkannten Standards im Einklang mit den zugehörigen Anforderungen zum Identitäts- und Berechtigungsmanagement aktivieren.",
       "primary_anchor": "BSI GS++ KONF.2.2",
       "attributes": {
         "practice": "KONF",
@@ -11542,7 +11542,7 @@
     {
       "id": "KONF.2.5",
       "title": "Überprüfung der Konfiguration",
-      "text": "Konfiguration für IT-Systeme SOLLTE die Übereinstimmung der tatsächlichen Konfiguration mit dem Referenzzustand {{ insert: param, konf.2.5-prm1 }} überprüfen.",
+      "text": "Konfiguration für IT-Systeme SOLLTE die Übereinstimmung der tatsächlichen Konfiguration mit dem Referenzzustand regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ KONF.2.5",
       "attributes": {
         "practice": "KONF",
@@ -11556,7 +11556,7 @@
     {
       "id": "KONF.2.5.1",
       "title": "Automatische Konfigurationsverwaltung",
-      "text": "Konfiguration für IT-Systeme KANN die Überprüfung der Konfiguration durch {{ insert: param, konf.2.5.1-prm1 }} aktivieren.",
+      "text": "Konfiguration für IT-Systeme KANN die Überprüfung der Konfiguration durch einen automatisierten Mechanismus aktivieren.",
       "primary_anchor": "BSI GS++ KONF.2.5.1",
       "attributes": {
         "practice": "KONF",
@@ -11682,7 +11682,7 @@
     {
       "id": "KONF.3.5",
       "title": "Standortbestimmung",
-      "text": "Konfiguration für IT-Systeme KANN eine Funktion zur Bestimmung des Standortes aus der Ferne {{ insert: param, konf.3.5-prm1 }} aktivieren.",
+      "text": "Konfiguration für IT-Systeme KANN eine Funktion zur Bestimmung des Standortes aus der Ferne durch einen automatisierten Mechanismus aktivieren.",
       "primary_anchor": "BSI GS++ KONF.3.5",
       "attributes": {
         "practice": "KONF",
@@ -11710,7 +11710,7 @@
     {
       "id": "KONF.3.6.1",
       "title": "Automatische Fernlöschung oder -sperre",
-      "text": "Konfiguration für Mobile Endgeräte KANN eine automatische Fernlöschung oder -sperre bei Inaktivität nach {{ insert: param, konf.3.6.1-prm1 }} aktivieren.",
+      "text": "Konfiguration für Mobile Endgeräte KANN eine automatische Fernlöschung oder -sperre bei Inaktivität nach einer längeren Frist aktivieren.",
       "primary_anchor": "BSI GS++ KONF.3.6.1",
       "attributes": {
         "practice": "KONF",
@@ -11794,7 +11794,7 @@
     {
       "id": "KONF.4.2.1",
       "title": "DNS-Verschlüsselung",
-      "text": "Konfiguration für IT-Systeme SOLLTE DNS-Verbindungen durch {{ insert: param, konf.4.2.1-prm1 }} verschlüsseln.",
+      "text": "Konfiguration für IT-Systeme SOLLTE DNS-Verbindungen durch einen anerkannten kryptographischen Algorithmus verschlüsseln.",
       "primary_anchor": "BSI GS++ KONF.4.2.1",
       "attributes": {
         "practice": "KONF",
@@ -11934,7 +11934,7 @@
     {
       "id": "KONF.6.1.2",
       "title": "Isolierung von Anwendungen",
-      "text": "Konfiguration für IT-Systeme KANN die Isolierung von {{ insert: param, konf.6.1.2-prm1 }} aktivieren.",
+      "text": "Konfiguration für IT-Systeme KANN die Isolierung von bestimmten Anwendungen aktivieren.",
       "primary_anchor": "BSI GS++ KONF.6.1.2",
       "attributes": {
         "practice": "KONF",
@@ -12284,7 +12284,7 @@
     {
       "id": "KONF.7.7",
       "title": "Regelmäßiger Funktionstest",
-      "text": "Konfiguration für IT-Systeme KANN die Funktionsfähigkeit des Schadcodeschutzes {{ insert: param, konf.7.7-prm1 }} überprüfen.",
+      "text": "Konfiguration für IT-Systeme KANN die Funktionsfähigkeit des Schadcodeschutzes regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ KONF.7.7",
       "attributes": {
         "practice": "KONF",
@@ -12494,7 +12494,7 @@
     {
       "id": "KONF.9.2",
       "title": "Begrenzung der Rechenleistung",
-      "text": "Konfiguration für Hostsysteme KANN die zur Verfügung stehende Rechenleistung anhand von {{ insert: param, konf.9.2-prm1 }} einschränken.",
+      "text": "Konfiguration für Hostsysteme KANN die zur Verfügung stehende Rechenleistung anhand von Schwellwerten einschränken.",
       "primary_anchor": "BSI GS++ KONF.9.2",
       "attributes": {
         "practice": "KONF",
@@ -12508,7 +12508,7 @@
     {
       "id": "KONF.9.3",
       "title": "Alternative Komponenten für kritische Funktionen",
-      "text": "Konfiguration für IT-Systeme KANN alternative Komponenten für {{ insert: param, konf.9.3-prm1 }} installieren.",
+      "text": "Konfiguration für IT-Systeme KANN alternative Komponenten für bestimmte kritische Funktionen installieren.",
       "primary_anchor": "BSI GS++ KONF.9.3",
       "attributes": {
         "practice": "KONF",
@@ -12550,7 +12550,7 @@
     {
       "id": "KONF.10.2",
       "title": "Kryptographische Verfahren in Anwendungen",
-      "text": "Konfiguration für Anwendungen SOLLTE kryptographische Verfahren nach {{ insert: param, konf.10.2-prm1 }} im Einklang mit den zugehörigen Anforderungen zum Identitäts- und Berechtigungsmanagement aktivieren.",
+      "text": "Konfiguration für Anwendungen SOLLTE kryptographische Verfahren nach anerkannten Standards im Einklang mit den zugehörigen Anforderungen zum Identitäts- und Berechtigungsmanagement aktivieren.",
       "primary_anchor": "BSI GS++ KONF.10.2",
       "attributes": {
         "practice": "KONF",
@@ -12592,7 +12592,7 @@
     {
       "id": "KONF.10.5",
       "title": "Überprüfung der Konfiguration",
-      "text": "Konfiguration für Anwendungen SOLLTE die Übereinstimmung der tatsächlichen Konfiguration mit dem Referenzzustand {{ insert: param, konf.10.5-prm1 }} überprüfen.",
+      "text": "Konfiguration für Anwendungen SOLLTE die Übereinstimmung der tatsächlichen Konfiguration mit dem Referenzzustand regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ KONF.10.5",
       "attributes": {
         "practice": "KONF",
@@ -12606,7 +12606,7 @@
     {
       "id": "KONF.10.5.1",
       "title": "Automatisierte Überprüfung der Konfiguration",
-      "text": "Konfiguration für Anwendungen KANN die Überprüfung der Konfiguration durch {{ insert: param, konf.10.5.1-prm1 }} aktivieren.",
+      "text": "Konfiguration für Anwendungen KANN die Überprüfung der Konfiguration durch einen automatisierten Mechanismus aktivieren.",
       "primary_anchor": "BSI GS++ KONF.10.5.1",
       "attributes": {
         "practice": "KONF",
@@ -12676,7 +12676,7 @@
     {
       "id": "KONF.11.3",
       "title": "Veröffentlichung von Domain-Infomationen",
-      "text": "Konfiguration für DNS-Server SOLLTE die Veröffentlichung von Domain-Infomationen anhand von {{ insert: param, konf.11.3-prm1 }} einschränken.",
+      "text": "Konfiguration für DNS-Server SOLLTE die Veröffentlichung von Domain-Infomationen anhand von Kriterien einschränken.",
       "primary_anchor": "BSI GS++ KONF.11.3",
       "attributes": {
         "practice": "KONF",
@@ -12690,7 +12690,7 @@
     {
       "id": "KONF.11.4",
       "title": "Erraten von Zugriffslinks",
-      "text": "Konfiguration für Webanwendungen SOLLTE das Durchprobieren von Zugriffslinks durch {{ insert: param, konf.11.4-prm1 }} blockieren.",
+      "text": "Konfiguration für Webanwendungen SOLLTE das Durchprobieren von Zugriffslinks durch einen automatisierten Mechanismus blockieren.",
       "primary_anchor": "BSI GS++ KONF.11.4",
       "attributes": {
         "practice": "KONF",
@@ -12802,7 +12802,7 @@
     {
       "id": "KONF.12.1",
       "title": "Eingabevalidierung",
-      "text": "Konfiguration für Anwendungen SOLLTE die Validierung von Eingabedaten durch {{ insert: param, konf.12.1-prm1 }} aktivieren.",
+      "text": "Konfiguration für Anwendungen SOLLTE die Validierung von Eingabedaten durch einen automatisierten Mechanismus aktivieren.",
       "primary_anchor": "BSI GS++ KONF.12.1",
       "attributes": {
         "practice": "KONF",
@@ -12998,7 +12998,7 @@
     {
       "id": "KONF.12.4",
       "title": "Speicherung von Zugangsdaten",
-      "text": "Konfiguration für Webbrowser SOLLTE die Speicherung von Zugangsdaten {{ insert: param, konf.12.4-prm1 }} aktivieren.",
+      "text": "Konfiguration für Webbrowser SOLLTE die Speicherung von Zugangsdaten in einem dedizierten Passwort-Manager mit Browser-Integration oder direkt im Browser durch ein Master-Passwort geschützt aktivieren.",
       "primary_anchor": "BSI GS++ KONF.12.4",
       "attributes": {
         "practice": "KONF",
@@ -13096,7 +13096,7 @@
     {
       "id": "KONF.12.11",
       "title": "Anonyme oder Pseudonyme Kommunikation",
-      "text": "Konfiguration für TK-Anwendungen KANN die Übermittlung {{ insert: param, konf.12.11-prm1 }} zur Gegenstelle aktivieren.",
+      "text": "Konfiguration für TK-Anwendungen KANN die Übermittlung eines Pseudonyms oder gar keiner Anzeigekennung zur Gegenstelle aktivieren.",
       "primary_anchor": "BSI GS++ KONF.12.11",
       "attributes": {
         "practice": "KONF",
@@ -13306,7 +13306,7 @@
     {
       "id": "KONF.13.7",
       "title": "TLS-Reports",
-      "text": "Konfiguration für E-Mail KANN TLS-Reports {{ insert: param, konf.13.7-prm1 }} überprüfen.",
+      "text": "Konfiguration für E-Mail KANN TLS-Reports regelmäßig überprüfen.",
       "primary_anchor": "BSI GS++ KONF.13.7",
       "attributes": {
         "practice": "KONF",
@@ -13320,7 +13320,7 @@
     {
       "id": "KONF.13.8",
       "title": "DMARC-Reports",
-      "text": "Konfiguration für E-Mail KANN DMARC-Reports {{ insert: param, konf.13.8-prm1 }} überprüfen.",
+      "text": "Konfiguration für E-Mail KANN DMARC-Reports regelmäßig oder bei Eingang überprüfen.",
       "primary_anchor": "BSI GS++ KONF.13.8",
       "attributes": {
         "practice": "KONF",
@@ -13376,7 +13376,7 @@
     {
       "id": "KONF.14.1",
       "title": "Verschlüsselung beim Transport",
-      "text": "Konfiguration für Anwendungen SOLLTE Kommunikation beim Transport über Netze nach {{ insert: param, konf.14.1-prm1 }} verschlüsseln.",
+      "text": "Konfiguration für Anwendungen SOLLTE Kommunikation beim Transport über Netze nach einem anerkannten Standard verschlüsseln.",
       "primary_anchor": "BSI GS++ KONF.14.1",
       "attributes": {
         "practice": "KONF",
@@ -13474,7 +13474,7 @@
     {
       "id": "KONF.15.1",
       "title": "Begrenzung des Speicherplatzes",
-      "text": "Konfiguration für Anwendungen von Hostsystemen KANN in der Anwendung zur Verfügung stehenden Speicherplatz pro {{ insert: param, konf.15.1-prm1 }} anhand von {{ insert: param, konf.15.1-prm2 }} einschränken.",
+      "text": "Konfiguration für Anwendungen von Hostsystemen KANN in der Anwendung zur Verfügung stehenden Speicherplatz pro Zugangskonto oder Mandant anhand von Schwellwerten einschränken.",
       "primary_anchor": "BSI GS++ KONF.15.1",
       "attributes": {
         "practice": "KONF",
@@ -13558,7 +13558,7 @@
     {
       "id": "DEV.1.1.2",
       "title": "Zuweisung der Aufgaben",
-      "text": "Entwicklung MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben {{ insert: param, dev.1.1.2-prm1 }} zuweisen.",
+      "text": "Entwicklung MUSS die mit den Verfahren und Regelungen verbundenen Aufgaben zuständigen Personen oder Rollen zuweisen.",
       "primary_anchor": "BSI GS++ DEV.1.1.2",
       "attributes": {
         "practice": "DEV",
@@ -13586,7 +13586,7 @@
     {
       "id": "DEV.1.2",
       "title": "Regelmäßige Überprüfung",
-      "text": "Entwicklung MUSS die Verfahren und Regelungen {{ insert: param, dev.1.2-prm1 }} und anlassbezogen auf Aktualität überprüfen.",
+      "text": "Entwicklung MUSS die Verfahren und Regelungen regelmäßig und anlassbezogen auf Aktualität überprüfen.",
       "primary_anchor": "BSI GS++ DEV.1.2",
       "attributes": {
         "practice": "DEV",
@@ -13922,7 +13922,7 @@
     {
       "id": "DEV.5.1",
       "title": "Verankerung des Zeitraums für Updates",
-      "text": "Entwicklung für Anwendungen SOLLTE die Bereitstellung von Sicherheitsupdates mindestens für {{ insert: param, dev.5.1-prm1 }} verankern.",
+      "text": "Entwicklung für Anwendungen SOLLTE die Bereitstellung von Sicherheitsupdates mindestens für einen bestimmten Zeitraum verankern.",
       "primary_anchor": "BSI GS++ DEV.5.1",
       "attributes": {
         "practice": "DEV",

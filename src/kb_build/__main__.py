@@ -6,7 +6,7 @@ from pathlib import Path
 
 from pydantic_ai.models import Model
 
-from govguard.aws_services import bedrock_model
+from govguard.aws_services import GLOBAL_MODEL_ID, bedrock_model
 from kb_build.extracted_models import merge_sources
 from kb_build.groq_services import groq_model
 from kb_build.rules_run import formulate_all
@@ -37,8 +37,12 @@ def extract_all(sources: Path = Path("data/sources.json"), out_dir: Path = Path(
 
 
 def model_for(provider: str) -> Model:
-    """Bedrock is the default; Groq is an explicit opt-in while Bedrock is blocked (ADR 0010)."""
-    providers = {"bedrock": bedrock_model, "groq": groq_model}
+    """Bedrock `eu.` is the default; the others are explicit build opt-ins (ADR 0010, 0012)."""
+    providers = {
+        "bedrock": bedrock_model,
+        "bedrock-global": lambda: bedrock_model(model_id=GLOBAL_MODEL_ID),
+        "groq": groq_model,
+    }
     if provider not in providers:
         raise ValueError(f"unknown provider {provider!r}, choose one of {sorted(providers)}")
     return providers[provider]()
@@ -48,7 +52,8 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="python -m kb_build")
     parser.add_argument("command", nargs="?", default="extract",
                         choices=["extract", "select", "rules"])
-    parser.add_argument("--provider", default="bedrock", choices=["bedrock", "groq"])
+    parser.add_argument("--provider", default="bedrock",
+                        choices=["bedrock", "bedrock-global", "groq"])
     parser.add_argument("--audit-type", choices=["spec", "architecture"], default=None)
     args = parser.parse_args()
     logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(message)s", datefmt="%H:%M:%S")
