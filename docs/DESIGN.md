@@ -332,7 +332,7 @@ Build (Zitat-Check) und Laufzeit (Beleg-Check) normalisieren mit **derselben** F
 MIN_QUOTE_LENGTH = 15                        # kürzere Zitate wie "S3" beweisen nichts
 
 def normalize(text: str) -> str
-def contains_quote(text: str, quote: str) -> bool  # len >= MIN_QUOTE_LENGTH und normalize(quote) in normalize(text)
+def contains_quote(text: str, quote: str) -> bool  # len >= MIN_QUOTE_LENGTH, Vergleich nach normalize() ohne Leerzeichen
 def template_resource_types(text: str) -> set[str] | None  # Typen aus "Resources" eines CloudFormation-JSON, sonst None
 ```
 
@@ -342,6 +342,8 @@ def template_resource_types(text: str) -> set[str] | None  # Typen aus "Resource
 3. Weiche Trennstriche entfernen.
 4. Typografische Anführungszeichen und Gedankenstriche durch ASCII-Zeichen ersetzen, damit „…“ und "…" gleich sind.
 5. Alle Leerzeichen und Zeilenumbrüche zu einem Leerzeichen zusammenfassen.
+
+`contains_quote()` vergleicht danach ohne Leerzeichen, denn pypdf zerteilt Wörter im SDM-PDF (`M60.S06`: „Protokollie rung“). Die Mindestlänge zählt mit Leerzeichen.
 
 Groß- und Kleinschreibung bleibt erhalten, denn „wörtlich“ heißt wörtlich. Eine bekannte Grenze: Silbentrennung am Zeilenende („Verarbei- tung“) wird nicht repariert, weil sich echte Bindestriche („Cloud-Dienst“) nicht sicher davon unterscheiden lassen.
 

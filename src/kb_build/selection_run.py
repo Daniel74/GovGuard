@@ -38,7 +38,7 @@ class BuildPaths:
     cache_file: Path = Path("data/judgement_cache.json")
 
 
-def _read_sources(data: Path, names: list[SourceName]) -> list[ExtractedSource]:
+def read_sources(data: Path, names: list[SourceName]) -> list[ExtractedSource]:
     paths = [data / "extracted" / f"{name.lower()}.json" for name in names]
     return [ExtractedSource.model_validate_json(p.read_text(encoding="utf-8")) for p in paths]
 
@@ -93,7 +93,7 @@ def _select(audit_type: AuditType, model: Model, paths: BuildPaths, cache: Judge
     scope = _read_scope(paths.data)
     judge = Judge(audit_type, model, scope, cache)
     try:
-        result = curate(judge, _read_sources(paths.data, names), pinned, scope, components)
+        result = curate(judge, read_sources(paths.data, names), pinned, scope, components)
     finally:
         _log_usage(audit_type, judge.usage)
     paths.out_dir.mkdir(parents=True, exist_ok=True)  # only after a successful run

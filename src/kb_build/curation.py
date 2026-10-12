@@ -1,15 +1,25 @@
-"""Selection of the bounded catalog: the LLM judges, the code selects (ADR 0011).
+"""Bounded catalog: the LLM judges, the code selects (ADR 0011); then the LLM writes the rules.
 
-Pure logic: gets the Judge injected (ADR 0005), no boto3. There is no ranking and no cap.
+Pure logic: gets the Judge or the model injected (ADR 0005), no boto3. No ranking and no cap.
 """
 
 import logging
 from dataclasses import dataclass
 
-from govguard.models import SourceName
+from pydantic_ai import UnexpectedModelBehavior
+from pydantic_ai.models import Model
+
+from govguard.models import AuditType, Rule, RuleCatalog, SourceName
 from kb_build.classify import Judge
 from kb_build.extracted_models import ExtractedSource, Requirement
-from kb_build.gates import check_coverage, check_pinned
+from kb_build.formulate import FormulateDeps, formulate_rule
+from kb_build.gates import (
+    Anchors,
+    check_coverage,
+    check_pinned,
+    check_rules,
+    requirements_by_anchor,
+)
 from kb_build.relevance import is_relevant
 from kb_build.scope import Scope
 from kb_build.selection_models import Outcome, SelectedRequirement, Selection, Verdict
@@ -85,3 +95,42 @@ def curate(
         check_coverage(components, selected)
     return CurationResult(Selection(audit_type=judge.audit_type, model_id=judge.model_id,
                                     selected=selected), verdicts)
+
+
+def _rule(
+    audit_type: AuditType, selected: SelectedRequirement, requirement: Requirement,
+    model: Model, anchors: Anchors,
+) -> Rule:
+    """The LLM writes the draft; identity and origin come from the selection, never the LLM."""
+    deps = FormulateDeps(audit_type, selected.source, requirement, anchors)
+    try:
+        draft = formulate_rule(selected, deps, model)
+    except UnexpectedModelBehavior as error:  # fail closed: no rule may silently go missing
+        raise ValueError(f"{selected.source} {requirement.id}: no valid rule: {error}") from error
+    prefix = "ARCH" if audit_type == "architecture" else "SPEC"
+    return Rule(
+        **draft.model_dump(),
+        id=f"{prefix}-{selected.source}-{requirement.id.replace(' ', '')}",
+        audit_type=audit_type, source=selected.source, primary_anchor=requirement.primary_anchor,
+        selection_rationale=selected.rationale, cfn_resource_types=selected.cfn_resource_types,
+    )
+
+
+def formulate_rules(
+    model: Model, selection: Selection, sources: list[ExtractedSource]
+) -> RuleCatalog:
+    """One rule per selected requirement, in selection order; then the gate (ARCHITECTURE 1)."""
+    anchors = requirements_by_anchor(sources)
+    by_id = {(s.source, r.id): r for s in sources for r in s.requirements}
+    rules = []
+    for n, selected in enumerate(selection.selected, start=1):
+        requirement = by_id[(selected.source, selected.requirement_id)]
+        rules.append(_rule(selection.audit_type, selected, requirement, model, anchors))
+        logger.info("%s %d/%d %s", selection.audit_type, n, len(selection.selected), rules[-1].id)
+    used = {s.source for s in selection.selected}
+    catalog = RuleCatalog(
+        audit_type=selection.audit_type, model_id=model.model_name, rules=rules,
+        source_versions={s.source: s.version for s in sources if s.source in used},
+    )
+    check_rules(catalog, selection, sources)
+    return catalog

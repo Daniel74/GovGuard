@@ -1,4 +1,4 @@
-"""Build entry point: python -m kb_build [extract|select] (ARCHITECTURE -> Code-Struktur)."""
+"""Build entry point: python -m kb_build [extract|select|rules] (ARCHITECTURE: Code-Struktur)."""
 
 import argparse
 import logging
@@ -9,6 +9,7 @@ from pydantic_ai.models import Model
 from govguard.aws_services import bedrock_model
 from kb_build.extracted_models import merge_sources
 from kb_build.groq_services import groq_model
+from kb_build.rules_run import formulate_all
 from kb_build.selection_run import select_all
 from kb_build.source_fetch import fetch_to_cache, load_sources_json, read_cached
 from kb_build.sources import bsi, c5, cis, dsgvo, fsbp, sdm
@@ -45,7 +46,8 @@ def model_for(provider: str) -> Model:
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="python -m kb_build")
-    parser.add_argument("command", nargs="?", default="extract", choices=["extract", "select"])
+    parser.add_argument("command", nargs="?", default="extract",
+                        choices=["extract", "select", "rules"])
     parser.add_argument("--provider", default="bedrock", choices=["bedrock", "groq"])
     parser.add_argument("--audit-type", choices=["spec", "architecture"], default=None)
     args = parser.parse_args()
@@ -53,5 +55,7 @@ if __name__ == "__main__":
     logging.getLogger("kb_build").setLevel(logging.INFO)  # progress only, no HTTP noise
     if args.command == "select":
         select_all(model_for(args.provider), only=args.audit_type)
+    elif args.command == "rules":
+        formulate_all(model_for(args.provider), only=args.audit_type)
     else:
         extract_all()

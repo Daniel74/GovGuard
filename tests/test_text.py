@@ -27,6 +27,12 @@ def test_contains_quote_finds_verbatim_quote_across_line_breaks() -> None:
     assert contains_quote(SPEC, "werden im Klartext in einem öffentlichen S3-Bucket")
 
 
+def test_contains_quote_ignores_spaces_that_pypdf_puts_into_words() -> None:
+    # SDM M60.S06 as extracted by pypdf; the model quotes the intact word
+    sdm = "Datensparsame Ausgestaltung der Protokollie rung von Löschungen"
+    assert contains_quote(sdm, "Ausgestaltung der Protokollierung von Löschungen")
+
+
 def test_contains_quote_rejects_rephrased_quote() -> None:
     assert not contains_quote(SPEC, "werden unverschlüsselt in einem öffentlichen S3-Bucket")
 

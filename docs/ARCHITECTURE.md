@@ -123,7 +123,7 @@ Der Primäranker ist die **eine** Anforderung, aus der eine Prüfregel stammt. I
 | C5 | `BSI C5 CRY-03.01B` | `Id` existiert im Prowler-JSON (fester Commit) |
 | FSBP | `AWS FSBP SNS.1` | `Id` existiert im Prowler-JSON (fester Commit) |
 
-Zusätzlich muss das `source_quote` **wörtlich** im Text genau der verankerten Anforderung stehen, nach Normalisierung von Leerzeichen und Zeilenumbrüchen und nach Entfernen von EUR-Lex-Markern wie „►C2“. Das ist dasselbe Prinzip wie der Beleg zur Laufzeit: Zitat statt Behauptung.
+Zusätzlich muss das `source_quote` **wörtlich** im Text genau der verankerten Anforderung stehen, nach Normalisierung von Leerzeichen und Zeilenumbrüchen und nach Entfernen von EUR-Lex-Markern wie „►C2“. Das ist dasselbe Prinzip wie der Beleg zur Laufzeit: Zitat statt Behauptung. Ist der ganze Text kürzer als 15 Zeichen (SDM `M60.P03`: „Löschkonzept“), muss das Zitat den ganzen Text umfassen.
 
 ### 1.4 Soll-Ergebnis der Golden Archetypes
 

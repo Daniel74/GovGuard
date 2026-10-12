@@ -26,10 +26,18 @@ def normalize(text: str) -> str:
     return _WHITESPACE.sub(" ", text).strip()
 
 
+def _without_spaces(text: str) -> str:
+    return normalize(text).replace(" ", "")
+
+
 def contains_quote(text: str, quote: str) -> bool:
-    """True if the quote appears verbatim in the text after normalization."""
-    needle = normalize(quote)
-    return len(needle) >= MIN_QUOTE_LENGTH and needle in normalize(text)
+    """True if the quote appears verbatim in the text after normalization.
+
+    Spaces do not count: pypdf splits words in the SDM PDFs ("Protokollie rung").
+    """
+    if len(normalize(quote)) < MIN_QUOTE_LENGTH:
+        return False
+    return _without_spaces(quote) in _without_spaces(text)
 
 
 def template_resource_types(text: str) -> set[str] | None:

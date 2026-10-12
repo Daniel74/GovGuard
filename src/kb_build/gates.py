@@ -1,7 +1,11 @@
 """Gates of the bounded catalog (ADR 0011): the build stops instead of shipping a gap. Pure code."""
 
-from govguard.models import AuditType, Preset
-from kb_build.selection_models import Outcome, SelectedRequirement
+from collections import Counter
+
+from govguard.models import AuditType, Preset, Rule, RuleCatalog, RuleDraft, SourceName
+from govguard.text import contains_quote, normalize
+from kb_build.extracted_models import ExtractedSource, Requirement
+from kb_build.selection_models import Outcome, SelectedRequirement, Selection
 
 
 def pinned_anchors(presets: list[Preset], audit_type: AuditType) -> set[str]:
@@ -33,3 +37,66 @@ def check_coverage(components: frozenset[str], selected: list[SelectedRequiremen
     uncovered = sorted(components - covered)
     if uncovered:
         raise ValueError(f"components without a selected requirement: {uncovered}")
+
+
+Anchors = dict[str, tuple[SourceName, Requirement]]  # primary anchor -> (source, requirement)
+
+
+def requirements_by_anchor(sources: list[ExtractedSource]) -> Anchors:
+    """All requirements, not only the selected ones: cross references may point anywhere."""
+    return {r.primary_anchor: (s.source, r) for s in sources for r in s.requirements}
+
+
+def is_quoted(requirement: Requirement, quote: str) -> bool:
+    """Verbatim in the text of exactly this requirement (ARCHITECTURE 1.3).
+
+    A text shorter than MIN_QUOTE_LENGTH may be quoted whole, e.g. SDM M60.P03 "Löschkonzept".
+    """
+    whole = normalize(quote) == normalize(requirement.text)
+    return whole or contains_quote(requirement.text, quote)
+
+
+def invalid_cross_references(draft: RuleDraft, source: SourceName, anchors: Anchors) -> list[str]:
+    """A cross reference must exist and belong to another source (CONTEXT.md: Querverweis)."""
+    return [
+        ref.anchor for ref in draft.cross_references
+        if ref.anchor not in anchors or anchors[ref.anchor][0] == source
+    ]
+
+
+def _rule_errors(rule: Rule, anchors: Anchors) -> list[str]:
+    if rule.primary_anchor not in anchors:
+        return [f"primary anchor {rule.primary_anchor!r} not found in the sources"]
+    errors = []
+    if not is_quoted(anchors[rule.primary_anchor][1], rule.source_quote):
+        errors.append(f"source_quote is not verbatim in the text of {rule.primary_anchor}")
+    for anchor in invalid_cross_references(rule, rule.source, anchors):
+        errors.append(f"cross reference {anchor!r} is unknown or of the same source")
+    return errors
+
+
+def _completeness_errors(catalog: RuleCatalog, selection: Selection, anchors: Anchors) -> list[str]:
+    """Exactly one rule per selected requirement: the bounded catalog loses nothing (ADR 0011)."""
+    ruled = Counter(
+        f"{source} {requirement.id}" for source, requirement in
+        (anchors[r.primary_anchor] for r in catalog.rules if r.primary_anchor in anchors)
+    )
+    wanted = {f"{s.source} {s.requirement_id}" for s in selection.selected}
+    checks = {
+        "selected requirements without a rule": sorted(wanted - ruled.keys()),
+        "requirements with more than one rule": sorted(k for k, n in ruled.items() if n > 1),
+        "rules for requirements that were not selected": sorted(ruled.keys() - wanted),
+    }
+    return [f"{label}: {keys}" for label, keys in checks.items() if keys]
+
+
+def check_rules(catalog: RuleCatalog, selection: Selection, sources: list[ExtractedSource]) -> None:
+    """Gate before the catalog is written: schema, anchor, quote, cross references (ARCHITECTURE 1).
+
+    Field types are already checked by Pydantic when `Rule` is built.
+    """
+    anchors = requirements_by_anchor(sources)
+    errors = [f"{r.id}: {e}" for r in catalog.rules for e in _rule_errors(r, anchors)]
+    errors += _completeness_errors(catalog, selection, anchors)
+    if errors:
+        raise ValueError("rules failed the gate:\n" + "\n".join(errors))

@@ -1,9 +1,13 @@
 """Gates of the bounded catalog (ADR 0011): the build stops instead of shipping a gap."""
 
+import re
+
 import pytest
 
-from kb_build.gates import check_coverage, check_pinned
-from kb_build.selection_models import SelectedRequirement
+from govguard.models import CrossReference, Rule, RuleCatalog
+from kb_build.extracted_models import ExtractedSource, Requirement
+from kb_build.gates import check_coverage, check_pinned, check_rules, is_quoted
+from kb_build.selection_models import SelectedRequirement, Selection
 
 
 def selected(*types: str) -> SelectedRequirement:
@@ -39,3 +43,108 @@ def test_a_component_without_a_rule_aborts_and_is_named() -> None:
     with pytest.raises(ValueError, match="AWS::SQS::Queue"):
         check_coverage(frozenset({"AWS::S3::Bucket", "AWS::SQS::Queue"}),
                        [selected("AWS::S3::Bucket")])
+
+
+# --- Gate: every rule is schema-valid, anchored and quoted verbatim (ARCHITECTURE 1) -----------
+
+CIS_TEXT = "Amazon S3 provides Block public access (bucket settings) for every bucket."
+
+
+def requirement(rid: str, anchor: str, text: str) -> Requirement:
+    return Requirement(id=rid, title=f"title {rid}", text=text, primary_anchor=anchor,
+                       attributes={}, prefilter_passed=True)
+
+
+SOURCES = [
+    ExtractedSource(source="CIS", version="v7.0.0", origin="o", requirements=[
+        requirement("3.1.4", "CIS AWS v7.0.0 3.1.4", CIS_TEXT),
+        requirement("3.1.5", "CIS AWS v7.0.0 3.1.5", "Ensure that every bucket encrypts data."),
+    ]),
+    ExtractedSource(source="BSI", version="sha", origin="o", requirements=[
+        requirement("DET.3.1", "BSI GS++ DET.3.1", "Protokolldaten SOLLTEN zentral liegen."),
+    ]),
+]
+
+
+def rule(rid: str = "3.1.4", **changes) -> Rule:
+    fields = {
+        "id": f"ARCH-CIS-{rid}", "audit_type": "architecture", "source": "CIS",
+        "primary_anchor": f"CIS AWS v7.0.0 {rid}", "selection_rationale": "prüfbar",
+        "cfn_resource_types": ["AWS::S3::Bucket"], "source_quote": "Block public access",
+        "title": "t", "compliant_if": "c", "violation_if": "v", "recommendation": "r",
+    }
+    return Rule(**fields | changes)
+
+
+def catalog(*rules: Rule) -> RuleCatalog:
+    return RuleCatalog(audit_type="architecture", source_versions={"CIS": "v7.0.0"},
+                       model_id="m", rules=list(rules))
+
+
+def selection_of(*ids: str) -> Selection:
+    return Selection(audit_type="architecture", model_id="m",
+                     selected=[selected("AWS::S3::Bucket").model_copy(update={"requirement_id": i})
+                               for i in ids])
+
+
+def test_a_rule_anchored_and_quoted_verbatim_passes() -> None:
+    check_rules(catalog(rule()), selection_of("3.1.4"), SOURCES)
+
+
+def test_a_primary_anchor_missing_in_the_source_aborts_and_is_named() -> None:
+    invented = rule(primary_anchor="CIS AWS v7.0.0 3.1.99")
+
+    with pytest.raises(ValueError, match=r"ARCH-CIS-3.1.4: primary anchor .*3\.1\.99"):
+        check_rules(catalog(invented), selection_of("3.1.4"), SOURCES)
+
+
+def test_a_quote_from_the_neighbouring_requirement_aborts() -> None:
+    # verbatim in CIS 3.1.5, but the rule is anchored to CIS 3.1.4
+    borrowed = rule(source_quote="Ensure that every bucket encrypts data.")
+
+    with pytest.raises(ValueError, match="ARCH-CIS-3.1.4: source_quote"):
+        check_rules(catalog(borrowed), selection_of("3.1.4"), SOURCES)
+
+
+def ai_suggested(anchor: str) -> CrossReference:
+    return CrossReference(anchor=anchor, origin="ai_suggested")
+
+
+def test_a_cross_reference_to_an_existing_requirement_of_another_source_passes() -> None:
+    linked = rule(cross_references=[ai_suggested("BSI GS++ DET.3.1")])
+
+    check_rules(catalog(linked), selection_of("3.1.4"), SOURCES)
+
+
+@pytest.mark.parametrize("anchor", ["BSI GS++ DET.3.99", "CIS AWS v7.0.0 3.1.5"],
+                         ids=["invented", "same source"])
+def test_an_invented_or_same_source_cross_reference_aborts_and_is_named(anchor: str) -> None:
+    linked = rule(cross_references=[ai_suggested(anchor)])
+
+    with pytest.raises(ValueError, match=re.escape(f"ARCH-CIS-3.1.4: cross reference {anchor!r}")):
+        check_rules(catalog(linked), selection_of("3.1.4"), SOURCES)
+
+
+def test_a_selected_requirement_without_a_rule_aborts_and_is_named() -> None:
+    with pytest.raises(ValueError, match=r"without a rule: \['CIS 3\.1\.5'\]"):
+        check_rules(catalog(rule()), selection_of("3.1.4", "3.1.5"), SOURCES)
+
+
+def test_a_requirement_with_two_rules_aborts() -> None:
+    with pytest.raises(ValueError, match=r"more than one rule: \['CIS 3\.1\.4'\]"):
+        check_rules(catalog(rule(), rule()), selection_of("3.1.4"), SOURCES)
+
+
+def test_a_rule_for_a_requirement_that_was_not_selected_aborts() -> None:
+    with pytest.raises(ValueError, match=r"not selected: \['CIS 3\.1\.5'\]"):
+        check_rules(catalog(rule(), rule("3.1.5", source_quote="every bucket encrypts data")),
+                    selection_of("3.1.4"), SOURCES)
+
+
+def test_a_text_shorter_than_the_minimum_quote_may_be_quoted_whole() -> None:
+    # SDM M60.P03 consists of the one word "Löschkonzept"
+    assert is_quoted(requirement("M60.P03", "SDM Löschen M60.P03", "Löschkonzept"), "Löschkonzept")
+
+
+def test_a_short_part_of_a_longer_text_still_proves_nothing() -> None:
+    assert not is_quoted(requirement("3.1.4", "CIS AWS v7.0.0 3.1.4", CIS_TEXT), "Amazon S3")
