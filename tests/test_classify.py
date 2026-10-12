@@ -118,6 +118,18 @@ def test_architecture_answer_with_an_invented_resource_type_gets_one_retry() -> 
     assert result.cfn_resource_types == ["AWS::S3::Bucket"]
 
 
+def test_architecture_answer_drops_invented_types_next_to_a_real_one_without_retry() -> None:
+    # The LLM added AWS::S3::AccountPublicAccessBlock next to the bucket (CIS 3.1.4, #18)
+    seen: list = []
+    mixed = {"testable": True, "rationale": "x",
+             "cfn_resource_types": ["AWS::S3::Bucket", "AWS::S3::AccountPublicAccessBlock"]}
+
+    result = classify_requirement(REQUIREMENT, "CIS", ARCH, answer_in_turns(mixed, seen=seen))
+
+    assert len(seen) == 1
+    assert result.cfn_resource_types == ["AWS::S3::Bucket"]
+
+
 def test_architecture_prompt_excludes_account_wide_duties() -> None:
     seen: list = []
 

@@ -34,10 +34,14 @@ wenn sie sich an Ressourcen festmachen lassen. Nein gilt bei Verträgen und Proz
   Support-Rolle, Passwort-Richtlinie, Root-MFA). "people" = Personen und Prozesse
   (MFA für Administratoren, Schulung, Verträge). "provider" = Cloud-Anbieter (Rechenzentrum,
   Hypervisor).
-  Hängt die Pflicht an Konto, Personen oder Anbieter, wähle das, auch wenn eine Ressource sie
-  technisch umsetzen könnte.
-- "cfn_resource_types": die betroffenen CloudFormation-Typen (z. B. AWS::S3::Bucket),
-  der wichtigste zuerst. Ist die Anforderung nicht prüfbar, bleibt die Liste leer.""",
+  Hängt die Pflicht nur an Konto, Personen oder Anbieter, wähle das, auch wenn eine Ressource
+  sie technisch umsetzen könnte, z. B. an einer bestimmten Konto-Ressource wie dem
+  CloudTrail-Bucket. Gilt sie zugleich für jede Ressource des Workloads (z. B. Block Public
+  Access an jedem Bucket), wähle "template".
+- "cfn_resource_types": alle CloudFormation-Typen, an deren Konfiguration sich die Anforderung
+  zeigt (z. B. bei Verschlüsselung jeder Speicher- und Transportdienst wie AWS::S3::Bucket,
+  AWS::KinesisFirehose::DeliveryStream), der wichtigste zuerst. Nur Typen, die es in
+  CloudFormation gibt. Ist die Anforderung nicht prüfbar, bleibt die Liste leer.""",
     "spec": """\
 Du bewertest genau eine Anforderung aus einem Regelwerk für Behörden-IT.
 Eine Spezifikation ist die fachliche Beschreibung eines Vorhabens, nicht nur die technische:
@@ -103,13 +107,17 @@ def _validate(ctx: RunContext[ClassifyDeps], answer: Classification) -> Classifi
         return answer.model_copy(update={"cfn_resource_types": [], "scope_level": "template"})
     if not answer.testable:
         return answer.model_copy(update={"cfn_resource_types": []})
-    invalid = [t for t in answer.cfn_resource_types if t not in load_cfn_types()]
-    if invalid or not answer.cfn_resource_types:
+    known = load_cfn_types()
+    real = [t for t in answer.cfn_resource_types if t in known]
+    invalid = [t for t in answer.cfn_resource_types if t not in known]
+    if not real:
         raise ModelRetry(
             "Eine prüfbare Architektur-Anforderung braucht mindestens einen echten "
             f"CloudFormation-Typ (Format AWS::Dienst::Ressource). Diese gibt es nicht: {invalid}"
         )
-    return answer
+    if invalid:  # the code drops invented types, no retry needed (#18)
+        logger.info("dropped invented resource types: %s", invalid)
+    return answer.model_copy(update={"cfn_resource_types": real})
 
 
 def classify_requirement(
