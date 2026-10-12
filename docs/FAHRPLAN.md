@@ -219,7 +219,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** In den Bounded Catalog kommen nur Anforderungen, deren Pflicht am Template hängt, nicht an Konto, Organisation, Personen oder Cloud-Anbieter (Stichprobe aus #12: CIS 4.4, C5 OPS-16.01B).
 **Voraussetzung:** Schritt 9.
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #18 umsetzen` → Plan → Go (der Prompt von Stufe ② ist eine Weichenstellung)
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #18 umsetzen` → Plan → Go (der Prompt von Stufe ② ist eine Weichenstellung)
       Reihenfolge: Feld `scope_level` in `Classification` → Code setzt `not_relevant` mit festem Satz → Prompt von Stufe ②
 - [ ] **Echter Lauf** 🤖 👤 „Erzeuge die Architektur-Auswahl neu“ (`--provider groq`, Schlüssel aus `.env`; die Prompt-Version ändert sich, alle ca. 884 Urteile werden neu bezahlt)
 - [ ] **Kontrollpunkt** 👤 `git diff data/knowledge_base/selection_arch.json`: Sind CIS 4.4 und C5 OPS-16.01B raus? Was ist sonst noch herausgefallen, und ist die Begründung plausibel?

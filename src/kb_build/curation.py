@@ -18,6 +18,11 @@ logger = logging.getLogger("kb_build")
 
 LLM_ERROR = "Die Antwort des Modells blieb auch nach zwei Wiederholungen ungültig."
 NO_REASON = "Vom Vorfilter verworfen."
+LEVEL_SENTENCES = {  # Shared Responsibility: the duty is not the workload's (issue #18)
+    "account": "Die Pflicht liegt beim Konto oder der Organisation, nicht am Template.",
+    "people": "Die Pflicht liegt bei Personen oder Prozessen, nicht am Template.",
+    "provider": "Die Pflicht liegt beim Cloud-Anbieter, nicht am Template.",
+}
 
 
 def _decide(source: SourceName, requirement: Requirement, judge: Judge, scope: Scope) -> Verdict:
@@ -32,10 +37,14 @@ def _decide(source: SourceName, requirement: Requirement, judge: Judge, scope: S
     fields["cfn_resource_types"] = answer.cfn_resource_types
     if not answer.testable:
         return Verdict(**fields, outcome="not_testable", rationale=answer.rationale)
-    if judge.audit_type == "architecture" and not is_relevant(answer, scope):
-        first = answer.cfn_resource_types[0]
-        sentence = f"Der erste Ressourcentyp {first} liegt nicht im Prüfumfang."
-        return Verdict(**fields, outcome="not_relevant", rationale=sentence)
+    if judge.audit_type == "architecture":
+        if answer.scope_level != "template":
+            sentence = LEVEL_SENTENCES[answer.scope_level]
+            return Verdict(**fields, outcome="not_relevant", rationale=sentence)
+        if not is_relevant(answer, scope):
+            first = answer.cfn_resource_types[0]
+            sentence = f"Der erste Ressourcentyp {first} liegt nicht im Prüfumfang."
+            return Verdict(**fields, outcome="not_relevant", rationale=sentence)
     return Verdict(**fields, outcome="selected", rationale=answer.rationale)
 
 

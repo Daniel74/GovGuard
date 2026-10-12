@@ -6,10 +6,13 @@ from pydantic import BaseModel
 
 from govguard.models import AuditType, SourceName
 
+ScopeLevel = Literal["template", "account", "people", "provider"]  # whose duty (#18)
+
 
 class Classification(BaseModel):  # written by the LLM, schema of tool classify_requirement
     testable: bool
     rationale: str
+    scope_level: ScopeLevel = "template"  # architecture only; the code drops all but "template"
     cfn_resource_types: list[str] = []  # architecture only; always empty for a spec
 
 

@@ -169,3 +169,56 @@ def test_spec_prompt_defines_a_spec_as_a_functional_description() -> None:
     assert "fachliche Beschreibung eines Vorhabens" in str(seen[0])
     assert "Auftragsverarbeiter" in str(seen[0])
 
+
+
+def test_spec_classification_never_has_a_scope_level() -> None:
+    # The code reads scope_level for the architecture only (issue #18)
+    answer = {**BUCKET, "scope_level": "provider"}
+
+    result = classify_requirement(REQUIREMENT, "DSGVO", SPEC, answer_in_turns(answer))
+
+    assert result.scope_level == "template"
+
+
+def test_architecture_classification_keeps_the_scope_level() -> None:
+    answer = {**BUCKET, "scope_level": "account"}
+
+    result = classify_requirement(REQUIREMENT, "CIS", ARCH, answer_in_turns(answer))
+
+    assert result.scope_level == "account"
+
+
+def test_architecture_prompt_explains_the_four_levels_of_a_duty() -> None:
+    # Issue #12 sample: CIS 4.4 (CloudTrail bucket) and C5 OPS-16.01B (MFA for admins)
+    seen: list = []
+
+    classify_requirement(REQUIREMENT, "CIS", ARCH, answer_in_turns(BUCKET, seen=seen))
+
+    prompt = str(seen[0])
+    assert "scope_level" in prompt
+    for level in ("template", "account", "people", "provider"):
+        assert f'"{level}"' in prompt
+    assert "CloudTrail-Bucket" in prompt
+    assert "MFA für Administratoren" in prompt
+
+
+def test_spec_prompt_leaves_the_scope_level_on_template() -> None:
+    seen: list = []
+
+    classify_requirement(REQUIREMENT, "DSGVO", SPEC, answer_in_turns(BUCKET, seen=seen))
+
+    assert '"scope_level" bleibt "template"' in str(seen[0])
+
+
+def test_the_tool_schema_offers_the_scope_level_to_the_model() -> None:
+    schemas: list = []
+
+    def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        schemas.append(info.output_tools[0].parameters_json_schema)
+        return ModelResponse(parts=[ToolCallPart("classify_requirement", BUCKET)])
+
+    classify_requirement(REQUIREMENT, "CIS", ARCH, FunctionModel(respond))
+
+    levels = schemas[0]["properties"]["scope_level"]["enum"]
+    assert levels == ["template", "account", "people", "provider"]
+

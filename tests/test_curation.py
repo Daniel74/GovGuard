@@ -39,8 +39,9 @@ def fake_llm(answers: dict[str, dict], asked: list[str]) -> FunctionModel:
     return FunctionModel(respond, model_name="fake-model")
 
 
-def can_test(*types: str) -> dict:
-    return {"testable": True, "rationale": "prüfbar", "cfn_resource_types": list(types)}
+def can_test(*types: str, level: str = "template") -> dict:
+    return {"testable": True, "rationale": "prüfbar", "scope_level": level,
+            "cfn_resource_types": list(types)}
 
 
 NOT_TESTABLE = {"testable": False, "rationale": "organisatorisch", "cfn_resource_types": []}
@@ -103,6 +104,71 @@ def test_a_requirement_outside_the_scope_gets_a_fixed_sentence_naming_the_type()
     assert verdict.rationale == (
         "Der erste Ressourcentyp AWS::CloudTrail::Trail liegt nicht im Prüfumfang.")
     assert verdict.cfn_resource_types == ["AWS::CloudTrail::Trail", "AWS::S3::Bucket"]
+
+
+# --- Duties of the account, people or provider are not checkable at a template (issue #18) ----
+
+
+def test_an_account_duty_in_scope_is_not_relevant_with_a_fixed_sentence() -> None:
+    # CIS 4.4: the CloudTrail bucket would give a permanent WARN for every S3 bucket
+    source = cis_source(req("4.4"))
+
+    result, _ = curate_cis(source, {"4.4": can_test("AWS::S3::Bucket", level="account")})
+
+    verdict = result.verdicts[0]
+    assert verdict.outcome == "not_relevant"
+    assert verdict.rationale == (
+        "Die Pflicht liegt beim Konto oder der Organisation, nicht am Template.")
+    assert verdict.cfn_resource_types == ["AWS::S3::Bucket"]
+    assert result.selection.selected == []
+
+
+def test_a_people_duty_is_not_relevant_even_for_a_resource_in_scope() -> None:
+    # C5 OPS-16.01B: MFA for admins gave a false FAIL for every Lambda role
+    source = ExtractedSource(
+        source="C5", version="v", origin="o", requirements=[req("OPS-16.01B")])
+    judge = Judge("architecture", fake_llm(
+        {"OPS-16.01B": can_test("AWS::IAM::Role", level="people")}, []))
+
+    result = curate(judge, [source], set(), SCOPE, NO_COMPONENTS)
+
+    assert result.verdicts[0].outcome == "not_relevant"
+    assert result.verdicts[0].rationale == (
+        "Die Pflicht liegt bei Personen oder Prozessen, nicht am Template.")
+
+
+def test_a_provider_duty_gets_its_own_sentence() -> None:
+    answer = can_test("AWS::S3::Bucket", level="provider")
+
+    result, _ = curate_cis(cis_source(req("1.1")), {"1.1": answer})
+
+    assert result.verdicts[0].rationale == (
+        "Die Pflicht liegt beim Cloud-Anbieter, nicht am Template.")
+
+
+def test_not_testable_wins_over_the_level_of_the_duty() -> None:
+    source = cis_source(req("1.2"))
+    answer = {"testable": False, "rationale": "organisatorisch", "scope_level": "people",
+              "cfn_resource_types": []}
+
+    result, _ = curate_cis(source, {"1.2": answer})
+
+    assert outcomes(result) == {"1.2": "not_testable"}
+
+
+def test_the_spec_audit_ignores_the_level_of_the_duty() -> None:
+    source = ExtractedSource(source="DSGVO", version="v", origin="o", requirements=[req("Art. 58")])
+    judge = Judge("spec", fake_llm({"Art. 58": can_test(level="provider")}, []))
+
+    result = curate(judge, [source], set(), NO_SCOPE, NO_COMPONENTS)
+
+    assert [s.requirement_id for s in result.selection.selected] == ["Art. 58"]
+
+
+def test_a_pinned_anchor_with_an_account_duty_aborts_the_build() -> None:
+    with pytest.raises(ValueError, match="A 4.4"):
+        curate_cis(cis_source(req("4.4")),
+                   {"4.4": can_test("AWS::S3::Bucket", level="account")}, pinned={"A 4.4"})
 
 
 def test_the_llm_rationale_stays_for_selected_and_not_testable_requirements() -> None:

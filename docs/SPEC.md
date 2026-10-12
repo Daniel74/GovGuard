@@ -26,13 +26,13 @@
 
 ## Aufnahme in den Bounded Catalog
 
-Jede Anforderung jeder Quelle bekommt genau einen Eintrag im **Auswahlprotokoll** (`data/knowledge_base/verdicts_<arch|spec>.json`, versioniert). Das LLM urteilt nur über „prüfbar“ und Ressourcentypen. Über die Aufnahme entscheidet der Code (ADR 0011).
+Jede Anforderung jeder Quelle bekommt genau einen Eintrag im **Auswahlprotokoll** (`data/knowledge_base/verdicts_<arch|spec>.json`, versioniert). Das LLM urteilt nur über „prüfbar“, Ebene der Pflicht und Ressourcentypen. Über die Aufnahme entscheidet der Code (ADR 0011).
 
 | Ergebnis | Bedeutung | Entscheidet |
 |---|---|---|
 | `selected` | prüfbar und relevant, steht im Bounded Catalog | Code |
 | `prefiltered` | vom Vorfilter verworfen, mit festem Begründungssatz (z. B. „Praktik SENS liegt außerhalb des Architektur-Audits“) | Code |
-| `not_relevant` | Architektur: der erste Ressourcentyp liegt nicht im Prüfumfang (z. B. CloudTrail, EC2-Instanz) | Code |
+| `not_relevant` | Architektur: die Pflicht liegt nicht am Template, sondern bei Konto, Personen oder Anbieter (z. B. CIS 4.4, MFA für Admins), oder der erste Ressourcentyp liegt nicht im Prüfumfang (z. B. EC2-Instanz) | Code |
 | `not_testable` | an einer Spezifikation bzw. einem Template nicht entscheidbar | LLM |
 | `llm_error` | Antwort auch nach zwei Retries ungültig (z. B. erfundener Ressourcentyp); die Anforderung ist ausgeschlossen und im Protokoll sichtbar. Bei einem Pflichtanker bricht der Build ab | Code |
 

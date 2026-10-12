@@ -27,9 +27,15 @@ Du bewertest genau eine Anforderung aus einem Regelwerk für Behörden-IT.
 Frage: Lässt sich ein Verstoß oder die Einhaltung an der Konfiguration von Ressourcen in einem
 einzelnen CloudFormation-Template erkennen (z. B. IAM-Policies, Verschlüsselung, Logging,
 Netzwerk, Zugriffsrechte)? Auch allgemeine Prinzipien wie "geringste Berechtigungen" zählen,
-wenn sie sich an Ressourcen festmachen lassen. Nein gilt bei Konto- oder Organisationsebene
-(z. B. Support-Rolle, CloudTrail, Passwort-Richtlinie), Personal, Verträgen und Prozessen.
+wenn sie sich an Ressourcen festmachen lassen. Nein gilt bei Verträgen und Prozessen.
 - "testable": ja oder nein. "rationale": ein deutscher Satz zur Begründung.
+- "scope_level": Wessen Pflicht ist das? "template" = das Workload selbst, am Template
+  erkennbar (Bucket, Rolle, Funktion). "account" = Konto oder Organisation (CloudTrail-Bucket,
+  Support-Rolle, Passwort-Richtlinie, Root-MFA). "people" = Personen und Prozesse
+  (MFA für Administratoren, Schulung, Verträge). "provider" = Cloud-Anbieter (Rechenzentrum,
+  Hypervisor).
+  Hängt die Pflicht an Konto, Personen oder Anbieter, wähle das, auch wenn eine Ressource sie
+  technisch umsetzen könnte.
 - "cfn_resource_types": die betroffenen CloudFormation-Typen (z. B. AWS::S3::Bucket),
   der wichtigste zuerst. Ist die Anforderung nicht prüfbar, bleibt die Liste leer.""",
     "spec": """\
@@ -43,7 +49,7 @@ Verschlüsselung, Zugriffsrechte, Auftragsverarbeiter, Übermittlung in Drittlä
 Nein gilt nur für Pflichten der Behörde, die keine Spezifikation berühren (z. B.
 Bußgeldverfahren, Befugnisse der Aufsicht, Zertifizierung).
 - "testable": ja oder nein. "rationale": ein deutscher Satz zur Begründung.
-- "cfn_resource_types" bleibt leer.""",
+- "scope_level" bleibt "template". "cfn_resource_types" bleibt leer.""",
 }
 
 SCOPE_PROMPT = """\
@@ -93,7 +99,9 @@ def _instructions(ctx: RunContext[ClassifyDeps]) -> str:
 
 @classify_agent.output_validator
 def _validate(ctx: RunContext[ClassifyDeps], answer: Classification) -> Classification:
-    if ctx.deps.audit_type == "spec" or not answer.testable:
+    if ctx.deps.audit_type == "spec":
+        return answer.model_copy(update={"cfn_resource_types": [], "scope_level": "template"})
+    if not answer.testable:
         return answer.model_copy(update={"cfn_resource_types": []})
     invalid = [t for t in answer.cfn_resource_types if t not in load_cfn_types()]
     if invalid or not answer.cfn_resource_types:

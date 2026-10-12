@@ -89,6 +89,7 @@ Stufe ② und die Relevanz (#6) schreiben je Audit-Art eine **Auswahlliste** `da
 class Classification(BaseModel):         # vom LLM, Schema für Tool classify_requirement
     testable: bool
     rationale: str
+    scope_level: Literal["template", "account", "people", "provider"] = "template"  # nur Architektur
     cfn_resource_types: list[str] = []   # nur Architektur; bei Spec immer leer
 
 class SelectedRequirement(BaseModel):

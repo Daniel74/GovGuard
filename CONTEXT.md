@@ -16,6 +16,7 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 - **Auswahlprotokoll**: Je Anforderung einer Quelle das Ergebnis der Auswahl (aufgenommen oder verworfen) mit Begründung, vom LLM oder vom Code. _Code_: `verdicts`. _Vermeiden_: Verdict, Log
 - **Prüfumfang**: Feste Liste der AWS-Dienste, für die das Architektur-Audit Prüfregeln führt. _Code_: `scope`. _Vermeiden_: Scope, Whitelist
 - **Relevant**: Eine Anforderung ist relevant, wenn sie einen Dienst im Prüfumfang betrifft; Bedingung für die Aufnahme neben „prüfbar“. _Code_: `is_relevant`
+- **Ebene**: Wessen Pflicht eine Anforderung ist: Workload (`template`), Konto/Organisation (`account`), Personen (`people`) oder Cloud-Anbieter (`provider`); nur `template` kommt ins Architektur-Audit. _Code_: `scope_level`. _Vermeiden_: Scope (gehört dem Prüfumfang)
 - **Komponente**: AWS-Dienst, aus dem ein Golden Archetype besteht, z. B. API Gateway, Lambda, SQS. _Code_: `required_types`. _Vermeiden_: Baustein (gehört dem SDM)
 - **Golden Archetype**: Vorab auditierte und freigegebene Referenzarchitektur für ein wiederkehrendes Behörden-Workload-Muster, als vollständige Kette vom API-Eingang bis zur Ablage, ohne Portal. _Code_: `Archetype`. _Vermeiden_: Pattern, Blueprint, Vorlage
 - **Freigabe**: Zustand eines Golden Archetype, der das Architektur-Audit und eine unabhängige deterministische Prüfung ohne Beanstandung bestanden hat; erlaubt sind nur Ausnahmen. _Code_: `approved`
