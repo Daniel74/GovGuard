@@ -8,6 +8,7 @@ import logging
 from pydantic_ai.models import Model
 
 from govguard.models import AuditType
+from kb_build.cfn_properties import CFN_PROPERTIES_FILE, load_cfn_properties
 from kb_build.formulate import formulate_rules
 from kb_build.quality import quality_report
 from kb_build.selection_models import Selection
@@ -27,11 +28,14 @@ def formulate_all(
     A file is written only after the gate passed; otherwise the old catalog stays.
     """
     sources = read_sources(paths.data, ALL_SOURCES)
+    properties = load_cfn_properties(paths.data / CFN_PROPERTIES_FILE.name)
     for audit_type in chosen(only):
         raw = paths.out_file("selection", audit_type).read_text(encoding="utf-8")
-        catalog = formulate_rules(model, Selection.model_validate_json(raw), sources)
+        catalog = formulate_rules(
+            model, Selection.model_validate_json(raw), sources, properties
+        )
         rules_file = paths.out_file("rules", audit_type)
         rules_file.write_text(catalog.model_dump_json(indent=2) + "\n", encoding="utf-8")
         logger.info("%s: %d rules written to %s", audit_type, len(catalog.rules), rules_file)
-        for source, counts in quality_report(catalog).items():
+        for source, counts in quality_report(catalog, properties).items():
             logger.info("%s quality %s: %s", audit_type, source, counts)

@@ -1,4 +1,4 @@
-"""formulate_rules(): the LLM writes the rule, the code adds what it knows (ARCHITECTURE 1.2)."""
+"""run_formulate(): the LLM writes the rule, the code adds what it knows (ARCHITECTURE 1.2)."""
 
 import pytest
 from conftest import make_requirement
@@ -12,7 +12,7 @@ from pydantic_ai.messages import (
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from kb_build.extracted_models import ExtractedSource
-from kb_build.formulate import formulate_rules
+from kb_build.formulate import formulate_rules as formulate_with
 from kb_build.selection_models import SelectedRequirement, Selection
 
 SOURCES = [
@@ -21,6 +21,17 @@ SOURCES = [
     ExtractedSource(source="BSI", version="sha", origin="o",
                     requirements=[make_requirement("DET.3.1", "BSI GS++ DET.3.1")]),
 ]
+
+
+PROPERTIES = {  # stands in for data/cfn_properties.json
+    "AWS::S3::Bucket": frozenset({"BucketEncryption", "LoggingConfiguration",
+                                  "LoggingConfiguration.LogFilePrefix"}),
+    "AWS::KMS::Key": frozenset({"KeyPolicy"}),
+}
+
+
+def run_formulate(model, selection, sources):
+    return formulate_with(model, selection, sources, PROPERTIES)
 
 
 def draft(rid: str, **changes) -> dict:
@@ -61,7 +72,7 @@ SPEC_SELECTION = Selection(audit_type="spec", model_id="selector", selected=[Sel
 
 
 def test_the_code_adds_identity_origin_and_types_from_the_selection() -> None:
-    catalog = formulate_rules(fake_llm({"3.1.4": [draft("3.1.4")]}), arch_selection("3.1.4"),
+    catalog = run_formulate(fake_llm({"3.1.4": [draft("3.1.4")]}), arch_selection("3.1.4"),
                               SOURCES)
 
     assert (catalog.audit_type, catalog.model_id) == ("architecture", "fake-model")
@@ -92,7 +103,7 @@ def test_a_quote_not_in_the_requirement_is_sent_back_and_the_second_attempt_coun
     sent_back: list[str] = []
     first = draft("3.1.4", source_quote="erfundener Normtext")
 
-    catalog = formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
+    catalog = run_formulate(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
 
     assert catalog.rules[0].source_quote == "The text of 3.1.4"
     assert "wörtlich" in sent_back[0]
@@ -103,7 +114,7 @@ def test_an_invented_cross_reference_is_sent_back_and_named() -> None:
     invented = [{"anchor": "BSI GS++ DET.3.99", "origin": "ai_suggested"}]
     first = draft("3.1.4", cross_references=invented)
 
-    catalog = formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
+    catalog = run_formulate(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
 
     assert catalog.rules[0].cross_references == []
     assert "BSI GS++ DET.3.99" in sent_back[0]
@@ -113,7 +124,7 @@ def test_an_answer_that_stays_invalid_aborts_the_build_and_names_the_requirement
     wrong = draft("3.1.4", source_quote="erfundener Normtext")
 
     with pytest.raises(ValueError, match="CIS 3.1.4"):
-        formulate_rules(fake_llm({"3.1.4": [wrong] * 3}), arch_selection("3.1.4"), SOURCES)
+        run_formulate(fake_llm({"3.1.4": [wrong] * 4}), arch_selection("3.1.4"), SOURCES)
 
 
 def test_a_spec_rule_drops_spaces_from_the_id_and_has_no_resource_types() -> None:
@@ -123,7 +134,7 @@ def test_a_spec_rule_drops_spaces_from_the_id_and_has_no_resource_types() -> Non
         seen.extend(str(m.instructions) for m in messages if hasattr(m, "instructions"))
         return ModelResponse(parts=[ToolCallPart("formulate_rule", draft("Art. 32"))])
 
-    catalog = formulate_rules(FunctionModel(respond), SPEC_SELECTION, [DSGVO, *SOURCES])
+    catalog = run_formulate(FunctionModel(respond), SPEC_SELECTION, [DSGVO, *SOURCES])
 
     rule = catalog.rules[0]
     assert (rule.id, rule.audit_type, rule.cfn_resource_types) == (
@@ -137,7 +148,7 @@ def test_the_retry_names_where_the_quote_deviates_and_what_the_text_says() -> No
     sent_back: list[str] = []
     first = draft("3.1.4", source_quote="The text of 3.1.4 should be quoted.")
 
-    formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
+    run_formulate(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
 
     assert "„should be quoted.“" in sent_back[0]
     assert "„must be quoted.“" in sent_back[0]
@@ -148,7 +159,7 @@ def test_vague_words_in_architecture_criteria_are_sent_back_and_named() -> None:
     sent_back: list[str] = []
     first = draft("3.1.4", violation_if="Policies gewähren Rechte, die nicht erforderlich sind.")
 
-    catalog = formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
+    catalog = run_formulate(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
 
     assert catalog.rules[0].violation_if == "BucketEncryption fehlt."
     assert "„erforderlich“" in sent_back[0]
@@ -159,7 +170,7 @@ def test_architecture_criteria_without_a_resource_type_of_the_rule_are_sent_back
     first = draft("3.1.4", compliant_if="Alle Daten sind verschlüsselt.",
                   violation_if="Daten liegen im Klartext.")
 
-    formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
+    run_formulate(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
 
     assert "AWS::S3::Bucket, AWS::KMS::Key" in sent_back[0]
 
@@ -169,6 +180,30 @@ def test_spec_criteria_may_use_the_words_of_the_law() -> None:
     lawful = draft("Art. 32", compliant_if="Die Spezifikation nennt angemessene Maßnahmen.")
     asked: list[str] = []
 
-    formulate_rules(fake_llm({"Art. 32": [lawful]}, asked), SPEC_SELECTION, [DSGVO])
+    run_formulate(fake_llm({"Art. 32": [lawful]}, asked), SPEC_SELECTION, [DSGVO])
 
     assert asked == ["Art. 32"]  # accepted at the first attempt
+
+
+def test_an_invented_property_is_sent_back_and_named_with_the_known_ones() -> None:
+    # CIS 4.4: CloudFormation knows LogFilePrefix at the bucket, not TargetPrefix
+    sent_back: list[str] = []
+    first = draft("3.1.4", compliant_if="AWS::S3::Bucket setzt LoggingConfiguration.TargetPrefix.")
+
+    catalog = run_formulate(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
+
+    assert catalog.rules[0].compliant_if == "AWS::S3::Bucket setzt BucketEncryption."
+    assert "LoggingConfiguration.TargetPrefix" in sent_back[0]
+    assert "LoggingConfiguration.LogFilePrefix" in sent_back[0]
+
+
+def test_the_retry_names_the_type_that_really_has_the_property() -> None:
+    # FSBP SecretsManager.1: rotation is set at RotationSchedule, not at the Secret
+    schedule = {"AWS::SecretsManager::RotationSchedule": frozenset({"RotationRules"})}
+    properties = PROPERTIES | schedule
+    sent_back: list[str] = []
+    first = draft("3.1.4", compliant_if="AWS::S3::Bucket setzt RotationRules.")
+
+    formulate_with(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES, properties)
+
+    assert "AWS::SecretsManager::RotationSchedule" in sent_back[0]

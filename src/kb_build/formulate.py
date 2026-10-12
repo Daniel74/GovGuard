@@ -11,6 +11,7 @@ from pydantic_ai.models import Model
 
 from govguard.models import AuditType, Rule, RuleCatalog, RuleDraft
 from govguard.text import normalize
+from kb_build.cfn_properties import alternatives, owners, unknown_properties
 from kb_build.extracted_models import ExtractedSource, Requirement
 from kb_build.gates import (
     Anchors,
@@ -69,12 +70,13 @@ class FormulateDeps:
     selected: SelectedRequirement  # source, rationale and resource types come from here
     requirement: Requirement
     anchors: Anchors  # every requirement of every source, for the cross references
+    properties: dict[str, frozenset[str]]  # data/cfn_properties.json: real properties per type
 
 
 formulate_agent = Agent(
     output_type=ToolOutput(RuleDraft, name=TOOL_NAME, description=TOOL_DESCRIPTION),
     deps_type=FormulateDeps,
-    retries=2,  # build only, no 29 s timeout (ADR 0005 limits the runtime agents to one retry)
+    retries=3,  # build only, no 29 s timeout (ADR 0005 limits the runtime agents to one retry)
     model_settings={"temperature": 0},
 )
 
@@ -96,7 +98,9 @@ def _deviation(text: str, quote: str) -> str:
     return "Schon der Anfang des Zitats fehlt im Text."
 
 
-def _criteria_problems(draft: RuleDraft, resource_types: list[str]) -> list[str]:
+def _criteria_problems(
+    draft: RuleDraft, resource_types: list[str], properties: dict[str, frozenset[str]]
+) -> list[str]:
     """Architecture criteria must be decidable from the template alone."""
     criteria, problems = f"{draft.compliant_if} {draft.violation_if}", []
     vague = vague_terms(criteria)
@@ -107,6 +111,13 @@ def _criteria_problems(draft: RuleDraft, resource_types: list[str]) -> list[str]
     if not any(t in criteria for t in resource_types):
         problems.append("Die Kriterien nennen keinen Ressourcentyp der Prüfregel. Nenne "
                         f"mindestens einen davon wörtlich: {', '.join(resource_types)}.")
+    for name in unknown_properties(criteria, resource_types, properties):
+        options = ", ".join(alternatives(name, resource_types, properties))
+        elsewhere = owners(name, properties)[:3]
+        hint = (f" Sie gehört zu {', '.join(elsewhere)}; nenne diesen Typ dann wörtlich."
+                if elsewhere else "")
+        problems.append(f"„{name}“ gibt es in CloudFormation an den Typen der Prüfregel nicht."
+                        f"{hint} Nimm nur echte Eigenschaften, z. B.: {options}.")
     return problems
 
 
@@ -118,7 +129,9 @@ def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDraft:
         deviation = _deviation(ctx.deps.requirement.text, draft.source_quote)
         problems.append(f"Das Zitat steht nicht wörtlich im Text in <anforderung>. {deviation}")
     if ctx.deps.audit_type == "architecture":
-        problems += _criteria_problems(draft, ctx.deps.selected.cfn_resource_types)
+        problems += _criteria_problems(
+            draft, ctx.deps.selected.cfn_resource_types, ctx.deps.properties
+        )
     invalid = invalid_cross_references(draft, ctx.deps.selected.source, ctx.deps.anchors)
     if invalid:
         problems.append(f"Diese Querverweise gibt es nicht in einer anderen Quelle, lass sie weg: "
@@ -159,7 +172,8 @@ def _complete_rule(deps: FormulateDeps, model: Model) -> Rule:
 
 
 def formulate_rules(
-    model: Model, selection: Selection, sources: list[ExtractedSource]
+    model: Model, selection: Selection, sources: list[ExtractedSource],
+    properties: dict[str, frozenset[str]],
 ) -> RuleCatalog:
     """One rule per selected requirement, in selection order; then the gate (ARCHITECTURE 1)."""
     anchors = requirements_by_anchor(sources)
@@ -167,7 +181,7 @@ def formulate_rules(
     rules = []
     for n, selected in enumerate(selection.selected, start=1):
         requirement = by_id[(selected.source, selected.requirement_id)]
-        deps = FormulateDeps(selection.audit_type, selected, requirement, anchors)
+        deps = FormulateDeps(selection.audit_type, selected, requirement, anchors, properties)
         rules.append(_complete_rule(deps, model))
         logger.info("%s %d/%d %s", selection.audit_type, n, len(selection.selected), rules[-1].id)
     used = {s.source for s in selection.selected}

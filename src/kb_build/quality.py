@@ -6,6 +6,7 @@ The validator sends violations back to the model; the report counts what is left
 import re
 
 from govguard.models import RuleCatalog
+from kb_build.cfn_properties import TYPE_PATTERN, unknown_properties
 
 # Words that need knowledge beyond the template, e.g. "nicht erforderlich" (BSI KONF.6.1)
 _VAGUE = re.compile(
@@ -27,13 +28,20 @@ _ACCOUNT_LEVEL = re.compile(
 )
 
 
-def quality_report(catalog: RuleCatalog) -> dict[str, dict[str, int]]:
-    """Per source: rules, rules with vague criteria, rules about account-level duties."""
+def quality_report(
+    catalog: RuleCatalog, properties: dict[str, frozenset[str]]
+) -> dict[str, dict[str, int]]:
+    """Per source: rules, rules with vague criteria, account-level duties, invented properties."""
     report: dict[str, dict[str, int]] = {}
     for rule in catalog.rules:
         criteria = f"{rule.compliant_if} {rule.violation_if}"
-        counts = report.setdefault(rule.source, {"rules": 0, "vague": 0, "account_level": 0})
+        counts = report.setdefault(
+            rule.source, {"rules": 0, "vague": 0, "account_level": 0, "unknown_properties": 0}
+        )
         counts["rules"] += 1
         counts["vague"] += bool(vague_terms(criteria))
-        counts["account_level"] += bool(_ACCOUNT_LEVEL.search(criteria))
+        counts["account_level"] += bool(_ACCOUNT_LEVEL.search(TYPE_PATTERN.sub(' ', criteria)))
+        counts["unknown_properties"] += bool(
+            unknown_properties(criteria, rule.cfn_resource_types, properties)
+        )
     return dict(sorted(report.items()))
