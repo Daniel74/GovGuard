@@ -1,13 +1,13 @@
 """Property paths of a CloudFormation resource schema (SPEC: no invented properties, #17)."""
 
 import json
-from pathlib import Path
 
 from kb_build.cfn_properties import (
+    PropertyIndex,
     build_snapshot,
-    load_cfn_properties,
     property_candidates,
     property_paths,
+    unjudged_types,
     unknown_properties,
 )
 
@@ -43,15 +43,10 @@ def test_a_recursive_definition_is_expanded_only_once() -> None:
     assert property_paths(schema) == {"Rule", "Rule.Child"}
 
 
-def test_the_snapshot_maps_each_type_to_its_sorted_paths(tmp_path: Path) -> None:
-    schemas = {"AWS::S3::Bucket": json.dumps(SCHEMA)}
-
-    snapshot = build_snapshot(schemas)
+def test_the_snapshot_maps_each_type_to_its_sorted_paths() -> None:
+    snapshot = build_snapshot({"AWS::S3::Bucket": json.dumps(SCHEMA)})
 
     assert snapshot["AWS::S3::Bucket"][:2] == ["BucketName", "LoggingConfiguration"]
-    file = tmp_path / "props.json"
-    file.write_text(json.dumps(snapshot), encoding="utf-8")
-    assert "LoggingConfiguration.LogFilePrefix" in load_cfn_properties(file)["AWS::S3::Bucket"]
 
 
 def test_candidates_are_dot_paths_and_multi_part_pascal_case_names() -> None:
@@ -70,10 +65,21 @@ def test_product_names_iam_keys_and_function_names_are_no_candidates() -> None:
     assert property_candidates(text) == []
 
 
-KNOWN = {
-    "AWS::S3::Bucket": frozenset({"LoggingConfiguration", "LoggingConfiguration.LogFilePrefix"}),
-    "AWS::ElasticLoadBalancingV2::Listener": frozenset({"DefaultActions", "DefaultActions.Type"}),
-}
+def test_further_service_names_are_no_candidates() -> None:
+    text = "OpenSearch, ElastiCache, SecretsManager, EventBridge und GuardDuty sind Dienste."
+
+    assert property_candidates(text) == []
+
+
+KNOWN = PropertyIndex(
+    paths={
+        "AWS::S3::Bucket": frozenset({"LoggingConfiguration",
+                                      "LoggingConfiguration.LogFilePrefix"}),
+        "AWS::ElasticLoadBalancingV2::Listener": frozenset({"DefaultActions",
+                                                            "DefaultActions.Type"}),
+    },
+    resource_names=frozenset({"BucketPolicy", "NetworkAclEntry"}),  # from cfn_resource_types
+)
 
 
 def test_an_invented_property_is_reported_and_a_real_one_is_not() -> None:
@@ -122,7 +128,7 @@ def test_a_rule_with_a_type_without_snapshot_is_not_judged() -> None:
 
 def test_a_type_named_in_the_text_counts_like_a_type_of_the_rule() -> None:
     # the model writes "AWS::EC2::SecurityGroup mit CidrIp" although the rule lists other types
-    known = KNOWN | {"AWS::EC2::SecurityGroup": frozenset({"CidrIp"})}
+    known = PropertyIndex(KNOWN.paths | {"AWS::EC2::SecurityGroup": frozenset({"CidrIp"})})
     text = "AWS::S3::Bucket und AWS::EC2::SecurityGroup mit CidrIp und TargetPrefix"
 
     assert unknown_properties(text, ["AWS::S3::Bucket"], known) == ["TargetPrefix"]
@@ -132,3 +138,15 @@ def test_a_type_named_in_the_text_without_snapshot_makes_the_rule_unjudged() -> 
     text = "AWS::S3::Bucket und AWS::CloudFront::Distribution mit ViewerProtocolPolicy"
 
     assert unknown_properties(text, ["AWS::S3::Bucket"], KNOWN) == []
+
+
+def test_the_types_outside_the_snapshot_are_named_once() -> None:
+    # nobody checks such a rule: the report counts it instead of hiding it as clean
+    text = "AWS::CloudFront::Distribution mit ViewerProtocolPolicy"
+    types = ["AWS::S3::Bucket", "AWS::CloudFront::Distribution"]
+
+    assert unjudged_types(text, types, KNOWN) == ["AWS::CloudFront::Distribution"]
+
+
+def test_a_rule_whose_types_are_all_in_the_snapshot_is_judged() -> None:
+    assert unjudged_types("AWS::S3::Bucket hat LogFilePrefix", ["AWS::S3::Bucket"], KNOWN) == []

@@ -36,6 +36,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 9       | A    | #12 Prüfregeln + Gate           | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
 | 9a      | A    | #18 Kontoweite Pflichten        | 🤖 Sonnet                                        | 👤 Kontrollpunkt + 🤖 Opus |
 | 9b      | A    | #17 Gate Eigenschaftsnamen      | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 9c      | A    | #19 Typen im Prüfumfang         | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
 | 11      | A    | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 12      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
@@ -240,12 +241,30 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #17 umsetzen` → Plan → Go (die Erkennung der Eigenschaftsnamen im Freitext ist eine Weichenstellung, siehe offene Fragen im Issue)
       Reihenfolge: Schnappschuss `data/cfn_properties.json` → reine Prüffunktion → Validator von `formulate_rule` → Qualitätsbericht `unknown_properties`
 - [x] **Echter Lauf** 🤖 👤 „Formuliere die Architektur-Prüfregeln neu“ (`--provider bedrock-global`, falls `eu.` keine Kapazität hat, ADR 0012). 👤 Prüfe: Zeigt der Qualitätsbericht 0 unbekannte Eigenschaften und `account_level` 0?
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #17`
-- [ ] **Verstehen** 👤 `/verstehen 17` (Kernfrage: warum ein Schema-Abgleich mehr beweist als ein strengerer Prompt)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #17`
+- [x] **Verstehen** 👤 `/verstehen 17` (Kernfrage: warum ein Schema-Abgleich mehr beweist als ein strengerer Prompt)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** `rules_arch.json` neu eingecheckt ist und der Qualitätsbericht 0 unbekannte Eigenschaften zeigt.
 **Fürs Fachgespräch:** deterministische Gegenprobe gegen eine Referenz (wie Zitat und Typliste), Grenzen von Prompt-Regeln.
+
+---
+
+### Schritt 9c – #19 Ressourcentypen auf den Prüfumfang begrenzen
+
+**Ziel:** Architektur-Prüfregeln nennen nur Typen aus `data/scope.json`, damit das Gate aus #17 jede Eigenschaft prüft. Nach dem Review von #17 bleiben 16 Regeln ungeprüft (`unjudged_properties`), z. B. mit CloudTrail, CloudFront, Classic ELB oder WAF Classic.
+**Voraussetzung:** Schritt 9b.
+
+- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #19: Backup, EFS, EBS-Volume und SSM in den Prüfumfang?` Bei Ja ergänzt 🤖 `scope.json` und ADR 0011 (Weichenstellung Prüfumfang).
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #19 umsetzen` → Plan → Go
+      Reihenfolge: Validator von Stufe ② streicht Typen außerhalb des Prüfumfangs → Validator von `formulate_rule` → `check_rules`
+- [ ] **Echter Lauf** 🤖 👤 „Erzeuge Architektur-Auswahl und -Prüfregeln neu“ (`--provider groq` bzw. `bedrock-global`). 👤 Prüfe: Zeigt der Qualitätsbericht `unjudged_properties` 0? Welche Regeln haben Typen verloren?
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #19`
+- [ ] **Verstehen** 👤 `/verstehen 19` (Kernfrage: warum ein Gate nur so weit prüft, wie seine Referenz reicht)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Auswahl und `rules_arch.json` neu eingecheckt sind und der Qualitätsbericht überall 0 zeigt.
+**Fürs Fachgespräch:** sichtbare statt stiller Lücken, Prüfumfang als bewusste Entscheidung, Shared Responsibility.
 
 ---
 
@@ -269,7 +288,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 ### Schritt 11 – #8 Preset-Gate und Build-Workflow
 
 **Ziel:** Der Build der Wissensbasis läuft per Knopfdruck in GitHub Actions und öffnet nur bei Grün einen Pull Request.
-**Voraussetzung:** Schritte 8, 9b und 10.
+**Voraussetzung:** Schritte 8, 9c und 10.
 
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #8 umsetzen` → Plan → Go
       Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Hash-Check; den Soll-Archetyp prüft erst #10) → `python -m kb_build` → `build-kb.yml` ohne Logik

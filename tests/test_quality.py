@@ -1,9 +1,11 @@
 """quality_report(): counts per source what the validator does not enforce."""
 
 from govguard.models import Rule, RuleCatalog
+from kb_build.cfn_properties import PropertyIndex
 from kb_build.quality import quality_report, vague_terms
 
-PROPERTIES = {"AWS::S3::Bucket": frozenset({"BucketEncryption", "LoggingConfiguration"})}
+PROPERTIES = PropertyIndex({"AWS::S3::Bucket": frozenset({"BucketEncryption",
+                                                          "LoggingConfiguration"})})
 
 
 def rule(rid: str, source: str, compliant_if: str) -> Rule:
@@ -25,8 +27,10 @@ def test_the_report_counts_vague_account_level_and_invented_property_rules_per_s
     ])
 
     assert quality_report(catalog, PROPERTIES) == {
-        "BSI": {"rules": 1, "vague": 1, "account_level": 0, "unknown_properties": 0},
-        "CIS": {"rules": 2, "vague": 0, "account_level": 1, "unknown_properties": 1},
+        "BSI": {"rules": 1, "vague": 1, "account_level": 0, "unknown_properties": 0,
+                "unjudged_properties": 0},
+        "CIS": {"rules": 2, "vague": 0, "account_level": 1, "unknown_properties": 1,
+                "unjudged_properties": 0},
     }
 
 
@@ -37,3 +41,13 @@ def test_a_cloudtrail_resource_in_the_template_is_no_account_level_duty() -> Non
     ])
 
     assert quality_report(catalog, PROPERTIES)["BSI"]["account_level"] == 0
+
+
+def test_a_rule_with_a_type_outside_the_snapshot_counts_as_unjudged() -> None:
+    catalog = RuleCatalog(audit_type="architecture", source_versions={}, model_id="m", rules=[
+        rule("a", "BSI", "AWS::CloudFront::Distribution hat ViewerProtocolPolicy."),
+    ])
+
+    counts = quality_report(catalog, PROPERTIES)["BSI"]
+
+    assert (counts["unknown_properties"], counts["unjudged_properties"]) == (0, 1)

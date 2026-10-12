@@ -2,10 +2,8 @@
 
 import json
 import re
-from functools import cache
+from dataclasses import dataclass
 from pathlib import Path
-
-from kb_build.cfn_types import load_cfn_types
 
 CFN_PROPERTIES_FILE = Path("data/cfn_properties.json")  # snapshot of describe-type, see README
 
@@ -22,10 +20,22 @@ _CANDIDATE = re.compile(
 # `AWS…` names (managed policies, rule groups) and names of resource types are skipped as well
 NOT_PROPERTIES = frozenset({
     "CloudFormation", "CloudTrail", "CloudWatch", "CloudFront", "CloudShell", "DynamoDB",
+    "OpenSearch", "ElastiCache", "SecretsManager", "EventBridge", "GuardDuty",
     "PostgreSQL", "MySQL", "WinRM", "StringEquals", "StringLike", "NotPrincipal",
     "AdministratorAccess", "PublicRead", "PublicReadWrite", "AuthenticatedRead",
     "BucketOwnerRead", "BucketOwnerFullControl", "LogDeliveryWrite",
 })
+
+
+
+
+@dataclass(frozen=True)
+class PropertyIndex:
+    """What a rule may name: real property paths per scope type, read by the entry point."""
+
+    paths: dict[str, frozenset[str]]  # data/cfn_properties.json
+    # `BucketPolicy` from `AWS::S3::BucketPolicy`: a resource of its own, not a property
+    resource_names: frozenset[str] = frozenset()
 
 
 def _resolve(schema: dict, node: dict) -> tuple[dict, str | None]:
@@ -59,49 +69,50 @@ def build_snapshot(schemas: dict[str, str]) -> dict[str, list[str]]:
     return {t: sorted(property_paths(json.loads(s))) for t, s in sorted(schemas.items())}
 
 
-@cache
-def load_cfn_properties(path: Path = CFN_PROPERTIES_FILE) -> dict[str, frozenset[str]]:
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    return {type_name: frozenset(paths) for type_name, paths in raw.items()}
-
-
-def _resource_names() -> frozenset[str]:
-    """`BucketPolicy` from `AWS::S3::BucketPolicy`: a resource of its own, not a property."""
-    return frozenset(t.rpartition("::")[2] for t in load_cfn_types())
-
-
-def property_candidates(text: str) -> list[str]:
+def property_candidates(text: str, resource_names: frozenset[str] = frozenset()) -> list[str]:
     """Names in `text` that look like CloudFormation properties, each once, in order."""
-    skipped = NOT_PROPERTIES | _resource_names()
+    skipped = NOT_PROPERTIES | resource_names
     found = _CANDIDATE.findall(TYPE_PATTERN.sub(" ", text))
     return list(dict.fromkeys(
         c for c in found if c not in skipped and not c.startswith("AWS")
     ))
 
 
-def unknown_properties(
-    text: str, resource_types: list[str], known: dict[str, frozenset[str]]
-) -> list[str]:
+def _rule_types(text: str, resource_types: list[str]) -> list[str]:
+    """The rule's types plus those named in `text`, each once."""
+    return list(dict.fromkeys([*resource_types, *TYPE_PATTERN.findall(text)]))
+
+
+def unjudged_types(text: str, resource_types: list[str], index: PropertyIndex) -> list[str]:
+    """Types outside the snapshot: their properties are unknown, so the rule stays unjudged."""
+    return [t for t in _rule_types(text, resource_types) if t not in index.paths]
+
+
+def unknown_properties(text: str, resource_types: list[str], index: PropertyIndex) -> list[str]:
     """Candidates that none of the rule's types, nor a type named in `text`, knows.
 
-    A type outside the snapshot makes the rule unjudged: its properties are unknown to us.
+    Empty for an unjudged rule (see `unjudged_types`): the report counts it separately.
     """
-    types = list(dict.fromkeys([*resource_types, *TYPE_PATTERN.findall(text)]))
-    if not resource_types or any(t not in known for t in types):
+    if not resource_types or unjudged_types(text, resource_types, index):
         return []
-    paths = frozenset().union(*(known[t] for t in types))
-    return [
-        c for c in property_candidates(text)
-        if not any(p == c or p.endswith(f".{c}") for p in paths)
-    ]
+    paths = _paths_of(index, _rule_types(text, resource_types))
+    return [c for c in property_candidates(text, index.resource_names)
+            if not _has_property(paths, c)]
 
 
-def alternatives(
-    candidate: str, resource_types: list[str], known: dict[str, frozenset[str]]
-) -> list[str]:
+def _paths_of(index: PropertyIndex, types: list[str]) -> frozenset[str]:
+    return frozenset().union(*(index.paths[t] for t in types if t in index.paths))
+
+
+def _has_property(paths: frozenset[str], name: str) -> bool:
+    """`name` may start below the top level: `LogFilePrefix` is found in `LoggingConfiguration`."""
+    return any(p == name or p.endswith(f".{name}") for p in paths)
+
+
+def alternatives(candidate: str, resource_types: list[str], index: PropertyIndex) -> list[str]:
     """What the model may use instead: siblings below the same parent, else the top level."""
     parent = candidate.rpartition(".")[0]
-    paths = sorted(frozenset().union(*(known[t] for t in resource_types if t in known)))
+    paths = sorted(_paths_of(index, resource_types))
 
     def is_below_parent(path: str) -> bool:
         above = path.rpartition(".")[0]
@@ -111,7 +122,6 @@ def alternatives(
     return siblings or [p for p in paths if "." not in p]
 
 
-def owners(candidate: str, known: dict[str, frozenset[str]]) -> list[str]:
+def owners(candidate: str, index: PropertyIndex) -> list[str]:
     """The snapshot types that have `candidate`, e.g. RotationSchedule for `RotationRules`."""
-    return [t for t, paths in sorted(known.items())
-            if any(p == candidate or p.endswith(f".{candidate}") for p in paths)]
+    return [t for t, paths in sorted(index.paths.items()) if _has_property(paths, candidate)]

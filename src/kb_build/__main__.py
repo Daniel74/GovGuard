@@ -1,4 +1,4 @@
-"""Build entry point: python -m kb_build [extract|select|rules] (ARCHITECTURE: Code-Struktur)."""
+"""Build entry point: python -m kb_build [extract|select|rules|cfn-properties] (ARCHITECTURE)."""
 
 import argparse
 import logging
@@ -7,6 +7,7 @@ from pathlib import Path
 from pydantic_ai.models import Model
 
 from govguard.aws_services import GLOBAL_MODEL_ID, bedrock_model
+from kb_build.cfn_properties_run import snapshot_scope
 from kb_build.extracted_models import merge_sources
 from kb_build.groq_services import groq_model
 from kb_build.rules_run import formulate_all
@@ -51,10 +52,11 @@ def model_for(provider: str) -> Model:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(prog="python -m kb_build")
     parser.add_argument("command", nargs="?", default="extract",
-                        choices=["extract", "select", "rules"])
+                        choices=["extract", "select", "rules", "cfn-properties"])
     parser.add_argument("--provider", default="bedrock",
                         choices=["bedrock", "bedrock-global", "groq"])
     parser.add_argument("--audit-type", choices=["spec", "architecture"], default=None)
+    parser.add_argument("--schema-dir", type=Path, default=Path("schemas"))  # describe-type
     args = parser.parse_args()
     logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(message)s", datefmt="%H:%M:%S")
     logging.getLogger("kb_build").setLevel(logging.INFO)  # progress only, no HTTP noise
@@ -62,5 +64,7 @@ if __name__ == "__main__":
         select_all(model_for(args.provider), only=args.audit_type)
     elif args.command == "rules":
         formulate_all(model_for(args.provider), only=args.audit_type)
+    elif args.command == "cfn-properties":
+        snapshot_scope(args.schema_dir)
     else:
         extract_all()

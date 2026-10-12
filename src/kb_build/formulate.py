@@ -11,7 +11,7 @@ from pydantic_ai.models import Model
 
 from govguard.models import AuditType, Rule, RuleCatalog, RuleDraft
 from govguard.text import normalize
-from kb_build.cfn_properties import alternatives, owners, unknown_properties
+from kb_build.cfn_properties import PropertyIndex, alternatives, owners, unknown_properties
 from kb_build.extracted_models import ExtractedSource, Requirement
 from kb_build.gates import (
     Anchors,
@@ -59,6 +59,7 @@ USER_PROMPT = (
     "<anforderung>\n{text}\n</anforderung>"
 )
 TOOL_NAME = "formulate_rule"
+MAX_OWNERS = 3  # types named in a retry hint: enough to choose from, short enough to read
 TOOL_DESCRIPTION = "Gib genau eine Prüfregel zur Anforderung ab."
 
 
@@ -70,7 +71,7 @@ class FormulateDeps:
     selected: SelectedRequirement  # source, rationale and resource types come from here
     requirement: Requirement
     anchors: Anchors  # every requirement of every source, for the cross references
-    properties: dict[str, frozenset[str]]  # data/cfn_properties.json: real properties per type
+    properties: PropertyIndex  # real properties per type, for the invented ones
 
 
 formulate_agent = Agent(
@@ -99,7 +100,7 @@ def _deviation(text: str, quote: str) -> str:
 
 
 def _criteria_problems(
-    draft: RuleDraft, resource_types: list[str], properties: dict[str, frozenset[str]]
+    draft: RuleDraft, resource_types: list[str], properties: PropertyIndex
 ) -> list[str]:
     """Architecture criteria must be decidable from the template alone."""
     criteria, problems = f"{draft.compliant_if} {draft.violation_if}", []
@@ -113,7 +114,7 @@ def _criteria_problems(
                         f"mindestens einen davon wörtlich: {', '.join(resource_types)}.")
     for name in unknown_properties(criteria, resource_types, properties):
         options = ", ".join(alternatives(name, resource_types, properties))
-        elsewhere = owners(name, properties)[:3]
+        elsewhere = owners(name, properties)[:MAX_OWNERS]
         hint = (f" Sie gehört zu {', '.join(elsewhere)}; nenne diesen Typ dann wörtlich."
                 if elsewhere else "")
         problems.append(f"„{name}“ gibt es in CloudFormation an den Typen der Prüfregel nicht."
@@ -173,7 +174,7 @@ def _complete_rule(deps: FormulateDeps, model: Model) -> Rule:
 
 def formulate_rules(
     model: Model, selection: Selection, sources: list[ExtractedSource],
-    properties: dict[str, frozenset[str]],
+    properties: PropertyIndex,
 ) -> RuleCatalog:
     """One rule per selected requirement, in selection order; then the gate (ARCHITECTURE 1)."""
     anchors = requirements_by_anchor(sources)

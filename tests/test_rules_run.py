@@ -8,7 +8,7 @@ from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart, User
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from govguard.models import RuleCatalog
-from kb_build.rules_run import formulate_all
+from kb_build.rules_run import formulate_all, read_property_index
 from kb_build.selection_models import Selection
 from kb_build.selection_run import BuildPaths
 
@@ -71,3 +71,10 @@ def test_a_failed_rule_aborts_the_build_and_writes_no_file(tmp_path: Path) -> No
         formulate_all(quoting_model(quote="erfundener Normtext"), paths, only="spec")
 
     assert not (paths.out_dir / "rules_spec.json").exists()
+
+
+def test_the_property_index_holds_nested_paths_and_names_of_all_resource_types() -> None:
+    index = read_property_index(DATA)
+
+    assert "LoggingConfiguration.LogFilePrefix" in index.paths["AWS::S3::Bucket"]
+    assert "BucketPolicy" in index.resource_names  # AWS::S3::BucketPolicy, a resource itself

@@ -1,4 +1,4 @@
-"""run_formulate(): the LLM writes the rule, the code adds what it knows (ARCHITECTURE 1.2)."""
+"""formulate_rules(): the LLM writes the rule, the code adds what it knows (ARCHITECTURE 1.2)."""
 
 import pytest
 from conftest import make_requirement
@@ -11,8 +11,9 @@ from pydantic_ai.messages import (
 )
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
+from kb_build.cfn_properties import PropertyIndex
 from kb_build.extracted_models import ExtractedSource
-from kb_build.formulate import formulate_rules as formulate_with
+from kb_build.formulate import formulate_rules
 from kb_build.selection_models import SelectedRequirement, Selection
 
 SOURCES = [
@@ -23,15 +24,15 @@ SOURCES = [
 ]
 
 
-PROPERTIES = {  # stands in for data/cfn_properties.json
+PROPERTIES = PropertyIndex({  # stands in for data/cfn_properties.json
     "AWS::S3::Bucket": frozenset({"BucketEncryption", "LoggingConfiguration",
                                   "LoggingConfiguration.LogFilePrefix"}),
     "AWS::KMS::Key": frozenset({"KeyPolicy"}),
-}
+})
 
 
 def run_formulate(model, selection, sources):
-    return formulate_with(model, selection, sources, PROPERTIES)
+    return formulate_rules(model, selection, sources, PROPERTIES)
 
 
 def draft(rid: str, **changes) -> dict:
@@ -200,10 +201,10 @@ def test_an_invented_property_is_sent_back_and_named_with_the_known_ones() -> No
 def test_the_retry_names_the_type_that_really_has_the_property() -> None:
     # FSBP SecretsManager.1: rotation is set at RotationSchedule, not at the Secret
     schedule = {"AWS::SecretsManager::RotationSchedule": frozenset({"RotationRules"})}
-    properties = PROPERTIES | schedule
+    properties = PropertyIndex(PROPERTIES.paths | schedule)
     sent_back: list[str] = []
     first = draft("3.1.4", compliant_if="AWS::S3::Bucket setzt RotationRules.")
 
-    formulate_with(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES, properties)
+    formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES, properties)
 
     assert "AWS::SecretsManager::RotationSchedule" in sent_back[0]

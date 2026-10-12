@@ -3,12 +3,15 @@
 The file I/O of stage 5 lives here: selection lists and sources in, rules_*.json out.
 """
 
+import json
 import logging
+from pathlib import Path
 
 from pydantic_ai.models import Model
 
 from govguard.models import AuditType
-from kb_build.cfn_properties import CFN_PROPERTIES_FILE, load_cfn_properties
+from kb_build.cfn_properties import CFN_PROPERTIES_FILE, PropertyIndex
+from kb_build.cfn_types import CFN_TYPES_FILE, load_cfn_types
 from kb_build.formulate import formulate_rules
 from kb_build.quality import quality_report
 from kb_build.selection_models import Selection
@@ -20,6 +23,12 @@ logger = logging.getLogger("kb_build")
 ALL_SOURCES = [name for names in SELECTIONS.values() for name in names]
 
 
+def read_property_index(data: Path) -> PropertyIndex:
+    raw = json.loads((data / CFN_PROPERTIES_FILE.name).read_text(encoding="utf-8"))
+    names = (t.rpartition("::")[2] for t in load_cfn_types(data / CFN_TYPES_FILE.name))
+    return PropertyIndex({t: frozenset(paths) for t, paths in raw.items()}, frozenset(names))
+
+
 def formulate_all(
     model: Model, paths: BuildPaths = BuildPaths(), only: AuditType | None = None
 ) -> None:
@@ -28,7 +37,7 @@ def formulate_all(
     A file is written only after the gate passed; otherwise the old catalog stays.
     """
     sources = read_sources(paths.data, ALL_SOURCES)
-    properties = load_cfn_properties(paths.data / CFN_PROPERTIES_FILE.name)
+    properties = read_property_index(paths.data)
     for audit_type in chosen(only):
         raw = paths.out_file("selection", audit_type).read_text(encoding="utf-8")
         catalog = formulate_rules(

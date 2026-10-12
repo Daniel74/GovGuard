@@ -60,7 +60,7 @@ def _read_presets(data: Path) -> list[Preset]:
     return [Preset.model_validate_json(p.read_text(encoding="utf-8")) for p in paths]
 
 
-def _read_scope(data: Path) -> Scope:
+def read_scope(data: Path) -> Scope:
     return Scope(json.loads((data / "scope.json").read_text(encoding="utf-8")))
 
 
@@ -100,7 +100,7 @@ def _select(audit_type: AuditType, model: Model, paths: BuildPaths, cache: Judge
     profiles = load_profiles(paths.data / "archetype_profiles.json")
     components = frozenset(t for p in profiles for t in p.required_types)
     pinned = pinned_anchors(_read_presets(paths.data), audit_type)
-    scope = _read_scope(paths.data)
+    scope = read_scope(paths.data)
     judge = Judge(audit_type, model, scope, cache)
     try:
         result = curate(judge, read_sources(paths.data, names), pinned, scope, components)
