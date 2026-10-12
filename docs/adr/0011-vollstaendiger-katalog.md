@@ -11,7 +11,7 @@ _Ersetzt [ADR 0002](0002-bounded-catalog.md). Ersetzt in [ADR 0007](0007-relevan
 
 ## Entscheidung
 
-- **Katalog ohne Obergrenze:** alle prüfbaren und relevanten Prüfregeln. Relevant heißt: Der erste Ressourcentyp liegt im Prüfumfang (`data/scope.json`). Das sind Serverless-Dienste, dazu RDS/Aurora und Fargate mit dem, was beide brauchen: VPC-Typen, ECR und Application/Network Load Balancer (ELBv2). Nicht dazu gehören EC2-Instanzen, EKS, CloudTrail, CloudFront und der Classic Load Balancer. Der Prompt von Stufe ② nennt den Prüfumfang.
+- **Katalog ohne Obergrenze:** alle prüfbaren und relevanten Prüfregeln. Relevant heißt: Der erste Ressourcentyp liegt im Prüfumfang (`data/scope.json`), und die Pflicht hängt am Template, nicht an Konto, Personen oder Anbieter (Ebene, #18). Das sind Serverless-Dienste, dazu RDS/Aurora und Fargate mit dem, was beide brauchen: VPC-Typen, ECR und Application/Network Load Balancer (ELBv2). Nicht dazu gehören EC2-Instanzen, EKS, CloudTrail, CloudFront und der Classic Load Balancer. Der Prompt von Stufe ② nennt den Prüfumfang.
 - **Auswahlprotokoll** für jede Anforderung, auch für die vom Vorfilter verworfenen. Code-Entscheidungen bekommen einen festen Begründungssatz.
 - **Cache:** LLM-Urteile werden nach Text-Hash, Prompt-Version und `model_id` wiederverwendet.
 - **Abdeckungs-Gate:** Jede Komponente der Archetypen hat mindestens eine Prüfregel, sonst bricht der Build ab. Ein Typ zählt an jeder Stelle der Liste, wie beim N/A zur Laufzeit.

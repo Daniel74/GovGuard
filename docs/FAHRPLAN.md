@@ -221,11 +221,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #18 umsetzen` → Plan → Go (der Prompt von Stufe ② ist eine Weichenstellung)
       Reihenfolge: Feld `scope_level` in `Classification` → Code setzt `not_relevant` mit festem Satz → Prompt von Stufe ②
-- [ ] **Echter Lauf** 🤖 👤 „Erzeuge die Architektur-Auswahl neu“ (`--provider groq`, Schlüssel aus `.env`; die Prompt-Version ändert sich, alle ca. 884 Urteile werden neu bezahlt)
-- [ ] **Kontrollpunkt** 👤 `git diff data/knowledge_base/selection_arch.json`: Sind CIS 4.4 und C5 OPS-16.01B raus? Was ist sonst noch herausgefallen, und ist die Begründung plausibel?
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #18`
-- [ ] **Verstehen** 👤 `/verstehen 18` (Kernfrage: warum „prüfbar“ und „relevant“ nicht reichen, wenn die Pflicht für jemand anderen gilt)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Echter Lauf** 🤖 👤 „Erzeuge die Architektur-Auswahl neu“ (`--provider groq`, Schlüssel aus `.env`; die Prompt-Version ändert sich, alle ca. 884 Urteile werden neu bezahlt)
+- [x] **Kontrollpunkt** 👤 `git diff data/knowledge_base/selection_arch.json`: Sind CIS 4.4 und C5 OPS-16.01B raus? Was ist sonst noch herausgefallen, und ist die Begründung plausibel?
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #18`
+- [x] **Verstehen** 👤 `/verstehen 18` (Kernfrage: warum „prüfbar“ und „relevant“ nicht reichen, wenn die Pflicht für jemand anderen gilt)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Die neue Auswahl eingecheckt ist, beide Gates grün sind und du den Diff freigegeben hast.
 **Fürs Fachgespräch:** Shared Responsibility Model (Anbieter, Konto, Workload), „Das LLM urteilt, der Code wählt aus“.

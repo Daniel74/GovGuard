@@ -12,13 +12,21 @@ from kb_build.extracted_models import ExtractedSource, Requirement
 from kb_build.gates import check_coverage, check_pinned
 from kb_build.relevance import is_relevant
 from kb_build.scope import Scope
-from kb_build.selection_models import Outcome, SelectedRequirement, Selection, Verdict
+from kb_build.selection_models import (
+    Classification,
+    Outcome,
+    ScopeLevel,
+    SelectedRequirement,
+    Selection,
+    Verdict,
+)
 
 logger = logging.getLogger("kb_build")
 
 LLM_ERROR = "Die Antwort des Modells blieb auch nach zwei Wiederholungen ungültig."
 NO_REASON = "Vom Vorfilter verworfen."
-LEVEL_SENTENCES = {  # Shared Responsibility: the duty is not the workload's (issue #18)
+# Shared Responsibility: the duty is not the workload's (issue #18)
+LEVEL_SENTENCES: dict[ScopeLevel, str] = {
     "account": "Die Pflicht liegt beim Konto oder der Organisation, nicht am Template.",
     "people": "Die Pflicht liegt bei Personen oder Prozessen, nicht am Template.",
     "provider": "Die Pflicht liegt beim Cloud-Anbieter, nicht am Template.",
@@ -37,15 +45,18 @@ def _decide(source: SourceName, requirement: Requirement, judge: Judge, scope: S
     fields["cfn_resource_types"] = answer.cfn_resource_types
     if not answer.testable:
         return Verdict(**fields, outcome="not_testable", rationale=answer.rationale)
-    if judge.audit_type == "architecture":
-        if answer.scope_level != "template":
-            sentence = LEVEL_SENTENCES[answer.scope_level]
-            return Verdict(**fields, outcome="not_relevant", rationale=sentence)
-        if not is_relevant(answer, scope):
-            first = answer.cfn_resource_types[0]
-            sentence = f"Der erste Ressourcentyp {first} liegt nicht im Prüfumfang."
-            return Verdict(**fields, outcome="not_relevant", rationale=sentence)
+    if judge.audit_type == "architecture" and (reason := _not_relevant_reason(answer, scope)):
+        return Verdict(**fields, outcome="not_relevant", rationale=reason)
     return Verdict(**fields, outcome="selected", rationale=answer.rationale)
+
+
+def _not_relevant_reason(answer: Classification, scope: Scope) -> str | None:
+    """Fixed sentence why the code drops a testable architecture requirement (ADR 0011)."""
+    if answer.scope_level != "template":
+        return LEVEL_SENTENCES[answer.scope_level]
+    if not is_relevant(answer, scope):
+        return f"Der erste Ressourcentyp {answer.cfn_resource_types[0]} liegt nicht im Prüfumfang."
+    return None
 
 
 def _pinned_outcomes(

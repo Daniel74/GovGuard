@@ -130,11 +130,12 @@ def test_architecture_answer_drops_invented_types_next_to_a_real_one_without_ret
     assert result.cfn_resource_types == ["AWS::S3::Bucket"]
 
 
-def test_architecture_prompt_excludes_account_wide_duties() -> None:
+def test_architecture_prompt_explains_the_scope_levels() -> None:
     seen: list = []
 
     classify_requirement(REQUIREMENT, "CIS", ARCH, answer_in_turns(BUCKET, seen=seen))
 
+    assert "scope_level" in str(seen[0])
     assert "Support-Rolle" in str(seen[0])
 
 
@@ -180,7 +181,6 @@ def test_spec_prompt_defines_a_spec_as_a_functional_description() -> None:
 
     assert "fachliche Beschreibung eines Vorhabens" in str(seen[0])
     assert "Auftragsverarbeiter" in str(seen[0])
-
 
 
 def test_spec_classification_never_has_a_scope_level() -> None:
@@ -233,4 +233,3 @@ def test_the_tool_schema_offers_the_scope_level_to_the_model() -> None:
 
     levels = schemas[0]["properties"]["scope_level"]["enum"]
     assert levels == ["template", "account", "people", "provider"]
-
