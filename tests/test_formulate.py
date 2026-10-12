@@ -1,6 +1,7 @@
 """formulate_rules(): the LLM writes the rule, the code adds what it knows (ARCHITECTURE 1.2)."""
 
 import pytest
+from conftest import make_requirement
 from pydantic_ai.messages import (
     ModelMessage,
     ModelResponse,
@@ -10,21 +11,15 @@ from pydantic_ai.messages import (
 )
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from kb_build.curation import formulate_rules
-from kb_build.extracted_models import ExtractedSource, Requirement
+from kb_build.extracted_models import ExtractedSource
+from kb_build.formulate import formulate_rules
 from kb_build.selection_models import SelectedRequirement, Selection
-
-
-def req(rid: str, anchor: str) -> Requirement:
-    return Requirement(id=rid, title=f"title {rid}", text=f"The text of {rid} must be quoted.",
-                       primary_anchor=anchor, attributes={}, prefilter_passed=True)
-
 
 SOURCES = [
     ExtractedSource(source="CIS", version="v7.0.0", origin="o",
-                    requirements=[req("3.1.4", "CIS AWS v7.0.0 3.1.4")]),
+                    requirements=[make_requirement("3.1.4", "CIS AWS v7.0.0 3.1.4")]),
     ExtractedSource(source="BSI", version="sha", origin="o",
-                    requirements=[req("DET.3.1", "BSI GS++ DET.3.1")]),
+                    requirements=[make_requirement("DET.3.1", "BSI GS++ DET.3.1")]),
 ]
 
 
@@ -57,6 +52,12 @@ def arch_selection(*ids: str) -> Selection:
         for i in ids
     ]
     return Selection(audit_type="architecture", model_id="selector", selected=selected)
+
+
+DSGVO = ExtractedSource(source="DSGVO", version="000.003", origin="o",
+                        requirements=[make_requirement("Art. 32", "DSGVO Art. 32")])
+SPEC_SELECTION = Selection(audit_type="spec", model_id="selector", selected=[SelectedRequirement(
+    requirement_id="Art. 32", source="DSGVO", rationale="prüfbar", cfn_resource_types=[])])
 
 
 def test_the_code_adds_identity_origin_and_types_from_the_selection() -> None:
@@ -116,18 +117,13 @@ def test_an_answer_that_stays_invalid_aborts_the_build_and_names_the_requirement
 
 
 def test_a_spec_rule_drops_spaces_from_the_id_and_has_no_resource_types() -> None:
-    dsgvo = ExtractedSource(source="DSGVO", version="000.003", origin="o",
-                            requirements=[req("Art. 32", "DSGVO Art. 32")])
-    selection = Selection(audit_type="spec", model_id="selector", selected=[
-        SelectedRequirement(requirement_id="Art. 32", source="DSGVO", rationale="prüfbar",
-                            cfn_resource_types=[])])
     seen: list[str] = []
 
     def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
         seen.extend(str(m.instructions) for m in messages if hasattr(m, "instructions"))
         return ModelResponse(parts=[ToolCallPart("formulate_rule", draft("Art. 32"))])
 
-    catalog = formulate_rules(FunctionModel(respond), selection, [dsgvo, *SOURCES])
+    catalog = formulate_rules(FunctionModel(respond), SPEC_SELECTION, [DSGVO, *SOURCES])
 
     rule = catalog.rules[0]
     assert (rule.id, rule.audit_type, rule.cfn_resource_types) == (
@@ -170,13 +166,9 @@ def test_architecture_criteria_without_a_resource_type_of_the_rule_are_sent_back
 
 def test_spec_criteria_may_use_the_words_of_the_law() -> None:
     # DSGVO Art. 32 itself demands "geeignete" and "angemessene" measures
-    dsgvo = ExtractedSource(source="DSGVO", version="v", origin="o",
-                            requirements=[req("Art. 32", "DSGVO Art. 32")])
-    selection = Selection(audit_type="spec", model_id="s", selected=[SelectedRequirement(
-        requirement_id="Art. 32", source="DSGVO", rationale="prüfbar", cfn_resource_types=[])])
     lawful = draft("Art. 32", compliant_if="Die Spezifikation nennt angemessene Maßnahmen.")
     asked: list[str] = []
 
-    formulate_rules(fake_llm({"Art. 32": [lawful]}, asked), selection, [dsgvo])
+    formulate_rules(fake_llm({"Art. 32": [lawful]}, asked), SPEC_SELECTION, [DSGVO])
 
     assert asked == ["Art. 32"]  # accepted at the first attempt

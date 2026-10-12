@@ -77,15 +77,15 @@ def _rule_errors(rule: Rule, anchors: Anchors) -> list[str]:
 
 def _completeness_errors(catalog: RuleCatalog, selection: Selection, anchors: Anchors) -> list[str]:
     """Exactly one rule per selected requirement: the bounded catalog loses nothing (ADR 0011)."""
-    ruled = Counter(
+    rule_counts = Counter(
         f"{source} {requirement.id}" for source, requirement in
         (anchors[r.primary_anchor] for r in catalog.rules if r.primary_anchor in anchors)
     )
     wanted = {f"{s.source} {s.requirement_id}" for s in selection.selected}
     checks = {
-        "selected requirements without a rule": sorted(wanted - ruled.keys()),
-        "requirements with more than one rule": sorted(k for k, n in ruled.items() if n > 1),
-        "rules for requirements that were not selected": sorted(ruled.keys() - wanted),
+        "selected requirements without a rule": sorted(wanted - rule_counts.keys()),
+        "requirements with more than one rule": sorted(k for k, n in rule_counts.items() if n > 1),
+        "rules for requirements that were not selected": sorted(rule_counts.keys() - wanted),
     }
     return [f"{label}: {keys}" for label, keys in checks.items() if keys]
 

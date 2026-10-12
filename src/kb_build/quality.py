@@ -20,7 +20,7 @@ def vague_terms(text: str) -> list[str]:
     return list(dict.fromkeys(m.group() for m in _VAGUE.finditer(text)))
 
 
-# Duties of the account or the organisation: never decidable at one template (ADR 0007)
+# Duties of the account or the organisation: never decidable at one template; baseline for #18
 _ACCOUNT_LEVEL = re.compile(
     r"CloudTrail|AWS Organizations|Root-(Benutzer|Konto)|Passwort-?Richtlinie|Password Policy",
     re.IGNORECASE,

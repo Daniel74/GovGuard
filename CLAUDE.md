@@ -6,7 +6,7 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 
 ## Leitplanken
 
-- AWS: Daten nur in `eu-central-1`, Inferenz nur in der EU (Bedrock-Profil `eu.`, ADR 0001), 100 % serverless, 0 € Leerlaufkosten (FinOps, siehe `CONTEXT.md`): Im Leerlauf zahlen wir nur für gehaltene Daten und für Sicherheit, z. B. KMS-Schlüssel ca. 1 $/Monat.
+- AWS: Daten nur in `eu-central-1`, Inferenz nur in der EU (Bedrock-Profil `eu.`, ADR 0001; Ausnahme nur im Build, ausdrücklich per `--provider bedrock-global`, ADR 0012), 100 % serverless, 0 € Leerlaufkosten (FinOps, siehe `CONTEXT.md`): Im Leerlauf zahlen wir nur für gehaltene Daten und für Sicherheit, z. B. KMS-Schlüssel ca. 1 $/Monat.
 - Python, Pydantic, Pydantic AI auf der Bedrock Converse API mit Tool-Choice (ADR 0005), Streamlit-UI.
 - Wissensbasis als JSON in S3 bzw. im Repo, Bounded Catalog ohne Suche und ohne Obergrenze, keine Vektor-DB (ADR 0011).
 - Code modular nach `docs/ARCHITECTURE.md` → *Code-Struktur*: boto3 und das Bedrock-Modell für Pydantic AI nur in `aws_services.py`, subprocess nur in `src/kb_build/cdk_runner.py`, HTTP-Downloads nur in `src/kb_build/source_fetch.py`, Prüflogik rein, nie vermischt. Workflow-YAML enthält keine Logik, nur `python -m …`.

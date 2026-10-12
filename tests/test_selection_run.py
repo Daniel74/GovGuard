@@ -10,7 +10,7 @@ from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart, User
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from kb_build.selection_models import Selection, Verdict
-from kb_build.selection_run import BuildPaths, select_all
+from kb_build.selection_run import BuildPaths, chosen, select_all
 
 DATA = Path(__file__).parent.parent / "data"
 ARCHITECTURE_SOURCES = ("BSI", "CIS", "FSBP", "C5")
@@ -130,3 +130,16 @@ def test_the_run_logs_the_tokens_per_audit_type(
     assert len(usage) == 1
     assert re.fullmatch(r"spec: [1-9]\d* requests, [1-9]\d* input tokens, \d+ output tokens",
                         usage[0])
+
+
+def test_every_output_file_is_named_after_its_kind_and_audit_type() -> None:
+    paths = BuildPaths(out_dir=Path("kb"))
+
+    assert paths.out_file("selection", "architecture") == Path("kb/selection_arch.json")
+    assert paths.out_file("verdicts", "spec") == Path("kb/verdicts_spec.json")
+    assert paths.out_file("rules", "architecture") == Path("kb/rules_arch.json")
+
+
+def test_only_narrows_the_audit_types() -> None:
+    assert chosen(None) == ["architecture", "spec"]
+    assert chosen("spec") == ["spec"]

@@ -7,6 +7,7 @@ import json
 import logging
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Literal
 
 from pydantic import TypeAdapter
 from pydantic_ai.models import Model
@@ -24,11 +25,13 @@ from kb_build.selection_models import Verdict
 
 logger = logging.getLogger("kb_build")
 
-# audit type -> (output file, extracted sources in catalog order)
-SELECTIONS: dict[AuditType, tuple[str, list[SourceName]]] = {
-    "architecture": ("selection_arch.json", ["BSI", "C5", "CIS", "FSBP"]),
-    "spec": ("selection_spec.json", ["DSGVO", "SDM"]),
+# audit type -> extracted sources in catalog order
+SELECTIONS: dict[AuditType, list[SourceName]] = {
+    "architecture": ["BSI", "C5", "CIS", "FSBP"],
+    "spec": ["DSGVO", "SDM"],
 }
+_FILE_SUFFIX: dict[AuditType, str] = {"architecture": "arch", "spec": "spec"}
+OutputKind = Literal["selection", "verdicts", "rules"]
 
 
 @dataclass(frozen=True)
@@ -36,6 +39,15 @@ class BuildPaths:
     data: Path = Path("data")
     out_dir: Path = Path("data/knowledge_base")  # deployed to S3: results only, no cache
     cache_file: Path = Path("data/judgement_cache.json")
+
+    def out_file(self, kind: OutputKind, audit_type: AuditType) -> Path:
+        """E.g. selection_arch.json, verdicts_spec.json, rules_arch.json."""
+        return self.out_dir / f"{kind}_{_FILE_SUFFIX[audit_type]}.json"
+
+
+def chosen(only: AuditType | None) -> list[AuditType]:
+    """Every audit type, or just `only`."""
+    return [audit_type for audit_type in SELECTIONS if only in (None, audit_type)]
 
 
 def read_sources(data: Path, names: list[SourceName]) -> list[ExtractedSource]:
@@ -77,16 +89,14 @@ def select_all(
     """
     cache = _read_cache(paths.cache_file)
     try:
-        for audit_type in SELECTIONS:
-            if only and audit_type != only:
-                continue
+        for audit_type in chosen(only):
             _select(audit_type, model, paths, cache)
     finally:
         _write_cache(cache, paths.cache_file)
 
 
 def _select(audit_type: AuditType, model: Model, paths: BuildPaths, cache: JudgementCache) -> None:
-    filename, names = SELECTIONS[audit_type]
+    names = SELECTIONS[audit_type]
     profiles = load_profiles(paths.data / "archetype_profiles.json")
     components = frozenset(t for p in profiles for t in p.required_types)
     pinned = pinned_anchors(_read_presets(paths.data), audit_type)
@@ -98,6 +108,6 @@ def _select(audit_type: AuditType, model: Model, paths: BuildPaths, cache: Judge
         _log_usage(audit_type, judge.usage)
     paths.out_dir.mkdir(parents=True, exist_ok=True)  # only after a successful run
     selection = result.selection.model_dump_json(indent=2) + "\n"
-    (paths.out_dir / filename).write_text(selection, encoding="utf-8")
+    paths.out_file("selection", audit_type).write_text(selection, encoding="utf-8")
     protocol = TypeAdapter(list[Verdict]).dump_json(result.verdicts, indent=2)
-    (paths.out_dir / filename.replace("selection_", "verdicts_")).write_bytes(protocol + b"\n")
+    paths.out_file("verdicts", audit_type).write_bytes(protocol + b"\n")

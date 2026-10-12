@@ -3,6 +3,7 @@ import json
 import pytest
 
 from govguard.models import CrossReference, Rule, RuleCatalog, Trace
+from kb_build.extracted_models import Requirement
 
 
 @pytest.fixture
@@ -11,6 +12,13 @@ def spec_input() -> str:
         "Das Bürgerportal speichert Gesundheitsdaten im Klartext in einem öffentlichen S3-Bucket.\n"
         "Alle Zugriffe erfolgen ausschließlich über TLS 1.3."
     )
+
+
+def make_requirement(rid: str, anchor: str, text: str | None = None) -> Requirement:
+    """An extracted requirement that passed the prefilter; text defaults to a quotable sentence."""
+    text = text or f"The text of {rid} must be quoted."
+    return Requirement(id=rid, title=f"title {rid}", text=text, primary_anchor=anchor,
+                       attributes={}, prefilter_passed=True)
 
 
 def make_rule(requirement_id: str, title: str, cfn_resource_types: list[str] | None = None) -> Rule:

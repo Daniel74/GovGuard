@@ -205,7 +205,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Echter Lauf** 🤖 👤 „Formuliere die Prüfregeln“
 - [x] **Stichprobe** 👤 Lies 5 Prüfregeln, davon mindestens eine aus FSBP und eine aus C5: Sind `compliant_if` und `violation_if` prüfbar? Passt `source_quote` zur Norm?
 - [-] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und `gh issue view 12`. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #12`
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #12`
 - [ ] **Verstehen** 👤 `/verstehen 12` (Kernfrage: warum der Code den Primäranker setzt und nicht das LLM)
 - [ ] **Abschließen** 👤 committet und pusht
 

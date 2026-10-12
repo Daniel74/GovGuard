@@ -1,5 +1,7 @@
 # 0001 – EU-Inferenzprofil statt „nur Frankfurt“
 
+_Für den Build ergänzt durch [ADR 0012](0012-globales-profil-im-build.md)._
+
 ## Kontext
 
 Die Leitplanke lautete „nur eu-central-1“. Stand 2026-10-08 ist kein aktuelles Claude-Modell in Frankfurt direkt (in-region) aufrufbar, sondern nur über Cross-Region-Inferenzprofile. Das Profil `eu.` verarbeitet in eu-central-1, eu-north-1, eu-south-1, eu-south-2, eu-west-1 und eu-west-3; das Profil `global.` weltweit.

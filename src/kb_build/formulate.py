@@ -3,17 +3,26 @@
 Pure logic: gets the Pydantic AI model injected, no boto3. The code adds identity and origin.
 """
 
+import logging
 from dataclasses import dataclass
 
-from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput
+from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
-from govguard.models import AuditType, RuleDraft, SourceName
+from govguard.models import AuditType, Rule, RuleCatalog, RuleDraft
 from govguard.text import normalize
-from kb_build.extracted_models import Requirement
-from kb_build.gates import Anchors, invalid_cross_references, is_quoted
+from kb_build.extracted_models import ExtractedSource, Requirement
+from kb_build.gates import (
+    Anchors,
+    check_rules,
+    invalid_cross_references,
+    is_quoted,
+    requirements_by_anchor,
+)
 from kb_build.quality import vague_terms
-from kb_build.selection_models import SelectedRequirement
+from kb_build.selection_models import SelectedRequirement, Selection
+
+logger = logging.getLogger("kb_build")
 
 PROMPT = """\
 Du formulierst aus genau einer Anforderung eines Regelwerks für Behörden-IT genau eine
@@ -35,6 +44,8 @@ ARCHITECTURE_CRITERIA = """
   "relevant", "erforderlich", "angemessen", "entsprechend". Gilt die Pflicht nur für eine
   Variante (z. B. bestimmte Engines oder Protokolle), nenne diese Bedingung."""
 
+# Per audit type: prefix of the rule ID and system prompt
+ID_PREFIX: dict[AuditType, str] = {"architecture": "ARCH", "spec": "SPEC"}
 PROMPTS: dict[AuditType, str] = {
     "architecture": PROMPT.format(audit="Architektur-Audit eines CloudFormation-Templates",
                                   subject="am Template") + ARCHITECTURE_CRITERIA,
@@ -55,10 +66,9 @@ class FormulateDeps:
     """Run dependencies of the agent (ADR 0005): what the validator checks against."""
 
     audit_type: AuditType
-    source: SourceName
+    selected: SelectedRequirement  # source, rationale and resource types come from here
     requirement: Requirement
     anchors: Anchors  # every requirement of every source, for the cross references
-    resource_types: tuple[str, ...] = ()  # from the selection; architecture only
 
 
 formulate_agent = Agent(
@@ -86,7 +96,7 @@ def _deviation(text: str, quote: str) -> str:
     return "Schon der Anfang des Zitats fehlt im Text."
 
 
-def _criteria_problems(draft: RuleDraft, resource_types: tuple[str, ...]) -> list[str]:
+def _criteria_problems(draft: RuleDraft, resource_types: list[str]) -> list[str]:
     """Architecture criteria must be decidable from the template alone."""
     criteria, problems = f"{draft.compliant_if} {draft.violation_if}", []
     vague = vague_terms(criteria)
@@ -108,8 +118,8 @@ def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDraft:
         deviation = _deviation(ctx.deps.requirement.text, draft.source_quote)
         problems.append(f"Das Zitat steht nicht wörtlich im Text in <anforderung>. {deviation}")
     if ctx.deps.audit_type == "architecture":
-        problems += _criteria_problems(draft, ctx.deps.resource_types)
-    invalid = invalid_cross_references(draft, ctx.deps.source, ctx.deps.anchors)
+        problems += _criteria_problems(draft, ctx.deps.selected.cfn_resource_types)
+    invalid = invalid_cross_references(draft, ctx.deps.selected.source, ctx.deps.anchors)
     if invalid:
         problems.append(f"Diese Querverweise gibt es nicht in einer anderen Quelle, lass sie weg: "
                         f"{invalid}")
@@ -118,7 +128,8 @@ def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDraft:
     return draft
 
 
-def user_prompt(selected: SelectedRequirement, requirement: Requirement) -> str:
+def user_prompt(deps: FormulateDeps) -> str:
+    selected, requirement = deps.selected, deps.requirement
     types = selected.cfn_resource_types
     return USER_PROMPT.format(
         source=selected.source, id=requirement.id, title=requirement.title,
@@ -127,6 +138,42 @@ def user_prompt(selected: SelectedRequirement, requirement: Requirement) -> str:
     )
 
 
-def formulate_rule(selected: SelectedRequirement, deps: FormulateDeps, model: Model) -> RuleDraft:
-    prompt = user_prompt(selected, deps.requirement)
-    return formulate_agent.run_sync(prompt, model=model, deps=deps).output
+def formulate_rule(deps: FormulateDeps, model: Model) -> RuleDraft:
+    return formulate_agent.run_sync(user_prompt(deps), model=model, deps=deps).output
+
+
+def _complete_rule(deps: FormulateDeps, model: Model) -> Rule:
+    """The LLM writes the draft; identity and origin come from the selection, never the LLM."""
+    selected, requirement = deps.selected, deps.requirement
+    try:
+        draft = formulate_rule(deps, model)
+    except UnexpectedModelBehavior as error:  # fail closed: no rule may silently go missing
+        raise ValueError(f"{selected.source} {requirement.id}: no valid rule: {error}") from error
+    return Rule(
+        **draft.model_dump(),
+        id=f"{ID_PREFIX[deps.audit_type]}-{selected.source}-{requirement.id.replace(' ', '')}",
+        audit_type=deps.audit_type, source=selected.source,
+        primary_anchor=requirement.primary_anchor, selection_rationale=selected.rationale,
+        cfn_resource_types=selected.cfn_resource_types,
+    )
+
+
+def formulate_rules(
+    model: Model, selection: Selection, sources: list[ExtractedSource]
+) -> RuleCatalog:
+    """One rule per selected requirement, in selection order; then the gate (ARCHITECTURE 1)."""
+    anchors = requirements_by_anchor(sources)
+    by_id = {(s.source, r.id): r for s in sources for r in s.requirements}
+    rules = []
+    for n, selected in enumerate(selection.selected, start=1):
+        requirement = by_id[(selected.source, selected.requirement_id)]
+        deps = FormulateDeps(selection.audit_type, selected, requirement, anchors)
+        rules.append(_complete_rule(deps, model))
+        logger.info("%s %d/%d %s", selection.audit_type, n, len(selection.selected), rules[-1].id)
+    used = {s.source for s in selection.selected}
+    catalog = RuleCatalog(
+        audit_type=selection.audit_type, model_id=model.model_name, rules=rules,
+        source_versions={s.source: s.version for s in sources if s.source in used},
+    )
+    check_rules(catalog, selection, sources)
+    return catalog

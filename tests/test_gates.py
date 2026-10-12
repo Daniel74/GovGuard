@@ -3,9 +3,10 @@
 import re
 
 import pytest
+from conftest import make_requirement
 
 from govguard.models import CrossReference, Rule, RuleCatalog
-from kb_build.extracted_models import ExtractedSource, Requirement
+from kb_build.extracted_models import ExtractedSource
 from kb_build.gates import check_coverage, check_pinned, check_rules, is_quoted
 from kb_build.selection_models import SelectedRequirement, Selection
 
@@ -50,18 +51,14 @@ def test_a_component_without_a_rule_aborts_and_is_named() -> None:
 CIS_TEXT = "Amazon S3 provides Block public access (bucket settings) for every bucket."
 
 
-def requirement(rid: str, anchor: str, text: str) -> Requirement:
-    return Requirement(id=rid, title=f"title {rid}", text=text, primary_anchor=anchor,
-                       attributes={}, prefilter_passed=True)
-
-
 SOURCES = [
     ExtractedSource(source="CIS", version="v7.0.0", origin="o", requirements=[
-        requirement("3.1.4", "CIS AWS v7.0.0 3.1.4", CIS_TEXT),
-        requirement("3.1.5", "CIS AWS v7.0.0 3.1.5", "Ensure that every bucket encrypts data."),
+        make_requirement("3.1.4", "CIS AWS v7.0.0 3.1.4", CIS_TEXT),
+        make_requirement("3.1.5", "CIS AWS v7.0.0 3.1.5",
+                         "Ensure that every bucket encrypts data."),
     ]),
     ExtractedSource(source="BSI", version="sha", origin="o", requirements=[
-        requirement("DET.3.1", "BSI GS++ DET.3.1", "Protokolldaten SOLLTEN zentral liegen."),
+        make_requirement("DET.3.1", "BSI GS++ DET.3.1", "Protokolldaten SOLLTEN zentral liegen."),
     ]),
 ]
 
@@ -143,8 +140,9 @@ def test_a_rule_for_a_requirement_that_was_not_selected_aborts() -> None:
 
 def test_a_text_shorter_than_the_minimum_quote_may_be_quoted_whole() -> None:
     # SDM M60.P03 consists of the one word "Löschkonzept"
-    assert is_quoted(requirement("M60.P03", "SDM Löschen M60.P03", "Löschkonzept"), "Löschkonzept")
+    whole = make_requirement("M60.P03", "SDM Löschen M60.P03", "Löschkonzept")
+    assert is_quoted(whole, "Löschkonzept")
 
 
 def test_a_short_part_of_a_longer_text_still_proves_nothing() -> None:
-    assert not is_quoted(requirement("3.1.4", "CIS AWS v7.0.0 3.1.4", CIS_TEXT), "Amazon S3")
+    assert not is_quoted(make_requirement("3.1.4", "CIS AWS v7.0.0 3.1.4", CIS_TEXT), "Amazon S3")

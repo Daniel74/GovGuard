@@ -123,7 +123,9 @@ Der Primäranker ist die **eine** Anforderung, aus der eine Prüfregel stammt. I
 | C5 | `BSI C5 CRY-03.01B` | `Id` existiert im Prowler-JSON (fester Commit) |
 | FSBP | `AWS FSBP SNS.1` | `Id` existiert im Prowler-JSON (fester Commit) |
 
-Zusätzlich muss das `source_quote` **wörtlich** im Text genau der verankerten Anforderung stehen, nach Normalisierung von Leerzeichen und Zeilenumbrüchen und nach Entfernen von EUR-Lex-Markern wie „►C2“. Das ist dasselbe Prinzip wie der Beleg zur Laufzeit: Zitat statt Behauptung. Ist der ganze Text kürzer als 15 Zeichen (SDM `M60.P03`: „Löschkonzept“), muss das Zitat den ganzen Text umfassen.
+Zusätzlich muss das `source_quote` **wörtlich** im Text genau der verankerten Anforderung stehen. Verglichen wird nach Entfernen von EUR-Lex-Markern wie „►C2“ und **ohne Leerzeichen**, denn pypdf zerteilt Wörter (SDM `M60.S06`: „Protokollie rung“). Der Beleg zur Laufzeit nutzt bewusst dieselbe Funktion (DESIGN 3): Zitat statt Behauptung. Dass ein Treffer dabei über Wortgrenzen gehen kann, nehmen wir in Kauf, denn die Zeichenfolge muss trotzdem lückenlos stimmen. Ist der ganze Text kürzer als 15 Zeichen (SDM `M60.P03`: „Löschkonzept“), muss das Zitat den ganzen Text umfassen. Querverweise müssen existieren und zu einer **anderen** Quelle gehören.
+
+Dieselben Prüfungen laufen schon beim Formulieren als Validator: Das LLM bekommt den Fehler zurück und hat zwei Wiederholungen. Bei Architektur-Regeln prüft er zusätzlich, ob die Kriterien einen Ressourcentyp der Regel nennen und keine vagen Wörter wie „erforderlich“ enthalten. Bleibt ein Entwurf ungültig, bricht der Build ab.
 
 ### 1.4 Soll-Ergebnis der Golden Archetypes
 
@@ -258,12 +260,13 @@ flowchart TB
     H["govguard/handler.py<br/>Lambda"]
     C["govguard/cli.py<br/>lokal + Selbst-Audit"]
     M["kb_build/__main__.py<br/>Build"]
+    R["kb_build/*_run.py<br/>Dateien lesen + schreiben"]
   end
   subgraph L["Logik – rein, ohne I/O"]
     AE["govguard/audit_engine.py<br/>+ models.py, text.py"]
-    KB["kb_build/: sources/, relevance.py,<br/>gates.py, curation.py, archetypes.py"]
+    KB["kb_build/: sources/, relevance.py,<br/>gates.py, curation.py, formulate.py,<br/>quality.py, archetypes.py"]
   end
-  subgraph A["Adapter – einziger Ort für I/O"]
+  subgraph A["Adapter – einziger Ort für AWS, subprocess, HTTP"]
     AWS["govguard/aws_services.py<br/>boto3, Bedrock-Modell"]
     CDK["kb_build/cdk_runner.py<br/>subprocess"]
     FE["kb_build/source_fetch.py<br/>HTTP + SHA-256"]
@@ -276,7 +279,7 @@ flowchart TB
   end
   H & C --> AE
   H & C --> AWS
-  M --> KB
+  M --> R --> KB
   M --> AWS & CDK & FE
   KB --> AE
   AWS --> B & S3
