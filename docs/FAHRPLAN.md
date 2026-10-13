@@ -295,9 +295,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
       Reihenfolge: Test Standard-Provider in `tests/test_main.py` → `default="groq"` in `kb_build/__main__.py` → Test „kein Ausweichen ohne `GROQ_API_KEY`“ → Docstring `groq_services.py`, `README.md` → Text von Issue #8 (Secret `GROQ_API_KEY`, OIDC-Rolle nur fürs Preset-Gate)
 - [x] **Freigabe** 👤 Leitplanke in `CLAUDE.md` anpassen lassen („Ausnahme im Build: Groq als Standard, ADR 0014“)
 - [x] **Entscheiden** 👤 Offene Frage im Issue: Prüfregeln jetzt mit Groq neu formulieren oder erst über #8? Falls jetzt: 🤖 `python -m kb_build rules` ohne Flag, 👤 prüft, ob der Qualitätsbericht weiter überall 0 zeigt und alle Pflichtanker drin sind.
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #21`
-- [ ] **Verstehen** 👤 `/verstehen 21` (Kernfrage: warum Datenresidenz zur Laufzeit gilt, aber nicht für öffentliche Normtexte im Build)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #21`
+- [-] **Verstehen** 👤 `/verstehen 21` (Kernfrage: warum Datenresidenz zur Laufzeit gilt, aber nicht für öffentliche Normtexte im Build)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** pytest und ruff grün sind, ein Lauf ohne Flag Groq nutzt und #8 den neuen Stand beschreibt.
 **Fürs Fachgespräch:** Trennung Build/Laufzeit, Kosten-Trade-off (FinOps), Gates machen die Qualität vom Modell unabhängig.

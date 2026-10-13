@@ -12,6 +12,7 @@ _Ersetzt [ADR 0010](0010-groq-build-fallback.md). Weicht für den Build von [ADR
 
 - `python -m kb_build` nutzt ohne Flag Groq (`--provider groq` ist Standard), für `select` und für `rules`. Ein Test prüft den Standard. Kein stilles Umschalten: Fehlt `GROQ_API_KEY`, bricht der Build ab. Das Modell steht als `model_id` in Auswahlliste und Katalog.
 - Bedrock bleibt als ausdrückliche Option: `--provider bedrock` (`eu.`) und `--provider bedrock-global` (ADR 0012), z. B. wenn Groq ausfällt.
+- Stufe ② erlaubt bis zu 6 statt 3 Korrekturrunden (`FORMULATE_RETRIES`), weil Groq erfundene Zitate öfter wiederholt als Haiku. Das Gate bleibt gleich streng; im Build gilt kein 29-s-Limit (ADR 0005).
 - Haiku über Bedrock `eu.` bleibt für alles mit Nutzereingaben: Audits zur Laufzeit, Preset-Gate (es ruft die Audit-Engine auf) und Archetyp-Generierung (#7).
 
 ## Konsequenzen

@@ -266,13 +266,15 @@ flowchart TB
     AE["govguard/audit_engine.py<br/>+ models.py, text.py"]
     KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py,<br/>archetypes.py (geplant)"]
   end
-  subgraph A["Adapter – einziger Ort für AWS, subprocess, HTTP"]
+  subgraph A["Adapter – einziger Ort für AWS, Groq, subprocess, HTTP"]
     AWS["govguard/aws_services.py<br/>boto3, Bedrock-Modell"]
+    GQ["kb_build/groq_services.py<br/>Groq-Modell, nur Build"]
     CDK["kb_build/cdk_runner.py (geplant)<br/>subprocess"]
     FE["kb_build/source_fetch.py<br/>HTTP + SHA-256"]
   end
   subgraph X["Extern"]
     B[("Bedrock eu.")]
+    G[("Groq")]
     S3[("S3")]
     CL["CDK CLI + cdk-nag"]
     HG["Herausgeber<br/>GitHub, CELLAR, DSK"]
@@ -280,9 +282,10 @@ flowchart TB
   H & C --> AE
   H & C --> AWS
   M --> R --> KB
-  M --> AWS & CDK & FE
+  M --> AWS & GQ & CDK & FE
   KB --> AE
   AWS --> B & S3
+  GQ --> G
   CDK --> CL
   FE --> HG
 ```
@@ -312,7 +315,7 @@ tests/                pytest, flach
 .github/workflows/    build-kb.yml, deploy.yml
 ```
 
-- **Adapter für I/O:** Nur `aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `cdk_runner.py` startet Prozesse, nur `source_fetch.py` lädt Quellen aus dem Netz. Ein Test prüft alle drei.
+- **Adapter für I/O:** Nur `aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `groq_services.py` baut das Groq-Modell für den Build (ADR 0014), nur `cdk_runner.py` startet Prozesse, nur `source_fetch.py` lädt Quellen aus dem Netz. Ein Test prüft alle vier.
 - **Keine Logik in Klebe-Code:** Einstiegsdateien und Workflow-YAML verbinden nur. Ein Workflow meldet sich an, ruft `python -m …` auf und öffnet den PR. Derselbe Befehl läuft lokal.
 - **src-Layout:** Der CDK-Stack packt mit `Code.from_asset("src/govguard")` genau den Laufzeit-Kern, ohne Build-Code, UI oder Daten.
 

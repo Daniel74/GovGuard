@@ -14,7 +14,7 @@ from pydantic_ai.models.function import AgentInfo, FunctionModel
 from kb_build.extract.models import ExtractedSource
 from kb_build.reference.cfn_properties import PropertyIndex
 from kb_build.reference.scope import Scope
-from kb_build.rules.formulate import formulate_rules
+from kb_build.rules.formulate import FORMULATE_RETRIES, formulate_rules
 from kb_build.select.models import SelectedRequirement, Selection
 
 SOURCES = [
@@ -129,7 +129,8 @@ def test_an_answer_that_stays_invalid_aborts_the_build_and_names_the_requirement
     wrong = draft("3.1.4", source_quote="erfundener Normtext")
 
     with pytest.raises(ValueError, match="CIS 3.1.4"):
-        run_formulate(fake_llm({"3.1.4": [wrong] * 7}), arch_selection("3.1.4"), SOURCES)
+        run_formulate(fake_llm({"3.1.4": [wrong] * (FORMULATE_RETRIES + 1)}),
+                      arch_selection("3.1.4"), SOURCES)
 
 
 def test_a_spec_rule_drops_spaces_from_the_id_and_has_no_resource_types() -> None:
@@ -227,17 +228,18 @@ def test_criteria_naming_a_type_outside_the_scope_are_sent_back_and_name_it() ->
     assert "Prüfumfang" in sent_back[0]
 
 
-def test_a_stubborn_model_gets_six_retries_before_the_build_stops() -> None:
+def test_a_stubborn_model_gets_every_retry_before_the_build_stops() -> None:
     # Groq (ADR 0014) repeats an invented quote or property; the gate stays strict, not the count
     calls = []
 
     def respond(history: list[ModelMessage], info: AgentInfo) -> ModelResponse:
         calls.append(1)
-        attempt = draft("3.1.4") if len(calls) > 6 else draft("3.1.4", source_quote="erfunden")
+        invented = len(calls) <= FORMULATE_RETRIES
+        attempt = draft("3.1.4", source_quote="erfunden") if invented else draft("3.1.4")
         return ModelResponse(parts=[ToolCallPart("formulate_rule", attempt)])
 
     catalog = run_formulate(FunctionModel(respond, model_name="fake-model"),
                             arch_selection("3.1.4"), SOURCES)
 
     assert catalog.rules[0].source_quote == "The text of 3.1.4"
-    assert len(calls) == 7
+    assert len(calls) == FORMULATE_RETRIES + 1

@@ -61,6 +61,7 @@ USER_PROMPT = (
 )
 TOOL_NAME = "formulate_rule"
 TOOL_DESCRIPTION = "Gib genau eine Prüfregel zur Anforderung ab."
+FORMULATE_RETRIES = 6  # build only, no 29 s timeout; Groq needs more than Haiku (ADR 0014)
 
 
 @dataclass(frozen=True)
@@ -78,7 +79,7 @@ class FormulateDeps:
 formulate_agent = Agent(
     output_type=ToolOutput(RuleDraft, name=TOOL_NAME, description=TOOL_DESCRIPTION),
     deps_type=FormulateDeps,
-    retries=6,  # build only, no 29 s timeout; Groq needs more than Haiku (ADR 0005, 0014)
+    retries=FORMULATE_RETRIES,
     model_settings={"temperature": 0},
 )
 
