@@ -43,7 +43,7 @@ flowchart TD
 
 Die Rauten sind **Gates**: automatische Prüfpunkte, an denen Code das Ergebnis des LLM kontrolliert. Fällt etwas durch, bricht der Build ab, und die alte Wissensbasis bleibt aktiv.
 
-Das Build-Skript lädt jede Quelle vom Herausgeber, wie in `data/sources.json` festgelegt, und bricht ab, wenn die SHA-256-Prüfsumme nicht stimmt. Quelldateien liegen nie im Repo (ADR 0008). Dann siebt es die Quellen in zwei Stufen: Ein deterministischer Vorfilter wirft offensichtlich Irrelevantes weg, dann entscheidet das LLM je Anforderung, ob sie an einer Spezifikation oder an einem CloudFormation-Template prüfbar ist, und nennt bei Architektur die betroffenen Ressourcentypen. Der Code behält alles, was prüfbar ist und einen Dienst im Prüfumfang betrifft, ohne Obergrenze; jede Entscheidung steht mit Begründung im Auswahlprotokoll (ADR 0011). Erst danach formuliert das LLM daraus Prüfregeln.
+Das Build-Skript lädt jede Quelle vom Herausgeber, wie in `data/input/sources.json` festgelegt, und bricht ab, wenn die SHA-256-Prüfsumme nicht stimmt. Quelldateien liegen nie im Repo (ADR 0008). Dann siebt es die Quellen in zwei Stufen: Ein deterministischer Vorfilter wirft offensichtlich Irrelevantes weg, dann entscheidet das LLM je Anforderung, ob sie an einer Spezifikation oder an einem CloudFormation-Template prüfbar ist, und nennt bei Architektur die betroffenen Ressourcentypen. Der Code behält alles, was prüfbar ist und einen Dienst im Prüfumfang betrifft, ohne Obergrenze; jede Entscheidung steht mit Begründung im Auswahlprotokoll (ADR 0011). Erst danach formuliert das LLM daraus Prüfregeln.
 
 Das erste Gate prüft jede Prüfregel in drei Punkten:
 
@@ -76,7 +76,7 @@ Jede Quelle durchläuft dieselben Stufen; nur die Parameter unterscheiden sich. 
 
 - **① Vorfilter:** reiner Code auf Metadaten (OSCAL-Props, Kapitel, Bereiche, Dienste, Maßnahmen-IDs). Er ist billig, reproduzierbar und wirft Organisatorisches früh weg. Für jede verworfene Anforderung schreibt er einen festen Begründungssatz ins Auswahlprotokoll.
 - **② LLM:** bekommt **eine** Anforderung und den Prüfumfang und antwortet nur ja/nein mit Begründung, bei Architektur zusätzlich mit `cfn_resource_types` (per Tool-Choice, siehe 2.1). Es zählt nicht und wählt nicht aus. Das Urteil wird gecacht (Text-Hash, Prompt-Version, `model_id`); ein neuer Lauf fragt nur neue oder geänderte Anforderungen.
-- **Relevanz (Code, nur Architektur):** Es bleiben nur Anforderungen, deren erster (wichtigster) `cfn_resource_type` im Prüfumfang liegt (`data/scope.json`): Serverless-Dienste, dazu RDS/Aurora und Fargate (ECS) mit dem, was beide brauchen: VPC-Typen, ECR und ELBv2. Kontoweite Pflichten wie Root-MFA oder CloudTrail fallen damit heraus, denn sie sind an keinem Template entscheidbar.
+- **Relevanz (Code, nur Architektur):** Es bleiben nur Anforderungen, deren erster (wichtigster) `cfn_resource_type` im Prüfumfang liegt (`data/input/scope.json`): Serverless-Dienste, dazu RDS/Aurora und Fargate (ECS) mit dem, was beide brauchen: VPC-Typen, ECR und ELBv2. Kontoweite Pflichten wie Root-MFA oder CloudTrail fallen damit heraus, denn sie sind an keinem Template entscheidbar.
 - **Aufnahme:** Jede prüfbare und relevante Anforderung kommt in den Bounded Catalog. Das Auswahlprotokoll (`verdicts_*.json`) hält für jede Anforderung Ergebnis und Begründung fest (SPEC). Die Liste der aufgenommenen (`selection_spec.json`, `selection_arch.json`) liegt versioniert im Repo; Änderungen zwischen zwei Builds zeigt der Git-Diff.
 - **Gates:** Die Pflichtanker der Presets müssen aufgenommen sein, und jede Komponente der Archetypen (Pflicht-Ressourcentypen, 1.4) braucht mindestens eine Prüfregel. Sonst bricht der Build ab.
 
@@ -133,7 +133,7 @@ Für Presets legt ein Mensch das Soll fest. Für Archetypen ist es **vollautomat
 
 1. **Struktur-Soll:** Das Template enthält die Pflicht-Ressourcentypen aus dem Steckbrief des Archetyps (deterministischer Check).
 2. **Compliance-Soll:** Jede Architektur-Prüfregel ist PASS oder N/A. N/A setzt hier nur der Code, wenn keiner ihrer `cfn_resource_types` im Template vorkommt (Abschnitt 2). Kommt einer vor, ist N/A **verboten**. So kann das LLM eine unbequeme Regel nicht wegdefinieren.
-3. **cdk-nag:** Das Regelpaket AwsSolutions meldet keine Errors außer Ausnahmen aus `data/nag_allowlist.json` (ADR 0007). Die Ausnahmen wendet der Code an; der Archetyp-Code darf kein `Validations.of(...).acknowledge(...)` enthalten (Code-Check, cdk-nag 3).
+3. **cdk-nag:** Das Regelpaket AwsSolutions meldet keine Errors außer Ausnahmen aus `data/input/nag_allowlist.json` (ADR 0007). Die Ausnahmen wendet der Code an; der Archetyp-Code darf kein `Validations.of(...).acknowledge(...)` enthalten (Code-Check, cdk-nag 3).
 
 Jeder Archetyp ist eine End-to-End-Kette ab API Gateway mit IAM-Auth; das Portal der Behörde liegt außerhalb (ADR 0009).
 
@@ -260,15 +260,15 @@ flowchart TB
     H["govguard/handler.py<br/>Lambda"]
     C["govguard/cli.py<br/>lokal + Selbst-Audit"]
     M["kb_build/__main__.py<br/>Build"]
-    R["kb_build/*_run.py<br/>Dateien lesen + schreiben"]
+    R["kb_build/*/run.py<br/>Dateien lesen + schreiben,<br/>Pfade aus paths.py"]
   end
   subgraph L["Logik – rein, ohne I/O"]
     AE["govguard/audit_engine.py<br/>+ models.py, text.py"]
-    KB["kb_build/: sources/, relevance.py,<br/>gates.py, curation.py, formulate.py,<br/>quality.py, archetypes.py"]
+    KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py,<br/>archetypes.py (geplant)"]
   end
   subgraph A["Adapter – einziger Ort für AWS, subprocess, HTTP"]
     AWS["govguard/aws_services.py<br/>boto3, Bedrock-Modell"]
-    CDK["kb_build/cdk_runner.py<br/>subprocess"]
+    CDK["kb_build/cdk_runner.py (geplant)<br/>subprocess"]
     FE["kb_build/source_fetch.py<br/>HTTP + SHA-256"]
   end
   subgraph X["Extern"]
@@ -289,22 +289,26 @@ flowchart TB
 
 Von der Logik führt **kein Pfeil** zu den Adaptern. Der Einstieg reicht die Adapter hinein, etwa das Bedrock-Modell (Dependency Injection); Tests reichen Fakes bzw. `TestModel` hinein.
 
-Jeder Ordner auf oberster Ebene ist eine eigene Deployment-Einheit oder eine Datenart:
+Jeder Ordner auf oberster Ebene ist eine eigene Deployment-Einheit oder eine Datenart. `src/kb_build/` hat je Build-Kommando einen Unterordner, `data/` ist nach Herkunft getrennt:
 
 ```
 src/govguard/         Laufzeit-Kern, wird zum Lambda-Paket
 src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, nie umgekehrt)
+  __main__.py         Einstieg; gates.py, paths.py (alle Datenpfade), source_fetch.py, groq_services.py
+  extract/            Adapter je Quelle (bsi, cis, c5, dsgvo, fsbp, sdm, prowler), models.py, run.py
+  select/             relevance, classify, curation, judgement_cache, models.py, run.py
+  rules/              formulate, quality, run.py
+  reference/          scope, cfn_types, cfn_properties, archetype_profiles, run.py (cfn-properties)
+  cdk_runner.py       geplant: einziger Ort für subprocess
 infra/                CDK-App des GovGuard-Stacks
 ui/                   Streamlit-App, spricht nur per HTTP mit der API
-data/sources.json     je Quelle URL, Version, SHA-256, Lizenz (ADR 0008)
-data/sources/         lokaler Download-Cache, in .gitignore
-data/extracted/       extrahierte Anforderungen (JSON); cis.json, fsbp.json, c5.json nur lokal (Lizenz)
-data/knowledge_base/  rules_spec.json, rules_arch.json, archetypes.json
-data/presets/         5 Presets: Eingabedatei + preset.json mit Soll-Ergebnis
-data/scope.json       Prüfumfang: CloudFormation-Namensräume der geprüften Dienste (ADR 0011)
-data/judgement_cache.json  LLM-Urteile der Auswahl (ADR 0011), bleibt beim Deploy außen vor
-data/archetype_profiles.json  Steckbriefe der 3 Archetypen (von Hand gepflegt)
-tests/                pytest
+data/input/           von Hand gepflegt: sources.json (URL, Version, SHA-256, Lizenz; ADR 0008),
+                      scope.json (Prüfumfang, ADR 0011), archetype_profiles.json,
+                      cfn_resource_types.json, cfn_properties.json, presets/ (5 Presets mit Soll-Ergebnis)
+data/intermediate/    Zwischenergebnisse, eingecheckt fürs Review: extracted/ (cis, fsbp, c5 nur lokal),
+                      judgement_cache.json, selection_*.json, verdicts_*.json; sources/ = Download-Cache, in .gitignore
+data/knowledge_base/  nur das Endergebnis: rules_spec.json, rules_arch.json, archetypes.json (geplant); geht nach S3
+tests/                pytest, flach
 .github/workflows/    build-kb.yml, deploy.yml
 ```
 
@@ -314,9 +318,9 @@ tests/                pytest
 
 ### Neue Quelle hinzufügen
 
-1. `data/sources.json`: URL, Version (Commit oder Tag), SHA-256, Lizenz (ADR 0008).
-2. Adapter `src/kb_build/sources/<quelle>.py` mit `extract()` und `prefilter()`. Der Vorfilter gibt `None` zurück oder für jede verworfene Anforderung einen festen Begründungssatz (Auswahlprotokoll). Prowler-Quellen (CIS, FSBP, C5) beschreiben nur ihr `ProwlerFormat` (Anker, Titel, Text, Attribute, Vorfilter); gelesen wird im gemeinsamen Parser `prowler.py`.
-3. Je ein Eintrag in `ADAPTERS` (`__main__.py`) und `SourceName` (`models.py`). In `SELECTIONS` (`selection_run.py`) kommt die Quelle zu ihrer Audit-Art.
+1. `data/input/sources.json`: URL, Version (Commit oder Tag), SHA-256, Lizenz (ADR 0008).
+2. Adapter `src/kb_build/extract/<quelle>.py` mit `extract()` und `prefilter()`. Der Vorfilter gibt `None` zurück oder für jede verworfene Anforderung einen festen Begründungssatz (Auswahlprotokoll). Prowler-Quellen (CIS, FSBP, C5) beschreiben nur ihr `ProwlerFormat` (Anker, Titel, Text, Attribute, Vorfilter); gelesen wird im gemeinsamen Parser `prowler.py`.
+3. Je ein Eintrag in `ADAPTERS` (`extract/run.py`) und `SourceName` (`models.py`). In `SELECTIONS` (`select/run.py`) kommt die Quelle zu ihrer Audit-Art.
 4. Lizenz: offen → Extrakt einchecken, Vermerk in `NOTICE`; sonst Extrakt in `.gitignore` (CIS, FSBP, C5).
 5. Test mit kleinem Fixture: Anzahl, Stichprobe, Vorfilter mit Begründung.
 

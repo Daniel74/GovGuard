@@ -2,9 +2,9 @@
 
 from typing import Any
 
-from kb_build.extracted_models import ExtractedSource, Requirement
-from kb_build.sources import prowler
-from kb_build.sources.prowler import ProwlerFormat, strip_markdown
+from kb_build.extract import prowler
+from kb_build.extract.models import ExtractedSource, Requirement
+from kb_build.extract.prowler import ProwlerFormat, strip_markdown
 
 # Networking holds the security groups for Aurora (ARCHITECTURE 1.1)
 CHAPTERS = {2: "IAM", 3: "Storage", 4: "Logging", 6: "Networking"}
@@ -41,5 +41,5 @@ FORMAT = ProwlerFormat(
 
 
 def extract(origin: str, data: dict[str, Any], version: str) -> ExtractedSource:
-    """All 70 recommendations; `version` from data/sources.json, Prowler only says "7.0"."""
+    """All 70 recommendations; `version` from data/input/sources.json, Prowler only says "7.0"."""
     return prowler.extract(FORMAT, origin, data, version)

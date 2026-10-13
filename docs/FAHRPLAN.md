@@ -36,7 +36,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 9       | A    | #12 Prüfregeln + Gate           | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
 | 9a      | A    | #18 Kontoweite Pflichten        | 🤖 Sonnet                                        | 👤 Kontrollpunkt + 🤖 Opus |
 | 9b      | A    | #17 Gate Eigenschaftsnamen      | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 9c      | A    | #19 Typen im Prüfumfang         | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 9c      | A    | #20 Ordnerstruktur              | 🤖 Opus                                          | 🤖 Opus                    |
+| 9d      | A    | #19 Typen im Prüfumfang         | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
 | 11      | A    | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 12      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
@@ -250,20 +251,36 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-### Schritt 9c – #19 Ressourcentypen auf den Prüfumfang begrenzen
+### Schritt 9c – #20 Ordnerstruktur: data/ nach Herkunft, kb_build/ nach Build-Schritt
 
-**Ziel:** Architektur-Prüfregeln nennen nur Typen aus `data/scope.json`, damit das Gate aus #17 jede Eigenschaft prüft. Nach dem Review von #17 bleiben 16 Regeln ungeprüft (`unjudged_properties`), z. B. mit CloudTrail, CloudFront, Classic ELB oder WAF Classic.
+**Ziel:** `data/` trennt Eingaben (`input/`), Zwischenergebnisse (`intermediate/`) und Endergebnis (`knowledge_base/`, nur `rules_*.json`); `kb_build/` hat je Build-Kommando einen Unterordner. Reines Refactoring.
 **Voraussetzung:** Schritt 9b.
+
+- [x] **Starten** _Opus_ · 👤 `/implement 20` → Plan → Go. Alle Datenpfade stehen in `kb_build/paths.py`; ein Test verbietet sie anderswo.
+- [x] **Prüfen** _Opus_ · `/code-review` (Standards + Spec als Sub-Agents), Befunde behoben
+- [ ] **Echter Lauf** → verschoben in Schritt 9d. Der Judgement-Cache passt schon vor #20 nicht mehr zum Prompt (beide Audit-Arten); ein Lauf jetzt würde alle Urteile bezahlen, und #19 würde sein Ergebnis wieder überschreiben. Nachweis bis dahin: Test der Standardpfade, Probelauf mit Dummy-Key liest alle Eingaben aus den neuen Pfaden.
+- [ ] **Verstehen** 👤 `/verstehen 20` (Kernfrage: warum Daten nach Herkunft getrennt werden und was davon nach S3 geht)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** pytest und ruff grün sind und der echte Lauf in 9d in `data/intermediate/` schreibt.
+**Fürs Fachgespräch:** Trennung Eingabe / Zwischenergebnis / Artefakt, eine Quelle für Pfade, Refactoring ohne Verhaltensänderung.
+
+---
+
+### Schritt 9d – #19 Ressourcentypen auf den Prüfumfang begrenzen
+
+**Ziel:** Architektur-Prüfregeln nennen nur Typen aus `data/input/scope.json`, damit das Gate aus #17 jede Eigenschaft prüft. Nach dem Review von #17 bleiben 16 Regeln ungeprüft (`unjudged_properties`), z. B. mit CloudTrail, CloudFront, Classic ELB oder WAF Classic.
+**Voraussetzung:** Schritt 9c.
 
 - [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #19: Backup, EFS, EBS-Volume und SSM in den Prüfumfang?` Bei Ja ergänzt 🤖 `scope.json` und ADR 0011 (Weichenstellung Prüfumfang).
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #19 umsetzen` → Plan → Go
       Reihenfolge: Validator von Stufe ② streicht Typen außerhalb des Prüfumfangs → Validator von `formulate_rule` → `check_rules`
-- [ ] **Echter Lauf** 🤖 👤 „Erzeuge Architektur-Auswahl und -Prüfregeln neu“ (`--provider groq` bzw. `bedrock-global`). 👤 Prüfe: Zeigt der Qualitätsbericht `unjudged_properties` 0? Welche Regeln haben Typen verloren?
+- [ ] **Echter Lauf** 🤖 👤 „Erzeuge Auswahl und Prüfregeln für **beide** Audit-Arten neu“: `select` ohne `--audit-type` (`--provider groq`), dann `rules` (`bedrock-global`, falls `eu.` keine Kapazität hat). Der Cache ist für Spec und Architektur veraltet (siehe 9c), alle Urteile werden neu bezahlt. 👤 Prüfe: Schreibt `select` nach `data/intermediate/` (Nachweis für #20)? Zeigt der Qualitätsbericht `unjudged_properties` 0? Welche Regeln haben Typen verloren? Was hat sich in `git diff data/intermediate/selection_spec.json` geändert?
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #19`
 - [ ] **Verstehen** 👤 `/verstehen 19` (Kernfrage: warum ein Gate nur so weit prüft, wie seine Referenz reicht)
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Auswahl und `rules_arch.json` neu eingecheckt sind und der Qualitätsbericht überall 0 zeigt.
+**Fertig, wenn:** Beide Auswahllisten und beide `rules_*.json` neu eingecheckt sind und der Qualitätsbericht überall 0 zeigt.
 **Fürs Fachgespräch:** sichtbare statt stiller Lücken, Prüfumfang als bewusste Entscheidung, Shared Responsibility.
 
 ---
@@ -288,7 +305,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 ### Schritt 11 – #8 Preset-Gate und Build-Workflow
 
 **Ziel:** Der Build der Wissensbasis läuft per Knopfdruck in GitHub Actions und öffnet nur bei Grün einen Pull Request.
-**Voraussetzung:** Schritte 8, 9c und 10.
+**Voraussetzung:** Schritte 8, 9d und 10.
 
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #8 umsetzen` → Plan → Go
       Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Hash-Check; den Soll-Archetyp prüft erst #10) → `python -m kb_build` → `build-kb.yml` ohne Logik
@@ -368,7 +385,7 @@ Start nur nach der Regel _Stichtag_ oben.
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #7 umsetzen`
       Reihenfolge: Allowlist-Filter (cdk-nag und Prüfregeln, aus Schritt 13) → Struktur-Soll → Compliance-Soll (N/A-Sperre) → Schleife mit höchstens 3 Runden (mit Fakes) → `cdk_runner.py`
 - [ ] **Echter Build** 👤 „Baue die 3 Archetypen“ → Go. Bei Fehlern von synth oder cdk-nag: 👤 `/diagnosing-bugs`
-- [ ] **Offene Frage** 👤 „Klär, ob Lambda-Logging `log-group:NAME:*` braucht“ → bei Ja: Ausnahme mit Begründung in `data/nag_allowlist.json`
+- [ ] **Offene Frage** 👤 „Klär, ob Lambda-Logging `log-group:NAME:*` braucht“ → bei Ja: Ausnahme mit Begründung in `data/input/nag_allowlist.json`
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #7`
 - [ ] **Verstehen** 👤 `/verstehen 7` (Schwerpunkt: cdk-nag und Ausnahmen)
 - [ ] **Abschließen** 👤 committet und pusht

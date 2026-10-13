@@ -56,3 +56,27 @@ def test_modules_stay_small() -> None:
         if (n := len(path.read_text(encoding="utf-8").splitlines())) > MAX_MODULE_LINES
     }
     assert too_long == {}
+
+
+DATA_PATH_OWNERS = {"kb_build/paths.py", "govguard/cli.py"}  # cli.py: one default catalog
+
+
+def data_path_literals(path: Path) -> list[str]:
+    """String constants like "data" or "data/…"; docstrings do not count."""
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    docstrings = {id(node.value) for node in ast.walk(tree) if isinstance(node, ast.Expr)}
+    return [
+        node.value for node in ast.walk(tree)
+        if isinstance(node, ast.Constant) and isinstance(node.value, str)
+        and id(node) not in docstrings and (node.value == "data" or node.value.startswith("data/"))
+    ]
+
+
+def test_data_paths_only_in_the_paths_module() -> None:
+    offenders = {
+        rel: literals
+        for path in SRC.rglob("*.py")
+        if (rel := path.relative_to(SRC).as_posix()) not in DATA_PATH_OWNERS
+        and (literals := data_path_literals(path))
+    }
+    assert offenders == {}

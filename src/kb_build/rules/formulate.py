@@ -11,8 +11,7 @@ from pydantic_ai.models import Model
 
 from govguard.models import AuditType, Rule, RuleCatalog, RuleDraft
 from govguard.text import normalize
-from kb_build.cfn_properties import PropertyIndex, alternatives, owners, unknown_properties
-from kb_build.extracted_models import ExtractedSource, Requirement
+from kb_build.extract.models import ExtractedSource, Requirement
 from kb_build.gates import (
     Anchors,
     check_rules,
@@ -20,8 +19,14 @@ from kb_build.gates import (
     is_quoted,
     requirements_by_anchor,
 )
-from kb_build.quality import vague_terms
-from kb_build.selection_models import SelectedRequirement, Selection
+from kb_build.reference.cfn_properties import (
+    PropertyIndex,
+    alternatives,
+    owners,
+    unknown_properties,
+)
+from kb_build.rules.quality import vague_terms
+from kb_build.select.models import SelectedRequirement, Selection
 
 logger = logging.getLogger("kb_build")
 

@@ -10,7 +10,7 @@ GovGuard ist ein Compliance-Copilot (DSGVO, BSI IT-Grundschutz) in Python auf AW
 - **AWS:** nur `eu-central-1`, Bedrock nur mit `eu.`-Inferenzprofil (ADR 0001). Tests rufen AWS nie auf. Bedrock-Läufe startest du nur auf ausdrückliche Anweisung; deployen darfst du nie.
 - **Daten:** Keine Quelldateien und keine CIS-Volltexte ins Repo (ADR 0008).
 - **Workflow-YAML:** keine Logik, nur `python -m …`.
-- **Nicht ändern:** `docs/`, `CLAUDE.md`, `AGENTS.md` und `data/presets/` (die Soll-Ergebnisse legt der Mensch fest).
+- **Nicht ändern:** `docs/`, `CLAUDE.md`, `AGENTS.md` und `data/input/presets/` (die Soll-Ergebnisse legt der Mensch fest).
 - **Stopp statt Anpassen:** Regeln und Konstanten aus `docs/ARCHITECTURE.md` und `docs/adr/` (z. B. Vorfilter-Kriterien) übernimmst du unverändert. Passt eine erwartete Zahl oder ein Test nach zwei Anläufen nicht, hörst du auf und meldest die Abweichung mit deinen Messwerten; du biegst nie Code oder Konstanten auf die Zielzahl hin.
 - **Abschluss:** Fasse kurz zusammen, welche Dateien du geändert hast und welche Kriterien noch offen sind. Füge die letzten Zeilen der Ausgabe von `pytest -q` und `ruff check .` unverändert ein.
 

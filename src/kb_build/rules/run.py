@@ -5,17 +5,17 @@ The file I/O of stage 5 lives here: selection lists and sources in, rules_*.json
 
 import json
 import logging
-from pathlib import Path
 
 from pydantic_ai.models import Model
 
 from govguard.models import AuditType
-from kb_build.cfn_properties import CFN_PROPERTIES_FILE, PropertyIndex
-from kb_build.cfn_types import CFN_TYPES_FILE, load_cfn_types
-from kb_build.formulate import formulate_rules
-from kb_build.quality import quality_report
-from kb_build.selection_models import Selection
-from kb_build.selection_run import SELECTIONS, BuildPaths, chosen, read_sources
+from kb_build.paths import BuildPaths
+from kb_build.reference.cfn_properties import PropertyIndex
+from kb_build.reference.cfn_types import load_cfn_types
+from kb_build.rules.formulate import formulate_rules
+from kb_build.rules.quality import quality_report
+from kb_build.select.models import Selection
+from kb_build.select.run import SELECTIONS, chosen, read_sources
 
 logger = logging.getLogger("kb_build")
 
@@ -23,27 +23,28 @@ logger = logging.getLogger("kb_build")
 ALL_SOURCES = [name for names in SELECTIONS.values() for name in names]
 
 
-def read_property_index(data: Path) -> PropertyIndex:
-    raw = json.loads((data / CFN_PROPERTIES_FILE.name).read_text(encoding="utf-8"))
-    names = (t.rpartition("::")[2] for t in load_cfn_types(data / CFN_TYPES_FILE.name))
-    return PropertyIndex({t: frozenset(paths) for t, paths in raw.items()}, frozenset(names))
+def read_property_index(paths: BuildPaths) -> PropertyIndex:
+    raw = json.loads(paths.cfn_properties.read_text(encoding="utf-8"))
+    names = (t.rpartition("::")[2] for t in load_cfn_types(paths.cfn_types))
+    return PropertyIndex({t: frozenset(props) for t, props in raw.items()}, frozenset(names))
 
 
 def formulate_all(
     model: Model, paths: BuildPaths = BuildPaths(), only: AuditType | None = None
 ) -> None:
-    """Per audit type (or just `only`): rules_*.json next to its selection list.
+    """Per audit type (or just `only`): rules_*.json from its selection list.
 
     A file is written only after the gate passed; otherwise the old catalog stays.
     """
-    sources = read_sources(paths.data, ALL_SOURCES)
-    properties = read_property_index(paths.data)
+    sources = read_sources(paths.extracted, ALL_SOURCES)
+    properties = read_property_index(paths)
     for audit_type in chosen(only):
         raw = paths.out_file("selection", audit_type).read_text(encoding="utf-8")
         catalog = formulate_rules(
             model, Selection.model_validate_json(raw), sources, properties
         )
         rules_file = paths.out_file("rules", audit_type)
+        rules_file.parent.mkdir(parents=True, exist_ok=True)  # only after the gate passed
         rules_file.write_text(catalog.model_dump_json(indent=2) + "\n", encoding="utf-8")
         logger.info("%s: %d rules written to %s", audit_type, len(catalog.rules), rules_file)
         for source, counts in quality_report(catalog, properties).items():

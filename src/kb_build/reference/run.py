@@ -1,10 +1,15 @@
-"""Writes data/cfn_properties.json from a folder of `describe-type` schemas (see README)."""
+"""Writes data/input/cfn_properties.json from a folder of `describe-type` schemas (see README)."""
 
 import json
 from pathlib import Path
 
-from kb_build.cfn_properties import CFN_PROPERTIES_FILE, build_snapshot
-from kb_build.selection_run import read_scope
+from kb_build.paths import BuildPaths
+from kb_build.reference.cfn_properties import build_snapshot
+from kb_build.reference.scope import Scope
+
+
+def read_scope(path: Path) -> Scope:
+    return Scope(json.loads(path.read_text(encoding="utf-8")))
 
 
 def write_snapshot(schema_dir: Path, types: frozenset[str], out_file: Path) -> None:
@@ -22,6 +27,6 @@ def write_snapshot(schema_dir: Path, types: frozenset[str], out_file: Path) -> N
     out_file.write_text(json.dumps(snapshot, indent=1) + "\n", encoding="utf-8")
 
 
-def snapshot_scope(schema_dir: Path, data: Path = Path("data")) -> None:
-    """`python -m kb_build cfn-properties`: every type of data/scope.json."""
-    write_snapshot(schema_dir, read_scope(data).types, data / CFN_PROPERTIES_FILE.name)
+def snapshot_scope(schema_dir: Path, paths: BuildPaths = BuildPaths()) -> None:
+    """`python -m kb_build cfn-properties`: every type of the scope."""
+    write_snapshot(schema_dir, read_scope(paths.scope).types, paths.cfn_properties)

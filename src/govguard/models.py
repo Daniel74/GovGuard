@@ -100,7 +100,7 @@ class Expected(BaseModel):
     archetype: ArchetypeId | None = None
 
 
-class Preset(BaseModel):  # file data/presets/<id>/preset.json
+class Preset(BaseModel):  # file data/input/presets/<id>/preset.json
     title: str  # shown in the UI, German
     audit_type: AuditType
     input_file: str  # next to preset.json, max. 100,000 characters

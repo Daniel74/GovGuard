@@ -4,8 +4,8 @@ import hashlib
 
 from pydantic import TypeAdapter
 
-from kb_build.extracted_models import Requirement
-from kb_build.selection_models import Classification
+from kb_build.extract.models import Requirement
+from kb_build.select.models import Classification
 
 _ENTRIES = TypeAdapter(dict[str, Classification])
 

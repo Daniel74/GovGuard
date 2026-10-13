@@ -7,7 +7,7 @@ from typing import Any
 
 from govguard.models import SourceName
 from govguard.text import normalize
-from kb_build.extracted_models import ExtractedSource, Prefilter, Requirement, mark_prefilter
+from kb_build.extract.models import ExtractedSource, Prefilter, Requirement, mark_prefilter
 
 Entry = dict[str, Any]
 # UTF-8 bytes read as Latin-1 upstream, e.g. "\u00e2\u0080\u0099" for "\u2019" (FSBP ECS.3)
@@ -40,7 +40,7 @@ def strip_markdown(text: str) -> str:
 
 
 def extract(fmt: ProwlerFormat, origin: str, prowler: Entry, version: str) -> ExtractedSource:
-    """All entries of a Prowler file; `version` comes from data/sources.json."""
+    """All entries of a Prowler file; `version` comes from data/input/sources.json."""
     requirements = [
         Requirement(
             id=entry["Id"], title=fmt.title(entry), text=fmt.text(entry),

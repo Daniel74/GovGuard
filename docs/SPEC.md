@@ -15,7 +15,7 @@
 
 - Die 5 Presets liefern ihren Soll-Gesamtstatus und ihre Pflicht-Befunde.
 - Jede extrahierte Anforderung hat genau einen Eintrag im Auswahlprotokoll mit Begründung; die aufgenommenen ergeben genau den Bounded Catalog.
-- Jeder `cfn_resource_type` im Auswahlprotokoll ist ein echter CloudFormation-Typ (`data/cfn_resource_types.json`); das LLM kann keine erfinden.
+- Jeder `cfn_resource_type` im Auswahlprotokoll ist ein echter CloudFormation-Typ (`data/input/cfn_resource_types.json`); das LLM kann keine erfinden.
 - Jeder Audit-Report hat genau einen Befund je Prüfregel; jeder Beleg steht wörtlich in der Eingabe.
 - Jede Architektur-Prüfregel ist relevant (erster Ressourcentyp im Prüfumfang), jede Komponente der Golden Archetypes hat mindestens eine Prüfregel, und die Pflichtanker der Presets stehen im Bounded Catalog (ADR 0011).
 - Das größte Preset (≤ 100.000 Zeichen) ist in unter 29 Sekunden ausgewertet.
@@ -26,7 +26,7 @@
 
 ## Aufnahme in den Bounded Catalog
 
-Jede Anforderung jeder Quelle bekommt genau einen Eintrag im **Auswahlprotokoll** (`data/knowledge_base/verdicts_<arch|spec>.json`, versioniert). Das LLM urteilt nur über „prüfbar“, Ebene der Pflicht und Ressourcentypen. Über die Aufnahme entscheidet der Code (ADR 0011).
+Jede Anforderung jeder Quelle bekommt genau einen Eintrag im **Auswahlprotokoll** (`data/intermediate/verdicts_<arch|spec>.json`, versioniert). Das LLM urteilt nur über „prüfbar“, Ebene der Pflicht und Ressourcentypen. Über die Aufnahme entscheidet der Code (ADR 0011).
 
 | Ergebnis | Bedeutung | Entscheidet |
 |---|---|---|

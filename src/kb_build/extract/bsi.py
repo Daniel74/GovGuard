@@ -5,7 +5,7 @@ from collections.abc import Iterator
 from typing import Any
 
 from govguard.text import normalize
-from kb_build.extracted_models import ExtractedSource, Requirement, mark_prefilter
+from kb_build.extract.models import ExtractedSource, Requirement, mark_prefilter
 
 PRACTICES = frozenset({"DLS", "BER", "DET", "KONF", "BES", "ARCH"})  # ARCHITECTURE 1.1
 MODAL_VERBS = frozenset({"MUSS", "SOLLTE"})  # ADR 0007, KANN stays out

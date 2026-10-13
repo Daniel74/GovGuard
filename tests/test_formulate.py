@@ -11,10 +11,10 @@ from pydantic_ai.messages import (
 )
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from kb_build.cfn_properties import PropertyIndex
-from kb_build.extracted_models import ExtractedSource
-from kb_build.formulate import formulate_rules
-from kb_build.selection_models import SelectedRequirement, Selection
+from kb_build.extract.models import ExtractedSource
+from kb_build.reference.cfn_properties import PropertyIndex
+from kb_build.rules.formulate import formulate_rules
+from kb_build.select.models import SelectedRequirement, Selection
 
 SOURCES = [
     ExtractedSource(source="CIS", version="v7.0.0", origin="o",
@@ -24,7 +24,7 @@ SOURCES = [
 ]
 
 
-PROPERTIES = PropertyIndex({  # stands in for data/cfn_properties.json
+PROPERTIES = PropertyIndex({  # stands in for data/input/cfn_properties.json
     "AWS::S3::Bucket": frozenset({"BucketEncryption", "LoggingConfiguration",
                                   "LoggingConfiguration.LogFilePrefix"}),
     "AWS::KMS::Key": frozenset({"KeyPolicy"}),

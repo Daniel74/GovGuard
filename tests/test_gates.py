@@ -6,9 +6,9 @@ import pytest
 from conftest import make_requirement
 
 from govguard.models import CrossReference, Rule, RuleCatalog
-from kb_build.extracted_models import ExtractedSource
+from kb_build.extract.models import ExtractedSource
 from kb_build.gates import check_coverage, check_pinned, check_rules, is_quoted
-from kb_build.selection_models import SelectedRequirement, Selection
+from kb_build.select.models import SelectedRequirement, Selection
 
 
 def selected(*types: str) -> SelectedRequirement:

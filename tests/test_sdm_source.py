@@ -1,6 +1,6 @@
 import pytest
 
-from kb_build.sources.sdm import extract_from_text
+from kb_build.extract.sdm import extract_from_text
 
 # pypdf text of the measure tables (section 5 of each module), cut to the tricky rows
 TABLE = """Einleitung mit Verweis im Fließtext

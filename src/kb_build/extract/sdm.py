@@ -11,9 +11,9 @@ from io import BytesIO
 from pypdf import PdfReader
 
 from govguard.text import normalize
-from kb_build.extracted_models import ExtractedSource, Requirement, mark_prefilter
+from kb_build.extract.models import ExtractedSource, Requirement, mark_prefilter
 
-# Modules in data/sources.json; Protokollieren (M43) is left out on purpose (ARCHITECTURE 1.1)
+# Modules in data/input/sources.json; Protokollieren (M43) is left out on purpose (ARCHITECTURE 1.1)
 MODULE_NAMES = {"M60": "Löschen", "M50": "Trennen", "M51": "Zugriffe regeln"}
 
 TABLE_HEADER = "Nr. Maßnahme"

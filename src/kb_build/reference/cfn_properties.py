@@ -3,9 +3,6 @@
 import json
 import re
 from dataclasses import dataclass
-from pathlib import Path
-
-CFN_PROPERTIES_FILE = Path("data/cfn_properties.json")  # snapshot of describe-type, see README
 
 TYPE_PATTERN = re.compile(r"AWS::\w+::\w+")
 # A dot path (`RedirectConfig.Protocol`), a name with a lowercase and a later capital letter
@@ -33,7 +30,7 @@ NOT_PROPERTIES = frozenset({
 class PropertyIndex:
     """What a rule may name: real property paths per scope type, read by the entry point."""
 
-    paths: dict[str, frozenset[str]]  # data/cfn_properties.json
+    paths: dict[str, frozenset[str]]  # data/input/cfn_properties.json
     # `BucketPolicy` from `AWS::S3::BucketPolicy`: a resource of its own, not a property
     resource_names: frozenset[str] = frozenset()
 

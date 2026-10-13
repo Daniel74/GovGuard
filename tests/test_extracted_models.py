@@ -1,7 +1,7 @@
 import pytest
 from pydantic import ValidationError
 
-from kb_build.extracted_models import (
+from kb_build.extract.models import (
     ExtractedSource,
     Requirement,
     mark_prefilter,

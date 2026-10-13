@@ -8,7 +8,7 @@ BSI IT-Grundschutz++ (Stand-der-Technik-Bibliothek)
   https://github.com/BSI-Bund/Stand-der-Technik-Bibliothek
   Lizenz: CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
   Veränderung: Anforderungen extrahiert, gefiltert und zu Prüfregeln umformuliert.
-  Daraus abgeleitete Dateien (data/extracted/bsi.json, Prüfregeln mit BSI-Anker)
+  Daraus abgeleitete Dateien (data/intermediate/extracted/bsi.json, Prüfregeln mit BSI-Anker)
   stehen ebenfalls unter CC BY-SA 4.0.
 
 Standard-Datenschutzmodell (SDM), Bausteine Löschen und Vernichten, Trennen, Zugriffe regeln

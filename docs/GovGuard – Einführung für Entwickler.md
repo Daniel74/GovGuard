@@ -79,9 +79,9 @@ Diese Begriffe tauchen in jedem Kapitel auf. Die Datenmodell-Namen in Klammern f
 | Status | Eines von vier erlaubten Urteilen | PASS, WARN, FAIL, N/A |
 | Beleg (`evidence`) | Wörtliches Zitat aus der Eingabe, das ein Urteil stützt | „BlockPublicAccess: BLOCK\_ALL“ |
 | Golden Archetype | Vorab gebaute und freigegebene Architekturvorlage als CDK-Code + CloudFormation-Template | ARCH-01 Sync REST |
-| Steckbrief (`ArchetypeProfile`) | Von Hand gepflegte Vorgabe für einen Archetyp: Zweck, Bausteine, Pflicht-Ressourcentypen | `data/archetype_profiles.json` |
+| Steckbrief (`ArchetypeProfile`) | Von Hand gepflegte Vorgabe für einen Archetyp: Zweck, Bausteine, Pflicht-Ressourcentypen | `data/input/archetype_profiles.json` |
 | Gate | Automatischer Prüfpunkt im Build; fällt etwas durch, bricht der Build ab | Zitat-Gate, Preset-Gate |
-| Preset | Testbeispiel mit einem von Menschen festgelegten Soll-Ergebnis | 4 Ordner unter `data/presets/` |
+| Preset | Testbeispiel mit einem von Menschen festgelegten Soll-Ergebnis | 4 Ordner unter `data/input/presets/` |
 | Build-Zeit | Selten, manuell: Wissensbasis und Archetypen erzeugen | GitHub-Workflow `build-kb.yml` |
 | Laufzeit | Je Anfrage: ein Audit beantworten | Lambda hinter API Gateway |
 
@@ -118,7 +118,7 @@ Viele LLM-Systeme suchen zur Laufzeit per Vektorsuche die „passendsten“ Rege
 
 ### Schritt 1: Extrahieren (Code)
 
-Je Quelle liest ein Quellen-Adapter (`src/kb_build/sources/*.py`) die Rohdaten: PDFs für CIS, DSGVO und SDM, den OSCAL-Katalog für BSI (fixiert auf einen Commit-SHA). Er schreibt eine Datei `data/extracted/<quelle>.json`.
+Je Quelle liest ein Quellen-Adapter (`src/kb_build/extract/*.py`) die Rohdaten: PDFs für CIS, DSGVO und SDM, den OSCAL-Katalog für BSI (fixiert auf einen Commit-SHA). Er schreibt eine Datei `data/intermediate/extracted/<quelle>.json`.
 
 - Die Datei enthält **alle** Anforderungen, nicht nur die gefilterten. Grund: Später wird geprüft, ob vom LLM vorgeschlagene Querverweise existieren, und die können auf beliebige Anforderungen zeigen.
 - Jede Anforderung hat `id`, `title`, den mit `normalize()` bereinigten Volltext `text`, den `primary_anchor` und `attributes` (reine Fakten wie Kapitel oder Level).
@@ -144,7 +144,7 @@ Links steht, was passiert, rechts, welches Datenobjekt dabei entsteht oder als E
 | DSGVO | Kapitel II–V (Art. 5–49) | Kapitel | Bußgeldstufe: bis 4 % vor bis 2 % (Art. 83) | 16 |
 | SDM | Bausteine Löschen (M60), Trennen (M50), Zugriffe regeln (M51); Ebenen Daten und Systeme | Baustein | Ebene Daten vor Systeme | 8 |
 
-**Ergebnis:** die Auswahlliste `data/knowledge_base/selection_arch.json` bzw. `selection_spec.json`. Jeder Eintrag nennt Anforderung, Begründung, Ressourcentypen, Rang und ob er gesetzt (`pinned`) ist. Die Liste ist ein **Kontrollpunkt**: Ein Mensch sieht im Git-Diff des Pull Requests, was sich gegenüber dem letzten Build geändert hat, bevor teure Schritte folgen.
+**Ergebnis:** die Auswahlliste `data/intermediate/selection_arch.json` bzw. `selection_spec.json`. Jeder Eintrag nennt Anforderung, Begründung, Ressourcentypen, Rang und ob er gesetzt (`pinned`) ist. Die Liste ist ein **Kontrollpunkt**: Ein Mensch sieht im Git-Diff des Pull Requests, was sich gegenüber dem letzten Build geändert hat, bevor teure Schritte folgen.
 
 ## 6. Build, Schritt 3: Prüfregeln formulieren
 
@@ -195,7 +195,7 @@ So sieht eine fertige Prüfregel aus (gekürzt):
 | Prüfung | Frage | Schützt vor |
 | --- | --- | --- |
 | Schema | Passt das JSON zum Pydantic-Modell `Rule`? | kaputten oder unvollständigen Regeln |
-| Anker | Gibt es Primäranker und jeden Querverweis wirklich in `data/extracted/`? | erfundenen Fundstellen wie „DET.3.99“ |
+| Anker | Gibt es Primäranker und jeden Querverweis wirklich in `data/intermediate/extracted/`? | erfundenen Fundstellen wie „DET.3.99“ |
 | Zitat | Steht `source_quote` wörtlich im Text **genau der verankerten Anforderung**? | erfundenem oder umformuliertem Normtext |
 
 Der dritte Punkt ist subtil: Ein Zitat aus Art. 5 darf eine Regel zu Art. 32 nicht „belegen“. Deshalb vergleicht das Gate nur mit dem Text der einen Anforderung, nicht mit der ganzen Quelle. Fällt eine Regel durch, bricht der Build ab, und die alte Wissensbasis bleibt aktiv.
@@ -220,7 +220,7 @@ Solutions Constructs sind vorgefertigte CDK-Bausteine von AWS, die sichere Stand
 
 ### Vom Steckbrief zur Freigabe
 
-1. Ein Mensch pflegt je Archetyp einen **Steckbrief** in `data/archetype_profiles.json`: Zweck, Constructs, Pflicht-Ressourcentypen und die für die Relevanz genutzten `resource_types` (Pflicht-Typen plus IAM-Rolle, KMS-Schlüssel, Log-Gruppe).
+1. Ein Mensch pflegt je Archetyp einen **Steckbrief** in `data/input/archetype_profiles.json`: Zweck, Constructs, Pflicht-Ressourcentypen und die für die Relevanz genutzten `resource_types` (Pflicht-Typen plus IAM-Rolle, KMS-Schlüssel, Log-Gruppe).
 2. Das LLM schreibt daraus Python-CDK-Code.
 3. `cdk synth` erzeugt deterministisch ein CloudFormation-Template. Geprüft wird das **Template, nicht der Code**, denn erst dort sieht man, ob ein Bucket wirklich verschlüsselt ist.
 4. Drei Bedingungen müssen alle erfüllt sein:
@@ -337,14 +337,14 @@ Die Wissensbasis lebt im Git-Repo und wird per Deploy nach S3 kopiert. Eingaben 
 
 | Ort | Inhalt | Wer schreibt | Wer liest |
 | --- | --- | --- | --- |
-| `data/sources/` | Quell-PDFs von CIS, DSGVO, SDM (BSI-OSCAL lädt der Build per Commit-SHA) | Mensch | Quellen-Adapter |
-| `data/extracted/<quelle>.json` | Alle Anforderungen einer Quelle, normalisiert (`ExtractedSource`) | Quellen-Adapter | Vorfilter, LLM-Klassifikation, Anker- und Zitat-Gate |
-| `data/knowledge_base/selection_*.json` | Auswahlliste: welche Anforderungen in den Katalog kommen (`Selection`) | Build (Klassifikation + Ranking) | Mensch im Pull Request, Formulierung der Prüfregeln |
+| `data/intermediate/sources/` | Quell-PDFs von CIS, DSGVO, SDM (BSI-OSCAL lädt der Build per Commit-SHA) | Mensch | Quellen-Adapter |
+| `data/intermediate/extracted/<quelle>.json` | Alle Anforderungen einer Quelle, normalisiert (`ExtractedSource`) | Quellen-Adapter | Vorfilter, LLM-Klassifikation, Anker- und Zitat-Gate |
+| `data/intermediate/selection_*.json` | Auswahlliste: welche Anforderungen in den Katalog kommen (`Selection`) | Build (Klassifikation + Ranking) | Mensch im Pull Request, Formulierung der Prüfregeln |
 | `data/knowledge_base/rules_*.json` | Regelkataloge für Spec und Architektur (`RuleCatalog`) | Build, nach dem Gate | Lambda, Selbst-Audit, Preset-Gate |
 | `data/knowledge_base/archetypes.json` | Freigegebene Archetypen mit Code, Template, Freigabe-Nachweis | Build | Lambda bei `/archetype/select`, Preset-Gate |
-| `data/archetype_profiles.json` | Steckbriefe der drei Archetypen | Mensch | Relevanzfilter, Archetyp-Build, Archetyp-Auswahl |
+| `data/input/archetype_profiles.json` | Steckbriefe der drei Archetypen | Mensch | Relevanzfilter, Archetyp-Build, Archetyp-Auswahl |
 | `data/nag_allowlist.json` | Erlaubte cdk-nag-Ausnahmen mit Begründung | Mensch | Archetyp-Freigabe, Deploy des GovGuard-Stacks |
-| `data/presets/<id>/` | Testeingabe + `preset.json` mit Soll | Mensch | Preset-Gate, Demo in der UI |
+| `data/input/presets/<id>/` | Testeingabe + `preset.json` mit Soll | Mensch | Preset-Gate, Demo in der UI |
 | S3 (eu-central-1) | Kopie der Wissensbasis | `deploy.yml` | Lambda beim Kaltstart |
 | Lambda-Speicher | Geladene Wissensbasis | Lambda beim Kaltstart | jedes Audit |
 | CloudWatch Logs | Ein `AuditEvent` je Aufruf, KMS-verschlüsselt, 365 Tage | Lambda-Handler | Auditor über Logs Insights |
@@ -354,7 +354,7 @@ Die Wissensbasis lebt im Git-Repo und wird per Deploy nach S3 kopiert. Eingaben 
 ### Der Lebensweg einer Prüfregel in einem Satz je Station
 
 1. Eine Anforderung steht in einer Quelle, z. B. CIS 3.1.4.
-2. Der Adapter extrahiert sie nach `data/extracted/cis.json`.
+2. Der Adapter extrahiert sie nach `data/intermediate/extracted/cis.json`.
 3. Vorfilter, LLM und Ranking setzen sie auf die Auswahlliste.
 4. Das LLM formuliert eine Prüfregel, das Gate prüft sie, sie landet in `rules_arch.json`.
 5. Die Archetypen werden gegen diese Regel freigegeben, das Preset-Gate wird grün, ein Pull Request entsteht.

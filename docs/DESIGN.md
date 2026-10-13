@@ -23,7 +23,7 @@ Dieses Dokument legt die **Verträge** zwischen den Tickets fest: Datenformate u
 
 ### 1.1 Requirement – extrahierte Anforderung
 
-Ein Quellen-Adapter (`src/kb_build/sources/*.py`) schreibt je Quelle eine Datei `data/extracted/<source>.json`. Sie enthält **alle** Anforderungen der Quelle, nicht nur die gefilterten, denn das Gate prüft auch Querverweise auf Anforderungen außerhalb der Auswahl.
+Ein Quellen-Adapter (`src/kb_build/extract/*.py`) schreibt je Quelle eine Datei `data/intermediate/extracted/<source>.json`. Sie enthält **alle** Anforderungen der Quelle, nicht nur die gefilterten, denn das Gate prüft auch Querverweise auf Anforderungen außerhalb der Auswahl.
 
 ```python
 class Requirement(BaseModel):
@@ -37,7 +37,7 @@ class Requirement(BaseModel):
 class ExtractedSource(BaseModel):
     source: Literal["BSI", "C5", "CIS", "FSBP", "DSGVO", "SDM"]
     version: str             # "v7.0.0", BSI-Commit-SHA, PDF-Version
-    origin: str              # Pfad in data/sources/ oder URL
+    origin: str              # Pfad in data/intermediate/sources/ oder URL
     requirements: list[Requirement]
 ```
 
@@ -47,7 +47,7 @@ Beispiel (gekürzt):
 {
   "source": "CIS",
   "version": "v7.0.0",
-  "origin": "data/sources/CIS_Amazon_Web_Services_Foundations_Benchmark_v7.0.0.pdf",
+  "origin": "data/intermediate/sources/CIS_Amazon_Web_Services_Foundations_Benchmark_v7.0.0.pdf",
   "requirements": [{
     "id": "3.1.4",
     "title": "Ensure that S3 is configured with 'Block Public Access' enabled",
@@ -77,13 +77,13 @@ def extract(origin: str, raw: dict, version: str) -> ExtractedSource  # rein: pa
 def prefilter(req: Requirement) -> str | None       # rein, ARCHITECTURE 1.1: None = bestanden, sonst Begründungssatz
 ```
 
-Datei lesen und `version` aus `data/sources.json` holen übernimmt `python -m kb_build`; so bleiben die Adapter ohne I/O testbar.
+Datei lesen und `version` aus `data/input/sources.json` holen übernimmt `python -m kb_build`; so bleiben die Adapter ohne I/O testbar.
 
 Das Gate (#12) prüft `source_quote` gegen den `text` **genau der Anforderung**, auf die der Primäranker zeigt, nicht gegen die ganze Quelle.
 
 ### 1.2 Rule – Prüfregel
 
-Stufe ② und die Relevanz (#6) schreiben je Audit-Art eine **Auswahlliste** `data/knowledge_base/selection_<spec|arch>.json` und das **Auswahlprotokoll** `verdicts_<spec|arch>.json`. Beide sind der Kontrollpunkt, bevor Prüfregeln formuliert werden (ADR 0011).
+Stufe ② und die Relevanz (#6) schreiben je Audit-Art eine **Auswahlliste** `data/intermediate/selection_<spec|arch>.json` und das **Auswahlprotokoll** `verdicts_<spec|arch>.json`. Beide sind der Kontrollpunkt, bevor Prüfregeln formuliert werden (ADR 0011).
 
 ```python
 class Classification(BaseModel):         # vom LLM, Schema für Tool classify_requirement
@@ -148,10 +148,10 @@ Beispiele für IDs: `ARCH-CIS-3.1.4`, `ARCH-BSI-DET.3.1`, `SPEC-DSGVO-Art.32`, `
 
 ### 1.3 Archetype – Golden Archetype
 
-Der **Steckbrief** ist die feste Vorgabe eines Menschen (ARCHITECTURE 1.4) und liegt in `data/archetype_profiles.json`. Der Build ergänzt Code, Template und Freigabe-Nachweis.
+Der **Steckbrief** ist die feste Vorgabe eines Menschen (ARCHITECTURE 1.4) und liegt in `data/input/archetype_profiles.json`. Der Build ergänzt Code, Template und Freigabe-Nachweis.
 
 ```python
-class ArchetypeProfile(BaseModel):       # Datei data/archetype_profiles.json, von Hand gepflegt
+class ArchetypeProfile(BaseModel):       # Datei data/input/archetype_profiles.json, von Hand gepflegt
     id: Literal["ARCH-01", "ARCH-02", "ARCH-03"]
     name: str                            # "Sync REST"
     purpose: str                         # Zweck, deutsch; nutzt auch select_archetype
@@ -188,7 +188,7 @@ class NagException(BaseModel):           # ein Eintrag in data/nag_allowlist.jso
 
 ### 1.4 Preset und Expected
 
-Jedes Preset ist ein Ordner `data/presets/<id>/` mit einer Eingabedatei und einer `preset.json`. Das Soll legt ein Mensch fest.
+Jedes Preset ist ein Ordner `data/input/presets/<id>/` mit einer Eingabedatei und einer `preset.json`. Das Soll legt ein Mensch fest.
 
 ```python
 class RequiredFinding(BaseModel):

@@ -4,8 +4,8 @@ from collections import Counter
 
 from govguard.models import AuditType, Preset, Rule, RuleCatalog, RuleDraft, SourceName
 from govguard.text import contains_quote, normalize
-from kb_build.extracted_models import ExtractedSource, Requirement
-from kb_build.selection_models import Outcome, SelectedRequirement, Selection
+from kb_build.extract.models import ExtractedSource, Requirement
+from kb_build.select.models import Outcome, SelectedRequirement, Selection
 
 
 def pinned_anchors(presets: list[Preset], audit_type: AuditType) -> set[str]:

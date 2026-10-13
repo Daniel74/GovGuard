@@ -14,7 +14,7 @@ class SourceHashMismatchError(ValueError):
 
 @dataclass(frozen=True)
 class SourceSpec:
-    """Entry from data/sources.json.
+    """Entry from data/input/sources.json.
 
     `url` must be stable (ideally pinned to a commit SHA) and `sha256` is enforced.
     """
@@ -57,7 +57,7 @@ def fetch_bytes_http(url: str) -> bytes:
 def fetch_to_cache(
     spec: SourceSpec,
     *,
-    cache_dir: str | Path = "data/sources",
+    cache_dir: Path,
     fetcher: Callable[[str], bytes] = fetch_bytes_http,
 ) -> Path:
     """Fetches a source, enforces its SHA-256 and stores it in the local cache.
@@ -65,7 +65,7 @@ def fetch_to_cache(
     The cache is deterministic: a single `filename` per source key.
     """
 
-    cache_path = Path(cache_dir) / spec.filename
+    cache_path = cache_dir / spec.filename
     if cache_path.exists():
         _verify(spec, cache_path.read_bytes())
         return cache_path

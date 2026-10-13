@@ -5,11 +5,11 @@ from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelResponse, ToolCallPart
 from pydantic_ai.models.function import FunctionModel
 
-from kb_build import classify
-from kb_build.classify import Judge
-from kb_build.extracted_models import Requirement
-from kb_build.judgement_cache import JudgementCache
-from kb_build.scope import Scope
+from kb_build.extract.models import Requirement
+from kb_build.reference.scope import Scope
+from kb_build.select import classify
+from kb_build.select.classify import Judge
+from kb_build.select.judgement_cache import JudgementCache
 
 ANSWER = {"testable": True, "rationale": "prüfbar", "cfn_resource_types": ["AWS::S3::Bucket"]}
 

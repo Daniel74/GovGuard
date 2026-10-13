@@ -3,8 +3,8 @@
 import pytest
 from pydantic import ValidationError
 
-from kb_build.judgement_cache import JudgementCache
-from kb_build.selection_models import Classification
+from kb_build.select.judgement_cache import JudgementCache
+from kb_build.select.models import Classification
 
 
 def test_scope_level_defaults_to_template() -> None:

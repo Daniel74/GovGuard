@@ -1,6 +1,6 @@
 import pytest
 
-from kb_build.sources.dsgvo import CHAPTERS, extract
+from kb_build.extract.dsgvo import CHAPTERS, extract
 
 # Shape of the CELLAR Formex file 02016R0679-20160504 (fragment, ADR 0008)
 FORMEX = """<?xml version="1.0" encoding="utf-8"?>

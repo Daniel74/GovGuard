@@ -2,6 +2,7 @@
 
 import itertools
 import re
+import shutil
 from pathlib import Path
 
 import pytest
@@ -9,10 +10,11 @@ from pydantic import TypeAdapter
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart, UserPromptPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from kb_build.selection_models import Selection, Verdict
-from kb_build.selection_run import BuildPaths, chosen, select_all
+from kb_build.paths import BuildPaths
+from kb_build.select.models import Selection, Verdict
+from kb_build.select.run import chosen, select_all
 
-DATA = Path(__file__).parent.parent / "data"
+REAL = BuildPaths()
 ARCHITECTURE_SOURCES = ("BSI", "CIS", "FSBP", "C5")
 COMPONENTS = [  # the fake LLM names the archetype components in turn, so the coverage gate passes
     "AWS::ApiGateway::RestApi", "AWS::Lambda::Function", "AWS::DynamoDB::Table",
@@ -21,7 +23,11 @@ COMPONENTS = [  # the fake LLM names the archetype components in turn, so the co
 
 
 def paths_in(tmp: Path) -> BuildPaths:
-    return BuildPaths(DATA, tmp / "knowledge_base", tmp / "judgement_cache.json")
+    """Real input and extracts, everything written goes to `tmp`."""
+    paths = BuildPaths(REAL.input, tmp / "intermediate", tmp / "knowledge_base")
+    if not paths.extracted.exists():
+        shutil.copytree(REAL.extracted, paths.extracted)
+    return paths
 
 
 def fake_model(calls: list[int] | None = None) -> FunctionModel:
@@ -41,11 +47,11 @@ def fake_model(calls: list[int] | None = None) -> FunctionModel:
 
 @pytest.fixture(scope="module")
 def written(tmp_path_factory: pytest.TempPathFactory) -> Path:
-    if not all((DATA / "extracted" / f"{s.lower()}.json").exists() for s in ARCHITECTURE_SOURCES):
+    if not all((REAL.extracted / f"{s.lower()}.json").exists() for s in ARCHITECTURE_SOURCES):
         pytest.skip("cis, fsbp and c5 are not extracted on this machine")  # local only (ADR 0008)
     paths = paths_in(tmp_path_factory.mktemp("build"))
     select_all(fake_model(), paths)
-    return paths.out_dir
+    return paths.intermediate
 
 
 def load(out: Path, name: str) -> Selection:
@@ -91,9 +97,10 @@ def test_the_selection_has_no_cap_and_keeps_the_pinned_anchors(written) -> None:
 def test_only_the_requested_audit_type_is_selected(tmp_path: Path) -> None:
     select_all(fake_model(), paths_in(tmp_path), only="spec")
 
-    assert sorted(p.name for p in (tmp_path / "knowledge_base").iterdir()) == [
-        "selection_spec.json", "verdicts_spec.json"]  # the cache is no part of the deployment
-    assert (tmp_path / "judgement_cache.json").exists()
+    paths = paths_in(tmp_path)
+    written = sorted(p.name for p in paths.intermediate.iterdir() if p.is_file())
+    assert written == ["judgement_cache.json", "selection_spec.json", "verdicts_spec.json"]
+    assert not paths.knowledge_base.exists()  # nothing of the selection is deployed
 
 
 def test_a_second_run_with_the_same_cache_asks_the_llm_nothing(tmp_path: Path) -> None:
@@ -116,8 +123,8 @@ def test_the_paid_answers_are_saved_even_if_a_gate_aborts_the_build(tmp_path: Pa
         select_all(FunctionModel(only_s3, model_name="fake-model"), paths_in(tmp_path),
                    only="architecture")
 
-    assert (tmp_path / "judgement_cache.json").exists()
-    assert not (tmp_path / "knowledge_base" / "selection_arch.json").exists()
+    assert paths_in(tmp_path).judgement_cache.exists()
+    assert not paths_in(tmp_path).out_file("selection", "architecture").exists()
 
 
 def test_the_run_logs_the_tokens_per_audit_type(
@@ -132,12 +139,22 @@ def test_the_run_logs_the_tokens_per_audit_type(
                         usage[0])
 
 
-def test_every_output_file_is_named_after_its_kind_and_audit_type() -> None:
-    paths = BuildPaths(out_dir=Path("kb"))
+def test_only_the_rules_go_to_the_knowledge_base_the_rest_stays_intermediate() -> None:
+    paths = BuildPaths(intermediate=Path("tmp"), knowledge_base=Path("kb"))
 
-    assert paths.out_file("selection", "architecture") == Path("kb/selection_arch.json")
-    assert paths.out_file("verdicts", "spec") == Path("kb/verdicts_spec.json")
+    assert paths.out_file("selection", "architecture") == Path("tmp/selection_arch.json")
+    assert paths.out_file("verdicts", "spec") == Path("tmp/verdicts_spec.json")
     assert paths.out_file("rules", "architecture") == Path("kb/rules_arch.json")
+
+
+def test_the_default_paths_follow_the_data_layout() -> None:
+    paths = BuildPaths()
+
+    assert paths.sources_json == Path("data/input/sources.json")
+    assert paths.presets == Path("data/input/presets")
+    assert paths.extracted == Path("data/intermediate/extracted")
+    assert paths.judgement_cache == Path("data/intermediate/judgement_cache.json")
+    assert paths.out_file("rules", "spec") == Path("data/knowledge_base/rules_spec.json")
 
 
 def test_only_narrows_the_audit_types() -> None:

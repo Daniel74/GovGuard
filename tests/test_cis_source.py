@@ -1,6 +1,6 @@
 import pytest
 
-from kb_build.sources.cis import extract
+from kb_build.extract.cis import extract
 
 VERSION = "v7.0.0"
 

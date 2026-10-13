@@ -1,20 +1,18 @@
 """The scope (ADR 0011): which AWS resource types the architecture audit keeps rules for."""
 
-import json
-from pathlib import Path
 
 import pytest
 
-from kb_build.archetype_profiles import load_profiles
-from kb_build.cfn_types import load_cfn_types
-from kb_build.scope import Scope
-
-SCOPE_FILE = Path(__file__).parent.parent / "data" / "scope.json"
+from kb_build.paths import BuildPaths
+from kb_build.reference.archetype_profiles import load_profiles
+from kb_build.reference.cfn_types import load_cfn_types
+from kb_build.reference.run import read_scope
+from kb_build.reference.scope import Scope
 
 
 @pytest.fixture(scope="module")
 def scope() -> Scope:
-    return Scope(json.loads(SCOPE_FILE.read_text(encoding="utf-8")))
+    return read_scope(BuildPaths().scope)
 
 
 def test_scope_names_services_with_their_cloudformation_types(scope: Scope) -> None:

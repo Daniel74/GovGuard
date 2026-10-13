@@ -1,6 +1,6 @@
 import pytest
 
-from kb_build.sources.bsi import PRACTICES, extract
+from kb_build.extract.bsi import PRACTICES, extract
 
 COMMIT_SHA = "c96d9f575e369df7e392220003b032d731f0e26d"
 

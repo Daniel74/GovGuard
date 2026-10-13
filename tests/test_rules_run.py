@@ -7,21 +7,21 @@ import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart, UserPromptPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from govguard.models import RuleCatalog
-from kb_build.rules_run import formulate_all, read_property_index
-from kb_build.selection_models import Selection
-from kb_build.selection_run import BuildPaths
+from govguard.models import AuditType, RuleCatalog
+from kb_build.paths import BuildPaths
+from kb_build.rules.run import formulate_all, read_property_index
+from kb_build.select.models import Selection
 
-DATA = Path(__file__).parent.parent / "data"
-KB = DATA / "knowledge_base"
+REAL = BuildPaths()
 
 
 def paths_in(tmp: Path) -> BuildPaths:
-    out_dir = tmp / "knowledge_base"
-    out_dir.mkdir()
-    for name in ("selection_arch.json", "selection_spec.json"):
-        shutil.copy(KB / name, out_dir / name)
-    return BuildPaths(DATA, out_dir, tmp / "judgement_cache.json")
+    """Real input, extracts and selection lists; everything written goes to `tmp`."""
+    paths = BuildPaths(REAL.input, tmp / "intermediate", tmp / "knowledge_base")
+    shutil.copytree(REAL.extracted, paths.extracted)
+    for audit_type in ("architecture", "spec"):
+        shutil.copy(REAL.out_file("selection", audit_type), paths.out_file("selection", audit_type))
+    return paths
 
 
 def quoting_model(quote: str | None = None) -> FunctionModel:
@@ -38,8 +38,9 @@ def quoting_model(quote: str | None = None) -> FunctionModel:
     return FunctionModel(respond, model_name="fake-model")
 
 
-def selected_count(name: str) -> int:
-    return len(Selection.model_validate_json((KB / name).read_text("utf-8")).selected)
+def selected_count(audit_type: AuditType) -> int:
+    raw = REAL.out_file("selection", audit_type).read_text("utf-8")
+    return len(Selection.model_validate_json(raw).selected)
 
 
 def test_one_rule_per_selected_requirement_is_written_per_audit_type(tmp_path: Path) -> None:
@@ -47,21 +48,20 @@ def test_one_rule_per_selected_requirement_is_written_per_audit_type(tmp_path: P
 
     formulate_all(quoting_model(), paths)
 
-    for rules, selection in [("rules_arch.json", "selection_arch.json"),
-                             ("rules_spec.json", "selection_spec.json")]:
-        catalog = RuleCatalog.model_validate_json((paths.out_dir / rules).read_text("utf-8"))
-        assert len(catalog.rules) == selected_count(selection)
+    for audit_type in ("architecture", "spec"):
+        raw = paths.out_file("rules", audit_type).read_text("utf-8")
+        assert len(RuleCatalog.model_validate_json(raw).rules) == selected_count(audit_type)
 
 
 def test_an_unchanged_build_writes_identical_files_without_timestamp(tmp_path: Path) -> None:
     paths = paths_in(tmp_path)
 
     formulate_all(quoting_model(), paths, only="spec")
-    first = (paths.out_dir / "rules_spec.json").read_bytes()
+    first = (paths.knowledge_base / "rules_spec.json").read_bytes()
     formulate_all(quoting_model(), paths, only="spec")
 
-    assert (paths.out_dir / "rules_spec.json").read_bytes() == first
-    assert not (paths.out_dir / "rules_arch.json").exists()
+    assert (paths.knowledge_base / "rules_spec.json").read_bytes() == first
+    assert not (paths.knowledge_base / "rules_arch.json").exists()
 
 
 def test_a_failed_rule_aborts_the_build_and_writes_no_file(tmp_path: Path) -> None:
@@ -70,11 +70,11 @@ def test_a_failed_rule_aborts_the_build_and_writes_no_file(tmp_path: Path) -> No
     with pytest.raises(ValueError, match="no valid rule"):
         formulate_all(quoting_model(quote="erfundener Normtext"), paths, only="spec")
 
-    assert not (paths.out_dir / "rules_spec.json").exists()
+    assert not (paths.knowledge_base / "rules_spec.json").exists()
 
 
 def test_the_property_index_holds_nested_paths_and_names_of_all_resource_types() -> None:
-    index = read_property_index(DATA)
+    index = read_property_index(REAL)
 
     assert "LoggingConfiguration.LogFilePrefix" in index.paths["AWS::S3::Bucket"]
     assert "BucketPolicy" in index.resource_names  # AWS::S3::BucketPolicy, a resource itself

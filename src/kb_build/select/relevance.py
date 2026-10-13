@@ -1,7 +1,7 @@
 """Relevance of a requirement for the architecture audit (ADR 0011). Pure code."""
 
-from kb_build.scope import Scope
-from kb_build.selection_models import Classification
+from kb_build.reference.scope import Scope
+from kb_build.select.models import Classification
 
 
 def is_relevant(classification: Classification, scope: Scope) -> bool:

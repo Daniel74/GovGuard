@@ -6,7 +6,12 @@ The validator sends violations back to the model; the report counts what is left
 import re
 
 from govguard.models import RuleCatalog
-from kb_build.cfn_properties import TYPE_PATTERN, PropertyIndex, unjudged_types, unknown_properties
+from kb_build.reference.cfn_properties import (
+    TYPE_PATTERN,
+    PropertyIndex,
+    unjudged_types,
+    unknown_properties,
+)
 
 # Words that need knowledge beyond the template, e.g. "nicht erforderlich" (BSI KONF.6.1)
 _VAGUE = re.compile(
@@ -31,7 +36,7 @@ _ACCOUNT_LEVEL = re.compile(
 def quality_report(catalog: RuleCatalog, properties: PropertyIndex) -> dict[str, dict[str, int]]:
     """Per source: rules, vague criteria, account-level duties, invented and unchecked properties.
 
-    `unjudged_properties`: rules with a type outside data/cfn_properties.json, nobody checks them.
+    `unjudged_properties`: type outside data/input/cfn_properties.json, nobody checks.
     """
     report: dict[str, dict[str, int]] = {}
     for rule in catalog.rules:

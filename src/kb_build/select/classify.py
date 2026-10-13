@@ -13,11 +13,11 @@ from pydantic_ai.models import Model
 from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, SourceName
-from kb_build.cfn_types import load_cfn_types
-from kb_build.extracted_models import Requirement
-from kb_build.judgement_cache import JudgementCache, cache_key, prompt_version
-from kb_build.scope import Scope
-from kb_build.selection_models import Classification
+from kb_build.extract.models import Requirement
+from kb_build.reference.cfn_types import load_cfn_types
+from kb_build.reference.scope import Scope
+from kb_build.select.judgement_cache import JudgementCache, cache_key, prompt_version
+from kb_build.select.models import Classification
 
 logger = logging.getLogger("kb_build")
 

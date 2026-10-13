@@ -1,6 +1,6 @@
 import pytest
 
-from kb_build.sources.c5 import AREAS, extract
+from kb_build.extract.c5 import AREAS, extract
 
 VERSION = "5.44.0"
 REASON = "Bereich gehört nicht zu COS, CRY, IAM, OPS, PSS."

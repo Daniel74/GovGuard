@@ -2,9 +2,9 @@
 
 from typing import Any
 
-from kb_build.extracted_models import ExtractedSource, Requirement
-from kb_build.sources import prowler
-from kb_build.sources.prowler import ProwlerFormat, strip_markdown
+from kb_build.extract import prowler
+from kb_build.extract.models import ExtractedSource, Requirement
+from kb_build.extract.prowler import ProwlerFormat, strip_markdown
 
 AREAS = frozenset({"OPS", "IAM", "CRY", "COS", "PSS"})  # ARCHITECTURE 1.1
 
@@ -27,5 +27,5 @@ FORMAT = ProwlerFormat(
 
 
 def extract(origin: str, data: dict[str, Any], version: str) -> ExtractedSource:
-    """All criteria; `version` is the Prowler tag from data/sources.json (C5 itself says 2025)."""
+    """All criteria; `version`: Prowler tag from data/input/sources.json (C5 says 2025)."""
     return prowler.extract(FORMAT, origin, data, version)

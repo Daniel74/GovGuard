@@ -1,6 +1,6 @@
 """Archetype profiles (ARCHITECTURE 1.4): the only fixed input to the relevance filter."""
 
-from kb_build.archetype_profiles import load_profiles, relevant_resource_types
+from kb_build.reference.archetype_profiles import load_profiles, relevant_resource_types
 
 # Sub-resources that every serverless CDK template contains next to the required types
 ALWAYS_RELEVANT = {
@@ -41,7 +41,7 @@ def test_relevant_resource_types_is_the_union_of_all_profiles() -> None:
 
 
 def test_every_profile_resource_type_exists_in_cloudformation() -> None:
-    from kb_build.cfn_types import load_cfn_types
+    from kb_build.reference.cfn_types import load_cfn_types
 
     known = load_cfn_types()
     for profile in load_profiles():

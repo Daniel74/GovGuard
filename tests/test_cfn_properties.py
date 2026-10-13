@@ -2,7 +2,7 @@
 
 import json
 
-from kb_build.cfn_properties import (
+from kb_build.reference.cfn_properties import (
     PropertyIndex,
     build_snapshot,
     property_candidates,

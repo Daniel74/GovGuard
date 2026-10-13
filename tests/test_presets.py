@@ -1,4 +1,4 @@
-"""Presets in data/presets/ (DESIGN 1.4, issue #3). The expected result comes from a human."""
+"""Presets in data/input/presets/ (DESIGN 1.4, issue #3). The expected result comes from a human."""
 
 import json
 from pathlib import Path
@@ -6,9 +6,10 @@ from pathlib import Path
 import pytest
 
 from govguard.models import Preset
+from kb_build.paths import BuildPaths
 
-DATA = Path(__file__).parent.parent / "data"
-PRESETS = DATA / "presets"
+PATHS = BuildPaths()
+PRESETS = PATHS.presets
 PRESET_DIRS = sorted(path for path in PRESETS.iterdir() if path.is_dir())
 MAX_INPUT_CHARS = 100_000
 
@@ -42,7 +43,7 @@ def resources(preset_id: str) -> dict[str, dict]:
 
 
 def test_foreign_preset_shares_no_component_with_the_archetypes() -> None:  # ADR 0011, issue #15
-    profiles = json.loads((DATA / "archetype_profiles.json").read_text(encoding="utf-8"))
+    profiles = json.loads((PATHS.archetype_profiles).read_text(encoding="utf-8"))
     components = {t for profile in profiles for t in profile["required_types"]}
     types = {resource["Type"] for resource in resources("arch-fristenwecker").values()}
     assert not types & components

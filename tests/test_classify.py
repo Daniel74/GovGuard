@@ -5,10 +5,10 @@ from pydantic_ai import UnexpectedModelBehavior
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from kb_build.classify import build_deps, classify_requirement
-from kb_build.extracted_models import Requirement
-from kb_build.scope import Scope
-from kb_build.selection_models import Classification
+from kb_build.extract.models import Requirement
+from kb_build.reference.scope import Scope
+from kb_build.select.classify import build_deps, classify_requirement
+from kb_build.select.models import Classification
 
 REQUIREMENT = Requirement(
     id="3.1.4", title="Block Public Access", text="Ensure that S3 blocks public access.",

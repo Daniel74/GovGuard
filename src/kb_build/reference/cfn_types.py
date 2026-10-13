@@ -4,9 +4,9 @@ import json
 from functools import cache
 from pathlib import Path
 
-CFN_TYPES_FILE = Path("data/cfn_resource_types.json")  # aws cloudformation list-types, AWS_TYPES
+from kb_build.paths import BuildPaths
 
 
 @cache
-def load_cfn_types(path: Path = CFN_TYPES_FILE) -> frozenset[str]:
+def load_cfn_types(path: Path = BuildPaths().cfn_types) -> frozenset[str]:
     return frozenset(json.loads(path.read_text(encoding="utf-8")))

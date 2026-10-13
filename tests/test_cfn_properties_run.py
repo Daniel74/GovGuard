@@ -1,11 +1,12 @@
-"""write_snapshot(): schema files of the scope types in, data/cfn_properties.json out (#17)."""
+"""write_snapshot(): schema files of the scope types in, cfn_properties.json out (#17)."""
 
 import json
 from pathlib import Path
 
 import pytest
 
-from kb_build.cfn_properties_run import snapshot_scope, write_snapshot
+from kb_build.paths import BuildPaths
+from kb_build.reference.run import snapshot_scope, write_snapshot
 
 
 def schema_file(directory: Path, name: str, type_name: str, prop: str) -> None:
@@ -29,13 +30,13 @@ def test_a_scope_type_without_schema_stops_the_snapshot(tmp_path: Path) -> None:
 
 
 def test_the_build_command_takes_the_types_from_scope_json(tmp_path: Path) -> None:
-    # python -m kb_build cfn-properties: data/scope.json in, data/cfn_properties.json out
-    data, schemas = tmp_path / "data", tmp_path / "schemas"
-    data.mkdir(), schemas.mkdir()
-    (data / "scope.json").write_text(json.dumps({"S3": ["AWS::S3::Bucket"]}), encoding="utf-8")
+    # python -m kb_build cfn-properties: scope.json in, cfn_properties.json out
+    paths, schemas = BuildPaths(input=tmp_path / "input"), tmp_path / "schemas"
+    paths.input.mkdir(), schemas.mkdir()
+    paths.scope.write_text(json.dumps({"S3": ["AWS::S3::Bucket"]}), encoding="utf-8")
     schema_file(schemas, "aws-s3-bucket.json", "AWS::S3::Bucket", "BucketName")
 
-    snapshot_scope(schemas, data)
+    snapshot_scope(schemas, paths)
 
-    written = json.loads((data / "cfn_properties.json").read_text(encoding="utf-8"))
+    written = json.loads(paths.cfn_properties.read_text(encoding="utf-8"))
     assert written == {"AWS::S3::Bucket": ["BucketName"]}

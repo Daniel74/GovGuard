@@ -1,16 +1,16 @@
 """Golden numbers against the real sources (Issues #4, #5); skipped without the local cache."""
 
-from pathlib import Path
 
 import pytest
 
-from kb_build.__main__ import ADAPTERS
-from kb_build.extracted_models import ExtractedSource, merge_sources
+from kb_build.extract.models import ExtractedSource, merge_sources
+from kb_build.extract.run import ADAPTERS
+from kb_build.paths import BuildPaths
 from kb_build.source_fetch import fetch_to_cache, load_sources_json, read_cached
 
-ROOT = Path(__file__).parent.parent
-SPECS = load_sources_json(ROOT / "data/sources.json")
-CACHE = ROOT / "data/sources"
+PATHS = BuildPaths()
+SPECS = load_sources_json(PATHS.sources_json)
+CACHE = PATHS.source_cache
 
 
 def extract_cached(filename: str) -> ExtractedSource:
@@ -73,7 +73,7 @@ def test_sdm_all_147_measures_pass_the_prefilter() -> None:
 
 def test_checked_in_extracts_match_a_fresh_build() -> None:
     for filename in ("bsi.json", "dsgvo.json", "sdm.json"):
-        checked_in = (ROOT / "data/extracted" / filename).read_text(encoding="utf-8")
+        checked_in = (PATHS.extracted / filename).read_text(encoding="utf-8")
         assert ExtractedSource.model_validate_json(checked_in).requirements == (
             extract_cached(filename).requirements
         ), filename

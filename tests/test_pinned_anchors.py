@@ -1,15 +1,14 @@
 """Pinned anchors come from the human-made presets (ADR 0011, DESIGN 1.4)."""
 
-from pathlib import Path
-
 import pytest
 
-from govguard.models import Preset
-from kb_build.extracted_models import ExtractedSource
+from govguard.models import AuditType, Preset
+from kb_build.extract.models import ExtractedSource
 from kb_build.gates import pinned_anchors
-from kb_build.selection_models import Selection
+from kb_build.paths import BuildPaths
+from kb_build.select.models import Selection
 
-ROOT = Path(__file__).parent.parent
+PATHS = BuildPaths()
 SOURCES = ["bsi", "c5", "cis", "dsgvo", "fsbp", "sdm"]
 ANCHOR_PREFIX = {  # the first word is ambiguous: "BSI C5 …" is not BSI GS++, "AWS FSBP …" is FSBP
     "BSI": "BSI GS++ ", "C5": "BSI C5 ", "CIS": "CIS AWS ", "FSBP": "AWS FSBP ",
@@ -17,7 +16,7 @@ ANCHOR_PREFIX = {  # the first word is ambiguous: "BSI C5 …" is not BSI GS++, 
 }
 PRESETS = [
     Preset.model_validate_json(path.read_text(encoding="utf-8"))
-    for path in sorted((ROOT / "data" / "presets").glob("*/preset.json"))
+    for path in sorted(PATHS.presets.glob("*/preset.json"))
 ]
 
 
@@ -38,7 +37,7 @@ def source_of(anchor: str) -> str:
 
 @pytest.mark.parametrize("source", SOURCES)
 def test_every_pinned_anchor_exists_in_the_extracted_sources(source: str) -> None:
-    path = ROOT / "data" / "extracted" / f"{source}.json"
+    path = PATHS.extracted / f"{source}.json"
     if not path.exists():  # cis.json, c5.json and fsbp.json stay local (ADR 0008)
         pytest.skip(f"{path.name} not extracted on this machine")
     extracted = ExtractedSource.model_validate_json(path.read_text(encoding="utf-8"))
@@ -47,12 +46,10 @@ def test_every_pinned_anchor_exists_in_the_extracted_sources(source: str) -> Non
     assert {a for a in pinned if source_of(a) == extracted.source} <= anchors
 
 
-@pytest.mark.parametrize(("audit_type", "file"), [
-    ("spec", "selection_spec.json"), ("architecture", "selection_arch.json"),
-])
-def test_every_pinned_anchor_is_in_the_checked_in_catalog(audit_type: str, file: str) -> None:
+@pytest.mark.parametrize("audit_type", ["spec", "architecture"])
+def test_every_pinned_anchor_is_in_the_checked_in_catalog(audit_type: AuditType) -> None:
     """Gate of issue #6 without a kb_build run and without the local extracted sources."""
-    path = ROOT / "data" / "knowledge_base" / file
+    path = PATHS.out_file("selection", audit_type)
     selected = Selection.model_validate_json(path.read_text(encoding="utf-8")).selected
     missing = [
         anchor for anchor in pinned_anchors(PRESETS, audit_type)

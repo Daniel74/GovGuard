@@ -4,7 +4,7 @@ import xml.etree.ElementTree as ET
 from collections.abc import Iterator
 
 from govguard.text import normalize
-from kb_build.extracted_models import ExtractedSource, Requirement, mark_prefilter
+from kb_build.extract.models import ExtractedSource, Requirement, mark_prefilter
 
 CHAPTERS = frozenset({2, 3, 4, 5})  # Kapitel II-V = Art. 5-49 (ARCHITECTURE 1.1)
 ROMAN = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6,

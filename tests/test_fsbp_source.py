@@ -1,6 +1,6 @@
 import pytest
 
-from kb_build.sources.fsbp import SERVICES, extract
+from kb_build.extract.fsbp import SERVICES, extract
 
 VERSION = "5.44.0"
 REASON = "Dienst gehört nicht zum Prüfumfang."

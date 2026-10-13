@@ -3,7 +3,7 @@ import json
 import pytest
 
 from govguard.models import CrossReference, Rule, RuleCatalog, Trace
-from kb_build.extracted_models import Requirement
+from kb_build.extract.models import Requirement
 
 
 @pytest.fixture

@@ -4,10 +4,10 @@ import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart, UserPromptPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from kb_build.classify import Judge
-from kb_build.curation import curate
-from kb_build.extracted_models import ExtractedSource, Requirement
-from kb_build.scope import Scope
+from kb_build.extract.models import ExtractedSource, Requirement
+from kb_build.reference.scope import Scope
+from kb_build.select.classify import Judge
+from kb_build.select.curation import curate
 
 SCOPE = Scope({"S3": ["AWS::S3::Bucket"], "IAM": ["AWS::IAM::Role"], "KMS": ["AWS::KMS::Key"]})
 NO_SCOPE = Scope({})

@@ -7,12 +7,11 @@ import logging
 from dataclasses import dataclass
 
 from govguard.models import SourceName
-from kb_build.classify import Judge
-from kb_build.extracted_models import ExtractedSource, Requirement
+from kb_build.extract.models import ExtractedSource, Requirement
 from kb_build.gates import check_coverage, check_pinned
-from kb_build.relevance import is_relevant
-from kb_build.scope import Scope
-from kb_build.selection_models import (
+from kb_build.reference.scope import Scope
+from kb_build.select.classify import Judge
+from kb_build.select.models import (
     Classification,
     Outcome,
     ScopeLevel,
@@ -20,6 +19,7 @@ from kb_build.selection_models import (
     Selection,
     Verdict,
 )
+from kb_build.select.relevance import is_relevant
 
 logger = logging.getLogger("kb_build")
 

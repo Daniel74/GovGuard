@@ -1,8 +1,8 @@
 """quality_report(): counts per source what the validator does not enforce."""
 
 from govguard.models import Rule, RuleCatalog
-from kb_build.cfn_properties import PropertyIndex
-from kb_build.quality import quality_report, vague_terms
+from kb_build.reference.cfn_properties import PropertyIndex
+from kb_build.rules.quality import quality_report, vague_terms
 
 PROPERTIES = PropertyIndex({"AWS::S3::Bucket": frozenset({"BucketEncryption",
                                                           "LoggingConfiguration"})})
