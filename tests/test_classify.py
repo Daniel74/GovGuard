@@ -161,6 +161,8 @@ def test_architecture_prompt_names_the_services_of_the_scope() -> None:
 
     assert "Prüfumfang" in str(seen[0])
     assert "Lambda, DynamoDB" in str(seen[0])
+    assert "verwirft der Code" in str(seen[0])  # types outside are stripped, so do not name them
+    assert "auch wenn er außerhalb" not in str(seen[0])
 
 
 def test_spec_prompt_does_not_mention_the_scope() -> None:
@@ -212,6 +214,7 @@ def test_architecture_prompt_explains_the_four_levels_of_a_duty() -> None:
         assert f'"{level}"' in prompt
     assert "CloudTrail-Bucket" in prompt
     assert "MFA für Administratoren" in prompt
+    assert "AWS::S3::AccountPublicAccessBlock" in prompt  # CIS 3.1.4 was judged "account" (#19)
 
 
 def test_spec_prompt_leaves_the_scope_level_on_template() -> None:
@@ -233,3 +236,29 @@ def test_the_tool_schema_offers_the_scope_level_to_the_model() -> None:
 
     levels = schemas[0]["properties"]["scope_level"]["enum"]
     assert levels == ["template", "account", "people", "provider"]
+
+
+S3_SCOPE = Scope({"S3": ["AWS::S3::Bucket"]})
+
+
+def test_architecture_answer_drops_types_outside_the_scope_without_retry() -> None:
+    # CIS 4.10 named CloudFront before API Gateway; now the code strips what the scope lacks (#19)
+    seen: list = []
+    mixed = {"testable": True, "rationale": "x",
+             "cfn_resource_types": ["AWS::CloudTrail::Trail", "AWS::S3::Bucket"]}
+
+    result = classify_requirement(REQUIREMENT, "CIS", build_deps("architecture", S3_SCOPE),
+                                  answer_in_turns(mixed, seen=seen))
+
+    assert len(seen) == 1
+    assert result.cfn_resource_types == ["AWS::S3::Bucket"]
+
+
+def test_architecture_answer_with_only_types_outside_the_scope_ends_up_without_types() -> None:
+    only_outside = {"testable": True, "rationale": "x",
+                    "cfn_resource_types": ["AWS::CloudTrail::Trail"]}
+
+    result = classify_requirement(REQUIREMENT, "CIS", build_deps("architecture", S3_SCOPE),
+                                  answer_in_turns(only_outside))
+
+    assert result.cfn_resource_types == []  # curation then finds it not relevant

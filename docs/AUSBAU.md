@@ -107,6 +107,11 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 - **Was bricht:** Ein Fargate-Dienst läuft dauerhaft und hat damit Leerlaufkosten. Er braucht eine VPC und meist einen Application Load Balancer, der selbst Leerlaufkosten hat.
 - **Anpassung:** Ein Container-Archetyp nur mit bewusst akzeptierten Leerlaufkosten, dokumentiert als Ausnahme von der FinOps-Leitplanke (neuer ADR). Vorher prüfen: Reicht ein ereignisgesteuerter Fargate-Task (z. B. Step Functions oder EventBridge startet ihn), der ohne Last nicht läuft?
 
+## Weitere Typen im Prüfumfang (EFS, SSM-Klartext-Parameter)
+
+- **Auslöser:** Prüfregeln nennen `AWS::EFS::FileSystem` (Verschlüsselung, Backup) und `AWS::SSM::Parameter` (Klartext statt SecureString). Beide liegen außerhalb des Prüfumfangs (ADR 0013), die Regeln fallen deshalb aus dem Katalog.
+- **Anpassung:** Typ in `scope.json`, Snapshot neu ziehen (README), Stufe ② voll neu laufen lassen. Bei SSM-Parametern zuerst klären, wie ein Klartext-Parameter am Template erkennbar ist (`Type: String` gegen `SecureString`).
+
 ## Systemweite Auswirkungen: Der Weg zu Asynchronität
 
 Sobald Map-Reduce für große Regelkataloge (Szenario 1) oder lange Dokumente (Szenario 2) greift, ändert sich die Systemarchitektur fundamental:

@@ -9,6 +9,7 @@ from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from govguard.models import AuditType, RuleCatalog
 from kb_build.paths import BuildPaths
+from kb_build.reference.run import read_scope
 from kb_build.rules.run import formulate_all, read_property_index
 from kb_build.select.models import Selection
 
@@ -21,7 +22,19 @@ def paths_in(tmp: Path) -> BuildPaths:
     shutil.copytree(REAL.extracted, paths.extracted)
     for audit_type in ("architecture", "spec"):
         shutil.copy(REAL.out_file("selection", audit_type), paths.out_file("selection", audit_type))
+    _keep_scope_types(paths)
     return paths
+
+
+def _keep_scope_types(paths: BuildPaths) -> None:
+    """The checked-in list may predate the scope (#19); rules may name scope types only."""
+    scope_types = read_scope(paths.scope).types
+    file = paths.out_file("selection", "architecture")
+    selection = Selection.model_validate_json(file.read_text("utf-8"))
+    for selected in selection.selected:
+        selected.cfn_resource_types = [t for t in selected.cfn_resource_types if t in scope_types]
+    selection.selected = [s for s in selection.selected if s.cfn_resource_types]
+    file.write_text(selection.model_dump_json(), encoding="utf-8")
 
 
 def quoting_model(quote: str | None = None) -> FunctionModel:
@@ -38,8 +51,8 @@ def quoting_model(quote: str | None = None) -> FunctionModel:
     return FunctionModel(respond, model_name="fake-model")
 
 
-def selected_count(audit_type: AuditType) -> int:
-    raw = REAL.out_file("selection", audit_type).read_text("utf-8")
+def selected_count(paths: BuildPaths, audit_type: AuditType) -> int:
+    raw = paths.out_file("selection", audit_type).read_text("utf-8")
     return len(Selection.model_validate_json(raw).selected)
 
 
@@ -50,7 +63,7 @@ def test_one_rule_per_selected_requirement_is_written_per_audit_type(tmp_path: P
 
     for audit_type in ("architecture", "spec"):
         raw = paths.out_file("rules", audit_type).read_text("utf-8")
-        assert len(RuleCatalog.model_validate_json(raw).rules) == selected_count(audit_type)
+        assert len(RuleCatalog.model_validate_json(raw).rules) == selected_count(paths, audit_type)
 
 
 def test_an_unchanged_build_writes_identical_files_without_timestamp(tmp_path: Path) -> None:

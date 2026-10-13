@@ -5,6 +5,7 @@ from collections import Counter
 from govguard.models import AuditType, Preset, Rule, RuleCatalog, RuleDraft, SourceName
 from govguard.text import contains_quote, normalize
 from kb_build.extract.models import ExtractedSource, Requirement
+from kb_build.rules.criteria import types_outside_scope
 from kb_build.select.models import Outcome, SelectedRequirement, Selection
 
 
@@ -64,7 +65,7 @@ def invalid_cross_references(draft: RuleDraft, source: SourceName, anchors: Anch
     ]
 
 
-def _rule_errors(rule: Rule, anchors: Anchors) -> list[str]:
+def _rule_errors(rule: Rule, anchors: Anchors, scope_types: frozenset[str]) -> list[str]:
     if rule.primary_anchor not in anchors:
         return [f"primary anchor {rule.primary_anchor!r} not found in the sources"]
     errors = []
@@ -72,6 +73,10 @@ def _rule_errors(rule: Rule, anchors: Anchors) -> list[str]:
         errors.append(f"source_quote is not verbatim in the text of {rule.primary_anchor}")
     for anchor in invalid_cross_references(rule, rule.source, anchors):
         errors.append(f"cross reference {anchor!r} is unknown or of the same source")
+    named = " ".join([*rule.cfn_resource_types, rule.compliant_if, rule.violation_if])
+    outside = types_outside_scope(named, scope_types)  # nothing could judge their properties (#19)
+    if outside:
+        errors.append(f"resource types outside the scope: {outside}")
     return errors
 
 
@@ -90,13 +95,17 @@ def _completeness_errors(catalog: RuleCatalog, selection: Selection, anchors: An
     return [f"{label}: {keys}" for label, keys in checks.items() if keys]
 
 
-def check_rules(catalog: RuleCatalog, selection: Selection, sources: list[ExtractedSource]) -> None:
-    """Gate before the catalog is written: schema, anchor, quote, cross references (ARCHITECTURE 1).
+def check_rules(
+    catalog: RuleCatalog, selection: Selection, sources: list[ExtractedSource],
+    scope_types: frozenset[str],
+) -> None:
+    """Gate before the catalog is written: schema, anchor, quote, cross references, resource
+    types in the scope (ARCHITECTURE 1).
 
     Field types are already checked by Pydantic when `Rule` is built.
     """
     anchors = requirements_by_anchor(sources)
-    errors = [f"{r.id}: {e}" for r in catalog.rules for e in _rule_errors(r, anchors)]
+    errors = [f"{r.id}: {e}" for r in catalog.rules for e in _rule_errors(r, anchors, scope_types)]
     errors += _completeness_errors(catalog, selection, anchors)
     if errors:
         raise ValueError("rules failed the gate:\n" + "\n".join(errors))

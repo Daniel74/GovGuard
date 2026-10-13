@@ -37,7 +37,8 @@ wenn sie sich an Ressourcen festmachen lassen. Nein gilt bei Verträgen und Proz
   Hängt die Pflicht nur an Konto, Personen oder Anbieter, wähle das, auch wenn eine Ressource
   sie technisch umsetzen könnte, z. B. an einer bestimmten Konto-Ressource wie dem
   CloudTrail-Bucket. Gilt sie zugleich für jede Ressource des Workloads (z. B. Block Public
-  Access an jedem Bucket), wähle "template".
+  Access an jedem Bucket), wähle "template", auch wenn es dafür eine Konto-Ressource wie
+  AWS::S3::AccountPublicAccessBlock gibt.
 - "cfn_resource_types": alle CloudFormation-Typen, an deren Konfiguration sich die Anforderung
   zeigt (z. B. bei Verschlüsselung jeder Speicher- und Transportdienst wie AWS::S3::Bucket,
   AWS::KinesisFirehose::DeliveryStream), der wichtigste zuerst. Nur Typen, die es in
@@ -58,8 +59,8 @@ Bußgeldverfahren, Befugnisse der Aufsicht, Zertifizierung).
 
 SCOPE_PROMPT = """\
 Der Prüfumfang (Dienste, für die wir Prüfregeln führen) umfasst: {services}.
-Nenne den wichtigsten Typ zuerst, auch wenn er außerhalb des Prüfumfangs liegt;
-über die Relevanz entscheidet danach der Code."""
+Typen außerhalb des Prüfumfangs verwirft der Code; nenne sie nicht. Bleibt kein Typ übrig,
+gilt die Anforderung als nicht relevant."""
 
 USER_PROMPT = "Quelle: {source}\nID: {id}\nTitel: {title}\n<anforderung>\n{text}\n</anforderung>"
 TOOL_NAME = "classify_requirement"
@@ -72,6 +73,7 @@ class ClassifyDeps:
 
     audit_type: AuditType
     instructions: str
+    scope_types: frozenset[str] | None = None  # architecture: types outside it are dropped (#19)
 
 
 def build_deps(audit_type: AuditType, scope: Scope | None = None) -> ClassifyDeps:
@@ -79,6 +81,7 @@ def build_deps(audit_type: AuditType, scope: Scope | None = None) -> ClassifyDep
     text = PROMPTS[audit_type]
     if audit_type == "architecture" and scope is not None:
         text += "\n" + SCOPE_PROMPT.format(services=", ".join(scope.services))
+        return ClassifyDeps(audit_type, text, scope.types)
     return ClassifyDeps(audit_type, text)
 
 
@@ -117,6 +120,11 @@ def _validate(ctx: RunContext[ClassifyDeps], answer: Classification) -> Classifi
         )
     if invalid:  # the code drops invented types, no retry needed (#18)
         logger.info("dropped invented resource types: %s", invalid)
+    if ctx.deps.scope_types is not None:  # the first type left decides the relevance (ADR 0007)
+        outside = [t for t in real if t not in ctx.deps.scope_types]
+        real = [t for t in real if t in ctx.deps.scope_types]
+        if outside:
+            logger.info("dropped types outside the scope: %s", outside)
     return answer.model_copy(update={"cfn_resource_types": real})
 
 

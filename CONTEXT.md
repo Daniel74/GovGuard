@@ -14,7 +14,7 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 - **Querverweis**: KI-vorgeschlagener, nicht verifizierter Bezug einer Prüfregel auf eine Anforderung einer anderen Quelle; beeinflusst keinen Status. _Code_: `cross_reference`. _Vermeiden_: Mapping
 - **Bounded Catalog**: Zur Build-Zeit festgelegte Menge aller prüfbaren und relevanten Prüfregeln je Audit-Art, die in jedem Audit vollständig bewertet wird. _Code_: `catalog`. _Vermeiden_: Top-K, Retrieval-Set
 - **Auswahlprotokoll**: Je Anforderung einer Quelle das Ergebnis der Auswahl (aufgenommen oder verworfen) mit Begründung, vom LLM oder vom Code. _Code_: `verdicts`. _Vermeiden_: Verdict, Log
-- **Prüfumfang**: Feste Liste der AWS-Dienste, für die das Architektur-Audit Prüfregeln führt. _Code_: `scope`. _Vermeiden_: Scope, Whitelist
+- **Prüfumfang**: Feste Liste der AWS-Dienste samt Begleittypen (AWS Backup, Application Auto Scaling), für die das Architektur-Audit Prüfregeln führt; Prüfregeln nennen nur Typen daraus. _Code_: `scope`. _Vermeiden_: Scope, Whitelist
 - **Relevant**: Eine Anforderung ist relevant, wenn sie einen Dienst im Prüfumfang betrifft und ihre Ebene `template` ist; Bedingung für die Aufnahme neben „prüfbar“. _Code_: `is_relevant`, `scope_level`
 - **Ebene**: Wessen Pflicht eine Anforderung ist: Workload (`template`), Konto/Organisation (`account`), Personen (`people`) oder Cloud-Anbieter (`provider`); nur `template` kommt ins Architektur-Audit. _Code_: `scope_level`. _Vermeiden_: Scope (gehört dem Prüfumfang)
 - **Komponente**: AWS-Dienst, aus dem ein Golden Archetype besteht, z. B. API Gateway, Lambda, SQS. _Code_: `required_types`. _Vermeiden_: Baustein (gehört dem SDM)

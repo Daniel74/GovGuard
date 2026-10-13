@@ -258,9 +258,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Starten** _Opus_ · 👤 `/implement 20` → Plan → Go. Alle Datenpfade stehen in `kb_build/paths.py`; ein Test verbietet sie anderswo.
 - [x] **Prüfen** _Opus_ · `/code-review` (Standards + Spec als Sub-Agents), Befunde behoben
-- [ ] **Echter Lauf** → verschoben in Schritt 9d. Der Judgement-Cache passt schon vor #20 nicht mehr zum Prompt (beide Audit-Arten); ein Lauf jetzt würde alle Urteile bezahlen, und #19 würde sein Ergebnis wieder überschreiben. Nachweis bis dahin: Test der Standardpfade, Probelauf mit Dummy-Key liest alle Eingaben aus den neuen Pfaden.
-- [ ] **Verstehen** 👤 `/verstehen 20` (Kernfrage: warum Daten nach Herkunft getrennt werden und was davon nach S3 geht)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Echter Lauf** → verschoben in Schritt 9d. Der Judgement-Cache passt schon vor #20 nicht mehr zum Prompt (beide Audit-Arten); ein Lauf jetzt würde alle Urteile bezahlen, und #19 würde sein Ergebnis wieder überschreiben. Nachweis bis dahin: Test der Standardpfade, Probelauf mit Dummy-Key liest alle Eingaben aus den neuen Pfaden.
+- [x] **Verstehen** 👤 `/verstehen 20` (Kernfrage: warum Daten nach Herkunft getrennt werden und was davon nach S3 geht)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** pytest und ruff grün sind und der echte Lauf in 9d in `data/intermediate/` schreibt.
 **Fürs Fachgespräch:** Trennung Eingabe / Zwischenergebnis / Artefakt, eine Quelle für Pfade, Refactoring ohne Verhaltensänderung.
@@ -272,10 +272,10 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Architektur-Prüfregeln nennen nur Typen aus `data/input/scope.json`, damit das Gate aus #17 jede Eigenschaft prüft. Nach dem Review von #17 bleiben 16 Regeln ungeprüft (`unjudged_properties`), z. B. mit CloudTrail, CloudFront, Classic ELB oder WAF Classic.
 **Voraussetzung:** Schritt 9c.
 
-- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #19: Backup, EFS, EBS-Volume und SSM in den Prüfumfang?` Bei Ja ergänzt 🤖 `scope.json` und ADR 0011 (Weichenstellung Prüfumfang).
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #19 umsetzen` → Plan → Go
-      Reihenfolge: Validator von Stufe ② streicht Typen außerhalb des Prüfumfangs → Validator von `formulate_rule` → `check_rules`
-- [ ] **Echter Lauf** 🤖 👤 „Erzeuge Auswahl und Prüfregeln für **beide** Audit-Arten neu“: `select` ohne `--audit-type` (`--provider groq`), dann `rules` (`bedrock-global`, falls `eu.` keine Kapazität hat). Der Cache ist für Spec und Architektur veraltet (siehe 9c), alle Urteile werden neu bezahlt. 👤 Prüfe: Schreibt `select` nach `data/intermediate/` (Nachweis für #20)? Zeigt der Qualitätsbericht `unjudged_properties` 0? Welche Regeln haben Typen verloren? Was hat sich in `git diff data/intermediate/selection_spec.json` geändert?
+- [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #19: Backup, EFS, EBS-Volume und SSM in den Prüfumfang?` Ergebnis im Issue: Begleittypen AWS Backup und Application Auto Scaling kommen dazu, EFS, EBS-Volume und SSM-Parameter bleiben draußen.
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #19 umsetzen` → Plan → Go
+      Reihenfolge: Prüfumfang erweitern (`scope.json`, Snapshot `cfn_properties.json`, ADR 0013, `CONTEXT.md`, `AUSBAU.md`) → Validator von Stufe ② streicht Typen außerhalb des Prüfumfangs → Validator von `formulate_rule` → `check_rules`
+- [x] **Echter Lauf** 🤖 👤 „Erzeuge Auswahl und Prüfregeln für **beide** Audit-Arten neu“: `select` ohne `--audit-type` (`--provider groq`), dann `rules` (`bedrock-global`, falls `eu.` keine Kapazität hat). Der Cache ist für Spec und Architektur veraltet (siehe 9c), alle Urteile werden neu bezahlt. 👤 Prüfe: Schreibt `select` nach `data/intermediate/` (Nachweis für #20)? Zeigt der Qualitätsbericht `unjudged_properties` 0? Welche Regeln haben Typen verloren? Behalten FSBP DynamoDB.4 und RDS.26 ihre Backup-Typen? Was hat sich in `git diff data/intermediate/selection_spec.json` geändert?
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #19`
 - [ ] **Verstehen** 👤 `/verstehen 19` (Kernfrage: warum ein Gate nur so weit prüft, wie seine Referenz reicht)
 - [ ] **Abschließen** 👤 committet und pusht

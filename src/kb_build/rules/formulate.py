@@ -19,13 +19,9 @@ from kb_build.gates import (
     is_quoted,
     requirements_by_anchor,
 )
-from kb_build.reference.cfn_properties import (
-    PropertyIndex,
-    alternatives,
-    owners,
-    unknown_properties,
-)
-from kb_build.rules.quality import vague_terms
+from kb_build.reference.cfn_properties import PropertyIndex
+from kb_build.reference.scope import Scope
+from kb_build.rules.criteria import criteria_problems
 from kb_build.select.models import SelectedRequirement, Selection
 
 logger = logging.getLogger("kb_build")
@@ -64,7 +60,6 @@ USER_PROMPT = (
     "<anforderung>\n{text}\n</anforderung>"
 )
 TOOL_NAME = "formulate_rule"
-MAX_OWNERS = 3  # types named in a retry hint: enough to choose from, short enough to read
 TOOL_DESCRIPTION = "Gib genau eine Prüfregel zur Anforderung ab."
 
 
@@ -77,6 +72,7 @@ class FormulateDeps:
     requirement: Requirement
     anchors: Anchors  # every requirement of every source, for the cross references
     properties: PropertyIndex  # real properties per type, for the invented ones
+    scope_types: frozenset[str]  # criteria may name nothing else (#19)
 
 
 formulate_agent = Agent(
@@ -104,29 +100,6 @@ def _deviation(text: str, quote: str) -> str:
     return "Schon der Anfang des Zitats fehlt im Text."
 
 
-def _criteria_problems(
-    draft: RuleDraft, resource_types: list[str], properties: PropertyIndex
-) -> list[str]:
-    """Architecture criteria must be decidable from the template alone."""
-    criteria, problems = f"{draft.compliant_if} {draft.violation_if}", []
-    vague = vague_terms(criteria)
-    if vague:
-        words = ", ".join(f"„{w}“" for w in vague)
-        problems.append(f"Die Kriterien enthalten Wörter, die am Template nicht entscheidbar "
-                        f"sind: {words}. Nenne stattdessen konkrete Eigenschaften und Werte.")
-    if not any(t in criteria for t in resource_types):
-        problems.append("Die Kriterien nennen keinen Ressourcentyp der Prüfregel. Nenne "
-                        f"mindestens einen davon wörtlich: {', '.join(resource_types)}.")
-    for name in unknown_properties(criteria, resource_types, properties):
-        options = ", ".join(alternatives(name, resource_types, properties))
-        elsewhere = owners(name, properties)[:MAX_OWNERS]
-        hint = (f" Sie gehört zu {', '.join(elsewhere)}; nenne diesen Typ dann wörtlich."
-                if elsewhere else "")
-        problems.append(f"„{name}“ gibt es in CloudFormation an den Typen der Prüfregel nicht."
-                        f"{hint} Nimm nur echte Eigenschaften, z. B.: {options}.")
-    return problems
-
-
 @formulate_agent.output_validator
 def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDraft:
     """Same checks as the gate, but early: the model gets a second chance (ADR 0005)."""
@@ -135,8 +108,9 @@ def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDraft:
         deviation = _deviation(ctx.deps.requirement.text, draft.source_quote)
         problems.append(f"Das Zitat steht nicht wörtlich im Text in <anforderung>. {deviation}")
     if ctx.deps.audit_type == "architecture":
-        problems += _criteria_problems(
-            draft, ctx.deps.selected.cfn_resource_types, ctx.deps.properties
+        problems += criteria_problems(
+            draft, ctx.deps.selected.cfn_resource_types, ctx.deps.properties,
+            ctx.deps.scope_types,
         )
     invalid = invalid_cross_references(draft, ctx.deps.selected.source, ctx.deps.anchors)
     if invalid:
@@ -179,7 +153,7 @@ def _complete_rule(deps: FormulateDeps, model: Model) -> Rule:
 
 def formulate_rules(
     model: Model, selection: Selection, sources: list[ExtractedSource],
-    properties: PropertyIndex,
+    properties: PropertyIndex, scope: Scope,
 ) -> RuleCatalog:
     """One rule per selected requirement, in selection order; then the gate (ARCHITECTURE 1)."""
     anchors = requirements_by_anchor(sources)
@@ -187,7 +161,8 @@ def formulate_rules(
     rules = []
     for n, selected in enumerate(selection.selected, start=1):
         requirement = by_id[(selected.source, selected.requirement_id)]
-        deps = FormulateDeps(selection.audit_type, selected, requirement, anchors, properties)
+        deps = FormulateDeps(
+            selection.audit_type, selected, requirement, anchors, properties, scope.types)
         rules.append(_complete_rule(deps, model))
         logger.info("%s %d/%d %s", selection.audit_type, n, len(selection.selected), rules[-1].id)
     used = {s.source for s in selection.selected}
@@ -195,5 +170,5 @@ def formulate_rules(
         audit_type=selection.audit_type, model_id=model.model_name, rules=rules,
         source_versions={s.source: s.version for s in sources if s.source in used},
     )
-    check_rules(catalog, selection, sources)
+    check_rules(catalog, selection, sources, scope.types)
     return catalog

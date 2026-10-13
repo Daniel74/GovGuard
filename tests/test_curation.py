@@ -106,6 +106,18 @@ def test_a_requirement_outside_the_scope_gets_a_fixed_sentence_naming_the_type()
     assert verdict.cfn_resource_types == ["AWS::CloudTrail::Trail", "AWS::S3::Bucket"]
 
 
+def test_a_requirement_with_only_types_outside_the_scope_is_not_relevant_without_a_crash() -> None:
+    # The judge strips CloudTrail (#19); nothing is left, so the code cannot name a first type
+    judge = Judge("architecture", fake_llm({"4.8": can_test("AWS::CloudTrail::Trail")}, []), SCOPE)
+
+    result = curate(judge, [cis_source(req("4.8"))], frozenset(), SCOPE, NO_COMPONENTS)
+
+    verdict = result.verdicts[0]
+    assert verdict.outcome == "not_relevant"
+    assert verdict.rationale == "Kein Ressourcentyp der Anforderung liegt im Prüfumfang."
+    assert verdict.cfn_resource_types == []
+
+
 # --- Duties of the account, people or provider are not checkable at a template (issue #18) ----
 
 

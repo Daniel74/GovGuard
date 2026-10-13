@@ -13,6 +13,7 @@ from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from kb_build.extract.models import ExtractedSource
 from kb_build.reference.cfn_properties import PropertyIndex
+from kb_build.reference.scope import Scope
 from kb_build.rules.formulate import formulate_rules
 from kb_build.select.models import SelectedRequirement, Selection
 
@@ -31,8 +32,11 @@ PROPERTIES = PropertyIndex({  # stands in for data/input/cfn_properties.json
 })
 
 
+SCOPE = Scope({"S3": ["AWS::S3::Bucket"], "KMS": ["AWS::KMS::Key"]})
+
+
 def run_formulate(model, selection, sources):
-    return formulate_rules(model, selection, sources, PROPERTIES)
+    return formulate_rules(model, selection, sources, PROPERTIES, SCOPE)
 
 
 def draft(rid: str, **changes) -> dict:
@@ -205,6 +209,19 @@ def test_the_retry_names_the_type_that_really_has_the_property() -> None:
     sent_back: list[str] = []
     first = draft("3.1.4", compliant_if="AWS::S3::Bucket setzt RotationRules.")
 
-    formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES, properties)
+    formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES, properties,
+                    SCOPE)
 
     assert "AWS::SecretsManager::RotationSchedule" in sent_back[0]
+
+
+def test_criteria_naming_a_type_outside_the_scope_are_sent_back_and_name_it() -> None:
+    # CIS 3.1.4 named AWS::CloudTrail::Trail; no property check can judge a type outside the scope
+    sent_back: list[str] = []
+    first = draft("3.1.4", violation_if="AWS::CloudTrail::Trail schreibt nicht ins Bucket.")
+
+    catalog = run_formulate(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES)
+
+    assert catalog.rules[0].violation_if == "BucketEncryption fehlt."
+    assert "AWS::CloudTrail::Trail" in sent_back[0]
+    assert "Prüfumfang" in sent_back[0]

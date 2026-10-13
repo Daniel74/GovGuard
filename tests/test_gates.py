@@ -10,6 +10,8 @@ from kb_build.extract.models import ExtractedSource
 from kb_build.gates import check_coverage, check_pinned, check_rules, is_quoted
 from kb_build.select.models import SelectedRequirement, Selection
 
+SCOPE_TYPES = frozenset({"AWS::S3::Bucket", "AWS::KMS::Key"})
+
 
 def selected(*types: str) -> SelectedRequirement:
     return SelectedRequirement(requirement_id="3.1.4", source="CIS", rationale="x",
@@ -85,14 +87,14 @@ def selection_of(*ids: str) -> Selection:
 
 
 def test_a_rule_anchored_and_quoted_verbatim_passes() -> None:
-    check_rules(catalog(rule()), selection_of("3.1.4"), SOURCES)
+    check_rules(catalog(rule()), selection_of("3.1.4"), SOURCES, SCOPE_TYPES)
 
 
 def test_a_primary_anchor_missing_in_the_source_aborts_and_is_named() -> None:
     invented = rule(primary_anchor="CIS AWS v7.0.0 3.1.99")
 
     with pytest.raises(ValueError, match=r"ARCH-CIS-3.1.4: primary anchor .*3\.1\.99"):
-        check_rules(catalog(invented), selection_of("3.1.4"), SOURCES)
+        check_rules(catalog(invented), selection_of("3.1.4"), SOURCES, SCOPE_TYPES)
 
 
 def test_a_quote_from_the_neighbouring_requirement_aborts() -> None:
@@ -100,7 +102,7 @@ def test_a_quote_from_the_neighbouring_requirement_aborts() -> None:
     borrowed = rule(source_quote="Ensure that every bucket encrypts data.")
 
     with pytest.raises(ValueError, match="ARCH-CIS-3.1.4: source_quote"):
-        check_rules(catalog(borrowed), selection_of("3.1.4"), SOURCES)
+        check_rules(catalog(borrowed), selection_of("3.1.4"), SOURCES, SCOPE_TYPES)
 
 
 def ai_suggested(anchor: str) -> CrossReference:
@@ -110,7 +112,7 @@ def ai_suggested(anchor: str) -> CrossReference:
 def test_a_cross_reference_to_an_existing_requirement_of_another_source_passes() -> None:
     linked = rule(cross_references=[ai_suggested("BSI GS++ DET.3.1")])
 
-    check_rules(catalog(linked), selection_of("3.1.4"), SOURCES)
+    check_rules(catalog(linked), selection_of("3.1.4"), SOURCES, SCOPE_TYPES)
 
 
 @pytest.mark.parametrize("anchor", ["BSI GS++ DET.3.99", "CIS AWS v7.0.0 3.1.5"],
@@ -119,23 +121,37 @@ def test_an_invented_or_same_source_cross_reference_aborts_and_is_named(anchor: 
     linked = rule(cross_references=[ai_suggested(anchor)])
 
     with pytest.raises(ValueError, match=re.escape(f"ARCH-CIS-3.1.4: cross reference {anchor!r}")):
-        check_rules(catalog(linked), selection_of("3.1.4"), SOURCES)
+        check_rules(catalog(linked), selection_of("3.1.4"), SOURCES, SCOPE_TYPES)
 
 
 def test_a_selected_requirement_without_a_rule_aborts_and_is_named() -> None:
     with pytest.raises(ValueError, match=r"without a rule: \['CIS 3\.1\.5'\]"):
-        check_rules(catalog(rule()), selection_of("3.1.4", "3.1.5"), SOURCES)
+        check_rules(catalog(rule()), selection_of("3.1.4", "3.1.5"), SOURCES, SCOPE_TYPES)
 
 
 def test_a_requirement_with_two_rules_aborts() -> None:
     with pytest.raises(ValueError, match=r"more than one rule: \['CIS 3\.1\.4'\]"):
-        check_rules(catalog(rule(), rule()), selection_of("3.1.4"), SOURCES)
+        check_rules(catalog(rule(), rule()), selection_of("3.1.4"), SOURCES, SCOPE_TYPES)
 
 
 def test_a_rule_for_a_requirement_that_was_not_selected_aborts() -> None:
     with pytest.raises(ValueError, match=r"not selected: \['CIS 3\.1\.5'\]"):
         check_rules(catalog(rule(), rule("3.1.5", source_quote="every bucket encrypts data")),
-                    selection_of("3.1.4"), SOURCES)
+                    selection_of("3.1.4"), SOURCES, SCOPE_TYPES)
+
+
+def test_a_rule_with_a_type_outside_the_scope_aborts_and_names_it() -> None:
+    outside = rule(cfn_resource_types=["AWS::S3::Bucket", "AWS::CloudTrail::Trail"])
+
+    with pytest.raises(ValueError, match=r"outside the scope: \['AWS::CloudTrail::Trail'\]"):
+        check_rules(catalog(outside), selection_of("3.1.4"), SOURCES, SCOPE_TYPES)
+
+
+def test_criteria_naming_a_type_outside_the_scope_abort() -> None:
+    outside = rule(violation_if="AWS::EFS::FileSystem ist unverschlüsselt.")
+
+    with pytest.raises(ValueError, match=r"outside the scope: \['AWS::EFS::FileSystem'\]"):
+        check_rules(catalog(outside), selection_of("3.1.4"), SOURCES, SCOPE_TYPES)
 
 
 def test_a_text_shorter_than_the_minimum_quote_may_be_quoted_whole() -> None:

@@ -54,6 +54,8 @@ def _not_relevant_reason(answer: Classification, scope: Scope) -> str | None:
     """Fixed sentence why the code drops a testable architecture requirement (ADR 0011)."""
     if answer.scope_level != "template":
         return LEVEL_SENTENCES[answer.scope_level]
+    if not answer.cfn_resource_types:  # the judge stripped every type outside the scope (#19)
+        return "Kein Ressourcentyp der Anforderung liegt im Prüfumfang."
     if not is_relevant(answer, scope):
         return f"Der erste Ressourcentyp {answer.cfn_resource_types[0]} liegt nicht im Prüfumfang."
     return None

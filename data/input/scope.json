@@ -141,5 +141,14 @@
     "AWS::EC2::VPCGatewayAttachment",
     "AWS::EC2::SubnetRouteTableAssociation",
     "AWS::EC2::SubnetNetworkAclAssociation"
+  ],
+  "AWS Backup": [
+    "AWS::Backup::BackupVault",
+    "AWS::Backup::BackupPlan",
+    "AWS::Backup::BackupSelection"
+  ],
+  "Application Auto Scaling": [
+    "AWS::ApplicationAutoScaling::ScalableTarget",
+    "AWS::ApplicationAutoScaling::ScalingPolicy"
   ]
 }

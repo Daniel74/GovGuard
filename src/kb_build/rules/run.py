@@ -12,6 +12,7 @@ from govguard.models import AuditType
 from kb_build.paths import BuildPaths
 from kb_build.reference.cfn_properties import PropertyIndex
 from kb_build.reference.cfn_types import load_cfn_types
+from kb_build.reference.run import read_scope
 from kb_build.rules.formulate import formulate_rules
 from kb_build.rules.quality import quality_report
 from kb_build.select.models import Selection
@@ -38,10 +39,11 @@ def formulate_all(
     """
     sources = read_sources(paths.extracted, ALL_SOURCES)
     properties = read_property_index(paths)
+    scope = read_scope(paths.scope)
     for audit_type in chosen(only):
         raw = paths.out_file("selection", audit_type).read_text(encoding="utf-8")
         catalog = formulate_rules(
-            model, Selection.model_validate_json(raw), sources, properties
+            model, Selection.model_validate_json(raw), sources, properties, scope
         )
         rules_file = paths.out_file("rules", audit_type)
         rules_file.parent.mkdir(parents=True, exist_ok=True)  # only after the gate passed
