@@ -39,6 +39,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 9c      | A    | #20 Ordnerstruktur              | 🤖 Opus                                          | 🤖 Opus                    |
 | 9d      | A    | #19 Typen im Prüfumfang         | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 9e      | A    | #21 Groq als Build-Standard     | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 9f      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                                        | 👤                         |
 | 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
 | 11      | A    | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 12      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
@@ -46,6 +47,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 14      | A    | #16 Doku nachziehen             | 👤 + 🤖 Sonnet                                   | 👤                         |
 | 15      | B    | #7 Golden Archetypes            | 🤖 Opus                                          | 🤖 Opus                    |
 | 16      | B    | #10 Archetyp-Auswahl            | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 17      | –    | #23 Lehrbuch fertigstellen      | 👤 + Claude Web                                  | 👤                         |
 
 ---
 
@@ -304,6 +306,20 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
+### Schritt 9f – #22 Doku zu kb_build nachziehen
+
+**Ziel:** `ARCHITECTURE.md`, `SPEC.md`, `METHODIK.md` und die Lernkarten stimmen mit dem Code nach #19, #20 und #21 überein (Relevanzregel nach ADR 0013, Korrekturrunden, kein Ranking mehr, Pfade nach #20). Ergänzt #16, das README und die drei Erklär-Dokumente übernimmt.
+**Voraussetzung:** Schritt 9e. Kein Code, nur Doku.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 22` und zieh die Dokumente und Lernkarten auf den Code-Stand nach“ → Plan → Go
+- [ ] **Prüfen** 👤 `grep` aus dem Issue, jeden Markdown-Link in `learning/lessons/` anklicken (oder per Skript prüfen lassen), ARCHITECTURE 1.1 querlesen
+- [ ] **Abschließen** 👤 committet und pusht, danach den Ordner `learning/lehrbuch/` einchecken
+
+**Fertig, wenn:** Das `grep` aus #22 nichts Veraltetes mehr findet und alle Links der Lernkarten auf vorhandene Dateien zeigen.
+**Fürs Fachgespräch:** Doku und Code müssen übereinstimmen; ADRs sind verbindlich, ältere Texte werden nachgezogen oder als überholt markiert.
+
+---
+
 ### Schritt 10 – #14 Audit-Engine: Ressourceninventar und parallele Pakete
 
 **Ziel:** Die Audit-Engine bewertet den vollständigen Katalog: N/A über das Ressourceninventar, die anwendbaren Prüfregeln in parallelen Paketen.
@@ -428,3 +444,21 @@ Start nur nach der Regel _Stichtag_ oben.
 
 **Fertig, wenn:** Das Preset liefert den Soll-Archetyp, und ein Report mit FAIL wird mit HTTP 422 abgelehnt.
 **Fürs Fachgespräch:** geschlossene Antwortmenge, keine Generierung zur Laufzeit.
+
+---
+
+## Abschluss
+
+### Schritt 17 – #23 Lehrbuch fertigstellen und korrigieren
+
+**Ziel:** Das Lehrbuch aus `learning/lehrbuch/` (Faktenbasis, Stand 13.10.2026) beschreibt den gebauten Stand, ist in Claude Web ausformuliert, von dir korrigiert und in NotebookLM geladen.
+**Voraussetzung:** Schritt 11 (#8) und Schritt 9f (#22). Schritte 15 und 16 nur, wenn sie gebaut wurden; sonst steht Priorität B als Ausbau im Lehrbuch. Beginnt, wenn die Entwicklung steht, und lässt vor der Abgabe am 21.10. genügend Zeit zum Korrigieren.
+
+- [ ] **Faktenbasis aktualisieren** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 23` und `learning/lehrbuch/README.md` und zieh die Kapitel auf den Code-Stand nach“ → Plan → Go (neues Kapitel zu #8, Kapitel 00, 08, 10, 99; Archetypen-Kapitel nur, falls #7 gebaut ist)
+- [ ] **Ausformulieren** 👤 Claude Web, ein Chat je Kapitel: Faktenbasis, `CONTEXT.md` und `docs/adr/` in ein Project laden, mit Kapitel 05 beginnen und den Stil-Prompt für alle Kapitel wiederverwenden. Zum Schluss fragen: „Welche Aussagen stehen nicht in den Dateien?“
+- [ ] **Korrigieren** 👤 Zahlen, ADR-Nummern und `Datei:Funktion`-Belege gegen das Repo prüfen; alle [OFFEN] klären
+- [ ] **NotebookLM** 👤 Kapitel hochladen, drei Stichprobenfragen stellen (z. B. zu Gates, Cache, Provider)
+- [ ] **Abschließen** 👤 committet und pusht (Faktenbasis; ob auch die Lesetexte, entscheidet die offene Frage im Issue)
+
+**Fertig, wenn:** Alle Kapitel ausformuliert und korrigiert sind und NotebookLM die Stichprobenfragen richtig beantwortet.
+**Fürs Fachgespräch:** Du erklärst die kb-build-Pipeline ohne Notizen: LLM urteilt, Code wählt aus, Gates fangen Erfundenes ab.
