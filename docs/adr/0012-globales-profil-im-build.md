@@ -1,6 +1,6 @@
 # 0012 – Globales Bedrock-Profil als Build-Option
 
-_Weicht für den Build von [ADR 0001](0001-eu-inferenzprofil.md) ab._
+_Weicht für den Build von [ADR 0001](0001-eu-inferenzprofil.md) ab. Seit [ADR 0014](0014-groq-standard-im-build.md) nur noch Ausweichoption, Standard im Build ist Groq._
 
 ## Kontext
 
@@ -8,7 +8,7 @@ Am 12.10.2026 brach das Formulieren der Prüfregeln (#12) dreimal mit HTTP 503 a
 
 ## Entscheidung
 
-- `python -m kb_build … --provider bedrock-global` nutzt das Profil `global.anthropic.claude-haiku-4-5-…`. Standard bleibt `eu.`.
+- `python -m kb_build … --provider bedrock-global` nutzt das Profil `global.anthropic.claude-haiku-4-5-…`. Unter den Bedrock-Optionen bleibt `eu.` der Standard.
 - Das gilt nur im Build, nie im Lambda. Dort gehen nur öffentliche Normtexte raus, keine Eingaben von Nutzern.
 - Kein automatisches Umschalten: Wer `global.` will, sagt es ausdrücklich (wie bei Groq, ADR 0010).
 - Nur `aws_services.py` kennt die Modell-ID (`GLOBAL_MODEL_ID`). Die genutzte ID steht als `model_id` im Katalog.

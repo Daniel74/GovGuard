@@ -1,5 +1,7 @@
 # 0010 – Groq als zeitlich begrenzter Build-Fallback
 
+_Ersetzt durch [ADR 0014](0014-groq-standard-im-build.md): Groq ist seit 13.10.2026 Standard im Build, nicht mehr befristet._
+
 _Weicht für den Build von [ADR 0001](0001-eu-inferenzprofil.md) ab._
 
 ## Kontext

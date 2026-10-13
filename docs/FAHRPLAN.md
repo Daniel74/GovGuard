@@ -38,6 +38,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 9b      | A    | #17 Gate Eigenschaftsnamen      | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 9c      | A    | #20 Ordnerstruktur              | 🤖 Opus                                          | 🤖 Opus                    |
 | 9d      | A    | #19 Typen im Prüfumfang         | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 9e      | A    | #21 Groq als Build-Standard     | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
 | 11      | A    | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 12      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
@@ -285,6 +286,24 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
+### Schritt 9e – #21 Groq als Standard-Provider für kb_build
+
+**Ziel:** `python -m kb_build` nutzt ohne Flag Groq für `select` und `rules` (ADR 0014). Haiku über Bedrock `eu.` bleibt für alles mit Nutzereingaben: Audits, Preset-Gate, Archetyp-Generierung.
+**Voraussetzung:** Schritt 9d abgeschlossen (Review von #19 auf ruhigem Stand).
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #21 umsetzen` → Plan → Go
+      Reihenfolge: Test Standard-Provider in `tests/test_main.py` → `default="groq"` in `kb_build/__main__.py` → Test „kein Ausweichen ohne `GROQ_API_KEY`“ → Docstring `groq_services.py`, `README.md` → Text von Issue #8 (Secret `GROQ_API_KEY`, OIDC-Rolle nur fürs Preset-Gate)
+- [ ] **Freigabe** 👤 Leitplanke in `CLAUDE.md` anpassen lassen („Ausnahme im Build: Groq als Standard, ADR 0014“)
+- [ ] **Entscheiden** 👤 Offene Frage im Issue: Prüfregeln jetzt mit Groq neu formulieren oder erst über #8? Falls jetzt: 🤖 `python -m kb_build rules` ohne Flag, 👤 prüft, ob der Qualitätsbericht weiter überall 0 zeigt und alle Pflichtanker drin sind.
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #21`
+- [ ] **Verstehen** 👤 `/verstehen 21` (Kernfrage: warum Datenresidenz zur Laufzeit gilt, aber nicht für öffentliche Normtexte im Build)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** pytest und ruff grün sind, ein Lauf ohne Flag Groq nutzt und #8 den neuen Stand beschreibt.
+**Fürs Fachgespräch:** Trennung Build/Laufzeit, Kosten-Trade-off (FinOps), Gates machen die Qualität vom Modell unabhängig.
+
+---
+
 ### Schritt 10 – #14 Audit-Engine: Ressourceninventar und parallele Pakete
 
 **Ziel:** Die Audit-Engine bewertet den vollständigen Katalog: N/A über das Ressourceninventar, die anwendbaren Prüfregeln in parallelen Paketen.
@@ -305,11 +324,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 ### Schritt 11 – #8 Preset-Gate und Build-Workflow
 
 **Ziel:** Der Build der Wissensbasis läuft per Knopfdruck in GitHub Actions und öffnet nur bei Grün einen Pull Request.
-**Voraussetzung:** Schritte 8, 9d und 10.
+**Voraussetzung:** Schritte 8, 9e und 10.
 
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #8 umsetzen` → Plan → Go
       Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Hash-Check; den Soll-Archetyp prüft erst #10) → `python -m kb_build` → `build-kb.yml` ohne Logik
-- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard OIDC-Provider und Rolle für build-kb.yml, nur Bedrock eu.-Profil` → 👤 Wizard ausführen
+- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard OIDC-Provider und Rolle für build-kb.yml, nur Bedrock eu.-Profil (Preset-Gate), Secret GROQ_API_KEY` → 👤 Wizard ausführen
 - [ ] **Ausprobieren** 👤 Workflow in GitHub Actions starten → PR lesen, Kosten prüfen
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #8`
 - [ ] **Verstehen** 👤 `/verstehen 8` (Kernfrage: warum OIDC besser ist als ein Access Key in GitHub)
