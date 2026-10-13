@@ -81,10 +81,9 @@ def _select(audit_type: AuditType, model: Model, paths: BuildPaths, cache: Judge
     profiles = load_profiles(paths.archetype_profiles)
     components = frozenset(t for p in profiles for t in p.required_types)
     pinned = pinned_anchors(_read_presets(paths.presets), audit_type)
-    scope = read_scope(paths.scope)
-    judge = Judge(audit_type, model, scope, cache)
+    judge = Judge(audit_type, model, read_scope(paths.scope), cache)  # it strips by scope
     try:
-        result = curate(judge, read_sources(paths.extracted, names), pinned, scope, components)
+        result = curate(judge, read_sources(paths.extracted, names), pinned, components)
     finally:
         _log_usage(audit_type, judge.usage)
     selection_file = paths.out_file("selection", audit_type)

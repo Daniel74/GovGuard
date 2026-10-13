@@ -1,6 +1,6 @@
 # 0014 – Groq ist Standard für den Build der Wissensbasis
 
-_Ersetzt [ADR 0010](0010-groq-build-fallback.md). Weicht für den Build von [ADR 0001](0001-eu-inferenzprofil.md) ab._
+_Ersetzt [ADR 0010](0010-groq-build-fallback.md). Weicht für den Build von [ADR 0001](0001-eu-inferenzprofil.md) ab. Umsetzung: #21._
 
 ## Kontext
 
@@ -10,15 +10,13 @@ _Ersetzt [ADR 0010](0010-groq-build-fallback.md). Weicht für den Build von [ADR
 
 ## Entscheidung
 
-- `python -m kb_build` nutzt ohne Flag Groq (`--provider groq` ist Standard), für `select` und für `rules`. Ein Test prüft den Standard.
+- `python -m kb_build` nutzt ohne Flag Groq (`--provider groq` ist Standard), für `select` und für `rules`. Ein Test prüft den Standard. Kein stilles Umschalten: Fehlt `GROQ_API_KEY`, bricht der Build ab. Das Modell steht als `model_id` in Auswahlliste und Katalog.
 - Bedrock bleibt als ausdrückliche Option: `--provider bedrock` (`eu.`) und `--provider bedrock-global` (ADR 0012), z. B. wenn Groq ausfällt.
 - Haiku über Bedrock `eu.` bleibt für alles mit Nutzereingaben: Audits zur Laufzeit, Preset-Gate (es ruft die Audit-Engine auf) und Archetyp-Generierung (#7).
-- Kein stilles Umschalten: Fehlt `GROQ_API_KEY`, bricht der Build ab. Das Modell steht als `model_id` in Auswahlliste und Katalog.
 
 ## Konsequenzen
 
-- Die Ausnahme von „Inferenz nur in der EU“ gilt im Build dauerhaft, nicht mehr befristet. `groq_services.py` und die Abhängigkeit in der Gruppe `build` bleiben.
-- Der CIS-Volltext (lizenziert, ADR 0008) geht bei jedem Build an Groq (US). Das nehmen wir für einen Prototyp ohne Weitergabe des Textes in Kauf.
+- Die Ausnahme von „Inferenz nur in der EU“ gilt im Build dauerhaft, nicht mehr befristet; `groq_services.py` und die Abhängigkeit in der Gruppe `build` bleiben. Auch der CIS-Volltext (lizenziert, ADR 0008) geht bei jedem Build an Groq (US). Das nehmen wir für einen Prototyp ohne Weitergabe des Textes in Kauf.
 - `build-kb.yml` (#8) braucht `GROQ_API_KEY` als GitHub-Secret. Die OIDC-Rolle braucht trotzdem Bedrock `eu.` für das Preset-Gate.
 - Der Wechsel macht den Katalog nicht stabiler: Auch Groq tauscht bei einem Neulauf rund 10 % der Auswahl aus (#19). Die Pflichtanker-Gates bleiben die Absicherung.
 

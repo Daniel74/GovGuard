@@ -1,6 +1,6 @@
 # 0011 – Vollständiger Katalog im Prüfumfang
 
-_Ersetzt [ADR 0002](0002-bounded-catalog.md). Ersetzt in [ADR 0007](0007-relevanz-und-ausnahmen.md) Relevanz, Gesetzte Plätze und Ranking. Prüfumfang ergänzt in [ADR 0013](0013-begleittypen-im-pruefumfang.md)._
+_Ersetzt [ADR 0002](0002-bounded-catalog.md). Ersetzt in [ADR 0007](0007-relevanz-und-ausnahmen.md) Relevanz, Gesetzte Plätze und Ranking. Prüfumfang ergänzt und Relevanzregel ersetzt in [ADR 0013](0013-begleittypen-im-pruefumfang.md)._
 
 ## Kontext
 

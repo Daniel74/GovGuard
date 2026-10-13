@@ -9,7 +9,6 @@ from dataclasses import dataclass
 from govguard.models import SourceName
 from kb_build.extract.models import ExtractedSource, Requirement
 from kb_build.gates import check_coverage, check_pinned
-from kb_build.reference.scope import Scope
 from kb_build.select.classify import Judge
 from kb_build.select.models import (
     Classification,
@@ -19,7 +18,6 @@ from kb_build.select.models import (
     Selection,
     Verdict,
 )
-from kb_build.select.relevance import is_relevant
 
 logger = logging.getLogger("kb_build")
 
@@ -33,7 +31,7 @@ LEVEL_SENTENCES: dict[ScopeLevel, str] = {
 }
 
 
-def _decide(source: SourceName, requirement: Requirement, judge: Judge, scope: Scope) -> Verdict:
+def _decide(source: SourceName, requirement: Requirement, judge: Judge) -> Verdict:
     """One verdict per requirement; only the testable question goes to the LLM."""
     fields = {"source": source, "requirement_id": requirement.id, "title": requirement.title}
     if not requirement.prefilter_passed:
@@ -45,36 +43,38 @@ def _decide(source: SourceName, requirement: Requirement, judge: Judge, scope: S
     fields["cfn_resource_types"] = answer.cfn_resource_types
     if not answer.testable:
         return Verdict(**fields, outcome="not_testable", rationale=answer.rationale)
-    if judge.audit_type == "architecture" and (reason := _not_relevant_reason(answer, scope)):
+    if judge.audit_type == "architecture" and (reason := _not_relevant_reason(answer)):
         return Verdict(**fields, outcome="not_relevant", rationale=reason)
     return Verdict(**fields, outcome="selected", rationale=answer.rationale)
 
 
-def _not_relevant_reason(answer: Classification, scope: Scope) -> str | None:
-    """Fixed sentence why the code drops a testable architecture requirement (ADR 0011)."""
+def _not_relevant_reason(answer: Classification) -> str | None:
+    """Fixed sentence why the code drops a testable architecture requirement (ADR 0011).
+
+    The judge already stripped the types outside the scope: any type left makes it relevant,
+    the first one left being the most important (ADR 0013).
+    """
     if answer.scope_level != "template":
         return LEVEL_SENTENCES[answer.scope_level]
     if not answer.cfn_resource_types:  # the judge stripped every type outside the scope (#19)
         return "Kein Ressourcentyp der Anforderung liegt im Prüfumfang."
-    if not is_relevant(answer, scope):
-        return f"Der erste Ressourcentyp {answer.cfn_resource_types[0]} liegt nicht im Prüfumfang."
     return None
 
 
 def _pinned_outcomes(
-    pinned: set[str], sources: list[ExtractedSource], judge: Judge, scope: Scope
+    pinned: set[str], sources: list[ExtractedSource], judge: Judge
 ) -> dict[str, Outcome]:
     """Fail fast: pinned anchors are decided first, before ~800 other requirements are paid."""
     by_anchor = {r.primary_anchor: (s.source, r) for s in sources for r in s.requirements}
     found = sorted(pinned & by_anchor.keys())
-    return {a: _decide(*by_anchor[a], judge, scope).outcome for a in found}
+    return {a: _decide(*by_anchor[a], judge).outcome for a in found}
 
 
-def _source_verdicts(source: ExtractedSource, judge: Judge, scope: Scope) -> list[Verdict]:
+def _source_verdicts(source: ExtractedSource, judge: Judge) -> list[Verdict]:
     total, asked = sum(r.prefilter_passed for r in source.requirements), 0
     verdicts = []
     for requirement in source.requirements:
-        verdict = _decide(source.source, requirement, judge, scope)
+        verdict = _decide(source.source, requirement, judge)
         if requirement.prefilter_passed:
             asked += 1
             tested = "not testable" if verdict.outcome == "not_testable" else "testable"
@@ -90,12 +90,11 @@ class CurationResult:
 
 
 def curate(
-    judge: Judge, sources: list[ExtractedSource], pinned: set[str], scope: Scope,
-    components: frozenset[str],
+    judge: Judge, sources: list[ExtractedSource], pinned: set[str], components: frozenset[str],
 ) -> CurationResult:
     """The LLM judges, the code selects: prefilter, testable, relevant; then the two gates."""
-    check_pinned(pinned, _pinned_outcomes(pinned, sources, judge, scope))
-    verdicts = [v for s in sources for v in _source_verdicts(s, judge, scope)]
+    check_pinned(pinned, _pinned_outcomes(pinned, sources, judge))
+    verdicts = [v for s in sources for v in _source_verdicts(s, judge)]
     selected = [
         SelectedRequirement(
             requirement_id=v.requirement_id, source=v.source, rationale=v.rationale,

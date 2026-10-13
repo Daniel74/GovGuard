@@ -27,6 +27,15 @@ def test_types_collects_the_types_of_all_services() -> None:
     assert scope.types == {"AWS::S3::Bucket", "AWS::KMS::Key", "AWS::KMS::Alias"}
 
 
+def test_scope_names_the_types_it_lacks_once_in_their_order() -> None:
+    # One check for stage ②, formulate_rule and check_rules (#19)
+    scope = Scope({"S3": ["AWS::S3::Bucket"]})
+    named = ["AWS::CloudTrail::Trail", "AWS::S3::Bucket", "AWS::WAF::WebACL",
+             "AWS::CloudTrail::Trail"]
+
+    assert scope.outside(named) == ["AWS::CloudTrail::Trail", "AWS::WAF::WebACL"]
+
+
 def test_scope_contains_only_real_cloudformation_types(scope: Scope) -> None:
     assert scope.types <= load_cfn_types()
 

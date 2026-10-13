@@ -72,7 +72,7 @@ class FormulateDeps:
     requirement: Requirement
     anchors: Anchors  # every requirement of every source, for the cross references
     properties: PropertyIndex  # real properties per type, for the invented ones
-    scope_types: frozenset[str]  # criteria may name nothing else (#19)
+    scope: Scope  # criteria may name nothing else (#19)
 
 
 formulate_agent = Agent(
@@ -110,7 +110,7 @@ def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDraft:
     if ctx.deps.audit_type == "architecture":
         problems += criteria_problems(
             draft, ctx.deps.selected.cfn_resource_types, ctx.deps.properties,
-            ctx.deps.scope_types,
+            ctx.deps.scope,
         )
     invalid = invalid_cross_references(draft, ctx.deps.selected.source, ctx.deps.anchors)
     if invalid:
@@ -162,7 +162,7 @@ def formulate_rules(
     for n, selected in enumerate(selection.selected, start=1):
         requirement = by_id[(selected.source, selected.requirement_id)]
         deps = FormulateDeps(
-            selection.audit_type, selected, requirement, anchors, properties, scope.types)
+            selection.audit_type, selected, requirement, anchors, properties, scope)
         rules.append(_complete_rule(deps, model))
         logger.info("%s %d/%d %s", selection.audit_type, n, len(selection.selected), rules[-1].id)
     used = {s.source for s in selection.selected}
@@ -170,5 +170,5 @@ def formulate_rules(
         audit_type=selection.audit_type, model_id=model.model_name, rules=rules,
         source_versions={s.source: s.version for s in sources if s.source in used},
     )
-    check_rules(catalog, selection, sources, scope.types)
+    check_rules(catalog, selection, sources, scope)
     return catalog

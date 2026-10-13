@@ -10,7 +10,6 @@ from kb_build.select.classify import Judge
 from kb_build.select.curation import curate
 
 SCOPE = Scope({"S3": ["AWS::S3::Bucket"], "IAM": ["AWS::IAM::Role"], "KMS": ["AWS::KMS::Key"]})
-NO_SCOPE = Scope({})
 NO_COMPONENTS: frozenset[str] = frozenset()
 
 
@@ -50,8 +49,8 @@ INVENTED = {"testable": True, "rationale": "x", "cfn_resource_types": ["AWS::SES
 
 def curate_cis(source: ExtractedSource, answers: dict, pinned: set[str] = frozenset()):
     asked: list[str] = []
-    judge = Judge("architecture", fake_llm(answers, asked))
-    return curate(judge, [source], pinned, SCOPE, NO_COMPONENTS), asked
+    judge = Judge("architecture", fake_llm(answers, asked), SCOPE)
+    return curate(judge, [source], pinned, NO_COMPONENTS), asked
 
 
 def outcomes(result) -> dict[str, str]:
@@ -93,24 +92,23 @@ def test_a_prefiltered_requirement_keeps_the_sentence_of_the_prefilter() -> None
     assert result.verdicts[0].rationale == "Kapitel 5 gehört nicht dazu."
 
 
-def test_a_requirement_outside_the_scope_gets_a_fixed_sentence_naming_the_type() -> None:
+def test_the_first_type_left_in_the_scope_decides_the_relevance() -> None:
+    # The judge strips CloudTrail (#19, ADR 0013); account duties fall out by scope_level (#18)
     source = cis_source(req("4.8"))
     answers = {"4.8": can_test("AWS::CloudTrail::Trail", "AWS::S3::Bucket")}
 
     result, _ = curate_cis(source, answers)
 
     verdict = result.verdicts[0]
-    assert verdict.outcome == "not_relevant"
-    assert verdict.rationale == (
-        "Der erste Ressourcentyp AWS::CloudTrail::Trail liegt nicht im Prüfumfang.")
-    assert verdict.cfn_resource_types == ["AWS::CloudTrail::Trail", "AWS::S3::Bucket"]
+    assert verdict.outcome == "selected"
+    assert verdict.cfn_resource_types == ["AWS::S3::Bucket"]
 
 
 def test_a_requirement_with_only_types_outside_the_scope_is_not_relevant_without_a_crash() -> None:
     # The judge strips CloudTrail (#19); nothing is left, so the code cannot name a first type
     judge = Judge("architecture", fake_llm({"4.8": can_test("AWS::CloudTrail::Trail")}, []), SCOPE)
 
-    result = curate(judge, [cis_source(req("4.8"))], frozenset(), SCOPE, NO_COMPONENTS)
+    result = curate(judge, [cis_source(req("4.8"))], frozenset(), NO_COMPONENTS)
 
     verdict = result.verdicts[0]
     assert verdict.outcome == "not_relevant"
@@ -140,9 +138,9 @@ def test_a_people_duty_is_not_relevant_even_for_a_resource_in_scope() -> None:
     source = ExtractedSource(
         source="C5", version="v", origin="o", requirements=[req("OPS-16.01B")])
     judge = Judge("architecture", fake_llm(
-        {"OPS-16.01B": can_test("AWS::IAM::Role", level="people")}, []))
+        {"OPS-16.01B": can_test("AWS::IAM::Role", level="people")}, []), SCOPE)
 
-    result = curate(judge, [source], set(), SCOPE, NO_COMPONENTS)
+    result = curate(judge, [source], set(), NO_COMPONENTS)
 
     assert result.verdicts[0].outcome == "not_relevant"
     assert result.verdicts[0].rationale == (
@@ -172,7 +170,7 @@ def test_the_spec_audit_ignores_the_level_of_the_duty() -> None:
     source = ExtractedSource(source="DSGVO", version="v", origin="o", requirements=[req("Art. 58")])
     judge = Judge("spec", fake_llm({"Art. 58": can_test(level="provider")}, []))
 
-    result = curate(judge, [source], set(), NO_SCOPE, NO_COMPONENTS)
+    result = curate(judge, [source], set(), NO_COMPONENTS)
 
     assert [s.requirement_id for s in result.selection.selected] == ["Art. 58"]
 
@@ -206,7 +204,7 @@ def test_curate_spec_has_no_relevance_filter_and_no_resource_types() -> None:
     source = ExtractedSource(source="DSGVO", version="v", origin="o", requirements=[req("Art. 32")])
     judge = Judge("spec", fake_llm({"Art. 32": can_test("AWS::S3::Bucket")}, []))
 
-    result = curate(judge, [source], set(), NO_SCOPE, NO_COMPONENTS)
+    result = curate(judge, [source], set(), NO_COMPONENTS)
 
     assert [(s.requirement_id, s.cfn_resource_types) for s in result.selection.selected] == [
         ("Art. 32", [])]
@@ -271,10 +269,10 @@ def test_pinned_anchors_are_checked_before_anything_else_is_classified() -> None
     asked: list[str] = []
     answers = {"DET.3.1": can_test("AWS::S3::Bucket"), "BER.4.1": can_test("AWS::IAM::Role"),
                "4.6": NOT_TESTABLE}
-    judge = Judge("architecture", fake_llm(answers, asked))
+    judge = Judge("architecture", fake_llm(answers, asked), SCOPE)
 
     with pytest.raises(ValueError, match="A 4.6"):
-        curate(judge, [bsi, cis], {"A BER.4.1", "A 4.6"}, SCOPE, NO_COMPONENTS)
+        curate(judge, [bsi, cis], {"A BER.4.1", "A 4.6"}, NO_COMPONENTS)
 
     assert "DET.3.1" not in asked  # failed fast: the other requirements are never paid for
 
@@ -285,8 +283,8 @@ def test_pinned_anchors_are_checked_before_anything_else_is_classified() -> None
 def curate_components(components: set[str], *answers: dict):
     ids_ = [f"3.1.{n}" for n in range(1, len(answers) + 1)]
     source = cis_source(*[req(i) for i in ids_])
-    judge = Judge("architecture", fake_llm(dict(zip(ids_, answers)), []))
-    return curate(judge, [source], set(), SCOPE, frozenset(components))
+    judge = Judge("architecture", fake_llm(dict(zip(ids_, answers)), []), SCOPE)
+    return curate(judge, [source], set(), frozenset(components))
 
 
 def test_the_build_passes_if_every_component_has_a_selected_requirement() -> None:
@@ -314,4 +312,4 @@ def test_the_spec_audit_has_no_components_to_cover() -> None:
     source = ExtractedSource(source="DSGVO", version="v", origin="o", requirements=[req("Art. 32")])
     judge = Judge("spec", fake_llm({"Art. 32": can_test()}, []))
 
-    curate(judge, [source], set(), NO_SCOPE, frozenset({"AWS::SQS::Queue"}))
+    curate(judge, [source], set(), frozenset({"AWS::SQS::Queue"}))

@@ -296,7 +296,7 @@ src/govguard/         Laufzeit-Kern, wird zum Lambda-Paket
 src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, nie umgekehrt)
   __main__.py         Einstieg; gates.py, paths.py (alle Datenpfade), source_fetch.py, groq_services.py
   extract/            Adapter je Quelle (bsi, cis, c5, dsgvo, fsbp, sdm, prowler), models.py, run.py
-  select/             relevance, classify, curation, judgement_cache, models.py, run.py
+  select/             classify, curation, judgement_cache, models.py, run.py
   rules/              formulate, criteria, quality, run.py
   reference/          scope, cfn_types, cfn_properties, archetype_profiles, run.py (cfn-properties)
   cdk_runner.py       geplant: einziger Ort für subprocess

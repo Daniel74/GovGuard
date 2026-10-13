@@ -11,19 +11,15 @@ from kb_build.reference.cfn_properties import (
     owners,
     unknown_properties,
 )
+from kb_build.reference.scope import Scope
 from kb_build.rules.quality import vague_terms
 
 MAX_OWNERS = 3  # types named in a retry hint: enough to choose from, short enough to read
 
 
-def types_outside_scope(text: str, scope_types: frozenset[str]) -> list[str]:
-    """The resource types named in `text` that the scope lacks, each once (#19)."""
-    return [t for t in dict.fromkeys(TYPE_PATTERN.findall(text)) if t not in scope_types]
-
-
 def criteria_problems(
     draft: RuleDraft, resource_types: list[str], properties: PropertyIndex,
-    scope_types: frozenset[str],
+    scope: Scope,
 ) -> list[str]:
     criteria, problems = f"{draft.compliant_if} {draft.violation_if}", []
     vague = vague_terms(criteria)
@@ -31,7 +27,7 @@ def criteria_problems(
         words = ", ".join(f"„{w}“" for w in vague)
         problems.append(f"Die Kriterien enthalten Wörter, die am Template nicht entscheidbar "
                         f"sind: {words}. Nenne stattdessen konkrete Eigenschaften und Werte.")
-    outside = types_outside_scope(criteria, scope_types)
+    outside = scope.outside(TYPE_PATTERN.findall(criteria))
     if outside:
         problems.append(f"Diese Ressourcentypen liegen außerhalb des Prüfumfangs: "
                         f"{', '.join(outside)}. Nenne nur Typen der Prüfregel.")

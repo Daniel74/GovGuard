@@ -7,7 +7,7 @@ from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from kb_build.extract.models import Requirement
 from kb_build.reference.scope import Scope
-from kb_build.select.classify import build_deps, classify_requirement
+from kb_build.select.classify import build_deps, classify_requirement, request_version
 from kb_build.select.models import Classification
 
 REQUIREMENT = Requirement(
@@ -262,3 +262,16 @@ def test_architecture_answer_with_only_types_outside_the_scope_ends_up_without_t
                                   answer_in_turns(only_outside))
 
     assert result.cfn_resource_types == []  # curation then finds it not relevant
+
+
+def test_a_new_type_of_a_known_service_changes_the_prompt_version() -> None:
+    # The prompt names only services, but the validator strips by type: a cached answer
+    # would lack the new type, so every change to scope.json means a full run (#19)
+    wider = Scope({"S3": ["AWS::S3::Bucket", "AWS::S3::BucketPolicy"]})
+
+    assert request_version(build_deps("architecture", S3_SCOPE)) != request_version(
+        build_deps("architecture", wider))
+
+
+def test_the_scope_leaves_the_prompt_version_of_the_spec_untouched() -> None:
+    assert request_version(build_deps("spec", S3_SCOPE)) == request_version(SPEC)

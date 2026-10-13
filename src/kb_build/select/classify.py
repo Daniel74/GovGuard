@@ -73,7 +73,7 @@ class ClassifyDeps:
 
     audit_type: AuditType
     instructions: str
-    scope_types: frozenset[str] | None = None  # architecture: types outside it are dropped (#19)
+    scope: Scope | None = None  # architecture: types outside it are dropped (#19)
 
 
 def build_deps(audit_type: AuditType, scope: Scope | None = None) -> ClassifyDeps:
@@ -81,14 +81,19 @@ def build_deps(audit_type: AuditType, scope: Scope | None = None) -> ClassifyDep
     text = PROMPTS[audit_type]
     if audit_type == "architecture" and scope is not None:
         text += "\n" + SCOPE_PROMPT.format(services=", ".join(scope.services))
-        return ClassifyDeps(audit_type, text, scope.types)
+        return ClassifyDeps(audit_type, text, scope)
     return ClassifyDeps(audit_type, text)
 
 
 def request_version(deps: ClassifyDeps) -> str:
-    """Prompt version of the cache key: instructions, user message and tool definition."""
+    """Prompt version of the cache key: instructions, user message, tool definition and the
+    scope types the validator keeps. The prompt shows services only; a new type of a known
+    service must still mean a full run (#19).
+    """
     schema = json.dumps(Classification.model_json_schema(), sort_keys=True)
-    return prompt_version(deps.instructions, USER_PROMPT, TOOL_NAME, TOOL_DESCRIPTION, schema)
+    scope_types = sorted(deps.scope.types) if deps.scope else []
+    return prompt_version(
+        deps.instructions, USER_PROMPT, TOOL_NAME, TOOL_DESCRIPTION, schema, *scope_types)
 
 
 classify_agent = Agent(
@@ -120,9 +125,9 @@ def _validate(ctx: RunContext[ClassifyDeps], answer: Classification) -> Classifi
         )
     if invalid:  # the code drops invented types, no retry needed (#18)
         logger.info("dropped invented resource types: %s", invalid)
-    if ctx.deps.scope_types is not None:  # the first type left decides the relevance (ADR 0007)
-        outside = [t for t in real if t not in ctx.deps.scope_types]
-        real = [t for t in real if t in ctx.deps.scope_types]
+    if ctx.deps.scope is not None:  # strip types outside the scope (ADR 0013)
+        outside = ctx.deps.scope.outside(real)
+        real = [t for t in real if t not in outside]
         if outside:
             logger.info("dropped types outside the scope: %s", outside)
     return answer.model_copy(update={"cfn_resource_types": real})

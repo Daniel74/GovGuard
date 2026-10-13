@@ -22,19 +22,16 @@ def paths_in(tmp: Path) -> BuildPaths:
     shutil.copytree(REAL.extracted, paths.extracted)
     for audit_type in ("architecture", "spec"):
         shutil.copy(REAL.out_file("selection", audit_type), paths.out_file("selection", audit_type))
-    _keep_scope_types(paths)
     return paths
 
 
-def _keep_scope_types(paths: BuildPaths) -> None:
-    """The checked-in list may predate the scope (#19); rules may name scope types only."""
-    scope_types = read_scope(paths.scope).types
-    file = paths.out_file("selection", "architecture")
-    selection = Selection.model_validate_json(file.read_text("utf-8"))
-    for selected in selection.selected:
-        selected.cfn_resource_types = [t for t in selected.cfn_resource_types if t in scope_types]
-    selection.selected = [s for s in selection.selected if s.cfn_resource_types]
-    file.write_text(selection.model_dump_json(), encoding="utf-8")
+def test_the_checked_in_selection_names_only_types_of_the_scope() -> None:
+    # check_rules aborts on any other type (#19); a stale list needs a new select run
+    scope_types = read_scope(REAL.scope).types
+    raw = REAL.out_file("selection", "architecture").read_text("utf-8")
+    named = {t for s in Selection.model_validate_json(raw).selected for t in s.cfn_resource_types}
+
+    assert sorted(named - scope_types) == []
 
 
 def quoting_model(quote: str | None = None) -> FunctionModel:

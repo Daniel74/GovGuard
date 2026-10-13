@@ -277,9 +277,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #19 umsetzen` → Plan → Go
       Reihenfolge: Prüfumfang erweitern (`scope.json`, Snapshot `cfn_properties.json`, ADR 0013, `CONTEXT.md`, `AUSBAU.md`) → Validator von Stufe ② streicht Typen außerhalb des Prüfumfangs → Validator von `formulate_rule` → `check_rules`
 - [x] **Echter Lauf** 🤖 👤 „Erzeuge Auswahl und Prüfregeln für **beide** Audit-Arten neu“: `select` ohne `--audit-type` (`--provider groq`), dann `rules` (`bedrock-global`, falls `eu.` keine Kapazität hat). Der Cache ist für Spec und Architektur veraltet (siehe 9c), alle Urteile werden neu bezahlt. 👤 Prüfe: Schreibt `select` nach `data/intermediate/` (Nachweis für #20)? Zeigt der Qualitätsbericht `unjudged_properties` 0? Welche Regeln haben Typen verloren? Behalten FSBP DynamoDB.4 und RDS.26 ihre Backup-Typen? Was hat sich in `git diff data/intermediate/selection_spec.json` geändert?
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #19`
-- [ ] **Verstehen** 👤 `/verstehen 19` (Kernfrage: warum ein Gate nur so weit prüft, wie seine Referenz reicht)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #19`
+- [-] **Verstehen** 👤 `/verstehen 19` (Kernfrage: warum ein Gate nur so weit prüft, wie seine Referenz reicht)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Beide Auswahllisten und beide `rules_*.json` neu eingecheckt sind und der Qualitätsbericht überall 0 zeigt.
 **Fürs Fachgespräch:** sichtbare statt stiller Lücken, Prüfumfang als bewusste Entscheidung, Shared Responsibility.
