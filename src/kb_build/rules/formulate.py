@@ -78,7 +78,7 @@ class FormulateDeps:
 formulate_agent = Agent(
     output_type=ToolOutput(RuleDraft, name=TOOL_NAME, description=TOOL_DESCRIPTION),
     deps_type=FormulateDeps,
-    retries=3,  # build only, no 29 s timeout (ADR 0005 limits the runtime agents to one retry)
+    retries=6,  # build only, no 29 s timeout; Groq needs more than Haiku (ADR 0005, 0014)
     model_settings={"temperature": 0},
 )
 

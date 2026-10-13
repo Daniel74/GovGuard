@@ -12,7 +12,7 @@ ADAPTER_ONLY = {  # I/O import -> the only module allowed to import it
     "botocore": "govguard/aws_services.py",
     "pydantic_ai.models.bedrock": "govguard/aws_services.py",
     "pydantic_ai.providers.bedrock": "govguard/aws_services.py",
-    "groq": "kb_build/groq_services.py",  # build-only fallback (ADR 0010)
+    "groq": "kb_build/groq_services.py",  # build default (ADR 0014)
     "pydantic_ai.models.groq": "kb_build/groq_services.py",
     "pydantic_ai.providers.groq": "kb_build/groq_services.py",
     "subprocess": "kb_build/cdk_runner.py",

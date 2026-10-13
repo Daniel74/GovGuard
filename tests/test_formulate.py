@@ -129,7 +129,7 @@ def test_an_answer_that_stays_invalid_aborts_the_build_and_names_the_requirement
     wrong = draft("3.1.4", source_quote="erfundener Normtext")
 
     with pytest.raises(ValueError, match="CIS 3.1.4"):
-        run_formulate(fake_llm({"3.1.4": [wrong] * 4}), arch_selection("3.1.4"), SOURCES)
+        run_formulate(fake_llm({"3.1.4": [wrong] * 7}), arch_selection("3.1.4"), SOURCES)
 
 
 def test_a_spec_rule_drops_spaces_from_the_id_and_has_no_resource_types() -> None:
@@ -225,3 +225,19 @@ def test_criteria_naming_a_type_outside_the_scope_are_sent_back_and_name_it() ->
     assert catalog.rules[0].violation_if == "BucketEncryption fehlt."
     assert "AWS::CloudTrail::Trail" in sent_back[0]
     assert "Prüfumfang" in sent_back[0]
+
+
+def test_a_stubborn_model_gets_six_retries_before_the_build_stops() -> None:
+    # Groq (ADR 0014) repeats an invented quote or property; the gate stays strict, not the count
+    calls = []
+
+    def respond(history: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        calls.append(1)
+        attempt = draft("3.1.4") if len(calls) > 6 else draft("3.1.4", source_quote="erfunden")
+        return ModelResponse(parts=[ToolCallPart("formulate_rule", attempt)])
+
+    catalog = run_formulate(FunctionModel(respond, model_name="fake-model"),
+                            arch_selection("3.1.4"), SOURCES)
+
+    assert catalog.rules[0].source_quote == "The text of 3.1.4"
+    assert len(calls) == 7

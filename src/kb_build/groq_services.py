@@ -1,6 +1,6 @@
-"""Groq adapter: temporary build-only fallback while Bedrock is unavailable (ADR 0010).
+"""Groq adapter: default LLM for the knowledge-base build (ADR 0014).
 
-Never used at runtime (Lambda); only public norm texts are sent. Delete with ADR 0010.
+Never used at runtime (Lambda); only public norm texts are sent, never user input.
 """
 
 import os

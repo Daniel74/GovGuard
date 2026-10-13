@@ -9,7 +9,7 @@ Build-Werkzeug, läuft lokal: `uv run python -m kb_build <befehl>`. Hintergrund:
 | `extract` (Standard) | Lädt die Quellen (SHA-256 geprüft) und zerlegt sie in Anforderungen. Kein LLM. | `data/intermediate/extracted/*.json` |
 | `select` | Das LLM klassifiziert „prüfbar ja/nein“, der Code wählt aus (Relevanz, gesetzte Plätze, Ranking). | `data/intermediate/selection_<arch\|spec>.json`, dazu `verdicts_*.json` (Urteil je Anforderung: gesetzt, gewählt, nicht prüfbar, nicht relevant, über der Obergrenze; [SPEC](docs/SPEC.md)) |
 
-- **Modell:** Standard ist Bedrock (`eu-central-1`, Profil `eu.`), mit `AWS_PROFILE=…` und gültigem Login. `--provider groq` ist ein befristeter Ausweg ([ADR 0010](docs/adr/0010-groq-build-fallback.md)): `export GROQ_API_KEY=…`, Modell optional über `GROQ_MODEL`.
+- **Modell:** Standard im Build ist Groq ([ADR 0014](docs/adr/0014-groq-standard-im-build.md)): `export GROQ_API_KEY=…`, Modell optional über `GROQ_MODEL`. Fehlt der Schlüssel, bricht der Lauf ab, ohne auf Bedrock auszuweichen. Bedrock nur ausdrücklich mit `--provider bedrock` (`eu-central-1`, Profil `eu.`, `AWS_PROFILE=…` und gültigem Login) oder `--provider bedrock-global` ([ADR 0012](docs/adr/0012-globales-profil-im-build.md)).
 - **Nur eine Audit-Art:** `select --audit-type spec` oder `architecture` rechnet nur diese Liste neu (ca. 100 bzw. 425 Aufrufe nacheinander).
 - **Fortschritt:** pro Anforderung eine Zeile mit Uhrzeit. Scheitert ein gesetzter Anker (Preset), bricht der Lauf in den ersten Sekunden ab.
 - **Tests:** `uv run pytest` und `uv run ruff check` brauchen weder AWS noch Groq.

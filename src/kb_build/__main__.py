@@ -15,7 +15,7 @@ from kb_build.select.run import select_all
 
 
 def model_for(provider: str) -> Model:
-    """Bedrock `eu.` is the default; the others are explicit build opt-ins (ADR 0010, 0012)."""
+    """Groq is the build default (ADR 0014); Bedrock profiles are explicit opt-ins (ADR 0012)."""
     providers = {
         "bedrock": bedrock_model,
         "bedrock-global": lambda: bedrock_model(model_id=GLOBAL_MODEL_ID),
@@ -26,15 +26,19 @@ def model_for(provider: str) -> Model:
     return providers[provider]()
 
 
-if __name__ == "__main__":
+def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(prog="python -m kb_build")
     parser.add_argument("command", nargs="?", default="extract",
                         choices=["extract", "select", "rules", "cfn-properties"])
-    parser.add_argument("--provider", default="bedrock",
+    parser.add_argument("--provider", default="groq",
                         choices=["bedrock", "bedrock-global", "groq"])
     parser.add_argument("--audit-type", choices=["spec", "architecture"], default=None)
     parser.add_argument("--schema-dir", type=Path, default=Path("schemas"))  # describe-type
-    args = parser.parse_args()
+    return parser.parse_args(argv)
+
+
+if __name__ == "__main__":
+    args = parse_args()
     logging.basicConfig(level=logging.WARNING, format="%(asctime)s %(message)s", datefmt="%H:%M:%S")
     logging.getLogger("kb_build").setLevel(logging.INFO)  # progress only, no HTTP noise
     if args.command == "select":

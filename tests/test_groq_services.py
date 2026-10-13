@@ -1,4 +1,4 @@
-"""Groq adapter: build-only fallback while Bedrock is unavailable (ADR 0010)."""
+"""Groq adapter: default LLM for the knowledge-base build (ADR 0014)."""
 
 import pytest
 from pydantic_ai.models.groq import GroqModel
