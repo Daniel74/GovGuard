@@ -26,12 +26,12 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 ## Audit
 
 - **Spezifikation**: Fachliche Beschreibung eines Vorhabens (Freitext oder OpenAPI); Eingabe des Spec-Audits. _Code_: `spec`. _Vermeiden_: Spec-Dokument, Anforderungsdokument
-- **Architektur**: Technische Beschreibung eines Systems (Freitext, Terraform oder CloudFormation); Eingabe des Architektur-Audits. _Code_: `architecture`. _Vermeiden_: Design, Infrastruktur
+- **Architektur**: Technische Beschreibung eines Systems (Freitext, Terraform oder CloudFormation; nur CloudFormation-JSON hat ein Code-Inventar, Terraform ist ungetestet, ADR 0015); Eingabe des Architektur-Audits. _Code_: `architecture`. _Vermeiden_: Design, Infrastruktur
 - **Spec-Audit**: Prüfung einer Spezifikation gegen die Prüfregeln aus DSGVO und SDM. _Code_: `spec_audit`. _Vermeiden_: Spec Review, Evaluation
 - **Architektur-Audit**: Prüfung einer Architektur gegen die Prüfregeln aus BSI Grundschutz++, BSI C5, CIS und AWS FSBP. _Code_: `architecture_audit`. _Vermeiden_: Architecture Review, Evaluation
 - **Befund**: Ergebnis genau einer Prüfregel in einem Audit, mit Status, Beleg und Empfehlung. _Code_: `Finding`. _Vermeiden_: Finding, Issue
 - **Status**: PASS (Einhaltung belegt), WARN (aus der Eingabe nicht entscheidbar, Prüfbedarf), FAIL (Verstoß belegt) oder N/A (nicht anwendbar). _Code_: `Status`
-- **Ressourceninventar**: Menge der Ressourcentypen, die in einer Architektur vorkommen; der Code liest sie aus CloudFormation oder Terraform, bei Freitext nennt sie das LLM mit Beleg. _Code_: `template_resource_types`. _Vermeiden_: Dienstliste
+- **Ressourceninventar**: Menge der Ressourcentypen, die in einer Architektur vorkommen; der Code liest sie nur aus CloudFormation-JSON, bei Freitext, YAML und Terraform nennt sie das LLM mit Beleg (ADR 0015). _Code_: `template_resource_types`. _Vermeiden_: Dienstliste
 - **Anwendbar**: Eine Prüfregel ist in einem Audit anwendbar, wenn mindestens einer ihrer Ressourcentypen im Ressourceninventar vorkommt; sonst setzt der Code N/A. _Vermeiden_: relevant (gilt zur Build-Zeit)
 - **Beleg**: Wörtliches Zitat aus der Eingabe, auf das sich ein Befund stützt. _Code_: `evidence`. _Vermeiden_: Evidence, Nachweis
 - **Gesamtstatus**: Der schlechteste Status aller Befunde eines Audits. _Code_: `overall_status`

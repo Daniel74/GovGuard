@@ -327,11 +327,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Nur CloudFormation-JSON hat ein Ressourceninventar per Code. Terraform und YAML laufen als Freitext, ohne Test durch ein Preset. ADR 0015, `CONTEXT.md`, `SPEC.md` und `AUSBAU.md` (Szenario 9) halten diese Einschränkung fest.
 **Voraussetzung:** Schritt 9f. Kein Code, nur Doku.
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 25` und setze es um“ → Plan → Go
+- [x] **Starten** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 25` und setze es um“ → Plan → Go
       Reihenfolge: ADR 0015 → `CONTEXT.md` und `SPEC.md` → `AUSBAU.md` Szenario 9 (IaC Generator vorher gegen AWS-Doku prüfen)
-- [ ] **Prüfen** 👤 ADR 0015 und Szenario 9 querlesen (je ca. 2 Minuten)
-- [ ] **Verstehen** 👤 `/verstehen 25` (Kernfrage: warum eine LLM-Übersetzung nach CloudFormation die Beleg-Pflicht bricht)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 👤 ADR 0015 und Szenario 9 querlesen (je ca. 2 Minuten)
+- [-] **Verstehen** 👤 `/verstehen 25` (Kernfrage: warum eine LLM-Übersetzung nach CloudFormation die Beleg-Pflicht bricht)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** ADR 0015 vorliegt und `CONTEXT.md`, `SPEC.md` und `AUSBAU.md` dazu passen.
 **Fürs Fachgespräch:** eine Sprache für Wissensbasis, Archetypen und Selbst-Audit; Terraform als bewusst dokumentierte, ungetestete Grenze.

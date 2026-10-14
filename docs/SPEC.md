@@ -5,7 +5,7 @@
 ## User Stories
 
 1. Als Architekt lasse ich eine Spezifikation auditieren und sehe pro Prüfregel Status, Beleg und Empfehlung.
-2. Als Architekt lasse ich eine Architektur (Freitext, Terraform oder CloudFormation) auditieren, auch wenn sie keinem Golden Archetype ähnelt.
+2. Als Architekt lasse ich eine Architektur (Freitext, Terraform oder CloudFormation) auditieren, auch wenn sie keinem Golden Archetype ähnelt. Nur CloudFormation-JSON hat ein Ressourceninventar per Code; Terraform und YAML gelten als Freitext und sind nicht getestet (ADR 0015).
 3. Als Architekt erhalte ich bei einer Spezifikation ohne FAIL einen Golden Archetype (CDK-Code + Template) mit Begründung – oder „kein passender Archetyp“. _(Priorität B)_
 4. Als CI-Pipeline rufe ich die Audit-API (IAM-Auth) auf und werte den Gesamtstatus maschinell aus.
 5. Als Projektbetreiber starte ich den Build der Wissensbasis manuell; nur bei grünen Gates öffnet er einen Pull Request, und erst dessen Merge rollt die Wissensbasis aus.

@@ -1,6 +1,6 @@
-# GovGuard – Ausbau in acht Szenarien (Post-MVP)
+# GovGuard – Ausbau in neun Szenarien (Post-MVP)
 
-Das GovGuard-MVP operiert bewusst mit definierten Limits: ein Prüfumfang aus Serverless-Diensten, RDS/Aurora und Fargate, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt acht Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
+Das GovGuard-MVP operiert bewusst mit definierten Limits: ein Prüfumfang aus Serverless-Diensten, RDS/Aurora und Fargate, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt neun Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
 
 Drei fundamentale Prinzipien bleiben in jedem Ausbauszenario konstant:
 
@@ -24,7 +24,7 @@ _Seit ADR 0011 im MVP: Quellen-Adapter, Cache, Pruning per Ressourceninventar un
 |---|---|---|
 | **Build** | **Quellen-Adapter:** Neue Kataloge (wie BSI C5) erhalten standardisierte Schnittstellen zum Auslesen und Vorfiltern. | Code |
 | **Build** | **Inkrementeller Build:** Bereits klassifizierte Anforderungen werden gecacht. Das LLM bewertet nur noch Delta-Änderungen (geänderte/neue Regeln). | Code & LLM |
-| **Laufzeit** | **Deterministisches Pruning:** Fehlt eine Ressource im IaC-Template (z.B. kein S3-Bucket), setzt der Code alle S3-Prüfregeln sofort auf `N/A`, ohne diese an das LLM zu senden. Im MVP für CloudFormation-JSON umgesetzt (ADR 0007); Ausbau: Terraform und YAML. | Code |
+| **Laufzeit** | **Deterministisches Pruning:** Fehlt eine Ressource im IaC-Template (z.B. kein S3-Bucket), setzt der Code alle S3-Prüfregeln sofort auf `N/A`, ohne diese an das LLM zu senden. Im MVP für CloudFormation-JSON umgesetzt (ADR 0007); Terraform: Szenario 9. | Code |
 | **Laufzeit** | **Map-Reduce-Evaluierung:** Der Katalog wird in thematische Pakete à 20 Regeln zerlegt. Eigene LLM-Aufrufe evaluieren diese Pakete parallel; der Code führt die Befunde final zusammen. | Code & LLM |
 
 ## Szenario 2: Verarbeitung massiver Dokumente (> 100.000 Zeichen)
@@ -106,6 +106,17 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 - **Auslöser:** Ein Fachverfahren liegt schon als Container vor oder braucht lange Laufzeiten über 15 Minuten. Auditiert wird Fargate schon im MVP (Prüfumfang), gebaut wird kein Archetyp.
 - **Was bricht:** Ein Fargate-Dienst läuft dauerhaft und hat damit Leerlaufkosten. Er braucht eine VPC und meist einen Application Load Balancer, der selbst Leerlaufkosten hat.
 - **Anpassung:** Ein Container-Archetyp nur mit bewusst akzeptierten Leerlaufkosten, dokumentiert als Ausnahme von der FinOps-Leitplanke (neuer ADR). Vorher prüfen: Reicht ein ereignisgesteuerter Fargate-Task (z. B. Step Functions oder EventBridge startet ihn), der ohne Last nicht läuft?
+
+## Szenario 9: Terraform als Format mit Code-Inventar
+
+- **Auslöser:** Behörden liefern ihre Architektur als Terraform, und N/A soll der Code setzen statt des LLM (ADR 0015).
+- **Was bricht:** Prüfregeln, Prüfumfang und Eigenschaften sprechen CloudFormation (`AWS::S3::Bucket`), Terraform heißt `aws_s3_bucket`. Die Zuordnung ist nicht 1:1: Ein CloudFormation-Typ verteilt sich in Terraform auf mehrere Blöcke (z. B. Verschlüsselung als eigener Block). Im MVP gilt Terraform als Freitext, und kein Preset testet es.
+
+| Weg | Anpassung | Ausführende Schicht |
+|---|---|---|
+| **Plan-JSON + Zuordnungstabelle** | `terraform show -json` liefert ein maschinenlesbares Inventar; eine gepflegte Tabelle `aws_*` → `AWS::*` übersetzt die Typen. Zuerst ein Terraform-Preset, dann die Tabelle, beides getestet. | Code & Mensch |
+| **CloudFormation IaC Generator nach dem Deploy** | Der Generator scannt bereits angelegte Ressourcen einer Region im Konto und erzeugt daraus ein CloudFormation-Template (laut AWS-Doku nur Typen, die die Cloud Control API unterstützt; ein Template fasst bis zu 500 Ressourcen). Geprüft wird also der Ist-Zustand nach dem Deploy, nicht die Eingabe vor dem Deploy. Vorher klären: Kontozugriff und IAM-Rechte, Region, und ob der Beleg aus dem generierten Template noch „Eingabe“ ist. _(Stand der AWS-Doku am 2026-10-14, vor dem Bau erneut prüfen.)_ | Code |
+| **LLM übersetzt nach CloudFormation** | **Ausdrücklich verworfen (ADR 0015):** Der Beleg stünde nicht mehr in der Eingabe, der Existenz-Check wäre wertlos. | – |
 
 ## Weitere Typen im Prüfumfang (EFS, SSM-Klartext-Parameter)
 
