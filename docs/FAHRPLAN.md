@@ -395,9 +395,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #27: Detailtiefe im Report, Anzeige in der UI, Begriff fürs Glossar`
 - [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #27 umsetzen` → Plan → Go (Report-Vertrag und Datenminimierung im Log sind Weichenstellungen)
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #27`
-- [ ] **Verstehen** 👤 `/verstehen 27` (Kernfrage: warum ein Audit-Werkzeug seine eigenen KI-Fehler zeigen muss)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #27`
+- [-] **Verstehen** 👤 `/verstehen 27` (Kernfrage: warum ein Audit-Werkzeug seine eigenen KI-Fehler zeigen muss)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Ein Report mit Retry die Korrekturen nennt, ein fail closed die Gründe in Alltagssprache zeigt und `AuditEvent` keine Eingabe enthält.
 **Fürs Fachgespräch:** Transparenz und Nachvollziehbarkeit von KI-Entscheidungen, Human Oversight, Datenminimierung im Protokoll.

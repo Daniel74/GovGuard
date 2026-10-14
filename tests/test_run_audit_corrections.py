@@ -5,6 +5,7 @@ from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelMessage, ModelResponse, RetryPromptPart, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 from test_run_audit import PASS_32, WARN_9, answer_in_turns
+from test_run_audit_freetext import FREE_TEXT, S3_SEEN, fake
 from test_run_audit_packages import INPUT as PACKAGE_INPUT
 from test_run_audit_packages import catalog_of, rule_ids_in
 
@@ -141,3 +142,49 @@ def test_report_without_a_retry_counts_zero(spec_catalog, spec_input, trace) -> 
     report = run_audit(spec_catalog, spec_input, answer_in_turns([PASS_32, WARN_9]), trace)
 
     assert report.retries == 0
+
+
+def test_pre_run_retry_reason_stands_in_unassigned_corrections(arch_catalog, trace) -> None:
+    invented = {"resource_type": "AWS::EC2::Instance", "evidence": S3_SEEN["evidence"]}
+
+    report = run_audit(arch_catalog, FREE_TEXT, fake([invented], [S3_SEEN], audit_prompts=[]),
+                       trace)
+
+    assert report.unassigned_corrections == ["AWS::EC2::Instance: Typ steht nicht in der Liste"]
+    assert report.retries == 1  # the pre-run counts like a package
+
+
+def test_pre_run_fail_closed_names_its_reason_not_the_schema(arch_catalog, trace) -> None:
+    invented = {"resource_type": "AWS::EC2::Instance", "evidence": S3_SEEN["evidence"]}
+
+    with pytest.raises(AuditValidationError) as failure:
+        run_audit(arch_catalog, FREE_TEXT, fake([invented], audit_prompts=[]), trace)
+
+    assert failure.value.problems == [("", "AWS::EC2::Instance: Typ steht nicht in der Liste")]
+
+
+def test_schema_retry_that_succeeds_leaves_a_plain_reason(spec_catalog, spec_input, trace) -> None:
+    calls: list[int] = []
+
+    def broken_once(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        calls.append(1)
+        findings = "keine Liste" if len(calls) == 1 else [PASS_32, WARN_9]
+        return ModelResponse(parts=[ToolCallPart("submit_audit", {"findings": findings})])
+
+    report = run_audit(spec_catalog, spec_input, FunctionModel(broken_once), trace)
+
+    assert report.retries == 1
+    assert len(report.unassigned_corrections) == 1
+    assert "Schema" in report.unassigned_corrections[0]
+
+
+def test_http_400_is_an_invalid_answer_not_an_api_error(spec_catalog, spec_input, trace) -> None:
+    def malformed(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        raise ModelHTTPError(status_code=400, model_name="fake-model", body="tool_use_failed")
+
+    with pytest.raises(AuditValidationError) as failure:
+        run_audit(spec_catalog, spec_input, FunctionModel(malformed), trace)
+
+    assert not failure.value.api_error  # Groq rejects a broken tool call with 400 (#26)
+    assert "Schema" in failure.value.problems[0][1]
+    assert "tool_use_failed" not in str(failure.value)

@@ -253,6 +253,21 @@ def test_the_run_reports_the_retries_of_the_formulate_gate(
     with caplog.at_level("INFO", logger="kb_build"):
         run_formulate(retry_prompts([], first), arch_selection("3.1.4"), SOURCES)
 
-    # llm_error stays 0: a rule that stays invalid aborts the build instead (ADR 0011)
+    # llm_error stays 0: the retry made the rule valid
     assert "architecture quality formulate: retries=1 llm_error=0" in [
         r.getMessage() for r in caplog.records]
+
+
+def test_an_aborted_run_still_reports_retries_and_the_llm_error(
+    caplog: pytest.LogCaptureFixture
+) -> None:
+    def invents(history: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        return ModelResponse(parts=[ToolCallPart("formulate_rule",
+                                                 draft("3.1.4", source_quote="erfunden"))])
+
+    with caplog.at_level("INFO", logger="kb_build"), pytest.raises(ValueError):
+        run_formulate(FunctionModel(invents, model_name="fake-model"),
+                      arch_selection("3.1.4"), SOURCES)
+
+    expected = f"architecture quality formulate: retries={FORMULATE_RETRIES} llm_error=1"
+    assert expected in [r.getMessage() for r in caplog.records]

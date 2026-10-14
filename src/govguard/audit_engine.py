@@ -10,12 +10,7 @@ from pydantic_ai.exceptions import ModelAPIError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
 from govguard.audit_gates import answer_problems, completeness_problems, without_equal_duplicates
-from govguard.corrections import (
-    SCHEMA_PROBLEM,
-    AuditValidationError,
-    Corrections,
-    downgrades_of,
-)
+from govguard.corrections import AuditValidationError, Corrections, downgrades_of
 from govguard.evidence import MAX_SPAN, evidence_of, numbered, without_unproven_verdict
 from govguard.inventory import resource_inventory
 from govguard.models import (
@@ -52,6 +47,7 @@ class AuditDeps(BaseModel):  # deps_type of the audit agent, input for the code 
     input_text: str
     na_forbidden: str | None  # prompt hint; set when N/A was already decided by code (ADR 0011)
     corrections: Corrections  # shared by all packages; the validator reports into it (#27)
+    reason_sent: bool = False  # the code sent the package back with reasons (#27)
 
 
 _OUTPUT = {"name": "submit_audit", "description": "Gib genau einen Befund je Prüfregel ab.",
@@ -70,7 +66,8 @@ def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditRespo
     """Downgrade first, then check: what the code can fix needs no retry (ADR 0017)."""
     text, last = ctx.deps.input_text, ctx.last_attempt
     original = response.findings
-    ctx.deps.corrections.retries += bool(ctx.retry)  # once per package: one retry at most
+    if ctx.retry:  # once per package: one retry at most
+        ctx.deps.corrections.record_retry(ctx.deps.reason_sent)
     checked = [without_unproven_verdict(f, text, last) for f in response.findings]
     expected = {rule.id for rule in ctx.deps.rules}
     response = AuditResponse(findings=without_equal_duplicates(checked))
@@ -78,7 +75,8 @@ def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditRespo
     ctx.deps.corrections.record_attempt(
         sorted(expected), downgrades_of(original, checked), problems, last)
     if problems:
-        raise ModelRetry("\n".join(line for _, line in problems))
+        ctx.deps.reason_sent = True
+        raise ModelRetry("\n".join(p.text for p in problems))
     return response
 
 
@@ -94,10 +92,8 @@ def run_audit(catalog: RuleCatalog, input_text: str, model: Model, trace: Trace)
     corrections = Corrections()
     try:
         drafts = asyncio.run(_drafts(catalog, input_text, model, corrections))
-    except ModelAPIError as error:  # throttled or down: fail closed, own sentence
-        raise AuditValidationError([], api_error=True) from error
-    except UnexpectedModelBehavior as error:  # invalid after the retry: fail closed
-        raise AuditValidationError(corrections.failed or [SCHEMA_PROBLEM]) from error
+    except (ModelAPIError, UnexpectedModelBehavior) as error:
+        raise corrections.fail_closed(error) from error
     if problems := completeness_problems({rule.id for rule in catalog.rules}, drafts):
         raise AuditValidationError(problems)  # merged packages: one finding per rule
     findings = _complete_findings(catalog, drafts, input_text, corrections)
@@ -118,7 +114,7 @@ async def _drafts(
     """N/A by code via the resource inventory; a template in a spec audit goes to the model."""
     if catalog.audit_type != "architecture":
         return await _ask_in_packages(catalog.rules, input_text, None, model, corrections)
-    inventory = await resource_inventory(catalog.rules, input_text, model)
+    inventory = await resource_inventory(catalog.rules, input_text, model, corrections)
     to_model = [rule for rule in catalog.rules if inventory.applies(rule)]
     drafts = [_na_by_code(rule, inventory.na_rationale)
               for rule in catalog.rules if not inventory.applies(rule)]

@@ -145,6 +145,8 @@ def _complete_rule(deps: FormulateDeps, model: Model) -> Rule:
     try:
         draft = formulate_rule(deps, model)
     except UnexpectedModelBehavior as error:  # fail closed: no rule may silently go missing
+        deps.counts.retries += FORMULATE_RETRIES  # every retry was spent
+        deps.counts.llm_errors += 1
         raise ValueError(f"{selected.source} {requirement.id}: no valid rule: {error}") from error
     return Rule(
         **draft.model_dump(),
@@ -163,13 +165,16 @@ def formulate_rules(
     anchors = requirements_by_anchor(sources)
     by_id = {(s.source, r.id): r for s in sources for r in s.requirements}
     rules, counts = [], GateCounts()
-    for n, selected in enumerate(selection.selected, start=1):
-        requirement = by_id[(selected.source, selected.requirement_id)]
-        deps = FormulateDeps(
-            selection.audit_type, selected, requirement, anchors, properties, scope, counts)
-        rules.append(_complete_rule(deps, model))
-        logger.info("%s %d/%d %s", selection.audit_type, n, len(selection.selected), rules[-1].id)
-    logger.info(counts.line(selection.audit_type, "formulate"))  # no llm_error: build aborts
+    try:
+        for n, selected in enumerate(selection.selected, start=1):
+            requirement = by_id[(selected.source, selected.requirement_id)]
+            deps = FormulateDeps(
+                selection.audit_type, selected, requirement, anchors, properties, scope, counts)
+            rules.append(_complete_rule(deps, model))
+            logger.info("%s %d/%d %s", selection.audit_type, n, len(selection.selected),
+                        rules[-1].id)
+    finally:  # an llm_error aborts the build; the quality report still counts it
+        logger.info(counts.line(selection.audit_type, "formulate"))
     used = {s.source for s in selection.selected}
     catalog = RuleCatalog(
         audit_type=selection.audit_type, model_id=model.model_name, rules=rules,

@@ -19,9 +19,9 @@ def evidence_problem(draft: FindingDraft, text: str) -> Problem | None:
     lines = _lines(draft)
     label = f"{draft.rule_id} ({draft.status})"  # the status shows in the fail-closed message
     if draft.status == "PASS" and lines is None:
-        return draft.rule_id, f"{label}: Zeilenbereich fehlt (Pflicht bei PASS)"
+        return Problem(draft.rule_id, f"{label}: Zeilenbereich fehlt (Pflicht bei PASS)")
     if lines and (problem := _range_problem(text, *lines)):
-        return draft.rule_id, f"{label}: {problem}"
+        return Problem(draft.rule_id, f"{label}: {problem}")
     return None
 
 

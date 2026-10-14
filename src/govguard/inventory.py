@@ -10,6 +10,7 @@ from pydantic import BaseModel
 from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput
 from pydantic_ai.models import Model
 
+from govguard.corrections import Corrections, Problem
 from govguard.models import InventoryResponse, RecognizedType, Rule
 from govguard.text import MIN_QUOTE_LENGTH, contains_quote, template_resource_types
 
@@ -45,6 +46,8 @@ class Inventory:
 class InventoryDeps(BaseModel):  # deps_type of the pre-run agent, input for the code checks
     candidate_types: list[str]
     input_text: str
+    corrections: Corrections  # the pre-run reports into it like a package (#27)
+    reason_sent: bool = False  # the code sent the answer back with reasons (#27)
 
 
 inventory_agent = Agent(
@@ -59,9 +62,14 @@ inventory_agent = Agent(
 @inventory_agent.output_validator
 def _validate(ctx: RunContext[InventoryDeps], response: InventoryResponse) -> InventoryResponse:
     """The code checks type and evidence of every recognized service (ADR 0011)."""
-    problems = [p for seen in response.resource_types if (p := _problem(seen, ctx.deps))]
+    problems = [Problem("", p) for seen in response.resource_types  # names no rule
+                if (p := _problem(seen, ctx.deps))]
+    if ctx.retry:
+        ctx.deps.corrections.record_retry(ctx.deps.reason_sent)
+    ctx.deps.corrections.record_attempt([], {}, problems, ctx.last_attempt)
     if problems:
-        raise ModelRetry("\n".join(problems))
+        ctx.deps.reason_sent = True
+        raise ModelRetry("\n".join(p.text for p in problems))
     return response
 
 
@@ -74,13 +82,16 @@ def _problem(seen: RecognizedType, deps: InventoryDeps) -> str | None:
     return None
 
 
-async def resource_inventory(rules: list[Rule], input_text: str, model: Model) -> Inventory:
+async def resource_inventory(
+    rules: list[Rule], input_text: str, model: Model, corrections: Corrections
+) -> Inventory:
     """Architecture audit only; the spec audit sends every rule to the model."""
     types = template_resource_types(input_text)
     if types is not None:
         return Inventory(types, NA_BY_CODE, NA_FORBIDDEN)
     candidates = sorted({t for rule in rules for t in rule.cfn_resource_types})
-    deps = InventoryDeps(candidate_types=candidates, input_text=input_text)
+    deps = InventoryDeps(candidate_types=candidates, input_text=input_text,
+                         corrections=corrections)
     result = await inventory_agent.run(_user_prompt(deps), model=model, deps=deps)
     seen = {item.resource_type for item in result.output.resource_types}
     return Inventory(seen, NA_NOT_RECOGNIZED, NA_FORBIDDEN_FREE_TEXT, ALWAYS_APPLICABLE)

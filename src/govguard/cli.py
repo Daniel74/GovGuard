@@ -43,7 +43,7 @@ def _failure_text(error: AuditValidationError) -> str:
     if error.api_error:
         return ("Audit fehlgeschlagen: Der KI-Dienst war nicht erreichbar oder überlastet. "
                 "Bitte später erneut versuchen.")
-    reasons = "\n".join(f"  - {text}" for _, text in error.problems)
+    reasons = "\n".join(f"  - {p.text}" for p in error.problems)
     return ("Audit fehlgeschlagen: Die Antwort der KI war auch nach einer Korrektur nicht "
             f"verwertbar. Gründe je Prüfregel:\n{reasons}")
 
