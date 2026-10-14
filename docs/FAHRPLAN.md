@@ -2,7 +2,7 @@
 
 Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich: Du brauchst kein anderes Dokument, um ihn abzuarbeiten. Hake die Kästchen im Editor ab.
 
-**Legende:** 👤 du · 🤖 Claude · 🛠 Junie (PyCharm) · `/…` Befehl zum Eintippen. `/verstehen N <Schwerpunkt>` erklärt das Ticket als Lernkarte und fragt sie ab. Claude zeigt pro Ticket einen Plan und arbeitet nach deinem **Go** am Stück (CLAUDE.md). Junie baut nur die UI und gibt bei #12 und #9 eine zweite Meinung. Alles läuft direkt auf `main`, ohne Branches.
+**Legende:** 👤 du · 🤖 Claude · 🛠 Junie (PyCharm) · ✂ fällt zuerst weg (Schnittlinie) · `/…` Befehl zum Eintippen. `/verstehen N <Schwerpunkt>` erklärt das Ticket als Lernkarte und fragt sie ab. Claude zeigt pro Ticket einen Plan und arbeitet nach deinem **Go** am Stück (CLAUDE.md). Junie baut nur die UI und gibt bei #12 und #9 eine zweite Meinung. Alles läuft direkt auf `main`, ohne Branches.
 
 **Rhythmus jedes Eintrags:** _Starten → Bauen → Prüfen → Verstehen → Abschließen._
 
@@ -17,9 +17,25 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Erst die Audits, dann die Architektur-Generierung.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Deploy, Selbst-Audit und Demo-UI; dazu passt die Doku. Schritte 6–14.
-- **B – Golden Archetypes (nur wenn Zeit bleibt):** Archetypen bauen und freigeben (#7), Archetyp-Auswahl (#10). Schritte 15–16.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Deploy, Selbst-Audit und Demo-UI; dazu passt die Doku. Schritte 6–14; 15–16 nur, wenn ein Tag frei wird (✂).
+- **B – Golden Archetypes (nur wenn Zeit bleibt):** Archetypen bauen und freigeben (#7), Archetyp-Auswahl (#10). Schritte 17–18.
 - **Stichtag:** B beginnt nur, wenn A fertig ist und bis zur Abgabe am 21.10. noch mindestens 3 Arbeitstage bleiben, also spätestens am Freitag, 16.10. Sonst gehen die Resttage in Stabilisierung und Präsentation. Im Fachgespräch ist B dann Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
+- **Stand 14.10.:** B entfällt. Der Deploy (#9, #11) wird voll gebaut und braucht 3–4 Tage, A ist also nicht bis 16.10. fertig.
+
+**Zeitplan bis zur Präsentation:**
+
+| Tag | Arbeit |
+| --- | ------ |
+| Mi 14.10. | Schritt 10: #14 abschließen. Die Messung dort (CLI, voller Katalog) zeigt früh, ob 29 s realistisch sind. Sind es mehr als ca. 25 s, Plan B aus ADR 0011 vor #9 entscheiden. |
+| Do 15. – Fr 16.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Freitag |
+| Sa oder So | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI |
+| Mo 19.10. | #11 fertig und live (das Claude-Wochenlimit setzt zurück) |
+| Di 20.10. | Schritte 13–14: Doku #22 und #16. Damit ist A fertig. |
+| Mi 21.10. | Abgabe, Puffer |
+| 22.–25.10. | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe |
+| Mo 26.10. | Präsentation und Fachgespräch |
+
+**Schnittlinie:** Wird es knapp, fällt zuerst #8 weg, weil der Build der Wissensbasis auch lokal per `python -m kb_build` läuft. Danach fällt #24 weg; es zählt nur bei einem neuen Build. Beide machen nur dann weiter, wenn ein Tag frei wird. Im Fachgespräch sind sie Ausbau.
 
 **Wer baut was:**
 
@@ -39,17 +55,17 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 9c      | A    | #20 Ordnerstruktur              | 🤖 Opus                                          | 🤖 Opus                    |
 | 9d      | A    | #19 Typen im Prüfumfang         | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 9e      | A    | #21 Groq als Build-Standard     | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 9f      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                                        | 👤                         |
 | 9g      | A    | #25 ADR 0015 Terraform-Grenze   | 🤖 Sonnet                                        | 👤                         |
 | 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
-| 10a     | A    | #24 Pflichtanker stabil         | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 11      | A    | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 12      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
-| 13      | A    | #11 Deploy + UI                 | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
+| 11      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
+| 12      | A    | #11 Deploy + UI                 | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
+| 13      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                                        | 👤                         |
 | 14      | A    | #16 Doku nachziehen             | 👤 + 🤖 Sonnet                                   | 👤                         |
-| 15      | B    | #7 Golden Archetypes            | 🤖 Opus                                          | 🤖 Opus                    |
-| 16      | B    | #10 Archetyp-Auswahl            | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 17      | –    | #23 Lehrbuch fertigstellen      | 👤 + Claude Web                                  | 👤                         |
+| 15      | A ✂  | #24 Pflichtanker stabil         | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 16      | A ✂  | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 17      | B    | #7 Golden Archetypes            | 🤖 Opus                                          | 🤖 Opus                    |
+| 18      | B    | #10 Archetyp-Auswahl            | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 19      | –    | #23 Lehrbuch fertigstellen      | 👤 + Claude Web                                  | 👤                         |
 
 ---
 
@@ -308,24 +324,10 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-### Schritt 9f – #22 Doku zu kb_build nachziehen
-
-**Ziel:** `ARCHITECTURE.md`, `SPEC.md`, `METHODIK.md` und die Lernkarten stimmen mit dem Code nach #19, #20 und #21 überein (Relevanzregel nach ADR 0013, Korrekturrunden, kein Ranking mehr, Pfade nach #20). Ergänzt #16, das README und die drei Erklär-Dokumente übernimmt.
-**Voraussetzung:** Schritt 9e. Kein Code, nur Doku.
-
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 22` und zieh die Dokumente und Lernkarten auf den Code-Stand nach“ → Plan → Go
-- [ ] **Prüfen** 👤 `grep` aus dem Issue, jeden Markdown-Link in `learning/lessons/` anklicken (oder per Skript prüfen lassen), ARCHITECTURE 1.1 querlesen
-- [ ] **Abschließen** 👤 committet und pusht, danach den Ordner `learning/lehrbuch/` einchecken
-
-**Fertig, wenn:** Das `grep` aus #22 nichts Veraltetes mehr findet und alle Links der Lernkarten auf vorhandene Dateien zeigen.
-**Fürs Fachgespräch:** Doku und Code müssen übereinstimmen; ADRs sind verbindlich, ältere Texte werden nachgezogen oder als überholt markiert.
-
----
-
 ### Schritt 9g – #25 ADR 0015: CloudFormation als einziges Format mit Code-Inventar, Terraform ungetestet
 
 **Ziel:** Nur CloudFormation-JSON hat ein Ressourceninventar per Code. Terraform und YAML laufen als Freitext, ohne Test durch ein Preset. ADR 0015, `CONTEXT.md`, `SPEC.md` und `AUSBAU.md` (Szenario 9) halten diese Einschränkung fest.
-**Voraussetzung:** Schritt 9f. Kein Code, nur Doku.
+**Voraussetzung:** Schritt 9e. Kein Code, nur Doku.
 
 - [x] **Starten** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 25` und setze es um“ → Plan → Go
       Reihenfolge: ADR 0015 → `CONTEXT.md` und `SPEC.md` → `AUSBAU.md` Szenario 9 (IaC Generator vorher gegen AWS-Doku prüfen)
@@ -343,7 +345,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Die Audit-Engine bewertet den vollständigen Katalog: N/A über das Ressourceninventar, die anwendbaren Prüfregeln in parallelen Paketen.
 **Voraussetzung:** Schritt 9.
 
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #14 umsetzen` → Plan → Go (der Freitext-Vorlauf ist eine Prompt-Weiche)
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #14 umsetzen` → Plan → Go (der Freitext-Vorlauf ist eine Prompt-Weiche)
       Reihenfolge: Freitext-Vorlauf mit Beleg → N/A-Verbot für erkannte Typen → Pakete parallel → Zusammenführen (ein Befund je Prüfregel) → Sortierung nach Ressourcentyp
 - [ ] **Messen** 👤 `/run CLI-Audit des größten Presets mit vollem Katalog, Laufzeit und Kosten messen` → 🤖 notiert das Ergebnis im Issue und setzt das Kostenziel in SPEC
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #14`
@@ -355,42 +357,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-### Schritt 10a – #24 Pflichtanker ohne Nachwürfeln auswählen
-
-**Ziel:** Ein `select`-Lauf ohne Cache besteht das Pflichtanker-Gate ohne Handeingriff. Bei #19 wurden CIS 3.1.4 und BSI BER.4.1 von Hand neu beurteilt; in der Probe vom 14.10. kippt CIS 3.1.4 in 1 von 5 Läufen auf `account`.
-**Voraussetzung:** Schritt 9e. Kommt vor #8: Ohne diese Regel bricht ein voller Architektur-Lauf im Workflow etwa jedes fünfte Mal am Pflichtanker-Gate ab; der Cache ist seit 38b3128 ungültig.
-
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #24 umsetzen` → Plan → Go (Gate-Design ist eine Weichenstellung)
-      Reihenfolge: Test in `tests/test_curation.py` → Pflichtanker übersteuern `scope_level` auf `template` mit festem Satz im Auswahlprotokoll → ADR
-- [ ] **Echter Lauf** 🤖 👤 „Erzeuge die Architektur-Auswahl neu“ (`select --audit-type architecture`, ohne Flag = Groq). 👤 Prüfe: Beide Gates grün, kein Cache-Eintrag von Hand gelöscht?
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #24`
-- [ ] **Verstehen** 👤 `/verstehen 24` (Kernfrage: warum ein Preset das Urteil des LLM übersteuern darf, aber nur beim `scope_level`)
-- [ ] **Abschließen** 👤 committet und pusht
-
-**Fertig, wenn:** Ein Lauf ohne Cache beide Gates besteht und das ADR die Regel festhält.
-**Fürs Fachgespräch:** Reproduzierbarkeit, Testorakel als Quelle der Wahrheit, „Das LLM urteilt, der Code wählt aus“.
-
----
-
-### Schritt 11 – #8 Preset-Gate und Build-Workflow
-
-**Ziel:** Der Build der Wissensbasis läuft per Knopfdruck in GitHub Actions und öffnet nur bei Grün einen Pull Request.
-**Voraussetzung:** Schritte 8, 9e, 10 und 10a.
-
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #8 umsetzen` → Plan → Go
-      Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Hash-Check; den Soll-Archetyp prüft erst #10) → `python -m kb_build` → `build-kb.yml` ohne Logik
-- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard OIDC-Provider und Rolle für build-kb.yml, nur Bedrock eu.-Profil (Preset-Gate), Secret GROQ_API_KEY` → 👤 Wizard ausführen
-- [ ] **Ausprobieren** 👤 Workflow in GitHub Actions starten → PR lesen, Kosten prüfen
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #8`
-- [ ] **Verstehen** 👤 `/verstehen 8` (Kernfrage: warum OIDC besser ist als ein Access Key in GitHub)
-- [ ] **Abschließen** 👤 committet und pusht
-
-**Fertig, wenn:** Ein Workflow-Lauf einen grünen PR mit Kostenangabe geöffnet hat.
-**Fürs Fachgespräch:** OIDC statt langlebiger Keys, Gate vor Merge, alte Version bleibt bei Rot aktiv.
-
----
-
-### Schritt 12 – #9 GovGuard-Stack und Audit-Endpunkte
+### Schritt 11 – #9 GovGuard-Stack und Audit-Endpunkte
 
 **Ziel:** Die Audit-API läuft in eu-central-1, protokolliert jeden Aufruf und bleibt unter 29 s.
 **Voraussetzung:** Schritt 10.
@@ -410,14 +377,14 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-### Schritt 13 – #11 Deploy-Pipeline und Demo-UI
+### Schritt 12 – #11 Deploy-Pipeline und Demo-UI
 
 **Ziel:** Jeder Push auf `main` rollt GovGuard nach dem Selbst-Audit aus; die Demo-UI auditiert Spezifikationen und Architekturen öffentlich.
-**Voraussetzung:** Schritte 9 und 12.
+**Voraussetzung:** Schritte 9 und 11.
 
 - [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard Einmalige AWS-Einrichtung für deploy.yml: OIDC-Deploy-Rolle, IAM-User für Streamlit, Secrets` → 👤 Wizard ausführen. Der Wizard ist zugleich die Anleitung, die das Ticket verlangt.
 - [ ] **Bauen Pipeline** 🤖 _Sonnet_ · 👤 „Setze aus Issue #11 die `deploy.yml` um“ → Plan → Go. Die Ausnahmen für Prüfregeln (z. B. FSBP `APIGateway.4`, `Lambda.3`) entstehen hier, mit Begründung (Weichenstellung).
-- [ ] **Bauen UI** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 13 und `gh issue view 11`. Baue nur die Streamlit-UI in `ui/`, ohne Archetyp-Abruf.“
+- [ ] **Bauen UI** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 12 und `gh issue view 11`. Baue nur die Streamlit-UI in `ui/`, ohne Archetyp-Abruf.“
 - [ ] **Ausprobieren** 👤 `/run Streamlit-UI lokal starten, Preset auditieren, Screenshot`
 - [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review`
 - [ ] **Live** 👤 Pushen → Pipeline beobachten → UI auf Streamlit Community Cloud öffnen
@@ -427,6 +394,20 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Fertig, wenn:** Ein Push den Deploy mit Selbst-Audit auslöst und die öffentliche UI ein Preset auditiert.
 **Fürs Fachgespräch:** Dogfooding, begründete Ausnahmen, ein einziger Weg in die Produktion, bewusstes US-Hosting nur mit fiktiven Daten.
+
+---
+
+### Schritt 13 – #22 Doku zu kb_build nachziehen
+
+**Ziel:** `ARCHITECTURE.md`, `SPEC.md`, `METHODIK.md` und die Lernkarten stimmen mit dem Code nach #19, #20 und #21 überein (Relevanzregel nach ADR 0013, Korrekturrunden, kein Ranking mehr, Pfade nach #20). Ergänzt #16, das README und die drei Erklär-Dokumente übernimmt.
+**Voraussetzung:** Schritt 9e. Kein Code, nur Doku. Läuft nach dem Deploy (Zeitplan: Di 20.10.).
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 22` und zieh die Dokumente und Lernkarten auf den Code-Stand nach“ → Plan → Go
+- [ ] **Prüfen** 👤 `grep` aus dem Issue, jeden Markdown-Link in `learning/lessons/` anklicken (oder per Skript prüfen lassen), ARCHITECTURE 1.1 querlesen
+- [ ] **Abschließen** 👤 committet und pusht, danach den Ordner `learning/lehrbuch/` einchecken
+
+**Fertig, wenn:** Das `grep` aus #22 nichts Veraltetes mehr findet und alle Links der Lernkarten auf vorhandene Dateien zeigen.
+**Fürs Fachgespräch:** Doku und Code müssen übereinstimmen; ADRs sind verbindlich, ältere Texte werden nachgezogen oder als überholt markiert.
 
 ---
 
@@ -443,17 +424,56 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-## Priorität B – Golden Archetypes (nur wenn Zeit bleibt)
+## Nur wenn ein Tag frei wird (Schnittlinie ✂)
 
-Start nur nach der Regel _Stichtag_ oben.
+Start nur, wenn Schritt 14 fertig ist und vor der Abgabe ein Tag frei bleibt. Sonst sind beide im Fachgespräch Ausbau.
 
-### Schritt 15 – #7 Golden Archetypes mit Freigabe
+### Schritt 15 – #24 Pflichtanker ohne Nachwürfeln auswählen
+
+**Ziel:** Ein `select`-Lauf ohne Cache besteht das Pflichtanker-Gate ohne Handeingriff. Bei #19 wurden CIS 3.1.4 und BSI BER.4.1 von Hand neu beurteilt; in der Probe vom 14.10. kippt CIS 3.1.4 in 1 von 5 Läufen auf `account`.
+**Voraussetzung:** Schritt 9e. Kommt vor #8: Ohne diese Regel bricht ein voller Architektur-Lauf im Workflow etwa jedes fünfte Mal am Pflichtanker-Gate ab; der Cache ist seit 38b3128 ungültig.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #24 umsetzen` → Plan → Go (Gate-Design ist eine Weichenstellung)
+      Reihenfolge: Test in `tests/test_curation.py` → Pflichtanker übersteuern `scope_level` auf `template` mit festem Satz im Auswahlprotokoll → ADR
+- [ ] **Echter Lauf** 🤖 👤 „Erzeuge die Architektur-Auswahl neu“ (`select --audit-type architecture`, ohne Flag = Groq). 👤 Prüfe: Beide Gates grün, kein Cache-Eintrag von Hand gelöscht?
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #24`
+- [ ] **Verstehen** 👤 `/verstehen 24` (Kernfrage: warum ein Preset das Urteil des LLM übersteuern darf, aber nur beim `scope_level`)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Ein Lauf ohne Cache beide Gates besteht und das ADR die Regel festhält.
+**Fürs Fachgespräch:** Reproduzierbarkeit, Testorakel als Quelle der Wahrheit, „Das LLM urteilt, der Code wählt aus“.
+
+---
+
+### Schritt 16 – #8 Preset-Gate und Build-Workflow
+
+**Ziel:** Der Build der Wissensbasis läuft per Knopfdruck in GitHub Actions und öffnet nur bei Grün einen Pull Request.
+**Voraussetzung:** Schritte 8, 9e, 10 und 15.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #8 umsetzen` → Plan → Go
+      Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Hash-Check; den Soll-Archetyp prüft erst #10) → `python -m kb_build` → `build-kb.yml` ohne Logik
+- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard OIDC-Provider und Rolle für build-kb.yml, nur Bedrock eu.-Profil (Preset-Gate), Secret GROQ_API_KEY` → 👤 Wizard ausführen
+- [ ] **Ausprobieren** 👤 Workflow in GitHub Actions starten → PR lesen, Kosten prüfen
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #8`
+- [ ] **Verstehen** 👤 `/verstehen 8` (Kernfrage: warum OIDC besser ist als ein Access Key in GitHub)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Ein Workflow-Lauf einen grünen PR mit Kostenangabe geöffnet hat.
+**Fürs Fachgespräch:** OIDC statt langlebiger Keys, Gate vor Merge, alte Version bleibt bei Rot aktiv.
+
+---
+
+## Priorität B – Golden Archetypes (entfällt, Stand 14.10.)
+
+Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
+
+### Schritt 17 – #7 Golden Archetypes mit Freigabe
 
 **Ziel:** ARCH-01 bis -03 sind als CDK gebaut und freigegeben, mit dokumentierten Ausnahmen.
 **Voraussetzung:** Schritt 14. Node.js und CDK CLI lokal installiert.
 
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #7 umsetzen`
-      Reihenfolge: Allowlist-Filter (cdk-nag und Prüfregeln, aus Schritt 13) → Struktur-Soll → Compliance-Soll (N/A-Sperre) → Schleife mit höchstens 3 Runden (mit Fakes) → `cdk_runner.py`
+      Reihenfolge: Allowlist-Filter (cdk-nag und Prüfregeln, aus Schritt 12) → Struktur-Soll → Compliance-Soll (N/A-Sperre) → Schleife mit höchstens 3 Runden (mit Fakes) → `cdk_runner.py`
 - [ ] **Echter Build** 👤 „Baue die 3 Archetypen“ → Go. Bei Fehlern von synth oder cdk-nag: 👤 `/diagnosing-bugs`
 - [ ] **Offene Frage** 👤 „Klär, ob Lambda-Logging `log-group:NAME:*` braucht“ → bei Ja: Ausnahme mit Begründung in `data/input/nag_allowlist.json`
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #7`
@@ -465,10 +485,10 @@ Start nur nach der Regel _Stichtag_ oben.
 
 ---
 
-### Schritt 16 – #10 Archetyp-Auswahl
+### Schritt 18 – #10 Archetyp-Auswahl
 
 **Ziel:** Bei einer Spezifikation ohne FAIL liefert GovGuard ARCH-01, -02, -03 oder „keiner“; die UI zeigt den Archetyp.
-**Voraussetzung:** Schritt 15.
+**Voraussetzung:** Schritt 17.
 
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #10 umsetzen` → Plan → Go (Auswahl, Ablehnung bei FAIL, `NONE`, Soll-Archetyp im Preset-Gate)
 - [ ] **UI** 🛠 _Junie_ · 👤 „Ergänze in `ui/` den Archetyp-Abruf nach Issue #10.“
@@ -484,12 +504,12 @@ Start nur nach der Regel _Stichtag_ oben.
 
 ## Abschluss
 
-### Schritt 17 – #23 Lehrbuch fertigstellen und korrigieren
+### Schritt 19 – #23 Lehrbuch fertigstellen und korrigieren
 
 **Ziel:** Das Lehrbuch aus `learning/lehrbuch/` (Faktenbasis, Stand 13.10.2026) beschreibt den gebauten Stand, ist in Claude Web ausformuliert, von dir korrigiert und in NotebookLM geladen.
-**Voraussetzung:** Schritt 11 (#8) und Schritt 9f (#22). Schritte 15 und 16 nur, wenn sie gebaut wurden; sonst steht Priorität B als Ausbau im Lehrbuch. Beginnt, wenn die Entwicklung steht, und lässt vor der Abgabe am 21.10. genügend Zeit zum Korrigieren.
+**Voraussetzung:** Schritt 13 (#22), Schritt 16 (#8) nur, falls gebaut; sonst steht #8 wie Priorität B als Ausbau im Lehrbuch. Läuft vom 22. bis 25.10. als Vorbereitung auf das Fachgespräch (siehe Zeitplan).
 
-- [ ] **Faktenbasis aktualisieren** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 23` und `learning/lehrbuch/README.md` und zieh die Kapitel auf den Code-Stand nach“ → Plan → Go (neues Kapitel zu #8, Kapitel 00, 08, 10, 99; Archetypen-Kapitel nur, falls #7 gebaut ist)
+- [ ] **Faktenbasis aktualisieren** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 23` und `learning/lehrbuch/README.md` und zieh die Kapitel auf den Code-Stand nach“ → Plan → Go (Kapitel zu #8 nur, falls gebaut; Kapitel 00, 08, 10, 99; Archetypen-Kapitel nur, falls #7 gebaut ist)
 - [ ] **Ausformulieren** 👤 Claude Web, ein Chat je Kapitel: Faktenbasis, `CONTEXT.md` und `docs/adr/` in ein Project laden, mit Kapitel 05 beginnen und den Stil-Prompt für alle Kapitel wiederverwenden. Zum Schluss fragen: „Welche Aussagen stehen nicht in den Dateien?“
 - [ ] **Korrigieren** 👤 Zahlen, ADR-Nummern und `Datei:Funktion`-Belege gegen das Repo prüfen; alle [OFFEN] klären
 - [ ] **NotebookLM** 👤 Kapitel hochladen, drei Stichprobenfragen stellen (z. B. zu Gates, Cache, Provider)
