@@ -56,6 +56,15 @@ class AuditResponse(BaseModel):  # schema of tool submit_audit
     findings: list[FindingDraft]
 
 
+class RecognizedType(BaseModel):  # written by the LLM, one item of tool submit_inventory
+    resource_type: str  # must be a type of the catalog
+    evidence: str  # verbatim quote from the input that names the service
+
+
+class InventoryResponse(BaseModel):  # schema of tool submit_inventory (free-text pre-run)
+    resource_types: list[RecognizedType]
+
+
 class Finding(FindingDraft):  # completed by the code from the catalog
     title: str
     primary_anchor: str
@@ -72,7 +81,7 @@ class Trace(BaseModel):  # links a report to input, knowledge base and deploy (A
 class AuditReport(BaseModel):
     audit_type: AuditType
     overall_status: Status
-    findings: list[Finding]  # exactly one per rule, in catalog order
+    findings: list[Finding]  # exactly one per rule, sorted by first resource type (ADR 0011)
     model_id: str
     trace: Trace
 

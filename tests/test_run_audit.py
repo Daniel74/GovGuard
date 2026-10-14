@@ -2,7 +2,8 @@ import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse, RetryPromptPart, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from govguard.audit_engine import NA_FORBIDDEN, AuditValidationError, run_audit
+from govguard.audit_engine import AuditValidationError, run_audit
+from govguard.inventory import NA_FORBIDDEN
 
 
 def answer_with(*findings: dict) -> FunctionModel:

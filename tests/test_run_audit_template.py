@@ -4,7 +4,8 @@ import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from govguard.audit_engine import NA_FORBIDDEN, AuditValidationError, run_audit
+from govguard.audit_engine import AuditValidationError, run_audit
+from govguard.inventory import NA_FORBIDDEN
 
 S3_PASS = {"rule_id": "ARCH-CIS-3.1.4", "status": "PASS", "evidence": '"BlockPublicAcls": true',
            "rationale": "Gesetzt.", "recommendation": None}
@@ -25,8 +26,8 @@ def test_rules_without_matching_resource_type_get_na_by_code(
 
     report = run_audit(arch_catalog, bucket_template, fake(S3_PASS, prompts), trace)
 
-    dynamo = report.findings[1]
-    assert (dynamo.rule_id, dynamo.status) == ("ARCH-CIS-3.3.1", "N/A")
+    dynamo = next(f for f in report.findings if f.rule_id == "ARCH-CIS-3.3.1")
+    assert dynamo.status == "N/A"
     assert dynamo.rationale == "Ressourcentyp nicht im Template"
     assert report.overall_status == "PASS"
     assert "ARCH-CIS-3.3.1" not in prompts[0]

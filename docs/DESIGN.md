@@ -260,21 +260,27 @@ def run_audit(catalog: RuleCatalog, input_text: str, model: Model,
 def select_archetype(spec_text: str, report: AuditReport,
                      catalog: ArchetypeCatalog, model: Model) -> ArchetypeChoice
 
-class AuditDeps(BaseModel):              # deps_type des Audit-Agenten
-    catalog: RuleCatalog
+class AuditDeps(BaseModel):              # deps_type des Audit-Agenten, je Paket
+    rules: list[Rule]                    # ca. 10 anwendbare Prüfregeln
     input_text: str
-    is_template: bool                    # CloudFormation im Architektur-Audit
+    na_forbidden: str | None             # Prompt-Hinweis, wenn der Code N/A schon entschieden hat
+
+class RecognizedType(BaseModel):         # ein Eintrag des Tools submit_inventory (Freitext-Vorlauf)
+    resource_type: str                   # muss im Katalog vorkommen
+    evidence: str                        # wörtliches Zitat aus der Eingabe
 
 class ArchetypeChoice(BaseModel):        # Schema des Tools select_archetype
     archetype: Literal["ARCH-01", "ARCH-02", "ARCH-03", "NONE"]
     rationale: str
 ```
 
-Vor dem LLM-Aufruf prüft `run_audit()` im Architektur-Audit mit `template_resource_types()` (3), ob die Eingabe ein CloudFormation-Template ist. Falls ja, erhält jede Prüfregel ohne passenden Ressourcentyp im Template vom Code den Befund N/A mit der Begründung „Ressourcentyp nicht im Template“ und geht nicht ans Modell (ADR 0007). Im Spec-Audit geht auch ein Template vollständig ans Modell, denn ein stilles N/A würde eine falsch eingereichte Eingabe verdecken.
+Vor dem Audit bestimmt `inventory.resource_inventory()` im Architektur-Audit das Ressourceninventar (ADR 0011, 0015). Bei CloudFormation-JSON liest es `template_resource_types()` (3); N/A heißt dann „Ressourcentyp nicht im Template“. Sonst nennt ein LLM-Vorlauf (`submit_inventory`) die Typen mit Beleg, der Code prüft Typ und Beleg (ein Retry, dann `AuditValidationError`); N/A heißt dann „Dienst in der Eingabe nicht erkannt“, und IAM, KMS und Logs sind immer anwendbar. Regeln mit N/A gehen nicht ans Modell. Im Spec-Audit geht auch ein Template vollständig ans Modell, denn ein stilles N/A würde eine falsch eingereichte Eingabe verdecken.
+
+Die übrigen Prüfregeln gehen in Paketen à 10 gleichzeitig ans Modell (`asyncio.gather`). Danach prüft der Code genau einen Befund je Prüfregel und sortiert den Report nach dem ersten Ressourcentyp.
 
 `run_audit()` validiert die LLM-Antwort in dieser Reihenfolge:
 1. Pydantic-Schema (`AuditResponse`), durch Pydantic AI.
-2. Jede an das Modell gesendete `rule_id` kommt genau einmal vor, und es gibt keine unbekannten IDs. Bei CloudFormation ist N/A vom Modell verboten, denn der Ressourcentyp kommt vor; der Prompt sagt das dem Modell vorab.
+2. Jede an das Modell gesendete `rule_id` kommt genau einmal vor, und es gibt keine unbekannten IDs. Im Architektur-Audit ist N/A vom Modell verboten, denn der Ressourcentyp kommt vor oder wird immer geprüft; der Prompt sagt das dem Modell vorab.
 3. Beleg vorhanden, wo er Pflicht ist (PASS, FAIL), und jeder gesetzte Beleg mit `contains_quote()` wörtlich in der Eingabe gefunden (siehe 3). Empfehlung vorhanden bei WARN und FAIL.
 
 Die Schritte 2 und 3 laufen im `@agent.output_validator` und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch, wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
@@ -348,4 +354,4 @@ def template_resource_types(text: str) -> set[str] | None  # Typen aus "Resource
 
 Groß- und Kleinschreibung bleibt erhalten, denn „wörtlich“ heißt wörtlich. Eine bekannte Grenze: Silbentrennung am Zeilenende („Verarbei- tung“) wird nicht repariert, weil sich echte Bindestriche („Cloud-Dienst“) nicht sicher davon unterscheiden lassen.
 
-`template_resource_types()` erkennt nur JSON. YAML mit Kurzformen wie `!Ref` und Terraform gelten als Freitext; dort entscheidet das LLM über N/A.
+`template_resource_types()` erkennt nur JSON. YAML mit Kurzformen wie `!Ref` und Terraform gelten als Freitext; dort nennt der LLM-Vorlauf die Typen mit Beleg (2.2).
