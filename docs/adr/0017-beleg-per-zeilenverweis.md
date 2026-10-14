@@ -21,7 +21,7 @@ _Ergänzt [ADR 0005](0005-pydantic-ai.md) und [ADR 0016](0016-groq-zur-laufzeit-
 
 - Jeder Beleg ist per Konstruktion wörtlich, auch mit Windows-Zeilenenden. Das Modell kann keine Zitate mehr erfinden, nur noch auf falsche Zeilen zeigen.
 - Fail closed gibt es für Belege nicht mehr, nur bei fehlenden, unbekannten oder widersprüchlichen Befunden, fehlender Empfehlung, N/A trotz Inventar und Fehlern der API.
-- **WARN hat zwei Bedeutungen:** aus der Eingabe nicht entscheidbar, oder vom Code herabgestuft. Der Report muss beides unterscheiden (#27). Falsche FAILs *mit* Beleg fängt das nicht ab (#28).
+- **WARN hat zwei Bedeutungen:** aus der Eingabe nicht entscheidbar, oder vom Code herabgestuft. Der Report unterscheidet beides je Befund mit `downgraded_from` und `corrections` (#27). Falsche FAILs *mit* Beleg fängt das nicht ab (#28).
 - Ein Beleg kann grob sein, bis zu einem Abschnitt. Die Grenze zählt Zeilen, nicht Zeichen: Bei Eingaben ohne Umbrüche (minifiziertes JSON) ist `1-1` die ganze Eingabe. Die Presets sind formatiert, deshalb bleibt das eine bekannte Grenze.
 - Die Nummern machen die Eingabe ca. 17 % größer, der Output sinkt um ca. 10–20 %, weil vor allem Begründung und Empfehlung ihn treiben.
 
