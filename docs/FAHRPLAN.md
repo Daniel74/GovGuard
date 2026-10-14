@@ -27,7 +27,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | Tag                | Arbeit                                                                                                          |
 | ------------------ | --------------------------------------------------------------------------------------------------------------- |
 | Mi 14.10.          | Schritt 10: #14 abschließen. Messung: fail closed wegen zusammengesetzter Belege, Einzelaufrufe bis 37 s → #26. |
-| Do 15.10.          | Schritt 10a: #26 Belege. Danach neu messen; sind es mehr als ca. 25 s, Plan B aus ADR 0011 vor #9 entscheiden.  |
+| Do 15.10.          | Schritt 10a: #26 Belege. Danach neu messen; sind es mehr als ca. 25 s, Plan B aus ADR 0011 vor #9 entscheiden. Schritte 10b–10c: #27 KI-Governance, #28 Bewertung |
 | Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                               |
 | So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                 |
 | Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                       |
@@ -59,6 +59,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 9g      | A    | #25 ADR 0015 Terraform-Grenze   | 🤖 Sonnet                                        | 👤                         |
 | 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
 | 10a     | A    | #26 Belege bei großen Eingaben  | 🤖 Opus                                          | 🤖 Opus                    |
+| 10b     | A    | #27 KI-Governance sichtbar      | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 10c     | A    | #28 FAIL nur bei Verstoß        | 🤖 Opus                                          | 🤖 Opus                    |
 | 11      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
 | 12      | A    | #11 Deploy + UI                 | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
 | 13      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                                        | 👤                         |
@@ -364,24 +366,58 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Das größte Preset läuft mit vollem Katalog durch, und jeder Beleg steht nachweislich wörtlich in der Eingabe, mit Bedrock (Haiku 4.5) und mit Groq (gpt-oss-120b) als günstigem Fallback. Die Messung aus Schritt 10 zeigt: Beide Modelle setzen Zitate zusammen oder formatieren sie um, gpt-oss hält zudem das Tool-Schema nicht ein. Haiku kostet ca. 0,90 $ je großem Audit, Groq ca. ein Zehntel.
 **Voraussetzung:** Schritt 10.
 
-- [ ] **Recherche** 🆕 _Opus_ · 👤 `/research Belege ohne Abschreiben: Citations der Bedrock Converse API (Haiku 4.5, eu., mit Tool-Choice nach ADR 0005)? Strict Tool Use / Structured Outputs für gpt-oss-120b auf Groq?`
-- [ ] **Prototyp** 🆕 _Opus_ · 👤 `/prototype Beleg per Zeilenbereich (Bedrock und Groq) gegen Citations (nur Bedrock) auf dem 10-Regel-Paket von spec-wohngeld-openapi` → Messung mit `/audit-messen`, Groq mit `MEASURE_MODEL=groq` (Bedrock ca. 0,10 $ je Variante, Groq Cent-Bereich)
-- [ ] **Entscheiden** 👤 Variante wählen (Weichen: Prompt-Design, Vertrag von `FindingDraft`). Groq ist zur Laufzeit ausdrückliche Option (ADR 0016), der Weg muss also mit beiden Modellen funktionieren. → 🤖 schreibt das ADR
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #26 umsetzen` → Plan → Go
+- [x] **Recherche** 🆕 _Opus_ · 👤 `/research Belege ohne Abschreiben: Citations der Bedrock Converse API (Haiku 4.5, eu., mit Tool-Choice nach ADR 0005)? Strict Tool Use / Structured Outputs für gpt-oss-120b auf Groq?`
+- [x] **Prototyp** 🆕 _Opus_ · 👤 `/prototype Beleg per Verweis für #26` (Citations verworfen, siehe Recherche). Ergebnis im Issue, Code auf Branch `prototype/26-beleg-per-verweis`: 0 umformulierte Zitate, 0 Schema-Retries, aber fail closed wegen zu großer Bereiche und FAIL ohne Beleg; Groq scheitert am Limit von 250.000 Tokens/min (ca. 1,40 $)
+- [ ] **Entscheiden** 👤 Entschieden: Beleg per Verweis, FAIL ohne Zeilenbereich stuft der Code auf WARN herab, Bereichsgrenze ca. 200 Zeilen. Offen: 🤖 schreibt das ADR und den Nachtrag zu ADR 0016 (Groq mit `NativeOutput` statt erzwungenem Tool)
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #26 umsetzen` → Plan → Go. Dazu die veralteten Groq-Hinweise im Skill `audit-messen` korrigieren (Tokens werden gemeldet; Groq zur Laufzeit erlaubt, ADR 0016)
 - [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi mit vollem Katalog, Bedrock und Groq` → 🤖 notiert beide Ergebnisse im Issue und setzt das Kostenziel in SPEC
+- [ ] **Plan B entscheiden** 🆕 _Opus_ · 👤 `/grilling Plan B aus ADR 0011: Lambda Function URL statt API Gateway wegen 29 s?` → 🤖 schreibt das ADR. Muss vor #9 stehen, weil #9 den Stack baut. Prototyp: Bedrock 42–53 s je Paket; Groq braucht gedrosselt ca. 2 Minuten
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #26`
 - [ ] **Verstehen** 👤 `/verstehen 26` (Kernfrage: warum der Beleg bleibt, auch wenn das LLM ihn nicht mehr abschreibt)
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Das Preset mit beiden Modellen sein `expected` erfüllt, das ADR vorliegt und Laufzeit und Kosten je Modell im Issue stehen.
+**Fertig, wenn:** Das Preset mit beiden Modellen ohne fail closed durchläuft, jeder Beleg wörtlich in der Eingabe steht, das ADR vorliegt und Laufzeit, Kosten und das Ergebnis gegen `expected` je Modell im Issue stehen.
 **Fürs Fachgespräch:** Grounding, Halluzinationsschutz durch Code statt Prompt, Output-Tokens als Laufzeittreiber, Modell-Unabhängigkeit durch Gates, Kosten gegen Datenresidenz.
+
+---
+
+### Schritt 10b – #27 KI-Governance: Korrekturen der KI sichtbar machen
+
+**Ziel:** Report, fail-closed-Meldung, `AuditEvent` und der Qualitätsbericht von `kb_build` zeigen, wo die KI danebenlag und der Code eingegriffen hat (Retry-Gründe, Herabstufungen). Anlass: Im Prototyp zu #26 hatten 14 von 16 Paketen einen Retry, unsichtbar für den Nutzer.
+**Voraussetzung:** Schritt 10a (die Herabstufung FAIL → WARN entsteht dort). Vor #9, weil Handler und UI den Report-Vertrag übernehmen.
+
+- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #27: Detailtiefe im Report, Anzeige in der UI, Begriff fürs Glossar`
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #27 umsetzen` → Plan → Go (Report-Vertrag und Datenminimierung im Log sind Weichenstellungen)
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #27`
+- [ ] **Verstehen** 👤 `/verstehen 27` (Kernfrage: warum ein Audit-Werkzeug seine eigenen KI-Fehler zeigen muss)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Ein Report mit Retry die Korrekturen nennt, ein fail closed die Gründe in Alltagssprache zeigt und `AuditEvent` keine Eingabe enthält.
+**Fürs Fachgespräch:** Transparenz und Nachvollziehbarkeit von KI-Entscheidungen, Human Oversight, Datenminimierung im Protokoll.
+
+---
+
+### Schritt 10c – #28 Bewertung: FAIL nur bei belegtem Verstoß
+
+**Ziel:** FAIL gibt es nur, wenn der Beleg einen Verstoß zeigt; was fehlt oder unklar ist, bleibt WARN. Im Prototyp zu #26 vergeben beide Modelle FAILs mit Beleg, die keinen Verstoß zeigen, deshalb verfehlt `spec-wohngeld-openapi` sein `expected` (WARN).
+**Voraussetzung:** Schritt 10a (Beleg per Verweis, Herabstufung von FAIL ohne Beleg).
+
+- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #28: Prompt, Feld oder Gate?` (Prompt-Design ist eine Weichenstellung)
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #28 umsetzen` → Plan → Go
+- [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi und spec-meldeportal-gesundheit, Bedrock und Groq` → 🤖 notiert die Ergebnisse gegen `expected` im Issue
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #28`
+- [ ] **Verstehen** 👤 `/verstehen 28` (Kernfrage: warum ein Beleg allein noch keinen Verstoß beweist)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Beide Spec-Presets mit beiden Modellen ihr `expected` erfüllen und `spec-meldeportal-gesundheit` seine Pflicht-FAILs behält.
+**Fürs Fachgespräch:** Testorakel mit Gegenprobe, Grenzen von Prompt-Regeln, „Das LLM urteilt, der Code prüft“.
 
 ---
 
 ### Schritt 11 – #9 GovGuard-Stack und Audit-Endpunkte
 
 **Ziel:** Die Audit-API läuft in eu-central-1, protokolliert jeden Aufruf und bleibt unter 29 s.
-**Voraussetzung:** Schritt 10a.
+**Voraussetzung:** Schritte 10b und 10c, Plan B entschieden (Schritt 10a).
 
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #9 umsetzen`
       Reihenfolge: `Trace` und `AuditEvent` bauen → `handler.py` → CDK-Stack mit Assertions-Tests (Tests auf das erzeugte Template)
