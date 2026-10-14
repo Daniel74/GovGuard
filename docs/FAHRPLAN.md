@@ -40,6 +40,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 9d      | A    | #19 Typen im Prüfumfang         | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 9e      | A    | #21 Groq als Build-Standard     | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 9f      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                                        | 👤                         |
+| 9g      | A    | #25 ADR 0015 Terraform-Grenze   | 🤖 Sonnet                                        | 👤                         |
 | 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
 | 10a     | A    | #24 Pflichtanker stabil         | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 11      | A    | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
@@ -321,13 +322,29 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
+### Schritt 9g – #25 ADR 0015: CloudFormation als einziges Format mit Code-Inventar, Terraform ungetestet
+
+**Ziel:** Nur CloudFormation-JSON hat ein Ressourceninventar per Code. Terraform und YAML laufen als Freitext, ohne Test durch ein Preset. ADR 0015, `CONTEXT.md`, `SPEC.md` und `AUSBAU.md` (Szenario 9) halten diese Einschränkung fest.
+**Voraussetzung:** Schritt 9f. Kein Code, nur Doku.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 25` und setze es um“ → Plan → Go
+      Reihenfolge: ADR 0015 → `CONTEXT.md` und `SPEC.md` → `AUSBAU.md` Szenario 9 (IaC Generator vorher gegen AWS-Doku prüfen)
+- [ ] **Prüfen** 👤 ADR 0015 und Szenario 9 querlesen (je ca. 2 Minuten)
+- [ ] **Verstehen** 👤 `/verstehen 25` (Kernfrage: warum eine LLM-Übersetzung nach CloudFormation die Beleg-Pflicht bricht)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** ADR 0015 vorliegt und `CONTEXT.md`, `SPEC.md` und `AUSBAU.md` dazu passen.
+**Fürs Fachgespräch:** eine Sprache für Wissensbasis, Archetypen und Selbst-Audit; Terraform als bewusst dokumentierte, ungetestete Grenze.
+
+---
+
 ### Schritt 10 – #14 Audit-Engine: Ressourceninventar und parallele Pakete
 
 **Ziel:** Die Audit-Engine bewertet den vollständigen Katalog: N/A über das Ressourceninventar, die anwendbaren Prüfregeln in parallelen Paketen.
 **Voraussetzung:** Schritt 9.
 
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #14 umsetzen` → Plan → Go (der Freitext-Vorlauf ist eine Prompt-Weiche)
-      Reihenfolge: Terraform-Zuordnungstabelle → Freitext-Vorlauf mit Beleg → Pakete parallel → Zusammenführen (ein Befund je Prüfregel) → Sortierung nach Ressourcentyp
+      Reihenfolge: Freitext-Vorlauf mit Beleg → N/A-Verbot für erkannte Typen → Pakete parallel → Zusammenführen (ein Befund je Prüfregel) → Sortierung nach Ressourcentyp
 - [ ] **Messen** 👤 `/run CLI-Audit des größten Presets mit vollem Katalog, Laufzeit und Kosten messen` → 🤖 notiert das Ergebnis im Issue und setzt das Kostenziel in SPEC
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #14`
 - [ ] **Verstehen** 👤 `/verstehen 14` (Kernfrage: warum ein übersehener Dienst sichtbar bleiben muss)
