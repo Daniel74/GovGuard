@@ -22,6 +22,12 @@ _Weicht für die Laufzeit von [ADR 0001](0001-eu-inferenzprofil.md) ab. Ergänzt
 - Der Groq-Adapter liegt heute in `kb_build/`, die Abhängigkeit in der Gruppe `build`. Für die Laufzeit müssen beide ins Lambda-Paket (`src/govguard`). `GROQ_API_KEY` braucht einen Platz im Stack (#9, Weiche Verschlüsselung).
 - Der Weg für Belege (#26) muss mit beiden Modellen funktionieren. Eine reine Bedrock-Funktion wie Citations bräuchte für Groq einen zweiten Weg.
 
+## Nachtrag 14.10.2026: strukturierte Ausgabe mit Groq (#26, ADR 0017)
+
+- Groq liefert strukturierte Ausgaben über `NativeOutput`: `response_format` mit json_schema und `strict`, also Constrained Decoding. Ein erzwungenes Tool gibt es dafür nicht. Groq kombiniert Structured Outputs nicht mit Tools, und Pydantic AI überträgt `strict` bei Groq-Tools nicht. Für Groq weicht das von ADR 0005 ab. Validator, Retry und fail closed bleiben gleich.
+- Im Prototyp gab es mit `NativeOutput` 0 Schema-Retries. Vollständigkeit garantiert das Schema aber nicht: In einem Paket fehlten 5 von 10 Befunden. Das fängt weiter der Validator ab.
+- Groq begrenzt den Durchsatz auf 250.000 Tokens pro Minute. Der volle Katalog mit 16 parallelen Paketen braucht ca. 460.000 und läuft daher nur gedrosselt, also in ca. 2 Minuten statt unter 29 s.
+
 ## Fachgespräch-Satz
 
 „Im Prototyp darf ich bewusst auf Groq ausweichen, weil nur fiktive Daten fließen und die UI ohnehin in den USA läuft; Standard bleibt Bedrock in der EU, jeder Report nennt sein Modell, und für echte Behördendaten gilt wieder ‚Inferenz nur in der EU'.“

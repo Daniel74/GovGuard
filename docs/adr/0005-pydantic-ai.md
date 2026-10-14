@@ -1,5 +1,7 @@
 # 0005 – Pydantic AI für strukturierte LLM-Ausgaben
 
+_Für Groq zur Laufzeit ergänzt durch den Nachtrag in [ADR 0016](0016-groq-zur-laufzeit-im-prototyp.md) (`NativeOutput` statt erzwungenem Tool). Belege: [ADR 0017](0017-beleg-per-zeilenverweis.md)._
+
 ## Kontext
 
 Alle vier LLM-Aufrufe (`classify_requirement`, `formulate_rule`, `submit_audit`, `select_archetype`) liefern strukturierte Daten über ein erzwungenes Tool. Mit boto3 direkt müssten wir jedes Mal das Tool-Schema erzeugen, die Antwort herauslösen, validieren und den Retry mit Fehlermeldung selbst schreiben. Pydantic AI erledigt genau das als Bibliothek.
