@@ -22,6 +22,12 @@ _Ergänzt [ADR 0005](0005-pydantic-ai.md) und [ADR 0016](0016-groq-zur-laufzeit-
 - Die Herabstufung muss im Report sichtbar sein (#27). Falsche FAILs *mit* Beleg fängt sie nicht ab (#28).
 - Der Freitext-Vorlauf (`submit_inventory`) kann denselben Weg nutzen. Das ist nur eingeschätzt, nicht gemessen.
 
+## Nachtrag 14.10.2026 – zu großer Bereich bei WARN/FAIL
+
+- Messung nach dem Umbau: Bei 11 Retries nannte Haiku das ganze Dokument als Bereich (z. B. `1-1720`), meist bei WARN/FAIL. Ein Paket blieb ungültig, also fail closed.
+- Entscheidung: Bei WARN und FAIL zählt ein Bereich über 200 Zeilen als „kein Bereich“. WARN bleibt WARN ohne Beleg, FAIL wird zu WARN, beides ohne Retry. Nur PASS mit zu großem Bereich bekommt einen Retry. Ungültige oder zu kurze Bereiche lösen weiter bei jedem Status einen Retry aus, denn dort zeigt das Modell auf etwas, das es nicht gibt.
+- Der Output-Validator bereinigt die Antwort zuerst und prüft sie danach. Was der Code selbst richten kann, kostet keinen Retry.
+
 ## Fachgespräch-Satz
 
 „Das Modell zeigt nur noch auf Zeilen, den Beleg schneidet mein Code aus. So ist jedes Zitat per Konstruktion wörtlich, und was das Modell nicht belegen kann, wird höchstens WARN, nie FAIL.“

@@ -117,6 +117,15 @@ def test_pass_without_lines_is_retried_once_then_fails_closed(
     assert "SPEC-DSGVO-Art.32: Zeilenbereich fehlt" in retry[0].model_response()
 
 
+def test_fail_closed_names_the_problems_of_the_last_attempt(
+    spec_catalog, spec_input, trace
+) -> None:
+    unproven = {**PASS_32, "line_start": None, "line_end": None}
+
+    with pytest.raises(AuditValidationError, match="SPEC-DSGVO-Art.32: Zeilenbereich fehlt"):
+        run_audit(spec_catalog, spec_input, answer_with(unproven, WARN_9), trace)
+
+
 def test_fail_without_lines_is_downgraded_to_warn_without_retry(
     spec_catalog, spec_input, trace
 ) -> None:
@@ -159,6 +168,20 @@ def test_invalid_line_range_is_retried_once_then_fails_closed(
     retry = [p for p in seen[1][-1].parts if isinstance(p, RetryPromptPart)]
     assert f"SPEC-DSGVO-Art.32: Zeilenbereich {line_start}-{line_end} {problem}" in (
         retry[0].model_response())
+
+
+@pytest.mark.parametrize("status", ["FAIL", "WARN"])
+def test_too_large_range_at_warn_or_fail_counts_as_no_range_without_retry(
+    spec_catalog, trace, status: str
+) -> None:
+    seen: list = []
+    whole_document = {**WARN_9, "status": status, "line_start": 1, "line_end": 251}
+
+    report = run_audit(spec_catalog, LONG_INPUT,
+                       answer_in_turns([PASS_32, whole_document], seen=seen), trace)
+
+    assert len(seen) == 1  # a range over the whole document proves nothing: like no range
+    assert (report.findings[1].status, report.findings[1].evidence) == ("WARN", None)
 
 
 def test_a_whole_section_of_200_lines_is_valid_evidence(spec_catalog, trace) -> None:

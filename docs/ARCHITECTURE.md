@@ -264,7 +264,7 @@ flowchart TB
     R["kb_build/*/run.py<br/>Dateien lesen + schreiben,<br/>Pfade aus paths.py"]
   end
   subgraph L["Logik – rein, ohne I/O"]
-    AE["govguard/audit_engine.py<br/>+ evidence.py, inventory.py, models.py, text.py"]
+    AE["govguard/audit_engine.py<br/>+ audit_gates.py, evidence.py, inventory.py, models.py, text.py"]
     KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py,<br/>archetypes.py (geplant)"]
   end
   subgraph A["Adapter – einziger Ort für AWS, Groq, subprocess, HTTP"]

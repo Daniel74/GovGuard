@@ -2,7 +2,6 @@
 
 import asyncio
 import json
-from collections import Counter
 from collections.abc import Iterable
 
 from pydantic import BaseModel
@@ -10,13 +9,8 @@ from pydantic_ai import Agent, ModelRetry, NativeOutput, RunContext, ToolOutput
 from pydantic_ai.exceptions import ModelAPIError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
-from govguard.evidence import (
-    MAX_SPAN,
-    evidence_of,
-    evidence_problem,
-    numbered,
-    without_unproven_fail,
-)
+from govguard.audit_gates import completeness_problems, field_problem
+from govguard.evidence import MAX_SPAN, evidence_of, numbered, without_unproven_fail
 from govguard.inventory import resource_inventory
 from govguard.models import (
     AuditReport,
@@ -41,6 +35,7 @@ Bei PASS und FAIL sind sie Pflicht, sonst null.
 Bei WARN und FAIL ist "recommendation" Pflicht. Schreibe Begründungen auf Deutsch."""
 
 PACKAGE_SIZE = 10  # rules per model call; 166 architecture rules -> 17 parallel calls
+GROQ_MAX_PARALLEL = 4  # 16 parallel packages need ~460,000 tokens/min, Groq tier allows 250,000
 
 # Worst status wins; N/A only if every finding is N/A (DESIGN 2.1)
 _SEVERITY: dict[Status, int] = {"N/A": 0, "PASS": 1, "WARN": 2, "FAIL": 3}
@@ -68,9 +63,11 @@ _AGENTS = {
 
 
 def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditResponse:
+    """Downgrade first, then check: what the code can fix needs no retry (ADR 0017)."""
+    response = AuditResponse(findings=[without_unproven_fail(f) for f in response.findings])
     expected = {rule.id for rule in ctx.deps.rules}
-    problems = _completeness_problems(expected, response.findings)
-    problems += [p for f in response.findings if (p := _field_problem(f, ctx.deps.input_text))]
+    problems = completeness_problems(expected, response.findings)
+    problems += [p for f in response.findings if (p := field_problem(f, ctx.deps.input_text))]
     if ctx.deps.na_forbidden:
         problems += [f"{f.rule_id}: N/A ist verboten, die Prüfregel ist laut Ressourceninventar "
                      "anwendbar" for f in response.findings if f.status == "N/A"]
@@ -83,29 +80,6 @@ for _agent in _AGENTS.values():  # the same gates for both models (ADR 0016)
     _agent.output_validator(_validate)
 
 
-def _completeness_problems(expected: set[str], drafts: list[FindingDraft]) -> list[str]:
-    """Exactly one finding per expected rule, no unknown rule IDs (DESIGN 2.2 step 2)."""
-    counts = Counter(f.rule_id for f in drafts)
-    missing = sorted(expected - counts.keys())
-    unknown = sorted(counts.keys() - expected)
-    duplicate = sorted(rule_id for rule_id, n in counts.items() if n > 1)
-    return [
-        f"{label}: {', '.join(ids)}"
-        for label, ids in [("Befund fehlt für", missing), ("Unbekannte rule_id", unknown),
-                           ("Mehr als ein Befund für", duplicate)]
-        if ids
-    ]
-
-
-def _field_problem(finding: FindingDraft, input_text: str) -> str | None:
-    """Evidence by line reference (ADR 0017); WARN/FAIL need a recommendation."""
-    if problem := evidence_problem(finding, input_text):
-        return problem
-    if finding.status in ("WARN", "FAIL") and not finding.recommendation:
-        return f"{finding.rule_id}: Empfehlung fehlt (Pflicht bei {finding.status})"
-    return None
-
-
 def overall_status(statuses: Iterable[Status]) -> Status:
     return max(statuses, key=_SEVERITY.__getitem__)
 
@@ -114,8 +88,8 @@ def run_audit(catalog: RuleCatalog, input_text: str, model: Model, trace: Trace)
     try:
         drafts = asyncio.run(_drafts(catalog, input_text, model))
     except (UnexpectedModelBehavior, ModelAPIError) as error:  # invalid or throttled: fail closed
-        raise AuditValidationError(str(error)) from error
-    if problems := _completeness_problems({rule.id for rule in catalog.rules}, drafts):
+        raise AuditValidationError(_with_cause(error)) from error
+    if problems := completeness_problems({rule.id for rule in catalog.rules}, drafts):
         raise AuditValidationError("\n".join(problems))  # merged packages: one finding per rule
     findings = _complete_findings(catalog, drafts, input_text)
     return AuditReport(
@@ -125,6 +99,11 @@ def run_audit(catalog: RuleCatalog, input_text: str, model: Model, trace: Trace)
         model_id=model.model_name,
         trace=trace,
     )
+
+
+def _with_cause(error: Exception) -> str:
+    """After the last retry the gate problems are only in the cause (ModelRetry)."""
+    return f"{error}:\n{error.__cause__}" if error.__cause__ else str(error)
 
 
 async def _drafts(catalog: RuleCatalog, input_text: str, model: Model) -> list[FindingDraft]:
@@ -141,12 +120,16 @@ async def _drafts(catalog: RuleCatalog, input_text: str, model: Model) -> list[F
 async def _ask_in_packages(
     rules: list[Rule], input_text: str, na_forbidden: str | None, model: Model
 ) -> list[FindingDraft]:
-    """All packages run at once to stay below the 29 s API Gateway timeout (ADR 0011)."""
+    """Bedrock: all packages at once (29 s API Gateway timeout, ADR 0011); Groq: throttled."""
     packages = [rules[i:i + PACKAGE_SIZE] for i in range(0, len(rules), PACKAGE_SIZE)]
-    answers = await asyncio.gather(*(
-        _ask_model(AuditDeps(rules=p, input_text=input_text, na_forbidden=na_forbidden), model)
-        for p in packages
-    ))
+    slots = asyncio.Semaphore(GROQ_MAX_PARALLEL if model.system == "groq" else len(packages) or 1)
+
+    async def ask(package: list[Rule]) -> list[FindingDraft]:
+        async with slots:
+            deps = AuditDeps(rules=package, input_text=input_text, na_forbidden=na_forbidden)
+            return await _ask_model(deps, model)
+
+    answers = await asyncio.gather(*(ask(p) for p in packages))
     return [draft for answer in answers for draft in answer]
 
 
@@ -158,7 +141,7 @@ def _na_by_code(rule: Rule, rationale: str) -> FindingDraft:
 async def _ask_model(deps: AuditDeps, model: Model) -> list[FindingDraft]:
     agent = _AGENTS["groq" if model.system == "groq" else "bedrock"]
     result = await agent.run(_user_prompt(deps), model=model, deps=deps)
-    return [without_unproven_fail(draft) for draft in result.output.findings]
+    return result.output.findings
 
 
 def _user_prompt(deps: AuditDeps) -> str:

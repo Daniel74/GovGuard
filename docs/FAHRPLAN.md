@@ -24,17 +24,17 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag                | Arbeit                                                                                                                                                            |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.          | Schritt 10: #14 abschließen. Messung: fail closed wegen zusammengesetzter Belege, Einzelaufrufe bis 37 s → #26.                                                   |
-| Do 15.10.          | Schritt 10a: #26 Belege. Danach neu messen; sind es mehr als ca. 25 s, Plan B aus ADR 0011 vor #9 entscheiden. Schritte 10b–10c: #27 KI-Governance, #28 Bewertung |
-| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                 |
-| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                   |
-| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                         |
-| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                             |
-| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                    |
-| 22.–25.10.         | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                   |
-| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                     |
+| Tag                | Arbeit                                                                                                                                                                                                                |
+| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.          | Schritt 10: #14 abschließen. Messung: fail closed wegen zusammengesetzter Belege, Einzelaufrufe bis 37 s → #26. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Messung ohne Durchlauf.                    |
+| Do 15.10.          | Schritt 10a: #26 nachschärfen und neu messen, Plan B aus ADR 0011 vor #9 entscheiden (Aufrufe bis 51 s). Schritte 10b–10c: #27 KI-Governance, #28 Bewertung. Wird es knapp, #27 auf die Herabstufung im Report kürzen |
+| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                                                                     |
+| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                                                                       |
+| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                                                                             |
+| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                                                                 |
+| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                                                                        |
+| 22.–25.10.         | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                                                                       |
+| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                                                                         |
 
 **Schnittlinie:** Wird es knapp, fällt zuerst #8 weg, weil der Build der Wissensbasis auch lokal per `python -m kb_build` läuft. Danach fällt #24 weg; es zählt nur bei einem neuen Build. Beide machen nur dann weiter, wenn ein Tag frei wird. Im Fachgespräch sind sie Ausbau.
 
@@ -370,9 +370,13 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Prototyp** 🆕 _Opus_ · 👤 `/prototype Beleg per Verweis für #26` (Citations verworfen, siehe Recherche). Ergebnis im Issue, Code auf Branch `prototype/26-beleg-per-verweis`: 0 umformulierte Zitate, 0 Schema-Retries, aber fail closed wegen zu großer Bereiche und FAIL ohne Beleg; Groq scheitert am Limit von 250.000 Tokens/min (ca. 1,40 $)
 - [x] **Entscheiden** 👤 Beleg per Verweis, FAIL ohne Zeilenbereich stuft der Code auf WARN herab, Bereichsgrenze ca. 200 Zeilen → ADR 0017, Nachtrag in ADR 0016 (Groq mit `NativeOutput` statt erzwungenem Tool)
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #26 umsetzen` → Plan → Go. Dazu die veralteten Groq-Hinweise im Skill `audit-messen` korrigieren (Tokens werden gemeldet; Groq zur Laufzeit erlaubt, ADR 0016)
-- [x] **Messen** 👤 `/audit-messen spec-wohngeld-openapi mit vollem Katalog, Bedrock und Groq` → 🤖 notiert beide Ergebnisse im Issue und setzt das Kostenziel in SPEC
-- [ ] **Plan B entscheiden** 🆕 _Opus_ · 👤 `/grilling Plan B aus ADR 0011: Lambda Function URL statt API Gateway wegen 29 s?` → 🤖 schreibt das ADR. Muss vor #9 stehen, weil #9 den Stack baut. Prototyp: Bedrock 42–53 s je Paket; Groq braucht gedrosselt ca. 2 Minuten
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #26`
+- [x] **Messen** 👤 `/audit-messen spec-wohngeld-openapi mit vollem Katalog, Bedrock und Groq` → 🤖 notiert beide Ergebnisse im Issue. Ergebnis 14.10.: kein Durchlauf. Bedrock fail closed, 6/16 Pakete mit Retry (meist Bereich über das ganze Dokument), 1,25 $, langsamster Aufruf 51 s; Groq HTTP 429 nach 11 Aufrufen. 0 umformulierte Belege, 0 Schema-Retries.
+- [x] **Abschließen (Zwischenstand)** 👤 committet den TDD-Umbau, z. B. `#26 evidence by line reference (ADR 0017), measurement`
+- [x] **Nachschärfen** 🆕 _Opus_ · 👤 „Lies docs/FAHRPLAN.md Schritt 10a und Issue #26 mit dem letzten Messkommentar.“ Dann `/tdd Issue #26 nachschärfen` → Plan → Go (Gate-Design und Drosselung sind Weichenstellungen)
+      Reihenfolge: zu großer Bereich bei WARN/FAIL gilt als „kein Bereich“ (FAIL → WARN, kein Retry), nur PASS mit zu großem Bereich → Retry → Groq-Pakete gedrosselt (höchstens 4 gleichzeitig), Bedrock voll parallel → `measure.py` loggt die Probleme des letzten Versuchs → Nachtrag ADR 0017, DESIGN 2.2
+- [ ] **Neu messen** 👤 `/audit-messen spec-wohngeld-openapi, Bedrock und Groq` → 🤖 notiert beide Ergebnisse gegen `expected` im Issue und setzt das Kostenziel in SPEC. Wieder fail closed: 👤 `/diagnosing-bugs fail closed bei spec-wohngeld-openapi` mit den Gründen aus `measure.py`. Falsche FAILs mit Beleg gehören zu #28, nicht hierher.
+- [ ] **Plan B entscheiden** 🆕 _Opus_ · 👤 `/grilling Plan B aus ADR 0011: Lambda Function URL statt API Gateway wegen 29 s?` → 🤖 schreibt das ADR. Muss vor #9 stehen, weil #9 den Stack baut. Messung 14.10.: Bedrock 38–51 s je Paket; Groq braucht gedrosselt ca. 2 Minuten
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #26 seit 46e91b0` (TDD-Umbau und Nachschärfen zusammen)
 - [ ] **Verstehen** 👤 `/verstehen 26` (Kernfrage: warum der Beleg bleibt, auch wenn das LLM ihn nicht mehr abschreibt)
 - [ ] **Abschließen** 👤 committet und pusht
 

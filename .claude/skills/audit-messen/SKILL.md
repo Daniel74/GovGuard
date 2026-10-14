@@ -19,8 +19,9 @@ Jeder Lauf kostet echtes Geld (Kosten-Weiche, CLAUDE.md). Die CLI kennt nur `spe
 
 ## Fallstricke
 
-- Groq: `MEASURE_MODEL=groq` nimmt `groq_model()` aus dem Build (Key per `set -a; source .env`). Groq ist zur Laufzeit eine ausdrückliche Option, nur mit fiktiven Presets (ADR 0016). Tokens meldet Groq inkl. Denk-Tokens. Limit 250.000 Tokens/min: Der volle Katalog (16 Pakete, ca. 460.000) endet sonst mit HTTP 429.
-- Belege per Zeilenverweis (ADR 0017): Ein FAIL ohne Zeilenbereich stuft der Code still auf WARN herab, ohne Retry. Im Report ist das noch nicht sichtbar (#27).
+- Groq: `MEASURE_MODEL=groq` nimmt `groq_model()` aus dem Build (Key per `set -a; source .env`). Groq ist zur Laufzeit eine ausdrückliche Option, nur mit fiktiven Presets (ADR 0016). Tokens meldet Groq inkl. Denk-Tokens. Limit 250.000 Tokens/min: Der volle Katalog braucht ca. 460.000, deshalb laufen höchstens 4 Pakete gleichzeitig (`GROQ_MAX_PARALLEL`). Kommt trotzdem HTTP 429, ist 2 die nächste Stellschraube.
+- Belege per Zeilenverweis (ADR 0017): Ein FAIL ohne Zeilenbereich oder mit Bereich über 200 Zeilen stuft der Code still auf WARN herab, ohne Retry. Im Report ist das noch nicht sichtbar (#27).
+- Bei Exit 2 stehen die Probleme des letzten Versuchs in `stats.txt` nach „Audit fehlgeschlagen“. Die Retry-Prompts zeigen nur die Probleme des ersten Versuchs.
 
 - Scheitert ein Paket endgültig, bricht `asyncio.run` die übrigen ab. `calls` zählt dann nur fertige Aufrufe; Bedrock berechnet abgebrochene trotzdem. Die Zahl der Retry-Prompts zeigt, wie viele Pakete wirklich Probleme hatten.
 - Preise: Haiku 4.5 kostet 1 $ / 5 $ je Mio. Tokens, das `eu.`-Profil 10 % mehr (Anthropic-Preisdoku). Ändert sich `MODEL_ID` in `aws_services.py`, die Preiszeile in `measure.py` anpassen.

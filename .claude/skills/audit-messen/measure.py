@@ -2,6 +2,7 @@
 
 Usage: uv run python .claude/skills/audit-messen/measure.py spec <file> [--catalog <json>]
 Report JSON -> stdout, measurements -> stderr. MEASURE_MODEL=groq measures Groq (ADR 0016).
+On fail closed the CLI writes the problems of the last attempt to stderr (AuditValidationError).
 """
 
 import os

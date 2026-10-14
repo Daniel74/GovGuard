@@ -22,7 +22,12 @@ def evidence_problem(draft: FindingDraft, text: str) -> str | None:
 
 
 def without_unproven_fail(draft: FindingDraft) -> FindingDraft:
-    """What is missing is WARN, not FAIL: the code enforces the prompt rule without a retry."""
+    """What is missing is WARN, not FAIL: the code enforces the prompt rule without a retry.
+
+    At WARN/FAIL a range over MAX_SPAN counts as no range; only PASS is retried for it.
+    """
+    if draft.status in ("WARN", "FAIL") and _too_large(draft):
+        draft = draft.model_copy(update={"line_start": None, "line_end": None})
     if draft.status == "FAIL" and _lines(draft) is None:
         return draft.model_copy(update={"status": "WARN"})
     return draft
@@ -39,6 +44,11 @@ def _lines(draft: FindingDraft) -> tuple[int, int] | None:
     if draft.line_start is None or draft.line_end is None:
         return None
     return draft.line_start, draft.line_end
+
+
+def _too_large(draft: FindingDraft) -> bool:
+    lines = _lines(draft)
+    return lines is not None and lines[1] - lines[0] + 1 > MAX_SPAN
 
 
 def _cut(text: str, line_start: int, line_end: int) -> str:

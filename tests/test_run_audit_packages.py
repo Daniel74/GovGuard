@@ -1,11 +1,12 @@
 """Applicable rules run in parallel packages of about 10 (ADR 0011)."""
 
 import asyncio
+import json
 
 import pytest
 from conftest import make_rule
 from pydantic_ai.exceptions import ModelHTTPError
-from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
+from pydantic_ai.messages import ModelMessage, ModelResponse, TextPart, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from govguard.audit_engine import AuditValidationError, run_audit
@@ -51,6 +52,30 @@ def test_rules_are_audited_in_parallel_packages_of_ten(trace) -> None:
     assert sorted(len(p) for p in recorder.packages) == [3, 10, 10]
     assert recorder.max_running == 3
     assert [f.rule_id for f in report.findings] == [f"SPEC-DSGVO-Art.{i}" for i in range(1, 24)]
+
+
+class GroqRecorder(Recorder):
+    """Same fake, answering as JSON text like Groq's native output (ADR 0016)."""
+
+    async def respond(self, messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        response = await super().respond(messages, info)
+        return ModelResponse(parts=[TextPart(json.dumps(response.parts[0].args))])
+
+
+class GroqFake(FunctionModel):
+    @property
+    def system(self) -> str:
+        return "groq"
+
+
+def test_groq_runs_at_most_four_packages_at_once(trace) -> None:
+    recorder = GroqRecorder()
+
+    report = run_audit(catalog_of(60), INPUT, GroqFake(recorder.respond), trace)
+
+    assert len(recorder.packages) == 6
+    assert recorder.max_running == 4  # 250,000 tokens/min on the Groq tier
+    assert len(report.findings) == 60
 
 
 class ForgetsOneRule(Recorder):

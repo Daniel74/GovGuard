@@ -293,16 +293,16 @@ class ArchetypeChoice(BaseModel):        # Schema des Tools select_archetype
 
 Vor dem Audit bestimmt `inventory.resource_inventory()` im Architektur-Audit das Ressourceninventar (ADR 0011, 0015). Bei CloudFormation-JSON liest es `template_resource_types()` (3); N/A heißt dann „Ressourcentyp nicht im Template“. Sonst nennt ein LLM-Vorlauf (`submit_inventory`) die Typen mit Beleg, der Code prüft Typ und Beleg (ein Retry, dann `AuditValidationError`); N/A heißt dann „Dienst in der Eingabe nicht erkannt“, und IAM, KMS und Logs sind immer anwendbar. Regeln mit N/A gehen nicht ans Modell. Im Spec-Audit geht auch ein Template vollständig ans Modell, denn ein stilles N/A würde eine falsch eingereichte Eingabe verdecken.
 
-Die übrigen Prüfregeln gehen in Paketen à 10 gleichzeitig ans Modell (`asyncio.gather`). Jedes Paket enthält die Eingabe mit Zeilennummern (`12| …`). Das Schema ist strikt: Bedrock bekommt ein erzwungenes Tool mit `strict` (ADR 0005), Groq `NativeOutput` (ADR 0016). Danach prüft der Code genau einen Befund je Prüfregel und sortiert den Report nach dem ersten Ressourcentyp.
+Die übrigen Prüfregeln gehen in Paketen à 10 gleichzeitig ans Modell (`asyncio.gather`). Bei Groq laufen höchstens 4 Pakete gleichzeitig (`GROQ_MAX_PARALLEL`), damit der volle Katalog unter dem Tarif-Limit von 250.000 Tokens/min bleibt. Jedes Paket enthält die Eingabe mit Zeilennummern (`12| …`). Das Schema ist strikt: Bedrock bekommt ein erzwungenes Tool mit `strict` (ADR 0005), Groq `NativeOutput` (ADR 0016). Danach prüft der Code genau einen Befund je Prüfregel und sortiert den Report nach dem ersten Ressourcentyp.
 
 `run_audit()` validiert die LLM-Antwort in dieser Reihenfolge:
 1. Pydantic-Schema (`AuditResponse`), durch Pydantic AI.
 2. Jede an das Modell gesendete `rule_id` kommt genau einmal vor, und es gibt keine unbekannten IDs. Im Architektur-Audit ist N/A vom Modell verboten, denn der Ressourcentyp kommt vor oder wird immer geprüft; der Prompt sagt das dem Modell vorab.
 3. Zeilenbereich vorhanden bei PASS; jeder gesetzte Bereich liegt in der Eingabe, umfasst höchstens 200 Zeilen (`MAX_SPAN`), und der Ausschnitt hat mindestens 15 Zeichen (`evidence.py`, ADR 0017). Empfehlung vorhanden bei WARN und FAIL.
 
-Ein FAIL ohne Zeilenbereich löst keinen Retry aus, der Code stuft es auf WARN herab. Den Beleg schneidet der Code aus den Zeilen, das Modell schreibt ihn nicht ab.
+Vor Schritt 2 bereinigt der Code die Antwort ohne Retry: Bei WARN und FAIL zählt ein Bereich über 200 Zeilen als „kein Bereich“, und ein FAIL ohne Zeilenbereich wird WARN (ADR 0017, Nachtrag). Den Beleg schneidet der Code aus den Zeilen, das Modell schreibt ihn nicht ab.
 
-Die Schritte 2 und 3 laufen im `@agent.output_validator` und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch oder die Modell-API (z. B. Drosselung, `ModelAPIError`), wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
+Die Schritte 2 und 3 laufen im `@agent.output_validator` (Prüfungen in `audit_gates.py`) und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch oder die Modell-API (z. B. Drosselung, `ModelAPIError`), wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. Die Meldung nennt die Probleme des letzten Versuchs. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
 
 ### 2.3 API-JSON
 
