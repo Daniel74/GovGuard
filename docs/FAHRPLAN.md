@@ -24,17 +24,17 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag                | Arbeit                                                                                                          |
-| ------------------ | --------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.          | Schritt 10: #14 abschließen. Messung: fail closed wegen zusammengesetzter Belege, Einzelaufrufe bis 37 s → #26. |
+| Tag                | Arbeit                                                                                                                                                            |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.          | Schritt 10: #14 abschließen. Messung: fail closed wegen zusammengesetzter Belege, Einzelaufrufe bis 37 s → #26.                                                   |
 | Do 15.10.          | Schritt 10a: #26 Belege. Danach neu messen; sind es mehr als ca. 25 s, Plan B aus ADR 0011 vor #9 entscheiden. Schritte 10b–10c: #27 KI-Governance, #28 Bewertung |
-| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                               |
-| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                 |
-| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                       |
-| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                           |
-| Mi 21.10.          | Abgabe, Puffer                                                                                                  |
-| 22.–25.10.         | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                 |
-| Mo 26.10.          | Präsentation und Fachgespräch                                                                                   |
+| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                 |
+| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                   |
+| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                         |
+| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                             |
+| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                    |
+| 22.–25.10.         | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                   |
+| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                     |
 
 **Schnittlinie:** Wird es knapp, fällt zuerst #8 weg, weil der Build der Wissensbasis auch lokal per `python -m kb_build` läuft. Danach fällt #24 weg; es zählt nur bei einem neuen Build. Beide machen nur dann weiter, wenn ein Tag frei wird. Im Fachgespräch sind sie Ausbau.
 
@@ -369,8 +369,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Recherche** 🆕 _Opus_ · 👤 `/research Belege ohne Abschreiben: Citations der Bedrock Converse API (Haiku 4.5, eu., mit Tool-Choice nach ADR 0005)? Strict Tool Use / Structured Outputs für gpt-oss-120b auf Groq?`
 - [x] **Prototyp** 🆕 _Opus_ · 👤 `/prototype Beleg per Verweis für #26` (Citations verworfen, siehe Recherche). Ergebnis im Issue, Code auf Branch `prototype/26-beleg-per-verweis`: 0 umformulierte Zitate, 0 Schema-Retries, aber fail closed wegen zu großer Bereiche und FAIL ohne Beleg; Groq scheitert am Limit von 250.000 Tokens/min (ca. 1,40 $)
 - [x] **Entscheiden** 👤 Beleg per Verweis, FAIL ohne Zeilenbereich stuft der Code auf WARN herab, Bereichsgrenze ca. 200 Zeilen → ADR 0017, Nachtrag in ADR 0016 (Groq mit `NativeOutput` statt erzwungenem Tool)
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #26 umsetzen` → Plan → Go. Dazu die veralteten Groq-Hinweise im Skill `audit-messen` korrigieren (Tokens werden gemeldet; Groq zur Laufzeit erlaubt, ADR 0016)
-- [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi mit vollem Katalog, Bedrock und Groq` → 🤖 notiert beide Ergebnisse im Issue und setzt das Kostenziel in SPEC
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #26 umsetzen` → Plan → Go. Dazu die veralteten Groq-Hinweise im Skill `audit-messen` korrigieren (Tokens werden gemeldet; Groq zur Laufzeit erlaubt, ADR 0016)
+- [x] **Messen** 👤 `/audit-messen spec-wohngeld-openapi mit vollem Katalog, Bedrock und Groq` → 🤖 notiert beide Ergebnisse im Issue und setzt das Kostenziel in SPEC
 - [ ] **Plan B entscheiden** 🆕 _Opus_ · 👤 `/grilling Plan B aus ADR 0011: Lambda Function URL statt API Gateway wegen 29 s?` → 🤖 schreibt das ADR. Muss vor #9 stehen, weil #9 den Stack baut. Prototyp: Bedrock 42–53 s je Paket; Groq braucht gedrosselt ca. 2 Minuten
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #26`
 - [ ] **Verstehen** 👤 `/verstehen 26` (Kernfrage: warum der Beleg bleibt, auch wenn das LLM ihn nicht mehr abschreibt)

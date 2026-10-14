@@ -32,7 +32,7 @@ def free_catalog() -> RuleCatalog:
 
 
 def warn(rule_id: str) -> dict:
-    return {"rule_id": rule_id, "status": "WARN", "evidence": None,
+    return {"rule_id": rule_id, "status": "WARN", "line_start": None, "line_end": None,
             "rationale": "Unklar.", "recommendation": "Nachweisen."}
 
 

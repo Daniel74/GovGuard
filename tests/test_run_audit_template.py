@@ -7,8 +7,8 @@ from pydantic_ai.models.function import AgentInfo, FunctionModel
 from govguard.audit_engine import AuditValidationError, run_audit
 from govguard.inventory import NA_FORBIDDEN
 
-S3_PASS = {"rule_id": "ARCH-CIS-3.1.4", "status": "PASS", "evidence": '"BlockPublicAcls": true',
-           "rationale": "Gesetzt.", "recommendation": None}
+S3_PASS = {"rule_id": "ARCH-CIS-3.1.4", "status": "PASS", "line_start": 7, "line_end": 7,
+           "rationale": "Gesetzt.", "recommendation": None}  # line 7: "BlockPublicAcls": true
 
 
 def fake(finding: dict, prompts: list[str]) -> FunctionModel:
@@ -38,7 +38,7 @@ def test_model_must_not_answer_na_when_resource_type_is_present(
     arch_catalog, bucket_template, trace
 ) -> None:
     prompts: list[str] = []
-    s3_na = {**S3_PASS, "status": "N/A", "evidence": None}
+    s3_na = {**S3_PASS, "status": "N/A", "line_start": None, "line_end": None}
 
     with pytest.raises(AuditValidationError):
         run_audit(arch_catalog, bucket_template, fake(s3_na, prompts), trace)

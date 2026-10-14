@@ -6,10 +6,17 @@ from collections import Counter
 from collections.abc import Iterable
 
 from pydantic import BaseModel
-from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput, UnexpectedModelBehavior
-from pydantic_ai.exceptions import ModelAPIError
+from pydantic_ai import Agent, ModelRetry, NativeOutput, RunContext, ToolOutput
+from pydantic_ai.exceptions import ModelAPIError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
+from govguard.evidence import (
+    MAX_SPAN,
+    evidence_of,
+    evidence_problem,
+    numbered,
+    without_unproven_fail,
+)
 from govguard.inventory import resource_inventory
 from govguard.models import (
     AuditReport,
@@ -21,16 +28,16 @@ from govguard.models import (
     Status,
     Trace,
 )
-from govguard.text import MIN_QUOTE_LENGTH, contains_quote
 
-SYSTEM_PROMPT = """\
+SYSTEM_PROMPT = f"""\
 Du bist ein Compliance-Prüfer für Behörden-IT. Bewerte die Eingabe gegen jede Prüfregel.
 - PASS: Einhaltung ist in der Eingabe belegt.
 - FAIL: Ein Verstoß ist in der Eingabe belegt.
 - WARN: Aus der Eingabe nicht entscheidbar; was fehlt, ist WARN, nicht FAIL.
 - N/A: Die Prüfregel ist auf die Eingabe nicht anwendbar.
-Bei PASS und FAIL ist "evidence" Pflicht.
-Jedes "evidence" ist ein wörtliches Zitat aus der Eingabe (mindestens 15 Zeichen).
+Jede Zeile der Eingabe beginnt mit ihrer Nummer, z. B. "12| ". Belege per Zeilenbereich:
+"line_start" und "line_end" nennen die Zeilen, die den Befund belegen (höchstens {MAX_SPAN} Zeilen).
+Bei PASS und FAIL sind sie Pflicht, sonst null.
 Bei WARN und FAIL ist "recommendation" Pflicht. Schreibe Begründungen auf Deutsch."""
 
 PACKAGE_SIZE = 10  # rules per model call; 166 architecture rules -> 17 parallel calls
@@ -49,16 +56,17 @@ class AuditDeps(BaseModel):  # deps_type of the audit agent, input for the code 
     na_forbidden: str | None  # prompt hint; set when N/A was already decided by code (ADR 0011)
 
 
-audit_agent = Agent(
-    output_type=ToolOutput(AuditResponse, name="submit_audit",
-                           description="Gib genau einen Befund je Prüfregel ab."),
-    instructions=SYSTEM_PROMPT,
-    deps_type=AuditDeps,
-    retries=1,  # exactly one retry, 29 s API Gateway timeout
-)
+_OUTPUT = {"name": "submit_audit", "description": "Gib genau einen Befund je Prüfregel ab.",
+           "strict": True}  # static schema, every field required (ADR 0017)
+# Bedrock: forced tool (ADR 0005); Groq: json_schema with constrained decoding (ADR 0016)
+_AGENTS = {
+    system: Agent(output_type=output_type, instructions=SYSTEM_PROMPT, deps_type=AuditDeps,
+                  retries=1)  # exactly one retry, 29 s API Gateway timeout
+    for system, output_type in [("bedrock", ToolOutput(AuditResponse, **_OUTPUT)),
+                                ("groq", NativeOutput(AuditResponse, **_OUTPUT))]
+}
 
 
-@audit_agent.output_validator
 def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditResponse:
     expected = {rule.id for rule in ctx.deps.rules}
     problems = _completeness_problems(expected, response.findings)
@@ -69,6 +77,10 @@ def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditRespo
     if problems:
         raise ModelRetry("\n".join(problems))
     return response
+
+
+for _agent in _AGENTS.values():  # the same gates for both models (ADR 0016)
+    _agent.output_validator(_validate)
 
 
 def _completeness_problems(expected: set[str], drafts: list[FindingDraft]) -> list[str]:
@@ -86,12 +98,9 @@ def _completeness_problems(expected: set[str], drafts: list[FindingDraft]) -> li
 
 
 def _field_problem(finding: FindingDraft, input_text: str) -> str | None:
-    """PASS/FAIL need evidence, any evidence is quoted verbatim; WARN/FAIL need a recommendation."""
-    if finding.status in ("PASS", "FAIL") and not finding.evidence:
-        return f"{finding.rule_id}: Beleg fehlt (Pflicht bei {finding.status})"
-    if finding.evidence and not contains_quote(input_text, finding.evidence):
-        return (f"{finding.rule_id}: Beleg ist kein wörtliches Zitat aus der Eingabe "
-                f"(mind. {MIN_QUOTE_LENGTH} Zeichen)")
+    """Evidence by line reference (ADR 0017); WARN/FAIL need a recommendation."""
+    if problem := evidence_problem(finding, input_text):
+        return problem
     if finding.status in ("WARN", "FAIL") and not finding.recommendation:
         return f"{finding.rule_id}: Empfehlung fehlt (Pflicht bei {finding.status})"
     return None
@@ -108,7 +117,7 @@ def run_audit(catalog: RuleCatalog, input_text: str, model: Model, trace: Trace)
         raise AuditValidationError(str(error)) from error
     if problems := _completeness_problems({rule.id for rule in catalog.rules}, drafts):
         raise AuditValidationError("\n".join(problems))  # merged packages: one finding per rule
-    findings = _complete_findings(catalog, drafts)
+    findings = _complete_findings(catalog, drafts, input_text)
     return AuditReport(
         audit_type=catalog.audit_type,
         overall_status=overall_status(f.status for f in findings),
@@ -142,13 +151,14 @@ async def _ask_in_packages(
 
 
 def _na_by_code(rule: Rule, rationale: str) -> FindingDraft:
-    return FindingDraft(rule_id=rule.id, status="N/A", evidence=None,
+    return FindingDraft(rule_id=rule.id, status="N/A", line_start=None, line_end=None,
                         rationale=rationale, recommendation=None)
 
 
 async def _ask_model(deps: AuditDeps, model: Model) -> list[FindingDraft]:
-    result = await audit_agent.run(_user_prompt(deps), model=model, deps=deps)
-    return result.output.findings
+    agent = _AGENTS["groq" if model.system == "groq" else "bedrock"]
+    result = await agent.run(_user_prompt(deps), model=model, deps=deps)
+    return [without_unproven_fail(draft) for draft in result.output.findings]
 
 
 def _user_prompt(deps: AuditDeps) -> str:
@@ -159,12 +169,14 @@ def _user_prompt(deps: AuditDeps) -> str:
     hint = f"{deps.na_forbidden}\n\n" if deps.na_forbidden else ""
     return (
         f"Prüfregeln:\n{json.dumps(rules, ensure_ascii=False, indent=1)}\n\n{hint}"
-        f"Eingabe:\n<eingabe>\n{deps.input_text}\n</eingabe>"
+        f"Eingabe:\n<eingabe>\n{numbered(deps.input_text)}\n</eingabe>"
     )
 
 
-def _complete_findings(catalog: RuleCatalog, drafts: list[FindingDraft]) -> list[Finding]:
-    """Add title, anchor and cross references from the catalog, sorted by resource type.
+def _complete_findings(
+    catalog: RuleCatalog, drafts: list[FindingDraft], input_text: str
+) -> list[Finding]:
+    """Cut the evidence, add title, anchor and cross references, sort by resource type.
 
     Duplicates across sources end up next to each other (ADR 0011); spec rules keep catalog order.
     """
@@ -172,9 +184,11 @@ def _complete_findings(catalog: RuleCatalog, drafts: list[FindingDraft]) -> list
     return [
         Finding(
             **by_rule[rule.id].model_dump(),
+            evidence=evidence_of(by_rule[rule.id], input_text),
             title=rule.title,
             primary_anchor=rule.primary_anchor,
             cross_references=rule.cross_references,
         )
         for rule in sorted(catalog.rules, key=lambda rule: rule.cfn_resource_types[:1])
     ]
+

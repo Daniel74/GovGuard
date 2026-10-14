@@ -38,8 +38,8 @@ class Recorder:
         self.running -= 1
         rule_ids = rule_ids_in(messages)
         self.packages.append(rule_ids)
-        findings = [{"rule_id": r, "status": "WARN", "evidence": None, "rationale": "Unklar.",
-                     "recommendation": "Nachweisen."} for r in rule_ids]
+        findings = [{"rule_id": r, "status": "WARN", "line_start": None, "line_end": None,
+                     "rationale": "Unklar.", "recommendation": "Nachweisen."} for r in rule_ids]
         return ModelResponse(parts=[ToolCallPart("submit_audit", {"findings": findings})])
 
 

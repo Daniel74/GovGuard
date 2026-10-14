@@ -42,7 +42,7 @@ def test_audit_request_forces_the_submit_audit_tool(
     spec_catalog: RuleCatalog, spec_input: str, trace: Trace
 ) -> None:
     findings = [
-        {"rule_id": rule.id, "status": "WARN", "evidence": None,
+        {"rule_id": rule.id, "status": "WARN", "line_start": None, "line_end": None,
          "rationale": "Nicht entscheidbar.", "recommendation": "Prüfen."}
         for rule in spec_catalog.rules
     ]

@@ -13,7 +13,7 @@ from govguard.models import AuditReport, RuleCatalog
 def fake_model(spec_catalog: RuleCatalog) -> FunctionModel:
     """Fake LLM: WARN for every rule."""
     findings = [
-        {"rule_id": rule.id, "status": "WARN", "evidence": None,
+        {"rule_id": rule.id, "status": "WARN", "line_start": None, "line_end": None,
          "rationale": "Nicht entscheidbar.", "recommendation": "Prüfen."}
         for rule in spec_catalog.rules
     ]

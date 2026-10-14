@@ -44,10 +44,11 @@ class RuleCatalog(BaseModel):  # file rules_spec.json or rules_arch.json
     rules: list[Rule] = Field(min_length=1)  # an empty catalog has no overall status
 
 
-class FindingDraft(BaseModel):  # written by the LLM, one item of tool submit_audit
+class FindingDraft(BaseModel):  # written by the LLM, one item of submit_audit; no defaults (strict)
     rule_id: str
     status: Status
-    evidence: str | None  # verbatim quote from the input; required for PASS and FAIL
+    line_start: int | None  # evidence by line reference (ADR 0017); required for PASS and FAIL
+    line_end: int | None
     rationale: str
     recommendation: str | None  # required for WARN and FAIL
 
@@ -65,7 +66,8 @@ class InventoryResponse(BaseModel):  # schema of tool submit_inventory (free-tex
     resource_types: list[RecognizedType]
 
 
-class Finding(FindingDraft):  # completed by the code from the catalog
+class Finding(FindingDraft):  # completed by the code from the input and the catalog
+    evidence: str | None  # cut from the input lines by the code: verbatim by construction
     title: str
     primary_anchor: str
     cross_references: list[CrossReference]

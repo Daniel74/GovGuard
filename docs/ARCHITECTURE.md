@@ -196,8 +196,9 @@ model = BedrockConverseModel("eu.anthropic.claude-haiku-4-5-20251001-v1:0")   # 
 
 # audit_engine.py – rein, bekommt das Modell übergeben
 audit_agent = Agent(
-    output_type=ToolOutput(AuditResponse, name="submit_audit",
-                           description="Gib genau einen Befund je Prüfregel ab."),
+    output_type=ToolOutput(AuditResponse, name="submit_audit",       # Groq: NativeOutput (ADR 0016)
+                           description="Gib genau einen Befund je Prüfregel ab.",
+                           strict=True),   # statisches Schema, alle Felder Pflicht (ADR 0017)
     instructions=SYSTEM_PROMPT,     # Rolle + Regeln für PASS/WARN/FAIL/N/A
     deps_type=AuditDeps,            # Katalog + Eingabe für die Code-Checks
     retries=1,                      # genau ein Retry, 29-s-Timeout
@@ -209,12 +210,12 @@ result = audit_agent.run_sync(catalog_and_input, model=model, deps=deps)
 |---|---|---|
 | `classify_requirement` | `testable: bool`, `rationale: str`, `cfn_resource_types: [str]` (nur Architektur) | Build, Stufe ② |
 | `formulate_rule` | LLM-Felder der Prüfregel (siehe 1.2) | Build, Stufe 5 |
-| `submit_audit` | `findings: [{rule_id, status: PASS\|WARN\|FAIL\|N/A, evidence, rationale, recommendation}]` | Laufzeit, beide Audits |
+| `submit_audit` | `findings: [{rule_id, status: PASS\|WARN\|FAIL\|N/A, line_start, line_end, rationale, recommendation}]` | Laufzeit, beide Audits |
 | `select_archetype` | `archetype: ARCH-01\|ARCH-02\|ARCH-03\|NONE`, `rationale: str` | Laufzeit, Archetyp-Auswahl |
 
 - **Enums schließen die Antwortmenge:** Das Modell kann keinen Status „OK“ und keinen Archetyp „ARCH-09“ erfinden.
 - **Tool-Choice ist kein Beweis:** Das Modell kann trotzdem falsche Werte liefern. Deshalb validiert danach Pydantic, und der Code prüft Vollständigkeit und Belege (`@agent.output_validator`). Bei Fehlern schickt Pydantic AI die Fehlermeldung einmal zurück ans Modell, danach HTTP 502.
-- **Was der Code weiß, fragt man das Modell nicht:** Primäranker, Querverweise und Gesamtstatus ergänzt der Code aus der Wissensbasis. Das Modell liefert nur Status, Beleg und Begründung.
+- **Was der Code weiß, fragt man das Modell nicht:** Primäranker, Querverweise und Gesamtstatus ergänzt der Code aus der Wissensbasis. Das Modell liefert nur Status, Zeilenbereich und Begründung; den Beleg schneidet der Code aus der Eingabe (ADR 0017).
 - **Modellwahl:** Haiku 4.5 unterstützt erzwungene Tools; Opus 5.5, Sonnet 5.5 und Fable 5.1 lehnen `toolChoice` = `any` bzw. `tool` laut Anthropic-Doku mit HTTP 400 ab. Achtung: Kann ein Modell kein Erzwingen, fällt Pydantic AI still auf `auto` zurück – darum bleibt Haiku 4.5 gesetzt.
 
 ## 3. Deployment – GovGuard prüft sich selbst
@@ -263,7 +264,7 @@ flowchart TB
     R["kb_build/*/run.py<br/>Dateien lesen + schreiben,<br/>Pfade aus paths.py"]
   end
   subgraph L["Logik – rein, ohne I/O"]
-    AE["govguard/audit_engine.py<br/>+ inventory.py, models.py, text.py"]
+    AE["govguard/audit_engine.py<br/>+ evidence.py, inventory.py, models.py, text.py"]
     KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py,<br/>archetypes.py (geplant)"]
   end
   subgraph A["Adapter – einziger Ort für AWS, Groq, subprocess, HTTP"]

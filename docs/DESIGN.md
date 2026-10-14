@@ -223,17 +223,19 @@ Wie bei `Rule` schreibt das LLM nur einen Entwurf. Die Daten aus dem Katalog erg
 ```python
 Status = Literal["PASS", "WARN", "FAIL", "N/A"]
 
-class FindingDraft(BaseModel):           # vom LLM, ein Element im Tool submit_audit
+class FindingDraft(BaseModel):           # vom LLM, ein Element in submit_audit; strikt, ohne Defaults
     rule_id: str
     status: Status
-    evidence: str | None                 # wörtliches Zitat aus der Eingabe; Pflicht bei PASS und FAIL
+    line_start: int | None               # Beleg per Zeilenverweis (ADR 0017); Pflicht bei PASS
+    line_end: int | None
     rationale: str
     recommendation: str | None           # Pflicht bei WARN und FAIL
 
-class AuditResponse(BaseModel):          # Schema des Tools submit_audit
+class AuditResponse(BaseModel):          # Schema von submit_audit
     findings: list[FindingDraft]
 
-class Finding(FindingDraft):             # vom Code aus dem Katalog ergänzt
+class Finding(FindingDraft):             # vom Code aus Eingabe und Katalog ergänzt
+    evidence: str | None                 # vom Code aus den Zeilen geschnitten, wörtlich per Konstruktion
     title: str
     primary_anchor: str
     cross_references: list[CrossReference]
@@ -246,7 +248,7 @@ class AuditReport(BaseModel):
     trace: Trace                         # Rückverfolgung, siehe 2.4
 ```
 
-- **Beleg-Pflicht folgt aus dem Glossar:** PASS heißt „Einhaltung belegt“, FAIL heißt „Verstoß belegt“, beide brauchen also ein Zitat. Fehlt etwas in der Eingabe, ist das WARN, nicht FAIL.
+- **Beleg-Pflicht folgt aus dem Glossar:** PASS heißt „Einhaltung belegt“, FAIL heißt „Verstoß belegt“, beide brauchen also einen Zeilenbereich. Fehlt etwas in der Eingabe, ist das WARN, nicht FAIL: Ein FAIL ohne Zeilenbereich stuft der Code auf WARN herab.
 - **Gesamtstatus:** Rangfolge FAIL > WARN > PASS > N/A, der schlechteste Status gewinnt. Sind alle Befunde N/A, ist der Gesamtstatus N/A.
 
 ### 2.2 run_audit() und select_archetype()
@@ -291,12 +293,14 @@ class ArchetypeChoice(BaseModel):        # Schema des Tools select_archetype
 
 Vor dem Audit bestimmt `inventory.resource_inventory()` im Architektur-Audit das Ressourceninventar (ADR 0011, 0015). Bei CloudFormation-JSON liest es `template_resource_types()` (3); N/A heißt dann „Ressourcentyp nicht im Template“. Sonst nennt ein LLM-Vorlauf (`submit_inventory`) die Typen mit Beleg, der Code prüft Typ und Beleg (ein Retry, dann `AuditValidationError`); N/A heißt dann „Dienst in der Eingabe nicht erkannt“, und IAM, KMS und Logs sind immer anwendbar. Regeln mit N/A gehen nicht ans Modell. Im Spec-Audit geht auch ein Template vollständig ans Modell, denn ein stilles N/A würde eine falsch eingereichte Eingabe verdecken.
 
-Die übrigen Prüfregeln gehen in Paketen à 10 gleichzeitig ans Modell (`asyncio.gather`). Danach prüft der Code genau einen Befund je Prüfregel und sortiert den Report nach dem ersten Ressourcentyp.
+Die übrigen Prüfregeln gehen in Paketen à 10 gleichzeitig ans Modell (`asyncio.gather`). Jedes Paket enthält die Eingabe mit Zeilennummern (`12| …`). Das Schema ist strikt: Bedrock bekommt ein erzwungenes Tool mit `strict` (ADR 0005), Groq `NativeOutput` (ADR 0016). Danach prüft der Code genau einen Befund je Prüfregel und sortiert den Report nach dem ersten Ressourcentyp.
 
 `run_audit()` validiert die LLM-Antwort in dieser Reihenfolge:
 1. Pydantic-Schema (`AuditResponse`), durch Pydantic AI.
 2. Jede an das Modell gesendete `rule_id` kommt genau einmal vor, und es gibt keine unbekannten IDs. Im Architektur-Audit ist N/A vom Modell verboten, denn der Ressourcentyp kommt vor oder wird immer geprüft; der Prompt sagt das dem Modell vorab.
-3. Beleg vorhanden, wo er Pflicht ist (PASS, FAIL), und jeder gesetzte Beleg mit `contains_quote()` wörtlich in der Eingabe gefunden (siehe 3). Empfehlung vorhanden bei WARN und FAIL.
+3. Zeilenbereich vorhanden bei PASS; jeder gesetzte Bereich liegt in der Eingabe, umfasst höchstens 200 Zeilen (`MAX_SPAN`), und der Ausschnitt hat mindestens 15 Zeichen (`evidence.py`, ADR 0017). Empfehlung vorhanden bei WARN und FAIL.
+
+Ein FAIL ohne Zeilenbereich löst keinen Retry aus, der Code stuft es auf WARN herab. Den Beleg schneidet der Code aus den Zeilen, das Modell schreibt ihn nicht ab.
 
 Die Schritte 2 und 3 laufen im `@agent.output_validator` und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch oder die Modell-API (z. B. Drosselung, `ModelAPIError`), wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
 
@@ -347,7 +351,7 @@ class AuditEvent(BaseModel):             # eine JSON-Zeile in CloudWatch Logs
 
 ## 3. Gemeinsame Funktionen
 
-Build (Zitat-Check) und Laufzeit (Beleg-Check) normalisieren mit **derselben** Funktion. Sonst würde ein Zitat im Build bestehen und zur Laufzeit scheitern oder umgekehrt.
+Build (Zitat-Check), Freitext-Vorlauf (Beleg im Ressourceninventar) und Mindestlänge eines Zeilenbelegs normalisieren mit **derselben** Funktion. Sonst würde ein Zitat im Build bestehen und zur Laufzeit scheitern oder umgekehrt.
 
 ```python
 # src/govguard/text.py – rein
