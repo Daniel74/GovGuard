@@ -15,7 +15,7 @@ Jeder Lauf kostet echtes Geld (Kosten-Weiche, CLAUDE.md). Die CLI kennt `spec` u
      > <scratchpad>/report.json 2> <scratchpad>/stats.txt
    ```
 
-4. **Berichten.** Fertig ist der Bericht, wenn er nennt: Modell, Exit-Code, Gesamtzeit, langsamsten Aufruf gegen die 29-s-Grenze von API Gateway, Aufrufe, Tokens, Output-Tokens je Aufruf, Kosten, Retry-Prompts (davon Schema) und bei Exit 2 die Retry-Gründe. Bei Exit 0 den Report mit `expected` aus `preset.json` vergleichen.
+4. **Berichten.** Fertig ist der Bericht, wenn er nennt: Modell, Exit-Code, Gesamtzeit gegen den Lambda-Timeout von 180 s (ADR 0018), langsamsten Aufruf, Aufrufe, Tokens, Output-Tokens je Aufruf, Kosten, Retry-Prompts (davon Schema) und bei Exit 2 die Retry-Gründe. Bei Exit 0 den Report mit `expected` aus `preset.json` vergleichen.
 
 ## Fallstricke
 

@@ -56,10 +56,11 @@ _OUTPUT = {"name": "submit_audit", "description": "Gib genau einen Befund je PrÃ
 # Bedrock: forced tool (ADR 0005); Groq: json_schema with constrained decoding (ADR 0016)
 _AGENTS = {
     system: Agent(output_type=output_type, instructions=SYSTEM_PROMPT, deps_type=AuditDeps,
-                  retries=1)  # exactly one retry, 29 s API Gateway timeout
+                  retries=1)  # exactly one retry, keeps the audit within the 180 s (ADR 0018)
     for system, output_type in [("bedrock", ToolOutput(AuditResponse, **_OUTPUT)),
                                 ("groq", NativeOutput(AuditResponse, **_OUTPUT))]
 }
+_MAX_PARALLEL = {"groq": GROQ_MAX_PARALLEL}  # Bedrock: no limit, all packages at once
 
 
 def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditResponse:
@@ -69,7 +70,7 @@ def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditRespo
         [without_unproven_verdict(f, text, last) for f in response.findings]))
     expected = {rule.id for rule in ctx.deps.rules}
     problems = completeness_problems(expected, response.findings)
-    problems += [p for f in response.findings if (p := field_problem(f, ctx.deps.input_text))]
+    problems += [p for f in response.findings if (p := field_problem(f, text))]
     if ctx.deps.na_forbidden:
         problems += [f"{f.rule_id}: N/A ist verboten, die PrÃ¼fregel ist laut Ressourceninventar "
                      "anwendbar" for f in response.findings if f.status == "N/A"]
@@ -122,9 +123,9 @@ async def _drafts(catalog: RuleCatalog, input_text: str, model: Model) -> list[F
 async def _ask_in_packages(
     rules: list[Rule], input_text: str, na_forbidden: str | None, model: Model
 ) -> list[FindingDraft]:
-    """Bedrock: all packages at once (29 s API Gateway timeout, ADR 0011); Groq: throttled."""
+    """Packages in parallel, so the audit stays within the 180 s (ADR 0018); Groq throttled."""
     packages = [rules[i:i + PACKAGE_SIZE] for i in range(0, len(rules), PACKAGE_SIZE)]
-    slots = asyncio.Semaphore(GROQ_MAX_PARALLEL if model.system == "groq" else len(packages) or 1)
+    slots = asyncio.Semaphore(_MAX_PARALLEL.get(_provider(model), len(packages) or 1))
 
     async def ask(package: list[Rule]) -> list[FindingDraft]:
         async with slots:
@@ -141,9 +142,14 @@ def _na_by_code(rule: Rule, rationale: str) -> FindingDraft:
 
 
 async def _ask_model(deps: AuditDeps, model: Model) -> list[FindingDraft]:
-    agent = _AGENTS["groq" if model.system == "groq" else "bedrock"]
+    agent = _AGENTS[_provider(model)]
     result = await agent.run(_user_prompt(deps), model=model, deps=deps)
     return result.output.findings
+
+
+def _provider(model: Model) -> str:
+    """Groq or Bedrock; test models (FunctionModel) behave like Bedrock."""
+    return "groq" if model.system == "groq" else "bedrock"
 
 
 def _user_prompt(deps: AuditDeps) -> str:
@@ -176,4 +182,3 @@ def _complete_findings(
         )
         for rule in sorted(catalog.rules, key=lambda rule: rule.cfn_resource_types[:1])
     ]
-

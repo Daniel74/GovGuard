@@ -62,6 +62,16 @@ def test_code_cuts_evidence_from_the_referenced_lines(spec_catalog, spec_input, 
     assert "2| Alle Zugriffe erfolgen" in str(seen[0])  # the model sees numbered lines
 
 
+def test_evidence_spanning_lines_is_verbatim_in_crlf_input(spec_catalog, trace) -> None:
+    crlf_input = "Gesundheitsdaten im Klartext.\r\nZugriffe erfolgen über TLS 1.3.\r\nEnde.\r\n"
+    two_lines = {**PASS_32, "line_start": 1, "line_end": 2}
+
+    report = run_audit(spec_catalog, crlf_input, answer_with(two_lines, WARN_9), trace)
+
+    assert report.findings[0].evidence in crlf_input  # verbatim, not only line by line
+    assert report.findings[0].evidence.endswith("TLS 1.3.")
+
+
 def test_spec_prompt_allows_na(spec_catalog, spec_input, trace) -> None:
     seen: list = []
 

@@ -1,6 +1,6 @@
 # GovGuard – GovCloud Compliance Copilot
 
-Portfolio- und IHK-Praxisprojekt (Cloud Business Expert, Modul 4). Der Copilot prüft Spezifikationen (DSGVO/SDM) und Architekturen (BSI IT-Grundschutz/CIS) und liefert einen Audit-Report mit PASS/WARN/FAIL. Danach schlägt er einen passenden Golden Archetype als CDK-Entwurf (Python, AWS Solutions Constructs) vor.
+Portfolio- und IHK-Praxisprojekt (Cloud Business Expert, Modul 4). Der Copilot prüft Spezifikationen (DSGVO/SDM) und Architekturen (BSI IT-Grundschutz/CIS) und liefert einen Audit-Report mit PASS/WARN/FAIL. Golden Archetypes sind entworfen, aber bewusst nicht gebaut (ADR 0019).
 
 Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollständig verteidigen kann, als eine große, die ich nur halb verstehe.
 
@@ -11,7 +11,7 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 - 100 % serverless, 0 € Leerlaufkosten (FinOps, siehe `CONTEXT.md`): Im Leerlauf zahlen wir nur für gehaltene Daten und für Sicherheit, z. B. KMS-Schlüssel ca. 1 $/Monat.
 - Python, Pydantic, Pydantic AI auf der Bedrock Converse API mit Tool-Choice (ADR 0005), Streamlit-UI.
 - Wissensbasis als JSON in S3 bzw. im Repo, Bounded Catalog ohne Suche und ohne Obergrenze, keine Vektor-DB (ADR 0011).
-- Code modular nach `docs/ARCHITECTURE.md` → *Code-Struktur*: boto3 und das Bedrock-Modell für Pydantic AI nur in `aws_services.py`, subprocess nur in `src/kb_build/cdk_runner.py`, HTTP-Downloads nur in `src/kb_build/source_fetch.py`, Prüflogik rein, nie vermischt. Workflow-YAML enthält keine Logik, nur `python -m …`.
+- Code modular nach `docs/ARCHITECTURE.md` → *Code-Struktur*: boto3 und das Bedrock-Modell für Pydantic AI nur in `aws_services.py`, kein subprocess (ADR 0019), HTTP-Downloads nur in `src/kb_build/source_fetch.py`, Prüflogik rein, nie vermischt. Workflow-YAML enthält keine Logik, nur `python -m …`.
 - Kleine Einheiten: ein Modul = eine Aufgabe, ca. 200 Zeilen; eine Funktion ca. 30 Zeilen. Wird es größer, teile auf. Die Grenzen prüfen ruff (`pyproject.toml`) und ein pytest-Test.
 
 `docs/Modul4_Praxisprojekt_Emails.md` ist **Rohmaterial**, voller älterer und widersprüchlicher Ideen. Verbindlich sind `CONTEXT.md` (Glossar) und `docs/adr/`. Fehlen sie, gilt das Gespräch mit mir.

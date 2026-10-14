@@ -24,17 +24,17 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag                | Arbeit                                                                                                                                                                                                                                          |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.          | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                                                                                                |
-| Do 15.10.          | Schritt 10a: Diagnose fail closed und Messung mit Durchlauf. Schritte 10b–10c: #27 KI-Governance, #28 Bewertung. Wird es knapp, #27 auf die Herabstufung im Report kürzen                                                                       |
-| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                                                                                               |
-| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                                                                                                 |
-| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                                                                                                       |
-| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                                                                                           |
-| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                                                                                                  |
-| 22.–25.10.         | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                                                                                                 |
-| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                                                                                                   |
+| Tag                | Arbeit                                                                                                                                                                    |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.          | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                          |
+| Do 15.10.          | Schritt 10a: Diagnose fail closed und Messung mit Durchlauf. Schritte 10b–10c: #27 KI-Governance, #28 Bewertung. Wird es knapp, #27 auf die Herabstufung im Report kürzen |
+| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                         |
+| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                           |
+| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                                 |
+| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                     |
+| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                            |
+| 22.–25.10.         | Verstehen: `/verstehen` für #14, #26, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                           |
+| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                             |
 
 **Schnittlinie:** Wird es knapp, fällt zuerst #8 weg, weil der Build der Wissensbasis auch lokal per `python -m kb_build` läuft. Danach fällt #24 weg; es zählt nur bei einem neuen Build. Beide machen nur dann weiter, wenn ein Tag frei wird. Im Fachgespräch sind sie Ausbau.
 
@@ -379,9 +379,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Diagnose** 🆕 _Opus_ · 👤 „Lies docs/FAHRPLAN.md Schritt 10a und Issue #26 mit dem letzten Messkommentar.“ Dann `/diagnosing-bugs fail closed bei spec-wohngeld-openapi` → Plan → Go (Gate-Design und Drosselung sind Weichenstellungen)
       Kandidaten aus der Messung: umgedrehter Bereich bei WARN/FAIL gilt wie ein zu großer als „kein Bereich“ → Bereich bei N/A ignorieren statt prüfen → Groq höchstens 2 Pakete gleichzeitig oder Token-Budget je Minute → fehlende Befunde (bis zu 7 je Paket) beobachten. Falsche FAILs mit Beleg gehören zu #28, nicht hierher.
 - [x] **Messen (Durchlauf)** 👤 `/audit-messen spec-wohngeld-openapi mit Bedrock und Groq, arch-antragseingang-fehlerhaft mit Bedrock` → 🤖 notiert die Ergebnisse gegen `expected` im Issue, setzt das Kostenziel in SPEC und bestätigt den Lambda-Timeout in ADR 0018
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #26 seit 46e91b0` (TDD-Umbau, Nachschärfen und Diagnose zusammen)
-- [ ] **Verstehen** 👤 `/verstehen 26` (Kernfrage: warum der Beleg bleibt, auch wenn das LLM ihn nicht mehr abschreibt)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #26 seit 46e91b0` (TDD-Umbau, Nachschärfen und Diagnose zusammen)
+- [-] **Verstehen** 👤 `/verstehen 26` (Kernfrage: warum der Beleg bleibt, auch wenn das LLM ihn nicht mehr abschreibt)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Das Preset mit beiden Modellen ohne fail closed durchläuft, jeder Beleg wörtlich in der Eingabe steht, das ADR vorliegt und Laufzeit, Kosten und das Ergebnis gegen `expected` je Modell im Issue stehen.
 **Fürs Fachgespräch:** Grounding, Halluzinationsschutz durch Code statt Prompt, Output-Tokens als Laufzeittreiber, Modell-Unabhängigkeit durch Gates, Kosten gegen Datenresidenz.

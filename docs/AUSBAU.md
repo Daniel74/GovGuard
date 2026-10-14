@@ -39,6 +39,7 @@ _Seit ADR 0011 im MVP: Quellen-Adapter, Cache, Pruning per Ressourceninventar un
 |---|---|---|
 | **Generell** | **S3-Upload-Pattern:** Der Client lädt die Datei direkt in einen S3-Bucket und übergibt der API lediglich die Object-URI zur Verarbeitung. | Code |
 | **IaC / OpenAPI** | **AST-Kürzung:** Ein Parser extrahiert nur sicherheitsrelevante Ressourcen, Attribute und Datenfelder. Unnötige Beschreibungen und Beispiele werden algorithmisch verworfen. | Code |
+| **Minifiziertes JSON** | **Belegs-Grenze in Zeichen:** Ohne Zeilenumbrüche liefert ein Zeilenverweis `1-1` die ganze Eingabe als Beleg (ADR 0017). Der Code formatiert JSON vor dem Nummerieren oder begrenzt den Beleg zusätzlich in Zeichen. | Code |
 | **Langer Freitext** | **Agentic Map-Reduce (Faktenextraktion):** 1. Code zerlegt das Dokument in Kapitel. 2. Das LLM extrahiert parallel aus jedem Kapitel Fakten (z.B. Datenhaltung, PII) inkl. Zitat. 3. Der Code baut daraus ein kompaktes Faktenblatt. 4. Das Audit läuft auf dem verdichteten Faktenblatt ab. | LLM & Code |
 
 _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, visualisiert das UI das erzeugte Faktenblatt vor dem eigentlichen Audit-Report.

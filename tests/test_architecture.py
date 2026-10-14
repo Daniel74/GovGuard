@@ -7,7 +7,7 @@ import pytest
 
 SRC = Path(__file__).parent.parent / "src"
 MAX_MODULE_LINES = 200
-ADAPTER_ONLY = {  # I/O import -> the only module allowed to import it
+ADAPTER_ONLY: dict[str, str | None] = {  # I/O import -> the only module allowed (None: none)
     "boto3": "govguard/aws_services.py",
     "botocore": "govguard/aws_services.py",
     "pydantic_ai.models.bedrock": "govguard/aws_services.py",
@@ -15,7 +15,7 @@ ADAPTER_ONLY = {  # I/O import -> the only module allowed to import it
     "groq": "kb_build/groq_services.py",  # build default (ADR 0014)
     "pydantic_ai.models.groq": "kb_build/groq_services.py",
     "pydantic_ai.providers.groq": "kb_build/groq_services.py",
-    "subprocess": "kb_build/cdk_runner.py",
+    "subprocess": None,  # no cdk_runner.py, no archetypes are built (ADR 0019)
     "urllib.request": "kb_build/source_fetch.py",
     "http.client": "kb_build/source_fetch.py",
     "requests": "kb_build/source_fetch.py",
@@ -40,7 +40,7 @@ def imports(path: Path, module: str) -> bool:
 
 
 @pytest.mark.parametrize(("module", "adapter"), ADAPTER_ONLY.items())
-def test_io_imports_only_in_their_adapter(module: str, adapter: str) -> None:
+def test_io_imports_only_in_their_adapter(module: str, adapter: str | None) -> None:
     offenders = [
         rel
         for path in SRC.rglob("*.py")

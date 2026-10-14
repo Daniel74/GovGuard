@@ -54,8 +54,11 @@ def _lines(draft: FindingDraft) -> tuple[int, int] | None:
 
 
 def _cut(text: str, line_start: int, line_end: int) -> str:
-    """Lines line_start to line_end (1-based, inclusive), verbatim from the input."""
-    return "\n".join(text.splitlines()[line_start - 1:line_end])
+    """Lines line_start to line_end (1-based, inclusive), verbatim incl. line breaks (CRLF)."""
+    lines = text.splitlines(keepends=True)[line_start - 1:line_end]
+    if not lines:
+        return ""
+    return "".join(lines[:-1]) + lines[-1].splitlines()[0]  # without the final line break
 
 
 def _range_problem(text: str, line_start: int, line_end: int) -> str | None:
