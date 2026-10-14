@@ -24,17 +24,17 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag                | Arbeit                                                                                                                                                                    |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.          | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                          |
-| Do 15.10.          | Schritt 10a: Diagnose fail closed und Messung mit Durchlauf. Schritte 10b–10c: #27 KI-Governance, #28 Bewertung. Wird es knapp, #27 auf die Herabstufung im Report kürzen |
-| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                         |
-| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                           |
-| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                                 |
-| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                     |
-| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                            |
-| 22.–25.10.         | Verstehen: `/verstehen` für #14, #26, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                      |
-| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                             |
+| Tag                | Arbeit                                                                                                                                                                  |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.          | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                        |
+| Do 15.10.          | Schritt 10a: Diagnose fail closed und Messung mit Durchlauf. Schritte 10b–10d: #27 KI-Governance, #28 Bewertung, #29 Wissensbasis. Wird es knapp, rutscht #29 hinter #9 |
+| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                       |
+| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                         |
+| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                               |
+| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                   |
+| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                          |
+| 22.–25.10.         | Verstehen: `/verstehen` für #14, #26, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                    |
+| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                           |
 
 **Schnittlinie:** Wird es knapp, fällt zuerst #8 weg, weil der Build der Wissensbasis auch lokal per `python -m kb_build` läuft. Danach fällt #24 weg; es zählt nur bei einem neuen Build. Beide machen nur dann weiter, wenn ein Tag frei wird. Im Fachgespräch sind sie Ausbau.
 
@@ -411,13 +411,31 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #28: Prompt, Feld oder Gate?` (Prompt-Design ist eine Weichenstellung)
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #28 umsetzen` → Plan → Go
-- [] **Messen** 👤 `/audit-messen spec-wohngeld-openapi und spec-meldeportal-gesundheit, Bedrock und Groq` → 🤖 notiert die Ergebnisse gegen `expected` im Issue
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #28`
-- [ ] **Verstehen** 👤 `/verstehen 28` (Kernfrage: warum ein Beleg allein noch keinen Verstoß beweist)
+- [x] **Messen** 👤 `/audit-messen spec-wohngeld-openapi je 2× mit Bedrock und Groq, spec-meldeportal-gesundheit mit Bedrock und Groq, arch-antragseingang-fehlerhaft mit Bedrock` → 🤖 notiert die Ergebnisse gegen `expected` im Issue
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #28` (Messkriterien sind nach #29 gewandert)
+- [x] **Verstehen** 👤 `/verstehen 28` (Kernfrage: warum ein Beleg allein noch keinen Verstoß beweist)
+- [x] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Prompt-Regel der offenen Welt, `temperature: 0` und die Obergrenze für Output-Tokens getestet sind und ADR 0020 vorliegt. Die Messkriterien prüft Schritt 10d.
+**Fürs Fachgespräch:** Testorakel mit Gegenprobe, Grenzen von Prompt-Regeln, „Das LLM urteilt, der Code prüft“.
+
+---
+
+### Schritt 10d – #29 Wissensbasis: `violation_if` beschreibt im Spec-Katalog nur festgelegte Verstöße
+
+**Ziel:** `violation_if` im Spec-Katalog beschreibt eine Festlegung, kein Fehlen (offene Welt, ADR 0020), damit `spec-wohngeld-openapi` sein `expected` (WARN) erfüllt.
+**Voraussetzung:** Schritt 10c. Schritt 11 hängt nicht davon ab, der Katalog ist JSON in S3 (ADR 0011). Wird es knapp, rutscht 10d hinter Schritt 11.
+
+- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #29: Regeln, die nur ein Fehlen kennen; neu formulieren ohne neue Auswahl?` (Prompt-Design ist eine Weichenstellung) → 🤖 übernimmt die Messkriterien aus #28 ins Issue: Gegenprobe `arch-antragseingang-fehlerhaft`, Schwankung
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #29 umsetzen` → Plan → Go
+- [ ] **Echter Lauf** 🤖 👤 `python -m kb_build rules --audit-type spec` (Groq, ADR 0014) → 👤 prüft: Qualitätsbericht überall 0, in `git diff data/knowledge_base/rules_spec.json` kommt keine Regel-ID dazu und keine fällt weg (Auswahl unverändert)
+- [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi je 2× mit Bedrock und Groq, spec-meldeportal-gesundheit mit Bedrock und Groq, arch-antragseingang-fehlerhaft mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Schwankung je Modell (Prüfregeln mit anderem Status zwischen Lauf 1 und 2)
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #29`
+- [ ] **Verstehen** 👤 `/verstehen 29` (Kernfrage: warum ein Verstoßkriterium in der offenen Welt eine Festlegung beschreiben muss)
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Beide Spec-Presets mit beiden Modellen ihr `expected` erfüllen und `spec-meldeportal-gesundheit` seine Pflicht-FAILs behält.
-**Fürs Fachgespräch:** Testorakel mit Gegenprobe, Grenzen von Prompt-Regeln, „Das LLM urteilt, der Code prüft“.
+**Fertig, wenn:** `spec-wohngeld-openapi` mit beiden Modellen in je zwei Läufen WARN zeigt, `spec-meldeportal-gesundheit` Art. 9 und M60.P01 als FAIL behält, `arch-antragseingang-fehlerhaft` sein `expected` erfüllt und die Schwankung im Issue steht.
+**Fürs Fachgespräch:** Offene und geschlossene Welt, Datenqualität der Wissensbasis vor Prompt-Tricks.
 
 ---
 

@@ -66,3 +66,18 @@ def test_both_models_audit_at_temperature_zero(spec_catalog, spec_input, trace) 
     run_audit(spec_catalog, spec_input, GroqFake(groq, model_name="groq-fake"), trace)
 
     assert [info.model_settings["temperature"] for info in seen] == [0, 0]
+
+
+def test_a_runaway_answer_is_cut_off_within_the_lambda_timeout(
+    spec_catalog, spec_input, trace
+) -> None:
+    # #28: a Bedrock retry looped for 204 s up to 64,000 tokens; normal answers stay below 4,000
+    seen: list[AgentInfo] = []
+
+    def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        seen.append(info)
+        return ModelResponse(parts=[ToolCallPart("submit_audit", {"findings": FINDINGS})])
+
+    run_audit(spec_catalog, spec_input, FunctionModel(respond), trace)
+
+    assert seen[0].model_settings["max_tokens"] == 8000

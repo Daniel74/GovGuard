@@ -1,26 +1,27 @@
 # 0020 – FAIL nur bei festgelegtem Verstoß
 
-_Ergänzt [ADR 0017](0017-beleg-per-zeilenverweis.md). Umsetzung und Messungen: #28._
+_Ergänzt [ADR 0017](0017-beleg-per-zeilenverweis.md). Umsetzung und Messungen: #28, Umbau des Katalogs: #29._
 
 ## Kontext
 
-- Seit #26 wird ein FAIL ohne Beleg WARN. Trotzdem verfehlt `spec-wohngeld-openapi` sein `expected` (WARN): Beide Modelle vergeben FAILs *mit* Beleg, die keinen Verstoß zeigen. Ein Beispiel ist Bedrock zu Art. 12: Es zitiert den Abschnitt „Rechte der betroffenen Personen“ und bemängelt fehlende Prozesse. Groq vergibt ca. neunmal so viele FAILs wie Bedrock (Messung 14.10.2026).
-- Ob ein Beleg einen Verstoß zeigt, ist eine Bedeutungsfrage. Ein Code-Gate kann sie nicht entscheiden.
+- Seit #26 wird ein FAIL ohne Beleg WARN. Trotzdem verfehlt `spec-wohngeld-openapi` sein `expected` (WARN): Beide Modelle vergeben FAILs *mit* Beleg, die keinen Verstoß zeigen, z. B. Bedrock zu Art. 12 mit dem Abschnitt „Rechte der betroffenen Personen“. Ob ein Beleg einen Verstoß zeigt, ist eine Bedeutungsfrage, die kein Code-Gate entscheidet.
 - Bei der Architektur gilt das Gegenteil: Ein Template ist ein Bauplan. Fehlt eine Einstellung, gilt der Standardwert, und das ist oft der Verstoß.
+- 130 von 151 `violation_if` im Spec-Katalog beschreiben ein Fehlen, z. B. „Die Spezifikation enthält kein Verfahren …“. Auch mit der Regel der offenen Welt vergibt Groq noch 50 FAILs, fast alle mit „keine/fehlt“ (Messung Anlauf 1b, #28).
 
 ## Entscheidung
 
-- Nur im Spec-Audit gilt diese Prompt-Regel: FAIL gibt es nur, wenn die Belegzeilen einen Verstoß ausdrücklich festlegen, also `violation_if` erfüllen. Fehlt etwas oder ist es vage, ist der Befund WARN. Bei FAIL nennt `rationale` diese Festlegung.
-- Die gemeinsame WARN-Zeile heißt nur noch „Aus der Eingabe nicht entscheidbar“. Der Teil „was fehlt, ist WARN“ fällt weg, weil er für Templates falsch ist.
-- Audit und Inventar-Vorlauf laufen mit `temperature: 0`. So hängt die Schwankung zwischen zwei Läufen weniger am Zufall des Modells.
-- Es gibt kein Gate und kein neues Feld. Bleibt das Ziel rot, ist Anlauf 2 ein Feld für das erfüllte Kriterium. Danach käme der Umbau der Wissensbasis als eigenes Ticket.
+- Eine Spezifikation ist eine **offene Welt**: Was sie nicht erwähnt, kann anderswo geregelt sein. Ein Template ist eine **geschlossene Welt**: Was fehlt, ist der Standardwert. Welche Welt gilt, entscheidet der Code über die Audit-Art, nicht das Modell.
+- Nur im Spec-Audit gilt die Prompt-Regel (`SPEC_FAIL_RULE`): Beschreibt `violation_if` ein Fehlen, belegt fehlender Text nur „nicht beschrieben“, also WARN. FAIL gibt es nur, wenn die Belegzeilen etwas festlegen, das der Prüfregel widerspricht. `rationale` nennt diese Festlegung.
+- Die gemeinsame WARN-Zeile heißt nur noch „Aus der Eingabe nicht entscheidbar“, weil „was fehlt, ist WARN“ für Templates falsch ist. Audit und Inventar-Vorlauf laufen mit `temperature: 0` und höchstens 8.000 Output-Tokens je Aufruf.
+- Kein Gate und kein neues Feld: Ein Feld für das erfüllte Kriterium hilft nicht, solange das Kriterium selbst ein Fehlen beschreibt. Deshalb formuliert #29 `violation_if` im Spec-Katalog als Festlegung um.
 
 ## Konsequenzen
 
-- Die Regel steht nur im Prompt. Ein falsches FAIL mit Beleg bleibt möglich und fällt nur in der Messung gegen `expected` auf.
-- Gegenproben bleiben Pflicht: Echte Verstöße wie Art. 9 in `spec-meldeportal-gesundheit` müssen FAIL bleiben.
-- `temperature: 0` macht Läufe nicht identisch. Gemessen wird die Zahl der Prüfregeln, deren Status sich zwischen zwei Läufen ändert.
+- Die Regel steht nur im Prompt, auch die Pflicht für `rationale`. Ein falsches FAIL mit Beleg bleibt möglich und fällt nur in der Messung gegen `expected` auf. Allein reicht die Regel nicht, erst mit #29 kann `expected` grün werden.
+- Gemessen werden in #29 auch die Gegenproben (Art. 9 bleibt FAIL) und die Schwankung: die Zahl der Prüfregeln, deren Status sich zwischen zwei Läufen ändert. `temperature: 0` macht Läufe nicht identisch.
+- Ein Bedrock-Retry lief in einer Schleife bis 64.000 Output-Tokens (204 s). Mit der Obergrenze bricht eine Schleife nach ca. 25 s ab, normal sind unter 4.000 Tokens. Der abgeschnittene Tool-Call beendet das Audit sofort fail closed, ohne Retry, aber innerhalb der 180 s (ADR 0018).
+- Offen: Eine Architektur als Freitext ist eigentlich auch offene Welt, wird aber heute wie ein Template geprüft.
 
 ## Fachgespräch-Satz
 
-„Im Spec-Audit heißt FAIL, dass die Spezifikation den Verstoß festlegt. Was sie offenlässt, ist Prüfbedarf, also WARN. Im Template ist es umgekehrt, denn dort bedeutet eine fehlende Einstellung den unsicheren Standardwert.“
+„Eine Spezifikation ist eine offene Welt: Was sie nicht erwähnt, ist Prüfbedarf, also WARN. Ein Template ist eine geschlossene Welt, dort bedeutet eine fehlende Einstellung den unsicheren Standardwert, also FAIL.“
