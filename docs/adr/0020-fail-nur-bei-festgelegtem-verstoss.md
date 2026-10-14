@@ -22,6 +22,12 @@ _Ergänzt [ADR 0017](0017-beleg-per-zeilenverweis.md). Umsetzung und Messungen: 
 - Ein Bedrock-Retry lief in einer Schleife bis 64.000 Output-Tokens (204 s). Mit der Obergrenze bricht eine Schleife nach ca. 25 s ab, normal sind unter 4.000 Tokens. Der abgeschnittene Tool-Call beendet das Audit sofort fail closed, ohne Retry, aber innerhalb der 180 s (ADR 0018).
 - Offen: Eine Architektur als Freitext ist eigentlich auch offene Welt, wird aber heute wie ein Template geprüft.
 
+## Nachtrag (#29)
+
+- Der Formulier-Prompt fürs Spec-Audit verlangt als `violation_if` eine Festlegung, auch einen erklärten Verzicht oder Aufschub. Im Build prüft ein **LLM-Prüfer** (`judge_violation`) jedes Spec-`violation_if`. Beschreibt es ein Fehlen, geht seine Begründung als Retry an den Formulierer. Scheitert der Prüfer, bricht der Build ab (fail closed).
+- Verworfen: eine Sperrliste („kein“, „fehlt“, „vage“). Sie schließt aus Wörtern auf die Bedeutung. „legt nicht fest“ und „legt fest, dass … nicht“ unterscheiden sich nur in der Wortstellung, und jede neue Umschreibung bräuchte einen neuen Eintrag.
+- Konsequenz: Ein LLM prüft ein LLM, das Urteil ist nicht reproduzierbar. Deshalb läuft der Prüfer nur im Build, die Zeile `spec quality judge` zählt seine Treffer, und den Beweis liefert weiter die Messung gegen `expected`. Er kostet einen Request je Entwurf, ca. 150 je Spec-Build.
+
 ## Fachgespräch-Satz
 
 „Eine Spezifikation ist eine offene Welt: Was sie nicht erwähnt, ist Prüfbedarf, also WARN. Ein Template ist eine geschlossene Welt, dort bedeutet eine fehlende Einstellung den unsicheren Standardwert, also FAIL.“

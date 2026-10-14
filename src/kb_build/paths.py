@@ -2,6 +2,7 @@
 
 input/          maintained by hand
 intermediate/   build results, checked in for the review (sources/ stays local, ADR 0008)
+                logs/ explains how a result came about: retries, judge, tokens (#29)
 knowledge_base/ only rules_*.json: read at runtime, deployed to S3
 """
 
@@ -61,3 +62,8 @@ class BuildPaths:
         """E.g. selection_arch.json, verdicts_spec.json; only rules_*.json is deployed."""
         folder = self.knowledge_base if kind == "rules" else self.intermediate
         return folder / f"{kind}_{_FILE_SUFFIX[audit_type]}.json"
+
+    def build_log(self, command: str, audit_type: AuditType | None) -> Path:
+        """E.g. logs/rules_spec.log; each run overwrites it, git keeps the older runs (#29)."""
+        suffix = f"_{_FILE_SUFFIX[audit_type]}" if audit_type else ""
+        return self.intermediate / "logs" / f"{command}{suffix}.log"

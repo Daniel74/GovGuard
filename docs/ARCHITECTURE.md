@@ -119,7 +119,7 @@ Der Primäranker ist die **eine** Anforderung, aus der eine Prüfregel stammt. I
 
 Zusätzlich muss das `source_quote` **wörtlich** im Text genau der verankerten Anforderung stehen. Verglichen wird nach Entfernen von EUR-Lex-Markern wie „►C2“ und **ohne Leerzeichen**, denn pypdf zerteilt Wörter (SDM `M60.S06`: „Protokollie rung“). Der Beleg zur Laufzeit nutzt bewusst dieselbe Funktion (DESIGN 3): Zitat statt Behauptung. Dass ein Treffer dabei über Wortgrenzen gehen kann, nehmen wir in Kauf, denn die Zeichenfolge muss trotzdem lückenlos stimmen. Ist der ganze Text kürzer als 15 Zeichen (SDM `M60.P03`: „Löschkonzept“), muss das Zitat den ganzen Text umfassen. Querverweise müssen existieren und zu einer **anderen** Quelle gehören.
 
-Dieselben Prüfungen laufen schon beim Formulieren als Validator: Das LLM bekommt den Fehler zurück und hat zwei Wiederholungen. Bei Architektur-Regeln prüft er zusätzlich, ob die Kriterien einen Ressourcentyp der Regel nennen und keine vagen Wörter wie „erforderlich“ enthalten. Bleibt ein Entwurf ungültig, bricht der Build ab.
+Dieselben Prüfungen laufen schon beim Formulieren als Validator: Das LLM bekommt den Fehler zurück und hat bis zu sechs Wiederholungen. Bei Architektur-Regeln prüft er zusätzlich, ob die Kriterien einen Ressourcentyp der Regel nennen und keine vagen Wörter wie „erforderlich“ enthalten. Bei Spec-Regeln fragt er einen LLM-Prüfer, ob `violation_if` eine Festlegung beschreibt und kein Fehlen (offene Welt, ADR 0020). Bleibt ein Entwurf ungültig, bricht der Build ab.
 
 ### 1.4 Steckbriefe der Archetypen (nur fürs Abdeckungs-Gate)
 
@@ -185,6 +185,7 @@ result = audit_agent.run_sync(catalog_and_input, model=model, deps=deps)
 |---|---|---|
 | `classify_requirement` | `testable: bool`, `rationale: str`, `cfn_resource_types: [str]` (nur Architektur) | Build, Stufe ② |
 | `formulate_rule` | LLM-Felder der Prüfregel (siehe 1.2) | Build, Stufe 5 |
+| `judge_violation` | `describes_absence: bool`, `reason: str` | Build, Stufe 5, nur Spec |
 | `submit_audit` | `findings: [{rule_id, status: PASS\|WARN\|FAIL\|N/A, line_start, line_end, rationale, recommendation}]` | Laufzeit, beide Audits |
 
 - **Enums schließen die Antwortmenge:** Das Modell kann keinen Status „OK“ erfinden.
@@ -272,7 +273,7 @@ src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, n
   __main__.py         Einstieg; gates.py, paths.py (alle Datenpfade), source_fetch.py, groq_services.py
   extract/            Adapter je Quelle (bsi, cis, c5, dsgvo, fsbp, sdm, prowler), models.py, run.py
   select/             classify, curation, judgement_cache, models.py, run.py
-  rules/              formulate, criteria, quality, run.py
+  rules/              formulate, prompts, criteria, violation_judge, quality, run.py
   reference/          scope, cfn_types, cfn_properties, archetype_profiles, run.py (cfn-properties)
 infra/                CDK-App des GovGuard-Stacks
 ui/                   Streamlit-App, spricht nur per HTTP mit der API
@@ -281,6 +282,7 @@ data/input/           von Hand gepflegt: sources.json (URL, Version, SHA-256, Li
                       cfn_resource_types.json, cfn_properties.json, presets/ (5 Presets mit Soll-Ergebnis)
 data/intermediate/    Zwischenergebnisse, eingecheckt fürs Review: extracted/ (cis, fsbp, c5 nur lokal),
                       judgement_cache.json, selection_*.json, verdicts_*.json; sources/ = Download-Cache, in .gitignore
+                      logs/<kommando>[_spec|_arch].log: Build-Log je Lauf (Retries mit Grund, Tokens), mit dem Ergebnis committen
 data/knowledge_base/  nur das Endergebnis: rules_spec.json, rules_arch.json; geht nach S3
 tests/                pytest, flach
 .github/workflows/    build-kb.yml, deploy.yml

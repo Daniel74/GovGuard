@@ -426,9 +426,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** `violation_if` im Spec-Katalog beschreibt eine Festlegung, kein Fehlen (offene Welt, ADR 0020), damit `spec-wohngeld-openapi` sein `expected` (WARN) erfüllt.
 **Voraussetzung:** Schritt 10c. Schritt 11 hängt nicht davon ab, der Katalog ist JSON in S3 (ADR 0011). Wird es knapp, rutscht 10d hinter Schritt 11.
 
-- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #29: Regeln, die nur ein Fehlen kennen; neu formulieren ohne neue Auswahl?` (Prompt-Design ist eine Weichenstellung) → 🤖 übernimmt die Messkriterien aus #28 ins Issue: Gegenprobe `arch-antragseingang-fehlerhaft`, Schwankung
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #29 umsetzen` → Plan → Go
-- [ ] **Echter Lauf** 🤖 👤 `python -m kb_build rules --audit-type spec` (Groq, ADR 0014) → 👤 prüft: Qualitätsbericht überall 0, in `git diff data/knowledge_base/rules_spec.json` kommt keine Regel-ID dazu und keine fällt weg (Auswahl unverändert)
+- [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #29: Regeln, die nur ein Fehlen kennen` (Prompt-Design ist eine Weichenstellung) → 🤖 übernimmt die Messkriterien aus #28 ins Issue: Gegenprobe `arch-antragseingang-fehlerhaft`, Schwankung
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #29 umsetzen` → Plan → Go
+- [ ] **Echter Lauf** 🤖 👤 `python -m kb_build rules --audit-type spec` (Groq, ADR 0014) → 👤 prüft: Qualitätsbericht überall 0, in `git diff data/knowledge_base/rules_spec.json` kommt keine Regel-ID dazu und keine fällt weg (Auswahl unverändert) → 🤖 notiert Requests, Input- und Output-Tokens und die Retries des Prüfers aus `data/intermediate/logs/rules_spec.log` im Issue → 👤 committet das Log zusammen mit `rules_spec.json`
 - [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi je 2× mit Bedrock und Groq, spec-meldeportal-gesundheit mit Bedrock und Groq, arch-antragseingang-fehlerhaft mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Schwankung je Modell (Prüfregeln mit anderem Status zwischen Lauf 1 und 2)
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #29`
 - [ ] **Verstehen** 👤 `/verstehen 29` (Kernfrage: warum ein Verstoßkriterium in der offenen Welt eine Festlegung beschreiben muss)
@@ -436,6 +436,20 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Fertig, wenn:** `spec-wohngeld-openapi` mit beiden Modellen in je zwei Läufen WARN zeigt, `spec-meldeportal-gesundheit` Art. 9 und M60.P01 als FAIL behält, `arch-antragseingang-fehlerhaft` sein `expected` erfüllt und die Schwankung im Issue steht.
 **Fürs Fachgespräch:** Offene und geschlossene Welt, Datenqualität der Wissensbasis vor Prompt-Tricks.
+
+---
+
+### Schritt 10e – #30 Build-Log: Grund jedes Retries in select (und Schema-Retries in rules)
+
+**Ziel:** Das Build-Log nennt zu jedem Retry von `select` und `rules` die Anforderung und den Grund, auch bei Schema-Fehlern. Heute steht für `select` nur die Zahl im Log.
+**Voraussetzung:** Schritt 10d (Retry-Zeile in `rules`). Klein, Schritt 11 hängt nicht davon ab. Wird es knapp, rutscht 10e hinter Schritt 11.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #30 umsetzen` → Plan → Go (offene Frage im Issue: Deps oder `capture_run_messages`)
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #30`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Jeder Retry in `select` und `rules` mit Anforderung und Grund im Build-Log steht und Antworten aus dem Cache keine Zeile erzeugen.
+**Fürs Fachgespräch:** Nachvollziehbarkeit auch im Build, nicht nur im Audit-Report.
 
 ---
 

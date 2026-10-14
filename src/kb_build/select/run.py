@@ -8,11 +8,10 @@ from pathlib import Path
 
 from pydantic import TypeAdapter
 from pydantic_ai.models import Model
-from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, Preset, SourceName
 from kb_build.extract.models import ExtractedSource
-from kb_build.gates import pinned_anchors
+from kb_build.gates import pinned_anchors, usage_line
 from kb_build.paths import BuildPaths
 from kb_build.reference.archetype_profiles import load_profiles
 from kb_build.reference.run import read_scope
@@ -56,11 +55,6 @@ def _write_cache(cache: JudgementCache, path: Path) -> None:
     path.write_bytes(cache.to_json())
 
 
-def _log_usage(audit_type: AuditType, usage: RunUsage) -> None:
-    logger.info("%s: %d requests, %d input tokens, %d output tokens", audit_type,
-                usage.requests, usage.input_tokens, usage.output_tokens)
-
-
 def select_all(
     model: Model, paths: BuildPaths = BuildPaths(), only: AuditType | None = None
 ) -> None:
@@ -85,7 +79,7 @@ def _select(audit_type: AuditType, model: Model, paths: BuildPaths, cache: Judge
     try:
         result = curate(judge, read_sources(paths.extracted, names), pinned, components)
     finally:
-        _log_usage(audit_type, judge.usage)
+        logger.info(usage_line(audit_type, judge.usage))
         logger.info(judge.counts.line(audit_type, "classify"))
     selection_file = paths.out_file("selection", audit_type)
     selection_file.parent.mkdir(parents=True, exist_ok=True)  # only after a successful run

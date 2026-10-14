@@ -8,6 +8,7 @@ from dataclasses import dataclass, field
 
 from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput, UnexpectedModelBehavior
 from pydantic_ai.models import Model
+from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, Rule, RuleCatalog, RuleDraft
 from govguard.text import normalize
@@ -19,47 +20,19 @@ from kb_build.gates import (
     invalid_cross_references,
     is_quoted,
     requirements_by_anchor,
+    usage_line,
 )
 from kb_build.reference.cfn_properties import PropertyIndex
 from kb_build.reference.scope import Scope
 from kb_build.rules.criteria import criteria_problems
+from kb_build.rules.prompts import PROMPTS, USER_PROMPT
+from kb_build.rules.violation_judge import judge_violation
 from kb_build.select.models import SelectedRequirement, Selection
 
 logger = logging.getLogger("kb_build")
 
-PROMPT = """\
-Du formulierst aus genau einer Anforderung eines Regelwerks für Behörden-IT genau eine
-Prüfregel für ein {audit}. Inhalte auf Deutsch, außer dem Zitat.
-- "source_quote": wörtlicher Auszug aus dem Text in <anforderung>, der die Kernpflicht trägt:
-  ein Satz oder Satzteil, mind. 15 Zeichen und höchstens 25 Wörter, Zeichen für Zeichen
-  kopiert. Original-Sprache, nichts übersetzen, kürzen, ergänzen oder grammatisch anpassen.
-- "title": kurzer Titel, höchstens 8 Wörter.
-- "compliant_if" / "violation_if": je ein Satz, woran man {subject} Einhaltung bzw. Verstoß
-  erkennt.
-- "recommendation": ein Satz zur Abhilfe.
-- "cross_references": nur Anforderungen einer anderen Quelle, die du sicher kennst, im exakten
-  Format, z. B. "BSI GS++ DET.3.1", "DSGVO Art. 32", "AWS FSBP S3.1". Im Zweifel leer lassen."""
-
-ARCHITECTURE_CRITERIA = """
-- Architektur: "compliant_if" und "violation_if" nennen mindestens einen der Ressourcentypen
-  wörtlich (z. B. AWS::RDS::DBInstance) und die konkrete Eigenschaft mit Wert (z. B.
-  DeletionProtection: true). Keine Wörter, die Wissen außerhalb des Templates brauchen, z. B.
-  "relevant", "erforderlich", "angemessen", "entsprechend". Gilt die Pflicht nur für eine
-  Variante (z. B. bestimmte Engines oder Protokolle), nenne diese Bedingung."""
-
-# Per audit type: prefix of the rule ID and system prompt
+# Per audit type: prefix of the rule ID
 ID_PREFIX: dict[AuditType, str] = {"architecture": "ARCH", "spec": "SPEC"}
-PROMPTS: dict[AuditType, str] = {
-    "architecture": PROMPT.format(audit="Architektur-Audit eines CloudFormation-Templates",
-                                  subject="am Template") + ARCHITECTURE_CRITERIA,
-    "spec": PROMPT.format(audit="Spec-Audit einer fachlichen Spezifikation",
-                          subject="an der Spezifikation"),
-}
-
-USER_PROMPT = (
-    "Quelle: {source}\nID: {id}\nTitel: {title}\nBegründung der Auswahl: {rationale}\n{types}"
-    "<anforderung>\n{text}\n</anforderung>"
-)
 TOOL_NAME = "formulate_rule"
 TOOL_DESCRIPTION = "Gib genau eine Prüfregel zur Anforderung ab."
 FORMULATE_RETRIES = 6  # build only, no 29 s timeout; Groq needs more than Haiku (ADR 0014)
@@ -76,6 +49,7 @@ class FormulateDeps:
     properties: PropertyIndex  # real properties per type, for the invented ones
     scope: Scope  # criteria may name nothing else (#19)
     counts: GateCounts = field(default_factory=GateCounts)  # shared by all rules of one run (#27)
+    judge_counts: GateCounts = field(default_factory=GateCounts)  # absences sent back (#29)
 
 
 formulate_agent = Agent(
@@ -104,25 +78,50 @@ def _deviation(text: str, quote: str) -> str:
 
 
 @formulate_agent.output_validator
-def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDraft:
+async def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDraft:
     """Same checks as the gate, but early: the model gets a second chance (ADR 0005)."""
+    problems = _code_problems(ctx.deps, draft)
+    if not problems and ctx.deps.audit_type == "spec":  # the judge costs a call: only valid drafts
+        problems = await _absence_problems(ctx, draft)
+    if problems:
+        reason, deps = " ".join(problems), ctx.deps
+        # the build log shows what the model reads (CONTEXT.md: Korrektur)
+        logger.info("%s %s %s retry %d: %s", deps.audit_type, deps.selected.source,
+                    deps.requirement.id, ctx.retry + 1, reason)
+        raise ModelRetry(reason)
+    ctx.deps.counts.retries += ctx.retry  # an accepted answer after n retries cost n retries
+    return draft
+
+
+async def _absence_problems(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> list[str]:
+    """Open world (ADR 0020): a violation the spec does not stipulate is only WARN (#29)."""
+    try:
+        check = await judge_violation(draft.violation_if, ctx.model, ctx.usage)
+    except UnexpectedModelBehavior:  # fail closed: _complete_rule aborts the build
+        ctx.deps.judge_counts.llm_errors += 1
+        raise
+    if not check.describes_absence:
+        return []
+    ctx.deps.judge_counts.retries += 1
+    return [f"„violation_if“ „{draft.violation_if}“ beschreibt ein Fehlen: {check.reason} "
+            "In der offenen Welt ist Fehlen nur WARN. Beschreibe eine Festlegung der "
+            "Spezifikation, die der Anforderung widerspricht, auch einen erklärten Verzicht "
+            "oder Aufschub."]
+
+
+def _code_problems(deps: FormulateDeps, draft: RuleDraft) -> list[str]:
     problems = []
-    if not is_quoted(ctx.deps.requirement, draft.source_quote):
-        deviation = _deviation(ctx.deps.requirement.text, draft.source_quote)
+    if not is_quoted(deps.requirement, draft.source_quote):
+        deviation = _deviation(deps.requirement.text, draft.source_quote)
         problems.append(f"Das Zitat steht nicht wörtlich im Text in <anforderung>. {deviation}")
-    if ctx.deps.audit_type == "architecture":
+    if deps.audit_type == "architecture":
         problems += criteria_problems(
-            draft, ctx.deps.selected.cfn_resource_types, ctx.deps.properties,
-            ctx.deps.scope,
-        )
-    invalid = invalid_cross_references(draft, ctx.deps.selected.source, ctx.deps.anchors)
+            draft, deps.selected.cfn_resource_types, deps.properties, deps.scope)
+    invalid = invalid_cross_references(draft, deps.selected.source, deps.anchors)
     if invalid:
         problems.append(f"Diese Querverweise gibt es nicht in einer anderen Quelle, lass sie weg: "
                         f"{invalid}")
-    if problems:
-        raise ModelRetry(" ".join(problems))
-    ctx.deps.counts.retries += ctx.retry  # an accepted answer after n retries cost n retries
-    return draft
+    return problems
 
 
 def user_prompt(deps: FormulateDeps) -> str:
@@ -135,19 +134,22 @@ def user_prompt(deps: FormulateDeps) -> str:
     )
 
 
-def formulate_rule(deps: FormulateDeps, model: Model) -> RuleDraft:
-    return formulate_agent.run_sync(user_prompt(deps), model=model, deps=deps).output
+def formulate_rule(deps: FormulateDeps, model: Model, usage: RunUsage | None = None) -> RuleDraft:
+    """`usage` collects the tokens of every request, retries and judge included."""
+    return formulate_agent.run_sync(user_prompt(deps), model=model, deps=deps, usage=usage).output
 
 
-def _complete_rule(deps: FormulateDeps, model: Model) -> Rule:
+def _complete_rule(deps: FormulateDeps, model: Model, total: RunUsage) -> Rule:
     """The LLM writes the draft; identity and origin come from the selection, never the LLM."""
-    selected, requirement = deps.selected, deps.requirement
-    try:
-        draft = formulate_rule(deps, model)
+    selected, requirement, usage = deps.selected, deps.requirement, RunUsage()
+    try:  # one usage per call: Pydantic AI checks its request limit against it
+        draft = formulate_rule(deps, model, usage)
     except UnexpectedModelBehavior as error:  # fail closed: no rule may silently go missing
         deps.counts.retries += FORMULATE_RETRIES  # every retry was spent
         deps.counts.llm_errors += 1
         raise ValueError(f"{selected.source} {requirement.id}: no valid rule: {error}") from error
+    finally:
+        total.incr(usage)  # failed retries cost tokens too
     return Rule(
         **draft.model_dump(),
         id=f"{ID_PREFIX[deps.audit_type]}-{selected.source}-{requirement.id.replace(' ', '')}",
@@ -164,17 +166,20 @@ def formulate_rules(
     """One rule per selected requirement, in selection order; then the gate (ARCHITECTURE 1)."""
     anchors = requirements_by_anchor(sources)
     by_id = {(s.source, r.id): r for s in sources for r in s.requirements}
-    rules, counts = [], GateCounts()
+    rules, counts, judge_counts, usage = [], GateCounts(), GateCounts(), RunUsage()
     try:
         for n, selected in enumerate(selection.selected, start=1):
             requirement = by_id[(selected.source, selected.requirement_id)]
-            deps = FormulateDeps(
-                selection.audit_type, selected, requirement, anchors, properties, scope, counts)
-            rules.append(_complete_rule(deps, model))
+            deps = FormulateDeps(selection.audit_type, selected, requirement, anchors,
+                                 properties, scope, counts, judge_counts)
+            rules.append(_complete_rule(deps, model, usage))
             logger.info("%s %d/%d %s", selection.audit_type, n, len(selection.selected),
                         rules[-1].id)
     finally:  # an llm_error aborts the build; the quality report still counts it
+        logger.info(usage_line(selection.audit_type, usage))
         logger.info(counts.line(selection.audit_type, "formulate"))
+        if selection.audit_type == "spec":  # architecture rules are never judged
+            logger.info(judge_counts.line(selection.audit_type, "judge"))
     used = {s.source for s in selection.selected}
     catalog = RuleCatalog(
         audit_type=selection.audit_type, model_id=model.model_name, rules=rules,

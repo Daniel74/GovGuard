@@ -1,10 +1,14 @@
-"""Entry point wiring: which LLM provider serves `python -m kb_build select`."""
+"""Entry point wiring: which LLM provider serves `python -m kb_build select`, where the log goes."""
+
+import logging
+from collections.abc import Iterator
+from pathlib import Path
 
 import pytest
 from pydantic_ai.models.bedrock import BedrockConverseModel
 from pydantic_ai.models.groq import GroqModel
 
-from kb_build.__main__ import model_for, parse_args
+from kb_build.__main__ import configure_logging, model_for, parse_args
 
 
 def test_groq_is_the_default_provider() -> None:
@@ -48,3 +52,40 @@ def test_groq_provider_builds_a_groq_model(monkeypatch: pytest.MonkeyPatch) -> N
 def test_unknown_provider_is_rejected() -> None:
     with pytest.raises(ValueError, match="openai"):
         model_for("openai")
+
+
+@pytest.fixture
+def build_logger() -> Iterator[logging.Logger]:
+    """configure_logging() adds a file handler; take it off again after the test."""
+    logger = logging.getLogger("kb_build")
+    before = list(logger.handlers)
+    yield logger
+    for handler in [h for h in logger.handlers if h not in before]:
+        handler.close()
+        logger.removeHandler(handler)
+
+
+def test_the_build_log_goes_to_a_file_too_without_http_noise(
+    tmp_path: Path, build_logger: logging.Logger
+) -> None:
+    log_file = tmp_path / "logs" / "rules_spec.log"
+
+    configure_logging(log_file)
+    build_logger.info("spec DSGVO Art. 16 retry 1: Grund")
+    logging.getLogger("httpx").warning("HTTP Request: POST https://api.groq.com")
+
+    text = log_file.read_text("utf-8")
+    assert "spec DSGVO Art. 16 retry 1: Grund" in text
+    assert "api.groq.com" not in text
+
+
+def test_each_run_overwrites_the_log_of_the_last_run(
+    tmp_path: Path, build_logger: logging.Logger
+) -> None:
+    log_file = tmp_path / "rules_spec.log"
+    log_file.write_text("old run\n", encoding="utf-8")
+
+    configure_logging(log_file)
+    build_logger.info("new run")
+
+    assert "old run" not in log_file.read_text("utf-8")

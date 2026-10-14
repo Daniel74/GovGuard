@@ -11,6 +11,7 @@ from govguard.models import AuditType, RuleCatalog
 from kb_build.paths import BuildPaths
 from kb_build.reference.run import read_scope
 from kb_build.rules.run import formulate_all, read_property_index
+from kb_build.rules.violation_judge import JUDGE_TOOL_NAME
 from kb_build.select.models import Selection
 
 REAL = BuildPaths()
@@ -38,6 +39,9 @@ def quoting_model(quote: str | None = None) -> FunctionModel:
     """Quotes the whole requirement text from the prompt, or always `quote`; names the types."""
 
     def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        if info.output_tools[0].name == JUDGE_TOOL_NAME:  # every spec violation is a stipulation
+            check = {"describes_absence": False, "reason": "Festlegung."}
+            return ModelResponse(parts=[ToolCallPart(JUDGE_TOOL_NAME, check)])
         prompt = next(p for p in messages[0].parts if isinstance(p, UserPromptPart)).content
         text = prompt.split("<anforderung>\n")[1].split("\n</anforderung>")[0]
         types = prompt.partition("Ressourcentypen: ")[2].partition("\n")[0]

@@ -157,6 +157,14 @@ def test_the_default_paths_follow_the_data_layout() -> None:
     assert paths.out_file("rules", "spec") == Path("data/knowledge_base/rules_spec.json")
 
 
+def test_the_build_log_has_one_file_per_command_and_audit_type() -> None:
+    # checked in next to the result it explains (#29); git keeps the older runs
+    paths = BuildPaths()
+
+    assert paths.build_log("rules", "spec") == Path("data/intermediate/logs/rules_spec.log")
+    assert paths.build_log("select", None) == Path("data/intermediate/logs/select.log")
+
+
 def test_only_narrows_the_audit_types() -> None:
     assert chosen(None) == ["architecture", "spec"]
     assert chosen("spec") == ["spec"]

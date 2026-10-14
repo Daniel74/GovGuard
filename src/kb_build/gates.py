@@ -3,6 +3,8 @@
 from collections import Counter
 from dataclasses import dataclass
 
+from pydantic_ai.usage import RunUsage
+
 from govguard.models import AuditType, Preset, Rule, RuleCatalog, RuleDraft, SourceName
 from govguard.text import contains_quote, normalize
 from kb_build.extract.models import ExtractedSource, Requirement
@@ -20,6 +22,12 @@ class GateCounts:
 
     def line(self, audit_type: AuditType, gate: str) -> str:
         return f"{audit_type} quality {gate}: retries={self.retries} llm_error={self.llm_errors}"
+
+
+def usage_line(audit_type: AuditType, usage: RunUsage) -> str:
+    """What a build step paid for one audit type, failed retries included."""
+    return (f"{audit_type}: {usage.requests} requests, {usage.input_tokens} input tokens, "
+            f"{usage.output_tokens} output tokens")
 
 
 def pinned_anchors(presets: list[Preset], audit_type: AuditType) -> set[str]:
