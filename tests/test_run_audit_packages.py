@@ -4,6 +4,7 @@ import asyncio
 
 import pytest
 from conftest import make_rule
+from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
@@ -65,3 +66,19 @@ class ForgetsOneRule(Recorder):
 def test_one_invalid_package_fails_the_whole_audit(trace) -> None:
     with pytest.raises(AuditValidationError):
         run_audit(catalog_of(23), INPUT, FunctionModel(ForgetsOneRule().respond), trace)
+
+
+def test_throttling_fails_closed(trace) -> None:
+    def throttled(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        raise ModelHTTPError(status_code=429, model_name="fake-model", body="ThrottlingException")
+
+    with pytest.raises(AuditValidationError):
+        run_audit(catalog_of(23), INPUT, FunctionModel(throttled), trace)
+
+
+def test_merged_packages_are_checked_for_one_finding_per_rule(trace) -> None:
+    catalog = catalog_of(11)  # rule 11 repeats the ID of rule 1 in the second package
+    catalog.rules[10] = make_rule("Art.1", "Regel 1 doppelt")
+
+    with pytest.raises(AuditValidationError, match="Mehr als ein Befund für: SPEC-DSGVO-Art.1"):
+        run_audit(catalog, INPUT, FunctionModel(Recorder().respond), trace)

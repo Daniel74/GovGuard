@@ -15,7 +15,7 @@ _Ersetzt [ADR 0002](0002-bounded-catalog.md). Ersetzt in [ADR 0007](0007-relevan
 - **Auswahlprotokoll** für jede Anforderung, auch für die vom Vorfilter verworfenen. Code-Entscheidungen bekommen einen festen Begründungssatz.
 - **Cache:** LLM-Urteile werden nach Text-Hash, Prompt-Version und `model_id` wiederverwendet.
 - **Abdeckungs-Gate:** Jede Komponente der Archetypen hat mindestens eine Prüfregel, sonst bricht der Build ab. Ein Typ zählt an jeder Stelle der Liste, wie beim N/A zur Laufzeit.
-- **Laufzeit:** Der Code setzt N/A über das Ressourceninventar. Bei CloudFormation liest er es direkt, bei Terraform über eine Zuordnungstabelle. Bei Freitext nennt es ein LLM-Vorlauf mit Beleg. IAM, KMS und Logs werden nie gestrichen. Die anwendbaren Prüfregeln laufen in Paketen à ca. 10 parallel.
+- **Laufzeit:** Der Code setzt N/A über das Ressourceninventar. Bei CloudFormation liest er es direkt, bei Terraform über eine Zuordnungstabelle. Bei Freitext nennt es ein LLM-Vorlauf mit Beleg; dort werden IAM, KMS und Logs nie gestrichen, denn sie stecken in jedem Workload, auch wenn der Text sie nicht nennt. Bei CloudFormation ist das Inventar des Codes exakt: Fehlt der Typ im Template, gibt es dort nichts zu prüfen. Die anwendbaren Prüfregeln laufen in Paketen à ca. 10 parallel.
 - **Ausnahmen** gibt es auch für Prüfregeln, die ein Archetyp oder der GovGuard-Stack bewusst nicht erfüllt, z. B. FSBP `Lambda.3` (VPC), `APIGateway.3` (X-Ray) und `APIGateway.4` (WAF). Der Code wendet sie im Selbst-Audit und in der Freigabe an.
 - **`kb_build` läuft nur manuell**, wenn sich Quelle, Steckbrief, Preset-Anker, Prompt oder Modell ändern.
 
@@ -25,6 +25,7 @@ _Ersetzt [ADR 0002](0002-bounded-catalog.md). Ersetzt in [ADR 0007](0007-relevan
 - Kosten und Laufzeit je Audit steigen. Das Kostenziel setzt erst die Messung. Unter 29 s bleibt es nur mit parallelen Paketen; Bedrock-Drosselung ist ein Risiko. Plan B ist eine Lambda Function URL mit IAM-Auth.
 - Dubletten über Quellen hinweg bleiben getrennte Befunde, denn jede Prüfregel hat genau einen Primäranker. Der Report sortiert nach Ressourcentyp.
 - Übersieht der Freitext-Vorlauf einen Dienst, steht „nicht erkannt“ im Befund. Die Lücke bleibt sichtbar.
+- Der Code prüft beim Vorlauf, dass der Beleg wörtlich in der Eingabe steht, nicht, dass er zum Typ passt. Ein falsch zugeordneter Beleg führt höchstens zu einem überflüssigen Befund, nie zu einem verlorenen.
 - Ein 5. Preset mit einer fremden Architektur sichert die neue Behauptung ab.
 - Aurora und Fargate werden auditiert, aber nicht als Archetyp gebaut: Fargate hat Leerlaufkosten, Aurora braucht eine VPC (AUSBAU).
 - Das LLM urteilt trotz Temperatur 0 nicht stabil: Im zweiten Lauf (11.10.2026) kippten 41 von 1.077 Urteilen. Der Cache friert die Urteile ein, der Kontrollpunkt bleibt nötig.

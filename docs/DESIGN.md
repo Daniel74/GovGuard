@@ -265,7 +265,22 @@ class AuditDeps(BaseModel):              # deps_type des Audit-Agenten, je Paket
     input_text: str
     na_forbidden: str | None             # Prompt-Hinweis, wenn der Code N/A schon entschieden hat
 
-class RecognizedType(BaseModel):         # ein Eintrag des Tools submit_inventory (Freitext-Vorlauf)
+# src/govguard/inventory.py – rein, ohne boto3
+async def resource_inventory(rules: list[Rule], input_text: str,
+                             model: Model) -> Inventory
+
+@dataclass(frozen=True)
+class Inventory:                         # Ressourceninventar eines Architektur-Audits
+    types: set[str]                      # erkannte Ressourcentypen
+    na_rationale: str                    # Begründung des N/A durch den Code
+    na_forbidden: str                    # Prompt-Hinweis für die anwendbaren Prüfregeln
+    always: tuple[str, ...] = ()         # Freitext: Präfixe von IAM, KMS, Logs
+    def applies(self, rule: Rule) -> bool
+
+class InventoryResponse(BaseModel):      # Schema des Tools submit_inventory (Freitext-Vorlauf)
+    resource_types: list[RecognizedType]
+
+class RecognizedType(BaseModel):         # ein Eintrag im Tool submit_inventory
     resource_type: str                   # muss im Katalog vorkommen
     evidence: str                        # wörtliches Zitat aus der Eingabe
 
@@ -283,7 +298,7 @@ Die übrigen Prüfregeln gehen in Paketen à 10 gleichzeitig ans Modell (`asynci
 2. Jede an das Modell gesendete `rule_id` kommt genau einmal vor, und es gibt keine unbekannten IDs. Im Architektur-Audit ist N/A vom Modell verboten, denn der Ressourcentyp kommt vor oder wird immer geprüft; der Prompt sagt das dem Modell vorab.
 3. Beleg vorhanden, wo er Pflicht ist (PASS, FAIL), und jeder gesetzte Beleg mit `contains_quote()` wörtlich in der Eingabe gefunden (siehe 3). Empfehlung vorhanden bei WARN und FAIL.
 
-Die Schritte 2 und 3 laufen im `@agent.output_validator` und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch, wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
+Die Schritte 2 und 3 laufen im `@agent.output_validator` und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch oder die Modell-API (z. B. Drosselung, `ModelAPIError`), wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
 
 ### 2.3 API-JSON
 

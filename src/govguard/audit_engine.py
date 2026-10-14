@@ -7,6 +7,7 @@ from collections.abc import Iterable
 
 from pydantic import BaseModel
 from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput, UnexpectedModelBehavior
+from pydantic_ai.exceptions import ModelAPIError
 from pydantic_ai.models import Model
 
 from govguard.inventory import resource_inventory
@@ -39,7 +40,7 @@ _SEVERITY: dict[Status, int] = {"N/A": 0, "PASS": 1, "WARN": 2, "FAIL": 3}
 
 
 class AuditValidationError(Exception):
-    """LLM answer still invalid after the retry; fail closed (HTTP 502)."""
+    """LLM answer still invalid after the retry, or the model API failed; fail closed (HTTP 502)."""
 
 
 class AuditDeps(BaseModel):  # deps_type of the audit agent, input for the code checks
@@ -63,8 +64,8 @@ def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditRespo
     problems = _completeness_problems(expected, response.findings)
     problems += [p for f in response.findings if (p := _field_problem(f, ctx.deps.input_text))]
     if ctx.deps.na_forbidden:
-        problems += [f"{f.rule_id}: N/A ist verboten, der Ressourcentyp kommt in der Eingabe vor"
-                     for f in response.findings if f.status == "N/A"]
+        problems += [f"{f.rule_id}: N/A ist verboten, die Prüfregel ist laut Ressourceninventar "
+                     "anwendbar" for f in response.findings if f.status == "N/A"]
     if problems:
         raise ModelRetry("\n".join(problems))
     return response
@@ -103,7 +104,7 @@ def overall_status(statuses: Iterable[Status]) -> Status:
 def run_audit(catalog: RuleCatalog, input_text: str, model: Model, trace: Trace) -> AuditReport:
     try:
         drafts = asyncio.run(_drafts(catalog, input_text, model))
-    except UnexpectedModelBehavior as error:  # still invalid after the retry: fail closed
+    except (UnexpectedModelBehavior, ModelAPIError) as error:  # invalid or throttled: fail closed
         raise AuditValidationError(str(error)) from error
     if problems := _completeness_problems({rule.id for rule in catalog.rules}, drafts):
         raise AuditValidationError("\n".join(problems))  # merged packages: one finding per rule

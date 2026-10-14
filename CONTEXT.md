@@ -31,8 +31,8 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 - **Architektur-Audit**: Prüfung einer Architektur gegen die Prüfregeln aus BSI Grundschutz++, BSI C5, CIS und AWS FSBP. _Code_: `architecture_audit`. _Vermeiden_: Architecture Review, Evaluation
 - **Befund**: Ergebnis genau einer Prüfregel in einem Audit, mit Status, Beleg und Empfehlung. _Code_: `Finding`. _Vermeiden_: Finding, Issue
 - **Status**: PASS (Einhaltung belegt), WARN (aus der Eingabe nicht entscheidbar, Prüfbedarf), FAIL (Verstoß belegt) oder N/A (nicht anwendbar). _Code_: `Status`
-- **Ressourceninventar**: Menge der Ressourcentypen, die in einer Architektur vorkommen; der Code liest sie nur aus CloudFormation-JSON, bei Freitext, YAML und Terraform nennt sie das LLM mit Beleg (ADR 0015). _Code_: `template_resource_types`. _Vermeiden_: Dienstliste
-- **Anwendbar**: Eine Prüfregel ist in einem Audit anwendbar, wenn mindestens einer ihrer Ressourcentypen im Ressourceninventar vorkommt; sonst setzt der Code N/A. _Vermeiden_: relevant (gilt zur Build-Zeit)
+- **Ressourceninventar**: Menge der Ressourcentypen, die in einer Architektur vorkommen; der Code liest sie nur aus CloudFormation-JSON, bei Freitext, YAML und Terraform nennt sie das LLM mit Beleg (ADR 0015). _Code_: `Inventory` (`resource_inventory()`, CloudFormation: `template_resource_types()`). _Vermeiden_: Dienstliste
+- **Anwendbar**: Eine Prüfregel ist in einem Audit anwendbar, wenn mindestens einer ihrer Ressourcentypen im Ressourceninventar vorkommt, bei Freitext außerdem immer für IAM, KMS und Logs; sonst setzt der Code N/A. _Code_: `Inventory.applies`. _Vermeiden_: relevant (gilt zur Build-Zeit)
 - **Beleg**: Wörtliches Zitat aus der Eingabe, auf das sich ein Befund stützt. _Code_: `evidence`. _Vermeiden_: Evidence, Nachweis
 - **Gesamtstatus**: Der schlechteste Status aller Befunde eines Audits. _Code_: `overall_status`
 - **Audit-Report**: Gesamtstatus plus genau ein Befund je Prüfregel des Bounded Catalog. _Code_: `AuditReport`. _Vermeiden_: Prüfbericht, Ergebnis

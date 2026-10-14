@@ -129,6 +129,19 @@ def test_model_must_not_answer_na_for_a_recognized_service(free_catalog, trace) 
     assert "ARCH-CIS-3.1.4: N/A ist verboten" in prompts[1]
 
 
+def test_na_retry_does_not_claim_an_always_applicable_type_is_in_the_input(
+    free_catalog, trace
+) -> None:
+    catalog = free_catalog.model_copy(update={"rules": [arch_rule("1.1", "AWS::IAM::Role")]})
+    prompts: list[str] = []
+
+    with pytest.raises(AuditValidationError):
+        run_audit(catalog, FREE_TEXT, fake([], audit_prompts=prompts, status="N/A"), trace)
+
+    assert "ARCH-CIS-1.1: N/A ist verboten, die Prüfregel ist laut Ressourceninventar anwendbar" \
+        in prompts[1]
+
+
 def test_report_is_sorted_by_resource_type(free_catalog, trace) -> None:
     rules = [*free_catalog.rules, arch_rule("1.1", "AWS::IAM::Role")]  # S3, DynamoDB, IAM
     catalog = free_catalog.model_copy(update={"rules": rules})

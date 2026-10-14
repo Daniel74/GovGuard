@@ -24,17 +24,17 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag                | Arbeit                                                                                                                                                                       |
-| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.          | Schritt 10: #14 abschließen. Messung: fail closed wegen zusammengesetzter Belege, Einzelaufrufe bis 37 s → #26.                                                              |
-| Do 15.10.          | Schritt 10a: #26 Belege. Danach neu messen; sind es mehr als ca. 25 s, Plan B aus ADR 0011 vor #9 entscheiden.                                                               |
-| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                            |
-| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                              |
-| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                                    |
-| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                        |
-| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                               |
-| 22.–25.10.         | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                              |
-| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                                |
+| Tag                | Arbeit                                                                                                          |
+| ------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.          | Schritt 10: #14 abschließen. Messung: fail closed wegen zusammengesetzter Belege, Einzelaufrufe bis 37 s → #26. |
+| Do 15.10.          | Schritt 10a: #26 Belege. Danach neu messen; sind es mehr als ca. 25 s, Plan B aus ADR 0011 vor #9 entscheiden.  |
+| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                               |
+| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                 |
+| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                       |
+| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                           |
+| Mi 21.10.          | Abgabe, Puffer                                                                                                  |
+| 22.–25.10.         | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                 |
+| Mo 26.10.          | Präsentation und Fachgespräch                                                                                   |
 
 **Schnittlinie:** Wird es knapp, fällt zuerst #8 weg, weil der Build der Wissensbasis auch lokal per `python -m kb_build` läuft. Danach fällt #24 weg; es zählt nur bei einem neuen Build. Beide machen nur dann weiter, wenn ein Tag frei wird. Im Fachgespräch sind sie Ausbau.
 
@@ -350,9 +350,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #14 umsetzen` → Plan → Go (der Freitext-Vorlauf ist eine Prompt-Weiche)
       Reihenfolge: Freitext-Vorlauf mit Beleg → N/A-Verbot für erkannte Typen → Pakete parallel → Zusammenführen (ein Befund je Prüfregel) → Sortierung nach Ressourcentyp
 - [x] **Messen** 👤 `/run CLI-Audit des größten Presets mit vollem Katalog, Laufzeit und Kosten messen` → 🤖 notiert das Ergebnis im Issue. Ergebnis: fail closed wegen Belegen (→ #26), ca. 0,90 $, Einzelaufrufe bis 37 s; das Kostenziel in SPEC setzt erst #26.
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #14`
-- [ ] **Verstehen** 👤 `/verstehen 14` (Kernfrage: warum ein übersehener Dienst sichtbar bleiben muss)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #14`
+- [-] **Verstehen** 👤 `/verstehen 14` (Kernfrage: warum ein übersehener Dienst sichtbar bleiben muss)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Alle Tests grün sind und Laufzeit und Kosten im Issue stehen.
 **Fürs Fachgespräch:** Pruning per Code, Map-Reduce, Vollständigkeit trotz Aufteilung.
