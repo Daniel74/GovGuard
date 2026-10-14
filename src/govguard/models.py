@@ -71,6 +71,8 @@ class Finding(FindingDraft):  # completed by the code from the input and the cat
     title: str
     primary_anchor: str
     cross_references: list[CrossReference]
+    downgraded_from: Status | None = None  # original status if the code downgraded it (ADR 0017)
+    corrections: list[str] = []  # readable reasons for retry and downgrade, same text as the retry
 
 
 class Trace(BaseModel):  # links a report to input, knowledge base and deploy (ADR 0006)
@@ -86,6 +88,8 @@ class AuditReport(BaseModel):
     findings: list[Finding]  # exactly one per rule, sorted by first resource type (ADR 0011)
     model_id: str
     trace: Trace
+    unassigned_corrections: list[str] = []  # reasons without a finding, e.g. an unknown rule_id
+    retries: int = 0  # packages sent back to the model once; no per-package view (#27)
 
 
 class AuditEvent(BaseModel):  # one JSON line in CloudWatch Logs, no evidence (DSGVO Art. 5(1)(c))
@@ -97,6 +101,8 @@ class AuditEvent(BaseModel):  # one JSON line in CloudWatch Logs, no evidence (D
     model_id: str
     overall_status: Status | None
     statuses: dict[str, Status]  # rule_id -> status
+    retries: int  # packages with a retry, a count only (#27)
+    downgrades: int  # findings the code set to WARN (#27)
     archetype: str | None
 
 

@@ -160,3 +160,13 @@ def test_the_default_paths_follow_the_data_layout() -> None:
 def test_only_narrows_the_audit_types() -> None:
     assert chosen(None) == ["architecture", "spec"]
     assert chosen("spec") == ["spec"]
+
+
+def test_the_run_reports_retries_and_llm_errors_of_the_classify_gate(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    with caplog.at_level("INFO", logger="kb_build"):
+        select_all(fake_model(), paths_in(tmp_path), only="spec")
+
+    assert "spec quality classify: retries=0 llm_error=0" in [
+        r.getMessage() for r in caplog.records]

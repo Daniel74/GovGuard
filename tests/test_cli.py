@@ -3,6 +3,7 @@ import json
 from pathlib import Path
 
 import pytest
+from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
@@ -82,3 +83,48 @@ def test_arch_command_audits_a_template_against_the_architecture_catalog(
     assert report.audit_type == "architecture"
     statuses = {f.rule_id: f.status for f in report.findings}
     assert statuses == {"ARCH-CIS-3.1.4": "WARN", "ARCH-CIS-3.3.1": "N/A"}  # DynamoDB: by code
+
+
+def run_failing(spec_catalog: RuleCatalog, spec_input: str, tmp_path: Path, model: FunctionModel,
+                capsys: pytest.CaptureFixture[str]) -> tuple[int, str]:
+    spec_file = tmp_path / "spec.txt"
+    spec_file.write_text(spec_input, encoding="utf-8")
+    catalog_file = tmp_path / "rules_spec.json"
+    catalog_file.write_text(spec_catalog.model_dump_json(), encoding="utf-8")
+    exit_code = main(["spec", str(spec_file), "--catalog", str(catalog_file)], model=model)
+    return exit_code, capsys.readouterr().err
+
+
+def test_fail_closed_names_the_reasons_per_rule_in_plain_language(
+    spec_catalog: RuleCatalog, spec_input: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        findings = [
+            {"rule_id": rule.id, "status": "WARN", "line_start": None, "line_end": None,
+             "rationale": "Unklar.", "recommendation": None}  # recommendation missing
+            for rule in spec_catalog.rules
+        ]
+        return ModelResponse(parts=[ToolCallPart("submit_audit", {"findings": findings})])
+
+    exit_code, err = run_failing(spec_catalog, spec_input, tmp_path,
+                                 FunctionModel(respond, model_name="fake-model"), capsys)
+
+    assert exit_code == 2
+    assert "nicht verwertbar" in err
+    assert "- SPEC-DSGVO-Art.9: Empfehlung fehlt (Pflicht bei WARN)" in err
+    assert "- SPEC-DSGVO-Art.32: Empfehlung fehlt (Pflicht bei WARN)" in err
+    assert "UnexpectedModelBehavior" not in err and "retries" not in err  # no library text
+
+
+def test_api_error_gets_its_own_sentence_without_library_text(
+    spec_catalog: RuleCatalog, spec_input: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    def throttled(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        raise ModelHTTPError(status_code=429, model_name="fake-model", body="ThrottlingException")
+
+    exit_code, err = run_failing(spec_catalog, spec_input, tmp_path,
+                                 FunctionModel(throttled, model_name="fake-model"), capsys)
+
+    assert exit_code == 2
+    assert "nicht erreichbar oder überlastet" in err
+    assert "ThrottlingException" not in err and "429" not in err

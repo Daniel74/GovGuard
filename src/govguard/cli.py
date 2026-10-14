@@ -32,10 +32,20 @@ def main(argv: list[str] | None = None, model: Model | None = None) -> int:
     try:
         report = run_audit(RuleCatalog.model_validate_json(catalog_bytes), input_text, model, trace)
     except AuditValidationError as error:  # fail closed, like HTTP 502
-        print(f"Audit fehlgeschlagen: LLM-Antwort ungültig ({error})", file=sys.stderr)
+        print(_failure_text(error), file=sys.stderr)
         return 2
     print(report.model_dump_json(indent=2))
     return 0
+
+
+def _failure_text(error: AuditValidationError) -> str:
+    """One plain sentence, then the reasons per rule; never the library's error text."""
+    if error.api_error:
+        return ("Audit fehlgeschlagen: Der KI-Dienst war nicht erreichbar oder überlastet. "
+                "Bitte später erneut versuchen.")
+    reasons = "\n".join(f"  - {text}" for _, text in error.problems)
+    return ("Audit fehlgeschlagen: Die Antwort der KI war auch nach einer Korrektur nicht "
+            f"verwertbar. Gründe je Prüfregel:\n{reasons}")
 
 
 def _parser() -> argparse.ArgumentParser:

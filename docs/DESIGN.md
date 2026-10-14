@@ -239,6 +239,8 @@ class Finding(FindingDraft):             # vom Code aus Eingabe und Katalog erg�
     title: str
     primary_anchor: str
     cross_references: list[CrossReference]
+    downgraded_from: Status | None       # ursprünglicher Status, wenn der Code herabgestuft hat (#27)
+    corrections: list[str]               # lesbare Gründe für Retry und Herabstufung (#27)
 
 class AuditReport(BaseModel):
     audit_type: Literal["spec", "architecture"]
@@ -246,9 +248,12 @@ class AuditReport(BaseModel):
     findings: list[Finding]              # genau einer je Prüfregel, Reihenfolge wie im Katalog
     model_id: str
     trace: Trace                         # Rückverfolgung, siehe 2.4
+    unassigned_corrections: list[str]    # Gründe ohne Befund, z. B. erfundene rule_id (#27)
+    retries: int                         # Pakete mit Retry, nur die Zahl (#27)
 ```
 
-- **Beleg-Pflicht folgt aus dem Glossar:** PASS heißt „Einhaltung belegt“, FAIL heißt „Verstoß belegt“, beide brauchen also einen Zeilenbereich. Fehlt etwas in der Eingabe, ist das WARN, nicht FAIL: Ein FAIL ohne Zeilenbereich stuft der Code auf WARN herab, ein PASS erst, wenn er auch nach dem Retry unbelegt bleibt. WARN heißt damit „nicht entscheidbar“ oder „von der KI nicht belegt“; der Report soll beides unterscheiden (#27).
+- **Beleg-Pflicht folgt aus dem Glossar:** PASS heißt „Einhaltung belegt“, FAIL heißt „Verstoß belegt“, beide brauchen also einen Zeilenbereich. Fehlt etwas in der Eingabe, ist das WARN, nicht FAIL: Ein FAIL ohne Zeilenbereich stuft der Code auf WARN herab, ein PASS erst, wenn er auch nach dem Retry unbelegt bleibt. WARN heißt damit „nicht entscheidbar“ oder „von der KI nicht belegt“; der Report unterscheidet beides mit `downgraded_from` (#27).
+- **Korrekturen:** Jedes Gate liefert `(rule_id, text)`. Derselbe Text steht im Retry-Prompt und in `corrections` des Befunds. Bei fail closed trägt `AuditValidationError.problems` dieselbe Liste (später der Body von HTTP 502), ein API-Fehler hat `api_error` und keine Gründe.
 - **Gesamtstatus:** Rangfolge FAIL > WARN > PASS > N/A, der schlechteste Status gewinnt. Sind alle Befunde N/A, ist der Gesamtstatus N/A.
 
 ### 2.2 run_audit() und select_archetype()
@@ -343,6 +348,8 @@ class AuditEvent(BaseModel):             # eine JSON-Zeile in CloudWatch Logs
     model_id: str
     overall_status: Status | None        # None bei /archetype/select und bei Fehlern
     statuses: dict[str, Status]          # rule_id → Status; ohne Belege und Begründungen
+    retries: int                         # Pakete mit Retry (#27)
+    downgrades: int                      # vom Code auf WARN herabgestufte Befunde (#27)
     archetype: str | None                # nur /archetype/select
 ```
 

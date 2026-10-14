@@ -1,5 +1,6 @@
 """Evidence by line reference (ADR 0017): the model points to lines, the code cuts the quote."""
 
+from govguard.corrections import Problem
 from govguard.models import FindingDraft
 from govguard.text import MIN_QUOTE_LENGTH, normalize
 
@@ -13,14 +14,14 @@ def numbered(text: str) -> str:
     return "\n".join(f"{i}| {line}" for i, line in enumerate(text.splitlines(), 1))
 
 
-def evidence_problem(draft: FindingDraft, text: str) -> str | None:
+def evidence_problem(draft: FindingDraft, text: str) -> Problem | None:
     """PASS needs a line range; any range must be valid. FAIL without one is downgraded."""
     lines = _lines(draft)
     label = f"{draft.rule_id} ({draft.status})"  # the status shows in the fail-closed message
     if draft.status == "PASS" and lines is None:
-        return f"{label}: Zeilenbereich fehlt (Pflicht bei PASS)"
+        return draft.rule_id, f"{label}: Zeilenbereich fehlt (Pflicht bei PASS)"
     if lines and (problem := _range_problem(text, *lines)):
-        return f"{label}: {problem}"
+        return draft.rule_id, f"{label}: {problem}"
     return None
 
 

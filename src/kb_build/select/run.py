@@ -86,6 +86,7 @@ def _select(audit_type: AuditType, model: Model, paths: BuildPaths, cache: Judge
         result = curate(judge, read_sources(paths.extracted, names), pinned, components)
     finally:
         _log_usage(audit_type, judge.usage)
+        logger.info(judge.counts.line(audit_type, "classify"))
     selection_file = paths.out_file("selection", audit_type)
     selection_file.parent.mkdir(parents=True, exist_ok=True)  # only after a successful run
     selection_file.write_text(result.selection.model_dump_json(indent=2) + "\n", encoding="utf-8")

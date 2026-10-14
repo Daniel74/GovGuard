@@ -1,6 +1,7 @@
 """Gates of the bounded catalog (ADR 0011): the build stops instead of shipping a gap. Pure code."""
 
 from collections import Counter
+from dataclasses import dataclass
 
 from govguard.models import AuditType, Preset, Rule, RuleCatalog, RuleDraft, SourceName
 from govguard.text import contains_quote, normalize
@@ -8,6 +9,17 @@ from kb_build.extract.models import ExtractedSource, Requirement
 from kb_build.reference.cfn_properties import TYPE_PATTERN
 from kb_build.reference.scope import Scope
 from kb_build.select.models import Outcome, SelectedRequirement, Selection
+
+
+@dataclass
+class GateCounts:
+    """What a build gate did with the model's answers: the quality report counts it (#27)."""
+
+    retries: int = 0  # answers the model had to redo
+    llm_errors: int = 0  # answers that stayed invalid (outcome `llm_error`)
+
+    def line(self, audit_type: AuditType, gate: str) -> str:
+        return f"{audit_type} quality {gate}: retries={self.retries} llm_error={self.llm_errors}"
 
 
 def pinned_anchors(presets: list[Preset], audit_type: AuditType) -> set[str]:

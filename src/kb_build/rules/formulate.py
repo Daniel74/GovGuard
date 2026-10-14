@@ -4,7 +4,7 @@ Pure logic: gets the Pydantic AI model injected, no boto3. The code adds identit
 """
 
 import logging
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput, UnexpectedModelBehavior
 from pydantic_ai.models import Model
@@ -14,6 +14,7 @@ from govguard.text import normalize
 from kb_build.extract.models import ExtractedSource, Requirement
 from kb_build.gates import (
     Anchors,
+    GateCounts,
     check_rules,
     invalid_cross_references,
     is_quoted,
@@ -74,6 +75,7 @@ class FormulateDeps:
     anchors: Anchors  # every requirement of every source, for the cross references
     properties: PropertyIndex  # real properties per type, for the invented ones
     scope: Scope  # criteria may name nothing else (#19)
+    counts: GateCounts = field(default_factory=GateCounts)  # shared by all rules of one run (#27)
 
 
 formulate_agent = Agent(
@@ -119,6 +121,7 @@ def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDraft:
                         f"{invalid}")
     if problems:
         raise ModelRetry(" ".join(problems))
+    ctx.deps.counts.retries += ctx.retry  # an accepted answer after n retries cost n retries
     return draft
 
 
@@ -159,13 +162,14 @@ def formulate_rules(
     """One rule per selected requirement, in selection order; then the gate (ARCHITECTURE 1)."""
     anchors = requirements_by_anchor(sources)
     by_id = {(s.source, r.id): r for s in sources for r in s.requirements}
-    rules = []
+    rules, counts = [], GateCounts()
     for n, selected in enumerate(selection.selected, start=1):
         requirement = by_id[(selected.source, selected.requirement_id)]
         deps = FormulateDeps(
-            selection.audit_type, selected, requirement, anchors, properties, scope)
+            selection.audit_type, selected, requirement, anchors, properties, scope, counts)
         rules.append(_complete_rule(deps, model))
         logger.info("%s %d/%d %s", selection.audit_type, n, len(selection.selected), rules[-1].id)
+    logger.info(counts.line(selection.audit_type, "formulate"))  # no llm_error: build aborts
     used = {s.source for s in selection.selected}
     catalog = RuleCatalog(
         audit_type=selection.audit_type, model_id=model.model_name, rules=rules,

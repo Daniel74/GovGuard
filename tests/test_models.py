@@ -1,7 +1,9 @@
+from datetime import UTC, datetime
+
 import pytest
 from pydantic import ValidationError
 
-from govguard.models import Preset, RequiredFinding, RuleCatalog
+from govguard.models import AuditEvent, Preset, RequiredFinding, RuleCatalog, Trace
 
 
 def test_rule_catalog_needs_at_least_one_rule() -> None:
@@ -35,3 +37,17 @@ def test_archetype_only_for_spec_without_fail(audit_type: str, overall_status: s
 
 def test_spec_without_fail_may_expect_archetype() -> None:
     assert make_preset("spec", "WARN", "ARCH-02").expected.archetype == "ARCH-02"
+
+
+def test_audit_event_counts_corrections_but_carries_no_text() -> None:
+    event = AuditEvent(
+        timestamp=datetime(2026, 10, 15, tzinfo=UTC), endpoint="/audit/spec", outcome="ok",
+        trace=Trace(audit_id="a-1", input_sha256="abc", catalog_sha256="def", kb_commit="x"),
+        model_id="m", overall_status="WARN", statuses={"SPEC-DSGVO-Art.9": "WARN"},
+        archetype=None, retries=1, downgrades=2,
+    )
+
+    logged = event.model_dump()
+    assert (logged["retries"], logged["downgrades"]) == (1, 2)
+    # No input text, no evidence, no reasons (ADR 0006, DSGVO Art. 5(1)(c))
+    assert not {"evidence", "input_text", "corrections", "rationale"} & logged.keys()

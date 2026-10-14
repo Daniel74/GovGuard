@@ -7,7 +7,7 @@ from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from kb_build.extract.models import Requirement
 from kb_build.reference.scope import Scope
-from kb_build.select.classify import build_deps, classify_requirement, request_version
+from kb_build.select.classify import Judge, build_deps, classify_requirement, request_version
 from kb_build.select.models import Classification
 
 REQUIREMENT = Requirement(
@@ -275,3 +275,21 @@ def test_a_new_type_of_a_known_service_changes_the_prompt_version() -> None:
 
 def test_the_scope_leaves_the_prompt_version_of_the_spec_untouched() -> None:
     assert request_version(build_deps("spec", S3_SCOPE)) == request_version(SPEC)
+
+
+def test_the_judge_counts_the_retries_it_needed() -> None:
+    wrong = {"testable": True, "rationale": "x", "cfn_resource_types": ["S3 bucket"]}
+    judge = Judge("architecture", answer_in_turns(wrong, BUCKET))
+
+    judge("CIS", REQUIREMENT)
+
+    assert (judge.counts.retries, judge.counts.llm_errors) == (1, 0)
+
+
+def test_the_judge_counts_an_answer_that_stays_invalid_as_llm_error() -> None:
+    wrong = {"testable": True, "rationale": "x", "cfn_resource_types": []}
+    judge = Judge("architecture", answer_in_turns(wrong))
+
+    assert judge("CIS", REQUIREMENT) is None
+
+    assert (judge.counts.retries, judge.counts.llm_errors) == (2, 1)  # two retries

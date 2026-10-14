@@ -394,7 +394,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritt 10a (die Herabstufung FAIL → WARN entsteht dort). Vor #9, weil Handler und UI den Report-Vertrag übernehmen.
 
 - [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #27: Detailtiefe im Report, Anzeige in der UI, Begriff fürs Glossar`
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #27 umsetzen` → Plan → Go (Report-Vertrag und Datenminimierung im Log sind Weichenstellungen)
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #27 umsetzen` → Plan → Go (Report-Vertrag und Datenminimierung im Log sind Weichenstellungen)
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #27`
 - [ ] **Verstehen** 👤 `/verstehen 27` (Kernfrage: warum ein Audit-Werkzeug seine eigenen KI-Fehler zeigen muss)
 - [ ] **Abschließen** 👤 committet und pusht

@@ -243,3 +243,16 @@ def test_a_stubborn_model_gets_every_retry_before_the_build_stops() -> None:
 
     assert catalog.rules[0].source_quote == "The text of 3.1.4"
     assert len(calls) == FORMULATE_RETRIES + 1
+
+
+def test_the_run_reports_the_retries_of_the_formulate_gate(
+    caplog: pytest.LogCaptureFixture
+) -> None:
+    first = draft("3.1.4", source_quote="The text of 3.1.4 should be quoted.")
+
+    with caplog.at_level("INFO", logger="kb_build"):
+        run_formulate(retry_prompts([], first), arch_selection("3.1.4"), SOURCES)
+
+    # llm_error stays 0: a rule that stays invalid aborts the build instead (ADR 0011)
+    assert "architecture quality formulate: retries=1 llm_error=0" in [
+        r.getMessage() for r in caplog.records]

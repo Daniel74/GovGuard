@@ -14,6 +14,7 @@ from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, SourceName
 from kb_build.extract.models import Requirement
+from kb_build.gates import GateCounts
 from kb_build.reference.cfn_types import load_cfn_types
 from kb_build.reference.scope import Scope
 from kb_build.select.judgement_cache import JudgementCache, cache_key, prompt_version
@@ -159,6 +160,7 @@ class Judge:
         self._cache = cache if cache is not None else JudgementCache()
         self._answers: dict[tuple[SourceName, str], Classification | None] = {}
         self.usage = RunUsage()  # tokens of the calls the cache could not answer
+        self.counts = GateCounts()  # retries and llm_error of those calls (#27)
 
     def __call__(self, source: SourceName, requirement: Requirement) -> Classification | None:
         key = (source, requirement.id)
@@ -184,6 +186,8 @@ class Judge:
             if isinstance(error, ModelHTTPError) and error.status_code != 400:
                 raise  # 401, 429 and server errors are no verdict on the requirement
             logger.warning("%s %s: invalid answer after retries: %s", source, requirement.id, error)
+            self.counts.llm_errors += 1
             return None
         finally:
             self.usage.incr(usage)  # failed retries cost tokens too
+            self.counts.retries += max(usage.requests - 1, 0)  # every request after the first

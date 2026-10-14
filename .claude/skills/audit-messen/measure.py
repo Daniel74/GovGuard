@@ -1,10 +1,14 @@
 """Run `govguard.cli.main()` against a real model; report wall time, tokens and retry reasons.
 
 Usage: uv run python .claude/skills/audit-messen/measure.py spec|arch <file> [--catalog <json>]
-Report JSON -> stdout, measurements -> stderr. MEASURE_MODEL=groq measures Groq (ADR 0016).
+Report JSON -> stdout, measurements -> stderr, retries and downgrades from the report (#27).
+MEASURE_MODEL=groq measures Groq (ADR 0016).
 On fail closed the CLI writes the problems of the last attempt to stderr (AuditValidationError).
 """
 
+import contextlib
+import io
+import json
 import os
 import sys
 import time
@@ -44,10 +48,24 @@ def _model_and_prices() -> tuple:
     return bedrock_model(), 1.10e-6, 5.50e-6  # Haiku 4.5 eu. profile: +10 % on 1 $/5 $
 
 
+def _print_corrections(report_json: str) -> None:
+    """Retries and downgrades the code made, read from the report (#27)."""
+    if not report_json.strip():  # fail closed: no report, the CLI wrote the reasons to stderr
+        return
+    report = json.loads(report_json)
+    downgraded = [f["downgraded_from"] for f in report["findings"] if f["downgraded_from"]]
+    print(f"packages with retry: {report['retries']} downgrades: {len(downgraded)} "
+          f"(PASS->WARN: {downgraded.count('PASS')}, FAIL->WARN: {downgraded.count('FAIL')}) "
+          f"unassigned corrections: {len(report['unassigned_corrections'])}", file=sys.stderr)
+
+
 wrapped, price_in, price_out = _model_and_prices()
 model = Measuring(wrapped)
 start = time.perf_counter()
-code = cli.main(sys.argv[1:], model=model)
+stdout = io.StringIO()
+with contextlib.redirect_stdout(stdout):  # the report is counted here, then printed unchanged
+    code = cli.main(sys.argv[1:], model=model)
+print(stdout.getvalue(), end="")
 wall = time.perf_counter() - start
 tokens_in = sum(c[1] for c in model.calls)
 tokens_out = sum(c[2] for c in model.calls)
@@ -60,6 +78,7 @@ for seconds, t_in, t_out, is_retry in sorted(model.calls):
           file=sys.stderr)
 print(f"retry prompts sent: {len(model.retries)} (schema: {model.schema_retries}) "
       f"output_tokens_per_call={tokens_out / max(len(model.calls), 1):.0f}", file=sys.stderr)
+_print_corrections(stdout.getvalue())
 for text in model.retries:
     print(f"--- retry prompt ---\n{text}", file=sys.stderr)
 sys.exit(code)
