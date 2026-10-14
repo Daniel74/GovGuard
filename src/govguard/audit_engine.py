@@ -35,7 +35,7 @@ Bei PASS und FAIL sind sie Pflicht, sonst null.
 Bei WARN und FAIL ist "recommendation" Pflicht. Schreibe Begründungen auf Deutsch."""
 
 PACKAGE_SIZE = 10  # rules per model call; 166 architecture rules -> 17 parallel calls
-GROQ_MAX_PARALLEL = 4  # 16 parallel packages need ~460,000 tokens/min, Groq tier allows 250,000
+GROQ_MAX_PARALLEL = 2  # ~110,000 tokens/min per slot measured (#26), Groq tier allows 250,000
 
 # Worst status wins; N/A only if every finding is N/A (DESIGN 2.1)
 _SEVERITY: dict[Status, int] = {"N/A": 0, "PASS": 1, "WARN": 2, "FAIL": 3}
@@ -64,7 +64,8 @@ _AGENTS = {
 
 def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditResponse:
     """Downgrade first, then check: what the code can fix needs no retry (ADR 0017)."""
-    response = AuditResponse(findings=[without_unproven_fail(f) for f in response.findings])
+    text = ctx.deps.input_text
+    response = AuditResponse(findings=[without_unproven_fail(f, text) for f in response.findings])
     expected = {rule.id for rule in ctx.deps.rules}
     problems = completeness_problems(expected, response.findings)
     problems += [p for f in response.findings if (p := field_problem(f, ctx.deps.input_text))]

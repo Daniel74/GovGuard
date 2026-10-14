@@ -19,8 +19,8 @@ Jeder Lauf kostet echtes Geld (Kosten-Weiche, CLAUDE.md). Die CLI kennt nur `spe
 
 ## Fallstricke
 
-- Groq: `MEASURE_MODEL=groq` nimmt `groq_model()` aus dem Build (Key per `set -a; source .env`). Groq ist zur Laufzeit eine ausdrückliche Option, nur mit fiktiven Presets (ADR 0016). Tokens meldet Groq inkl. Denk-Tokens. Limit 250.000 Tokens/min: Der volle Katalog braucht ca. 460.000, deshalb laufen höchstens 4 Pakete gleichzeitig (`GROQ_MAX_PARALLEL`). Kommt trotzdem HTTP 429, ist 2 die nächste Stellschraube.
-- Belege per Zeilenverweis (ADR 0017): Ein FAIL ohne Zeilenbereich oder mit Bereich über 200 Zeilen stuft der Code still auf WARN herab, ohne Retry. Im Report ist das noch nicht sichtbar (#27).
+- Groq: `MEASURE_MODEL=groq` nimmt `groq_model()` aus dem Build (Key per `set -a; source .env`). Groq ist zur Laufzeit eine ausdrückliche Option, nur mit fiktiven Presets (ADR 0016). Tokens meldet Groq inkl. Denk-Tokens. Limit 250.000 Tokens/min: Gemessen sind ca. 110.000 Tokens/min je gleichzeitigem Paket, deshalb laufen höchstens 2 Pakete gleichzeitig (`GROQ_MAX_PARALLEL`); der volle Katalog dauert damit mindestens ca. 2,3 min. Kommt trotzdem HTTP 429, ist ein Token-Budget je Minute die nächste Stellschraube.
+- Belege per Zeilenverweis (ADR 0017): Bei WARN, FAIL und N/A verwirft der Code einen unbrauchbaren Bereich (ungültig, umgedreht, zu groß, zu kurz), ein FAIL ohne Bereich wird still WARN, beides ohne Retry. Die Abbruchmeldung nennt den Status, z. B. `Art.12 (PASS): …`. Im Report ist das noch nicht sichtbar (#27).
 - Bei Exit 2 stehen die Probleme des letzten Versuchs in `stats.txt` nach „Audit fehlgeschlagen“. Die Retry-Prompts zeigen nur die Probleme des ersten Versuchs.
 
 - Scheitert ein Paket endgültig, bricht `asyncio.run` die übrigen ab. `calls` zählt dann nur fertige Aufrufe; Bedrock berechnet abgebrochene trotzdem. Die Zahl der Retry-Prompts zeigt, wie viele Pakete wirklich Probleme hatten.

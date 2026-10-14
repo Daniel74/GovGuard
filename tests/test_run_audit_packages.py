@@ -68,13 +68,13 @@ class GroqFake(FunctionModel):
         return "groq"
 
 
-def test_groq_runs_at_most_four_packages_at_once(trace) -> None:
+def test_groq_runs_at_most_two_packages_at_once(trace) -> None:
     recorder = GroqRecorder()
 
     report = run_audit(catalog_of(60), INPUT, GroqFake(recorder.respond), trace)
 
     assert len(recorder.packages) == 6
-    assert recorder.max_running == 4  # 250,000 tokens/min on the Groq tier
+    assert recorder.max_running == 2  # 250,000 tokens/min on the Groq tier
     assert len(report.findings) == 60
 
 

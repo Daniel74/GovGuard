@@ -14,19 +14,21 @@ def numbered(text: str) -> str:
 def evidence_problem(draft: FindingDraft, text: str) -> str | None:
     """PASS needs a line range; any range must be valid. FAIL without one is downgraded."""
     lines = _lines(draft)
+    label = f"{draft.rule_id} ({draft.status})"  # the status shows in the fail-closed message
     if draft.status == "PASS" and lines is None:
-        return f"{draft.rule_id}: Zeilenbereich fehlt (Pflicht bei PASS)"
+        return f"{label}: Zeilenbereich fehlt (Pflicht bei PASS)"
     if lines and (problem := _range_problem(text, *lines)):
-        return f"{draft.rule_id}: {problem}"
+        return f"{label}: {problem}"
     return None
 
 
-def without_unproven_fail(draft: FindingDraft) -> FindingDraft:
+def without_unproven_fail(draft: FindingDraft, text: str) -> FindingDraft:
     """What is missing is WARN, not FAIL: the code enforces the prompt rule without a retry.
 
-    At WARN/FAIL a range over MAX_SPAN counts as no range; only PASS is retried for it.
+    Only PASS needs a usable range; at WARN, FAIL and N/A an unusable one counts as no range.
     """
-    if draft.status in ("WARN", "FAIL") and _too_large(draft):
+    lines = _lines(draft)
+    if draft.status != "PASS" and lines and _range_problem(text, *lines):
         draft = draft.model_copy(update={"line_start": None, "line_end": None})
     if draft.status == "FAIL" and _lines(draft) is None:
         return draft.model_copy(update={"status": "WARN"})
@@ -44,11 +46,6 @@ def _lines(draft: FindingDraft) -> tuple[int, int] | None:
     if draft.line_start is None or draft.line_end is None:
         return None
     return draft.line_start, draft.line_end
-
-
-def _too_large(draft: FindingDraft) -> bool:
-    lines = _lines(draft)
-    return lines is not None and lines[1] - lines[0] + 1 > MAX_SPAN
 
 
 def _cut(text: str, line_start: int, line_end: int) -> str:

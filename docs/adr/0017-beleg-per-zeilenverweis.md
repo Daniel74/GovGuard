@@ -28,6 +28,12 @@ _Ergänzt [ADR 0005](0005-pydantic-ai.md) und [ADR 0016](0016-groq-zur-laufzeit-
 - Entscheidung: Bei WARN und FAIL zählt ein Bereich über 200 Zeilen als „kein Bereich“. WARN bleibt WARN ohne Beleg, FAIL wird zu WARN, beides ohne Retry. Nur PASS mit zu großem Bereich bekommt einen Retry. Ungültige oder zu kurze Bereiche lösen weiter bei jedem Status einen Retry aus, denn dort zeigt das Modell auf etwas, das es nicht gibt.
 - Der Output-Validator bereinigt die Antwort zuerst und prüft sie danach. Was der Code selbst richten kann, kostet keinen Retry.
 
+## Nachtrag 14.10.2026 – eine Regel für alle Bereiche außer PASS
+
+- Diagnose nach der zweiten Messung: fail closed am umgedrehten Bereich `154-67`, dazu Retries für `1-1705` bei N/A. Haiku wiederholt den Fehler auch nach dem Retry.
+- Entscheidung: Nur PASS braucht einen brauchbaren Bereich. Bei WARN, FAIL und N/A zählt jeder unbrauchbare Bereich (ungültig, umgedreht, zu groß, zu kurz) als „kein Bereich“, ohne Retry. Ein FAIL ohne Bereich wird wie bisher WARN. Das ersetzt die Einzelregel „zu groß“ aus dem ersten Nachtrag.
+- Zeigt ein FAIL auf Zeilen, die es nicht gibt, stuft der Code ihn herab. Das ist die sichere Richtung. Die Abbruchmeldung nennt jetzt den Status (`Art.12 (PASS): …`).
+
 ## Fachgespräch-Satz
 
 „Das Modell zeigt nur noch auf Zeilen, den Beleg schneidet mein Code aus. So ist jedes Zitat per Konstruktion wörtlich, und was das Modell nicht belegen kann, wird höchstens WARN, nie FAIL.“

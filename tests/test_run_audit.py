@@ -114,7 +114,7 @@ def test_pass_without_lines_is_retried_once_then_fails_closed(
 
     assert len(seen) == 2  # exactly one retry
     retry = [p for p in seen[1][-1].parts if isinstance(p, RetryPromptPart)]
-    assert "SPEC-DSGVO-Art.32: Zeilenbereich fehlt" in retry[0].model_response()
+    assert "SPEC-DSGVO-Art.32 (PASS): Zeilenbereich fehlt" in retry[0].model_response()
 
 
 def test_fail_closed_names_the_problems_of_the_last_attempt(
@@ -122,7 +122,8 @@ def test_fail_closed_names_the_problems_of_the_last_attempt(
 ) -> None:
     unproven = {**PASS_32, "line_start": None, "line_end": None}
 
-    with pytest.raises(AuditValidationError, match="SPEC-DSGVO-Art.32: Zeilenbereich fehlt"):
+    with pytest.raises(AuditValidationError,
+                       match=r"SPEC-DSGVO-Art\.32 \(PASS\): Zeilenbereich fehlt"):
         run_audit(spec_catalog, spec_input, answer_with(unproven, WARN_9), trace)
 
 
@@ -166,22 +167,27 @@ def test_invalid_line_range_is_retried_once_then_fails_closed(
 
     assert len(seen) == 2  # exactly one retry
     retry = [p for p in seen[1][-1].parts if isinstance(p, RetryPromptPart)]
-    assert f"SPEC-DSGVO-Art.32: Zeilenbereich {line_start}-{line_end} {problem}" in (
+    assert f"SPEC-DSGVO-Art.32 (PASS): Zeilenbereich {line_start}-{line_end} {problem}" in (
         retry[0].model_response())
 
 
-@pytest.mark.parametrize("status", ["FAIL", "WARN"])
-def test_too_large_range_at_warn_or_fail_counts_as_no_range_without_retry(
-    spec_catalog, trace, status: str
+@pytest.mark.parametrize("status", ["FAIL", "WARN", "N/A"])
+@pytest.mark.parametrize(
+    ("line_start", "line_end"),
+    [(1, 251), (154, 67), (250, 252), (251, 251)],  # too large, reversed, outside, too short
+)
+def test_unusable_range_outside_pass_counts_as_no_range_without_retry(
+    spec_catalog, trace, status: str, line_start: int, line_end: int
 ) -> None:
     seen: list = []
-    whole_document = {**WARN_9, "status": status, "line_start": 1, "line_end": 251}
+    pointing = {**WARN_9, "status": status, "line_start": line_start, "line_end": line_end}
 
     report = run_audit(spec_catalog, LONG_INPUT,
-                       answer_in_turns([PASS_32, whole_document], seen=seen), trace)
+                       answer_in_turns([PASS_32, pointing], seen=seen), trace)
 
-    assert len(seen) == 1  # a range over the whole document proves nothing: like no range
-    assert (report.findings[1].status, report.findings[1].evidence) == ("WARN", None)
+    assert len(seen) == 1  # only PASS needs a usable range; elsewhere it is like no range
+    downgraded = "WARN" if status == "FAIL" else status
+    assert (report.findings[1].status, report.findings[1].evidence) == (downgraded, None)
 
 
 def test_a_whole_section_of_200_lines_is_valid_evidence(spec_catalog, trace) -> None:
