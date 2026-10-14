@@ -1,5 +1,7 @@
 # 0006 – CloudWatch Logs als Audit-Protokoll
 
+_Der Punkt zu `dataTrace` entfällt mit [ADR 0018](0018-lambda-function-url.md): ohne API Gateway kein Zugriffslog am Eingang._
+
 ## Kontext
 
 Ein Auditor soll jeden Aufruf nachvollziehen können: wann, mit welcher Wissensbasis, welchem Modell und welchem Ergebnis (SPEC US 6). Zur Wahl standen CloudWatch Logs, S3 mit Object Lock über den eigenen Archetyp ARCH-03 und „nur im Report“. Eingaben können personenbezogene Daten enthalten.

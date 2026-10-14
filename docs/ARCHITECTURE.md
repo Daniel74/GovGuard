@@ -1,6 +1,6 @@
 # GovGuard – Big Picture
 
-GovGuard hat zwei Betriebsarten: **Build-Zeit** (Wissensbasis und Golden Archetypes erzeugen) und **Laufzeit** (Audits beantworten). Beide nutzen dieselbe **Audit-Engine**. Begriffe: [CONTEXT.md](../CONTEXT.md), Anforderungen: [SPEC.md](SPEC.md).
+GovGuard hat zwei Betriebsarten: **Build-Zeit** (Wissensbasis erzeugen) und **Laufzeit** (Audits beantworten). Beide nutzen dieselbe **Audit-Engine**. Begriffe: [CONTEXT.md](../CONTEXT.md), Anforderungen: [SPEC.md](SPEC.md).
 
 ## Arbeitsteilung LLM ↔ Code
 
@@ -10,9 +10,9 @@ Testfrage für jede Aufgabe: **Gibt es genau eine richtige Antwort, die sich ohn
 |---|---|
 | zählen, sortieren, nachschlagen, vergleichen | verstehen, bewerten, formulieren |
 | Vorfilter, Relevanz, Abdeckung, N/A über das Ressourceninventar | „Ist diese Anforderung prüfbar, und welche Ressourcentypen betrifft sie?“ |
-| Primäranker, Querverweis-IDs prüfen, Archetyp-Dateien laden | Prüfregel-Kriterien und Empfehlungen formulieren |
+| Primäranker, Querverweis-IDs prüfen | Prüfregel-Kriterien und Empfehlungen formulieren |
 | Zitat steht wörtlich in Quelle/Eingabe? Jede Prüfregel genau ein Befund? | „Verstößt diese Spezifikation gegen Art. 9?“ |
-| Gesamtstatus = schlechtester Einzelstatus; N/A, wenn der Ressourcentyp im Template fehlt | Archetyp aus geschlossener Liste wählen |
+| Gesamtstatus = schlechtester Einzelstatus; N/A, wenn der Ressourcentyp im Template fehlt | Ressourceninventar aus Freitext nennen, mit Beleg (ADR 0015) |
 
 Das LLM sitzt immer **zwischen zwei Code-Schichten**: Der Code bereitet vor (filtern, auswählen), das LLM urteilt, und der Code kontrolliert (Schema, Vollständigkeit, Zitate). Was der Code schon weiß, erzeugt das LLM nicht. Das hält den Anteil klein, der halluzinieren kann.
 
@@ -31,12 +31,8 @@ flowchart TD
   K --> R["4 Relevanz (Prüfumfang)<br/>+ Abdeckungs-Gate (deterministisch)"]
   R --> P["5 LLM formuliert Prüfregeln + Querverweise"]
   P --> G1{"Gate: Schema, Anker, Zitat"}
-  G1 -->|ok| A["6 LLM schreibt CDK-Archetyp"]
-  A --> S["cdk synth"]
-  S --> AE["Audit-Engine + cdk-nag"]
-  AE -->|"Beanstandung (max. 3 Runden)"| A
-  AE -->|freigegeben| PR{"7 Preset-Gate"}
-  PR -->|grün| KB["Pull Request<br/>rules_spec.json<br/>rules_arch.json<br/>archetypes.json"]
+  G1 -->|ok| PR{"6 Preset-Gate"}
+  PR -->|grün| KB["Pull Request<br/>rules_spec.json<br/>rules_arch.json"]
   G1 -->|Fehler| X["Build-Abbruch"]
   PR -->|rot| X
 ```
@@ -55,11 +51,9 @@ Das erste Gate prüft jede Prüfregel in drei Punkten:
 
 Den Primäranker setzt zwar der Code, der Check sichert aber die Extraktion ab. Querverweise schlägt dagegen das LLM vor; hier fängt der Check erfundene IDs ab.
 
-Danach entstehen die Golden Archetypes. Das LLM schreibt CDK-Code, `cdk synth` macht daraus ein CloudFormation-Template, und unsere Audit-Engine sowie cdk-nag prüfen dieses Template. Bei Beanstandungen korrigiert das LLM, höchstens dreimal.
-
 Zum Schluss müssen die 5 Presets ihr festgelegtes Soll-Ergebnis liefern. Nur wenn alle Gates grün sind, öffnet der Workflow einen Pull Request mit der neuen Wissensbasis. Nach S3 gelangt sie erst nach dem Merge, über den normalen Deploy (Abschnitt 3). Jeder Fehler bricht den Build ab, und die alte Version bleibt aktiv.
 
-Der Workflow startet nur manuell: Er kostet viele LLM-Aufrufe, liefert bei jedem Lauf leicht andere Texte, und die Quellen ändern sich selten. Sobald es Archetypen gibt, laufen Kuration und Archetypen immer zusammen, weil die Archetypen gegen die aktuellen Prüfregeln freigegeben werden (1.4). Die Archetypen haben Priorität B (FAHRPLAN).
+Der Workflow startet nur manuell: Er kostet viele LLM-Aufrufe, liefert bei jedem Lauf leicht andere Texte, und die Quellen ändern sich selten. Golden Archetypes baut der Build nicht (ADR 0019).
 
 ### 1.1 Sieben: Vorfilter, LLM, Relevanz
 
@@ -127,15 +121,9 @@ Zusätzlich muss das `source_quote` **wörtlich** im Text genau der verankerten 
 
 Dieselben Prüfungen laufen schon beim Formulieren als Validator: Das LLM bekommt den Fehler zurück und hat zwei Wiederholungen. Bei Architektur-Regeln prüft er zusätzlich, ob die Kriterien einen Ressourcentyp der Regel nennen und keine vagen Wörter wie „erforderlich“ enthalten. Bleibt ein Entwurf ungültig, bricht der Build ab.
 
-### 1.4 Soll-Ergebnis der Golden Archetypes
+### 1.4 Steckbriefe der Archetypen (nur fürs Abdeckungs-Gate)
 
-Für Presets legt ein Mensch das Soll fest. Für Archetypen ist es **vollautomatisch** und besteht aus drei Bedingungen, die alle erfüllt sein müssen:
-
-1. **Struktur-Soll:** Das Template enthält die Pflicht-Ressourcentypen aus dem Steckbrief des Archetyps (deterministischer Check).
-2. **Compliance-Soll:** Jede Architektur-Prüfregel ist PASS oder N/A. N/A setzt hier nur der Code, wenn keiner ihrer `cfn_resource_types` im Template vorkommt (Abschnitt 2). Kommt einer vor, ist N/A **verboten**. So kann das LLM eine unbequeme Regel nicht wegdefinieren.
-3. **cdk-nag:** Das Regelpaket AwsSolutions meldet keine Errors außer Ausnahmen aus `data/input/nag_allowlist.json` (ADR 0007). Die Ausnahmen wendet der Code an; der Archetyp-Code darf kein `Validations.of(...).acknowledge(...)` enthalten (Code-Check, cdk-nag 3).
-
-Jeder Archetyp ist eine End-to-End-Kette ab API Gateway mit IAM-Auth; das Portal der Behörde liegt außerhalb (ADR 0009).
+Golden Archetypes werden nicht gebaut (ADR 0019). Ihre Steckbriefe in `data/input/archetype_profiles.json` bleiben, denn sie nennen die Komponenten, die das Abdeckungs-Gate braucht (1.1): Jeder Pflicht-Ressourcentyp braucht mindestens eine Prüfregel. Jeder Archetyp ist als End-to-End-Kette ab API Gateway mit IAM-Auth entworfen (ADR 0009).
 
 | Archetyp | Solutions Constructs | Pflicht-Ressourcentypen |
 |---|---|---|
@@ -143,46 +131,33 @@ Jeder Archetyp ist eine End-to-End-Kette ab API Gateway mit IAM-Auth; das Portal
 | ARCH-02 Antragseingang | `aws-apigateway-lambda`, `aws-lambda-sqs`, `aws-sqs-lambda`, `aws-lambda-s3` | `AWS::ApiGateway::RestApi`, `AWS::Lambda::Function`, `AWS::SQS::Queue`, `AWS::S3::Bucket` |
 | ARCH-03 Audit-Log-Archiv | `aws-apigateway-lambda`, `aws-lambda-kinesisfirehose`, `aws-kinesisfirehose-s3` | `AWS::ApiGateway::RestApi`, `AWS::Lambda::Function`, `AWS::KinesisFirehose::DeliveryStream`, `AWS::S3::Bucket` mit `ObjectLockEnabled` |
 
-Startliste der Ausnahmen (Spike mit cdk-nag 3.0.2 und Solutions Constructs 2.105):
-
-| Regel | Ressource | Begründung |
-|---|---|---|
-| AwsSolutions-COG4 | API-Methoden aller Archetypen | IAM-Auth (SigV4) für Maschine-zu-Maschine statt Cognito-Login; auch im GovGuard-Stack (ADR 0004) |
-| AwsSolutions-IAM4 | `BucketNotificationsHandler` (altes ARCH-02 mit `aws-s3-sqs`) | CDK-interne Hilfs-Lambda für S3-Notifications; die verwaltete Policy erlaubt nur Logs. Wird gestrichen, wenn #7 zeigt, dass sie nicht mehr greift (ADR 0009) |
-| AwsSolutions-IAM5 | Firehose-Policy `bucket/*` (ARCH-03) | Objektnamen entstehen zur Laufzeit; Rechte auf genau einen Bucket, nur Schreiben |
-
-Die Steckbriefe (Zweck, Constructs, Pflicht-Typen, `resource_types`) sind die einzige feste Vorgabe an das LLM. Die Pflicht-Typen sind die Komponenten für das Abdeckungs-Gate (1.1); `resource_types` sind die Pflicht-Typen plus die Unterressourcen, die jeder serverless CDK-Entwurf mitbringt: `AWS::IAM::Role`, `AWS::IAM::Policy`, `AWS::KMS::Key`, `AWS::Logs::LogGroup`, `AWS::ApiGateway::Stage`, `AWS::ApiGateway::Method` und bei S3-Archetypen `AWS::S3::BucketPolicy`. EC2 gehört nicht dazu: Wir beschränken uns auf serverless. Die Liste ist eine Annahme, bis #7 echte Templates synthetisiert; dann prüfen wir sie dagegen. Sie stammen aus [Behörden Cloud-Referenzarchitekturen Analyse](research/Behörden%20Cloud-Referenzarchitekturen%20Analyse.md). ARCH-01 nutzt DynamoDB statt Aurora (wie das Construct-Mapping im Research-Dokument): DynamoDB On-Demand kostet im Leerlauf 0 €.
+Die Steckbriefe stammen aus [Behörden Cloud-Referenzarchitekturen Analyse](research/Behörden%20Cloud-Referenzarchitekturen%20Analyse.md). Wie Bau und Freigabe aussähen (CDK vom LLM, `cdk synth`, Audit-Engine und cdk-nag, höchstens drei Korrekturrunden), beschreiben ADR 0003 und 0009 als Ausbau.
 
 ## 2. Laufzeit – ein Audit
 
 ```mermaid
 sequenceDiagram
   actor U as Streamlit-UI / CI
-  participant API as API Gateway REST
-  participant L as Lambda (Audit-Engine)
+  participant L as Lambda (Audit-Engine)<br/>Function URL, IAM-Auth
   participant S3 as S3
   participant B as Bedrock (eu.)
   participant CW as CloudWatch Logs
   Note over L,S3: Kaltstart: Wissensbasis in den Speicher laden
-  U->>API: POST /audit/spec (SigV4)
-  API->>L: Spezifikation
+  U->>L: POST /audit/spec (SigV4, Timeout 180 s)
   L->>B: Converse, Tool submit_audit (je Paket parallel: anwendbare Prüfregeln + Eingabe)
   B-->>L: Befunde (JSON)
   L->>L: Pydantic + Code-Checks (1 Befund je Regel, Belege wörtlich)
   L->>CW: Audit-Ereignis (Hashes + Status, ohne Eingabe)
   L-->>U: Audit-Report
-  U->>API: POST /archetype/select (Spezifikation + Audit-Report)
-  API->>L: weiterleiten
-  L->>B: Converse, Tool select_archetype
-  B-->>L: ARCH-01 / 02 / 03 oder NONE
-  L-->>U: Golden Archetype (CDK + Template) + Begründung
 ```
+
+Die UI ruft die Lambda direkt über ihre Function URL auf, ohne API Gateway: Ein Audit mit vollem Katalog dauert länger als dessen 29 s (ADR 0018).
 
 Beim Kaltstart lädt die Lambda-Funktion die Wissensbasis einmal aus S3 in den Speicher, weitere Aufrufe nutzen sie direkt. Zuerst bestimmt sie das Ressourceninventar der Eingabe: bei CloudFormation-JSON der Code, bei Freitext, YAML und Terraform ein LLM-Vorlauf mit Beleg je Dienst (ADR 0015). Jede Prüfregel ohne passenden Ressourcentyp setzt der Code auf N/A; IAM, KMS und Logs streicht er nie. Die anwendbaren Prüfregeln gehen in Paketen à ca. 10 parallel mit der Eingabe an Bedrock (ADR 0011). Das Modell muss über das erzwungene Tool `submit_audit` antworten (Tool-Choice), es kann also nur strukturiertes JSON liefern, keinen Freitext.
 
 Danach prüft der Code, nicht das Modell, das Ergebnis. Pydantic validiert das Schema, und zusätzlich muss jede Prüfregel genau einen Befund haben und jeder Beleg wörtlich in der Eingabe stehen. Erst dann wird der Gesamtstatus berechnet.
 
-Hat das Spec-Audit kein FAIL, kann der Client in einem zweiten Aufruf einen Golden Archetype anfordern. Das Modell wählt dann nur aus einer geschlossenen Liste: ARCH-01, -02, -03 oder `NONE` (keiner). Das Architektur-Audit (`POST /audit/architecture`) läuft genauso wie das Spec-Audit ab, nur mit den Prüfregeln aus BSI Grundschutz++, BSI C5, CIS und FSBP.
+Das Architektur-Audit (`POST /audit/architecture`) läuft genauso wie das Spec-Audit ab, nur mit den Prüfregeln aus BSI Grundschutz++, BSI C5, CIS und FSBP.
 
 ### 2.1 Tool-Choice – wie das Modell zur Struktur gezwungen wird
 
@@ -201,7 +176,7 @@ audit_agent = Agent(
                            strict=True),   # statisches Schema, alle Felder Pflicht (ADR 0017)
     instructions=SYSTEM_PROMPT,     # Rolle + Regeln für PASS/WARN/FAIL/N/A
     deps_type=AuditDeps,            # Katalog + Eingabe für die Code-Checks
-    retries=1,                      # genau ein Retry, 29-s-Timeout
+    retries=1,                      # genau ein Retry, Lambda-Timeout 180 s (ADR 0018)
 )
 result = audit_agent.run_sync(catalog_and_input, model=model, deps=deps)
 ```
@@ -211,9 +186,8 @@ result = audit_agent.run_sync(catalog_and_input, model=model, deps=deps)
 | `classify_requirement` | `testable: bool`, `rationale: str`, `cfn_resource_types: [str]` (nur Architektur) | Build, Stufe ② |
 | `formulate_rule` | LLM-Felder der Prüfregel (siehe 1.2) | Build, Stufe 5 |
 | `submit_audit` | `findings: [{rule_id, status: PASS\|WARN\|FAIL\|N/A, line_start, line_end, rationale, recommendation}]` | Laufzeit, beide Audits |
-| `select_archetype` | `archetype: ARCH-01\|ARCH-02\|ARCH-03\|NONE`, `rationale: str` | Laufzeit, Archetyp-Auswahl |
 
-- **Enums schließen die Antwortmenge:** Das Modell kann keinen Status „OK“ und keinen Archetyp „ARCH-09“ erfinden.
+- **Enums schließen die Antwortmenge:** Das Modell kann keinen Status „OK“ erfinden.
 - **Tool-Choice ist kein Beweis:** Das Modell kann trotzdem falsche Werte liefern. Deshalb validiert danach Pydantic, und der Code prüft Vollständigkeit und Belege (`@agent.output_validator`). Bei Fehlern schickt Pydantic AI die Fehlermeldung einmal zurück ans Modell, danach HTTP 502.
 - **Was der Code weiß, fragt man das Modell nicht:** Primäranker, Querverweise und Gesamtstatus ergänzt der Code aus der Wissensbasis. Das Modell liefert nur Status, Zeilenbereich und Begründung; den Beleg schneidet der Code aus der Eingabe (ADR 0017).
 - **Modellwahl:** Haiku 4.5 unterstützt erzwungene Tools; Opus 5.5, Sonnet 5.5 und Fable 5.1 lehnen `toolChoice` = `any` bzw. `tool` laut Anthropic-Doku mit HTTP 400 ab. Achtung: Kann ein Modell kein Erzwingen, fällt Pydantic AI still auf `auto` zurück – darum bleibt Haiku 4.5 gesetzt.
@@ -232,7 +206,7 @@ flowchart LR
 
 GovGuard wird selbst mit CDK beschrieben und über GitHub Actions ausgerollt. Die Pipeline meldet sich per OIDC bei AWS an und erhält kurzlebige Rechte, es liegen also keine dauerhaften Zugangsschlüssel in GitHub.
 
-Vor jedem Deploy durchläuft der eigene Stack dieselben zwei Prüfungen wie die Golden Archetypes. Erst prüft cdk-nag deterministisch, mit denselben Ausnahmen, dann prüft die Audit-Engine das Template gegen die Architektur-Prüfregeln. Ein FAIL oder WARN blockiert das Deployment, außer bei einer Ausnahme aus der Allowlist (ADR 0011).
+Vor jedem Deploy durchläuft der eigene Stack zwei Prüfungen. Erst prüft cdk-nag deterministisch, mit den Ausnahmen aus der Allowlist, dann prüft die Audit-Engine das Template gegen die Architektur-Prüfregeln. Ein FAIL oder WARN blockiert das Deployment, außer bei einer Ausnahme aus der Allowlist (ADR 0011).
 
 So beweist GovGuard an sich selbst, dass seine Regeln erfüllbar sind (Dogfooding).
 
@@ -242,10 +216,10 @@ Es gibt nur **einen Weg in die Produktion**: `deploy.yml`. Er lädt auch die Wis
 
 | Komponente | Aufgabe | Technik |
 |---|---|---|
-| Build-Skript | Wissensbasis und Archetypen erzeugen | Python-Paket `kb_build`, CDK CLI |
+| Build-Skript | Wissensbasis erzeugen | Python-Paket `kb_build` |
 | Audit-Engine | Prompt bauen, Bedrock aufrufen, Befunde validieren | Python-Modul, Pydantic, Pydantic AI |
-| API | 3 Endpunkte, IAM-Auth, Throttling | API Gateway REST + Lambda |
-| Wissensbasis | Prüfregeln und Golden Archetypes | JSON in `data/knowledge_base/` (versioniert), per Deploy nach S3 |
+| API | 2 Endpunkte, IAM-Auth | Lambda mit Function URL (ADR 0018) |
+| Wissensbasis | Prüfregeln | JSON in `data/knowledge_base/` (versioniert), per Deploy nach S3 |
 | UI | Eingabe, Ampel, Download | Streamlit Community Cloud (ADR 0004) |
 | Audit-Protokoll | ein Ereignis je Aufruf, für Auditoren | CloudWatch Logs, KMS, 365 Tage (ADR 0006) |
 | Build-Workflow | manuell: Build-Skript ausführen, PR öffnen | GitHub Actions `build-kb.yml` |
@@ -265,7 +239,7 @@ flowchart TB
   end
   subgraph L["Logik – rein, ohne I/O"]
     AE["govguard/audit_engine.py<br/>+ audit_gates.py, evidence.py, inventory.py, models.py, text.py"]
-    KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py,<br/>archetypes.py (geplant)"]
+    KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py"]
   end
   subgraph A["Adapter – einziger Ort für AWS, Groq, subprocess, HTTP"]
     AWS["govguard/aws_services.py<br/>boto3, Bedrock-Modell"]
@@ -311,7 +285,7 @@ data/input/           von Hand gepflegt: sources.json (URL, Version, SHA-256, Li
                       cfn_resource_types.json, cfn_properties.json, presets/ (5 Presets mit Soll-Ergebnis)
 data/intermediate/    Zwischenergebnisse, eingecheckt fürs Review: extracted/ (cis, fsbp, c5 nur lokal),
                       judgement_cache.json, selection_*.json, verdicts_*.json; sources/ = Download-Cache, in .gitignore
-data/knowledge_base/  nur das Endergebnis: rules_spec.json, rules_arch.json, archetypes.json (geplant); geht nach S3
+data/knowledge_base/  nur das Endergebnis: rules_spec.json, rules_arch.json; geht nach S3
 tests/                pytest, flach
 .github/workflows/    build-kb.yml, deploy.yml
 ```
@@ -334,10 +308,9 @@ tests/                pytest, flach
 |---|---|
 | `POST /audit/spec` | Spezifikation → Audit-Report |
 | `POST /audit/architecture` | Architektur → Audit-Report |
-| `POST /archetype/select` | Spezifikation + Spec-Audit-Report → Golden Archetype oder „keiner“; abgelehnt bei FAIL |
 
-- Ein Audit wertet die anwendbaren Prüfregeln in parallelen Paketen aus (ADR 0011); Ziel bleibt das 29-s-Timeout. Reicht das nicht, lässt sich das Integrations-Timeout regionaler REST-APIs per Quota-Antrag erhöhen; Plan B ist eine Lambda Function URL.
-- `/archetype/select` vertraut dem mitgesendeten Report: vertretbar, weil Archetypen öffentlich und vorab freigegeben sind.
+- Beide Pfade liegen an derselben Function URL mit IAM-Auth; der Handler routet, sonst 404 (ADR 0018). Einen Endpunkt für Golden Archetypes gibt es nicht (ADR 0019).
+- Ein Audit wertet die anwendbaren Prüfregeln in parallelen Paketen aus (ADR 0011). Das Lambda-Timeout liegt vorläufig bei 180 s; die Messung in Schritt 10a bestätigt es.
 - Scheitert die Validierung, schickt Pydantic AI die Fehlermeldung einmal zurück ans Modell (`retries=1`), danach HTTP 502.
 
 ## Kosten

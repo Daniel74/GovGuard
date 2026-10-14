@@ -22,7 +22,7 @@ _Ersetzt [ADR 0002](0002-bounded-catalog.md). Ersetzt in [ADR 0007](0007-relevan
 ## Konsequenzen
 
 - Ranking, Gesetzte Plätze und Obergrenzen entfallen. Preset-Anker müssen nur prüfbar und relevant sein (Gate).
-- Kosten und Laufzeit je Audit steigen. Das Kostenziel setzt erst die Messung. Unter 29 s bleibt es nur mit parallelen Paketen; Bedrock-Drosselung ist ein Risiko. Plan B ist eine Lambda Function URL mit IAM-Auth.
+- Kosten und Laufzeit je Audit steigen. Das Kostenziel setzt erst die Messung. Unter 29 s bleibt es nur mit parallelen Paketen; Bedrock-Drosselung ist ein Risiko. Plan B ist eine Lambda Function URL mit IAM-Auth, entschieden in [ADR 0018](0018-lambda-function-url.md).
 - Dubletten über Quellen hinweg bleiben getrennte Befunde, denn jede Prüfregel hat genau einen Primäranker. Der Report sortiert nach Ressourcentyp.
 - Übersieht der Freitext-Vorlauf einen Dienst, steht „nicht erkannt“ im Befund. Die Lücke bleibt sichtbar.
 - Der Code prüft beim Vorlauf, dass der Beleg wörtlich in der Eingabe steht, nicht, dass er zum Typ passt. Ein falsch zugeordneter Beleg führt höchstens zu einem überflüssigen Befund, nie zu einem verlorenen.

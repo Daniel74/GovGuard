@@ -1,6 +1,6 @@
 # 0003 – Golden Archetypes als CDK mit Solutions Constructs
 
-_Ergänzt durch [ADR 0007](0007-relevanz-und-ausnahmen.md) und [ADR 0009](0009-end-to-end-archetypen.md)._
+_Ergänzt durch [ADR 0007](0007-relevanz-und-ausnahmen.md) und [ADR 0009](0009-end-to-end-archetypen.md). Bau entfällt mit [ADR 0019](0019-nur-audits.md)._
 
 ## Kontext
 

@@ -1,5 +1,7 @@
 # 0004 – Streamlit Community Cloud für die Demo-UI
 
+_Rechte und Throttling geändert durch [ADR 0018](0018-lambda-function-url.md): `lambda:InvokeFunctionUrl` + `lambda:InvokeFunction` statt `execute-api:Invoke`, kein Stage-Throttling._
+
 ## Kontext
 
 Für Präsentation und Bewerbungen ist ein öffentlicher Live-Link gewünscht. Ein Frontend-Hosting in Frankfurt kostet Zeit und laufend Geld. Streamlit Community Cloud ist kostenlos, hostet aber in den USA.

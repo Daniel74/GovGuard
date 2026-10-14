@@ -18,23 +18,23 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Priorität:** Erst die Audits, dann die Architektur-Generierung.
 
 - **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Deploy, Selbst-Audit und Demo-UI; dazu passt die Doku. Schritte 6–14; 15–16 nur, wenn ein Tag frei wird (✂).
-- **B – Golden Archetypes (nur wenn Zeit bleibt):** Archetypen bauen und freigeben (#7), Archetyp-Auswahl (#10). Schritte 17–18.
+- **B – Golden Archetypes (entfällt, ADR 0019):** Archetypen bauen und freigeben (#7), Archetyp-Auswahl (#10). Schritte 17–18 bleiben als Ausbau stehen.
 - **Stichtag:** B beginnt nur, wenn A fertig ist und bis zur Abgabe am 21.10. noch mindestens 3 Arbeitstage bleiben, also spätestens am Freitag, 16.10. Sonst gehen die Resttage in Stabilisierung und Präsentation. Im Fachgespräch ist B dann Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 14.10.:** B entfällt. Der Deploy (#9, #11) wird voll gebaut und braucht 3–4 Tage, A ist also nicht bis 16.10. fertig.
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag                | Arbeit                                                                                                                                                                                                                |
-| ------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.          | Schritt 10: #14 abschließen. Messung: fail closed wegen zusammengesetzter Belege, Einzelaufrufe bis 37 s → #26. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Messung ohne Durchlauf.                    |
-| Do 15.10.          | Schritt 10a: #26 nachschärfen und neu messen, Plan B aus ADR 0011 vor #9 entscheiden (Aufrufe bis 51 s). Schritte 10b–10c: #27 KI-Governance, #28 Bewertung. Wird es knapp, #27 auf die Herabstufung im Report kürzen |
-| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                                                                     |
-| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                                                                       |
-| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                                                                             |
-| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                                                                 |
-| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                                                                        |
-| 22.–25.10.         | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                                                                       |
-| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                                                                         |
+| Tag                | Arbeit                                                                                                                                                                                                                                          |
+| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.          | Schritt 10: #14 abschließen. Messung: fail closed wegen zusammengesetzter Belege, Einzelaufrufe bis 37 s → #26. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, nachgeschärft; zwei Messungen ohne Durchlauf (Retries 6 → 3 Pakete). |
+| Do 15.10.          | Schritt 10a: Diagnose fail closed und Messung mit Durchlauf (Plan B am 14.10. entschieden, ADR 0018). Schritte 10b–10c: #27 KI-Governance, #28 Bewertung. Wird es knapp, #27 auf die Herabstufung im Report kürzen        |
+| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                                                                                               |
+| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                                                                                                 |
+| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                                                                                                       |
+| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                                                                                           |
+| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                                                                                                  |
+| 22.–25.10.         | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                                                                                                 |
+| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                                                                                                   |
 
 **Schnittlinie:** Wird es knapp, fällt zuerst #8 weg, weil der Build der Wissensbasis auch lokal per `python -m kb_build` läuft. Danach fällt #24 weg; es zählt nur bei einem neuen Build. Beide machen nur dann weiter, wenn ein Tag frei wird. Im Fachgespräch sind sie Ausbau.
 
@@ -374,8 +374,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Abschließen (Zwischenstand)** 👤 committet den TDD-Umbau, z. B. `#26 evidence by line reference (ADR 0017), measurement`
 - [x] **Nachschärfen** 🆕 _Opus_ · 👤 „Lies docs/FAHRPLAN.md Schritt 10a und Issue #26 mit dem letzten Messkommentar.“ Dann `/tdd Issue #26 nachschärfen` → Plan → Go (Gate-Design und Drosselung sind Weichenstellungen)
       Reihenfolge: zu großer Bereich bei WARN/FAIL gilt als „kein Bereich“ (FAIL → WARN, kein Retry), nur PASS mit zu großem Bereich → Retry → Groq-Pakete gedrosselt (höchstens 4 gleichzeitig), Bedrock voll parallel → `measure.py` loggt die Probleme des letzten Versuchs → Nachtrag ADR 0017, DESIGN 2.2
-- [ ] **Neu messen** 👤 `/audit-messen spec-wohngeld-openapi, Bedrock und Groq` → 🤖 notiert beide Ergebnisse gegen `expected` im Issue und setzt das Kostenziel in SPEC. Wieder fail closed: 👤 `/diagnosing-bugs fail closed bei spec-wohngeld-openapi` mit den Gründen aus `measure.py`. Falsche FAILs mit Beleg gehören zu #28, nicht hierher.
-- [ ] **Plan B entscheiden** 🆕 _Opus_ · 👤 `/grilling Plan B aus ADR 0011: Lambda Function URL statt API Gateway wegen 29 s?` → 🤖 schreibt das ADR. Muss vor #9 stehen, weil #9 den Stack baut. Messung 14.10.: Bedrock 38–51 s je Paket; Groq braucht gedrosselt ca. 2 Minuten
+- [x] **Neu messen** 👤 `/audit-messen spec-wohngeld-openapi, Bedrock und Groq` → 🤖 notiert beide Ergebnisse im Issue. Ergebnis 14.10.: wieder kein Durchlauf. Bedrock 3/16 Pakete mit Retry (vorher 6), fail closed am umgedrehten Bereich `154-67`, 0,97 $, 43,8 s, langsamster Aufruf 33,4 s; Groq HTTP 429 trotz 4 parallelen Paketen (ca. 410.000 Tokens/min).
+- [x] **Plan B entscheiden** 🆕 _Opus_ · 👤 `/grilling Plan B aus ADR 0011: Lambda Function URL statt API Gateway wegen 29 s?` → 🤖 schreibt das ADR. Muss vor #9 stehen, weil #9 den Stack baut. Braucht keinen Durchlauf: Schon ein Aufruf ohne Retry liegt über 29 s (Bedrock 31–51 s, mit Retry ca. das Doppelte; Groq gedrosselt mindestens 2 Minuten). Der Lambda-Timeout steht vorläufig im ADR und wird nach dem Durchlauf bestätigt. Ergebnis 14.10.: ADR 0018 (Function URL mit IAM-Auth, Timeout vorläufig 180 s, keine Reserved Concurrency bei Konto-Limit 10) und ADR 0019 (nur Audits); Issue #9 angepasst.
+- [ ] **Diagnose** 🆕 _Opus_ · 👤 „Lies docs/FAHRPLAN.md Schritt 10a und Issue #26 mit dem letzten Messkommentar.“ Dann `/diagnosing-bugs fail closed bei spec-wohngeld-openapi` → Plan → Go (Gate-Design und Drosselung sind Weichenstellungen)
+      Kandidaten aus der Messung: umgedrehter Bereich bei WARN/FAIL gilt wie ein zu großer als „kein Bereich“ → Bereich bei N/A ignorieren statt prüfen → Groq höchstens 2 Pakete gleichzeitig oder Token-Budget je Minute → fehlende Befunde (bis zu 7 je Paket) beobachten. Falsche FAILs mit Beleg gehören zu #28, nicht hierher.
+- [ ] **Messen (Durchlauf)** 👤 `/audit-messen spec-wohngeld-openapi mit Bedrock und Groq, arch-antragseingang-fehlerhaft mit Bedrock` → 🤖 notiert die Ergebnisse gegen `expected` im Issue, setzt das Kostenziel in SPEC und bestätigt den Lambda-Timeout in ADR 0018
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #26 seit 46e91b0` (TDD-Umbau und Nachschärfen zusammen)
 - [ ] **Verstehen** 👤 `/verstehen 26` (Kernfrage: warum der Beleg bleibt, auch wenn das LLM ihn nicht mehr abschreibt)
 - [ ] **Abschließen** 👤 committet und pusht
@@ -420,14 +423,14 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ### Schritt 11 – #9 GovGuard-Stack und Audit-Endpunkte
 
-**Ziel:** Die Audit-API läuft in eu-central-1, protokolliert jeden Aufruf und bleibt unter 29 s.
-**Voraussetzung:** Schritte 10b und 10c, Plan B entschieden (Schritt 10a).
+**Ziel:** Die Audit-API läuft in eu-central-1 über eine Lambda Function URL mit IAM-Auth (ADR 0018), protokolliert jeden Aufruf und bleibt im Lambda-Timeout.
+**Voraussetzung:** Schritte 10b und 10c, Durchlauf aus Schritt 10a.
 
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #9 umsetzen`
       Reihenfolge: `Trace` und `AuditEvent` bauen → `handler.py` → CDK-Stack mit Assertions-Tests (Tests auf das erzeugte Template)
 - [ ] **Sicherheit** 👤 `/security-review` vor dem ersten Deploy
 - [ ] **Einrichten** falls nötig: 👤 `/wizard cdk bootstrap für eu-central-1` → 👤 Wizard ausführen
-- [ ] **Deploy + Test** 👤 „Deploye den Stack und ruf /audit/architecture mit dem größten Preset auf“ → Go → 👤 `/run`. Über 29 s: 👤 `/model opus`, dann `/diagnosing-bugs` und Plan B aus ADR 0011 entscheiden
+- [ ] **Deploy + Test** 👤 „Deploye den Stack und ruf /audit/architecture mit dem größten Preset auf“ → Go → 👤 `/run`. Läuft es in den Lambda-Timeout: 👤 `/model opus`, dann `/diagnosing-bugs`
 - [ ] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und `gh issue view 9`. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #9`
 - [ ] **Verstehen** 👤 `/verstehen 9` (Schwerpunkt: IAM, KMS und Audit-Protokoll)

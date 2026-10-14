@@ -1,6 +1,6 @@
 # 0009 – Golden Archetypes als End-to-End-Ketten, ohne Portal
 
-_Ergänzt [ADR 0003](0003-cdk-solutions-constructs.md)._
+_Ergänzt [ADR 0003](0003-cdk-solutions-constructs.md). Bau und Auswahl entfallen mit [ADR 0019](0019-nur-audits.md); die Steckbriefe bleiben fürs Abdeckungs-Gate._
 
 ## Kontext
 
