@@ -1,6 +1,6 @@
 # 0001 – EU-Inferenzprofil statt „nur Frankfurt“
 
-_Für den Build ergänzt durch [ADR 0012](0012-globales-profil-im-build.md) und [ADR 0014](0014-groq-standard-im-build.md)._
+_Für den Build ergänzt durch [ADR 0012](0012-globales-profil-im-build.md) und [ADR 0014](0014-groq-standard-im-build.md), für die Laufzeit im Prototyp durch [ADR 0016](0016-groq-zur-laufzeit-im-prototyp.md)._
 
 ## Kontext
 

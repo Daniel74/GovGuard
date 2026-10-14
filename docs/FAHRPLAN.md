@@ -24,16 +24,17 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag | Arbeit |
-| --- | ------ |
-| Mi 14.10. | Schritt 10: #14 abschließen. Die Messung dort (CLI, voller Katalog) zeigt früh, ob 29 s realistisch sind. Sind es mehr als ca. 25 s, Plan B aus ADR 0011 vor #9 entscheiden. |
-| Do 15. – Fr 16.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Freitag |
-| Sa oder So | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI |
-| Mo 19.10. | #11 fertig und live (das Claude-Wochenlimit setzt zurück) |
-| Di 20.10. | Schritte 13–14: Doku #22 und #16. Damit ist A fertig. |
-| Mi 21.10. | Abgabe, Puffer |
-| 22.–25.10. | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe |
-| Mo 26.10. | Präsentation und Fachgespräch |
+| Tag                | Arbeit                                                                                                                                                                       |
+| ------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.          | Schritt 10: #14 abschließen. Messung: fail closed wegen zusammengesetzter Belege, Einzelaufrufe bis 37 s → #26.                                                              |
+| Do 15.10.          | Schritt 10a: #26 Belege. Danach neu messen; sind es mehr als ca. 25 s, Plan B aus ADR 0011 vor #9 entscheiden.                                                               |
+| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                            |
+| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                              |
+| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                                    |
+| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                        |
+| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                               |
+| 22.–25.10.         | Verstehen: `/verstehen` für #14, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                              |
+| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                                |
 
 **Schnittlinie:** Wird es knapp, fällt zuerst #8 weg, weil der Build der Wissensbasis auch lokal per `python -m kb_build` läuft. Danach fällt #24 weg; es zählt nur bei einem neuen Build. Beide machen nur dann weiter, wenn ein Tag frei wird. Im Fachgespräch sind sie Ausbau.
 
@@ -57,6 +58,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 9e      | A    | #21 Groq als Build-Standard     | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 9g      | A    | #25 ADR 0015 Terraform-Grenze   | 🤖 Sonnet                                        | 👤                         |
 | 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
+| 10a     | A    | #26 Belege bei großen Eingaben  | 🤖 Opus                                          | 🤖 Opus                    |
 | 11      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
 | 12      | A    | #11 Deploy + UI                 | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
 | 13      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                                        | 👤                         |
@@ -347,7 +349,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #14 umsetzen` → Plan → Go (der Freitext-Vorlauf ist eine Prompt-Weiche)
       Reihenfolge: Freitext-Vorlauf mit Beleg → N/A-Verbot für erkannte Typen → Pakete parallel → Zusammenführen (ein Befund je Prüfregel) → Sortierung nach Ressourcentyp
-- [ ] **Messen** 👤 `/run CLI-Audit des größten Presets mit vollem Katalog, Laufzeit und Kosten messen` → 🤖 notiert das Ergebnis im Issue und setzt das Kostenziel in SPEC
+- [x] **Messen** 👤 `/run CLI-Audit des größten Presets mit vollem Katalog, Laufzeit und Kosten messen` → 🤖 notiert das Ergebnis im Issue. Ergebnis: fail closed wegen Belegen (→ #26), ca. 0,90 $, Einzelaufrufe bis 37 s; das Kostenziel in SPEC setzt erst #26.
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #14`
 - [ ] **Verstehen** 👤 `/verstehen 14` (Kernfrage: warum ein übersehener Dienst sichtbar bleiben muss)
 - [ ] **Abschließen** 👤 committet und pusht
@@ -357,10 +359,29 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
+### Schritt 10a – #26 Belege bei großen Eingaben
+
+**Ziel:** Das größte Preset läuft mit vollem Katalog durch, und jeder Beleg steht nachweislich wörtlich in der Eingabe, mit Bedrock (Haiku 4.5) und mit Groq (gpt-oss-120b) als günstigem Fallback. Die Messung aus Schritt 10 zeigt: Beide Modelle setzen Zitate zusammen oder formatieren sie um, gpt-oss hält zudem das Tool-Schema nicht ein. Haiku kostet ca. 0,90 $ je großem Audit, Groq ca. ein Zehntel.
+**Voraussetzung:** Schritt 10.
+
+- [ ] **Recherche** 🆕 _Opus_ · 👤 `/research Belege ohne Abschreiben: Citations der Bedrock Converse API (Haiku 4.5, eu., mit Tool-Choice nach ADR 0005)? Strict Tool Use / Structured Outputs für gpt-oss-120b auf Groq?`
+- [ ] **Prototyp** 🆕 _Opus_ · 👤 `/prototype Beleg per Zeilenbereich (Bedrock und Groq) gegen Citations (nur Bedrock) auf dem 10-Regel-Paket von spec-wohngeld-openapi` → Messung mit `/audit-messen`, Groq mit `MEASURE_MODEL=groq` (Bedrock ca. 0,10 $ je Variante, Groq Cent-Bereich)
+- [ ] **Entscheiden** 👤 Variante wählen (Weichen: Prompt-Design, Vertrag von `FindingDraft`). Groq ist zur Laufzeit ausdrückliche Option (ADR 0016), der Weg muss also mit beiden Modellen funktionieren. → 🤖 schreibt das ADR
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #26 umsetzen` → Plan → Go
+- [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi mit vollem Katalog, Bedrock und Groq` → 🤖 notiert beide Ergebnisse im Issue und setzt das Kostenziel in SPEC
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #26`
+- [ ] **Verstehen** 👤 `/verstehen 26` (Kernfrage: warum der Beleg bleibt, auch wenn das LLM ihn nicht mehr abschreibt)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Das Preset mit beiden Modellen sein `expected` erfüllt, das ADR vorliegt und Laufzeit und Kosten je Modell im Issue stehen.
+**Fürs Fachgespräch:** Grounding, Halluzinationsschutz durch Code statt Prompt, Output-Tokens als Laufzeittreiber, Modell-Unabhängigkeit durch Gates, Kosten gegen Datenresidenz.
+
+---
+
 ### Schritt 11 – #9 GovGuard-Stack und Audit-Endpunkte
 
 **Ziel:** Die Audit-API läuft in eu-central-1, protokolliert jeden Aufruf und bleibt unter 29 s.
-**Voraussetzung:** Schritt 10.
+**Voraussetzung:** Schritt 10a.
 
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #9 umsetzen`
       Reihenfolge: `Trace` und `AuditEvent` bauen → `handler.py` → CDK-Stack mit Assertions-Tests (Tests auf das erzeugte Template)
@@ -414,7 +435,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 ### Schritt 14 – #16 Doku nachziehen
 
 **Ziel:** README und die drei Erklär-Dokumente beschreiben den gebauten Stand nach ADR 0011.
-**Voraussetzung:** Schritte 7, 9 und 10 (#6, #12, #14).
+**Voraussetzung:** Schritte 7, 9, 10 und 10a (#6, #12, #14, #26).
 
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 16` und zieh die vier Dokumente auf den Code-Stand nach“ → Plan → Go
 - [ ] **Prüfen** 👤 `grep` aus dem Issue, dann jedes Dokument querlesen (je ca. 2 Minuten)

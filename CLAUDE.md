@@ -6,7 +6,7 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 
 ## Leitplanken
 
-- AWS: Daten nur in `eu-central-1`, Inferenz für Nutzereingaben nur in der EU (Bedrock-Profil `eu.`, ADR 0001).
+- AWS: Daten nur in `eu-central-1`, Inferenz für Nutzereingaben standardmäßig in der EU (Bedrock-Profil `eu.`, ADR 0001); im Prototyp Groq als ausdrückliche Option (ADR 0016).
 - Ausnahme Build der Wissensbasis: Er schickt nur öffentliche Normtexte raus, standardmäßig an Groq (ADR 0014), nur auf ausdrücklichen Wunsch an Bedrock `global.` (ADR 0012).
 - 100 % serverless, 0 € Leerlaufkosten (FinOps, siehe `CONTEXT.md`): Im Leerlauf zahlen wir nur für gehaltene Daten und für Sicherheit, z. B. KMS-Schlüssel ca. 1 $/Monat.
 - Python, Pydantic, Pydantic AI auf der Bedrock Converse API mit Tool-Choice (ADR 0005), Streamlit-UI.
