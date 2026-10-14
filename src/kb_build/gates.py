@@ -20,6 +20,9 @@ class GateCounts:
     retries: int = 0  # answers the model had to redo
     llm_errors: int = 0  # answers that stayed invalid (outcome `llm_error`)
 
+    def __add__(self, other: "GateCounts") -> "GateCounts":
+        return GateCounts(self.retries + other.retries, self.llm_errors + other.llm_errors)
+
     def line(self, audit_type: AuditType, gate: str) -> str:
         return f"{audit_type} quality {gate}: retries={self.retries} llm_error={self.llm_errors}"
 
@@ -76,6 +79,18 @@ def is_quoted(requirement: Requirement, quote: str) -> bool:
     """
     whole = normalize(quote) == normalize(requirement.text)
     return whole or contains_quote(requirement.text, quote)
+
+
+def quote_deviation(text: str, quote: str) -> str:
+    """Where the quote leaves the text: the longest quoted start found, then both continuations."""
+    words, text = normalize(quote).split(" "), normalize(text)
+    for n in range(len(words) - 1, 0, -1):
+        start = text.find(" ".join(words[:n]))
+        if start >= 0:
+            rest = text[start + len(" ".join(words[:n])):].split()
+            return (f"Ab „{' '.join(words[n:n + 5])}“ weicht es ab; im Text steht dort "
+                    f"„{' '.join(rest[:5])}“.")
+    return "Schon der Anfang des Zitats fehlt im Text."
 
 
 def invalid_cross_references(draft: RuleDraft, source: SourceName, anchors: Anchors) -> list[str]:

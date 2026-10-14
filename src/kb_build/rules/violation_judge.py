@@ -10,7 +10,7 @@ from pydantic_ai import Agent, ToolOutput
 from pydantic_ai.models import Model
 from pydantic_ai.usage import RunUsage
 
-PROMPT = """\
+JUDGE_PROMPT = """\
 Du prüfst das Verstoßkriterium ("violation_if") einer Prüfregel für das Spec-Audit einer
 fachlichen Spezifikation. Eine Spezifikation ist eine offene Welt: Was sie nicht erwähnt,
 kann anderswo geregelt sein. Ein Verstoßkriterium muss deshalb beschreiben, was die
@@ -23,7 +23,7 @@ Spezifikation festlegt, nicht, was ihr fehlt.
 Enthält das Kriterium beides (z. B. verbunden mit "oder"), gilt es als Fehlen.
 "describes_absence": true bei Fehlen, sonst false. "reason": ein Satz, woran du es erkennst."""
 
-USER_PROMPT = "<violation_if>\n{text}\n</violation_if>"
+JUDGE_USER_PROMPT = "<violation_if>\n{text}\n</violation_if>"
 JUDGE_TOOL_NAME = "judge_violation"
 JUDGE_RETRIES = 2  # a schema slip only; the verdict itself is never retried
 
@@ -36,7 +36,7 @@ class ViolationCheck(BaseModel):  # schema of tool judge_violation
 judge_agent = Agent(
     output_type=ToolOutput(ViolationCheck, name=JUDGE_TOOL_NAME,
                            description="Gib dein Urteil zum Verstoßkriterium ab."),
-    instructions=PROMPT,
+    instructions=JUDGE_PROMPT,
     retries=JUDGE_RETRIES,
     model_settings={"temperature": 0},
 )
@@ -44,5 +44,6 @@ judge_agent = Agent(
 
 async def judge_violation(violation_if: str, model: Model, usage: RunUsage) -> ViolationCheck:
     """`usage` is the one of the formulate run: the judge's tokens count there too."""
-    result = await judge_agent.run(USER_PROMPT.format(text=violation_if), model=model, usage=usage)
+    prompt = JUDGE_USER_PROMPT.format(text=violation_if)
+    result = await judge_agent.run(prompt, model=model, usage=usage)
     return result.output

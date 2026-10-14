@@ -430,11 +430,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #29 umsetzen` → Plan → Go
 - [x] **Echter Lauf** 🤖 👤 `python -m kb_build rules --audit-type spec` (Groq, ADR 0014) → 👤 prüft: Qualitätsbericht überall 0, in `git diff data/knowledge_base/rules_spec.json` kommt keine Regel-ID dazu und keine fällt weg (Auswahl unverändert) → 🤖 notiert Requests, Input- und Output-Tokens und die Retries des Prüfers aus `data/intermediate/logs/rules_spec.log` im Issue → 👤 committet das Log zusammen mit `rules_spec.json`
 - [x] **Messen** 👤 `/audit-messen spec-wohngeld-openapi je 2× mit Bedrock und Groq, spec-meldeportal-gesundheit mit Bedrock und Groq, arch-antragseingang-fehlerhaft mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Schwankung je Modell (Prüfregeln mit anderem Status zwischen Lauf 1 und 2)
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #29`
-- [ ] **Verstehen** 👤 `/verstehen 29` (Kernfrage: warum ein Verstoßkriterium in der offenen Welt eine Festlegung beschreiben muss)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #29`
+- [-] **Verstehen** 👤 `/verstehen 29` (Kernfrage: warum ein Verstoßkriterium in der offenen Welt eine Festlegung beschreiben muss)
+- [x] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** `spec-wohngeld-openapi` mit beiden Modellen in je zwei Läufen WARN zeigt, `spec-meldeportal-gesundheit` Art. 9 und M60.P01 als FAIL behält, `arch-antragseingang-fehlerhaft` sein `expected` erfüllt und die Schwankung im Issue steht.
+**Fertig, wenn:** `spec-wohngeld-openapi` mit Bedrock in zwei Läufen WARN zeigt und die Schwankung im Issue steht. Groq und M60.P01 folgen in #31, die Gegenproben mit Bedrock in #32.
 **Fürs Fachgespräch:** Offene und geschlossene Welt, Datenqualität der Wissensbasis vor Prompt-Tricks.
 
 ---
@@ -455,7 +455,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ### Schritt 10f – #31 Spec-Audit mit Groq: FAIL mit Fehlen-Begründung trotz Festlegungs-Kriterium
 
-**Ziel:** Groq vergibt im Spec-Audit kein FAIL, das nur ein Fehlen begründet. Mit dem Katalog aus #29 vergibt Groq bei `spec-wohngeld-openapi` 12 FAILs, Bedrock keins.
+**Ziel:** Groq vergibt im Spec-Audit kein FAIL, das nur ein Fehlen begründet.
 **Voraussetzung:** Schritt 10d (neuer Spec-Katalog). Schritt 11 hängt nicht davon ab. Wird es knapp, rutscht 10f hinter Schritt 11, oder Groq fällt zur Laufzeit weg (ADR 0016).
 
 - [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #31: Prompt, Gate, Prüfer zur Laufzeit oder Groq streichen?` (Prompt-Design und Kosten sind Weichenstellungen)

@@ -27,6 +27,7 @@ _Ergänzt [ADR 0017](0017-beleg-per-zeilenverweis.md). Umsetzung und Messungen: 
 - Der Formulier-Prompt fürs Spec-Audit verlangt als `violation_if` eine Festlegung, auch einen erklärten Verzicht oder Aufschub. Im Build prüft ein **LLM-Prüfer** (`judge_violation`) jedes Spec-`violation_if`. Beschreibt es ein Fehlen, geht seine Begründung als Retry an den Formulierer. Scheitert der Prüfer, bricht der Build ab (fail closed).
 - Verworfen: eine Sperrliste („kein“, „fehlt“, „vage“). Sie schließt aus Wörtern auf die Bedeutung. „legt nicht fest“ und „legt fest, dass … nicht“ unterscheiden sich nur in der Wortstellung, und jede neue Umschreibung bräuchte einen neuen Eintrag.
 - Konsequenz: Ein LLM prüft ein LLM, das Urteil ist nicht reproduzierbar. Deshalb läuft der Prüfer nur im Build, die Zeile `spec quality judge` zählt seine Treffer, und den Beweis liefert weiter die Messung gegen `expected`. Er kostet einen Request je gültigen Entwurf, im ersten Lauf 245 von 619 Requests des Spec-Builds.
+- Jeder Retry und jeder Abbruch zählt genau einmal, und zwar bei dem Schritt, der ihn ausgelöst hat: Treffer und Ausfälle des Prüfers zählen nur bei `judge`, Schema- und Code-Fehler nur bei `formulate`. Lehnt der Prüfer bis zum Limit ab, ist das ein `llm_error` bei `formulate`, denn der Formulierer hat keine gültige Regel geliefert.
 
 ## Fachgespräch-Satz
 

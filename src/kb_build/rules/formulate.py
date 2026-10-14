@@ -11,7 +11,6 @@ from pydantic_ai.models import Model
 from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, Rule, RuleCatalog, RuleDraft
-from govguard.text import normalize
 from kb_build.extract.models import ExtractedSource, Requirement
 from kb_build.gates import (
     Anchors,
@@ -19,6 +18,7 @@ from kb_build.gates import (
     check_rules,
     invalid_cross_references,
     is_quoted,
+    quote_deviation,
     requirements_by_anchor,
     usage_line,
 )
@@ -48,7 +48,8 @@ class FormulateDeps:
     anchors: Anchors  # every requirement of every source, for the cross references
     properties: PropertyIndex  # real properties per type, for the invented ones
     scope: Scope  # criteria may name nothing else (#19)
-    counts: GateCounts = field(default_factory=GateCounts)  # shared by all rules of one run (#27)
+    # Per rule, the run sums them up; each retry counts once, at the gate that sent it back
+    counts: GateCounts = field(default_factory=GateCounts)  # schema and code problems (#27)
     judge_counts: GateCounts = field(default_factory=GateCounts)  # absences sent back (#29)
 
 
@@ -65,18 +66,6 @@ def _instructions(ctx: RunContext[FormulateDeps]) -> str:
     return PROMPTS[ctx.deps.audit_type]
 
 
-def _deviation(text: str, quote: str) -> str:
-    """Where the quote leaves the text: the longest quoted start found, then both continuations."""
-    words, text = normalize(quote).split(" "), normalize(text)
-    for n in range(len(words) - 1, 0, -1):
-        start = text.find(" ".join(words[:n]))
-        if start >= 0:
-            rest = text[start + len(" ".join(words[:n])):].split()
-            return (f"Ab „{' '.join(words[n:n + 5])}“ weicht es ab; im Text steht dort "
-                    f"„{' '.join(rest[:5])}“.")
-    return "Schon der Anfang des Zitats fehlt im Text."
-
-
 @formulate_agent.output_validator
 async def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDraft:
     """Same checks as the gate, but early: the model gets a second chance (ADR 0005)."""
@@ -89,8 +78,13 @@ async def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDra
         logger.info("%s %s %s retry %d: %s", deps.audit_type, deps.selected.source,
                     deps.requirement.id, ctx.retry + 1, reason)
         raise ModelRetry(reason)
-    ctx.deps.counts.retries += ctx.retry  # an accepted answer after n retries cost n retries
+    _count_own_retries(ctx)
     return draft
+
+
+def _count_own_retries(ctx: RunContext[FormulateDeps]) -> None:
+    """n retries so far: the judge's are counted by the judge, the rest by formulate."""
+    ctx.deps.counts.retries += ctx.retry - ctx.deps.judge_counts.retries
 
 
 async def _absence_problems(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> list[str]:
@@ -98,11 +92,13 @@ async def _absence_problems(ctx: RunContext[FormulateDeps], draft: RuleDraft) ->
     try:
         check = await judge_violation(draft.violation_if, ctx.model, ctx.usage)
     except UnexpectedModelBehavior:  # fail closed: _complete_rule aborts the build
+        _count_own_retries(ctx)
         ctx.deps.judge_counts.llm_errors += 1
         raise
     if not check.describes_absence:
         return []
-    ctx.deps.judge_counts.retries += 1
+    if ctx.retry < FORMULATE_RETRIES:  # the last rejection aborts instead of retrying
+        ctx.deps.judge_counts.retries += 1
     return [f"„violation_if“ „{draft.violation_if}“ beschreibt ein Fehlen: {check.reason} "
             "In der offenen Welt ist Fehlen nur WARN. Beschreibe eine Festlegung der "
             "Spezifikation, die der Anforderung widerspricht, auch einen erklärten Verzicht "
@@ -112,7 +108,7 @@ async def _absence_problems(ctx: RunContext[FormulateDeps], draft: RuleDraft) ->
 def _code_problems(deps: FormulateDeps, draft: RuleDraft) -> list[str]:
     problems = []
     if not is_quoted(deps.requirement, draft.source_quote):
-        deviation = _deviation(deps.requirement.text, draft.source_quote)
+        deviation = quote_deviation(deps.requirement.text, draft.source_quote)
         problems.append(f"Das Zitat steht nicht wörtlich im Text in <anforderung>. {deviation}")
     if deps.audit_type == "architecture":
         problems += criteria_problems(
@@ -145,8 +141,9 @@ def _complete_rule(deps: FormulateDeps, model: Model, total: RunUsage) -> Rule:
     try:  # one usage per call: Pydantic AI checks its request limit against it
         draft = formulate_rule(deps, model, usage)
     except UnexpectedModelBehavior as error:  # fail closed: no rule may silently go missing
-        deps.counts.retries += FORMULATE_RETRIES  # every retry was spent
-        deps.counts.llm_errors += 1
+        if not deps.judge_counts.llm_errors:  # a failed judge has counted already
+            deps.counts.retries += FORMULATE_RETRIES - deps.judge_counts.retries  # all spent
+            deps.counts.llm_errors += 1
         raise ValueError(f"{selected.source} {requirement.id}: no valid rule: {error}") from error
     finally:
         total.incr(usage)  # failed retries cost tokens too
@@ -159,6 +156,14 @@ def _complete_rule(deps: FormulateDeps, model: Model, total: RunUsage) -> Rule:
     )
 
 
+def _log_quality(audit_type: AuditType, started: list[FormulateDeps]) -> None:
+    """Quality report of the run: each rule counted its own retries, here they add up."""
+    logger.info(sum((d.counts for d in started), GateCounts()).line(audit_type, "formulate"))
+    if audit_type == "spec":  # architecture rules are never judged
+        judge = sum((d.judge_counts for d in started), GateCounts())
+        logger.info(judge.line(audit_type, "judge"))
+
+
 def formulate_rules(
     model: Model, selection: Selection, sources: list[ExtractedSource],
     properties: PropertyIndex, scope: Scope,
@@ -166,20 +171,18 @@ def formulate_rules(
     """One rule per selected requirement, in selection order; then the gate (ARCHITECTURE 1)."""
     anchors = requirements_by_anchor(sources)
     by_id = {(s.source, r.id): r for s in sources for r in s.requirements}
-    rules, counts, judge_counts, usage = [], GateCounts(), GateCounts(), RunUsage()
+    rules, started, usage = [], [], RunUsage()
     try:
         for n, selected in enumerate(selection.selected, start=1):
             requirement = by_id[(selected.source, selected.requirement_id)]
-            deps = FormulateDeps(selection.audit_type, selected, requirement, anchors,
-                                 properties, scope, counts, judge_counts)
-            rules.append(_complete_rule(deps, model, usage))
+            started.append(FormulateDeps(selection.audit_type, selected, requirement, anchors,
+                                         properties, scope))
+            rules.append(_complete_rule(started[-1], model, usage))
             logger.info("%s %d/%d %s", selection.audit_type, n, len(selection.selected),
                         rules[-1].id)
     finally:  # an llm_error aborts the build; the quality report still counts it
         logger.info(usage_line(selection.audit_type, usage))
-        logger.info(counts.line(selection.audit_type, "formulate"))
-        if selection.audit_type == "spec":  # architecture rules are never judged
-            logger.info(judge_counts.line(selection.audit_type, "judge"))
+        _log_quality(selection.audit_type, started)
     used = {s.source for s in selection.selected}
     catalog = RuleCatalog(
         audit_type=selection.audit_type, model_id=model.model_name, rules=rules,

@@ -36,6 +36,8 @@ PROPERTIES = PropertyIndex({  # stands in for data/input/cfn_properties.json
 
 
 SCOPE = Scope({"S3": ["AWS::S3::Bucket"], "KMS": ["AWS::KMS::Key"]})
+ABSENCE = "Die Spezifikation nennt kein maschinenlesbares Exportformat."
+STIPULATION = "Die Spezifikation legt als Exportformat nur PDF fest."
 
 
 def run_formulate(model, selection, sources):
@@ -181,10 +183,6 @@ def test_architecture_criteria_without_a_resource_type_of_the_rule_are_sent_back
     assert "AWS::S3::Bucket, AWS::KMS::Key" in sent_back[0]
 
 
-ABSENCE = "Die Spezifikation nennt kein maschinenlesbares Exportformat."
-STIPULATION = "Die Spezifikation legt als Exportformat nur PDF fest."
-
-
 def spec_llm(drafts: list[dict], sent_back: list[str] | None = None,
              judged: list[str] | None = None,
              instructions: list[str] | None = None) -> FunctionModel:
@@ -240,6 +238,55 @@ def test_the_run_reports_how_often_the_judge_sent_an_absence_back(
         run_formulate(spec_llm(drafts), SPEC_SELECTION, [DSGVO])
 
     assert "spec quality judge: retries=1 llm_error=0" in [r.getMessage() for r in caplog.records]
+
+
+def quality_lines(caplog: pytest.LogCaptureFixture) -> list[str]:
+    return [r.getMessage() for r in caplog.records if " quality " in r.getMessage()]
+
+
+def test_each_retry_counts_once_at_the_gate_that_sent_it_back(
+    caplog: pytest.LogCaptureFixture
+) -> None:
+    # no double counting: formulate and judge are separate lines of the quality report
+    drafts = [draft("Art. 32", source_quote="erfunden", violation_if=STIPULATION),
+              draft("Art. 32", violation_if=ABSENCE), draft("Art. 32", violation_if=STIPULATION)]
+
+    with caplog.at_level("INFO", logger="kb_build"):
+        run_formulate(spec_llm(drafts), SPEC_SELECTION, [DSGVO])
+
+    assert quality_lines(caplog) == ["spec quality formulate: retries=1 llm_error=0",
+                                     "spec quality judge: retries=1 llm_error=0"]
+
+
+def test_a_judge_rejecting_every_attempt_aborts_the_build_and_counts_each_retry_once(
+    caplog: pytest.LogCaptureFixture
+) -> None:
+    # the last rejection aborts instead of retrying; the formulator failed, not the judge
+    drafts = [draft("Art. 32", violation_if=ABSENCE)] * (FORMULATE_RETRIES + 1)
+
+    with (caplog.at_level("INFO", logger="kb_build"),
+          pytest.raises(ValueError, match="DSGVO Art. 32")):
+        run_formulate(spec_llm(drafts), SPEC_SELECTION, [DSGVO])
+
+    assert quality_lines(caplog) == [
+        "spec quality formulate: retries=0 llm_error=1",
+        f"spec quality judge: retries={FORMULATE_RETRIES} llm_error=0"]
+
+
+def test_the_quality_report_sums_the_retries_of_all_rules(
+    caplog: pytest.LogCaptureFixture
+) -> None:
+    wrong = {rid: draft(rid, source_quote="erfunden") for rid in ("3.1.4", "DET.3.1")}
+    llm = fake_llm({rid: [wrong[rid], draft(rid)] for rid in wrong})
+    selection = arch_selection("3.1.4")
+    selection.selected.append(SelectedRequirement(
+        requirement_id="DET.3.1", source="BSI", rationale="prüfbar",
+        cfn_resource_types=["AWS::S3::Bucket"]))
+
+    with caplog.at_level("INFO", logger="kb_build"):
+        run_formulate(llm, selection, SOURCES)
+
+    assert quality_lines(caplog) == ["architecture quality formulate: retries=2 llm_error=0"]
 
 
 def test_the_run_logs_the_tokens_of_every_request_retries_and_judge_included(
@@ -307,7 +354,9 @@ def test_a_judge_that_stays_invalid_aborts_the_build_and_names_the_requirement(
           pytest.raises(ValueError, match="DSGVO Art. 32")):
         run_formulate(FunctionModel(respond), SPEC_SELECTION, [DSGVO])
 
-    assert "spec quality judge: retries=0 llm_error=1" in [r.getMessage() for r in caplog.records]
+    # the judge failed, not the formulator: the error counts once, at the judge
+    assert quality_lines(caplog) == ["spec quality formulate: retries=0 llm_error=0",
+                                     "spec quality judge: retries=0 llm_error=1"]
 
 
 def test_an_architecture_violation_may_describe_a_missing_setting_the_judge_is_not_asked() -> None:
