@@ -41,6 +41,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 9e      | A    | #21 Groq als Build-Standard     | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 9f      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                                        | 👤                         |
 | 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
+| 10a     | A    | #24 Pflichtanker stabil         | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 11      | A    | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 12      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
 | 13      | A    | #11 Deploy + UI                 | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
@@ -337,10 +338,27 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
+### Schritt 10a – #24 Pflichtanker ohne Nachwürfeln auswählen
+
+**Ziel:** Ein `select`-Lauf ohne Cache besteht das Pflichtanker-Gate ohne Handeingriff. Bei #19 wurden CIS 3.1.4 und BSI BER.4.1 von Hand neu beurteilt; in der Probe vom 14.10. kippt CIS 3.1.4 in 1 von 5 Läufen auf `account`.
+**Voraussetzung:** Schritt 9e. Kommt vor #8: Ohne diese Regel bricht ein voller Architektur-Lauf im Workflow etwa jedes fünfte Mal am Pflichtanker-Gate ab; der Cache ist seit 38b3128 ungültig.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #24 umsetzen` → Plan → Go (Gate-Design ist eine Weichenstellung)
+      Reihenfolge: Test in `tests/test_curation.py` → Pflichtanker übersteuern `scope_level` auf `template` mit festem Satz im Auswahlprotokoll → ADR
+- [ ] **Echter Lauf** 🤖 👤 „Erzeuge die Architektur-Auswahl neu“ (`select --audit-type architecture`, ohne Flag = Groq). 👤 Prüfe: Beide Gates grün, kein Cache-Eintrag von Hand gelöscht?
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #24`
+- [ ] **Verstehen** 👤 `/verstehen 24` (Kernfrage: warum ein Preset das Urteil des LLM übersteuern darf, aber nur beim `scope_level`)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Ein Lauf ohne Cache beide Gates besteht und das ADR die Regel festhält.
+**Fürs Fachgespräch:** Reproduzierbarkeit, Testorakel als Quelle der Wahrheit, „Das LLM urteilt, der Code wählt aus“.
+
+---
+
 ### Schritt 11 – #8 Preset-Gate und Build-Workflow
 
 **Ziel:** Der Build der Wissensbasis läuft per Knopfdruck in GitHub Actions und öffnet nur bei Grün einen Pull Request.
-**Voraussetzung:** Schritte 8, 9e und 10.
+**Voraussetzung:** Schritte 8, 9e, 10 und 10a.
 
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #8 umsetzen` → Plan → Go
       Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Hash-Check; den Soll-Archetyp prüft erst #10) → `python -m kb_build` → `build-kb.yml` ohne Logik

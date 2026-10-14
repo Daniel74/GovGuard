@@ -18,7 +18,7 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 
 ## Arbeitsweise: ein Go pro Ticket
 
-1. Zeig zu Beginn den Plan des Tickets: die TDD-Zyklen als nummerierte Liste, je eine Zeile (was, welche Datei).
+1. Erkläre zu Beginn das Ticket für einen IT-Junior (max. 5 Zeilen): *Problem heute* (was fehlt oder geht schief), *Beispiel* (Eingabe → Ergebnis vorher/nachher), *Was neu entsteht* (Dateien/Funktionen in Alltagssprache), *Wo die Weiche liegt*. Danach der Plan: die TDD-Zyklen als nummerierte Liste, je eine Zeile (was, welche Datei).
 2. Nach meinem **Go** arbeite alle Zyklen am Stück ab. Halte nur an einer **Weichenstellung** an: IAM, Verschlüsselung, Netzwerk, Datenresidenz, Kosten-Trade-off, Prompt-Design. Oder wenn ein Test nach zwei Anläufen rot bleibt.
 3. Zum Schluss: geänderte Dateien, Ergebnis von pytest und ruff, offene Kriterien.
 
