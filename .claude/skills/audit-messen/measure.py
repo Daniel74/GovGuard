@@ -5,6 +5,7 @@ Report JSON -> stdout, measurements -> stderr.
 """
 
 import json
+import os
 import sys
 import time
 
@@ -34,29 +35,43 @@ class Measuring(WrapperModel):
         response = await super().request(messages, model_settings, model_request_parameters)
         self.calls.append((time.perf_counter() - start, response.usage.input_tokens,
                            response.usage.output_tokens, bool(retry)))
-        self.rejected += [f"{f['rule_id']}: {f['evidence']!r}" for f in _findings(response)
-                          if f.get("evidence") and not contains_quote(INPUT, f["evidence"])]
+        self.rejected += [f"{f.get('rule_id')}: {f['evidence']!r}" for f in _findings(response)
+                          if isinstance(f, dict) and isinstance(f.get("evidence"), str)
+                          and not contains_quote(INPUT, f["evidence"])]
         return response
 
 
 def _findings(response) -> list[dict]:
-    """Tool args of submit_audit; tolerate findings sent as JSON strings."""
+    """Tool args of submit_audit; the model sometimes sends findings as a (broken) JSON string."""
     found = []
     for part in response.parts:
         if isinstance(part, ToolCallPart):
             items = part.args_as_dict().get("findings", [])
-            items = json.loads(items) if isinstance(items, str) else items
-            found += [json.loads(i) if isinstance(i, str) else i for i in items]
+            try:
+                items = json.loads(items) if isinstance(items, str) else items
+                found += [json.loads(i) if isinstance(i, str) else i for i in items]
+            except ValueError:
+                print("UNPARSEABLE findings: sent as a string with invalid JSON", file=sys.stderr)
     return found
 
 
-model = Measuring(bedrock_model())
+def _model_and_prices() -> tuple:
+    """MEASURE_MODEL=groq: comparison only, Groq is not allowed at runtime (ADR 0001)."""
+    if os.getenv("MEASURE_MODEL") == "groq":
+        from kb_build.groq_services import groq_model
+        return groq_model(), 0.15e-6, 0.60e-6  # gpt-oss-120b, Groq model docs
+    return bedrock_model(), 1.10e-6, 5.50e-6  # Haiku 4.5 eu. profile: +10 % on 1 $/5 $
+
+
+wrapped, price_in, price_out = _model_and_prices()
+model = Measuring(wrapped)
 start = time.perf_counter()
 code = cli.main(sys.argv[1:], model=model)
 wall = time.perf_counter() - start
 tokens_in = sum(c[1] for c in model.calls)
 tokens_out = sum(c[2] for c in model.calls)
-cost = tokens_in * 1.10e-6 + tokens_out * 5.50e-6  # Haiku 4.5 eu. profile: +10 % on 1 $/5 $
+cost = tokens_in * price_in + tokens_out * price_out
+print(f"model={model.model_name}", file=sys.stderr)
 print(f"exit={code} wall={wall:.1f}s calls={len(model.calls)} input_tokens={tokens_in} "
       f"output_tokens={tokens_out} cost_usd={cost:.2f}", file=sys.stderr)
 for seconds, t_in, t_out, is_retry in sorted(model.calls):

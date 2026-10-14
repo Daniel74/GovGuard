@@ -19,6 +19,8 @@ Jeder Lauf kostet echtes Geld (Kosten-Weiche, CLAUDE.md). Die CLI kennt nur `spe
 
 ## Fallstricke
 
+- Modellvergleich: `MEASURE_MODEL=groq` nimmt `groq_model()` aus dem Build (Key per `set -a; source .env`). Nur mit fiktiven Presets; zur Laufzeit ist Groq verboten (ADR 0001). Groq meldet hier 0 Tokens, die Kostenzeile gilt dann nicht.
+
 - Scheitert ein Paket endgültig, bricht `asyncio.run` die übrigen ab. `calls` zählt dann nur fertige Aufrufe; Bedrock berechnet abgebrochene trotzdem. Die Zahl der Retry-Prompts zeigt, wie viele Pakete wirklich Probleme hatten.
 - Preise: Haiku 4.5 kostet 1 $ / 5 $ je Mio. Tokens, das `eu.`-Profil 10 % mehr (Anthropic-Preisdoku). Ändert sich `MODEL_ID` in `aws_services.py`, die Preiszeile in `measure.py` anpassen.
 - Basislinie 14.10.2026, `spec-wohngeld-openapi` (84 KB, 151 Regeln, 16 Pakete): ca. 39 s, 32 Tsd. Input-Tokens je Aufruf, langsamster Aufruf 37 s, ca. 0,90 $, fail closed wegen zusammengesetzter Belege.
