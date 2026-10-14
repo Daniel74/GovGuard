@@ -24,6 +24,7 @@ class Measuring(WrapperModel):
         super().__init__(wrapped)
         self.calls: list[tuple[float, int, int, bool]] = []  # seconds, input, output, is_retry
         self.retries: list[str] = []
+        self.schema_retries = 0  # PROTOTYPE #26: schema violations, not content problems
         self.rejected: list[str] = []  # evidence that contains_quote() will reject
 
     async def request(self, messages, model_settings, model_request_parameters):
@@ -31,6 +32,7 @@ class Measuring(WrapperModel):
         retry = [p for p in last.parts if isinstance(p, RetryPromptPart)] \
             if isinstance(last, ModelRequest) else []
         self.retries += [p.model_response() for p in retry]
+        self.schema_retries += sum(isinstance(p.content, list) for p in retry)  # pydantic errors
         start = time.perf_counter()
         response = await super().request(messages, model_settings, model_request_parameters)
         self.calls.append((time.perf_counter() - start, response.usage.input_tokens,
@@ -63,6 +65,10 @@ def _model_and_prices() -> tuple:
     return bedrock_model(), 1.10e-6, 5.50e-6  # Haiku 4.5 eu. profile: +10 % on 1 $/5 $
 
 
+if os.getenv("MEASURE_EVIDENCE") == "ref":  # PROTOTYPE #26: evidence by line reference
+    from govguard import audit_engine, proto_evidence_ref
+    audit_engine._ask_model = proto_evidence_ref.ask_model_by_ref
+
 wrapped, price_in, price_out = _model_and_prices()
 model = Measuring(wrapped)
 start = time.perf_counter()
@@ -77,7 +83,8 @@ print(f"exit={code} wall={wall:.1f}s calls={len(model.calls)} input_tokens={toke
 for seconds, t_in, t_out, is_retry in sorted(model.calls):
     print(f"  call {seconds:5.1f}s in={t_in} out={t_out}{' RETRY' if is_retry else ''}",
           file=sys.stderr)
-print(f"retry prompts sent: {len(model.retries)}", file=sys.stderr)
+print(f"retry prompts sent: {len(model.retries)} (schema: {model.schema_retries}) "
+      f"output_tokens_per_call={tokens_out / max(len(model.calls), 1):.0f}", file=sys.stderr)
 for text in model.retries:
     print(f"--- retry prompt ---\n{text}", file=sys.stderr)
 for line in model.rejected:
