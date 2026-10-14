@@ -429,7 +429,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #29: Regeln, die nur ein Fehlen kennen` (Prompt-Design ist eine Weichenstellung) → 🤖 übernimmt die Messkriterien aus #28 ins Issue: Gegenprobe `arch-antragseingang-fehlerhaft`, Schwankung
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #29 umsetzen` → Plan → Go
 - [x] **Echter Lauf** 🤖 👤 `python -m kb_build rules --audit-type spec` (Groq, ADR 0014) → 👤 prüft: Qualitätsbericht überall 0, in `git diff data/knowledge_base/rules_spec.json` kommt keine Regel-ID dazu und keine fällt weg (Auswahl unverändert) → 🤖 notiert Requests, Input- und Output-Tokens und die Retries des Prüfers aus `data/intermediate/logs/rules_spec.log` im Issue → 👤 committet das Log zusammen mit `rules_spec.json`
-- [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi je 2× mit Bedrock und Groq, spec-meldeportal-gesundheit mit Bedrock und Groq, arch-antragseingang-fehlerhaft mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Schwankung je Modell (Prüfregeln mit anderem Status zwischen Lauf 1 und 2)
+- [x] **Messen** 👤 `/audit-messen spec-wohngeld-openapi je 2× mit Bedrock und Groq, spec-meldeportal-gesundheit mit Bedrock und Groq, arch-antragseingang-fehlerhaft mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Schwankung je Modell (Prüfregeln mit anderem Status zwischen Lauf 1 und 2)
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #29`
 - [ ] **Verstehen** 👤 `/verstehen 29` (Kernfrage: warum ein Verstoßkriterium in der offenen Welt eine Festlegung beschreiben muss)
 - [ ] **Abschließen** 👤 committet und pusht
@@ -450,6 +450,39 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Fertig, wenn:** Jeder Retry in `select` und `rules` mit Anforderung und Grund im Build-Log steht und Antworten aus dem Cache keine Zeile erzeugen.
 **Fürs Fachgespräch:** Nachvollziehbarkeit auch im Build, nicht nur im Audit-Report.
+
+---
+
+### Schritt 10f – #31 Spec-Audit mit Groq: FAIL mit Fehlen-Begründung trotz Festlegungs-Kriterium
+
+**Ziel:** Groq vergibt im Spec-Audit kein FAIL, das nur ein Fehlen begründet. Mit dem Katalog aus #29 vergibt Groq bei `spec-wohngeld-openapi` 12 FAILs, Bedrock keins.
+**Voraussetzung:** Schritt 10d (neuer Spec-Katalog). Schritt 11 hängt nicht davon ab. Wird es knapp, rutscht 10f hinter Schritt 11, oder Groq fällt zur Laufzeit weg (ADR 0016).
+
+- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #31: Prompt, Gate, Prüfer zur Laufzeit oder Groq streichen?` (Prompt-Design und Kosten sind Weichenstellungen)
+- [ ] **Diagnose** 👤 `/audit-messen spec-wohngeld-openapi mit Groq und einem Katalog nur aus den 12 Regeln in #31`
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #31 umsetzen` → Plan → Go
+- [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi 2× mit Groq, spec-meldeportal-gesundheit mit Groq` → 🤖 notiert im Issue die Ergebnisse gegen `expected`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #31`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** `spec-wohngeld-openapi` mit Groq in zwei Läufen WARN zeigt, Art. 9 bei `spec-meldeportal-gesundheit` FAIL bleibt und keine Änderung auf ein einzelnes Preset zielt.
+**Fürs Fachgespräch:** Modellwahl als Qualitätsfrage, Überanpassung an das Testorakel vermeiden.
+
+---
+
+### Schritt 10g – #32 Audit fail closed nach Retry: Modell korrigiert den Status, aber nicht die Pflichtfelder
+
+**Ziel:** Die Gegenproben `arch-antragseingang-fehlerhaft` und `spec-meldeportal-gesundheit` liefern mit Bedrock wieder einen Audit-Report, statt nach einem Retry fail closed abzubrechen.
+**Voraussetzung:** Schritt 10d (Messungen in #29). Schritt 11 hängt nicht davon ab, aber die Demo braucht Gegenproben mit Ergebnis.
+
+- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #32: Retry-Prompt mit Pflichtfeldern oder Empfehlung aus der Prüfregel; doppelte Befunde` (Prompt-Design ist eine Weichenstellung)
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #32 umsetzen` → Plan → Go
+- [ ] **Messen** 👤 `/audit-messen arch-antragseingang-fehlerhaft mit Bedrock, spec-meldeportal-gesundheit 2× mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #32`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Beide Gegenproben mit Bedrock `expected` erfüllen und kein Befund ohne Pflichtfelder in den Report kommt.
+**Fürs Fachgespräch:** Fail closed als Sicherheitsprinzip und seine Kosten für die Verfügbarkeit, „Was der Code weiß, fragt man das Modell nicht“.
 
 ---
 
