@@ -55,6 +55,7 @@ inventory_agent = Agent(
                            description="Gib die erkannten Ressourcentypen mit Beleg ab."),
     instructions=INVENTORY_PROMPT,
     deps_type=InventoryDeps,
+    model_settings={"temperature": 0},  # a missed service flips its rules to N/A (#28)
     retries=1,  # exactly one retry, like the audit
 )
 

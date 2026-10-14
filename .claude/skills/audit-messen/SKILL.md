@@ -16,6 +16,13 @@ Jeder Lauf kostet echtes Geld (Kosten-Weiche, CLAUDE.md). Die CLI kennt `spec` u
    ```
 
 4. **Berichten.** Fertig ist der Bericht, wenn er nennt: Modell, Exit-Code, Gesamtzeit gegen den Lambda-Timeout von 180 s (ADR 0018), langsamsten Aufruf, Aufrufe, Tokens, Output-Tokens je Aufruf, Kosten, Retry-Prompts (davon Schema) und bei Exit 2 die Retry-Gründe. Bei Exit 0 den Report mit `expected` aus `preset.json` vergleichen.
+5. **Schwankung (bei zwei Läufen).** Zahl der Prüfregeln mit anderem Status zwischen zwei Reports (#28, ADR 0020):
+
+   ```bash
+   uv run python -c "import json,sys; a,b=(json.load(open(p))['findings'] for p in sys.argv[1:]); \
+   s={f['rule_id']:f['status'] for f in a}; print(sum(s[f['rule_id']]!=f['status'] for f in b))" \
+     <scratchpad>/report1.json <scratchpad>/report2.json
+   ```
 
 ## Fallstricke
 

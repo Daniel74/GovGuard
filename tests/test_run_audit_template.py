@@ -4,7 +4,7 @@ import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from govguard.audit_engine import AuditValidationError, run_audit
+from govguard.audit_engine import SPEC_FAIL_RULE, AuditValidationError, run_audit
 from govguard.inventory import NA_FORBIDDEN
 
 S3_PASS = {"rule_id": "ARCH-CIS-3.1.4", "status": "PASS", "line_start": 7, "line_end": 7,
@@ -32,6 +32,18 @@ def test_rules_without_matching_resource_type_get_na_by_code(
     assert report.overall_status == "PASS"
     assert "ARCH-CIS-3.3.1" not in prompts[0]
     assert NA_FORBIDDEN in prompts[0]
+
+
+def test_architecture_prompt_keeps_fail_for_a_missing_setting(
+    arch_catalog, bucket_template, trace
+) -> None:
+    prompts: list[str] = []
+
+    run_audit(arch_catalog, bucket_template, fake(S3_PASS, prompts), trace)
+
+    # A template is a blueprint: a missing setting means the default, a violation (ADR 0020)
+    assert SPEC_FAIL_RULE not in prompts[0]
+    assert "was fehlt" not in prompts[0]
 
 
 def test_model_must_not_answer_na_when_resource_type_is_present(

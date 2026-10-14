@@ -2,7 +2,7 @@ import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse, RetryPromptPart, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from govguard.audit_engine import AuditValidationError, run_audit
+from govguard.audit_engine import SPEC_FAIL_RULE, AuditValidationError, run_audit
 from govguard.evidence import UNPROVEN_PASS
 from govguard.inventory import NA_FORBIDDEN
 
@@ -78,6 +78,16 @@ def test_spec_prompt_allows_na(spec_catalog, spec_input, trace) -> None:
     run_audit(spec_catalog, spec_input, answer_in_turns([PASS_32, WARN_9], seen=seen), trace)
 
     assert NA_FORBIDDEN not in str(seen[0])
+
+
+def test_spec_prompt_allows_fail_only_for_a_violation_the_lines_lay_down(
+    spec_catalog, spec_input, trace
+) -> None:
+    seen: list = []
+
+    run_audit(spec_catalog, spec_input, answer_in_turns([PASS_32, WARN_9], seen=seen), trace)
+
+    assert SPEC_FAIL_RULE in str(seen[0])  # missing or vague is WARN (ADR 0020)
 
 
 def test_spec_audit_sends_templates_to_the_model(spec_catalog, bucket_template, trace) -> None:

@@ -142,6 +142,22 @@ def test_na_retry_does_not_claim_an_always_applicable_type_is_in_the_input(
         in prompts[1]
 
 
+def test_pre_run_names_resource_types_at_temperature_zero(free_catalog, trace) -> None:
+    # a service seen in one run and missed in the next would flip its rules to N/A (#28)
+    settings: list = []
+
+    def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        tool = info.output_tools[0].name
+        if tool == "submit_inventory":
+            settings.append(info.model_settings)
+            return ModelResponse(parts=[ToolCallPart(tool, {"resource_types": [S3_SEEN]})])
+        return ModelResponse(parts=[ToolCallPart(tool, {"findings": [warn("ARCH-CIS-3.1.4")]})])
+
+    run_audit(free_catalog, FREE_TEXT, FunctionModel(respond), trace)
+
+    assert settings[0]["temperature"] == 0
+
+
 def test_report_is_sorted_by_resource_type(free_catalog, trace) -> None:
     rules = [*free_catalog.rules, arch_rule("1.1", "AWS::IAM::Role")]  # S3, DynamoDB, IAM
     catalog = free_catalog.model_copy(update={"rules": rules})

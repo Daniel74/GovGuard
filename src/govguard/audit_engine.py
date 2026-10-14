@@ -28,12 +28,17 @@ SYSTEM_PROMPT = f"""\
 Du bist ein Compliance-Prüfer für Behörden-IT. Bewerte die Eingabe gegen jede Prüfregel.
 - PASS: Einhaltung ist in der Eingabe belegt.
 - FAIL: Ein Verstoß ist in der Eingabe belegt.
-- WARN: Aus der Eingabe nicht entscheidbar; was fehlt, ist WARN, nicht FAIL.
+- WARN: Aus der Eingabe nicht entscheidbar.
 - N/A: Die Prüfregel ist auf die Eingabe nicht anwendbar.
 Jede Zeile der Eingabe beginnt mit ihrer Nummer, z. B. "12| ". Belege per Zeilenbereich:
 "line_start" und "line_end" nennen die Zeilen, die den Befund belegen (höchstens {MAX_SPAN} Zeilen).
 Bei PASS und FAIL sind sie Pflicht, sonst null.
 Bei WARN und FAIL ist "recommendation" Pflicht. Schreibe Begründungen auf Deutsch."""
+# Spec audit only: a template is a blueprint, there a missing setting is the default (ADR 0020)
+SPEC_FAIL_RULE = """\
+Spezifikation: FAIL nur, wenn die Belegzeilen einen Verstoß ausdrücklich festlegen, also \
+"violation_if" erfüllen. Fehlt eine Angabe oder bleibt sie vage, ist der Befund WARN, nicht FAIL. \
+Bei FAIL nennt "rationale" diese Festlegung."""
 
 PACKAGE_SIZE = 10  # rules per model call; 166 architecture rules -> 17 parallel calls
 GROQ_MAX_PARALLEL = 2  # ~110,000 tokens/min per slot measured (#26), Groq tier allows 250,000
@@ -55,6 +60,7 @@ _OUTPUT = {"name": "submit_audit", "description": "Gib genau einen Befund je Pr�
 # Bedrock: forced tool (ADR 0005); Groq: json_schema with constrained decoding (ADR 0016)
 _AGENTS = {
     system: Agent(output_type=output_type, instructions=SYSTEM_PROMPT, deps_type=AuditDeps,
+                  model_settings={"temperature": 0},  # same input, same status (#28)
                   retries=1)  # exactly one retry, keeps the audit within the 180 s (ADR 0018)
     for system, output_type in [("bedrock", ToolOutput(AuditResponse, **_OUTPUT)),
                                 ("groq", NativeOutput(AuditResponse, **_OUTPUT))]
@@ -80,8 +86,13 @@ def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditRespo
     return response
 
 
+def _status_rule(ctx: RunContext[AuditDeps]) -> str:
+    return SPEC_FAIL_RULE if ctx.deps.rules[0].audit_type == "spec" else ""  # one type per catalog
+
+
 for _agent in _AGENTS.values():  # the same gates for both models (ADR 0016)
     _agent.output_validator(_validate)
+    _agent.instructions(_status_rule)
 
 
 def overall_status(statuses: Iterable[Status]) -> Status:

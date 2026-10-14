@@ -409,9 +409,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** FAIL gibt es nur, wenn der Beleg einen Verstoß zeigt; was fehlt oder unklar ist, bleibt WARN. Im Prototyp zu #26 vergeben beide Modelle FAILs mit Beleg, die keinen Verstoß zeigen, deshalb verfehlt `spec-wohngeld-openapi` sein `expected` (WARN).
 **Voraussetzung:** Schritt 10a (Beleg per Verweis, Herabstufung von FAIL ohne Beleg).
 
-- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #28: Prompt, Feld oder Gate?` (Prompt-Design ist eine Weichenstellung)
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #28 umsetzen` → Plan → Go
-- [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi und spec-meldeportal-gesundheit, Bedrock und Groq` → 🤖 notiert die Ergebnisse gegen `expected` im Issue
+- [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #28: Prompt, Feld oder Gate?` (Prompt-Design ist eine Weichenstellung)
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #28 umsetzen` → Plan → Go
+- [] **Messen** 👤 `/audit-messen spec-wohngeld-openapi und spec-meldeportal-gesundheit, Bedrock und Groq` → 🤖 notiert die Ergebnisse gegen `expected` im Issue
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #28`
 - [ ] **Verstehen** 👤 `/verstehen 28` (Kernfrage: warum ein Beleg allein noch keinen Verstoß beweist)
 - [ ] **Abschließen** 👤 committet und pusht

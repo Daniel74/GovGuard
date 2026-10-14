@@ -48,3 +48,21 @@ def test_groq_gets_strict_native_output_instead_of_a_tool(spec_catalog, spec_inp
     assert (params.output_mode, params.output_object.strict) == ("native", True)
     assert seen[0].output_tools == []
     assert report.findings[0].evidence == "Alle Zugriffe erfolgen ausschließlich über TLS 1.3."
+
+
+def test_both_models_audit_at_temperature_zero(spec_catalog, spec_input, trace) -> None:
+    # #28: Groq gave about nine times as many FAILs as Bedrock; the spread is measured per run
+    seen: list[AgentInfo] = []
+
+    def bedrock(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        seen.append(info)
+        return ModelResponse(parts=[ToolCallPart("submit_audit", {"findings": FINDINGS})])
+
+    def groq(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        seen.append(info)
+        return ModelResponse(parts=[TextPart(json.dumps({"findings": FINDINGS}))])
+
+    run_audit(spec_catalog, spec_input, FunctionModel(bedrock), trace)
+    run_audit(spec_catalog, spec_input, GroqFake(groq, model_name="groq-fake"), trace)
+
+    assert [info.model_settings["temperature"] for info in seen] == [0, 0]
