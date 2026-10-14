@@ -13,7 +13,8 @@ from govguard.audit_engine import AuditValidationError, run_audit
 from govguard.aws_services import bedrock_model
 from govguard.models import RuleCatalog, Trace
 
-DEFAULT_CATALOG = Path("data/knowledge_base/rules_spec.json")
+SPEC_CATALOG = Path("data/knowledge_base/rules_spec.json")
+ARCH_CATALOG = Path("data/knowledge_base/rules_arch.json")
 
 
 def main(argv: list[str] | None = None, model: Model | None = None) -> int:
@@ -40,9 +41,14 @@ def main(argv: list[str] | None = None, model: Model | None = None) -> int:
 def _parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="govguard.cli", description="GovGuard Audit lokal")
     commands = parser.add_subparsers(dest="command", required=True)
-    spec = commands.add_parser("spec", help="Spec-Audit (DSGVO/SDM)")
-    spec.add_argument("file", type=Path, help="Spezifikation als Textdatei")
-    spec.add_argument("--catalog", type=Path, default=DEFAULT_CATALOG, help="rules_spec.json")
+    for name, help_text, file_help, catalog in [
+        ("spec", "Spec-Audit (DSGVO/SDM)", "Spezifikation als Textdatei", SPEC_CATALOG),
+        ("arch", "Architektur-Audit (BSI/CIS)", "CloudFormation-Template oder Freitext",
+         ARCH_CATALOG),
+    ]:
+        command = commands.add_parser(name, help=help_text)
+        command.add_argument("file", type=Path, help=file_help)
+        command.add_argument("--catalog", type=Path, default=catalog, help=catalog.name)
     return parser
 
 

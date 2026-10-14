@@ -9,8 +9,8 @@ from pydantic_ai import Agent, ModelRetry, NativeOutput, RunContext, ToolOutput
 from pydantic_ai.exceptions import ModelAPIError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
-from govguard.audit_gates import completeness_problems, field_problem
-from govguard.evidence import MAX_SPAN, evidence_of, numbered, without_unproven_fail
+from govguard.audit_gates import completeness_problems, field_problem, without_equal_duplicates
+from govguard.evidence import MAX_SPAN, evidence_of, numbered, without_unproven_verdict
 from govguard.inventory import resource_inventory
 from govguard.models import (
     AuditReport,
@@ -64,8 +64,9 @@ _AGENTS = {
 
 def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditResponse:
     """Downgrade first, then check: what the code can fix needs no retry (ADR 0017)."""
-    text = ctx.deps.input_text
-    response = AuditResponse(findings=[without_unproven_fail(f, text) for f in response.findings])
+    text, last = ctx.deps.input_text, ctx.last_attempt
+    response = AuditResponse(findings=without_equal_duplicates(
+        [without_unproven_verdict(f, text, last) for f in response.findings]))
     expected = {rule.id for rule in ctx.deps.rules}
     problems = completeness_problems(expected, response.findings)
     problems += [p for f in response.findings if (p := field_problem(f, ctx.deps.input_text))]

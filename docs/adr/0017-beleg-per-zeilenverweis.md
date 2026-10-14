@@ -34,6 +34,13 @@ _Ergänzt [ADR 0005](0005-pydantic-ai.md) und [ADR 0016](0016-groq-zur-laufzeit-
 - Entscheidung: Nur PASS braucht einen brauchbaren Bereich. Bei WARN, FAIL und N/A zählt jeder unbrauchbare Bereich (ungültig, umgedreht, zu groß, zu kurz) als „kein Bereich“, ohne Retry. Ein FAIL ohne Bereich wird wie bisher WARN. Das ersetzt die Einzelregel „zu groß“ aus dem ersten Nachtrag.
 - Zeigt ein FAIL auf Zeilen, die es nicht gibt, stuft der Code ihn herab. Das ist die sichere Richtung. Die Abbruchmeldung nennt jetzt den Status (`Art.12 (PASS): …`).
 
+## Nachtrag 14.10.2026 – PASS ohne Beleg nach dem Retry wird WARN
+
+- Messung nach der Diagnose: fail closed, weil Haiku für `SPEC-SDM-M51.D01` PASS vergab und auch im Retry keinen brauchbaren Bereich fand (`516-887`, dann `516-90`). 3 andere PASS hat der Retry repariert.
+- Entscheidung: PASS ohne brauchbaren Bereich bekommt weiter einen Retry. Bleibt er auch im letzten Versuch unbelegt, stuft der Code ihn auf WARN herab, statt das Audit abzubrechen. Er setzt eine feste Empfehlung („Einhaltung selbst prüfen …“). Der Validator erkennt den letzten Versuch an `ctx.last_attempt` (Pydantic AI).
+- **WARN hat damit zwei Bedeutungen:** (a) aus der Eingabe nicht entscheidbar, oder (b) das Modell hat ein PASS oder FAIL nicht belegt, und der Code hat es herabgestuft. Der Report muss beides unterscheiden, die UI soll es zeigen (#27).
+- Fail closed gibt es für Belege nicht mehr, nur noch bei fehlenden, unbekannten oder widersprüchlichen Befunden, fehlender Empfehlung, N/A trotz Inventar und Fehlern der API.
+
 ## Fachgespräch-Satz
 
-„Das Modell zeigt nur noch auf Zeilen, den Beleg schneidet mein Code aus. So ist jedes Zitat per Konstruktion wörtlich, und was das Modell nicht belegen kann, wird höchstens WARN, nie FAIL.“
+„Das Modell zeigt nur noch auf Zeilen, den Beleg schneidet mein Code aus. So ist jedes Zitat per Konstruktion wörtlich, und was das Modell nicht belegen kann, wird höchstens WARN, nie PASS oder FAIL.“

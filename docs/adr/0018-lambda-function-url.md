@@ -12,7 +12,7 @@ _Setzt den Plan B aus [ADR 0011](0011-vollstaendiger-katalog.md) um. Ändert [AD
 
 - Die Audit-Lambda bekommt eine **Function URL mit `AuthType: AWS_IAM`** (SigV4, Dienst `lambda`). API Gateway entfällt im GovGuard-Stack.
 - Der Handler routet `POST /audit/spec` und `POST /audit/architecture` selbst, sonst 404.
-- **Lambda-Timeout vorläufig 180 s**, die UI wartet 190 s mit `st.spinner`. Der Durchlauf in Schritt 10a bestätigt den Wert, mit `spec-wohngeld-openapi` und `arch-antragseingang-fehlerhaft`.
+- **Lambda-Timeout 180 s**, die UI wartet 190 s mit `st.spinner`. Bestätigt durch den Durchlauf am 14.10.2026 (#26): `spec-wohngeld-openapi` mit Bedrock 47,4 s, mit Groq 73,5 s, `arch-antragseingang-fehlerhaft` mit Bedrock 31,6 s, jeweils mit Retries.
 - Der Streamlit-User erhält über seine Gruppe nur `lambda:InvokeFunctionUrl` und `lambda:InvokeFunction` mit der Bedingung `lambda:InvokedViaFunctionUrl`, beides auf genau diese Funktion. Seit Oktober 2025 verlangt AWS beide Rechte.
 - Missbrauchsschutz: IAM-Auth, Budget-Alarm bei 5 € und das Konto-Limit von 10. Ein eigenes Throttling gibt es nicht.
 

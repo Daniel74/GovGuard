@@ -62,3 +62,23 @@ def test_invalid_llm_answer_fails_closed(
     assert exit_code == 2
     assert captured.out == ""
     assert "Audit fehlgeschlagen" in captured.err
+
+
+def test_arch_command_audits_a_template_against_the_architecture_catalog(
+    arch_catalog: RuleCatalog, bucket_template: str, tmp_path: Path,
+    capsys: pytest.CaptureFixture[str]
+) -> None:
+    template_file = tmp_path / "template.json"
+    template_file.write_text(bucket_template, encoding="utf-8")
+    catalog_file = tmp_path / "rules_arch.json"
+    catalog_file.write_text(arch_catalog.model_dump_json(), encoding="utf-8")
+    s3_rule = arch_catalog.model_copy(update={"rules": arch_catalog.rules[:1]})
+
+    exit_code = main(["arch", str(template_file), "--catalog", str(catalog_file)],
+                     model=fake_model(s3_rule))
+
+    report = AuditReport.model_validate(json.loads(capsys.readouterr().out))
+    assert exit_code == 0
+    assert report.audit_type == "architecture"
+    statuses = {f.rule_id: f.status for f in report.findings}
+    assert statuses == {"ARCH-CIS-3.1.4": "WARN", "ARCH-CIS-3.3.1": "N/A"}  # DynamoDB: by code

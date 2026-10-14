@@ -4,6 +4,8 @@ from govguard.models import FindingDraft
 from govguard.text import MIN_QUOTE_LENGTH, normalize
 
 MAX_SPAN = 200  # lines per evidence, about one section; 40 was too tight (prototype #26)
+UNPROVEN_PASS = ("Einhaltung selbst prüfen: Die KI hat PASS vergeben, aber auch nach einer "
+                 "Korrektur keinen brauchbaren Zeilenbereich als Beleg genannt.")
 
 
 def numbered(text: str) -> str:
@@ -22,8 +24,8 @@ def evidence_problem(draft: FindingDraft, text: str) -> str | None:
     return None
 
 
-def without_unproven_fail(draft: FindingDraft, text: str) -> FindingDraft:
-    """What is missing is WARN, not FAIL: the code enforces the prompt rule without a retry.
+def without_unproven_verdict(draft: FindingDraft, text: str, last_attempt: bool) -> FindingDraft:
+    """What is not proven is WARN: FAIL at once, PASS only after its retry (ADR 0017).
 
     Only PASS needs a usable range; at WARN, FAIL and N/A an unusable one counts as no range.
     """
@@ -32,6 +34,9 @@ def without_unproven_fail(draft: FindingDraft, text: str) -> FindingDraft:
         draft = draft.model_copy(update={"line_start": None, "line_end": None})
     if draft.status == "FAIL" and _lines(draft) is None:
         return draft.model_copy(update={"status": "WARN"})
+    if draft.status == "PASS" and last_attempt and evidence_problem(draft, text):
+        return draft.model_copy(update={"status": "WARN", "line_start": None, "line_end": None,
+                                        "recommendation": UNPROVEN_PASS})
     return draft
 
 

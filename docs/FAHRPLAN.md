@@ -26,8 +26,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 | Tag                | Arbeit                                                                                                                                                                                                                                          |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.          | Schritt 10: #14 abschließen. Messung: fail closed wegen zusammengesetzter Belege, Einzelaufrufe bis 37 s → #26. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, nachgeschärft; zwei Messungen ohne Durchlauf (Retries 6 → 3 Pakete). |
-| Do 15.10.          | Schritt 10a: Diagnose fail closed und Messung mit Durchlauf (Plan B am 14.10. entschieden, ADR 0018). Schritte 10b–10c: #27 KI-Governance, #28 Bewertung. Wird es knapp, #27 auf die Herabstufung im Report kürzen        |
+| Mi 14.10.          | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                                                                                                |
+| Do 15.10.          | Schritt 10a: Diagnose fail closed und Messung mit Durchlauf. Schritte 10b–10c: #27 KI-Governance, #28 Bewertung. Wird es knapp, #27 auf die Herabstufung im Report kürzen                                                                       |
 | Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                                                                                               |
 | So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                                                                                                 |
 | Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                                                                                                       |
@@ -190,7 +190,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 ### Schritt 7 – #6 Bounded Catalog und Auswahlprotokoll (Kontrollpunkt)
 
 **Ziel:** Es steht fest, welche Anforderungen in den Bounded Catalog kommen, und zu jeder Anforderung gibt es eine Begründung. Du hast das Auswahlprotokoll gelesen und freigegeben.
-**Voraussetzung:** Schritt 6. Der erste Lauf vom 09.10. (mit Ranking und Obergrenze) ist durch ADR 0011 überholt.
+**Voraussetzung:** Schritt 6.
 
 - [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #6 umsetzen` → Plan → Go (der Prompt von Stufe ② ist eine Weichenstellung)
       Reihenfolge: `data/scope.json` → Relevanz (erster Typ im Prüfumfang) → Ranking und Obergrenzen entfernen → Auswahlprotokoll für alle Anforderungen → Cache → Gates (Pflichtanker, Abdeckung)
@@ -283,7 +283,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Starten** _Opus_ · 👤 `/implement 20` → Plan → Go. Alle Datenpfade stehen in `kb_build/paths.py`; ein Test verbietet sie anderswo.
 - [x] **Prüfen** _Opus_ · `/code-review` (Standards + Spec als Sub-Agents), Befunde behoben
-- [x] **Echter Lauf** → verschoben in Schritt 9d. Der Judgement-Cache passt schon vor #20 nicht mehr zum Prompt (beide Audit-Arten); ein Lauf jetzt würde alle Urteile bezahlen, und #19 würde sein Ergebnis wieder überschreiben. Nachweis bis dahin: Test der Standardpfade, Probelauf mit Dummy-Key liest alle Eingaben aus den neuen Pfaden.
+- [x] **Echter Lauf** → verschoben in Schritt 9d, weil der Judgement-Cache für beide Audit-Arten nicht mehr zum Prompt passt und #19 den Lauf ohnehin wiederholt.
 - [x] **Verstehen** 👤 `/verstehen 20` (Kernfrage: warum Daten nach Herkunft getrennt werden und was davon nach S3 geht)
 - [x] **Abschließen** 👤 committet und pusht
 
@@ -297,7 +297,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Architektur-Prüfregeln nennen nur Typen aus `data/input/scope.json`, damit das Gate aus #17 jede Eigenschaft prüft. Nach dem Review von #17 bleiben 16 Regeln ungeprüft (`unjudged_properties`), z. B. mit CloudTrail, CloudFront, Classic ELB oder WAF Classic.
 **Voraussetzung:** Schritt 9c.
 
-- [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #19: Backup, EFS, EBS-Volume und SSM in den Prüfumfang?` Ergebnis im Issue: Begleittypen AWS Backup und Application Auto Scaling kommen dazu, EFS, EBS-Volume und SSM-Parameter bleiben draußen.
+- [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #19: Backup, EFS, EBS-Volume und SSM in den Prüfumfang?`
 - [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #19 umsetzen` → Plan → Go
       Reihenfolge: Prüfumfang erweitern (`scope.json`, Snapshot `cfn_properties.json`, ADR 0013, `CONTEXT.md`, `AUSBAU.md`) → Validator von Stufe ② streicht Typen außerhalb des Prüfumfangs → Validator von `formulate_rule` → `check_rules`
 - [x] **Echter Lauf** 🤖 👤 „Erzeuge Auswahl und Prüfregeln für **beide** Audit-Arten neu“: `select` ohne `--audit-type` (`--provider groq`), dann `rules` (`bedrock-global`, falls `eu.` keine Kapazität hat). Der Cache ist für Spec und Architektur veraltet (siehe 9c), alle Urteile werden neu bezahlt. 👤 Prüfe: Schreibt `select` nach `data/intermediate/` (Nachweis für #20)? Zeigt der Qualitätsbericht `unjudged_properties` 0? Welche Regeln haben Typen verloren? Behalten FSBP DynamoDB.4 und RDS.26 ihre Backup-Typen? Was hat sich in `git diff data/intermediate/selection_spec.json` geändert?
@@ -351,7 +351,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #14 umsetzen` → Plan → Go (der Freitext-Vorlauf ist eine Prompt-Weiche)
       Reihenfolge: Freitext-Vorlauf mit Beleg → N/A-Verbot für erkannte Typen → Pakete parallel → Zusammenführen (ein Befund je Prüfregel) → Sortierung nach Ressourcentyp
-- [x] **Messen** 👤 `/run CLI-Audit des größten Presets mit vollem Katalog, Laufzeit und Kosten messen` → 🤖 notiert das Ergebnis im Issue. Ergebnis: fail closed wegen Belegen (→ #26), ca. 0,90 $, Einzelaufrufe bis 37 s; das Kostenziel in SPEC setzt erst #26.
+- [x] **Messen** 👤 `/run CLI-Audit des größten Presets mit vollem Katalog, Laufzeit und Kosten messen` → 🤖 notiert das Ergebnis im Issue.
 - [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #14`
 - [-] **Verstehen** 👤 `/verstehen 14` (Kernfrage: warum ein übersehener Dienst sichtbar bleiben muss)
 - [x] **Abschließen** 👤 committet und pusht
@@ -367,20 +367,19 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritt 10.
 
 - [x] **Recherche** 🆕 _Opus_ · 👤 `/research Belege ohne Abschreiben: Citations der Bedrock Converse API (Haiku 4.5, eu., mit Tool-Choice nach ADR 0005)? Strict Tool Use / Structured Outputs für gpt-oss-120b auf Groq?`
-- [x] **Prototyp** 🆕 _Opus_ · 👤 `/prototype Beleg per Verweis für #26` (Citations verworfen, siehe Recherche). Ergebnis im Issue, Code auf Branch `prototype/26-beleg-per-verweis`: 0 umformulierte Zitate, 0 Schema-Retries, aber fail closed wegen zu großer Bereiche und FAIL ohne Beleg; Groq scheitert am Limit von 250.000 Tokens/min (ca. 1,40 $)
+- [x] **Prototyp** 🆕 _Opus_ · 👤 `/prototype Beleg per Verweis für #26` (Citations verworfen, siehe Recherche).
 - [x] **Entscheiden** 👤 Beleg per Verweis, FAIL ohne Zeilenbereich stuft der Code auf WARN herab, Bereichsgrenze ca. 200 Zeilen → ADR 0017, Nachtrag in ADR 0016 (Groq mit `NativeOutput` statt erzwungenem Tool)
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #26 umsetzen` → Plan → Go. Dazu die veralteten Groq-Hinweise im Skill `audit-messen` korrigieren (Tokens werden gemeldet; Groq zur Laufzeit erlaubt, ADR 0016)
-- [x] **Messen** 👤 `/audit-messen spec-wohngeld-openapi mit vollem Katalog, Bedrock und Groq` → 🤖 notiert beide Ergebnisse im Issue. Ergebnis 14.10.: kein Durchlauf. Bedrock fail closed, 6/16 Pakete mit Retry (meist Bereich über das ganze Dokument), 1,25 $, langsamster Aufruf 51 s; Groq HTTP 429 nach 11 Aufrufen. 0 umformulierte Belege, 0 Schema-Retries.
+- [x] **Messen** 👤 `/audit-messen spec-wohngeld-openapi mit vollem Katalog, Bedrock und Groq` → 🤖 notiert beide Ergebnisse im Issue.
 - [x] **Abschließen (Zwischenstand)** 👤 committet den TDD-Umbau, z. B. `#26 evidence by line reference (ADR 0017), measurement`
 - [x] **Nachschärfen** 🆕 _Opus_ · 👤 „Lies docs/FAHRPLAN.md Schritt 10a und Issue #26 mit dem letzten Messkommentar.“ Dann `/tdd Issue #26 nachschärfen` → Plan → Go (Gate-Design und Drosselung sind Weichenstellungen)
       Reihenfolge: zu großer Bereich bei WARN/FAIL gilt als „kein Bereich“ (FAIL → WARN, kein Retry), nur PASS mit zu großem Bereich → Retry → Groq-Pakete gedrosselt (höchstens 4 gleichzeitig), Bedrock voll parallel → `measure.py` loggt die Probleme des letzten Versuchs → Nachtrag ADR 0017, DESIGN 2.2
-- [x] **Neu messen** 👤 `/audit-messen spec-wohngeld-openapi, Bedrock und Groq` → 🤖 notiert beide Ergebnisse im Issue. Ergebnis 14.10.: wieder kein Durchlauf. Bedrock 3/16 Pakete mit Retry (vorher 6), fail closed am umgedrehten Bereich `154-67`, 0,97 $, 43,8 s, langsamster Aufruf 33,4 s; Groq HTTP 429 trotz 4 parallelen Paketen (ca. 410.000 Tokens/min).
-- [x] **Plan B entscheiden** 🆕 _Opus_ · 👤 `/grilling Plan B aus ADR 0011: Lambda Function URL statt API Gateway wegen 29 s?` → 🤖 schreibt das ADR. Muss vor #9 stehen, weil #9 den Stack baut. Braucht keinen Durchlauf: Schon ein Aufruf ohne Retry liegt über 29 s (Bedrock 31–51 s, mit Retry ca. das Doppelte; Groq gedrosselt mindestens 2 Minuten). Der Lambda-Timeout steht vorläufig im ADR und wird nach dem Durchlauf bestätigt. Ergebnis 14.10.: ADR 0018 (Function URL mit IAM-Auth, Timeout vorläufig 180 s, keine Reserved Concurrency bei Konto-Limit 10) und ADR 0019 (nur Audits); Issue #9 angepasst.
+- [x] **Neu messen** 👤 `/audit-messen spec-wohngeld-openapi, Bedrock und Groq` → 🤖 notiert beide Ergebnisse im Issue.
+- [x] **Plan B entscheiden** 🆕 _Opus_ · 👤 `/grilling Plan B aus ADR 0011: Lambda Function URL statt API Gateway wegen 29 s?` → 🤖 schreibt das ADR. Muss vor #9 stehen, weil #9 den Stack baut.
 - [x] **Diagnose** 🆕 _Opus_ · 👤 „Lies docs/FAHRPLAN.md Schritt 10a und Issue #26 mit dem letzten Messkommentar.“ Dann `/diagnosing-bugs fail closed bei spec-wohngeld-openapi` → Plan → Go (Gate-Design und Drosselung sind Weichenstellungen)
       Kandidaten aus der Messung: umgedrehter Bereich bei WARN/FAIL gilt wie ein zu großer als „kein Bereich“ → Bereich bei N/A ignorieren statt prüfen → Groq höchstens 2 Pakete gleichzeitig oder Token-Budget je Minute → fehlende Befunde (bis zu 7 je Paket) beobachten. Falsche FAILs mit Beleg gehören zu #28, nicht hierher.
-      Ergebnis 14.10.: Offline-Wiedergabe der Messfehler (echtes Preset, Fake-LLM) bestätigt Kandidat 1 und 2. Nur PASS braucht einen brauchbaren Bereich, sonst zählt jeder unbrauchbare als „kein Bereich“ (Nachtrag ADR 0017). Abbruchmeldung nennt den Status. Groq höchstens 2 Pakete gleichzeitig. Fehlende Befunde: nur beobachten.
-- [ ] **Messen (Durchlauf)** 👤 `/audit-messen spec-wohngeld-openapi mit Bedrock und Groq, arch-antragseingang-fehlerhaft mit Bedrock` → 🤖 notiert die Ergebnisse gegen `expected` im Issue, setzt das Kostenziel in SPEC und bestätigt den Lambda-Timeout in ADR 0018
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #26 seit 46e91b0` (TDD-Umbau und Nachschärfen zusammen)
+- [x] **Messen (Durchlauf)** 👤 `/audit-messen spec-wohngeld-openapi mit Bedrock und Groq, arch-antragseingang-fehlerhaft mit Bedrock` → 🤖 notiert die Ergebnisse gegen `expected` im Issue, setzt das Kostenziel in SPEC und bestätigt den Lambda-Timeout in ADR 0018
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #26 seit 46e91b0` (TDD-Umbau, Nachschärfen und Diagnose zusammen)
 - [ ] **Verstehen** 👤 `/verstehen 26` (Kernfrage: warum der Beleg bleibt, auch wenn das LLM ihn nicht mehr abschreibt)
 - [ ] **Abschließen** 👤 committet und pusht
 

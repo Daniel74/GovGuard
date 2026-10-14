@@ -3,6 +3,7 @@ from pydantic_ai.messages import ModelMessage, ModelResponse, RetryPromptPart, T
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from govguard.audit_engine import AuditValidationError, run_audit
+from govguard.evidence import UNPROVEN_PASS
 from govguard.inventory import NA_FORBIDDEN
 
 
@@ -92,7 +93,7 @@ def test_run_audit_retries_once_with_missing_rule_ids(spec_catalog, spec_input, 
     "findings",
     [
         [PASS_32],  # missing rule
-        [PASS_32, WARN_9, WARN_9],  # duplicate finding
+        [PASS_32, WARN_9, {**WARN_9, "status": "N/A"}],  # contradicting duplicate
         [PASS_32, WARN_9, {**WARN_9, "rule_id": "SPEC-DSGVO-Art.99"}],  # unknown rule
     ],
 )
@@ -103,28 +104,52 @@ def test_run_audit_fails_closed_when_findings_stay_incomplete(
         run_audit(spec_catalog, spec_input, answer_with(*findings), trace)
 
 
-def test_pass_without_lines_is_retried_once_then_fails_closed(
+def test_duplicate_with_the_same_status_is_dropped_without_retry(
+    spec_catalog, spec_input, trace
+) -> None:
+    seen: list = []
+    again = {**WARN_9, "rationale": "Nochmal unklar."}
+
+    report = run_audit(spec_catalog, spec_input,
+                       answer_in_turns([PASS_32, WARN_9, again], seen=seen), trace)
+
+    assert len(seen) == 1  # the code can keep one of two equal answers itself
+    assert [f.rationale for f in report.findings] == ["TLS.", "Unklar."]  # the first one wins
+
+
+def test_pass_without_lines_is_retried_once_then_downgraded_to_warn(
     spec_catalog, spec_input, trace
 ) -> None:
     seen: list = []
     unproven = {**PASS_32, "line_start": None, "line_end": None}
 
-    with pytest.raises(AuditValidationError):
-        run_audit(spec_catalog, spec_input, answer_in_turns([unproven, WARN_9], seen=seen), trace)
+    report = run_audit(spec_catalog, spec_input, answer_in_turns([unproven, WARN_9], seen=seen),
+                       trace)
 
     assert len(seen) == 2  # exactly one retry
     retry = [p for p in seen[1][-1].parts if isinstance(p, RetryPromptPart)]
     assert "SPEC-DSGVO-Art.32 (PASS): Zeilenbereich fehlt" in retry[0].model_response()
+    tls = report.findings[0]
+    assert (tls.status, tls.evidence) == ("WARN", None)  # still unproven after the retry
+    assert tls.recommendation == UNPROVEN_PASS
+
+
+def test_pass_proven_in_the_retry_stays_pass(spec_catalog, spec_input, trace) -> None:
+    unproven = {**PASS_32, "line_start": None, "line_end": None}
+
+    report = run_audit(spec_catalog, spec_input,
+                       answer_in_turns([unproven, WARN_9], [PASS_32, WARN_9], seen=[]), trace)
+
+    assert report.findings[0].status == "PASS"
 
 
 def test_fail_closed_names_the_problems_of_the_last_attempt(
     spec_catalog, spec_input, trace
 ) -> None:
-    unproven = {**PASS_32, "line_start": None, "line_end": None}
+    no_recommendation = {**WARN_9, "recommendation": None}
 
-    with pytest.raises(AuditValidationError,
-                       match=r"SPEC-DSGVO-Art\.32 \(PASS\): Zeilenbereich fehlt"):
-        run_audit(spec_catalog, spec_input, answer_with(unproven, WARN_9), trace)
+    with pytest.raises(AuditValidationError, match=r"SPEC-DSGVO-Art\.9: Empfehlung fehlt"):
+        run_audit(spec_catalog, spec_input, answer_with(PASS_32, no_recommendation), trace)
 
 
 def test_fail_without_lines_is_downgraded_to_warn_without_retry(
@@ -156,16 +181,17 @@ LONG_INPUT = "\n".join(  # 250 lines of one section, then a line too short to pr
         (251, 251, "zu kurz"),  # "TLS 1.3" proves nothing
     ],
 )
-def test_invalid_line_range_is_retried_once_then_fails_closed(
+def test_invalid_line_range_at_pass_is_retried_once_then_downgraded_to_warn(
     spec_catalog, trace, line_start: int, line_end: int, problem: str
 ) -> None:
     seen: list = []
     pointing = {**PASS_32, "line_start": line_start, "line_end": line_end}
 
-    with pytest.raises(AuditValidationError):
-        run_audit(spec_catalog, LONG_INPUT, answer_in_turns([pointing, WARN_9], seen=seen), trace)
+    report = run_audit(spec_catalog, LONG_INPUT, answer_in_turns([pointing, WARN_9], seen=seen),
+                       trace)
 
     assert len(seen) == 2  # exactly one retry
+    assert (report.findings[0].status, report.findings[0].evidence) == ("WARN", None)
     retry = [p for p in seen[1][-1].parts if isinstance(p, RetryPromptPart)]
     assert f"SPEC-DSGVO-Art.32 (PASS): Zeilenbereich {line_start}-{line_end} {problem}" in (
         retry[0].model_response())

@@ -1,6 +1,6 @@
 """Run `govguard.cli.main()` against a real model; report wall time, tokens and retry reasons.
 
-Usage: uv run python .claude/skills/audit-messen/measure.py spec <file> [--catalog <json>]
+Usage: uv run python .claude/skills/audit-messen/measure.py spec|arch <file> [--catalog <json>]
 Report JSON -> stdout, measurements -> stderr. MEASURE_MODEL=groq measures Groq (ADR 0016).
 On fail closed the CLI writes the problems of the last attempt to stderr (AuditValidationError).
 """

@@ -18,8 +18,8 @@
 - Jeder `cfn_resource_type` im Auswahlprotokoll ist ein echter CloudFormation-Typ (`data/input/cfn_resource_types.json`); das LLM kann keine erfinden.
 - Jeder Audit-Report hat genau einen Befund je Prüfregel; jeder Beleg steht wörtlich in der Eingabe.
 - Jede Architektur-Prüfregel ist relevant (erster Ressourcentyp im Prüfumfang), jede Komponente der Golden Archetypes hat mindestens eine Prüfregel, und die Pflichtanker der Presets stehen im Bounded Catalog (ADR 0011).
-- Das größte Preset (≤ 100.000 Zeichen) ist in unter 29 Sekunden ausgewertet.
-- Die Kosten je Audit des größten Presets haben einen Zielwert, gesetzt nach der ersten Messung (ADR 0011). GovGuard hat 0 € Leerlaufkosten; Fixkosten fallen nur für Sicherheit an (KMS-Schlüssel ca. 1 $/Monat).
+- Das größte Preset (≤ 100.000 Zeichen) ist innerhalb des Lambda-Timeouts von 180 Sekunden ausgewertet (ADR 0018).
+- Ein Audit des größten Presets kostet höchstens 1,20 $ mit Bedrock (Haiku 4.5 `eu.`) bzw. 0,15 $ mit Groq (gemessen 14.10.2026: 0,95–1,05 $ bzw. 0,10 $, #26). GovGuard hat 0 € Leerlaufkosten; Fixkosten fallen nur für Sicherheit an (KMS-Schlüssel ca. 1 $/Monat).
 - Das Selbst-Audit des GovGuard-Stacks hat kein FAIL und kein WARN, außer Ausnahmen (ADR 0011).
 - _(Priorität B)_ Alle 3 Golden Archetypes sind freigegeben: Architektur-Audit ohne FAIL und WARN, cdk-nag ohne Errors, jeweils außer Ausnahmen (ADR 0007, ADR 0011).
 - Jeder Aufruf erzeugt ein Audit-Ereignis in CloudWatch Logs mit `audit_id`, Zeit, `input_sha256`, `catalog_sha256`, `kb_commit`, `model_id` und Ergebnis, ohne Eingabetext.
@@ -40,6 +40,5 @@ Vor den Prüfregeln liest der Projektbetreiber das Auswahlprotokoll (Kontrollpun
 
 ## Offene Fragen
 
-- Reicht das Standard-Timeout von 29 Sekunden mit parallelen Paketen? Für regionale REST-APIs lässt es sich per Quota-Antrag erhöhen (laut AWS-Doku, ggf. auf Kosten des Throttle-Limits; im Kurs-Konto ungewiss). Plan B: Lambda Function URL mit IAM-Auth (ADR 0011).
 - Wie viele Prüfregeln umfasst der Katalog mit FSBP und C5, und was kostet damit ein Audit? Das zeigt der erste Lauf.
 - Dürfen kurze Zitate aus FSBP (AWS-Doku) und C5 (© BSI) ins Repo? Bis zur Klärung gilt die Regel für CIS (ADR 0008).

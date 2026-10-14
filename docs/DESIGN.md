@@ -248,7 +248,7 @@ class AuditReport(BaseModel):
     trace: Trace                         # Rückverfolgung, siehe 2.4
 ```
 
-- **Beleg-Pflicht folgt aus dem Glossar:** PASS heißt „Einhaltung belegt“, FAIL heißt „Verstoß belegt“, beide brauchen also einen Zeilenbereich. Fehlt etwas in der Eingabe, ist das WARN, nicht FAIL: Ein FAIL ohne Zeilenbereich stuft der Code auf WARN herab.
+- **Beleg-Pflicht folgt aus dem Glossar:** PASS heißt „Einhaltung belegt“, FAIL heißt „Verstoß belegt“, beide brauchen also einen Zeilenbereich. Fehlt etwas in der Eingabe, ist das WARN, nicht FAIL: Ein FAIL ohne Zeilenbereich stuft der Code auf WARN herab, ein PASS erst, wenn er auch nach dem Retry unbelegt bleibt. WARN heißt damit „nicht entscheidbar“ oder „von der KI nicht belegt“; der Report soll beides unterscheiden (#27).
 - **Gesamtstatus:** Rangfolge FAIL > WARN > PASS > N/A, der schlechteste Status gewinnt. Sind alle Befunde N/A, ist der Gesamtstatus N/A.
 
 ### 2.2 run_audit() und select_archetype()
@@ -300,7 +300,7 @@ Die übrigen Prüfregeln gehen in Paketen à 10 gleichzeitig ans Modell (`asynci
 2. Jede an das Modell gesendete `rule_id` kommt genau einmal vor, und es gibt keine unbekannten IDs. Im Architektur-Audit ist N/A vom Modell verboten, denn der Ressourcentyp kommt vor oder wird immer geprüft; der Prompt sagt das dem Modell vorab.
 3. Zeilenbereich vorhanden bei PASS; der Bereich liegt in der Eingabe, umfasst höchstens 200 Zeilen (`MAX_SPAN`), und der Ausschnitt hat mindestens 15 Zeichen (`evidence.py`, ADR 0017). Empfehlung vorhanden bei WARN und FAIL.
 
-Vor Schritt 2 bereinigt der Code die Antwort ohne Retry: Bei WARN, FAIL und N/A zählt ein unbrauchbarer Bereich (ungültig, umgedreht, zu groß, zu kurz) als „kein Bereich“, und ein FAIL ohne Zeilenbereich wird WARN (ADR 0017, Nachträge). Nur PASS bekommt für den Bereich einen Retry. Den Beleg schneidet der Code aus den Zeilen, das Modell schreibt ihn nicht ab.
+Vor Schritt 2 bereinigt der Code die Antwort ohne Retry: Bei WARN, FAIL und N/A zählt ein unbrauchbarer Bereich (ungültig, umgedreht, zu groß, zu kurz) als „kein Bereich“, und ein FAIL ohne Zeilenbereich wird WARN (ADR 0017, Nachträge). Nur PASS bekommt für den Bereich einen Retry; bleibt er im letzten Versuch unbelegt, wird er WARN mit fester Empfehlung (`ctx.last_attempt`). Mehrere Befunde zur selben Prüfregel mit gleichem Status fasst der Code zum ersten zusammen; widersprechen sie sich, folgt ein Retry. Den Beleg schneidet der Code aus den Zeilen, das Modell schreibt ihn nicht ab.
 
 Die Schritte 2 und 3 laufen im `@agent.output_validator` (Prüfungen in `audit_gates.py`) und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch oder die Modell-API (z. B. Drosselung, `ModelAPIError`), wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. Die Meldung nennt die Probleme des letzten Versuchs. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
 

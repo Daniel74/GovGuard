@@ -20,6 +20,17 @@ def completeness_problems(expected: set[str], drafts: list[FindingDraft]) -> lis
     ]
 
 
+def without_equal_duplicates(drafts: list[FindingDraft]) -> list[FindingDraft]:
+    """Keep the first of several findings with the same rule and status; a contradiction stays."""
+    seen: set[tuple[str, str]] = set()
+    kept = []
+    for draft in drafts:
+        if (draft.rule_id, draft.status) not in seen:
+            seen.add((draft.rule_id, draft.status))
+            kept.append(draft)
+    return kept
+
+
 def field_problem(finding: FindingDraft, input_text: str) -> str | None:
     """Evidence by line reference (ADR 0017); WARN/FAIL need a recommendation."""
     if problem := evidence_problem(finding, input_text):
