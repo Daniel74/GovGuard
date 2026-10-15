@@ -9,12 +9,13 @@ from pydantic_ai import Agent, ModelRetry, NativeOutput, RunContext, ToolOutput
 from pydantic_ai.exceptions import ModelAPIError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
-from govguard.audit_gates import answer_problems, completeness_problems, without_equal_duplicates
+from govguard.audit_gates import answer_problems, completeness_problems
 from govguard.corrections import AuditValidationError, Corrections, downgrades_of
 from govguard.evidence import MAX_SPAN, evidence_of, numbered, without_unproven_verdict
 from govguard.fail_judge import judge_fails, provider_of
 from govguard.inventory import resource_inventory
 from govguard.models import (
+    SEVERITY,
     AuditReport,
     AuditResponse,
     Finding,
@@ -24,6 +25,7 @@ from govguard.models import (
     Status,
     Trace,
 )
+from govguard.repairs import with_rule_recommendations, worst_of_duplicates
 
 SYSTEM_PROMPT = f"""\
 Du bist ein Compliance-Prüfer für Behörden-IT. Bewerte die Eingabe gegen jede Prüfregel.
@@ -43,9 +45,6 @@ nur, wenn die Belegzeilen etwas festlegen, das der Prüfregel widerspricht; "rat
 
 PACKAGE_SIZE = 10  # rules per model call; 166 architecture rules -> 17 parallel calls
 GROQ_MAX_PARALLEL = 2  # ~110,000 tokens/min per slot measured (#26), Groq tier allows 250,000
-
-# Worst status wins; N/A only if every finding is N/A (DESIGN 2.1)
-_SEVERITY: dict[Status, int] = {"N/A": 0, "PASS": 1, "WARN": 2, "FAIL": 3}
 
 
 class AuditDeps(BaseModel):  # deps_type of the audit agent, input for the code checks
@@ -70,21 +69,22 @@ _MAX_PARALLEL = {"groq": GROQ_MAX_PARALLEL}  # Bedrock: no limit, all packages a
 
 
 def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditResponse:
-    """Downgrade first, then check: what the code can fix needs no retry (ADR 0017)."""
-    text, last = ctx.deps.input_text, ctx.last_attempt
-    original = response.findings
+    """Repair and downgrade first, then check: what the code can fix needs no retry (ADR 0017)."""
+    text, last, rules = ctx.deps.input_text, ctx.last_attempt, ctx.deps.rules
     if ctx.retry:  # once per package: one retry at most
         ctx.deps.corrections.record_retry(ctx.deps.reason_sent)
-    checked = [without_unproven_verdict(f, text, last) for f in response.findings]
-    expected = {rule.id for rule in ctx.deps.rules}
-    response = AuditResponse(findings=without_equal_duplicates(checked))
-    problems = answer_problems(expected, response.findings, text, ctx.deps.na_forbidden)
+    kept, contradictions = worst_of_duplicates(response.findings)
+    checked = [without_unproven_verdict(f, text, last) for f in kept]
+    filled, filled_in = with_rule_recommendations(checked, rules)
+    expected = {rule.id for rule in rules}
+    problems = answer_problems(expected, filled, text, ctx.deps.na_forbidden)
+    ctx.deps.corrections.record_repairs(expected, contradictions + filled_in)
     ctx.deps.corrections.record_attempt(
-        sorted(expected), downgrades_of(original, checked), problems, last)
+        sorted(expected), downgrades_of(kept, checked), problems, last)
     if problems:
         ctx.deps.reason_sent = True
         raise ModelRetry("\n".join(p.text for p in problems))
-    return response
+    return AuditResponse(findings=filled)
 
 
 def _status_rule(ctx: RunContext[AuditDeps]) -> str:
@@ -97,7 +97,7 @@ for _agent in _AGENTS.values():  # the same gates for both models (ADR 0016)
 
 
 def overall_status(statuses: Iterable[Status]) -> Status:
-    return max(statuses, key=_SEVERITY.__getitem__)
+    return max(statuses, key=SEVERITY.__getitem__)
 
 
 def run_audit(catalog: RuleCatalog, input_text: str, model: Model, trace: Trace) -> AuditReport:

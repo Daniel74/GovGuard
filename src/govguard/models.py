@@ -9,6 +9,8 @@ from typing import Literal
 from pydantic import BaseModel, Field, model_validator
 
 Status = Literal["PASS", "WARN", "FAIL", "N/A"]
+# Worst status wins; N/A only if every finding is N/A (DESIGN 2.1)
+SEVERITY: dict[Status, int] = {"N/A": 0, "PASS": 1, "WARN": 2, "FAIL": 3}
 AuditType = Literal["spec", "architecture"]
 SourceName = Literal["BSI", "C5", "CIS", "DSGVO", "FSBP", "SDM"]
 ArchetypeId = Literal["ARCH-01", "ARCH-02", "ARCH-03", "NONE"]

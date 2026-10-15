@@ -47,16 +47,15 @@ def test_pass_unproven_after_the_retry_shows_retry_reason_and_downgrade(
 def test_retry_reason_of_a_rule_lands_in_its_finding_even_when_the_retry_fixes_it(
     spec_catalog, spec_input, trace
 ) -> None:
-    no_recommendation = {**WARN_9, "recommendation": None}
+    unproven = {**PASS_32, "line_start": None, "line_end": None}
 
     report = run_audit(spec_catalog, spec_input,
-                       answer_in_turns([PASS_32, no_recommendation], [PASS_32, WARN_9], seen=[]),
-                       trace)
+                       answer_in_turns([unproven, WARN_9], [PASS_32, WARN_9], seen=[]), trace)
 
-    legal = report.findings[1]
-    assert (legal.status, legal.downgraded_from) == ("WARN", None)
-    assert [c for c in legal.corrections if "Empfehlung fehlt" in c]
-    assert report.findings[0].corrections == []  # PASS_32 was fine in both attempts
+    tls = report.findings[0]
+    assert (tls.status, tls.downgraded_from) == ("PASS", None)
+    assert [c for c in tls.corrections if "Zeilenbereich fehlt" in c]
+    assert report.findings[1].corrections == []  # WARN_9 was fine in both attempts
 
 
 def test_reason_without_a_finding_stands_in_unassigned_corrections(
@@ -83,13 +82,11 @@ def test_clean_audit_has_no_corrections_at_all(spec_catalog, spec_input, trace) 
 def test_fail_closed_carries_the_reasons_of_the_last_attempt_as_a_list(
     spec_catalog, spec_input, trace
 ) -> None:
-    no_recommendation = {**WARN_9, "recommendation": None}
-
     with pytest.raises(AuditValidationError) as failure:
-        run_audit(spec_catalog, spec_input, answer_in_turns([PASS_32, no_recommendation]), trace)
+        run_audit(spec_catalog, spec_input, answer_in_turns([PASS_32]), trace)
 
     assert failure.value.problems == [
-        ("SPEC-DSGVO-Art.9", "SPEC-DSGVO-Art.9: Empfehlung fehlt (Pflicht bei WARN)")]
+        ("SPEC-DSGVO-Art.9", "Befund fehlt für: SPEC-DSGVO-Art.9")]
     assert not failure.value.api_error
 
 

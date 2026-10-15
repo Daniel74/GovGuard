@@ -496,10 +496,10 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Die Gegenproben `arch-antragseingang-fehlerhaft` und `spec-meldeportal-gesundheit` liefern mit Bedrock wieder einen Audit-Report, statt nach einem Retry fail closed abzubrechen.
 **Voraussetzung:** Schritt 10d (Messungen in #29). Schritt 11 hängt nicht davon ab, aber die Demo braucht Gegenproben mit Ergebnis.
 
-- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #32: Retry-Prompt mit Pflichtfeldern oder Empfehlung aus der Prüfregel; doppelte Befunde` (Prompt-Design ist eine Weichenstellung)
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #32 umsetzen` → Plan → Go
+- [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #32: Retry-Prompt mit Pflichtfeldern oder Empfehlung aus der Prüfregel; doppelte Befunde` (Prompt-Design ist eine Weichenstellung)
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #32 umsetzen` → Plan → Go
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #32` (Code-Stand, ohne Messung)
-- [ ] ☁ **Messen** 👤 `/audit-messen arch-antragseingang-fehlerhaft mit Bedrock, spec-meldeportal-gesundheit 2× mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected`
+- [ ] ☁ **Messen** (im AWS-Nachholblock, zusammen mit #33) 👤 `/audit-messen arch-antragseingang-fehlerhaft mit Bedrock, spec-meldeportal-gesundheit 2× mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected`
 - [ ] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Beide Gegenproben mit Bedrock `expected` erfüllen und kein Befund ohne Pflichtfelder in den Report kommt.
@@ -551,12 +551,16 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ## AWS-Nachholblock (sobald AWS zurück ist)
 
-Alle ☁-Kästchen am Stück, in dieser Reihenfolge. Kein Zugriff bis Mo 19.10.: 🆕 _Opus_ · 👤 `/grilling Demo-Fallback ohne AWS: lokale UI mit Groq?` (Datenresidenz ist eine Weichenstellung).
+**Ziel:** Alle ☁-Kästchen am Stück nachholen: erst die Bedrock-Messungen (#32, #33), dann Deploy (#9) und Pipeline (#11). Die Messungen kommen zuerst, damit der Deploy auf geprüftem Audit-Code aufsetzt. Hake danach auch das ☁-Kästchen im jeweiligen Schritt ab.
+**Kein Zugriff bis Mo 19.10.:** 🆕 _Opus_ · 👤 `/grilling Demo-Fallback ohne AWS: lokale UI mit Groq?` (Datenresidenz ist eine Weichenstellung).
 
-1. 👤 `aws sso login`, dann `aws sts get-caller-identity`
-2. Schritt 10g ☁ Messen und Schritt 10h Messen (eine Session mit `/audit-messen`)
-3. Schritt 11 ☁ Einrichten, ☁ Deploy + Test
-4. Schritt 12 ☁ Einrichten, ☁ Live
+- [ ] **Anmelden** 👤 `aws sso login`, dann `aws sts get-caller-identity`. Zeigt es nicht dein Konto, geht keines der folgenden Kästchen.
+- [ ] ☁ **Messen #32 und #33** 🆕 _Opus_ · 👤 eine Session `/audit-messen`, alles mit Bedrock: - Schritt 10g (#32): `arch-antragseingang-fehlerhaft` 1×, `spec-meldeportal-gesundheit` 2×, voller Katalog. Prüfe: kein fail closed nach Retry, `expected` erfüllt, Korrekturzeilen „Empfehlung aus der Prüfregel ergänzt“ bzw. „Widersprüchliche Befunde“ im Report, keine Antwort bei 8.000 Output-Tokens abgeschnitten. - Schritt 10h (#33): `spec-meldeportal-gesundheit` mit kleinem Katalog (Art. 9, M60.P01), `spec-wohngeld-openapi`. Prüfe: Der FAIL-Prüfer stuft Art. 9 nicht herab, Wohngeld zeigt WARN.
+      → 🤖 notiert die Ergebnisse je Issue. Bleibt ein Gegenprobe-Preset rot: neues Ticket statt Abschluss.
+- [ ] ☁ **Deploy #9** (Schritt 11) 👤 Wizard `cdk bootstrap` ausführen → Stack deployen → `/audit/architecture` mit dem größten Preset aufrufen. Prüfe: Report kommt innerhalb des Lambda-Timeouts (ADR 0018), Audit-Ereignis in CloudWatch Logs ohne Eingabetext.
+- [ ] ☁ **Live #11** (Schritt 12) 👤 Einrichtungs-Wizard ausführen (OIDC-Rolle, Secrets) → pushen → Pipeline mit Selbst-Audit beobachten → öffentliche UI auditiert ein Preset.
+
+**Fertig, wenn:** Alle ☁-Kästchen in den Schritten 10g, 10h, 11 und 12 abgehakt sind.
 
 ### Schritt 10h – #33 Messung: Gegenprobe FAIL-Prüfer mit Bedrock (Art. 9, Ergebnisse aus #29)
 

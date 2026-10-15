@@ -113,7 +113,6 @@ def test_run_audit_retries_once_with_missing_rule_ids(spec_catalog, spec_input, 
     "findings",
     [
         [PASS_32],  # missing rule
-        [PASS_32, WARN_9, {**WARN_9, "status": "N/A"}],  # contradicting duplicate
         [PASS_32, WARN_9, {**WARN_9, "rule_id": "SPEC-DSGVO-Art.99"}],  # unknown rule
     ],
 )
@@ -166,10 +165,8 @@ def test_pass_proven_in_the_retry_stays_pass(spec_catalog, spec_input, trace) ->
 def test_fail_closed_names_the_problems_of_the_last_attempt(
     spec_catalog, spec_input, trace
 ) -> None:
-    no_recommendation = {**WARN_9, "recommendation": None}
-
-    with pytest.raises(AuditValidationError, match=r"SPEC-DSGVO-Art\.9: Empfehlung fehlt"):
-        run_audit(spec_catalog, spec_input, answer_with(PASS_32, no_recommendation), trace)
+    with pytest.raises(AuditValidationError, match=r"Befund fehlt für: SPEC-DSGVO-Art\.9"):
+        run_audit(spec_catalog, spec_input, answer_with(PASS_32), trace)
 
 
 def test_fail_without_lines_is_downgraded_to_warn_without_retry(
@@ -244,14 +241,11 @@ def test_a_whole_section_of_200_lines_is_valid_evidence(spec_catalog, trace) -> 
     assert report.findings[0].evidence.splitlines()[-1].startswith("Abschnitt 200:")
 
 
-@pytest.mark.parametrize(
-    "finding",
-    [
-        {**PASS_32, "status": "WARN"},  # WARN needs a recommendation
-    ],
-)
-def test_run_audit_rejects_findings_without_required_fields(
-    spec_catalog, spec_input, trace, finding: dict
+def test_warn_without_any_recommendation_still_fails_closed(
+    spec_catalog, spec_input, trace
 ) -> None:
-    with pytest.raises(AuditValidationError):
-        run_audit(spec_catalog, spec_input, answer_with(finding, WARN_9), trace)
+    spec_catalog.rules[0].recommendation = ""  # nothing the code could fill in (#32)
+    warn = {**PASS_32, "status": "WARN"}
+
+    with pytest.raises(AuditValidationError, match=r"SPEC-DSGVO-Art\.32: Empfehlung fehlt"):
+        run_audit(spec_catalog, spec_input, answer_with(warn, WARN_9), trace)

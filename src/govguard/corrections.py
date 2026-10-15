@@ -59,6 +59,7 @@ class Corrections(BaseModel):
     """Collects what the validator corrects, over all packages of one audit."""
 
     downgrades: Downgrades = {}  # rule_id -> (original status, reason)
+    repairs: list[Problem] = []  # what the code filled in or chose itself, without a retry (#32)
     retry_problems: list[Problem] = []  # every problem that sent a package back to the model
     retries: int = 0  # packages (and the pre-run and the FAIL judge) with a retry
     failed: list[Problem] = []  # problems of a last attempt: the audit fails closed (HTTP 502)
@@ -102,6 +103,10 @@ class Corrections(BaseModel):
         if last_attempt:
             self.failed += problems
 
+    def record_repairs(self, rule_ids: set[str], repairs: list[Problem]) -> None:
+        """Like a downgrade, a repair counts only from the last attempt."""
+        self.repairs = [p for p in self.repairs if p.rule_id not in rule_ids] + repairs
+
     def fail_closed(self, error: Exception) -> AuditValidationError:
         """Throttled or down: own sentence. Invalid after the retry: its reasons."""
         if service_down(error):
@@ -115,5 +120,6 @@ class Corrections(BaseModel):
     def for_rule(self, rule_id: str) -> dict:
         """The fields `downgraded_from` and `corrections` of the finding of this rule."""
         original, reason = self.downgrades.get(rule_id, (None, None))
-        reasons = [p.text for p in self.retry_problems + self.verdicts if p.rule_id == rule_id]
+        reasons = [p.text for p in self.retry_problems + self.repairs + self.verdicts
+                   if p.rule_id == rule_id]
         return {"downgraded_from": original, "corrections": reasons + ([reason] if reason else [])}

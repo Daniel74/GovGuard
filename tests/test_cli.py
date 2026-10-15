@@ -99,20 +99,15 @@ def test_fail_closed_names_the_reasons_per_rule_in_plain_language(
     spec_catalog: RuleCatalog, spec_input: str, tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
-        findings = [
-            {"rule_id": rule.id, "status": "WARN", "line_start": None, "line_end": None,
-             "rationale": "Unklar.", "recommendation": None}  # recommendation missing
-            for rule in spec_catalog.rules
-        ]
-        return ModelResponse(parts=[ToolCallPart("submit_audit", {"findings": findings})])
+        return ModelResponse(parts=[ToolCallPart("submit_audit", {"findings": []})])  # none
 
     exit_code, err = run_failing(spec_catalog, spec_input, tmp_path,
                                  FunctionModel(respond, model_name="fake-model"), capsys)
 
     assert exit_code == 2
     assert "nicht verwertbar" in err
-    assert "- SPEC-DSGVO-Art.9: Empfehlung fehlt (Pflicht bei WARN)" in err
-    assert "- SPEC-DSGVO-Art.32: Empfehlung fehlt (Pflicht bei WARN)" in err
+    assert "- Befund fehlt für: SPEC-DSGVO-Art.9" in err
+    assert "- Befund fehlt für: SPEC-DSGVO-Art.32" in err
     assert "UnexpectedModelBehavior" not in err and "retries" not in err  # no library text
 
 
