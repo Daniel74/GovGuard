@@ -2,7 +2,7 @@
 
 Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich: Du brauchst kein anderes Dokument, um ihn abzuarbeiten. Hake die Kästchen im Editor ab.
 
-**Legende:** 👤 du · 🤖 Claude · 🛠 Junie (PyCharm) · ✂ fällt zuerst weg (Schnittlinie) · `/…` Befehl zum Eintippen. `/verstehen N <Schwerpunkt>` erklärt das Ticket als Lernkarte und fragt sie ab. Claude zeigt pro Ticket einen Plan und arbeitet nach deinem **Go** am Stück (CLAUDE.md). Junie baut nur die UI und gibt bei #12 und #9 eine zweite Meinung. Alles läuft direkt auf `main`, ohne Branches.
+**Legende:** 👤 du · 🤖 Claude · 🛠 Junie (PyCharm) · ☁ braucht AWS-Zugriff · `/…` Befehl zum Eintippen. `/verstehen N <Schwerpunkt>` erklärt das Ticket als Lernkarte und fragt sie ab. Claude zeigt pro Ticket einen Plan und arbeitet nach deinem **Go** am Stück (CLAUDE.md). Junie baut nur die UI und gibt bei #12 und #9 eine zweite Meinung. Alles läuft direkt auf `main`, ohne Branches.
 
 **Rhythmus jedes Eintrags:** _Starten → Bauen → Prüfen → Verstehen → Abschließen._
 
@@ -17,26 +17,24 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Erst die Audits, dann die Architektur-Generierung.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Deploy, Selbst-Audit und Demo-UI; dazu passt die Doku. Schritte 6–14; 15–16 nur, wenn ein Tag frei wird (✂).
-- **B – Golden Archetypes (entfällt, ADR 0019):** Archetypen bauen und freigeben (#7), Archetyp-Auswahl (#10). Schritte 17–18 bleiben als Ausbau stehen.
-- **Stichtag:** B beginnt nur, wenn A fertig ist und bis zur Abgabe am 21.10. noch mindestens 3 Arbeitstage bleiben, also spätestens am Freitag, 16.10. Sonst gehen die Resttage in Stabilisierung und Präsentation. Im Fachgespräch ist B dann Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
-- **Stand 14.10.:** B entfällt. Der Deploy (#9, #11) wird voll gebaut und braucht 3–4 Tage, A ist also nicht bis 16.10. fertig.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Deploy, Selbst-Audit und Demo-UI. Offene Schritte in dieser Reihenfolge: 15, 10g, 11, 12, dann der AWS-Nachholblock (10h und alle ☁-Kästchen), zuletzt die Doku 13–14.
+- **B – Ausbau (entfällt):** Audit-Reports in S3 (#34, Schritt 12a, als Erstes, wenn Zeit bleibt), Preset-Gate und Build-Workflow (#8, Schritt 16; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, Schritte 17–18, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
+- **Stand 15.10.:** Kein AWS-Zugriff. Jeder Schritt läuft bis zum ersten ☁-Kästchen; der Rest folgt gesammelt im AWS-Nachholblock.
 
 **Zeitplan bis zur Präsentation:**
 
 | Tag                | Arbeit                                                                                                                                                               |
 | ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Mi 14.10.          | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                     |
-| Do 15.10.          | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen                                                                                          |
-| Fr 16. – Sa 17.10. | Schritt 10f abschließen (Messen, Prüfen). Schritt 11: #9 Stack und Endpunkte mit Groq-Option, Deploy und Messung am Samstag. #32 (Schritt 10g) nur, wenn Zeit bleibt |
-| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                      |
-| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                            |
-| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                |
+| Do 15.10.          | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                                           |
+| Fr 16.10.          | Schritt 10g: #32 klären und per TDD bauen (bis ☁). Schritt 11: #9 `Trace`, `AuditEvent`, Handler, Groq-Adapter                                                       |
+| Sa 17.10.          | Schritt 11: CDK-Stack mit Assertions-Tests, cdk-nag, `/security-review` (bis ☁)                                                                                      |
+| So 18.10.          | Schritt 12: #11 `deploy.yml` und Wizard-Skript (bis ☁); Junie baut parallel die UI gegen einen gespeicherten Report                                                  |
+| Mo 19.10.          | AWS zurück: AWS-Nachholblock. Kein AWS: Weichenstellung Demo-Fallback lokal mit Groq (Datenresidenz). Das Claude-Wochenlimit setzt zurück                            |
+| Di 20.10.          | Rest des AWS-Nachholblocks. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                    |
 | Mi 21.10.          | Abgabe, Puffer                                                                                                                                                       |
-| 22.–25.10.         | Verstehen: `/verstehen` für #14, #26, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                 |
+| 22.–25.10.         | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                       |
 | Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                        |
-
-**Schnittlinie:** Wird es knapp, fällt zuerst #8 weg, weil der Build der Wissensbasis auch lokal per `python -m kb_build` läuft. Danach fällt #24 weg; es zählt nur bei einem neuen Build. Beide machen nur dann weiter, wenn ein Tag frei wird. Im Fachgespräch sind sie Ausbau.
 
 **Wer baut was:**
 
@@ -64,13 +62,15 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 10d     | A    | #29 Spec-Katalog Festlegungen   | 🤖 Opus                                          | 🤖 Opus                    |
 | 10e     | A    | #30 Build-Log Retry-Gründe      | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 10f     | A    | #31 FAIL-Prüfer zur Laufzeit    | 🤖 Opus                                          | 🤖 Opus                    |
+| 15      | A    | #24 Pflichtanker stabil         | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 10g     | A    | #32 Fail closed nach Retry      | 🤖 Opus                                          | 🤖 Opus                    |
 | 11      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
 | 12      | A    | #11 Deploy + UI                 | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
+| 10h     | A ☁  | #33 Gegenprobe Bedrock          | 👤 Messung                                       | 👤                         |
 | 13      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                                        | 👤                         |
 | 14      | A    | #16 Doku nachziehen             | 👤 + 🤖 Sonnet                                   | 👤                         |
-| 15      | A ✂  | #24 Pflichtanker stabil         | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 16      | A ✂  | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 12a     | B    | #34 Audit-Reports in S3         | 🤖 Opus                                          | 🤖 Opus                    |
+| 16      | B    | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 17      | B    | #7 Golden Archetypes            | 🤖 Opus                                          | 🤖 Opus                    |
 | 18      | B    | #10 Archetyp-Auswahl            | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 19      | –    | #23 Lehrbuch fertigstellen      | 👤 + Claude Web                                  | 👤                         |
@@ -474,6 +474,23 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
+### Schritt 15 – #24 Pflichtanker ohne Nachwürfeln auswählen
+
+**Ziel:** Ein `select`-Lauf ohne Cache besteht das Pflichtanker-Gate ohne Handeingriff. Bei #19 wurden CIS 3.1.4 und BSI BER.4.1 von Hand neu beurteilt; in der Probe vom 14.10. kippt CIS 3.1.4 in 1 von 5 Läufen auf `account`.
+**Voraussetzung:** Schritt 9e. Läuft komplett ohne AWS (Groq, ADR 0014). Ohne diese Regel bricht ein voller Architektur-Lauf etwa jedes fünfte Mal am Pflichtanker-Gate ab; der Cache ist seit 38b3128 ungültig.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #24 umsetzen` → Plan → Go (Gate-Design ist eine Weichenstellung)
+      Reihenfolge: Test in `tests/test_curation.py` → Pflichtanker übersteuern `scope_level` auf `template` mit festem Satz im Auswahlprotokoll → ADR
+- [ ] **Echter Lauf** 🤖 👤 „Erzeuge die Architektur-Auswahl neu“ (`select --audit-type architecture`, ohne Flag = Groq). 👤 Prüfe: Beide Gates grün, kein Cache-Eintrag von Hand gelöscht?
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #24`
+- [ ] **Verstehen** 👤 `/verstehen 24` (Kernfrage: warum ein Preset das Urteil des LLM übersteuern darf, aber nur beim `scope_level`)
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Ein Lauf ohne Cache beide Gates besteht und das ADR die Regel festhält.
+**Fürs Fachgespräch:** Reproduzierbarkeit, Testorakel als Quelle der Wahrheit, „Das LLM urteilt, der Code wählt aus“.
+
+---
+
 ### Schritt 10g – #32 Audit fail closed nach Retry: Modell korrigiert den Status, aber nicht die Pflichtfelder
 
 **Ziel:** Die Gegenproben `arch-antragseingang-fehlerhaft` und `spec-meldeportal-gesundheit` liefern mit Bedrock wieder einen Audit-Report, statt nach einem Retry fail closed abzubrechen.
@@ -481,25 +498,12 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #32: Retry-Prompt mit Pflichtfeldern oder Empfehlung aus der Prüfregel; doppelte Befunde` (Prompt-Design ist eine Weichenstellung)
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #32 umsetzen` → Plan → Go
-- [ ] **Messen** 👤 `/audit-messen arch-antragseingang-fehlerhaft mit Bedrock, spec-meldeportal-gesundheit 2× mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected`
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #32`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #32` (Code-Stand, ohne Messung)
+- [ ] ☁ **Messen** 👤 `/audit-messen arch-antragseingang-fehlerhaft mit Bedrock, spec-meldeportal-gesundheit 2× mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected`
 - [ ] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Beide Gegenproben mit Bedrock `expected` erfüllen und kein Befund ohne Pflichtfelder in den Report kommt.
 **Fürs Fachgespräch:** Fail closed als Sicherheitsprinzip und seine Kosten für die Verfügbarkeit, „Was der Code weiß, fragt man das Modell nicht“.
-
----
-
-### Schritt 10h – #33 Messung: Gegenprobe FAIL-Prüfer mit Bedrock (Art. 9, Ergebnisse aus #29)
-
-**Ziel:** Der FAIL-Prüfer aus #31 stuft mit Bedrock kein echtes FAIL herab und ändert nichts an den Ergebnissen aus #29.
-**Voraussetzung:** Schritt 10f (#31) und wieder AWS-Zugriff. Unabhängig von #32, dank kleinem Katalog.
-
-- [ ] **Messen** 👤 `/audit-messen spec-meldeportal-gesundheit mit Bedrock über einen kleinen Katalog mit Art. 9 und M60.P01, spec-wohngeld-openapi mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Zähler des Prüfers
-- [ ] **Abschließen** 👤 schließt #33 (bei Herabstufung von Art. 9: neues Ticket statt Abschluss)
-
-**Fertig, wenn:** Art. 9 mit Bedrock FAIL bleibt und vom Prüfer bestätigt ist, Wohngeld mit Bedrock WARN zeigt.
-**Fürs Fachgespräch:** Gegenprobe gegen das zweite Modell, ein Prüfer darf echte Verstöße nicht wegdiskutieren.
 
 ---
 
@@ -511,10 +515,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #9 umsetzen`
       Reihenfolge: `Trace` und `AuditEvent` bauen → `handler.py` mit Feld `provider` (Groq-Adapter ins Lambda-Paket, `GROQ_API_KEY` aus SSM SecureString) → CDK-Stack mit Assertions-Tests (Tests auf das erzeugte Template).
 - [ ] **Sicherheit** 👤 `/security-review` vor dem ersten Deploy
-- [ ] **Einrichten** falls nötig: 👤 `/wizard cdk bootstrap für eu-central-1` → 👤 Wizard ausführen
-- [ ] **Deploy + Test** 👤 „Deploye den Stack und ruf /audit/architecture mit dem größten Preset auf“ → Go → 👤 `/run`. Läuft es in den Lambda-Timeout: 👤 `/model opus`, dann `/diagnosing-bugs`
 - [ ] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und `gh issue view 9`. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #9`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #9` (Code-Stand, ohne Deploy)
+- [ ] **Einrichten** falls nötig: 👤 `/wizard cdk bootstrap für eu-central-1` (Wizard erzeugen geht ohne AWS)
+- [ ] ☁ **Einrichten** 👤 Wizard ausführen
+- [ ] ☁ **Deploy + Test** 👤 „Deploye den Stack und ruf /audit/architecture mit dem größten Preset auf“ → Go → 👤 `/run`. Läuft es in den Lambda-Timeout: 👤 `/model opus`, dann `/diagnosing-bugs`
 - [ ] **Verstehen** 👤 `/verstehen 9` (Schwerpunkt: IAM, KMS und Audit-Protokoll)
 - [ ] **Abschließen** 👤 committet und pusht
 
@@ -528,18 +533,41 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Jeder Push auf `main` rollt GovGuard nach dem Selbst-Audit aus; die Demo-UI auditiert Spezifikationen und Architekturen öffentlich.
 **Voraussetzung:** Schritte 9 und 11.
 
-- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard Einmalige AWS-Einrichtung für deploy.yml: OIDC-Deploy-Rolle, IAM-User für Streamlit, Secrets, GROQ_API_KEY als SSM SecureString` → 👤 Wizard ausführen. Der Wizard ist zugleich die Anleitung, die das Ticket verlangt.
+- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard Einmalige AWS-Einrichtung für deploy.yml: OIDC-Deploy-Rolle, IAM-User für Streamlit, Secrets, GROQ_API_KEY als SSM SecureString`. Der Wizard ist zugleich die Anleitung, die das Ticket verlangt.
 - [ ] **Bauen Pipeline** 🤖 _Sonnet_ · 👤 „Setze aus Issue #11 die `deploy.yml` um“ → Plan → Go. Die Ausnahmen für Prüfregeln (z. B. FSBP `APIGateway.4`, `Lambda.3`) entstehen hier, mit Begründung (Weichenstellung).
-- [ ] **Bauen UI** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 12 und `gh issue view 11`. Baue nur die Streamlit-UI in `ui/`, ohne Archetyp-Abruf.“
-- [ ] **Ausprobieren** 👤 `/run Streamlit-UI lokal starten, Preset auditieren, Screenshot`
+- [ ] **Bauen UI** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 12 und `gh issue view 11`. Baue nur die Streamlit-UI in `ui/`, ohne Archetyp-Abruf. Zum Testen ohne AWS zeigt die UI einen gespeicherten Report (JSON).“
+- [ ] **Ausprobieren** 👤 `/run Streamlit-UI lokal mit gespeichertem Report starten, Screenshot`
 - [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review`
-- [ ] **Live** 👤 Pushen → Pipeline beobachten → UI auf Streamlit Community Cloud öffnen
-- [ ] **Prüfen** 👤 `/code-review gegen Issue #11`
+- [ ] **Prüfen** 👤 `/code-review gegen Issue #11` (Code-Stand, ohne Live)
+- [ ] ☁ **Einrichten** 👤 Wizard ausführen
+- [ ] ☁ **Live** 👤 Pushen → Pipeline beobachten → UI auf Streamlit Community Cloud öffnen, Preset auditieren
 - [ ] **Verstehen** 👤 `/verstehen 11`, danach `/verstehen probe` (Generalprobe)
 - [ ] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Ein Push den Deploy mit Selbst-Audit auslöst und die öffentliche UI ein Preset auditiert.
 **Fürs Fachgespräch:** Dogfooding, begründete Ausnahmen, ein einziger Weg in die Produktion, bewusstes US-Hosting nur mit fiktiven Daten.
+
+---
+
+## AWS-Nachholblock (sobald AWS zurück ist)
+
+Alle ☁-Kästchen am Stück, in dieser Reihenfolge. Kein Zugriff bis Mo 19.10.: 🆕 _Opus_ · 👤 `/grilling Demo-Fallback ohne AWS: lokale UI mit Groq?` (Datenresidenz ist eine Weichenstellung).
+
+1. 👤 `aws sso login`, dann `aws sts get-caller-identity`
+2. Schritt 10g ☁ Messen und Schritt 10h Messen (eine Session mit `/audit-messen`)
+3. Schritt 11 ☁ Einrichten, ☁ Deploy + Test
+4. Schritt 12 ☁ Einrichten, ☁ Live
+
+### Schritt 10h – #33 Messung: Gegenprobe FAIL-Prüfer mit Bedrock (Art. 9, Ergebnisse aus #29)
+
+**Ziel:** Der FAIL-Prüfer aus #31 stuft mit Bedrock kein echtes FAIL herab und ändert nichts an den Ergebnissen aus #29.
+**Voraussetzung:** Schritt 10f (#31) und wieder AWS-Zugriff. Unabhängig von #32, dank kleinem Katalog.
+
+- [ ] ☁ **Messen** 👤 `/audit-messen spec-meldeportal-gesundheit mit Bedrock über einen kleinen Katalog mit Art. 9 und M60.P01, spec-wohngeld-openapi mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Zähler des Prüfers
+- [ ] **Abschließen** 👤 schließt #33 (bei Herabstufung von Art. 9: neues Ticket statt Abschluss)
+
+**Fertig, wenn:** Art. 9 mit Bedrock FAIL bleibt und vom Prüfer bestätigt ist, Wohngeld mit Bedrock WARN zeigt.
+**Fürs Fachgespräch:** Gegenprobe gegen das zweite Modell, ein Prüfer darf echte Verstöße nicht wegdiskutieren.
 
 ---
 
@@ -570,24 +598,24 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-## Nur wenn ein Tag frei wird (Schnittlinie ✂)
+## Priorität B – Ausbau (entfällt, Stand 15.10.)
 
-Start nur, wenn Schritt 14 fertig ist und vor der Abgabe ein Tag frei bleibt. Sonst sind beide im Fachgespräch Ausbau.
+Im Fachgespräch Ausbau: Der Build läuft lokal per `python -m kb_build`; für die Archetypen liegen Steckbriefe, ADR 0003 und 0009 vor.
 
-### Schritt 15 – #24 Pflichtanker ohne Nachwürfeln auswählen
+### Schritt 12a – #34 Audit-Reports in S3 speichern (mit Löschfrist)
 
-**Ziel:** Ein `select`-Lauf ohne Cache besteht das Pflichtanker-Gate ohne Handeingriff. Bei #19 wurden CIS 3.1.4 und BSI BER.4.1 von Hand neu beurteilt; in der Probe vom 14.10. kippt CIS 3.1.4 in 1 von 5 Läufen auf `account`.
-**Voraussetzung:** Schritt 9e. Kommt vor #8: Ohne diese Regel bricht ein voller Architektur-Lauf im Workflow etwa jedes fünfte Mal am Pflichtanker-Gate ab; der Cache ist seit 38b3128 ungültig.
+**Ziel:** Der Handler speichert jeden Audit-Report verschlüsselt in einem eigenen Bucket mit Löschfrist; das `AuditEvent` verweist über `request_id` darauf.
+**Voraussetzung:** Schritt 12 (Selbst-Audit in `deploy.yml`). Erst, wenn A fertig ist und ein Tag frei bleibt.
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #24 umsetzen` → Plan → Go (Gate-Design ist eine Weichenstellung)
-      Reihenfolge: Test in `tests/test_curation.py` → Pflichtanker übersteuern `scope_level` auf `template` mit festem Satz im Auswahlprotokoll → ADR
-- [ ] **Echter Lauf** 🤖 👤 „Erzeuge die Architektur-Auswahl neu“ (`select --audit-type architecture`, ohne Flag = Groq). 👤 Prüfe: Beide Gates grün, kein Cache-Eintrag von Hand gelöscht?
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #24`
-- [ ] **Verstehen** 👤 `/verstehen 24` (Kernfrage: warum ein Preset das Urteil des LLM übersteuern darf, aber nur beim `scope_level`)
+- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #34: Zweck, Löschfrist, Reports mit oder ohne evidence` (Datenschutz und IAM sind Weichenstellungen) → 🤖 schreibt das ADR
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #34 umsetzen` → Plan → Go
+      Reihenfolge: `put_report()` in `aws_services.py` (Stubber) → Handler (Fehler beim Speichern blockiert den Report nicht) → CDK-Bucket mit Assertions-Tests (KMS, TLS, Lifecycle, nur `PutObject`) → cdk-nag und Ausnahmen
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #34`
+- [ ] ☁ **Deploy + Test** 👤 Pushen → Selbst-Audit grün? → einen Aufruf machen, Objekt unter `reports/` mit der Auditor-Rolle lesen
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Ein Lauf ohne Cache beide Gates besteht und das ADR die Regel festhält.
-**Fürs Fachgespräch:** Reproduzierbarkeit, Testorakel als Quelle der Wahrheit, „Das LLM urteilt, der Code wählt aus“.
+**Fertig, wenn:** Ein Aufruf einen Report in S3 ablegt, die Lambda ihn nicht lesen kann und das Selbst-Audit grün bleibt.
+**Fürs Fachgespräch:** Nachvollziehbarkeit gegen Datenminimierung, Löschfrist statt Object Lock (Art. 17 DSGVO), Least Privilege (nur Schreiben).
 
 ---
 
@@ -608,10 +636,6 @@ Start nur, wenn Schritt 14 fertig ist und vor der Abgabe ein Tag frei bleibt. So
 **Fürs Fachgespräch:** OIDC statt langlebiger Keys, Gate vor Merge, alte Version bleibt bei Rot aktiv.
 
 ---
-
-## Priorität B – Golden Archetypes (entfällt, Stand 14.10.)
-
-Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 
 ### Schritt 17 – #7 Golden Archetypes mit Freigabe
 
