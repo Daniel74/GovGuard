@@ -27,8 +27,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | Tag                | Arbeit                                                                                                                                                                  |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Mi 14.10.          | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                        |
-| Do 15.10.          | Schritt 10a: Diagnose fail closed und Messung mit Durchlauf. Schritte 10b–10d: #27 KI-Governance, #28 Bewertung, #29 Wissensbasis. Wird es knapp, rutscht #29 hinter #9 |
-| Fr 16. – Sa 17.10. | Schritt 11: #9 Stack und Endpunkte, Deploy und Messung am Samstag                                                                                                       |
+| Do 15.10.          | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen                                                                                             |
+| Fr 16. – Sa 17.10. | Schritt 10f abschließen (Messen, Prüfen). Schritt 11: #9 Stack und Endpunkte mit Groq-Option, Deploy und Messung am Samstag. #32 (Schritt 10g) nur, wenn Zeit bleibt    |
 | So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                         |
 | Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                               |
 | Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                   |
@@ -61,6 +61,10 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 10a     | A    | #26 Belege bei großen Eingaben  | 🤖 Opus                                          | 🤖 Opus                    |
 | 10b     | A    | #27 KI-Governance sichtbar      | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 10c     | A    | #28 FAIL nur bei Verstoß        | 🤖 Opus                                          | 🤖 Opus                    |
+| 10d     | A    | #29 Spec-Katalog Festlegungen   | 🤖 Opus                                          | 🤖 Opus                    |
+| 10e     | A    | #30 Build-Log Retry-Gründe      | 🤖 Sonnet                                        | 🤖 Opus                    |
+| 10f     | A    | #31 FAIL-Prüfer zur Laufzeit    | 🤖 Opus                                          | 🤖 Opus                    |
+| 10g     | A    | #32 Fail closed nach Retry      | 🤖 Opus                                          | 🤖 Opus                    |
 | 11      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
 | 12      | A    | #11 Deploy + UI                 | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
 | 13      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                                        | 👤                         |
@@ -453,20 +457,20 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-### Schritt 10f – #31 Spec-Audit mit Groq: FAIL mit Fehlen-Begründung trotz Festlegungs-Kriterium
+### Schritt 10f – #31 Spec-Audit: LLM-Prüfer bestätigt jedes FAIL zur Laufzeit (offene Welt)
 
-**Ziel:** Groq vergibt im Spec-Audit kein FAIL, das nur ein Fehlen begründet.
-**Voraussetzung:** Schritt 10d (neuer Spec-Katalog). Schritt 11 hängt nicht davon ab. Wird es knapp, rutscht 10f hinter Schritt 11, oder Groq fällt zur Laufzeit weg (ADR 0016).
+**Ziel:** Ein LLM-Prüfer bestätigt jedes FAIL im Spec-Audit oder stuft es auf WARN herab, für Bedrock und Groq. Groq bleibt Option, notfalls mit bekannter Grenze (ADR 0016).
+**Voraussetzung:** Schritt 10d (neuer Spec-Katalog). Schritt 11 hängt nicht davon ab, die UI in Schritt 12 zeigt aber den Zähler des Prüfers. Wird es knapp, rutscht 10f hinter Schritt 11.
 
-- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #31: Prompt, Gate, Prüfer zur Laufzeit oder Groq streichen?` (Prompt-Design und Kosten sind Weichenstellungen)
+- [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #31: Prompt, Gate, Prüfer zur Laufzeit oder Groq streichen?` (Prompt-Design und Kosten sind Weichenstellungen)
 - [ ] **Diagnose** 👤 `/audit-messen spec-wohngeld-openapi mit Groq und einem Katalog nur aus den 12 Regeln in #31`
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #31 umsetzen` → Plan → Go
-- [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi 2× mit Groq, spec-meldeportal-gesundheit mit Groq` → 🤖 notiert im Issue die Ergebnisse gegen `expected`
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #31 umsetzen` → Plan → Go. Halt beim Prompt des Prüfers (Weichenstellung Prompt-Design), danach weiter bis zur Integration in `run_audit`.
+- [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi 2× mit Groq, spec-meldeportal-gesundheit mit Groq, Art. 9 mit Bedrock über einen kleinen Katalog` → 🤖 notiert im Issue die Ergebnisse gegen `expected`. Der kleine Katalog ist nötig, weil Meldeportal mit Bedrock bis #32 fail closed abbricht.
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #31`
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** `spec-wohngeld-openapi` mit Groq in zwei Läufen WARN zeigt, Art. 9 bei `spec-meldeportal-gesundheit` FAIL bleibt und keine Änderung auf ein einzelnes Preset zielt.
-**Fürs Fachgespräch:** Modellwahl als Qualitätsfrage, Überanpassung an das Testorakel vermeiden.
+**Fertig, wenn:** Art. 9 bei `spec-meldeportal-gesundheit` mit beiden Modellen FAIL bleibt, jedes Urteil des Prüfers in `corrections` steht und Wohngeld mit Groq entweder WARN zeigt oder die Grenze in ADR 0016 steht.
+**Fürs Fachgespräch:** LLM-as-a-Judge zur Laufzeit, Herabstufen statt Retry, im Zweifel bleibt der strengere Status. Überanpassung an das Testorakel vermeiden.
 
 ---
 
@@ -492,7 +496,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritte 10b und 10c, Durchlauf aus Schritt 10a.
 
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #9 umsetzen`
-      Reihenfolge: `Trace` und `AuditEvent` bauen → `handler.py` → CDK-Stack mit Assertions-Tests (Tests auf das erzeugte Template)
+      Reihenfolge: `Trace` und `AuditEvent` bauen → `handler.py` mit Feld `provider` (Groq-Adapter ins Lambda-Paket) → CDK-Stack mit Assertions-Tests (Tests auf das erzeugte Template). Ablage von `GROQ_API_KEY` ist eine Weichenstellung (Issue #9).
 - [ ] **Sicherheit** 👤 `/security-review` vor dem ersten Deploy
 - [ ] **Einrichten** falls nötig: 👤 `/wizard cdk bootstrap für eu-central-1` → 👤 Wizard ausführen
 - [ ] **Deploy + Test** 👤 „Deploye den Stack und ruf /audit/architecture mit dem größten Preset auf“ → Go → 👤 `/run`. Läuft es in den Lambda-Timeout: 👤 `/model opus`, dann `/diagnosing-bugs`
