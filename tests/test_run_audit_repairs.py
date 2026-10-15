@@ -1,5 +1,6 @@
 """What the code repairs from the knowledge base needs no retry (ADR 0017, #32)."""
 
+import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 from test_run_audit import PASS_32, WARN_9, answer_in_turns
@@ -54,13 +55,15 @@ def test_contradicting_duplicates_keep_the_worst_status_without_retry(
                                  "(PASS, WARN): Der schwerere Status gilt."]
 
 
-def test_downgrade_belongs_to_the_kept_duplicate(arch_catalog, bucket_template, trace) -> None:
-    proven = {"rule_id": "ARCH-CIS-3.1.4", "status": "FAIL", "line_start": 4, "line_end": 7,
-              "rationale": "Nur BlockPublicAcls.", "recommendation": "Alle vier setzen."}
-    unproven = {**proven, "line_start": None, "line_end": None, "rationale": "Ohne Beleg."}
+PROVEN_FAIL = {"rule_id": "ARCH-CIS-3.1.4", "status": "FAIL", "line_start": 4, "line_end": 7,
+               "rationale": "Nur BlockPublicAcls.", "recommendation": "Alle vier setzen."}
+UNPROVEN_FAIL = {**PROVEN_FAIL, "line_start": None, "line_end": None, "rationale": "Ohne Beleg."}
 
+
+@pytest.mark.parametrize("findings", [[PROVEN_FAIL, UNPROVEN_FAIL], [UNPROVEN_FAIL, PROVEN_FAIL]])
+def test_proven_duplicate_wins_in_any_order(findings, arch_catalog, bucket_template, trace) -> None:
     def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
-        return ModelResponse(parts=[ToolCallPart("submit_audit", {"findings": [proven, unproven]})])
+        return ModelResponse(parts=[ToolCallPart("submit_audit", {"findings": findings})])
 
     report = run_audit(arch_catalog, bucket_template, FunctionModel(respond), trace)
 

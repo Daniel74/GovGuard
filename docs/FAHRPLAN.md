@@ -498,9 +498,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #32: Retry-Prompt mit Pflichtfeldern oder Empfehlung aus der Prüfregel; doppelte Befunde` (Prompt-Design ist eine Weichenstellung)
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #32 umsetzen` → Plan → Go
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #32` (Code-Stand, ohne Messung)
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #32` (Code-Stand, ohne Messung)
 - [ ] ☁ **Messen** (im AWS-Nachholblock, zusammen mit #33) 👤 `/audit-messen arch-antragseingang-fehlerhaft mit Bedrock, spec-meldeportal-gesundheit 2× mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected`
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Beide Gegenproben mit Bedrock `expected` erfüllen und kein Befund ohne Pflichtfelder in den Report kommt.
 **Fürs Fachgespräch:** Fail closed als Sicherheitsprinzip und seine Kosten für die Verfügbarkeit, „Was der Code weiß, fragt man das Modell nicht“.

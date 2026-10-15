@@ -15,6 +15,7 @@ def completeness_problems(expected: set[str], drafts: list[FindingDraft]) -> lis
         for label, ids in [
             ("Befund fehlt für", sorted(expected - counts.keys())),
             ("Unbekannte rule_id", sorted(counts.keys() - expected)),
+            # per package repairs.py keeps one finding per rule; guards the merged packages
             ("Mehr als ein Befund für", sorted(r for r, n in counts.items() if n > 1)),
         ]
         for rule_id in ids

@@ -1,7 +1,8 @@
 """What the code corrected in the model's answer: retry reasons and downgrades (#27).
 
-A problem is `(rule_id, text)`; the text is the line the model reads in the retry prompt and
-the reason the report shows (CONTEXT.md: Korrektur).
+A problem is `(rule_id, text)` the model must fix: the text is the line it reads in the retry
+prompt and the reason the report shows. A correction has the same shape, but the code acted
+itself, without a retry (CONTEXT.md: Korrektur).
 """
 
 from typing import NamedTuple
@@ -15,6 +16,11 @@ from govguard.models import FailJudgeCount, FindingDraft, Status
 class Problem(NamedTuple):
     rule_id: str  # "" when no rule is meant, e.g. a broken schema or the resource inventory
     text: str  # readable reason, the same line in the retry prompt and in the report
+
+
+class Correction(NamedTuple):
+    rule_id: str
+    text: str  # readable reason in the report, e.g. a repair or a verdict of the FAIL judge
 
 
 SCHEMA_PROBLEM = Problem("", "Die Antwort der KI entsprach nicht dem vorgegebenen Schema.")
@@ -59,11 +65,11 @@ class Corrections(BaseModel):
     """Collects what the validator corrects, over all packages of one audit."""
 
     downgrades: Downgrades = {}  # rule_id -> (original status, reason)
-    repairs: list[Problem] = []  # what the code filled in or chose itself, without a retry (#32)
+    repairs: list[Correction] = []  # what the code filled in or chose itself, no retry (#32)
     retry_problems: list[Problem] = []  # every problem that sent a package back to the model
     retries: int = 0  # packages (and the pre-run and the FAIL judge) with a retry
     failed: list[Problem] = []  # problems of a last attempt: the audit fails closed (HTTP 502)
-    verdicts: list[Problem] = []  # verdicts of the FAIL judge that keep the FAIL (#31)
+    verdicts: list[Correction] = []  # verdicts of the FAIL judge that keep the FAIL (#31)
     fail_judge: FailJudgeCount = FailJudgeCount()
 
     def record_verdict(self, rule_id: str, confirmed: bool, text: str) -> None:
@@ -71,7 +77,8 @@ class Corrections(BaseModel):
         self.fail_judge.checked += 1
         if confirmed:
             self.fail_judge.confirmed += 1
-            self.verdicts.append(Problem(rule_id, f"{rule_id}: Prüfer bestätigt das FAIL: {text}"))
+            self.verdicts.append(
+                Correction(rule_id, f"{rule_id}: Prüfer bestätigt das FAIL: {text}"))
         else:
             self.fail_judge.downgraded += 1
             self.downgrades[rule_id] = (
@@ -82,7 +89,7 @@ class Corrections(BaseModel):
         self.fail_judge.checked += 1
         self.fail_judge.unavailable += 1
         self.verdicts.append(
-            Problem(rule_id, f"{rule_id}: Prüfer nicht verfügbar ({reason}), FAIL ungeprüft"))
+            Correction(rule_id, f"{rule_id}: Prüfer nicht verfügbar ({reason}), FAIL ungeprüft"))
 
     def record_retry(self, reason_sent: bool) -> None:
         """Once per package, on its retry; without a reason from the code the schema broke."""
@@ -103,9 +110,9 @@ class Corrections(BaseModel):
         if last_attempt:
             self.failed += problems
 
-    def record_repairs(self, rule_ids: set[str], repairs: list[Problem]) -> None:
+    def record_repairs(self, rule_ids: set[str], repairs: list[Correction]) -> None:
         """Like a downgrade, a repair counts only from the last attempt."""
-        self.repairs = [p for p in self.repairs if p.rule_id not in rule_ids] + repairs
+        self.repairs = [c for c in self.repairs if c.rule_id not in rule_ids] + repairs
 
     def fail_closed(self, error: Exception) -> AuditValidationError:
         """Throttled or down: own sentence. Invalid after the retry: its reasons."""
@@ -120,6 +127,6 @@ class Corrections(BaseModel):
     def for_rule(self, rule_id: str) -> dict:
         """The fields `downgraded_from` and `corrections` of the finding of this rule."""
         original, reason = self.downgrades.get(rule_id, (None, None))
-        reasons = [p.text for p in self.retry_problems + self.repairs + self.verdicts
-                   if p.rule_id == rule_id]
+        reasons = [r.text for r in [*self.retry_problems, *self.repairs, *self.verdicts]
+                   if r.rule_id == rule_id]
         return {"downgraded_from": original, "corrections": reasons + ([reason] if reason else [])}
