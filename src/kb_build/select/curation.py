@@ -29,10 +29,19 @@ LEVEL_SENTENCES: dict[ScopeLevel, str] = {
     "people": "Die Pflicht liegt bei Personen oder Prozessen, nicht am Template.",
     "provider": "Die Pflicht liegt beim Cloud-Anbieter, nicht am Template.",
 }
+# A preset proves a pinned anchor is visible at the template, so the code overrides the level (#24)
+PINNED_LEVEL_SENTENCE = (
+    "Pflichtanker eines Presets: Der Code setzt die Ebene auf „template“, "
+    "denn das Preset belegt, dass der Befund am Template erkennbar ist.")
 
 
-def _decide(source: SourceName, requirement: Requirement, judge: Judge) -> Verdict:
-    """One verdict per requirement; only the testable question goes to the LLM."""
+def _decide(
+    source: SourceName, requirement: Requirement, judge: Judge, pinned: bool = False
+) -> Verdict:
+    """One verdict per requirement; only the testable question goes to the LLM.
+
+    A pinned anchor keeps `testable` and the types from the LLM, but its level is `template` (#24).
+    """
     fields = {"source": source, "requirement_id": requirement.id, "title": requirement.title}
     if not requirement.prefilter_passed:
         reason = requirement.prefilter_reason or NO_REASON
@@ -43,9 +52,13 @@ def _decide(source: SourceName, requirement: Requirement, judge: Judge) -> Verdi
     fields["cfn_resource_types"] = answer.cfn_resource_types
     if not answer.testable:
         return Verdict(**fields, outcome="not_testable", rationale=answer.rationale)
+    rationale = answer.rationale
+    if judge.audit_type == "architecture" and pinned and answer.scope_level != "template":
+        answer = answer.model_copy(update={"scope_level": "template"})
+        rationale = f"{rationale} {PINNED_LEVEL_SENTENCE}"
     if judge.audit_type == "architecture" and (reason := _not_relevant_reason(answer)):
         return Verdict(**fields, outcome="not_relevant", rationale=reason)
-    return Verdict(**fields, outcome="selected", rationale=answer.rationale)
+    return Verdict(**fields, outcome="selected", rationale=rationale)
 
 
 def _not_relevant_reason(answer: Classification) -> str | None:
@@ -67,14 +80,14 @@ def _pinned_outcomes(
     """Fail fast: pinned anchors are decided first, before ~800 other requirements are paid."""
     by_anchor = {r.primary_anchor: (s.source, r) for s in sources for r in s.requirements}
     found = sorted(pinned & by_anchor.keys())
-    return {a: _decide(*by_anchor[a], judge).outcome for a in found}
+    return {a: _decide(*by_anchor[a], judge, pinned=True).outcome for a in found}
 
 
-def _source_verdicts(source: ExtractedSource, judge: Judge) -> list[Verdict]:
+def _source_verdicts(source: ExtractedSource, judge: Judge, pinned: set[str]) -> list[Verdict]:
     total, asked = sum(r.prefilter_passed for r in source.requirements), 0
     verdicts = []
     for requirement in source.requirements:
-        verdict = _decide(source.source, requirement, judge)
+        verdict = _decide(source.source, requirement, judge, requirement.primary_anchor in pinned)
         if requirement.prefilter_passed:
             asked += 1
             tested = "not testable" if verdict.outcome == "not_testable" else "testable"
@@ -94,7 +107,7 @@ def curate(
 ) -> CurationResult:
     """The LLM judges, the code selects: prefilter, testable, relevant; then the two gates."""
     check_pinned(pinned, _pinned_outcomes(pinned, sources, judge))
-    verdicts = [v for s in sources for v in _source_verdicts(s, judge)]
+    verdicts = [v for s in sources for v in _source_verdicts(s, judge, pinned)]
     selected = [
         SelectedRequirement(
             requirement_id=v.requirement_id, source=v.source, rationale=v.rationale,

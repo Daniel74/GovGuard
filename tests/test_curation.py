@@ -175,10 +175,37 @@ def test_the_spec_audit_ignores_the_level_of_the_duty() -> None:
     assert [s.requirement_id for s in result.selection.selected] == ["Art. 58"]
 
 
-def test_a_pinned_anchor_with_an_account_duty_aborts_the_build() -> None:
-    with pytest.raises(ValueError, match="A 4.4"):
-        curate_cis(cis_source(req("4.4")),
-                   {"4.4": can_test("AWS::S3::Bucket", level="account")}, pinned={"A 4.4"})
+def test_a_pinned_anchor_with_an_account_duty_is_selected_with_a_fixed_sentence() -> None:
+    # Issue #24: CIS 3.1.4 tipped to `account` in 1 of 5 runs; the preset proves it is checkable
+    result, _ = curate_cis(cis_source(req("3.1.4")),
+                           {"3.1.4": can_test("AWS::S3::Bucket", level="account")},
+                           pinned={"A 3.1.4"})
+
+    verdict = result.verdicts[0]
+    assert verdict.outcome == "selected"
+    assert verdict.cfn_resource_types == ["AWS::S3::Bucket"]  # the types stay with the LLM
+    assert verdict.rationale == (
+        "prüfbar Pflichtanker eines Presets: Der Code setzt die Ebene auf „template“, "
+        "denn das Preset belegt, dass der Befund am Template erkennbar ist.")
+    assert result.selection.selected[0].rationale == verdict.rationale
+
+
+@pytest.mark.parametrize("level", ["people", "provider"])
+def test_the_override_covers_every_level_but_only_for_the_pinned_anchor(level: str) -> None:
+    source = cis_source(req("3.1.4"), req("4.4"))
+    answers = {"3.1.4": can_test("AWS::S3::Bucket", level=level),
+               "4.4": can_test("AWS::S3::Bucket", level=level)}
+
+    result, _ = curate_cis(source, answers, pinned={"A 3.1.4"})
+
+    assert outcomes(result) == {"3.1.4": "selected", "4.4": "not_relevant"}
+
+
+def test_a_pinned_anchor_with_the_level_template_gets_no_sentence() -> None:
+    result, _ = curate_cis(cis_source(req("3.1.4")), {"3.1.4": can_test("AWS::S3::Bucket")},
+                           pinned={"A 3.1.4"})
+
+    assert result.verdicts[0].rationale == "prüfbar"  # nothing was overridden, nothing to show
 
 
 def test_the_llm_rationale_stays_for_selected_and_not_testable_requirements() -> None:
@@ -247,6 +274,15 @@ def test_a_pinned_anchor_that_is_selected_passes_the_gate() -> None:
 @pytest.mark.parametrize("answer", [NOT_TESTABLE, can_test("AWS::CloudTrail::Trail"), INVENTED],
                          ids=["not testable", "not relevant", "llm error"])
 def test_a_pinned_anchor_that_is_not_selected_aborts_the_build(answer: dict) -> None:
+    with pytest.raises(ValueError, match="A 4.6"):
+        curate_cis(cis_source(req("4.6")), {"4.6": answer}, pinned={"A 4.6"})
+
+
+@pytest.mark.parametrize("answer", [
+    {**NOT_TESTABLE, "scope_level": "account"},
+    can_test("AWS::CloudTrail::Trail", level="account"),
+], ids=["not testable", "outside the scope"])
+def test_the_level_override_does_not_hide_other_reasons_to_abort(answer: dict) -> None:
     with pytest.raises(ValueError, match="A 4.6"):
         curate_cis(cis_source(req("4.6")), {"4.6": answer}, pinned={"A 4.6"})
 

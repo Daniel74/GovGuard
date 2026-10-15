@@ -23,18 +23,18 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag                | Arbeit                                                                                                                                                               |
-| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.          | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                     |
-| Do 15.10.          | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                                           |
-| Fr 16.10.          | Schritt 10g: #32 klären und per TDD bauen (bis ☁). Schritt 11: #9 `Trace`, `AuditEvent`, Handler, Groq-Adapter                                                       |
-| Sa 17.10.          | Schritt 11: CDK-Stack mit Assertions-Tests, cdk-nag, `/security-review` (bis ☁)                                                                                      |
-| So 18.10.          | Schritt 12: #11 `deploy.yml` und Wizard-Skript (bis ☁); Junie baut parallel die UI gegen einen gespeicherten Report                                                  |
-| Mo 19.10.          | AWS zurück: AWS-Nachholblock. Kein AWS: Weichenstellung Demo-Fallback lokal mit Groq (Datenresidenz). Das Claude-Wochenlimit setzt zurück                            |
-| Di 20.10.          | Rest des AWS-Nachholblocks. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                    |
-| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                       |
-| 22.–25.10.         | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                       |
-| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                        |
+| Tag        | Arbeit                                                                                                                                    |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.  | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                          |
+| Do 15.10.  | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                |
+| Fr 16.10.  | Schritt 10g: #32 klären und per TDD bauen (bis ☁). Schritt 11: #9 `Trace`, `AuditEvent`, Handler, Groq-Adapter                            |
+| Sa 17.10.  | Schritt 11: CDK-Stack mit Assertions-Tests, cdk-nag, `/security-review` (bis ☁)                                                           |
+| So 18.10.  | Schritt 12: #11 `deploy.yml` und Wizard-Skript (bis ☁); Junie baut parallel die UI gegen einen gespeicherten Report                       |
+| Mo 19.10.  | AWS zurück: AWS-Nachholblock. Kein AWS: Weichenstellung Demo-Fallback lokal mit Groq (Datenresidenz). Das Claude-Wochenlimit setzt zurück |
+| Di 20.10.  | Rest des AWS-Nachholblocks. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                         |
+| Mi 21.10.  | Abgabe, Puffer                                                                                                                            |
+| 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                            |
+| Mo 26.10.  | Präsentation und Fachgespräch                                                                                                             |
 
 **Wer baut was:**
 
@@ -479,7 +479,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Ein `select`-Lauf ohne Cache besteht das Pflichtanker-Gate ohne Handeingriff. Bei #19 wurden CIS 3.1.4 und BSI BER.4.1 von Hand neu beurteilt; in der Probe vom 14.10. kippt CIS 3.1.4 in 1 von 5 Läufen auf `account`.
 **Voraussetzung:** Schritt 9e. Läuft komplett ohne AWS (Groq, ADR 0014). Ohne diese Regel bricht ein voller Architektur-Lauf etwa jedes fünfte Mal am Pflichtanker-Gate ab; der Cache ist seit 38b3128 ungültig.
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #24 umsetzen` → Plan → Go (Gate-Design ist eine Weichenstellung)
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #24 umsetzen` → Plan → Go (Gate-Design ist eine Weichenstellung)
       Reihenfolge: Test in `tests/test_curation.py` → Pflichtanker übersteuern `scope_level` auf `template` mit festem Satz im Auswahlprotokoll → ADR
 - [ ] **Echter Lauf** 🤖 👤 „Erzeuge die Architektur-Auswahl neu“ (`select --audit-type architecture`, ohne Flag = Groq). 👤 Prüfe: Beide Gates grün, kein Cache-Eintrag von Hand gelöscht?
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #24`

@@ -21,6 +21,7 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 - **Komponente**: AWS-Dienst, aus dem ein Golden Archetype besteht, z. B. API Gateway, Lambda, SQS. _Code_: `required_types`. _Vermeiden_: Baustein (gehört dem SDM)
 - **Golden Archetype**: Vorab auditierte und freigegebene Referenzarchitektur für ein wiederkehrendes Behörden-Workload-Muster, als vollständige Kette vom API-Eingang bis zur Ablage, ohne Portal. _Code_: `Archetype`. _Vermeiden_: Pattern, Blueprint, Vorlage
 - **Freigabe**: Zustand eines Golden Archetype, der das Architektur-Audit und eine unabhängige deterministische Prüfung ohne Beanstandung bestanden hat; erlaubt sind nur Ausnahmen. _Code_: `approved`
+- **Pflichtanker**: Primäranker eines Pflichtbefunds in einem Preset; das Gate bricht den Build ab, wenn er nicht aufgenommen ist, und der Code setzt seine Ebene auf `template` (ADR 0022, #24). _Code_: `pinned` (`pinned_anchors`). _Vermeiden_: Pinned Anchor, Gesetzter Platz
 - **Ausnahme**: Begründeter, von Hand gepflegter Eintrag in einer Allowlist, der einem Golden Archetype oder dem GovGuard-Stack einen nicht behebbaren cdk-nag-Error oder den Verstoß gegen eine bewusst nicht erfüllte Prüfregel erlaubt. _Code_: `NagException`. _Vermeiden_: Suppression, Acknowledge
 
 ## Audit
