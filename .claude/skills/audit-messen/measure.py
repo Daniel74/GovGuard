@@ -1,7 +1,8 @@
 """Run `govguard.cli.main()` against a real model; report wall time, tokens and retry reasons.
 
 Usage: uv run python .claude/skills/audit-messen/measure.py spec|arch <file> [--catalog <json>]
-Report JSON -> stdout, measurements -> stderr, retries and downgrades from the report (#27).
+Report JSON -> stdout, measurements -> stderr, retries and downgrades from the report (#27),
+the verdicts of the FAIL judge too (#31).
 MEASURE_MODEL=groq measures Groq (ADR 0016).
 On fail closed the CLI writes the problems of the last attempt to stderr (AuditValidationError).
 """
@@ -19,11 +20,13 @@ from pydantic_ai.models.wrapper import WrapperModel
 from govguard import cli
 from govguard.aws_services import bedrock_model
 
+JUDGE_OUTPUT = "submit_fail_verdicts"  # output name of the FAIL judge in fail_judge.py
+
 
 class Measuring(WrapperModel):
     def __init__(self, wrapped) -> None:
         super().__init__(wrapped)
-        self.calls: list[tuple[float, int, int, bool]] = []  # seconds, input, output, is_retry
+        self.calls: list[tuple[float, int, int, str]] = []  # seconds, input, output, label
         self.retries: list[str] = []
         self.schema_retries = 0  # schema violations, not content problems
 
@@ -36,8 +39,15 @@ class Measuring(WrapperModel):
         start = time.perf_counter()
         response = await super().request(messages, model_settings, model_request_parameters)
         self.calls.append((time.perf_counter() - start, response.usage.input_tokens,
-                           response.usage.output_tokens, bool(retry)))
+                           response.usage.output_tokens, _label(model_request_parameters, retry)))
         return response
+
+
+def _label(params, retry: list) -> str:
+    """JUDGE marks the request of the FAIL judge (#31), RETRY a package sent back."""
+    names = [t.name for t in params.output_tools]
+    names += [params.output_object.name] if params.output_object else []
+    return (" JUDGE" if JUDGE_OUTPUT in names else "") + (" RETRY" if retry else "")
 
 
 def _model_and_prices() -> tuple:
@@ -57,6 +67,9 @@ def _print_corrections(report_json: str) -> None:
     print(f"packages with retry: {report['retries']} downgrades: {len(downgraded)} "
           f"(PASS->WARN: {downgraded.count('PASS')}, FAIL->WARN: {downgraded.count('FAIL')}) "
           f"unassigned corrections: {len(report['unassigned_corrections'])}", file=sys.stderr)
+    judge = report["fail_judge"]
+    print(f"fail judge: checked {judge['checked']} confirmed {judge['confirmed']} "
+          f"downgraded {judge['downgraded']} unavailable {judge['unavailable']}", file=sys.stderr)
 
 
 wrapped, price_in, price_out = _model_and_prices()
@@ -73,9 +86,8 @@ cost = tokens_in * price_in + tokens_out * price_out
 print(f"model={model.model_name}", file=sys.stderr)
 print(f"exit={code} wall={wall:.1f}s calls={len(model.calls)} input_tokens={tokens_in} "
       f"output_tokens={tokens_out} cost_usd={cost:.2f}", file=sys.stderr)
-for seconds, t_in, t_out, is_retry in sorted(model.calls):
-    print(f"  call {seconds:5.1f}s in={t_in} out={t_out}{' RETRY' if is_retry else ''}",
-          file=sys.stderr)
+for seconds, t_in, t_out, label in sorted(model.calls):
+    print(f"  call {seconds:5.1f}s in={t_in} out={t_out}{label}", file=sys.stderr)
 print(f"retry prompts sent: {len(model.retries)} (schema: {model.schema_retries}) "
       f"output_tokens_per_call={tokens_out / max(len(model.calls), 1):.0f}", file=sys.stderr)
 _print_corrections(stdout.getvalue())

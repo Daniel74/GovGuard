@@ -12,6 +12,7 @@ from pydantic_ai.models import Model
 from govguard.audit_gates import answer_problems, completeness_problems, without_equal_duplicates
 from govguard.corrections import AuditValidationError, Corrections, downgrades_of
 from govguard.evidence import MAX_SPAN, evidence_of, numbered, without_unproven_verdict
+from govguard.fail_judge import judge_fails, provider_of
 from govguard.inventory import resource_inventory
 from govguard.models import (
     AuditReport,
@@ -116,15 +117,18 @@ def run_audit(catalog: RuleCatalog, input_text: str, model: Model, trace: Trace)
         trace=trace,
         unassigned_corrections=corrections.unassigned({rule.id for rule in catalog.rules}),
         retries=corrections.retries,
+        fail_judge=corrections.fail_judge,
     )
 
 
 async def _drafts(
     catalog: RuleCatalog, input_text: str, model: Model, corrections: Corrections
 ) -> list[FindingDraft]:
-    """N/A by code via the resource inventory; a template in a spec audit goes to the model."""
+    """Spec, a template too: every FAIL goes to the judge (open world, #31). Architecture:
+    N/A by code via the resource inventory."""
     if catalog.audit_type != "architecture":
-        return await _ask_in_packages(catalog.rules, input_text, None, model, corrections)
+        drafts = await _ask_in_packages(catalog.rules, input_text, None, model, corrections)
+        return await judge_fails(catalog.rules, drafts, input_text, model, corrections)
     inventory = await resource_inventory(catalog.rules, input_text, model, corrections)
     to_model = [rule for rule in catalog.rules if inventory.applies(rule)]
     drafts = [_na_by_code(rule, inventory.na_rationale)
@@ -139,7 +143,7 @@ async def _ask_in_packages(
 ) -> list[FindingDraft]:
     """Packages in parallel, so the audit stays within the 180 s (ADR 0018); Groq throttled."""
     packages = [rules[i:i + PACKAGE_SIZE] for i in range(0, len(rules), PACKAGE_SIZE)]
-    slots = asyncio.Semaphore(_MAX_PARALLEL.get(_provider(model), len(packages) or 1))
+    slots = asyncio.Semaphore(_MAX_PARALLEL.get(provider_of(model), len(packages) or 1))
 
     async def ask(package: list[Rule]) -> list[FindingDraft]:
         async with slots:
@@ -157,14 +161,9 @@ def _na_by_code(rule: Rule, rationale: str) -> FindingDraft:
 
 
 async def _ask_model(deps: AuditDeps, model: Model) -> list[FindingDraft]:
-    agent = _AGENTS[_provider(model)]
+    agent = _AGENTS[provider_of(model)]
     result = await agent.run(_user_prompt(deps), model=model, deps=deps)
     return result.output.findings
-
-
-def _provider(model: Model) -> str:
-    """Groq or Bedrock; test models (FunctionModel) behave like Bedrock."""
-    return "groq" if model.system == "groq" else "bedrock"
 
 
 def _user_prompt(deps: AuditDeps) -> str:

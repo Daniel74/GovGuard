@@ -9,7 +9,7 @@ from typing import NamedTuple
 from pydantic import BaseModel
 from pydantic_ai.exceptions import ModelAPIError, ModelHTTPError
 
-from govguard.models import FindingDraft, Status
+from govguard.models import FailJudgeCount, FindingDraft, Status
 
 
 class Problem(NamedTuple):
@@ -37,6 +37,13 @@ def downgrades_of(before: list[FindingDraft], after: list[FindingDraft]) -> Down
     }
 
 
+def service_down(error: Exception) -> bool:
+    """Throttled or down, not an invalid answer; Groq rejects a broken tool call with HTTP 400,
+    that is an invalid answer too (#26)."""
+    invalid = isinstance(error, ModelHTTPError) and error.status_code == 400
+    return isinstance(error, ModelAPIError) and not invalid
+
+
 class AuditValidationError(Exception):
     """LLM answer still invalid after the retry, or the model API failed; fail closed (HTTP 502).
 
@@ -55,6 +62,26 @@ class Corrections(BaseModel):
     retry_problems: list[Problem] = []  # every problem that sent a package back to the model
     retries: int = 0  # packages (and the pre-run) with a retry
     failed: list[Problem] = []  # problems of a last attempt: the audit fails closed (HTTP 502)
+    verdicts: list[Problem] = []  # verdicts of the FAIL judge that keep the FAIL (#31)
+    fail_judge: FailJudgeCount = FailJudgeCount()
+
+    def record_verdict(self, rule_id: str, confirmed: bool, text: str) -> None:
+        """A rejected FAIL becomes WARN like an unproven one (ADR 0017), without a retry."""
+        self.fail_judge.checked += 1
+        if confirmed:
+            self.fail_judge.confirmed += 1
+            self.verdicts.append(Problem(rule_id, f"{rule_id}: Prüfer bestätigt das FAIL: {text}"))
+        else:
+            self.fail_judge.downgraded += 1
+            self.downgrades[rule_id] = (
+                "FAIL", f"{rule_id}: Prüfer bestätigt das FAIL nicht, wird WARN: {text}")
+
+    def record_unchecked(self, rule_id: str, reason: str) -> None:
+        """No verdict: the FAIL stays, the stricter status (#31)."""
+        self.fail_judge.checked += 1
+        self.fail_judge.unavailable += 1
+        self.verdicts.append(
+            Problem(rule_id, f"{rule_id}: Prüfer nicht verfügbar ({reason}), FAIL ungeprüft"))
 
     def record_retry(self, reason_sent: bool) -> None:
         """Once per package, on its retry; without a reason from the code the schema broke."""
@@ -76,10 +103,8 @@ class Corrections(BaseModel):
             self.failed += problems
 
     def fail_closed(self, error: Exception) -> AuditValidationError:
-        """Throttled or down: own sentence. Invalid after the retry: its reasons; Groq rejects
-        a broken tool call with HTTP 400, that is an invalid answer too (#26)."""
-        invalid = isinstance(error, ModelHTTPError) and error.status_code == 400
-        if isinstance(error, ModelAPIError) and not invalid:
+        """Throttled or down: own sentence. Invalid after the retry: its reasons."""
+        if service_down(error):
             return AuditValidationError([], api_error=True)
         return AuditValidationError(self.failed or [SCHEMA_PROBLEM])
 
@@ -90,5 +115,5 @@ class Corrections(BaseModel):
     def for_rule(self, rule_id: str) -> dict:
         """The fields `downgraded_from` and `corrections` of the finding of this rule."""
         original, reason = self.downgrades.get(rule_id, (None, None))
-        reasons = [p.text for p in self.retry_problems if p.rule_id == rule_id]
+        reasons = [p.text for p in self.retry_problems + self.verdicts if p.rule_id == rule_id]
         return {"downgraded_from": original, "corrections": reasons + ([reason] if reason else [])}

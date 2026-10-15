@@ -24,17 +24,17 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag                | Arbeit                                                                                                                                                                  |
-| ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.          | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                        |
-| Do 15.10.          | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen                                                                                             |
-| Fr 16. – Sa 17.10. | Schritt 10f abschließen (Messen, Prüfen). Schritt 11: #9 Stack und Endpunkte mit Groq-Option, Deploy und Messung am Samstag. #32 (Schritt 10g) nur, wenn Zeit bleibt    |
-| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                         |
-| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                               |
-| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                   |
-| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                          |
-| 22.–25.10.         | Verstehen: `/verstehen` für #14, #26, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                    |
-| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                           |
+| Tag                | Arbeit                                                                                                                                                               |
+| ------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.          | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                     |
+| Do 15.10.          | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen                                                                                          |
+| Fr 16. – Sa 17.10. | Schritt 10f abschließen (Messen, Prüfen). Schritt 11: #9 Stack und Endpunkte mit Groq-Option, Deploy und Messung am Samstag. #32 (Schritt 10g) nur, wenn Zeit bleibt |
+| So 18.10.          | Schritt 12: #11 Pipeline und Wizard; Junie baut parallel die UI                                                                                                      |
+| Mo 19.10.          | #11 fertig und live (das Claude-Wochenlimit setzt zurück)                                                                                                            |
+| Di 20.10.          | Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                                                                                |
+| Mi 21.10.          | Abgabe, Puffer                                                                                                                                                       |
+| 22.–25.10.         | Verstehen: `/verstehen` für #14, #26, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                 |
+| Mo 26.10.          | Präsentation und Fachgespräch                                                                                                                                        |
 
 **Schnittlinie:** Wird es knapp, fällt zuerst #8 weg, weil der Build der Wissensbasis auch lokal per `python -m kb_build` läuft. Danach fällt #24 weg; es zählt nur bei einem neuen Build. Beide machen nur dann weiter, wenn ein Tag frei wird. Im Fachgespräch sind sie Ausbau.
 
@@ -463,9 +463,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritt 10d (neuer Spec-Katalog). Schritt 11 hängt nicht davon ab, die UI in Schritt 12 zeigt aber den Zähler des Prüfers. Wird es knapp, rutscht 10f hinter Schritt 11.
 
 - [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #31: Prompt, Gate, Prüfer zur Laufzeit oder Groq streichen?` (Prompt-Design und Kosten sind Weichenstellungen)
-- [ ] **Diagnose** 👤 `/audit-messen spec-wohngeld-openapi mit Groq und einem Katalog nur aus den 12 Regeln in #31`
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #31 umsetzen` → Plan → Go. Halt beim Prompt des Prüfers (Weichenstellung Prompt-Design), danach weiter bis zur Integration in `run_audit`.
-- [ ] **Messen** 👤 `/audit-messen spec-wohngeld-openapi 2× mit Groq, spec-meldeportal-gesundheit mit Groq, Art. 9 mit Bedrock über einen kleinen Katalog` → 🤖 notiert im Issue die Ergebnisse gegen `expected`. Der kleine Katalog ist nötig, weil Meldeportal mit Bedrock bis #32 fail closed abbricht.
+- [x] **Diagnose** 👤 `/audit-messen spec-wohngeld-openapi mit Groq und einem Katalog nur aus den 12 Regeln in #31`
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #31 umsetzen` → Plan → Go. Halt beim Prompt des Prüfers (Weichenstellung Prompt-Design), danach weiter bis zur Integration in `run_audit`.
+- [x] **Messen** 👤 `/audit-messen spec-wohngeld-openapi 2× mit Groq, spec-meldeportal-gesundheit mit Groq, Art. 9 mit Bedrock über einen kleinen Katalog` → 🤖 notiert im Issue die Ergebnisse gegen `expected`. Der kleine Katalog ist nötig, weil Meldeportal mit Bedrock bis #32 fail closed abbricht.
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #31`
 - [ ] **Abschließen** 👤 committet und pusht
 
@@ -496,7 +496,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritte 10b und 10c, Durchlauf aus Schritt 10a.
 
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #9 umsetzen`
-      Reihenfolge: `Trace` und `AuditEvent` bauen → `handler.py` mit Feld `provider` (Groq-Adapter ins Lambda-Paket) → CDK-Stack mit Assertions-Tests (Tests auf das erzeugte Template). Ablage von `GROQ_API_KEY` ist eine Weichenstellung (Issue #9).
+      Reihenfolge: `Trace` und `AuditEvent` bauen → `handler.py` mit Feld `provider` (Groq-Adapter ins Lambda-Paket, `GROQ_API_KEY` aus SSM SecureString) → CDK-Stack mit Assertions-Tests (Tests auf das erzeugte Template).
 - [ ] **Sicherheit** 👤 `/security-review` vor dem ersten Deploy
 - [ ] **Einrichten** falls nötig: 👤 `/wizard cdk bootstrap für eu-central-1` → 👤 Wizard ausführen
 - [ ] **Deploy + Test** 👤 „Deploye den Stack und ruf /audit/architecture mit dem größten Preset auf“ → Go → 👤 `/run`. Läuft es in den Lambda-Timeout: 👤 `/model opus`, dann `/diagnosing-bugs`
@@ -515,7 +515,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Jeder Push auf `main` rollt GovGuard nach dem Selbst-Audit aus; die Demo-UI auditiert Spezifikationen und Architekturen öffentlich.
 **Voraussetzung:** Schritte 9 und 11.
 
-- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard Einmalige AWS-Einrichtung für deploy.yml: OIDC-Deploy-Rolle, IAM-User für Streamlit, Secrets` → 👤 Wizard ausführen. Der Wizard ist zugleich die Anleitung, die das Ticket verlangt.
+- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard Einmalige AWS-Einrichtung für deploy.yml: OIDC-Deploy-Rolle, IAM-User für Streamlit, Secrets, GROQ_API_KEY als SSM SecureString` → 👤 Wizard ausführen. Der Wizard ist zugleich die Anleitung, die das Ticket verlangt.
 - [ ] **Bauen Pipeline** 🤖 _Sonnet_ · 👤 „Setze aus Issue #11 die `deploy.yml` um“ → Plan → Go. Die Ausnahmen für Prüfregeln (z. B. FSBP `APIGateway.4`, `Lambda.3`) entstehen hier, mit Begründung (Weichenstellung).
 - [ ] **Bauen UI** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 12 und `gh issue view 11`. Baue nur die Streamlit-UI in `ui/`, ohne Archetyp-Abruf.“
 - [ ] **Ausprobieren** 👤 `/run Streamlit-UI lokal starten, Preset auditieren, Screenshot`
