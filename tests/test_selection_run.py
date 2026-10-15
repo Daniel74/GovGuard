@@ -7,7 +7,13 @@ from pathlib import Path
 
 import pytest
 from pydantic import TypeAdapter
-from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart, UserPromptPart
+from pydantic_ai.messages import (
+    ModelMessage,
+    ModelResponse,
+    RetryPromptPart,
+    ToolCallPart,
+    UserPromptPart,
+)
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from kb_build.paths import BuildPaths
@@ -178,3 +184,31 @@ def test_the_run_reports_retries_and_llm_errors_of_the_classify_gate(
 
     assert "spec quality classify: retries=0 llm_error=0" in [
         r.getMessage() for r in caplog.records]
+
+
+def test_the_build_log_names_every_retry_of_a_paid_answer_and_none_of_a_cached_one(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    def forgetful(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        redo = any(isinstance(p, RetryPromptPart) for p in messages[-1].parts)
+        answer = {"testable": True, "cfn_resource_types": []}
+        return ModelResponse(parts=[ToolCallPart(
+            "classify_requirement", answer | ({"rationale": "prüfbar"} if redo else {}))])
+
+    def retry_lines() -> list[str]:
+        return [r.getMessage() for r in caplog.records if " retry " in r.getMessage()]
+
+    with caplog.at_level("INFO", logger="kb_build"):
+        select_all(FunctionModel(forgetful, model_name="fake-model"), paths_in(tmp_path),
+                   only="spec")
+        paid = retry_lines()
+        paid_quality = next(
+            r.getMessage() for r in caplog.records if "quality classify" in r.getMessage())
+        caplog.clear()
+        select_all(FunctionModel(forgetful, model_name="fake-model"), paths_in(tmp_path),
+                   only="spec")
+
+    assert len(paid) > 0
+    assert paid_quality == f"spec quality classify: retries={len(paid)} llm_error=0"
+    assert "spec DSGVO Art. 9 retry 1: rationale: Field required" in paid
+    assert retry_lines() == []

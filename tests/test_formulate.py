@@ -461,3 +461,28 @@ def test_an_aborted_run_still_reports_retries_and_the_llm_error(
 
     expected = f"architecture quality formulate: retries={FORMULATE_RETRIES} llm_error=1"
     assert expected in [r.getMessage() for r in caplog.records]
+
+
+def retry_lines(caplog: pytest.LogCaptureFixture) -> list[str]:
+    return [r.getMessage() for r in caplog.records if " retry " in r.getMessage()]
+
+
+def test_the_log_names_a_schema_error_too(caplog: pytest.LogCaptureFixture) -> None:
+    no_title = {k: v for k, v in draft("3.1.4").items() if k != "title"}
+
+    with caplog.at_level("INFO", logger="kb_build"):
+        run_formulate(fake_llm({"3.1.4": [no_title, draft("3.1.4")]}), arch_selection("3.1.4"),
+                      SOURCES)
+
+    assert retry_lines(caplog) == ["architecture CIS 3.1.4 retry 1: title: Field required"]
+
+
+def test_an_aborted_rule_still_logs_every_retry_once(caplog: pytest.LogCaptureFixture) -> None:
+    wrong = draft("3.1.4", source_quote="erfundener Normtext")
+
+    with caplog.at_level("INFO", logger="kb_build"), pytest.raises(ValueError):
+        run_formulate(fake_llm({"3.1.4": [wrong] * (FORMULATE_RETRIES + 1)}),
+                      arch_selection("3.1.4"), SOURCES)
+
+    numbers = [line.split(":")[0].rsplit(" ", 1)[1] for line in retry_lines(caplog)]
+    assert numbers == [str(n) for n in range(1, FORMULATE_RETRIES + 1)]  # the last answer aborts

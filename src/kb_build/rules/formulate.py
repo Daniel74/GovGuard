@@ -7,6 +7,7 @@ import logging
 from dataclasses import dataclass, field
 
 from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput, UnexpectedModelBehavior
+from pydantic_ai.agent import capture_run_messages
 from pydantic_ai.models import Model
 from pydantic_ai.usage import RunUsage
 
@@ -18,6 +19,7 @@ from kb_build.gates import (
     check_rules,
     invalid_cross_references,
     is_quoted,
+    log_retries,
     quote_deviation,
     requirements_by_anchor,
     usage_line,
@@ -73,11 +75,7 @@ async def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDra
     if not problems and ctx.deps.audit_type == "spec":  # the judge costs a call: only valid drafts
         problems = await _absence_problems(ctx, draft)
     if problems:
-        reason, deps = " ".join(problems), ctx.deps
-        # the build log shows what the model reads (CONTEXT.md: Korrektur)
-        logger.info("%s %s %s retry %d: %s", deps.audit_type, deps.selected.source,
-                    deps.requirement.id, ctx.retry + 1, reason)
-        raise ModelRetry(reason)
+        raise ModelRetry(" ".join(problems))  # the build log shows it, see formulate_rule
     _count_own_retries(ctx)
     return draft
 
@@ -131,8 +129,16 @@ def user_prompt(deps: FormulateDeps) -> str:
 
 
 def formulate_rule(deps: FormulateDeps, model: Model, usage: RunUsage | None = None) -> RuleDraft:
-    """`usage` collects the tokens of every request, retries and judge included."""
-    return formulate_agent.run_sync(user_prompt(deps), model=model, deps=deps, usage=usage).output
+    """`usage` collects the tokens of every request, retries and judge included.
+
+    The build log shows each retry with the reason the model reads (CONTEXT.md: Korrektur, #30).
+    """
+    with capture_run_messages() as messages:
+        try:
+            return formulate_agent.run_sync(
+                user_prompt(deps), model=model, deps=deps, usage=usage).output
+        finally:
+            log_retries(f"{deps.audit_type} {deps.selected.source} {deps.requirement.id}", messages)
 
 
 def _complete_rule(deps: FormulateDeps, model: Model, total: RunUsage) -> Rule:

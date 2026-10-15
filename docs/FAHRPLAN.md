@@ -444,7 +444,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Das Build-Log nennt zu jedem Retry von `select` und `rules` die Anforderung und den Grund, auch bei Schema-Fehlern. Heute steht für `select` nur die Zahl im Log.
 **Voraussetzung:** Schritt 10d (Retry-Zeile in `rules`). Klein, Schritt 11 hängt nicht davon ab. Wird es knapp, rutscht 10e hinter Schritt 11.
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #30 umsetzen` → Plan → Go (offene Frage im Issue: Deps oder `capture_run_messages`)
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #30 umsetzen` → Plan → Go (offene Frage im Issue: Deps oder `capture_run_messages`)
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #30`
 - [ ] **Abschließen** 👤 committet und pusht
 

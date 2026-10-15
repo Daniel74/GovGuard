@@ -8,13 +8,14 @@ import logging
 from dataclasses import dataclass
 
 from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput, UnexpectedModelBehavior
+from pydantic_ai.agent import capture_run_messages
 from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.models import Model
 from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, SourceName
 from kb_build.extract.models import Requirement
-from kb_build.gates import GateCounts
+from kb_build.gates import GateCounts, log_retries
 from kb_build.reference.cfn_types import load_cfn_types
 from kb_build.reference.scope import Scope
 from kb_build.select.judgement_cache import JudgementCache, cache_key, prompt_version
@@ -180,14 +181,17 @@ class Judge:
 
     def _ask(self, source: SourceName, requirement: Requirement) -> Classification | None:
         usage = RunUsage()  # one per call: Pydantic AI checks its request limit against it
-        try:
-            return classify_requirement(requirement, source, self._deps, self._model, usage)
-        except (UnexpectedModelBehavior, ModelHTTPError) as error:
-            if isinstance(error, ModelHTTPError) and error.status_code != 400:
-                raise  # 401, 429 and server errors are no verdict on the requirement
-            logger.warning("%s %s: invalid answer after retries: %s", source, requirement.id, error)
-            self.counts.llm_errors += 1
-            return None
-        finally:
-            self.usage.incr(usage)  # failed retries cost tokens too
-            self.counts.retries += max(usage.requests - 1, 0)  # every request after the first
+        with capture_run_messages() as messages:  # the retries show what was sent back (#30)
+            try:
+                return classify_requirement(requirement, source, self._deps, self._model, usage)
+            except (UnexpectedModelBehavior, ModelHTTPError) as error:
+                if isinstance(error, ModelHTTPError) and error.status_code != 400:
+                    raise  # 401, 429 and server errors are no verdict on the requirement
+                logger.warning(
+                    "%s %s: invalid answer after retries: %s", source, requirement.id, error)
+                self.counts.llm_errors += 1
+                return None
+            finally:
+                self.usage.incr(usage)  # failed retries cost tokens too
+                self.counts.retries += max(usage.requests - 1, 0)  # every request after the first
+                log_retries(f"{self.audit_type} {source} {requirement.id}", messages)

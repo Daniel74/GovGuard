@@ -1,8 +1,10 @@
 """Gates of the bounded catalog (ADR 0011): the build stops instead of shipping a gap. Pure code."""
 
+import logging
 from collections import Counter
 from dataclasses import dataclass
 
+from pydantic_ai.messages import ModelMessage, RetryPromptPart
 from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, Preset, Rule, RuleCatalog, RuleDraft, SourceName
@@ -11,6 +13,8 @@ from kb_build.extract.models import ExtractedSource, Requirement
 from kb_build.reference.cfn_properties import TYPE_PATTERN
 from kb_build.reference.scope import Scope
 from kb_build.select.models import Outcome, SelectedRequirement, Selection
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -31,6 +35,20 @@ def usage_line(audit_type: AuditType, usage: RunUsage) -> str:
     """What a build step paid for one audit type, failed retries included."""
     return (f"{audit_type}: {usage.requests} requests, {usage.input_tokens} input tokens, "
             f"{usage.output_tokens} output tokens")
+
+
+def log_retries(label: str, messages: list[ModelMessage]) -> None:
+    """One line per answer the model had to redo: what it read as the reason (#30).
+
+    Covers the validator's corrections and schema errors alike; the messages hold both.
+    """
+    reasons = [
+        part.content if isinstance(part.content, str)
+        else "; ".join(f"{'.'.join(map(str, e['loc']))}: {e['msg']}" for e in part.content)
+        for message in messages for part in message.parts if isinstance(part, RetryPromptPart)
+    ]
+    for n, reason in enumerate(reasons, start=1):
+        logger.info("%s retry %d: %s", label, n, " ".join(reason.split()))
 
 
 def pinned_anchors(presets: list[Preset], audit_type: AuditType) -> set[str]:
