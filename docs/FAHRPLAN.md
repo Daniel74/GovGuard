@@ -445,8 +445,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritt 10d (Retry-Zeile in `rules`). Klein, Schritt 11 hängt nicht davon ab. Wird es knapp, rutscht 10e hinter Schritt 11.
 
 - [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #30 umsetzen` → Plan → Go (offene Frage im Issue: Deps oder `capture_run_messages`)
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #30`
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #30`
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Jeder Retry in `select` und `rules` mit Anforderung und Grund im Build-Log steht und Antworten aus dem Cache keine Zeile erzeugen.
 **Fürs Fachgespräch:** Nachvollziehbarkeit auch im Build, nicht nur im Audit-Report.

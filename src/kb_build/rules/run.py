@@ -13,7 +13,7 @@ from kb_build.paths import BuildPaths
 from kb_build.reference.cfn_properties import PropertyIndex
 from kb_build.reference.cfn_types import load_cfn_types
 from kb_build.reference.run import read_scope
-from kb_build.rules.formulate import formulate_rules
+from kb_build.rules.catalog import formulate_rules
 from kb_build.rules.quality import quality_report
 from kb_build.select.models import Selection
 from kb_build.select.run import SELECTIONS, chosen, read_sources

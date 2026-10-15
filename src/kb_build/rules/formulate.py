@@ -1,37 +1,25 @@
-"""Stage 5 of the build (ARCHITECTURE 1): one rule per selected requirement (ADR 0005).
+"""Stage 5 of the build (ARCHITECTURE 1): the rule of one selected requirement (ADR 0005).
 
 Pure logic: gets the Pydantic AI model injected, no boto3. The code adds identity and origin.
+The run over the whole selection is catalog.py's task.
 """
 
-import logging
 from dataclasses import dataclass, field
 
 from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput, UnexpectedModelBehavior
-from pydantic_ai.agent import capture_run_messages
 from pydantic_ai.models import Model
 from pydantic_ai.usage import RunUsage
 
-from govguard.models import AuditType, Rule, RuleCatalog, RuleDraft
-from kb_build.extract.models import ExtractedSource, Requirement
-from kb_build.gates import (
-    Anchors,
-    GateCounts,
-    check_rules,
-    invalid_cross_references,
-    is_quoted,
-    log_retries,
-    quote_deviation,
-    requirements_by_anchor,
-    usage_line,
-)
+from govguard.models import AuditType, Rule, RuleDraft
+from kb_build.build_log import logged_retries
+from kb_build.extract.models import Requirement
+from kb_build.gates import Anchors, GateCounts, invalid_cross_references, is_quoted, quote_deviation
 from kb_build.reference.cfn_properties import PropertyIndex
 from kb_build.reference.scope import Scope
 from kb_build.rules.criteria import criteria_problems
 from kb_build.rules.prompts import PROMPTS, USER_PROMPT
 from kb_build.rules.violation_judge import judge_violation
-from kb_build.select.models import SelectedRequirement, Selection
-
-logger = logging.getLogger("kb_build")
+from kb_build.select.models import SelectedRequirement
 
 # Per audit type: prefix of the rule ID
 ID_PREFIX: dict[AuditType, str] = {"architecture": "ARCH", "spec": "SPEC"}
@@ -53,6 +41,7 @@ class FormulateDeps:
     # Per rule, the run sums them up; each retry counts once, at the gate that sent it back
     counts: GateCounts = field(default_factory=GateCounts)  # schema and code problems (#27)
     judge_counts: GateCounts = field(default_factory=GateCounts)  # absences sent back (#29)
+    judged: set[str] = field(default_factory=set)  # texts the judge sent back, for the log (#30)
 
 
 formulate_agent = Agent(
@@ -74,6 +63,7 @@ async def _validate(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> RuleDra
     problems = _code_problems(ctx.deps, draft)
     if not problems and ctx.deps.audit_type == "spec":  # the judge costs a call: only valid drafts
         problems = await _absence_problems(ctx, draft)
+        ctx.deps.judged.update(problems)  # the build log names the judge as gate (#30)
     if problems:
         raise ModelRetry(" ".join(problems))  # the build log shows it, see formulate_rule
     _count_own_retries(ctx)
@@ -88,8 +78,8 @@ def _count_own_retries(ctx: RunContext[FormulateDeps]) -> None:
 async def _absence_problems(ctx: RunContext[FormulateDeps], draft: RuleDraft) -> list[str]:
     """Open world (ADR 0020): a violation the spec does not stipulate is only WARN (#29)."""
     try:
-        check = await judge_violation(draft.violation_if, ctx.model, ctx.usage)
-    except UnexpectedModelBehavior:  # fail closed: _complete_rule aborts the build
+        check = await judge_violation(draft.violation_if, ctx.model, ctx.usage, _label(ctx.deps))
+    except UnexpectedModelBehavior:  # fail closed: complete_rule aborts the build
         _count_own_retries(ctx)
         ctx.deps.judge_counts.llm_errors += 1
         raise
@@ -128,20 +118,21 @@ def user_prompt(deps: FormulateDeps) -> str:
     )
 
 
+def _label(deps: FormulateDeps) -> str:
+    return f"{deps.audit_type} {deps.selected.source} {deps.requirement.id}"
+
+
 def formulate_rule(deps: FormulateDeps, model: Model, usage: RunUsage | None = None) -> RuleDraft:
     """`usage` collects the tokens of every request, retries and judge included.
 
     The build log shows each retry with the reason the model reads (CONTEXT.md: Korrektur, #30).
     """
-    with capture_run_messages() as messages:
-        try:
-            return formulate_agent.run_sync(
-                user_prompt(deps), model=model, deps=deps, usage=usage).output
-        finally:
-            log_retries(f"{deps.audit_type} {deps.selected.source} {deps.requirement.id}", messages)
+    with logged_retries(_label(deps), lambda text: "judge" if text in deps.judged else "code"):
+        return formulate_agent.run_sync(
+            user_prompt(deps), model=model, deps=deps, usage=usage).output
 
 
-def _complete_rule(deps: FormulateDeps, model: Model, total: RunUsage) -> Rule:
+def complete_rule(deps: FormulateDeps, model: Model, total: RunUsage) -> Rule:
     """The LLM writes the draft; identity and origin come from the selection, never the LLM."""
     selected, requirement, usage = deps.selected, deps.requirement, RunUsage()
     try:  # one usage per call: Pydantic AI checks its request limit against it
@@ -161,38 +152,3 @@ def _complete_rule(deps: FormulateDeps, model: Model, total: RunUsage) -> Rule:
         cfn_resource_types=selected.cfn_resource_types,
     )
 
-
-def _log_quality(audit_type: AuditType, started: list[FormulateDeps]) -> None:
-    """Quality report of the run: each rule counted its own retries, here they add up."""
-    logger.info(sum((d.counts for d in started), GateCounts()).line(audit_type, "formulate"))
-    if audit_type == "spec":  # architecture rules are never judged
-        judge = sum((d.judge_counts for d in started), GateCounts())
-        logger.info(judge.line(audit_type, "judge"))
-
-
-def formulate_rules(
-    model: Model, selection: Selection, sources: list[ExtractedSource],
-    properties: PropertyIndex, scope: Scope,
-) -> RuleCatalog:
-    """One rule per selected requirement, in selection order; then the gate (ARCHITECTURE 1)."""
-    anchors = requirements_by_anchor(sources)
-    by_id = {(s.source, r.id): r for s in sources for r in s.requirements}
-    rules, started, usage = [], [], RunUsage()
-    try:
-        for n, selected in enumerate(selection.selected, start=1):
-            requirement = by_id[(selected.source, selected.requirement_id)]
-            started.append(FormulateDeps(selection.audit_type, selected, requirement, anchors,
-                                         properties, scope))
-            rules.append(_complete_rule(started[-1], model, usage))
-            logger.info("%s %d/%d %s", selection.audit_type, n, len(selection.selected),
-                        rules[-1].id)
-    finally:  # an llm_error aborts the build; the quality report still counts it
-        logger.info(usage_line(selection.audit_type, usage))
-        _log_quality(selection.audit_type, started)
-    used = {s.source for s in selection.selected}
-    catalog = RuleCatalog(
-        audit_type=selection.audit_type, model_id=model.model_name, rules=rules,
-        source_versions={s.source: s.version for s in sources if s.source in used},
-    )
-    check_rules(catalog, selection, sources, scope)
-    return catalog

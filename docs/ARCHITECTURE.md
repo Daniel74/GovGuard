@@ -240,7 +240,7 @@ flowchart TB
   end
   subgraph L["Logik – rein, ohne I/O"]
     AE["govguard/audit_engine.py<br/>+ audit_gates.py, corrections.py, evidence.py,<br/>inventory.py, models.py, text.py"]
-    KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py"]
+    KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py, build_log.py"]
   end
   subgraph A["Adapter – einziger Ort für AWS, Groq, HTTP"]
     AWS["govguard/aws_services.py<br/>boto3, Bedrock-Modell"]
@@ -270,10 +270,10 @@ Jeder Ordner auf oberster Ebene ist eine eigene Deployment-Einheit oder eine Dat
 ```
 src/govguard/         Laufzeit-Kern, wird zum Lambda-Paket
 src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, nie umgekehrt)
-  __main__.py         Einstieg; gates.py, paths.py (alle Datenpfade), source_fetch.py, groq_services.py
+  __main__.py         Einstieg; gates.py, build_log.py (Retries im Build-Log), paths.py (alle Datenpfade), source_fetch.py, groq_services.py
   extract/            Adapter je Quelle (bsi, cis, c5, dsgvo, fsbp, sdm, prowler), models.py, run.py
   select/             classify, curation, judgement_cache, models.py, run.py
-  rules/              formulate, prompts, criteria, violation_judge, quality, run.py
+  rules/              catalog, formulate, prompts, criteria, violation_judge, quality, run.py
   reference/          scope, cfn_types, cfn_properties, archetype_profiles, run.py (cfn-properties)
 infra/                CDK-App des GovGuard-Stacks
 ui/                   Streamlit-App, spricht nur per HTTP mit der API

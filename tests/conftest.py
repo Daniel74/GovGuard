@@ -14,6 +14,11 @@ def spec_input() -> str:
     )
 
 
+def retry_lines(caplog: pytest.LogCaptureFixture) -> list[str]:
+    """The build log lines of the retries (#30)."""
+    return [r.getMessage() for r in caplog.records if " retry " in r.getMessage()]
+
+
 def make_requirement(rid: str, anchor: str, text: str | None = None) -> Requirement:
     """An extracted requirement that passed the prefilter; text defaults to a quotable sentence."""
     text = text or f"The text of {rid} must be quoted."

@@ -3,7 +3,7 @@
 import re
 
 import pytest
-from conftest import make_requirement
+from conftest import make_requirement, retry_lines
 from pydantic_ai.messages import (
     ModelMessage,
     ModelResponse,
@@ -16,7 +16,8 @@ from pydantic_ai.models.function import AgentInfo, FunctionModel
 from kb_build.extract.models import ExtractedSource
 from kb_build.reference.cfn_properties import PropertyIndex
 from kb_build.reference.scope import Scope
-from kb_build.rules.formulate import FORMULATE_RETRIES, formulate_rules
+from kb_build.rules.catalog import formulate_rules
+from kb_build.rules.formulate import FORMULATE_RETRIES
 from kb_build.rules.violation_judge import JUDGE_TOOL_NAME
 from kb_build.select.models import SelectedRequirement, Selection
 
@@ -324,9 +325,9 @@ def test_the_log_names_each_retry_with_its_reason_and_the_rejected_violation(
     with caplog.at_level("INFO", logger="kb_build"):
         run_formulate(spec_llm(drafts), SPEC_SELECTION, [DSGVO])
 
-    retries = [r.getMessage() for r in caplog.records if " retry " in r.getMessage()]
+    retries = retry_lines(caplog)
     assert len(retries) == 1
-    assert retries[0].startswith("spec DSGVO Art. 32 retry 1: ")
+    assert retries[0].startswith("spec DSGVO Art. 32 retry 1 (judge): ")
     assert ABSENCE in retries[0] and "Der Satz beschreibt ein Fehlen." in retries[0]
 
 
@@ -336,8 +337,26 @@ def test_an_architecture_retry_is_logged_with_its_reason(caplog: pytest.LogCaptu
     with caplog.at_level("INFO", logger="kb_build"):
         run_formulate(retry_prompts([], first), arch_selection("3.1.4"), SOURCES)
 
-    assert any(r.getMessage().startswith("architecture CIS 3.1.4 retry 1: Das Zitat steht nicht")
-               for r in caplog.records)
+    assert any(
+        r.getMessage().startswith("architecture CIS 3.1.4 retry 1 (code): Das Zitat steht nicht")
+        for r in caplog.records)
+
+
+def test_each_retry_line_names_the_gate_that_sent_the_draft_back(
+    caplog: pytest.LogCaptureFixture
+) -> None:
+    no_title = {k: v for k, v in draft("Art. 32", violation_if=STIPULATION).items()
+                if k != "title"}
+    drafts = [draft("Art. 32", source_quote="erfunden", violation_if=STIPULATION),
+              draft("Art. 32", violation_if=ABSENCE), no_title,
+              draft("Art. 32", violation_if=STIPULATION)]
+
+    with caplog.at_level("INFO", logger="kb_build"):
+        run_formulate(spec_llm(drafts), SPEC_SELECTION, [DSGVO])
+
+    assert [line.split(":")[0] for line in retry_lines(caplog)] == [
+        "spec DSGVO Art. 32 retry 1 (code)", "spec DSGVO Art. 32 retry 2 (judge)",
+        "spec DSGVO Art. 32 retry 3 (schema)"]
 
 
 def test_a_judge_that_stays_invalid_aborts_the_build_and_names_the_requirement(
@@ -357,6 +376,24 @@ def test_a_judge_that_stays_invalid_aborts_the_build_and_names_the_requirement(
     # the judge failed, not the formulator: the error counts once, at the judge
     assert quality_lines(caplog) == ["spec quality formulate: retries=0 llm_error=0",
                                      "spec quality judge: retries=0 llm_error=1"]
+
+
+def test_the_log_shows_that_the_judge_failed_not_the_draft(
+    caplog: pytest.LogCaptureFixture
+) -> None:
+    def respond(history: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        if info.output_tools[0].name == JUDGE_TOOL_NAME:
+            return ModelResponse(parts=[ToolCallPart(JUDGE_TOOL_NAME, {"reason": "ohne Urteil"})])
+        return ModelResponse(parts=[ToolCallPart("formulate_rule",
+                                                 draft("Art. 32", violation_if=STIPULATION))])
+
+    with caplog.at_level("INFO", logger="kb_build"), pytest.raises(ValueError):
+        run_formulate(FunctionModel(respond), SPEC_SELECTION, [DSGVO])
+
+    missing = "describes_absence: Field required"
+    assert [r.getMessage() for r in caplog.records if " Art. 32 " in r.getMessage()] == [
+        f"spec DSGVO Art. 32 judge retry {n} (schema): {missing}" for n in (1, 2)] + [
+        f"spec DSGVO Art. 32 judge rejected (schema): {missing}"]  # once, at the judge
 
 
 def test_an_architecture_violation_may_describe_a_missing_setting_the_judge_is_not_asked() -> None:
@@ -463,10 +500,6 @@ def test_an_aborted_run_still_reports_retries_and_the_llm_error(
     assert expected in [r.getMessage() for r in caplog.records]
 
 
-def retry_lines(caplog: pytest.LogCaptureFixture) -> list[str]:
-    return [r.getMessage() for r in caplog.records if " retry " in r.getMessage()]
-
-
 def test_the_log_names_a_schema_error_too(caplog: pytest.LogCaptureFixture) -> None:
     no_title = {k: v for k, v in draft("3.1.4").items() if k != "title"}
 
@@ -474,15 +507,22 @@ def test_the_log_names_a_schema_error_too(caplog: pytest.LogCaptureFixture) -> N
         run_formulate(fake_llm({"3.1.4": [no_title, draft("3.1.4")]}), arch_selection("3.1.4"),
                       SOURCES)
 
-    assert retry_lines(caplog) == ["architecture CIS 3.1.4 retry 1: title: Field required"]
+    assert retry_lines(caplog) == [
+        "architecture CIS 3.1.4 retry 1 (schema): title: Field required"]
 
 
-def test_an_aborted_rule_still_logs_every_retry_once(caplog: pytest.LogCaptureFixture) -> None:
+def test_an_aborted_rule_logs_every_retry_once_and_why_the_last_answer_was_rejected(
+    caplog: pytest.LogCaptureFixture
+) -> None:
     wrong = draft("3.1.4", source_quote="erfundener Normtext")
 
     with caplog.at_level("INFO", logger="kb_build"), pytest.raises(ValueError):
         run_formulate(fake_llm({"3.1.4": [wrong] * (FORMULATE_RETRIES + 1)}),
                       arch_selection("3.1.4"), SOURCES)
 
-    numbers = [line.split(":")[0].rsplit(" ", 1)[1] for line in retry_lines(caplog)]
-    assert numbers == [str(n) for n in range(1, FORMULATE_RETRIES + 1)]  # the last answer aborts
+    lines = [r.getMessage() for r in caplog.records
+             if r.getMessage().startswith("architecture CIS 3.1.4 ")]
+    numbers = [line.split(" (")[0].rsplit(" ", 1)[1] for line in lines[:-1]]
+    assert numbers == [str(n) for n in range(1, FORMULATE_RETRIES + 1)]
+    # the last answer aborts the build: no retry, but its reason makes the abort traceable
+    assert lines[-1] == lines[-2].replace(f"retry {FORMULATE_RETRIES} (code)", "rejected (code)")

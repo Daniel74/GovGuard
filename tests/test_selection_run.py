@@ -6,6 +6,7 @@ import shutil
 from pathlib import Path
 
 import pytest
+from conftest import retry_lines
 from pydantic import TypeAdapter
 from pydantic_ai.messages import (
     ModelMessage,
@@ -195,13 +196,10 @@ def test_the_build_log_names_every_retry_of_a_paid_answer_and_none_of_a_cached_o
         return ModelResponse(parts=[ToolCallPart(
             "classify_requirement", answer | ({"rationale": "prüfbar"} if redo else {}))])
 
-    def retry_lines() -> list[str]:
-        return [r.getMessage() for r in caplog.records if " retry " in r.getMessage()]
-
     with caplog.at_level("INFO", logger="kb_build"):
         select_all(FunctionModel(forgetful, model_name="fake-model"), paths_in(tmp_path),
                    only="spec")
-        paid = retry_lines()
+        paid = retry_lines(caplog)
         paid_quality = next(
             r.getMessage() for r in caplog.records if "quality classify" in r.getMessage())
         caplog.clear()
@@ -210,5 +208,50 @@ def test_the_build_log_names_every_retry_of_a_paid_answer_and_none_of_a_cached_o
 
     assert len(paid) > 0
     assert paid_quality == f"spec quality classify: retries={len(paid)} llm_error=0"
-    assert "spec DSGVO Art. 9 retry 1: rationale: Field required" in paid
-    assert retry_lines() == []
+    assert "spec DSGVO Art. 9 retry 1 (schema): rationale: Field required" in paid
+    assert retry_lines(caplog) == []
+
+
+def test_the_build_log_names_what_the_validator_sent_back(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    rotating = fake_model().function
+
+    def invents_once(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        prompt = next(p for p in messages[0].parts if isinstance(p, UserPromptPart)).content
+        if not prompt.startswith("Quelle: CIS\nID: 3.1.4\n"):
+            return rotating(messages, info)
+        redo = any(isinstance(p, RetryPromptPart) for p in messages[-1].parts)
+        types = ["AWS::S3::Bucket"] if redo else ["S3 bucket"]
+        return ModelResponse(parts=[ToolCallPart("classify_requirement", {
+            "testable": True, "rationale": "prüfbar", "cfn_resource_types": types})])
+
+    with caplog.at_level("INFO", logger="kb_build"):
+        select_all(FunctionModel(invents_once, model_name="fake-model"), paths_in(tmp_path),
+                   only="architecture")
+
+    assert retry_lines(caplog) == [  # the text the model reads (CONTEXT.md: Korrektur)
+        "architecture CIS 3.1.4 retry 1 (code): Eine prüfbare Architektur-Anforderung braucht "
+        "mindestens einen echten CloudFormation-Typ (Format AWS::Dienst::Ressource). "
+        "Diese gibt es nicht: ['S3 bucket']"]
+
+
+def test_the_build_log_names_why_the_last_answer_was_rejected(
+    tmp_path: Path, caplog: pytest.LogCaptureFixture
+) -> None:
+    def never_explains_art_5(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        prompt = next(p for p in messages[0].parts if isinstance(p, UserPromptPart)).content
+        answer = {"testable": True, "cfn_resource_types": []}
+        if not prompt.startswith("Quelle: DSGVO\nID: Art. 5\n"):
+            answer["rationale"] = "prüfbar"
+        return ModelResponse(parts=[ToolCallPart("classify_requirement", answer)])
+
+    with caplog.at_level("INFO", logger="kb_build"):
+        select_all(FunctionModel(never_explains_art_5, model_name="fake-model"),
+                   paths_in(tmp_path), only="spec")
+
+    assert [r.getMessage() for r in caplog.records
+            if r.getMessage().startswith("spec DSGVO Art. 5 ")] == [
+        "spec DSGVO Art. 5 retry 1 (schema): rationale: Field required",
+        "spec DSGVO Art. 5 retry 2 (schema): rationale: Field required",
+        "spec DSGVO Art. 5 rejected (schema): rationale: Field required"]  # then llm_error

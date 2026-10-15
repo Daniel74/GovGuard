@@ -1,6 +1,7 @@
 """Stage ② of the selection (ARCHITECTURE 1.1): one LLM verdict per requirement."""
 
 import pytest
+from conftest import retry_lines
 from pydantic_ai import UnexpectedModelBehavior
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
@@ -295,10 +296,6 @@ def test_the_judge_counts_an_answer_that_stays_invalid_as_llm_error() -> None:
     assert (judge.counts.retries, judge.counts.llm_errors) == (2, 1)  # two retries
 
 
-def retry_lines(caplog: pytest.LogCaptureFixture) -> list[str]:
-    return [r.getMessage() for r in caplog.records if " retry " in r.getMessage()]
-
-
 def test_the_build_log_names_requirement_and_reason_of_a_sent_back_answer(
     caplog: pytest.LogCaptureFixture
 ) -> None:
@@ -308,7 +305,8 @@ def test_the_build_log_names_requirement_and_reason_of_a_sent_back_answer(
         Judge("architecture", answer_in_turns(wrong, BUCKET))("CIS", REQUIREMENT)
 
     [line] = retry_lines(caplog)
-    assert line.startswith("architecture CIS 3.1.4 retry 1: Eine prüfbare Architektur-Anforderung")
+    assert line.startswith(
+        "architecture CIS 3.1.4 retry 1 (code): Eine prüfbare Architektur-Anforderung")
     assert "S3 bucket" in line  # the reason the model reads, in one line
     assert "\n" not in line
 
@@ -319,7 +317,8 @@ def test_the_build_log_names_a_schema_error_too(caplog: pytest.LogCaptureFixture
     with caplog.at_level("INFO", logger="kb_build"):
         Judge("architecture", answer_in_turns(no_rationale, BUCKET))("CIS", REQUIREMENT)
 
-    assert retry_lines(caplog) == ["architecture CIS 3.1.4 retry 1: rationale: Field required"]
+    assert retry_lines(caplog) == [
+        "architecture CIS 3.1.4 retry 1 (schema): rationale: Field required"]
 
 
 def test_every_retry_gets_its_own_numbered_line(caplog: pytest.LogCaptureFixture) -> None:
@@ -329,7 +328,7 @@ def test_every_retry_gets_its_own_numbered_line(caplog: pytest.LogCaptureFixture
         Judge("architecture", answer_in_turns(no_rationale, no_rationale, BUCKET))(
             "CIS", REQUIREMENT)
 
-    assert [line.split(":")[0] for line in retry_lines(caplog)] == [
+    assert [line.split(" (")[0] for line in retry_lines(caplog)] == [
         "architecture CIS 3.1.4 retry 1", "architecture CIS 3.1.4 retry 2"]
 
 

@@ -10,6 +10,8 @@ from pydantic_ai import Agent, ToolOutput
 from pydantic_ai.models import Model
 from pydantic_ai.usage import RunUsage
 
+from kb_build.build_log import logged_retries
+
 JUDGE_PROMPT = """\
 Du prüfst das Verstoßkriterium ("violation_if") einer Prüfregel für das Spec-Audit einer
 fachlichen Spezifikation. Eine Spezifikation ist eine offene Welt: Was sie nicht erwähnt,
@@ -42,8 +44,14 @@ judge_agent = Agent(
 )
 
 
-async def judge_violation(violation_if: str, model: Model, usage: RunUsage) -> ViolationCheck:
-    """`usage` is the one of the formulate run: the judge's tokens count there too."""
+async def judge_violation(
+    violation_if: str, model: Model, usage: RunUsage, label: str
+) -> ViolationCheck:
+    """`usage` is the one of the formulate run: the judge's tokens count there too.
+
+    The build log shows the judge's own retries under `label judge` (#30).
+    """
     prompt = JUDGE_USER_PROMPT.format(text=violation_if)
-    result = await judge_agent.run(prompt, model=model, usage=usage)
+    with logged_retries(f"{label} judge"):
+        result = await judge_agent.run(prompt, model=model, usage=usage)
     return result.output
