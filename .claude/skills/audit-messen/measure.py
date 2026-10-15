@@ -64,7 +64,7 @@ def _print_corrections(report_json: str) -> None:
         return
     report = json.loads(report_json)
     downgraded = [f["downgraded_from"] for f in report["findings"] if f["downgraded_from"]]
-    print(f"packages with retry: {report['retries']} downgrades: {len(downgraded)} "
+    print(f"retries (packages + judge): {report['retries']} downgrades: {len(downgraded)} "
           f"(PASS->WARN: {downgraded.count('PASS')}, FAIL->WARN: {downgraded.count('FAIL')}) "
           f"unassigned corrections: {len(report['unassigned_corrections'])}", file=sys.stderr)
     judge = report["fail_judge"]

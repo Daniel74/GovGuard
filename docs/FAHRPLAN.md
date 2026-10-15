@@ -465,11 +465,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #31: Prompt, Gate, Prüfer zur Laufzeit oder Groq streichen?` (Prompt-Design und Kosten sind Weichenstellungen)
 - [x] **Diagnose** 👤 `/audit-messen spec-wohngeld-openapi mit Groq und einem Katalog nur aus den 12 Regeln in #31`
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #31 umsetzen` → Plan → Go. Halt beim Prompt des Prüfers (Weichenstellung Prompt-Design), danach weiter bis zur Integration in `run_audit`.
-- [x] **Messen** 👤 `/audit-messen spec-wohngeld-openapi 2× mit Groq, spec-meldeportal-gesundheit mit Groq, Art. 9 mit Bedrock über einen kleinen Katalog` → 🤖 notiert im Issue die Ergebnisse gegen `expected`. Der kleine Katalog ist nötig, weil Meldeportal mit Bedrock bis #32 fail closed abbricht.
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #31`
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Messen** 👤 `/audit-messen spec-wohngeld-openapi 2× mit Groq, spec-meldeportal-gesundheit mit Groq` → 🤖 notiert im Issue die Ergebnisse gegen `expected`. Die Gegenprobe mit Bedrock folgt in Schritt 10h (#33).
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #31`
+- [x] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Art. 9 bei `spec-meldeportal-gesundheit` mit beiden Modellen FAIL bleibt, jedes Urteil des Prüfers in `corrections` steht und Wohngeld mit Groq entweder WARN zeigt oder die Grenze in ADR 0016 steht.
+**Fertig, wenn:** Art. 9 bei `spec-meldeportal-gesundheit` mit Groq FAIL bleibt (Bedrock in #33), jedes Urteil des Prüfers in `corrections` steht und Wohngeld mit Groq entweder WARN zeigt oder die Grenze in ADR 0016 steht.
 **Fürs Fachgespräch:** LLM-as-a-Judge zur Laufzeit, Herabstufen statt Retry, im Zweifel bleibt der strengere Status. Überanpassung an das Testorakel vermeiden.
 
 ---
@@ -487,6 +487,19 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Fertig, wenn:** Beide Gegenproben mit Bedrock `expected` erfüllen und kein Befund ohne Pflichtfelder in den Report kommt.
 **Fürs Fachgespräch:** Fail closed als Sicherheitsprinzip und seine Kosten für die Verfügbarkeit, „Was der Code weiß, fragt man das Modell nicht“.
+
+---
+
+### Schritt 10h – #33 Messung: Gegenprobe FAIL-Prüfer mit Bedrock (Art. 9, Ergebnisse aus #29)
+
+**Ziel:** Der FAIL-Prüfer aus #31 stuft mit Bedrock kein echtes FAIL herab und ändert nichts an den Ergebnissen aus #29.
+**Voraussetzung:** Schritt 10f (#31) und wieder AWS-Zugriff. Unabhängig von #32, dank kleinem Katalog.
+
+- [ ] **Messen** 👤 `/audit-messen spec-meldeportal-gesundheit mit Bedrock über einen kleinen Katalog mit Art. 9 und M60.P01, spec-wohngeld-openapi mit Bedrock` → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Zähler des Prüfers
+- [ ] **Abschließen** 👤 schließt #33 (bei Herabstufung von Art. 9: neues Ticket statt Abschluss)
+
+**Fertig, wenn:** Art. 9 mit Bedrock FAIL bleibt und vom Prüfer bestätigt ist, Wohngeld mit Bedrock WARN zeigt.
+**Fürs Fachgespräch:** Gegenprobe gegen das zweite Modell, ein Prüfer darf echte Verstöße nicht wegdiskutieren.
 
 ---
 

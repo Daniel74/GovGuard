@@ -155,7 +155,7 @@ Die UI ruft die Lambda direkt über ihre Function URL auf, ohne API Gateway: Ein
 
 Beim Kaltstart lädt die Lambda-Funktion die Wissensbasis einmal aus S3 in den Speicher, weitere Aufrufe nutzen sie direkt. Zuerst bestimmt sie das Ressourceninventar der Eingabe: bei CloudFormation-JSON der Code, bei Freitext, YAML und Terraform ein LLM-Vorlauf mit Beleg je Dienst (ADR 0015). Jede Prüfregel ohne passenden Ressourcentyp setzt der Code auf N/A; IAM, KMS und Logs streicht er nie. Die anwendbaren Prüfregeln gehen in Paketen à ca. 10 parallel mit der Eingabe an Bedrock (ADR 0011). Das Modell muss über das erzwungene Tool `submit_audit` antworten (Tool-Choice), es kann also nur strukturiertes JSON liefern, keinen Freitext.
 
-Danach prüft der Code, nicht das Modell, das Ergebnis. Pydantic validiert das Schema, und zusätzlich muss jede Prüfregel genau einen Befund haben und jeder Beleg wörtlich in der Eingabe stehen. Erst dann wird der Gesamtstatus berechnet.
+Danach prüft der Code, nicht das Modell, das Ergebnis. Pydantic validiert das Schema, und zusätzlich muss jede Prüfregel genau einen Befund haben und jeder Beleg wörtlich in der Eingabe stehen. Im Spec-Audit gehen danach alle FAILs gebündelt an den FAIL-Prüfer (Tool `submit_fail_verdicts`): Bestätigt er ein FAIL nicht, wird es WARN; fällt er aus, bleibt es ungeprüft FAIL, ohne HTTP 502 (ADR 0020). Erst dann wird der Gesamtstatus berechnet.
 
 Das Architektur-Audit (`POST /audit/architecture`) läuft genauso wie das Spec-Audit ab, nur mit den Prüfregeln aus BSI Grundschutz++, BSI C5, CIS und FSBP.
 
@@ -187,6 +187,7 @@ result = audit_agent.run_sync(catalog_and_input, model=model, deps=deps)
 | `formulate_rule` | LLM-Felder der Prüfregel (siehe 1.2) | Build, Stufe 5 |
 | `judge_violation` | `describes_absence: bool`, `reason: str` | Build, Stufe 5, nur Spec |
 | `submit_audit` | `findings: [{rule_id, status: PASS\|WARN\|FAIL\|N/A, line_start, line_end, rationale, recommendation}]` | Laufzeit, beide Audits |
+| `submit_fail_verdicts` | `verdicts: [{rule_id, confirmed: bool, reason}]` | Laufzeit, nur Spec, nur bei FAIL (ADR 0020) |
 
 - **Enums schließen die Antwortmenge:** Das Modell kann keinen Status „OK“ erfinden.
 - **Tool-Choice ist kein Beweis:** Das Modell kann trotzdem falsche Werte liefern. Deshalb validiert danach Pydantic, und der Code prüft Vollständigkeit und Belege (`@agent.output_validator`). Bei Fehlern schickt Pydantic AI die Fehlermeldung einmal zurück ans Modell, danach HTTP 502.
@@ -239,7 +240,7 @@ flowchart TB
     R["kb_build/*/run.py<br/>Dateien lesen + schreiben,<br/>Pfade aus paths.py"]
   end
   subgraph L["Logik – rein, ohne I/O"]
-    AE["govguard/audit_engine.py<br/>+ audit_gates.py, corrections.py, evidence.py,<br/>inventory.py, models.py, text.py"]
+    AE["govguard/audit_engine.py<br/>+ audit_gates.py, corrections.py, evidence.py,<br/>fail_judge.py, inventory.py, models.py, text.py"]
     KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py, build_log.py"]
   end
   subgraph A["Adapter – einziger Ort für AWS, Groq, HTTP"]

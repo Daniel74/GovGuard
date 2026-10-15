@@ -9,6 +9,7 @@ from test_run_audit import PASS_32, WARN_9
 from test_run_audit_schema import GroqFake
 
 from govguard.audit_engine import run_audit
+from govguard.corrections import SCHEMA_PROBLEM
 from govguard.models import FailJudgeCount
 
 JUDGE_TOOL = "submit_fail_verdicts"
@@ -55,6 +56,7 @@ def test_judge_sees_only_the_evidence_lines_and_confirms_the_fail(
     assert legal.corrections == ["SPEC-DSGVO-Art.9: Prüfer bestätigt das FAIL: "
                                  "Zeile 1 legt Klartext fest."]
     assert report.fail_judge == FailJudgeCount(checked=1, confirmed=1)
+    assert report.retries == 0
 
 
 def test_fail_the_judge_rejects_becomes_warn_with_its_reason(
@@ -89,16 +91,38 @@ def test_fail_stays_unchecked_when_the_judge_is_down(spec_catalog, spec_input, t
     assert report.fail_judge == FailJudgeCount(checked=1, unavailable=1)
 
 
+def test_fail_stays_unchecked_when_the_judge_answers_invalid_twice(
+    spec_catalog, spec_input, trace
+) -> None:
+    broken = [{"rule_id": "SPEC-DSGVO-Art.9"}]  # "confirmed" and "reason" missing
+    judged: list = []
+
+    report = run_audit(spec_catalog, spec_input,
+                       audit_and_judge([PASS_32, FAIL_9], broken, judged), trace)
+
+    assert len(judged) == 2
+    legal = report.findings[1]
+    assert (legal.status, legal.downgraded_from) == ("FAIL", None)
+    assert legal.corrections == ["SPEC-DSGVO-Art.9: Prüfer nicht verfügbar (Antwort auch nach "
+                                 "einer Korrektur nicht verwertbar), FAIL ungeprüft"]
+    assert report.retries == 1
+    assert report.unassigned_corrections == [SCHEMA_PROBLEM.text]
+    assert report.fail_judge == FailJudgeCount(checked=1, unavailable=1)
+
+
 def test_fail_without_verdict_stays_unchecked_and_foreign_verdicts_count_nowhere(
     spec_catalog, spec_input, trace
 ) -> None:
     fail_32 = {**PASS_32, "status": "FAIL", "recommendation": "TLS prüfen."}
     verdicts = [{"rule_id": "SPEC-DSGVO-Art.9", "confirmed": True, "reason": "Klartext."},
                 {"rule_id": "SPEC-DSGVO-Art.99", "confirmed": False, "reason": "Erfunden."}]
+    judged: list = []
 
     report = run_audit(spec_catalog, spec_input,
-                       audit_and_judge([fail_32, FAIL_9], verdicts, []), trace)
+                       audit_and_judge([fail_32, FAIL_9], verdicts, judged), trace)
 
+    assert len(judged) == 2  # asked once more, then the FAIL stays
+    assert report.retries == 1
     tls = report.findings[0]
     assert tls.status == "FAIL"
     assert tls.corrections == ["SPEC-DSGVO-Art.32: Prüfer nicht verfügbar (kein Urteil zu "
@@ -166,5 +190,7 @@ def test_missing_verdict_is_asked_for_once_more(spec_catalog, spec_input, trace)
 
     assert len(judged) == 2
     assert "Urteil fehlt für: SPEC-DSGVO-Art.32" in str(judged[1][-1])
+    assert report.retries == 1  # visible like a package retry (#27)
+    assert report.unassigned_corrections == []  # the code sent a reason, no schema slip
     assert report.findings[0].status == "WARN"
     assert report.fail_judge == FailJudgeCount(checked=2, confirmed=1, downgraded=1)

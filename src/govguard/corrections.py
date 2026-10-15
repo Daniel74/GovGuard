@@ -60,7 +60,7 @@ class Corrections(BaseModel):
 
     downgrades: Downgrades = {}  # rule_id -> (original status, reason)
     retry_problems: list[Problem] = []  # every problem that sent a package back to the model
-    retries: int = 0  # packages (and the pre-run) with a retry
+    retries: int = 0  # packages (and the pre-run and the FAIL judge) with a retry
     failed: list[Problem] = []  # problems of a last attempt: the audit fails closed (HTTP 502)
     verdicts: list[Problem] = []  # verdicts of the FAIL judge that keep the FAIL (#31)
     fail_judge: FailJudgeCount = FailJudgeCount()

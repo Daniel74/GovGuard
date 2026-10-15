@@ -4,7 +4,7 @@ _Bestätigt [ADR 0005](0005-pydantic-ai.md). Anlass: mit dem FAIL-Prüfer (#31) 
 
 ## Kontext
 
-- Laufzeit: Inventar → Prüfpakete parallel → FAIL-Prüfer. Jeder Schritt ist ein Pydantic-AI-`Agent` mit genau einem strukturierten Aufruf, Validator und höchstens einem Retry. Die Reihenfolge steht fest, kein LLM entscheidet den nächsten Schritt.
+- Laufzeit: Architektur-Audit Inventar → Prüfpakete parallel, Spec-Audit Prüfpakete parallel → FAIL-Prüfer. Jeder Schritt ist ein Pydantic-AI-`Agent` mit genau einem strukturierten Aufruf, Validator und höchstens einem Retry. Die Reihenfolge steht fest, kein LLM entscheidet den nächsten Schritt.
 - Die Orchestrierung sind ca. 40 Zeilen `asyncio` (`gather` + `Semaphore`) in `audit_engine.py`. Lambda ist zustandslos und hat 180 s (ADR 0018).
 - LangGraph (Abläufe als Graph mit Zustand) hilft bei Zyklen, Verzweigungen durch das LLM, Checkpoints und Mensch in der Schleife. Nichts davon kommt bei GovGuard vor.
 

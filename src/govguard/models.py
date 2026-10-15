@@ -96,7 +96,7 @@ class AuditReport(BaseModel):
     model_id: str
     trace: Trace
     unassigned_corrections: list[str] = []  # reasons without a finding, e.g. an unknown rule_id
-    retries: int = 0  # packages sent back to the model once; no per-package view (#27)
+    retries: int = 0  # packages and the FAIL judge sent back once; no per-package view (#27)
     fail_judge: FailJudgeCount = FailJudgeCount()
 
 

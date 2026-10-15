@@ -43,25 +43,34 @@ class FailVerdicts(BaseModel):  # schema of tool submit_fail_verdicts
     verdicts: list[FailVerdict]
 
 
+class JudgeDeps(BaseModel):  # deps_type of the judge
+    fail_ids: list[str]  # rule_ids of the FAILs, each needs a verdict
+    corrections: Corrections  # the judge's retry counts like a package retry (#27)
+    reason_sent: bool = False  # the code asked for missing verdicts
+
+
 _OUTPUT = {"name": "submit_fail_verdicts", "strict": True,
            "description": "Gib je FAIL-Befund genau ein Urteil ab."}
 _SETTINGS = {"temperature": 0, "max_tokens": 8000}  # like the audit (#28)
 # Bedrock: forced tool (ADR 0005); Groq: json_schema with constrained decoding (ADR 0016)
 _JUDGES = {
     provider: Agent(output_type=output_type, instructions=FAIL_JUDGE_PROMPT,
-                    deps_type=list[str],  # rule_ids of the FAILs, each needs a verdict
-                    model_settings=_SETTINGS, retries=1)  # schema slip or missing verdicts
+                    deps_type=JudgeDeps, model_settings=_SETTINGS,
+                    retries=1)  # one retry, for a schema slip or missing verdicts
     for provider, output_type in [("bedrock", ToolOutput(FailVerdicts, **_OUTPUT)),
                                   ("groq", NativeOutput(FailVerdicts, **_OUTPUT))]
 }
 
 
-def _all_judged(ctx: RunContext[list[str]], output: FailVerdicts) -> FailVerdicts:
+def _all_judged(ctx: RunContext[JudgeDeps], output: FailVerdicts) -> FailVerdicts:
     """One retry for missing verdicts (5 of 27 measured, #31); after it the FAIL stays."""
+    if ctx.retry:
+        ctx.deps.corrections.record_retry(ctx.deps.reason_sent)
     judged = {verdict.rule_id for verdict in output.verdicts}
-    if (missing := [rule_id for rule_id in ctx.deps if rule_id not in judged]) \
+    if (no_verdict := [rule_id for rule_id in ctx.deps.fail_ids if rule_id not in judged]) \
             and not ctx.last_attempt:
-        raise ModelRetry(f"Urteil fehlt für: {', '.join(missing)}")
+        ctx.deps.reason_sent = True
+        raise ModelRetry(f"Urteil fehlt für: {', '.join(no_verdict)}")
     return output
 
 
@@ -85,12 +94,14 @@ async def judge_fails(
     fails = {d.rule_id: d for d in drafts if d.status == "FAIL"}
     if not fails:
         return drafts
-    verdicts, missing = await _verdicts(rules, list(fails.values()), input_text, model)
+    deps = JudgeDeps(fail_ids=list(fails), corrections=corrections)
+    verdicts, no_verdict_reason = await _verdicts(rules, list(fails.values()), input_text,
+                                                  model, deps)
     for rule_id in fails:
         if verdict := verdicts.get(rule_id):
             corrections.record_verdict(rule_id, verdict.confirmed, verdict.reason)
         else:
-            corrections.record_unchecked(rule_id, missing)
+            corrections.record_unchecked(rule_id, no_verdict_reason)
     rejected = {rule_id for rule_id in fails if rule_id in verdicts
                 and not verdicts[rule_id].confirmed}
     return [d.model_copy(update={"status": "WARN"}) if d.status == "FAIL" and d.rule_id in rejected
@@ -98,13 +109,16 @@ async def judge_fails(
 
 
 async def _verdicts(
-    rules: list[Rule], fails: list[FindingDraft], input_text: str, model: Model
+    rules: list[Rule], fails: list[FindingDraft], input_text: str, model: Model, deps: JudgeDeps
 ) -> tuple[dict[str, FailVerdict], str]:
     """rule_id -> first verdict, and the reason for a FAIL without one."""
     try:
         result = await _JUDGES[provider_of(model)].run(
-            _user_prompt(rules, fails, input_text), model=model, deps=[f.rule_id for f in fails])
-    except (ModelAPIError, UnexpectedModelBehavior) as error:
+            _user_prompt(rules, fails, input_text), model=model, deps=deps)
+    except UnexpectedModelBehavior:  # invalid after the retry; the validator never saw it
+        deps.corrections.record_retry(deps.reason_sent)
+        return {}, _INVALID
+    except ModelAPIError as error:  # Groq rejects a broken answer with HTTP 400, no retry
         return {}, _DOWN if service_down(error) else _INVALID
     verdicts: dict[str, FailVerdict] = {}
     for verdict in result.output.verdicts:
