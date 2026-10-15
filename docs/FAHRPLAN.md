@@ -482,9 +482,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #24 umsetzen` → Plan → Go (Gate-Design ist eine Weichenstellung)
       Reihenfolge: Test in `tests/test_curation.py` → Pflichtanker übersteuern `scope_level` auf `template` mit festem Satz im Auswahlprotokoll → ADR
 - [x] **Echter Lauf** 🤖 👤 „Erzeuge die Architektur-Auswahl neu“ (`select --audit-type architecture`, ohne Flag = Groq). 👤 Prüfe: Beide Gates grün, kein Cache-Eintrag von Hand gelöscht?
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #24`
-- [ ] **Verstehen** 👤 `/verstehen 24` (Kernfrage: warum ein Preset das Urteil des LLM übersteuern darf, aber nur beim `scope_level`)
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #24`
+- [-] **Verstehen** 👤 `/verstehen 24` (Kernfrage: warum ein Preset das Urteil des LLM übersteuern darf, aber nur beim `scope_level`)
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Ein Lauf ohne Cache beide Gates besteht und das ADR die Regel festhält.
 **Fürs Fachgespräch:** Reproduzierbarkeit, Testorakel als Quelle der Wahrheit, „Das LLM urteilt, der Code wählt aus“.

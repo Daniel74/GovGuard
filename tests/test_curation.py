@@ -185,7 +185,7 @@ def test_a_pinned_anchor_with_an_account_duty_is_selected_with_a_fixed_sentence(
     assert verdict.outcome == "selected"
     assert verdict.cfn_resource_types == ["AWS::S3::Bucket"]  # the types stay with the LLM
     assert verdict.rationale == (
-        "prüfbar Pflichtanker eines Presets: Der Code setzt die Ebene auf „template“, "
+        "prüfbar. Pflichtanker eines Presets: Der Code setzt die Ebene auf „template“, "
         "denn das Preset belegt, dass der Befund am Template erkennbar ist.")
     assert result.selection.selected[0].rationale == verdict.rationale
 

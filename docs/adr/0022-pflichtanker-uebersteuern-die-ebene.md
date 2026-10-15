@@ -4,7 +4,7 @@ _Ergänzt [ADR 0011](0011-vollstaendiger-katalog.md) (Preset-Anker im Gate) und 
 
 ## Kontext
 
-- Ein Pflichtanker ist der Anker eines Pflichtbefunds in einem Preset. Das Gate bricht den Build ab, wenn er nicht aufgenommen ist.
+- Ein Pflichtanker ist der Primäranker einer Prüfregel, deren Befund ein Preset im Soll-Ergebnis festlegt. Das Gate bricht den Build ab, wenn er nicht aufgenommen ist.
 - Das LLM urteilt die Ebene (`scope_level`) nicht stabil: In der Probe vom 14.10.2026 (Groq, 5 Läufe) kippte CIS 3.1.4 in 1 von 5 Läufen auf `account`. Das Gate brach ab, und bei #19 half nur Nachwürfeln von Hand.
 
 ## Entscheidung
