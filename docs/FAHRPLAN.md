@@ -571,8 +571,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #40 umsetzen` → Plan → Go
       Reihenfolge: Abhängigkeiten und Marker → Server-Fixture → Bildvergleich (Unit-Test ohne Browser) → vier Ansichten → Vergleichsbilder → zweimal stabil grün
 - [x] **Freigeben** 👤 Referenzbilder in `tests/visual/` ansehen: Sie zeigen bewusst den heutigen Stand
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #40`
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #40`
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** `uv run pytest -m visual` zweimal hintereinander grün ist und normales `uv run pytest` ohne Browser läuft.
 **Fürs Fachgespräch:** Regressionstest als Sicherheitsnetz, Referenzbild als freigegebener Soll-Stand, warum ein Mockup kein Pixel-Orakel ist.

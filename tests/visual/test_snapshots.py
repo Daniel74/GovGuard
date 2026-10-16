@@ -36,6 +36,13 @@ def test_a_changed_area_yields_a_diff_image() -> None:
     assert diff.size == (40, 30)
 
 
+def test_a_pure_colour_change_yields_a_diff_image() -> None:
+    actual = blank()
+    actual.paste((255, 255, 0), (10, 10, 30, 30))  # white to yellow: only blue changes
+
+    assert compare(actual, blank()) is not None
+
+
 def test_a_different_size_is_a_diff_even_if_the_overlap_is_equal() -> None:
     diff = compare(blank(height=50), blank())
 

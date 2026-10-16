@@ -20,8 +20,10 @@ def changed_mask(actual: Image.Image, reference: Image.Image) -> Image.Image:
     """Mode "L" image of the larger size: 255 where a pixel differs by more than the tolerance;
     an area only one image covers counts as changed."""
     size = (max(actual.width, reference.width), max(actual.height, reference.height))
-    diff = ImageChops.difference(on_canvas(actual, size), on_canvas(reference, size))
-    mask = diff.convert("L").point(lambda v: 255 if v > CHANNEL_TOLERANCE else 0)
+    red, green, blue = ImageChops.difference(
+        on_canvas(actual, size), on_canvas(reference, size)).split()
+    strongest = ImageChops.lighter(ImageChops.lighter(red, green), blue)  # not luma: hides hue
+    mask = strongest.point(lambda v: 255 if v > CHANNEL_TOLERANCE else 0)
     overlap = Image.new("L", size, 255)
     overlap.paste(0, (0, 0, min(actual.width, reference.width),
                       min(actual.height, reference.height)))

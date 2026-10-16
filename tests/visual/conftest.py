@@ -17,6 +17,7 @@ import pytest
 ROOT = Path(__file__).parents[2]
 WIDTH, HEIGHT = 1440, 900  # width of the design artboards (#11)
 START_TIMEOUT = 30
+SERVER_LOG = ROOT / "tests" / "visual" / "output" / "streamlit.log"  # cause of a failed start
 
 
 @pytest.fixture
@@ -38,7 +39,7 @@ def wait_until_healthy(url: str) -> None:
                 return
         except OSError:
             time.sleep(0.3)
-    raise TimeoutError(f"Streamlit did not answer within {START_TIMEOUT} s: {url}")
+    raise TimeoutError(f"Streamlit did not answer within {START_TIMEOUT} s, see {SERVER_LOG}")
 
 
 @pytest.fixture(scope="session")
@@ -46,18 +47,20 @@ def app_url() -> Iterator[str]:
     """streamlit_app.py on a free local port, demo backend without secrets (ADR 0023)."""
     port = free_port()
     env = {**os.environ, "AUDIT_BACKEND": "local"}
-    server = subprocess.Popen(
-        [sys.executable, "-m", "streamlit", "run", "streamlit_app.py",
-         "--server.headless=true", f"--server.port={port}",
-         "--browser.gatherUsageStats=false"],
-        cwd=ROOT, env=env, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    url = f"http://127.0.0.1:{port}"
-    try:
-        wait_until_healthy(url)
-        yield url
-    finally:
-        server.terminate()
-        server.wait(timeout=10)
+    SERVER_LOG.parent.mkdir(exist_ok=True)
+    with SERVER_LOG.open("w") as log:
+        server = subprocess.Popen(
+            [sys.executable, "-m", "streamlit", "run", "streamlit_app.py",
+             "--server.headless=true", f"--server.port={port}",
+             "--browser.gatherUsageStats=false"],
+            cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT)
+        url = f"http://127.0.0.1:{port}"
+        try:
+            wait_until_healthy(url)
+            yield url
+        finally:
+            server.terminate()
+            server.wait(timeout=10)
 
 
 @pytest.fixture(scope="session")
