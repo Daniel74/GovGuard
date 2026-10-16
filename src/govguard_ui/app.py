@@ -2,17 +2,16 @@
 
 import streamlit as st
 
-from govguard_ui import create_page, gallery_page, start_page
+from govguard_ui import navigation, start_page
 
 
 def main() -> None:
     st.set_page_config(page_title="GovGuard", page_icon="🛡️", layout="wide")
     pages = [
         st.Page(start_page.render, title="Start & Hilfe", default=True),  # served at /
-        st.Page(gallery_page.render, title="Audits ansehen", url_path="audits"),
-        st.Page(create_page.render, title="Audit erstellen", url_path="erstellen"),
+        navigation.gallery(),
+        navigation.create(),
     ]
-    with st.sidebar:
-        st.markdown("**GovGuard**  \nCompliance Copilot")
-        st.caption("Demo-Stand · nur fiktive Daten")
-    st.navigation(pages).run()
+    current = st.navigation(pages, position="hidden")
+    navigation.sidebar(pages)
+    current.run()

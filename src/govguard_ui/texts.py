@@ -1,7 +1,7 @@
 """German UI texts shared by several pages (#11)."""
 
-DATA_WARNING = ("Keine echten oder personenbezogenen Daten eingeben. "
-                "Eingaben gehen zur Inferenz an Groq in die USA.")  # ADR 0004, 0016, 0023
+DATA_RULE = "Keine echten oder personenbezogenen Daten eingeben."  # ADR 0004, 0016, 0023
+DATA_FLOW_US = "Eingaben gehen zur Inferenz an Groq in die USA."
 
 HELP = {  # help on the report head; status help lives in style.LOOKS
     "judge": "Ein zweiter Modellaufruf sieht je FAIL nur das Verstoßkriterium und die "
@@ -15,3 +15,8 @@ HELP = {  # help on the report head; status help lives in style.LOOKS
 
 TYPE_LABELS = {"spec": "Spezifikation (DSGVO, SDM)",
                "architecture": "Architektur (BSI IT-Grundschutz, BSI C5, CIS, AWS FSBP)"}
+TYPE_CHOICES = {  # radio options on "Audit erstellen": norms and input formats (#41)
+    "spec": "**Spezifikation** · DSGVO, SDM · Markdown oder OpenAPI",
+    "architecture": "**Architektur** · BSI IT-Grundschutz, BSI C5, CIS, AWS FSBP · "
+                    "CloudFormation-JSON, Terraform oder Freitext",
+}

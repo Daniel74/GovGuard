@@ -2,6 +2,7 @@
 
 import os
 import time
+from pathlib import Path
 
 import streamlit as st
 
@@ -14,10 +15,11 @@ from govguard_ui.gallery import load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
 from govguard_ui.report_view import render_report
 from govguard_ui.style import CSS
-from govguard_ui.texts import DATA_WARNING, TYPE_LABELS
+from govguard_ui.texts import DATA_FLOW_US, DATA_RULE, TYPE_CHOICES
 
 DATA_FLOW = ("Datenfluss: Eingabe → Streamlit Community Cloud (USA) → Groq (USA). Nichts wird "
              "gespeichert; der Report bleibt nur in dieser Sitzung.")
+FORMATS = {".md": "Markdown", ".yaml": "YAML", ".json": "JSON"}  # by file suffix of the preset
 
 
 def secret(name: str) -> str | None:
@@ -31,7 +33,7 @@ def secret(name: str) -> str | None:
 def render() -> None:
     st.html(CSS)
     st.title("Audit erstellen")
-    st.warning(f"**{DATA_WARNING}**", icon="⚠️")
+    st.warning(f"**{DATA_RULE}** {DATA_FLOW_US}", icon=":material/warning:")
     if problem := backend_problem(secret("AUDIT_BACKEND")):
         st.error(problem)
         return
@@ -39,42 +41,67 @@ def render() -> None:
         _result(created)
         return
     audit_type, title, source, expected = _input_form()
-    password = st.text_input("Passwort", type="password", key="password",
-                             help="Schützt vor Kosten durch Fremde. Das Passwort erhalten Sie "
-                                  "vom Betreiber der Demo.")
-    if st.button("Audit starten", type="primary", key="start"):
-        if problem := start_problem(source[1], password, secret("APP_PASSWORD")):
-            st.error(problem)
-        else:
-            _run(audit_type, title, source, expected)
+    with st.container(border=True):
+        st.markdown("#### 4 · Starten")
+        password = st.text_input("Passwort", type="password", key="password", width=360)
+        st.caption("Schützt vor Kosten durch Fremde. Das Passwort erhalten Sie vom Betreiber der "
+                   "Demo.")
+        if st.button("Audit starten", type="primary", key="start"):
+            if problem := start_problem(source[1], password, secret("APP_PASSWORD")):
+                st.error(problem)
+            else:
+                _run(audit_type, title, source, expected)
 
 
 def _input_form() -> tuple[AuditType, str, tuple[str, str], Expected | None]:
-    """Audit type, title, (file name, text) of the input and the preset's expected result."""
-    audit_type = st.radio("1 · Audit-Art", ["spec", "architecture"], horizontal=True,
-                          format_func=TYPE_LABELS.get, key="audit_type")
-    mode = st.radio("2 · Eingabe", ["Preset laden", "Text einfügen"], horizontal=True,
-                    key="input_mode")
-    if mode == "Preset laden":
-        presets = {e.preset_id: e for e in load_gallery(PRESETS, GALLERY)
-                   if e.preset.audit_type == audit_type}
-        chosen = presets[st.selectbox("Preset (fiktive Beispiel-Eingabe mit Soll-Ergebnis)",
-                                      list(presets), format_func=lambda i: presets[i].preset.title,
-                                      key=f"create_preset_{audit_type}")]
-        st.caption(f"{chosen.source_name} · {with_thousand_dots(len(chosen.source_text))} Zeichen")
-        source = (chosen.source_name, chosen.source_text)
-        title, expected = chosen.preset.title, chosen.preset.expected
-    else:
+    """Steps 1 to 3, each in a frame: audit type, input, model (#41)."""
+    with st.container(border=True):
+        st.markdown("#### 1 · Audit-Art")
+        audit_type = st.radio("Audit-Art", ["spec", "architecture"],
+                              format_func=TYPE_CHOICES.get, key="audit_type",
+                              label_visibility="collapsed")
+    with st.container(border=True):
+        st.markdown("#### 2 · Eingabe")
+        title, source, expected = _source(audit_type)
+    with st.container(border=True):
+        st.markdown("#### 3 · Modell")
+        st.radio("Modell", [f"**Groq · {model_name()}** · ca. 2–3 Cent je Audit, 20–60 s"],
+                 key="model", label_visibility="collapsed")
+        st.radio("Nicht verfügbar", ["Claude Haiku über AWS Bedrock (EU) · in der UI nicht "
+                                     "verfügbar, nur per CLI für echte Daten"],  # ADR 0001, 0023
+                 index=None, disabled=True, key="model_bedrock", label_visibility="collapsed")
+        st.caption(DATA_FLOW)
+    return audit_type, title, source, expected
+
+
+def _source(audit_type: AuditType) -> tuple[str, tuple[str, str], Expected | None]:
+    """Title, (file name, text) of the input and the preset's expected result."""
+    preset_tab, text_tab = st.tabs(["Preset laden", "Text einfügen"], key="input_mode",
+                                   on_change="rerun")  # only the open tab runs its input
+    if preset_tab.open:
+        with preset_tab:
+            return _preset(audit_type)
+    with text_tab:
         text = st.text_area("Spezifikation oder Architektur (fiktiv)", height=260, key="text",
                             placeholder="Hier die fiktive Spezifikation oder Architektur "
                                         "einfügen …")
         limit = with_thousand_dots(MAX_INPUT_CHARS)
         st.caption(f"{with_thousand_dots(len(text))} / {limit} Zeichen")
-        source, title, expected = ("Eingabe", text), "Eigene Eingabe", None
-    st.markdown(f"**3 · Modell:** Groq · `{model_name()}` · "
-                "ca. 2–3 Cent je Audit, 20–60 s")
-    st.caption(DATA_FLOW + " Claude Haiku über AWS Bedrock (EU) gibt es nur per CLI.")
-    return audit_type, title, source, expected
+    return "Eigene Eingabe", ("Eingabe", text), None
+
+
+def _preset(audit_type: AuditType) -> tuple[str, tuple[str, str], Expected | None]:
+    presets = {e.preset_id: e for e in load_gallery(PRESETS, GALLERY)
+               if e.preset.audit_type == audit_type}
+    chosen = presets[st.selectbox("Preset (fiktive Beispiel-Eingabe mit Soll-Ergebnis)",
+                                  list(presets), format_func=lambda i: presets[i].preset.title,
+                                  key=f"create_preset_{audit_type}",
+                                  filter_mode=None)]  # a choice, no typing (#41)
+    size = with_thousand_dots(len(chosen.source_text))
+    file_format = FORMATS.get(Path(chosen.source_name).suffix, "Text")
+    st.caption(f"{chosen.source_name} · {file_format} · {size} Zeichen · "
+               f"Soll: {chosen.preset.expected.overall_status}")
+    return chosen.preset.title, (chosen.source_name, chosen.source_text), chosen.preset.expected
 
 
 def _run(

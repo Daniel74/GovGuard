@@ -579,17 +579,17 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-### Schritt 12d – #41 Demo-UI: Seitenbreite, Start & Hilfe und Audit erstellen
+### Schritt 12d – #41 Demo-UI: Rahmen der App, Start & Hilfe und Audit erstellen
 
-**Ziel:** Breite, Start-Seite und das Formular „Audit erstellen“ entsprechen dem Design-Artefakt.
+**Ziel:** Rahmen der App (Breite, Sidebar, Theme), Start-Seite und das Formular „Audit erstellen“ entsprechen dem Design-Artefakt.
 **Voraussetzung:** Schritt 12c.
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #41 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
-- [ ] **Ansehen** 👤 Vergleichsbilder für Start und Audit erstellen prüfen, dann `uv run pytest -m visual --update-snapshots` nur für diese Seiten
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #41 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
+- [x] **Ansehen** 👤 alle vier Vergleichsbilder `tests/visual/output/*-design.png` prüfen, dann `uv run pytest -m visual --update-snapshots` (Theme und Sidebar wirken auf jede Seite)
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #41`
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Nur die Referenzbilder von Start und Audit erstellen sich geändert haben und `pytest -m visual` grün ist.
+**Fertig, wenn:** Alle Referenzbilder nach Sichtvergleich neu freigegeben sind und `pytest -m visual` zweimal grün ist.
 **Fürs Fachgespräch:** Native Streamlit-Mittel (Theme, Rahmen) vor eigenem CSS.
 
 ---

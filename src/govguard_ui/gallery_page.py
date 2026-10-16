@@ -20,6 +20,7 @@ def render() -> None:
     entries = {entry.preset_id: entry for entry in _gallery()}
     preset_id = st.selectbox(
         "Gespeichertes Audit aus der Galerie", list(entries), key="gallery_preset",
+        filter_mode=None,  # a choice, no typing (#41)
         format_func=lambda i: f"{entries[i].preset.title} "
                               f"({TYPE_LABELS[entries[i].preset.audit_type].split(' ')[0]})")
     entry = entries[preset_id]

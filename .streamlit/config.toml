@@ -1,10 +1,20 @@
-# Colours of the design artefact (#11, artboard Statusfarben); fonts are the Streamlit default
+# Colours and sizes of the design artefact (#11, #41); fonts are the Streamlit default
 [theme]
 base = "light"
 primaryColor = "#0B4F8A"
 backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F0F2F6"
+secondaryBackgroundColor = "#FFFFFF"  # input fields are white with a border, as in the design
 textColor = "#1A2233"
+borderColor = "#CFD5DC"
+showWidgetBorder = true
+yellowBackgroundColor = "#FFF1CD"  # data warning
+yellowTextColor = "#53310D"
+dataframeHeaderBackgroundColor = "#EEF0F4"
+headingFontSizes = ["2.125rem", "1.625rem", "1.375rem", "1.0625rem", "1rem", "0.875rem"]
+
+[theme.sidebar]
+backgroundColor = "#EEF0F4"
+secondaryBackgroundColor = "#D6DFE9"  # the active page link
 
 [client]
 toolbarMode = "minimal"  # no developer menu in the public demo

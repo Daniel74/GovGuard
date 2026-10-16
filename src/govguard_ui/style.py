@@ -1,4 +1,4 @@
-"""Status colours and small HTML pieces of the design artefact (#11, artboard Statusfarben).
+"""Status colours, page frame and small HTML pieces of the design artefact (#11, #41).
 
 Never colour alone: every status carries a symbol and a word; all pairs meet WCAG AA.
 Every dynamic text goes through html.escape: it comes from the LLM or from the user.
@@ -50,6 +50,20 @@ LOOKS: dict[Category, Look] = {
 }
 
 CSS = """<style>
+[data-testid="stMainBlockContainer"]{max-width:calc(1040px + 10rem);padding:3rem 5rem 4rem}
+[data-testid="stSidebar"]{width:240px!important;min-width:240px;max-width:240px}
+[data-testid="stSidebarHeader"]{height:2rem;padding:0}
+[data-testid="stSidebarContent"]{padding:0}
+[data-testid="stSidebarUserContent"]{padding:0 16px 16px}
+[data-testid="stSidebar"] [data-testid="stPageLink"] p{font-size:15px}
+[data-testid="stSidebar"] [data-testid="stPageLink"] a{padding:10px 12px}
+[data-testid="stSidebarUserContent"] [data-testid="stVerticalBlock"]{gap:4px}
+[data-testid="stAlertContainer"]:has([data-testid="stAlertContentWarning"]){
+  border:1px solid #EAC475}
+.gg-brand{display:flex;gap:10px;align-items:flex-start;padding:0 8px 16px}
+.gg-brand img{margin-top:4px}
+.gg-brand b{display:block;font-size:17px;line-height:1.3}
+.gg-brand span{font-size:13px;color:#4A5361}
 .gg-badge{display:inline-block;padding:2px 10px;border-radius:4px;font-weight:700;
   border:1px solid;white-space:nowrap}
 .gg-big{font-size:24px;padding:8px 14px;border-width:2px;border-radius:8px}
@@ -66,6 +80,8 @@ CSS = """<style>
 .gg-mark{background:#E3EEF9;border-left-color:#0B4F8A}
 .gg-mark .n{color:#0B4F8A;font-weight:700}
 .gg-table{width:100%;border-collapse:collapse}
+.gg-frame{border:1px solid #D5DAE1;border-radius:8px;overflow:hidden}
+.gg-frame tr:first-child th{border-top:0}
 .gg-table td,.gg-table th{text-align:left;vertical-align:top;padding:10px 12px;
   border-top:1px solid #E3E7EC}
 .gg-table th{background:#F0F2F6;color:#4A5361;font-size:14px}
