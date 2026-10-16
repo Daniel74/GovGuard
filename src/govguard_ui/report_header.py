@@ -44,7 +44,7 @@ def _counters(report: AuditReport, key: str) -> None:
     counts = category_counts(report.findings)
     downgraded = sum(1 for f in report.findings if f.downgraded_from)
     words = {**{name: LOOKS[name].word for name in TILES},
-             "WARN": f"mit Beleg · davon {downgraded} herabgestuft",
+             "WARN": f"mit Beleg · davon {downgraded} herabgestuft" if downgraded else "mit Beleg",
              "GAP": "nicht beschrieben · kein Verstoß"}
     if report.audit_type == "architecture":
         words["N/A"] = "Ressourcentyp nicht in der Architektur"
@@ -76,7 +76,7 @@ def render_expected(report: AuditReport, expected: Expected, key: str) -> None:
     overall, *required = expected_checks(report, expected)
     ok = all(check.ok for check in (overall, *required))
     with st.container(border=True, horizontal=True, vertical_alignment="center",
-                      key=f"{key}_expected_{'pass' if ok else 'fail'}"):  # colour as a status
+                      key=f"{key}_expected_{LOOKS['PASS' if ok else 'FAIL'].css}"):
         st.markdown(f"**{'Soll-Abgleich: wie erwartet' if ok else 'Soll-Abweichung'}**",
                     help=HELP["expected"], width="content")
         st.markdown(f"{'✓' if overall.ok else '✕'} Gesamtstatus Soll {overall.expected}, "

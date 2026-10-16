@@ -118,8 +118,6 @@ CSS = """<style>
 """ + _status_css() + "</style>"
 
 
-
-
 def badge(category: Category, word: bool = False) -> str:
     """word: status and meaning as one mark, e.g. "✕ FAIL · Verstoß belegt" (#42)."""
     look = LOOKS[category]
