@@ -15,3 +15,4 @@ data/input/presets/*.local.md
 
 # Local secrets (Groq key for the build, ADR 0014) must never be committed
 .env
+.streamlit/secrets.toml

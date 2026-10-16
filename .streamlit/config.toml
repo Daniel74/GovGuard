@@ -8,3 +8,4 @@ textColor = "#1A2233"
 
 [client]
 toolbarMode = "minimal"  # no developer menu in the public demo
+showErrorDetails = "type"  # no tracebacks in the public demo, only the error type
