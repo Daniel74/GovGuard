@@ -23,18 +23,18 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag        | Arbeit                                                                                                                                            |
-| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.  | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                  |
-| Do 15.10.  | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                        |
-| Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                                      |
-| Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                                        |
-| So 18.10.  | Schritt 12: UI fertig, live auf Streamlit Community Cloud                                                                                         |
+| Tag        | Arbeit                                                                                                                                       |
+| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.  | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                             |
+| Do 15.10.  | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                   |
+| Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                                 |
+| Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                                   |
+| So 18.10.  | Schritt 12: UI fertig, live auf Streamlit Community Cloud                                                                                    |
 | Mo 19.10.  | Schritt 11b: Stack per CDK (bis `cdk synth`). Schritt 11a: #34 Audit-Jobs. AWS zurück: AWS-Nachholblock. Das Claude-Wochenlimit setzt zurück |
-| Di 20.10.  | Schritt 12b: GovGuard-Spezifikation, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                               |
-| Mi 21.10.  | Abgabe, Puffer                                                                                                                                    |
-| 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                    |
-| Mo 26.10.  | Präsentation und Fachgespräch                                                                                                                     |
+| Di 20.10.  | Schritt 12b: GovGuard-Spezifikation, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                          |
+| Mi 21.10.  | Abgabe, Puffer                                                                                                                               |
+| 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                               |
+| Mo 26.10.  | Präsentation und Fachgespräch                                                                                                                |
 
 **Wer baut was:**
 
@@ -515,9 +515,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Klären** 🆕 _Opus_ · 👤 `/grill-with-docs UI und Hosting: Lies docs/research/ui-hosting/ergebnisse-2026-10-16.md und gh issue view 9, 11, 34. Kläre die offenen Fragen, schreib ADR 0023, ergänze CONTEXT.md`
 - [x] **Tickets** 🤖 _Opus_ (gleiche Session) · 👤 `/to-tickets nach ADR 0023: #9 in Laufzeit und Stack teilen, #11 auf Demo-UI, #34 neu, Ticket Recruiter-Stand` → 🤖 passt die Ticketnummern in den Schritten 11–12b und R an
-- [ ] **Design** 🆕 _Opus_ · 👤 „Lege nach `docs/research/ui-hosting/claude-design-brief.md` das Design-Artefakt für die UI an, mit Daten aus `beispiel-reports/`“ → 🤖 baut die drei Seiten als Artboards (nur baubar mit Streamlit) und schreibt den Link in #11 → 👤 kommentiert im Artefakt → 👤 „Arbeite meine Kommentare im Design-Artefakt ein“, bis es passt
-- [ ] **Recherche** (optional) 👤 Gemini Deep Research mit `docs/research/ui-hosting/gemini-research-fragen.md` → Ergebnis in denselben Ordner
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Design** 🆕 _Opus_ · 👤 „Lege nach `docs/research/ui-hosting/claude-design-brief.md` das Design-Artefakt für die UI an, mit Daten aus `beispiel-reports/`“ → 🤖 baut die drei Seiten als Artboards (nur baubar mit Streamlit) und schreibt den Link in #11 → 👤 kommentiert im Artefakt → 👤 „Arbeite meine Kommentare im Design-Artefakt ein“, bis es passt
+- [-] **Recherche** (optional) 👤 Gemini Deep Research mit `docs/research/ui-hosting/gemini-research-fragen.md` → Ergebnis in denselben Ordner
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** ADR 0023 steht, die Tickets keine offenen Fragen mehr haben und das Design-Artefakt alle drei Seiten der UI zeigt, ohne offene Kommentare und mit Link in #11.
 **Fürs Fachgespräch:** Bewusster Trade-off zwischen Datenresidenz, Kosten und Verfügbarkeit; teuer ist nicht AWS, sondern das Modell.
