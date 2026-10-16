@@ -11,7 +11,7 @@ from govguard.cli import main, model_for, parse_args
 from govguard.models import AuditReport, RuleCatalog
 
 
-def fake_model(spec_catalog: RuleCatalog) -> FunctionModel:
+def fake_model(spec_catalog: RuleCatalog, model_name: str = "fake-model") -> FunctionModel:
     """Fake LLM: WARN for every rule."""
     findings = [
         {"rule_id": rule.id, "status": "WARN", "line_start": None, "line_end": None,
@@ -22,7 +22,21 @@ def fake_model(spec_catalog: RuleCatalog) -> FunctionModel:
     def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
         return ModelResponse(parts=[ToolCallPart("submit_audit", {"findings": findings})])
 
-    return FunctionModel(respond, model_name="fake-model")
+    return FunctionModel(respond, model_name=model_name)
+
+
+def spec_argv(spec_catalog: RuleCatalog, text: str, tmp_path: Path) -> list[str]:
+    """Writes input and catalog, returns the CLI arguments of a spec audit."""
+    spec_file = tmp_path / "spec.txt"
+    spec_file.write_text(text, encoding="utf-8")
+    catalog_file = tmp_path / "rules_spec.json"
+    catalog_file.write_text(spec_catalog.model_dump_json(), encoding="utf-8")
+    return ["spec", str(spec_file), "--catalog", str(catalog_file)]
+
+
+@pytest.fixture
+def argv(spec_catalog: RuleCatalog, spec_input: str, tmp_path: Path) -> list[str]:
+    return spec_argv(spec_catalog, spec_input, tmp_path)
 
 
 def test_spec_command_prints_audit_report_as_json(
@@ -153,20 +167,18 @@ def test_each_provider_builds_its_own_model(monkeypatch: pytest.MonkeyPatch) -> 
     assert model_for("bedrock").model_name.startswith("eu.")  # EU only (ADR 0001)
 
 
+@pytest.mark.parametrize("provider", ["groq", "bedrock"])
 def test_the_report_names_the_model_of_the_chosen_provider(
-    spec_catalog: RuleCatalog, spec_input: str, tmp_path: Path,
+    provider: str, spec_catalog: RuleCatalog, argv: list[str],
     capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    spec_file = tmp_path / "spec.txt"
-    spec_file.write_text(spec_input, encoding="utf-8")
-    catalog_file = tmp_path / "rules_spec.json"
-    catalog_file.write_text(spec_catalog.model_dump_json(), encoding="utf-8")
-    monkeypatch.setattr("govguard.cli.groq_model", lambda: fake_model(spec_catalog))
+    monkeypatch.setattr(f"govguard.cli.{provider}_model",
+                        lambda: fake_model(spec_catalog, f"fake-{provider}"))
 
-    exit_code = main(["spec", str(spec_file), "--catalog", str(catalog_file)])
+    exit_code = main([*argv, "--provider", provider])
 
     assert exit_code == 0
-    assert AuditReport.model_validate_json(capsys.readouterr().out).model_id == "fake-model"
+    assert AuditReport.model_validate_json(capsys.readouterr().out).model_id == f"fake-{provider}"
 
 
 def test_too_long_input_ends_with_exit_code_1_and_a_plain_sentence(
@@ -180,3 +192,26 @@ def test_too_long_input_ends_with_exit_code_1_and_a_plain_sentence(
 
     assert exit_code == 1  # 2 stays fail closed
     assert err.strip() == "Eingabe zu lang: 100.001 Zeichen, erlaubt sind höchstens 100.000."
+
+
+def test_too_long_input_is_rejected_before_the_model_is_built(
+    spec_catalog: RuleCatalog, tmp_path: Path, capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)  # building the model would raise
+
+    exit_code = main(spec_argv(spec_catalog, "x" * 100_001, tmp_path))
+
+    assert exit_code == 1
+    assert capsys.readouterr().err.startswith("Eingabe zu lang")
+
+
+def test_missing_groq_key_ends_with_exit_code_3_and_a_plain_sentence(
+    argv: list[str], capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+
+    exit_code = main(argv)
+
+    assert exit_code == 3  # 1 input, 2 fail closed
+    assert capsys.readouterr().err.startswith("GROQ_API_KEY fehlt")

@@ -6,19 +6,25 @@ import os
 import sys
 import uuid
 from pathlib import Path
+from typing import get_args
 
 from pydantic_ai.models import Model
 
-from govguard.audit_engine import AuditValidationError, InputTooLongError, run_audit
+from govguard.audit_engine import (
+    AuditValidationError,
+    InputTooLongError,
+    check_input_length,
+    run_audit,
+)
 from govguard.aws_services import bedrock_model
-from govguard.groq_services import groq_model
-from govguard.models import RuleCatalog, Trace
+from govguard.groq_services import MissingApiKeyError, groq_model
+from govguard.models import Provider, RuleCatalog, Trace
 
 SPEC_CATALOG = Path("data/knowledge_base/rules_spec.json")
 ARCH_CATALOG = Path("data/knowledge_base/rules_arch.json")
 
 
-def model_for(provider: str) -> Model:
+def model_for(provider: Provider) -> Model:
     """Groq is the default (ADR 0023); no silent switch, a missing key raises (ADR 0016)."""
     return {"groq": groq_model, "bedrock": bedrock_model}[provider]()
 
@@ -33,13 +39,16 @@ def main(argv: list[str] | None = None, model: Model | None = None) -> int:
         catalog_sha256=hashlib.sha256(catalog_bytes).hexdigest(),
         kb_commit=os.environ.get("KB_COMMIT", "local"),
     )
-    if model is None:
-        model = model_for(args.provider)
     try:
+        check_input_length(input_text)  # before the model: no key needed to learn it's too long
+        model = model or model_for(args.provider)
         report = run_audit(RuleCatalog.model_validate_json(catalog_bytes), input_text, model, trace)
     except InputTooLongError as error:  # rejected before the first LLM call
         print(error, file=sys.stderr)
         return 1
+    except MissingApiKeyError as error:  # no silent switch to Bedrock (ADR 0016)
+        print(error, file=sys.stderr)
+        return 3
     except AuditValidationError as error:  # fail closed, like HTTP 502
         print(_failure_text(error), file=sys.stderr)
         return 2
@@ -68,7 +77,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         command = commands.add_parser(name, help=help_text)
         command.add_argument("file", type=Path, help=file_help)
         command.add_argument("--catalog", type=Path, default=catalog, help=catalog.name)
-        command.add_argument("--provider", choices=["groq", "bedrock"], default="groq",
+        command.add_argument("--provider", choices=get_args(Provider), default="groq",
                              help="groq: nur fiktive Daten (USA); bedrock: eu., echte Daten")
     return parser.parse_args(argv)
 

@@ -2,8 +2,17 @@ from datetime import UTC, datetime
 
 import pytest
 from pydantic import ValidationError
+from pydantic_ai.models.function import FunctionModel
 
-from govguard.models import AuditEvent, Preset, RequiredFinding, RuleCatalog, Trace
+from govguard.groq_services import groq_model
+from govguard.models import (
+    AuditEvent,
+    Preset,
+    RequiredFinding,
+    RuleCatalog,
+    Trace,
+    provider_of,
+)
 
 
 def test_rule_catalog_needs_at_least_one_rule() -> None:
@@ -51,3 +60,10 @@ def test_audit_event_counts_corrections_but_carries_no_text() -> None:
     assert (logged["retries"], logged["downgrades"]) == (1, 2)
     # No input text, no evidence, no reasons (ADR 0006, DSGVO Art. 5(1)(c))
     assert not {"evidence", "input_text", "corrections", "rationale"} & logged.keys()
+
+
+def test_provider_of_tells_groq_from_bedrock(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("GROQ_API_KEY", "test")
+
+    assert provider_of(groq_model()) == "groq"
+    assert provider_of(FunctionModel(lambda *_: None)) == "bedrock"  # test models like Bedrock

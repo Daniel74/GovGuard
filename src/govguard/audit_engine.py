@@ -1,14 +1,13 @@
 """Audit engine: pure audit logic, gets the model injected (ADR 0005). No boto3."""
 
 import asyncio
-from collections.abc import Callable, Coroutine, Iterable
-from typing import Any
+from collections.abc import Callable, Iterable
 
 from pydantic_ai.exceptions import ModelAPIError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
 from govguard.audit_gates import completeness_problems
-from govguard.audit_packages import SPEC_FAIL_RULE, package_requests
+from govguard.audit_packages import PackageRequest, package_requests
 from govguard.corrections import AuditValidationError, Corrections
 from govguard.evidence import evidence_of
 from govguard.fail_judge import judge_fails
@@ -25,7 +24,7 @@ from govguard.models import (
     Trace,
 )
 
-__all__ = ["SPEC_FAIL_RULE", "AuditValidationError", "InputTooLongError", "overall_status",
+__all__ = ["AuditValidationError", "InputTooLongError", "check_input_length", "overall_status",
            "run_audit"]
 
 type OnProgress = Callable[[Progress], None]
@@ -36,12 +35,18 @@ class InputTooLongError(ValueError):
     """Raised before the first LLM call, so a too long input costs nothing."""
 
     def __init__(self, length: int) -> None:
-        super().__init__(f"Eingabe zu lang: {_german(length)} Zeichen, erlaubt sind höchstens "
-                         f"{_german(MAX_INPUT_CHARS)}.")
+        super().__init__(f"Eingabe zu lang: {_with_thousand_dots(length)} Zeichen, erlaubt sind "
+                         f"höchstens {_with_thousand_dots(MAX_INPUT_CHARS)}.")
 
 
-def _german(number: int) -> str:
+def _with_thousand_dots(number: int) -> str:
     return f"{number:,}".replace(",", ".")
+
+
+def check_input_length(input_text: str) -> None:
+    """Callers may check before building the model, run_audit checks again (ADR 0023)."""
+    if len(input_text) > MAX_INPUT_CHARS:
+        raise InputTooLongError(len(input_text))
 
 
 def overall_status(statuses: Iterable[Status]) -> Status:
@@ -53,8 +58,7 @@ def run_audit(
     on_progress: OnProgress | None = None,
 ) -> AuditReport:
     """on_progress gets each phase and finished package; the audit logic stays pure (ADR 0023)."""
-    if len(input_text) > MAX_INPUT_CHARS:
-        raise InputTooLongError(len(input_text))
+    check_input_length(input_text)
     corrections = Corrections()
     try:
         drafts = asyncio.run(_drafts(catalog, input_text, model, corrections,
@@ -78,40 +82,40 @@ def run_audit(
 
 async def _drafts(
     catalog: RuleCatalog, input_text: str, model: Model, corrections: Corrections,
-    report: OnProgress,
+    on_progress: OnProgress,
 ) -> list[FindingDraft]:
     """Spec, a template too: every FAIL goes to the judge (open world, #31). Architecture:
     N/A by code via the resource inventory."""
     if catalog.audit_type != "architecture":
         drafts = await _counted(
-            package_requests(catalog.rules, input_text, None, model, corrections), report)
+            package_requests(catalog.rules, input_text, None, model, corrections), on_progress)
         if any(draft.status == "FAIL" for draft in drafts):  # the judge only runs on a FAIL
-            report(Progress(phase="fail_judge"))
+            on_progress(Progress(phase="fail_judge"))
         return await judge_fails(catalog.rules, drafts, input_text, model, corrections)
-    report(Progress(phase="inventory"))
+    on_progress(Progress(phase="inventory"))
     inventory = await resource_inventory(catalog.rules, input_text, model, corrections)
     to_model = [rule for rule in catalog.rules if inventory.applies(rule)]
     drafts = [_na_by_code(rule, inventory.na_rationale)
               for rule in catalog.rules if not inventory.applies(rule)]
     return drafts + await _counted(package_requests(
-        to_model, input_text, inventory.na_forbidden, model, corrections), report)
+        to_model, input_text, inventory.na_forbidden, model, corrections), on_progress)
 
 
 async def _counted(
-    requests: list[Coroutine[Any, Any, list[FindingDraft]]], report: OnProgress
+    requests: list[PackageRequest], on_progress: OnProgress
 ) -> list[FindingDraft]:
     """All packages at once; each finished one is reported."""
     total, done = len(requests), 0
-    report(Progress(phase="packages", packages_total=total))
+    on_progress(Progress(phase="packages", packages_total=total))
 
-    async def counted(request: Coroutine[Any, Any, list[FindingDraft]]) -> list[FindingDraft]:
+    async def run_and_count(request: PackageRequest) -> list[FindingDraft]:
         nonlocal done
         drafts = await request
         done += 1
-        report(Progress(phase="packages", packages_done=done, packages_total=total))
+        on_progress(Progress(phase="packages", packages_done=done, packages_total=total))
         return drafts
 
-    answers = await asyncio.gather(*(counted(r) for r in requests))
+    answers = await asyncio.gather(*(run_and_count(r) for r in requests))
     return [draft for answer in answers for draft in answer]
 
 

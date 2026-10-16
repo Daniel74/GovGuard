@@ -1,6 +1,6 @@
 # 0014 – Groq ist Standard für den Build der Wissensbasis
 
-_Ersetzt [ADR 0010](0010-groq-build-fallback.md). Weicht für den Build von [ADR 0001](0001-eu-inferenzprofil.md) ab. Umsetzung: #21._
+_Ersetzt [ADR 0010](0010-groq-build-fallback.md). Weicht für den Build von [ADR 0001](0001-eu-inferenzprofil.md) ab. Umsetzung: #21. Teilweise geändert durch [ADR 0023](0023-demo-und-recruiter-stand.md): `groq_services.py` liegt in `govguard`, die Abhängigkeit gehört zur Laufzeit (#35)._
 
 ## Kontext
 

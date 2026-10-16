@@ -13,7 +13,7 @@ from pydantic_ai.models import Model
 
 from govguard.corrections import Corrections, service_down
 from govguard.evidence import evidence_of
-from govguard.models import FindingDraft, Rule
+from govguard.models import FindingDraft, Provider, Rule, provider_of
 
 _DOWN = "KI-Dienst nicht erreichbar oder überlastet"  # never the library's error text
 _INVALID = "Antwort auch nach einer Korrektur nicht verwertbar"
@@ -53,7 +53,7 @@ _OUTPUT = {"name": "submit_fail_verdicts", "strict": True,
            "description": "Gib je FAIL-Befund genau ein Urteil ab."}
 _SETTINGS = {"temperature": 0, "max_tokens": 8000}  # like the audit (#28)
 # Bedrock: forced tool (ADR 0005); Groq: json_schema with constrained decoding (ADR 0016)
-_JUDGES = {
+_JUDGES: dict[Provider, Agent] = {
     provider: Agent(output_type=output_type, instructions=FAIL_JUDGE_PROMPT,
                     deps_type=JudgeDeps, model_settings=_SETTINGS,
                     retries=1)  # one retry, for a schema slip or missing verdicts
@@ -76,11 +76,6 @@ def _all_judged(ctx: RunContext[JudgeDeps], output: FailVerdicts) -> FailVerdict
 
 for _judge in _JUDGES.values():
     _judge.output_validator(_all_judged)
-
-
-def provider_of(model: Model) -> str:
-    """Groq or Bedrock; test models (FunctionModel) behave like Bedrock. Shared with the audit."""
-    return "groq" if model.system == "groq" else "bedrock"
 
 
 async def judge_fails(

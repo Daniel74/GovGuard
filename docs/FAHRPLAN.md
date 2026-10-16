@@ -529,10 +529,10 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** `run_audit` läuft mit Groq als Standard (Bedrock nur per CLI) und meldet seinen Fortschritt; die UI kann es ohne AWS direkt aufrufen.
 **Voraussetzung:** Schritt 10i. Läuft komplett ohne AWS.
 
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #35 umsetzen` → Plan → Go
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #35 umsetzen` → Plan → Go
       Reihenfolge: Groq-Adapter von `kb_build` nach `govguard` → Flag `--provider` in der CLI → Fortschritt aus `run_audit` (Prüflogik bleibt rein, Test mit `FunctionModel`)
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #35`
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #35`
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** `python -m govguard.cli spec --provider groq …` einen Report liefert und der Test die Fortschrittsmeldungen in der richtigen Reihenfolge sieht.
 **Fürs Fachgespräch:** Kein stilles Umschalten, `model_id` im Report, Fortschritt als Naht ohne Seiteneffekt in der Prüflogik.

@@ -71,3 +71,20 @@ def test_the_fail_judge_phase_follows_the_packages_only_when_there_is_a_fail(
     run_audit(spec_catalog, spec_input, model, trace, on_progress=seen.append)
 
     assert as_tuples(seen) == [("packages", 0, 1), ("packages", 1, 1), ("fail_judge", 0, 0)]
+
+
+def test_architecture_audit_without_a_model_package_reports_zero_of_zero(
+    arch_catalog: RuleCatalog, bucket_template: str, trace
+) -> None:
+    seen: list[Progress] = []
+    dynamodb_only = arch_catalog.model_copy(
+        update={"rules": [r for r in arch_catalog.rules if r.id == "ARCH-CIS-3.3.1"]})
+
+    def never_called(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        raise AssertionError("every rule is N/A by code, no package reaches the model")
+
+    report = run_audit(dynamodb_only, bucket_template, FunctionModel(never_called), trace,
+                       on_progress=seen.append)
+
+    assert report.overall_status == "N/A"
+    assert as_tuples(seen) == [("inventory", 0, 0), ("packages", 0, 0)]

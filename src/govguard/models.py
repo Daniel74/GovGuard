@@ -7,6 +7,7 @@ from datetime import datetime
 from typing import Literal
 
 from pydantic import BaseModel, Field, model_validator
+from pydantic_ai.models import Model
 
 Status = Literal["PASS", "WARN", "FAIL", "N/A"]
 # Worst status wins; N/A only if every finding is N/A (DESIGN 2.1)
@@ -14,6 +15,12 @@ SEVERITY: dict[Status, int] = {"N/A": 0, "PASS": 1, "WARN": 2, "FAIL": 3}
 AuditType = Literal["spec", "architecture"]
 SourceName = Literal["BSI", "C5", "CIS", "DSGVO", "FSBP", "SDM"]
 ArchetypeId = Literal["ARCH-01", "ARCH-02", "ARCH-03", "NONE"]
+Provider = Literal["groq", "bedrock"]  # groq: fictitious data only; bedrock eu.: real data
+
+
+def provider_of(model: Model) -> Provider:
+    """Groq or Bedrock; test models (FunctionModel) behave like Bedrock."""
+    return "groq" if model.system == "groq" else "bedrock"
 
 
 class CrossReference(BaseModel):

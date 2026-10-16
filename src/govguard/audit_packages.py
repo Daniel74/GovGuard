@@ -15,8 +15,7 @@ from pydantic_ai.models import Model
 from govguard.audit_gates import answer_problems
 from govguard.corrections import Corrections, downgrades_of
 from govguard.evidence import MAX_SPAN, numbered, without_unproven_verdict
-from govguard.fail_judge import provider_of
-from govguard.models import AuditResponse, FindingDraft, Rule
+from govguard.models import AuditResponse, FindingDraft, Provider, Rule, provider_of
 from govguard.repairs import with_rule_recommendations, worst_of_duplicates
 
 SYSTEM_PROMPT = f"""\
@@ -35,6 +34,7 @@ Spezifikation (offene Welt): Was die Eingabe nicht erwähnt, kann anderswo gereg
 Beschreibt "violation_if" ein Fehlen, belegt fehlender Text nur "nicht beschrieben": WARN. FAIL \
 nur, wenn die Belegzeilen etwas festlegen, das der Prüfregel widerspricht; "rationale" nennt es."""
 
+type PackageRequest = Coroutine[Any, Any, list[FindingDraft]]  # one model call, not yet awaited
 PACKAGE_SIZE = 10  # rules per model call; 166 architecture rules -> 17 parallel calls
 GROQ_MAX_PARALLEL = 2  # ~110,000 tokens/min per slot measured (#26), Groq tier allows 250,000
 
@@ -51,13 +51,14 @@ _OUTPUT = {"name": "submit_audit", "description": "Gib genau einen Befund je Pr�
            "strict": True}  # static schema, every field required (ADR 0017)
 _SETTINGS = {"temperature": 0, "max_tokens": 8000}  # same status; a loop ends in ~25 s (#28)
 # Bedrock: forced tool (ADR 0005); Groq: json_schema with constrained decoding (ADR 0016)
-_AGENTS = {
+_AGENTS: dict[Provider, Agent] = {
     system: Agent(output_type=output_type, instructions=SYSTEM_PROMPT, deps_type=AuditDeps,
                   model_settings=_SETTINGS, retries=1)  # one retry: within the 180 s (ADR 0018)
     for system, output_type in [("bedrock", ToolOutput(AuditResponse, **_OUTPUT)),
                                 ("groq", NativeOutput(AuditResponse, **_OUTPUT))]
 }
-_MAX_PARALLEL = {"groq": GROQ_MAX_PARALLEL}  # Bedrock: no limit, all packages at once
+# Bedrock: no limit, all packages at once
+_MAX_PARALLEL: dict[Provider, int] = {"groq": GROQ_MAX_PARALLEL}
 
 
 def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditResponse:
@@ -91,7 +92,7 @@ for _agent in _AGENTS.values():  # the same gates for both models (ADR 0016)
 def package_requests(
     rules: list[Rule], input_text: str, na_forbidden: str | None, model: Model,
     corrections: Corrections,
-) -> list[Coroutine[Any, Any, list[FindingDraft]]]:
+) -> list[PackageRequest]:
     """One request per package, run in parallel within the 180 s (ADR 0018); Groq throttled."""
     packages = [rules[i:i + PACKAGE_SIZE] for i in range(0, len(rules), PACKAGE_SIZE)]
     slots = asyncio.Semaphore(_MAX_PARALLEL.get(provider_of(model), len(packages) or 1))

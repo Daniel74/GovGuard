@@ -2,7 +2,8 @@ import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse, RetryPromptPart, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from govguard.audit_engine import SPEC_FAIL_RULE, AuditValidationError, run_audit
+from govguard.audit_engine import AuditValidationError, run_audit
+from govguard.audit_packages import SPEC_FAIL_RULE
 from govguard.evidence import UNPROVEN_PASS
 from govguard.inventory import NA_FORBIDDEN
 

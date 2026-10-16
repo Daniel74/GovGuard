@@ -19,7 +19,7 @@ Build-Werkzeug, läuft lokal: `uv run python -m kb_build <befehl>`. Hintergrund:
 ## Audit lokal (`govguard.cli`)
 
 - `uv run python -m govguard.cli spec <datei>` bzw. `arch <datei>`; Standard ist Groq (`GROQ_API_KEY`, nur fiktive Daten). `--provider bedrock` nimmt Bedrock `eu.`, den einzigen Weg für echte Daten ([ADR 0001](docs/adr/0001-eu-inferenzprofil.md)).
-- Exit-Codes: 0 Report auf stdout, 1 Eingabe über 100.000 Zeichen (vor jedem LLM-Aufruf), 2 fail closed.
+- Exit-Codes: 0 Report auf stdout, 1 Eingabe über 100.000 Zeichen (vor jedem LLM-Aufruf), 2 fail closed, 3 `GROQ_API_KEY` fehlt.
 
 ## Bekannte Grenzen
 
