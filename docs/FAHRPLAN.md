@@ -567,7 +567,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Ein Test fotografiert die vier Ansichten der UI und vergleicht sie mit freigegebenen Referenzbildern; je Ansicht entsteht ein Vergleichsbild „Design | Streamlit“.
 **Voraussetzung:** Schritt 12. Läuft komplett ohne AWS.
 
-- [x] **Soll-Bilder** 🤖 _Opus_ · 👤 loggt sich in einem Chrome mit eigenem Profil ein (`--remote-debugging-port`), 🤖 fotografiert die Artboards Start, Main, Arch und Erstellen im Play-Modus bei 1440 px per Playwright über CDP → `tests/visual/design/start.png`, `gallery-spec.png`, `gallery-arch.png`, `create.png`
+- [x] **Soll-Bilder** 🤖 _Opus_ · 👤 loggt sich in einem Chrome mit eigenem Profil ein, 🤖 fotografiert die Artboards per Playwright über CDP → `tests/visual/design/start.png`, `gallery-spec.png`, `gallery-arch.png`, `create.png`. Ändert sich das Design: 👤 `/design-screenshots`
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #40 umsetzen` → Plan → Go
       Reihenfolge: Abhängigkeiten und Marker → Server-Fixture → Bildvergleich (Unit-Test ohne Browser) → vier Ansichten → Vergleichsbilder → zweimal stabil grün
 - [ ] **Freigeben** 👤 Referenzbilder in `tests/visual/` ansehen: Sie zeigen bewusst den heutigen Stand
