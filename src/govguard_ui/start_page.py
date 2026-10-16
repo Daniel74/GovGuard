@@ -53,12 +53,12 @@ def render() -> None:
         st.subheader("Audit erstellen")
         st.markdown(STEPS)
         if st.button("Zu „Audit erstellen“", type="primary", key="to_create"):
-            st.switch_page(navigation.create())
+            st.switch_page(navigation.create_audit_page())
     with right.container(border=True, height="stretch"):
         st.subheader("Gespeicherte Audits ansehen")
         st.markdown(GALLERY)
         if st.button("Zu „Audits ansehen“", key="to_gallery"):
-            st.switch_page(navigation.gallery())
+            st.switch_page(navigation.audits_page())
     st.header("So lesen Sie einen Audit-Report")
     st.html(_status_table())
     terms = list(TERMS.items())

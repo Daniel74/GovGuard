@@ -49,6 +49,7 @@ LOOKS: dict[Category, Look] = {
         todo="Nichts. In der Liste standardmäßig ausgeblendet."),
 }
 
+# Own CSS only where Streamlit has no option; tests/visual/test_browser.py guards the frame
 CSS = """<style>
 [data-testid="stMainBlockContainer"]{max-width:calc(1040px + 10rem);padding:3rem 5rem 4rem}
 [data-testid="stSidebar"]{width:240px!important;min-width:240px;max-width:240px}
@@ -84,7 +85,7 @@ CSS = """<style>
 .gg-frame tr:first-child th{border-top:0}
 .gg-table td,.gg-table th{text-align:left;vertical-align:top;padding:10px 12px;
   border-top:1px solid #E3E7EC}
-.gg-table th{background:#F0F2F6;color:#4A5361;font-size:14px}
+.gg-table th{background:#EEF0F4;color:#4A5361;font-size:14px}
 </style>"""
 
 

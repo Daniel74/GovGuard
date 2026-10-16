@@ -585,9 +585,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritt 12c.
 
 - [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #41 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
-- [x] **Ansehen** 👤 alle vier Vergleichsbilder `tests/visual/output/*-design.png` prüfen, dann `uv run pytest -m visual --update-snapshots` (Theme und Sidebar wirken auf jede Seite)
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #41`
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Ansehen** 👤 alle vier Vergleichsbilder `tests/visual/output/*-design.png` prüfen, dann `uv run pytest -m visual --update-snapshots`
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #41`
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Alle Referenzbilder nach Sichtvergleich neu freigegeben sind und `pytest -m visual` zweimal grün ist.
 **Fürs Fachgespräch:** Native Streamlit-Mittel (Theme, Rahmen) vor eigenem CSS.

@@ -21,11 +21,11 @@ BRAND = (f'<div class="gg-brand"><img src="{LOGO}" alt=""><div><b>GovGuard</b>'
          '<span>Compliance Copilot</span></div></div>')
 
 
-def gallery() -> StreamlitPage:
+def audits_page() -> StreamlitPage:
     return st.Page(gallery_page.render, title="Audits ansehen", url_path="audits")
 
 
-def create() -> StreamlitPage:
+def create_audit_page() -> StreamlitPage:
     return st.Page(create_page.render, title="Audit erstellen", url_path="erstellen")
 
 
@@ -35,4 +35,5 @@ def sidebar(pages: list[StreamlitPage]) -> None:
         st.html(BRAND)
         for page in pages:
             st.page_link(page)
+        st.space("small")  # air above the note, as in the design
         st.caption("Demo-Stand · nur fiktive Daten")

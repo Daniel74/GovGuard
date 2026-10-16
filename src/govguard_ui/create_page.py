@@ -65,6 +65,7 @@ def _input_form() -> tuple[AuditType, str, tuple[str, str], Expected | None]:
         title, source, expected = _source(audit_type)
     with st.container(border=True):
         st.markdown("#### 3 · Modell")
+        # display only, never read: Groq is the only model in the UI (ADR 0023)
         st.radio("Modell", [f"**Groq · {model_name()}** · ca. 2–3 Cent je Audit, 20–60 s"],
                  key="model", label_visibility="collapsed")
         st.radio("Nicht verfügbar", ["Claude Haiku über AWS Bedrock (EU) · in der UI nicht "
