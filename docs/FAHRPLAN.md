@@ -23,58 +23,58 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag        | Arbeit                                                                                                                                    |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.  | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                          |
-| Do 15.10.  | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                |
-| Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                             |
-| Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                                |
-| So 18.10.  | Schritt 12: UI fertig, live auf Streamlit Community Cloud                                                                                 |
+| Tag        | Arbeit                                                                                                                                            |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.  | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                  |
+| Do 15.10.  | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                        |
+| Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                                      |
+| Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                                        |
+| So 18.10.  | Schritt 12: UI fertig, live auf Streamlit Community Cloud                                                                                         |
 | Mo 19.10.  | Schritt 11b: Stack per CDK (bis `cdk synth`). Schritt 11a: #34 Bucket im Stack. AWS zurück: AWS-Nachholblock. Das Claude-Wochenlimit setzt zurück |
-| Di 20.10.  | Schritt 12b: GovGuard-Spezifikation, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                       |
-| Mi 21.10.  | Abgabe, Puffer                                                                                                                            |
-| 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                            |
-| Mo 26.10.  | Präsentation und Fachgespräch                                                                                                             |
+| Di 20.10.  | Schritt 12b: GovGuard-Spezifikation, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                               |
+| Mi 21.10.  | Abgabe, Puffer                                                                                                                                    |
+| 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                    |
+| Mo 26.10.  | Präsentation und Fachgespräch                                                                                                                     |
 
 **Wer baut was:**
 
-| Schritt | Prio | Ticket                          | Baut                                             | Prüft                      |
-| ------- | ---- | ------------------------------- | ------------------------------------------------ | -------------------------- |
-| 1       | –    | #1 Prüfkern                     | 🤖 Opus                                          | 🤖 Opus                    |
-| 2       | –    | #3 Presets                      | 👤 + 🤖 Opus                                     | 👤                         |
-| 3       | –    | #2 Bedrock + CLI                | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 4       | –    | #4 BSI + CIS                    | 🛠 Junie                                         | 🤖 Opus                    |
-| 5       | –    | #5 DSGVO + SDM                  | 🛠 Junie                                         | 🤖 Opus                    |
-| 6       | A    | #13 Quellen FSBP + C5           | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 7       | A    | #6 Bounded Catalog              | 🤖 Sonnet                                        | 👤 Kontrollpunkt + 🤖 Opus |
-| 8       | A    | #15 5. Preset                   | 👤 + 🤖 Opus                                     | 👤                         |
-| 9       | A    | #12 Prüfregeln + Gate           | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
-| 9a      | A    | #18 Kontoweite Pflichten        | 🤖 Sonnet                                        | 👤 Kontrollpunkt + 🤖 Opus |
-| 9b      | A    | #17 Gate Eigenschaftsnamen      | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 9c      | A    | #20 Ordnerstruktur              | 🤖 Opus                                          | 🤖 Opus                    |
-| 9d      | A    | #19 Typen im Prüfumfang         | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 9e      | A    | #21 Groq als Build-Standard     | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 9g      | A    | #25 ADR 0015 Terraform-Grenze   | 🤖 Sonnet                                        | 👤                         |
-| 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                                          | 🤖 Opus                    |
-| 10a     | A    | #26 Belege bei großen Eingaben  | 🤖 Opus                                          | 🤖 Opus                    |
-| 10b     | A    | #27 KI-Governance sichtbar      | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 10c     | A    | #28 FAIL nur bei Verstoß        | 🤖 Opus                                          | 🤖 Opus                    |
-| 10d     | A    | #29 Spec-Katalog Festlegungen   | 🤖 Opus                                          | 🤖 Opus                    |
-| 10e     | A    | #30 Build-Log Retry-Gründe      | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 10f     | A    | #31 FAIL-Prüfer zur Laufzeit    | 🤖 Opus                                          | 🤖 Opus                    |
-| 15      | A    | #24 Pflichtanker stabil         | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 10g     | A    | #32 Fail closed nach Retry      | 🤖 Opus                                          | 🤖 Opus                    |
-| 10i     | A    | UI und Hosting klären           | 👤 + 🤖 Opus (Design-Artefakt)                  | 👤                         |
-| 11      | A    | #9 Laufzeit: Groq, Fortschritt  | 🤖 Opus                                          | 🤖 Opus                    |
-| 12      | A    | #11 Demo-UI                     | 🤖 Sonnet (nach Design-Artefakt)                 | 🤖 Opus                    |
-| 11b     | A    | #9 Stack (CDK, IAM, KMS)        | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
-| 11a     | A    | #34 S3 im Stack                 | 🤖 Opus                                          | 🤖 Opus                    |
-| 12b     | A    | Selbst-Audit und Galerie        | 👤 + 🤖 Opus                                     | 👤                         |
-| 10h     | A ☁  | #33 Gegenprobe Bedrock          | 👤 Messung                                       | 👤                         |
-| 13      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                                        | 👤                         |
-| 14      | A    | #16 Doku nachziehen             | 👤 + 🤖 Sonnet                                   | 👤                         |
-| 19      | –    | #23 Lehrbuch fertigstellen      | 👤 + Claude Web                                  | 👤                         |
-| R       | ☁    | Recruiter-Stand                 | 🤖 Opus                                          | 🤖 Opus                    |
+| Schritt | Prio | Ticket                          | Baut                             | Prüft                      |
+| ------- | ---- | ------------------------------- | -------------------------------- | -------------------------- |
+| 1       | –    | #1 Prüfkern                     | 🤖 Opus                          | 🤖 Opus                    |
+| 2       | –    | #3 Presets                      | 👤 + 🤖 Opus                     | 👤                         |
+| 3       | –    | #2 Bedrock + CLI                | 🤖 Sonnet                        | 🤖 Opus                    |
+| 4       | –    | #4 BSI + CIS                    | 🛠 Junie                         | 🤖 Opus                    |
+| 5       | –    | #5 DSGVO + SDM                  | 🛠 Junie                         | 🤖 Opus                    |
+| 6       | A    | #13 Quellen FSBP + C5           | 🤖 Sonnet                        | 🤖 Opus                    |
+| 7       | A    | #6 Bounded Catalog              | 🤖 Sonnet                        | 👤 Kontrollpunkt + 🤖 Opus |
+| 8       | A    | #15 5. Preset                   | 👤 + 🤖 Opus                     | 👤                         |
+| 9       | A    | #12 Prüfregeln + Gate           | 🤖 Opus                          | 🤖 Opus · 🛠 Junie         |
+| 9a      | A    | #18 Kontoweite Pflichten        | 🤖 Sonnet                        | 👤 Kontrollpunkt + 🤖 Opus |
+| 9b      | A    | #17 Gate Eigenschaftsnamen      | 🤖 Sonnet                        | 🤖 Opus                    |
+| 9c      | A    | #20 Ordnerstruktur              | 🤖 Opus                          | 🤖 Opus                    |
+| 9d      | A    | #19 Typen im Prüfumfang         | 🤖 Sonnet                        | 🤖 Opus                    |
+| 9e      | A    | #21 Groq als Build-Standard     | 🤖 Sonnet                        | 🤖 Opus                    |
+| 9g      | A    | #25 ADR 0015 Terraform-Grenze   | 🤖 Sonnet                        | 👤                         |
+| 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                          | 🤖 Opus                    |
+| 10a     | A    | #26 Belege bei großen Eingaben  | 🤖 Opus                          | 🤖 Opus                    |
+| 10b     | A    | #27 KI-Governance sichtbar      | 🤖 Sonnet                        | 🤖 Opus                    |
+| 10c     | A    | #28 FAIL nur bei Verstoß        | 🤖 Opus                          | 🤖 Opus                    |
+| 10d     | A    | #29 Spec-Katalog Festlegungen   | 🤖 Opus                          | 🤖 Opus                    |
+| 10e     | A    | #30 Build-Log Retry-Gründe      | 🤖 Sonnet                        | 🤖 Opus                    |
+| 10f     | A    | #31 FAIL-Prüfer zur Laufzeit    | 🤖 Opus                          | 🤖 Opus                    |
+| 15      | A    | #24 Pflichtanker stabil         | 🤖 Sonnet                        | 🤖 Opus                    |
+| 10g     | A    | #32 Fail closed nach Retry      | 🤖 Opus                          | 🤖 Opus                    |
+| 10i     | A    | UI und Hosting klären           | 👤 + 🤖 Opus (Design-Artefakt)   | 👤                         |
+| 11      | A    | #9 Laufzeit: Groq, Fortschritt  | 🤖 Opus                          | 🤖 Opus                    |
+| 12      | A    | #11 Demo-UI                     | 🤖 Sonnet (nach Design-Artefakt) | 🤖 Opus                    |
+| 11b     | A    | #9 Stack (CDK, IAM, KMS)        | 🤖 Opus                          | 🤖 Opus · 🛠 Junie         |
+| 11a     | A    | #34 S3 im Stack                 | 🤖 Opus                          | 🤖 Opus                    |
+| 12b     | A    | Selbst-Audit und Galerie        | 👤 + 🤖 Opus                     | 👤                         |
+| 10h     | A ☁  | #33 Gegenprobe Bedrock          | 👤 Messung                       | 👤                         |
+| 13      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                        | 👤                         |
+| 14      | A    | #16 Doku nachziehen             | 👤 + 🤖 Sonnet                   | 👤                         |
+| 19      | –    | #23 Lehrbuch fertigstellen      | 👤 + Claude Web                  | 👤                         |
+| R       | ☁    | Recruiter-Stand                 | 🤖 Opus                          | 🤖 Opus                    |
 
 ---
 
@@ -513,7 +513,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** ADR 0023 hält Hosting, Datenfluss und Kosten für Demo und Recruiter-Stand fest; #9, #11 und #34 sind danach neu geschnitten, ohne offene Fragen.
 **Voraussetzung:** keine. Eingang: `docs/research/ui-hosting/ergebnisse-2026-10-16.md` (Entscheidungen, Fakten und offene Fragen vom 16.10.). Datenresidenz, Verschlüsselung und Kosten sind Weichenstellungen.
 
-- [ ] **Klären** 🆕 _Opus_ · 👤 `/grill-with-docs UI und Hosting: Lies docs/research/ui-hosting/ergebnisse-2026-10-16.md und gh issue view 9, 11, 34. Kläre die offenen Fragen, schreib ADR 0023, ergänze CONTEXT.md`
+- [x] **Klären** 🆕 _Opus_ · 👤 `/grill-with-docs UI und Hosting: Lies docs/research/ui-hosting/ergebnisse-2026-10-16.md und gh issue view 9, 11, 34. Kläre die offenen Fragen, schreib ADR 0023, ergänze CONTEXT.md`
 - [ ] **Tickets** 🤖 _Opus_ (gleiche Session) · 👤 `/to-tickets nach ADR 0023: #9 in Laufzeit und Stack teilen, #11 auf Demo-UI, #34 neu, Ticket Recruiter-Stand` → 🤖 passt die Ticketnummern in den Schritten 11–12b und R an
 - [ ] **Design** 🆕 _Opus_ · 👤 „Lege nach `docs/research/ui-hosting/claude-design-brief.md` das Design-Artefakt für die UI an, mit Daten aus `beispiel-reports/`“ → 🤖 baut die drei Seiten als Artboards (nur baubar mit Streamlit) und schreibt den Link in #11 → 👤 kommentiert im Artefakt → 👤 „Arbeite meine Kommentare im Design-Artefakt ein“, bis es passt
 - [ ] **Recherche** (optional) 👤 Gemini Deep Research mit `docs/research/ui-hosting/gemini-research-fragen.md` → Ergebnis in denselben Ordner
@@ -596,7 +596,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritte 11a, 11b und 12.
 
 - [ ] **Schreiben** 🆕 _Opus_ · 👤 „Schreibe die GovGuard-Spezifikation nach dem Ticket aus 10i“ → 👤 liest sie und legt das Soll fest (Testorakel, wie bei #3)
-- [ ] **Erzeugen** 👤 `/audit-messen alle Presets, GovGuard-Spezifikation und Stack-Template mit Groq` → nur Reports, die das Soll erfüllen, kommen in die Galerie
+- [ ] **Erzeugen** 👤 `/audit-messen alle Presets, GovGuard-Spezifikation und Stack-Template mit Groq` → alle Reports kommen in die Galerie, Soll-Abweichungen sichtbar (ADR 0023)
 - [ ] **Ausprobieren** 👤 `/run` → jede Galerie-Seite öffnen
 - [ ] **Abschließen** 👤 committet und pusht
 

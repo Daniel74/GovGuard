@@ -1,5 +1,7 @@
 # 0006 – CloudWatch Logs als Audit-Protokoll
 
+_Ergänzt durch [ADR 0023](0023-demo-und-recruiter-stand.md): Reports liegen als Audit-Job 1 Tag in S3; Nachweis bleibt das Audit-Ereignis._
+
 _Der Punkt zu `dataTrace` entfällt mit [ADR 0018](0018-lambda-function-url.md): ohne API Gateway kein Zugriffslog am Eingang._
 
 ## Kontext

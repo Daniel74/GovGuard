@@ -1,5 +1,7 @@
 # 0018 – Lambda Function URL statt API Gateway
 
+_Im Recruiter-Stand asynchron als Audit-Job mit Timeout 300 s: [ADR 0023](0023-demo-und-recruiter-stand.md)._
+
 _Setzt den Plan B aus [ADR 0011](0011-vollstaendiger-katalog.md) um. Ändert [ADR 0004](0004-streamlit-community-cloud.md) (Rechte, Throttling) und [ADR 0006](0006-cloudwatch-audit-protokoll.md) (`dataTrace`). Umsetzung: #9._
 
 ## Kontext

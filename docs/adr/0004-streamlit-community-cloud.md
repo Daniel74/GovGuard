@@ -1,6 +1,6 @@
 # 0004 – Streamlit Community Cloud für die Demo-UI
 
-_Rechte und Throttling geändert durch [ADR 0018](0018-lambda-function-url.md): `lambda:InvokeFunctionUrl` + `lambda:InvokeFunction` statt `execute-api:Invoke`, kein Stage-Throttling._
+_Rechte und Throttling geändert durch [ADR 0018](0018-lambda-function-url.md): `lambda:InvokeFunctionUrl` + `lambda:InvokeFunction` statt `execute-api:Invoke`, kein Stage-Throttling. Aufrufweg je Stand: [ADR 0023](0023-demo-und-recruiter-stand.md)._
 
 ## Kontext
 
