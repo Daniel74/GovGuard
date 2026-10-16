@@ -5,9 +5,9 @@ import time
 
 import streamlit as st
 
-from govguard.audit_engine import AuditValidationError
-from govguard.cli import failure_text
-from govguard.groq_services import DEFAULT_MODEL, MissingApiKeyError, groq_model
+from govguard.audit_engine import MAX_INPUT_CHARS, AuditValidationError, with_thousand_dots
+from govguard.audit_setup import failure_text
+from govguard.groq_services import MissingApiKeyError, groq_model, model_name
 from govguard.models import AuditType, Expected
 from govguard_ui.audit_runner import backend_problem, progress_view, run_local, start_problem
 from govguard_ui.gallery import load_gallery
@@ -51,7 +51,7 @@ def render() -> None:
 
 def _input_form() -> tuple[AuditType, str, tuple[str, str], Expected | None]:
     """Audit type, title, (file name, text) of the input and the preset's expected result."""
-    audit_type = st.radio("1 · Audit-Typ", ["spec", "architecture"], horizontal=True,
+    audit_type = st.radio("1 · Audit-Art", ["spec", "architecture"], horizontal=True,
                           format_func=TYPE_LABELS.get, key="audit_type")
     mode = st.radio("2 · Eingabe", ["Preset laden", "Text einfügen"], horizontal=True,
                     key="input_mode")
@@ -61,16 +61,17 @@ def _input_form() -> tuple[AuditType, str, tuple[str, str], Expected | None]:
         chosen = presets[st.selectbox("Preset (fiktive Beispiel-Eingabe mit Soll-Ergebnis)",
                                       list(presets), format_func=lambda i: presets[i].preset.title,
                                       key=f"create_preset_{audit_type}")]
-        st.caption(f"{chosen.source_name} · {len(chosen.source_text):,} Zeichen".replace(",", "."))
+        st.caption(f"{chosen.source_name} · {with_thousand_dots(len(chosen.source_text))} Zeichen")
         source = (chosen.source_name, chosen.source_text)
         title, expected = chosen.preset.title, chosen.preset.expected
     else:
         text = st.text_area("Spezifikation oder Architektur (fiktiv)", height=260, key="text",
                             placeholder="Hier die fiktive Spezifikation oder Architektur "
                                         "einfügen …")
-        st.caption(f"{len(text):,} / 100.000 Zeichen".replace(",", "."))
+        limit = with_thousand_dots(MAX_INPUT_CHARS)
+        st.caption(f"{with_thousand_dots(len(text))} / {limit} Zeichen")
         source, title, expected = ("Eingabe", text), "Eigene Eingabe", None
-    st.markdown(f"**3 · Modell:** Groq · `{os.getenv('GROQ_MODEL', DEFAULT_MODEL)}` · "
+    st.markdown(f"**3 · Modell:** Groq · `{model_name()}` · "
                 "ca. 2–3 Cent je Audit, 20–60 s")
     st.caption(DATA_FLOW + " Claude Haiku über AWS Bedrock (EU) gibt es nur per CLI.")
     return audit_type, title, source, expected

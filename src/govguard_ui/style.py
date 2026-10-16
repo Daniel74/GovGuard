@@ -11,19 +11,42 @@ from pydantic import BaseModel
 from govguard_ui.review import Category
 
 
-class Look(BaseModel):
+class Look(BaseModel):  # the one table per category: badge, counter, help and start page
     symbol: str
     label: str
     word: str  # short meaning, e.g. "Verstoß belegt"
     css: str  # class suffix in CSS
+    meaning: str  # what the category says about the finding
+    todo: str  # what the reader should do
 
 
 LOOKS: dict[Category, Look] = {
-    "FAIL": Look(symbol="✕", label="FAIL", word="Verstoß belegt", css="fail"),
-    "WARN": Look(symbol="!", label="WARN", word="Prüfbedarf", css="warn"),
-    "GAP": Look(symbol="○", label="Lücke", word="nicht beschrieben", css="gap"),
-    "PASS": Look(symbol="✓", label="PASS", word="Einhaltung belegt", css="pass"),
-    "N/A": Look(symbol="–", label="N/A", word="nicht anwendbar", css="na"),
+    "FAIL": Look(
+        symbol="✕", label="FAIL", word="Verstoß belegt", css="fail",
+        meaning="Verstoß belegt: Die Belegzeilen legen etwas fest, das der Prüfregel widerspricht. "
+                "Fehlt nur eine Angabe, ist das kein FAIL, sondern eine Lücke.",
+        todo="Beheben. Die Empfehlung im Befund nennt einen Weg."),
+    "WARN": Look(
+        symbol="!", label="WARN", word="Prüfbedarf", css="warn",
+        meaning="Prüfbedarf mit Beleg: Die Zeilen reichen für kein klares Urteil, oder der Code "
+                "hat ein PASS oder FAIL herabgestuft, das die KI nicht belegt oder der "
+                "FAIL-Prüfer nicht bestätigt hat.",
+        todo="Fachlich nachprüfen."),
+    "GAP": Look(
+        symbol="○", label="Lücke", word="nicht beschrieben", css="gap",
+        meaning="WARN ohne Belegzeilen: Die Eingabe beschreibt die Anforderung nicht. Eine "
+                "Spezifikation ist eine offene Welt, deshalb ist das kein Verstoß, sondern eine "
+                "offene Frage.",
+        todo="Als Checkliste unter der Befundliste nutzen: vor der Umsetzung klären oder bewusst "
+             "ausschließen."),
+    "PASS": Look(
+        symbol="✓", label="PASS", word="Einhaltung belegt", css="pass",
+        meaning="Einhaltung belegt: Die Belegzeilen zeigen, dass die Anforderung erfüllt ist.",
+        todo="Nichts. Der Beleg dient als Nachweis."),
+    "N/A": Look(
+        symbol="–", label="N/A", word="nicht anwendbar", css="na",
+        meaning="Nicht anwendbar, z. B. weil der Ressourcentyp in der Architektur nicht vorkommt.",
+        todo="Nichts. In der Liste standardmäßig ausgeblendet."),
 }
 
 CSS = """<style>

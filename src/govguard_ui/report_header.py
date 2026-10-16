@@ -3,9 +3,11 @@
 import streamlit as st
 
 from govguard.models import AuditReport, Expected
-from govguard_ui.review import category_counts, expected_checks
+from govguard_ui.review import Category, category_counts, expected_checks
 from govguard_ui.style import LOOKS, badge
 from govguard_ui.texts import HELP, TYPE_LABELS
+
+TILES: tuple[Category, ...] = ("FAIL", "WARN", "PASS", "N/A", "GAP")  # gaps last (design)
 
 
 def render_header(report: AuditReport, title: str, key: str) -> None:
@@ -17,7 +19,7 @@ def render_header(report: AuditReport, title: str, key: str) -> None:
         st.download_button("Report als JSON herunterladen", report.model_dump_json(indent=2),
                            file_name=f"govguard-{report.trace.audit_id[:8]}.json",
                            mime="application/json", key=f"{key}_download")
-        with st.expander("Nachvollziehbarkeit (Trace)"):
+        with st.expander("Rückverfolgung"):
             trace = report.trace
             st.caption(f"audit_id `{trace.audit_id}`  \ninput_sha256 `{trace.input_sha256}`  \n"
                        f"catalog_sha256 `{trace.catalog_sha256}`  \nkb_commit `{trace.kb_commit}`")
@@ -31,14 +33,12 @@ def render_header(report: AuditReport, title: str, key: str) -> None:
 def _counters(report: AuditReport) -> None:
     counts = category_counts(report.findings)
     downgraded = sum(1 for f in report.findings if f.downgraded_from)
-    subs = {"FAIL": "Verstoß belegt", "WARN": f"mit Beleg · davon {downgraded} herabgestuft",
-            "PASS": "Einhaltung belegt", "N/A": "nicht anwendbar",
-            "GAP": "nicht beschrieben · kein Verstoß"}
     *tiles, judge_tile = st.columns(6)
-    for tile, (name, sub) in zip(tiles, subs.items(), strict=True):
+    for tile, name in zip(tiles, TILES, strict=True):
         look = LOOKS[name]
-        tile.metric(f"{look.symbol} {look.label}", counts[name], help=HELP[name], border=True)
-        tile.caption(sub)
+        tile.metric(f"{look.symbol} {look.label}", counts[name], help=look.meaning, border=True)
+        warn_sub = f"{look.word} · davon {downgraded} herabgestuft"
+        tile.caption(warn_sub if name == "WARN" else look.word)
     judge = report.fail_judge
     if report.audit_type == "spec":
         judge_tile.metric("FAIL-Prüfer", judge.checked, help=HELP["judge"], border=True)

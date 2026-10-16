@@ -12,7 +12,7 @@ FILTERS = ("FAIL", "WARN", "PASS", "N/A")  # gaps are no filter: they stand belo
 DEFAULT_FILTERS = ["FAIL", "WARN", "PASS"]  # N/A hidden by default (design artefact)
 COLUMNS = {"Status": st.column_config.TextColumn(width="small"),
            "Prüfregel": st.column_config.TextColumn(width="medium"),
-           "Normanker": st.column_config.TextColumn(width="small"),
+           "Primäranker": st.column_config.TextColumn(width="small"),
            "Zeilen": st.column_config.TextColumn(width="small")}
 
 
@@ -40,7 +40,7 @@ def _filter_label(name: str, count: int) -> str:
 
 
 def _pick_from_table(shown: list[Finding], key: str, table_key: str) -> None:
-    rows = [{"Status": _status_text(f), "Prüfregel": f.title, "Normanker": f.primary_anchor,
+    rows = [{"Status": _status_text(f), "Prüfregel": f.title, "Primäranker": f.primary_anchor,
              "Zeilen": lines_text(f)} for f in shown]
     event = st.dataframe(rows, hide_index=True, on_select="rerun", selection_mode="single-row",
                          key=table_key, height=420, column_config=COLUMNS)

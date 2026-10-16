@@ -6,10 +6,8 @@ from pathlib import Path
 from pydantic_ai.models import Model
 
 from govguard.audit_engine import InputTooLongError, OnProgress, check_input_length, run_audit
-from govguard.cli import ARCH_CATALOG, SPEC_CATALOG, make_trace
+from govguard.audit_setup import CATALOGS, make_trace
 from govguard.models import AuditReport, AuditType, Progress, RuleCatalog
-
-CATALOGS: dict[AuditType, Path] = {"spec": SPEC_CATALOG, "architecture": ARCH_CATALOG}
 
 
 def start_problem(text: str, password: str, secret: str | None) -> str | None:

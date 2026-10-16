@@ -1,10 +1,7 @@
 """CLI entry point: local audit, wires file I/O, the model and `run_audit()` together."""
 
 import argparse
-import hashlib
-import os
 import sys
-import uuid
 from pathlib import Path
 from typing import get_args
 
@@ -16,12 +13,10 @@ from govguard.audit_engine import (
     check_input_length,
     run_audit,
 )
+from govguard.audit_setup import ARCH_CATALOG, SPEC_CATALOG, failure_text, make_trace
 from govguard.aws_services import bedrock_model
 from govguard.groq_services import MissingApiKeyError, groq_model
-from govguard.models import Provider, RuleCatalog, Trace
-
-SPEC_CATALOG = Path("data/knowledge_base/rules_spec.json")
-ARCH_CATALOG = Path("data/knowledge_base/rules_arch.json")
+from govguard.models import Provider, RuleCatalog
 
 
 def model_for(provider: Provider) -> Model:
@@ -49,26 +44,6 @@ def main(argv: list[str] | None = None, model: Model | None = None) -> int:
         return 2
     print(report.model_dump_json(indent=2))
     return 0
-
-
-def make_trace(input_text: str, catalog_bytes: bytes) -> Trace:
-    """Hashes only, never the input itself (ADR 0006); shared with the UI."""
-    return Trace(
-        audit_id=str(uuid.uuid4()),
-        input_sha256=hashlib.sha256(input_text.encode()).hexdigest(),
-        catalog_sha256=hashlib.sha256(catalog_bytes).hexdigest(),
-        kb_commit=os.environ.get("KB_COMMIT", "local"),
-    )
-
-
-def failure_text(error: AuditValidationError) -> str:
-    """One plain sentence, then the reasons per rule; never the library's error text."""
-    if error.api_error:
-        return ("Audit fehlgeschlagen: Der KI-Dienst war nicht erreichbar oder überlastet. "
-                "Bitte später erneut versuchen.")
-    reasons = "\n".join(f"  - {p.text}" for p in error.problems)
-    return ("Audit fehlgeschlagen: Die Antwort der KI war auch nach einer Korrektur nicht "
-            f"verwertbar. Gründe je Prüfregel:\n{reasons}")
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:

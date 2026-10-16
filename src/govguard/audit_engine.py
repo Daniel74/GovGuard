@@ -35,11 +35,11 @@ class InputTooLongError(ValueError):
     """Raised before the first LLM call, so a too long input costs nothing."""
 
     def __init__(self, length: int) -> None:
-        super().__init__(f"Eingabe zu lang: {_with_thousand_dots(length)} Zeichen, erlaubt sind "
-                         f"höchstens {_with_thousand_dots(MAX_INPUT_CHARS)}.")
+        super().__init__(f"Eingabe zu lang: {with_thousand_dots(length)} Zeichen, erlaubt sind "
+                         f"höchstens {with_thousand_dots(MAX_INPUT_CHARS)}.")
 
 
-def _with_thousand_dots(number: int) -> str:
+def with_thousand_dots(number: int) -> str:
     return f"{number:,}".replace(",", ".")
 
 

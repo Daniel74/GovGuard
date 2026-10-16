@@ -16,7 +16,7 @@ def render_detail(finding: Finding) -> None:
     if finding.downgraded_from:
         tags.append(f"↓ herabgestuft von {finding.downgraded_from}")
     if kind == "GAP":
-        tags.append("aus der Eingabe nicht entscheidbar")
+        tags.append("kein Verstoß")  # CONTEXT: Lücke, never "nicht entscheidbar"
     with st.container(border=True):
         st.html(badge(kind) + "".join(tag(t) for t in tags))
         st.markdown(f"#### {finding.title}")

@@ -5,6 +5,8 @@ from pydantic_ai.models.function import FunctionModel
 from streamlit.testing.v1 import AppTest
 from test_run_audit_progress import warn_for_every_rule
 
+from govguard.audit_engine import MAX_INPUT_CHARS, with_thousand_dots
+
 DATA_WARNING = ("Keine echten oder personenbezogenen Daten eingeben. "
                 "Eingaben gehen zur Inferenz an Groq in die USA.")
 
@@ -45,6 +47,7 @@ def test_start_page_warns_about_data_and_explains_the_report() -> None:
     assert not app.exception
     assert DATA_WARNING in shown_text(app)
     assert "So lesen Sie einen Audit-Report" in shown_text(app)
+    assert f"höchstens {with_thousand_dots(MAX_INPUT_CHARS)} Zeichen" in shown_text(app)
 
 
 def test_gallery_shows_the_first_preset_with_its_source_and_expected_result() -> None:
@@ -78,6 +81,16 @@ def test_create_page_without_the_password_starts_no_audit() -> None:
     assert "created" not in app.session_state
 
 
+def test_create_page_shows_the_input_limit_and_the_model(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("GROQ_MODEL", "openai/gpt-oss-20b")
+    app = page(create_script, APP_PASSWORD="geheim", AUDIT_BACKEND="local")
+
+    app.radio(key="input_mode").set_value("Text einfügen").run()
+
+    assert f"0 / {with_thousand_dots(MAX_INPUT_CHARS)} Zeichen" in shown_text(app)
+    assert "openai/gpt-oss-20b" in shown_text(app)
+
+
 def test_create_page_refuses_a_backend_other_than_local() -> None:
     app = page(create_script, APP_PASSWORD="geheim", AUDIT_BACKEND="lambda")
 
@@ -107,3 +120,46 @@ def test_the_app_opens_on_start_and_help() -> None:
 
     assert not app.exception
     assert DATA_WARNING in shown_text(app)
+
+
+def test_every_category_has_one_look_and_the_start_page_explains_it() -> None:
+    from govguard_ui.review import CATEGORIES
+    from govguard_ui.style import LOOKS
+
+    app = page(start_script)
+
+    assert set(LOOKS) == set(CATEGORIES)
+    for look in LOOKS.values():
+        assert look.meaning in shown_text(app) and look.todo in shown_text(app)
+
+
+AVOIDED = ("Normanker", "Audit-Typ", "Trace", "nicht entscheidbar")  # CONTEXT.md: Vermeiden
+
+
+def all_labels(app: AppTest) -> str:
+    """Shown text plus expander, radio and table column labels."""
+    labels = [e.label for e in app.expander] + [r.label for r in app.radio]
+    columns = [str(c) for frame in app.dataframe for c in frame.value.columns]
+    return "\n".join([shown_text(app), *labels, *columns])
+
+
+def test_the_ui_uses_the_glossary_terms() -> None:
+    gallery = page(gallery_script)
+    gallery.session_state["gallery_spec-meldeportal-gesundheit_selected"] = first_gap_rule()
+    gallery.run()
+    text = "\n".join(all_labels(app) for app in (page(start_script), gallery, page(create_script)))
+
+    assert not gallery.exception
+    assert [word for word in AVOIDED if word in text] == []
+    assert all(term in text for term in ("Primäranker", "Audit-Art", "Rückverfolgung", "Lücke"))
+
+
+def first_gap_rule() -> str:
+    """Rule id of the first gap in the stored spec report, to show a gap in the detail."""
+    from govguard_ui.gallery import load_gallery
+    from govguard_ui.paths import GALLERY, PRESETS
+    from govguard_ui.review import category
+
+    entries = {e.preset_id: e for e in load_gallery(PRESETS, GALLERY)}
+    report = entries["spec-meldeportal-gesundheit"].report
+    return next(f.rule_id for f in report.findings if category(f) == "GAP")

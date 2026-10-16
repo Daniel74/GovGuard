@@ -3,7 +3,7 @@
 import pytest
 from pydantic_ai.models.groq import GroqModel
 
-from govguard.groq_services import DEFAULT_MODEL, groq_model
+from govguard.groq_services import DEFAULT_MODEL, groq_model, model_name
 
 
 def test_groq_model_uses_the_default_model(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -20,7 +20,7 @@ def test_groq_model_can_be_switched_by_environment(monkeypatch: pytest.MonkeyPat
     monkeypatch.setenv("GROQ_API_KEY", "test")
     monkeypatch.setenv("GROQ_MODEL", "openai/gpt-oss-20b")
 
-    assert groq_model().model_name == "openai/gpt-oss-20b"
+    assert groq_model().model_name == model_name() == "openai/gpt-oss-20b"
 
 
 def test_missing_api_key_fails_with_a_clear_message(monkeypatch: pytest.MonkeyPatch) -> None:

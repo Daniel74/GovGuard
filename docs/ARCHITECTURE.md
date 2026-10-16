@@ -236,12 +236,15 @@ flowchart TB
   subgraph E["Einstieg – verbindet nur"]
     H["govguard/handler.py<br/>Lambda"]
     C["govguard/cli.py<br/>lokal + Selbst-Audit"]
+    U["govguard_ui/<br/>Streamlit-Demo, ohne AWS"]
+    S["govguard/audit_setup.py<br/>Kataloge, Rückverfolgung,<br/>Fehlertext für CLI + UI"]
     M["kb_build/__main__.py<br/>Build"]
     R["kb_build/*/run.py<br/>Dateien lesen + schreiben,<br/>Pfade aus paths.py"]
   end
   subgraph L["Logik – rein, ohne I/O"]
     AE["govguard/audit_engine.py<br/>+ audit_packages.py, audit_gates.py, corrections.py,<br/>evidence.py, fail_judge.py, inventory.py, models.py,<br/>repairs.py, text.py"]
     KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py, build_log.py"]
+    RV["govguard_ui/review.py<br/>Report lesen: Lücke, Soll-Abgleich"]
   end
   subgraph A["Adapter – einziger Ort für AWS, Groq, HTTP"]
     AWS["govguard/aws_services.py<br/>boto3, Bedrock-Modell"]
@@ -254,8 +257,11 @@ flowchart TB
     S3[("S3")]
     HG["Herausgeber<br/>GitHub, CELLAR, DSK"]
   end
-  H & C --> AE
-  H & C --> AWS & GQ
+  H & C & U --> AE
+  H & C --> AWS
+  H & C & U --> GQ
+  C & U --> S
+  U --> RV
   M --> R --> KB
   M --> AWS & GQ & FE
   KB --> AE
@@ -264,7 +270,7 @@ flowchart TB
   FE --> HG
 ```
 
-Von der Logik führt **kein Pfeil** zu den Adaptern. Der Einstieg reicht die Adapter hinein, etwa das Bedrock-Modell (Dependency Injection); Tests reichen Fakes bzw. `TestModel` hinein.
+Von der Logik führt **kein Pfeil** zu den Adaptern, und von der Demo-UI keiner zu AWS (ADR 0023). Der Einstieg reicht die Adapter hinein, etwa das Bedrock-Modell (Dependency Injection); Tests reichen Fakes bzw. `TestModel` hinein.
 
 Jeder Ordner auf oberster Ebene ist eine eigene Deployment-Einheit oder eine Datenart. `src/kb_build/` hat je Build-Kommando einen Unterordner, `data/` ist nach Herkunft getrennt:
 
@@ -277,7 +283,8 @@ src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, n
   rules/              catalog, formulate, prompts, criteria, violation_judge, quality, run.py
   reference/          scope, cfn_types, cfn_properties, archetype_profiles, run.py (cfn-properties)
 infra/                CDK-App des GovGuard-Stacks
-ui/                   Streamlit-App, spricht nur per HTTP mit der API
+src/govguard_ui/      Streamlit-Demo (ADR 0023): ruft run_audit im eigenen Prozess mit Groq auf;
+                      Start über streamlit_app.py im Root
 data/input/           von Hand gepflegt: sources.json (URL, Version, SHA-256, Lizenz; ADR 0008),
                       scope.json (Prüfumfang, ADR 0011), archetype_profiles.json,
                       cfn_resource_types.json, cfn_properties.json, presets/ (5 Presets mit Soll-Ergebnis)
@@ -285,12 +292,13 @@ data/intermediate/    Zwischenergebnisse, eingecheckt fürs Review: extracted/ (
                       judgement_cache.json, selection_*.json, verdicts_*.json; sources/ = Download-Cache, in .gitignore
                       logs/<kommando>[_spec|_arch].log: Build-Log je Lauf (Retries mit Grund, Tokens), mit dem Ergebnis committen
 data/knowledge_base/  nur das Endergebnis: rules_spec.json, rules_arch.json; geht nach S3
+data/gallery/        Galerie: je Preset ein gespeicherter Report, wächst nur per Commit
 tests/                pytest, flach
 .github/workflows/    build-kb.yml, deploy.yml
 ```
 
-- **Adapter für I/O:** Nur `aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `groq_services.py` baut das Groq-Modell für Laufzeit und Build (ADR 0014, 0023), nur `source_fetch.py` lädt Quellen aus dem Netz. Kein Modul startet Prozesse (ADR 0019). Ein Test prüft das.
-- **Keine Logik in Klebe-Code:** Einstiegsdateien und Workflow-YAML verbinden nur. Ein Workflow meldet sich an, ruft `python -m …` auf und öffnet den PR. Derselbe Befehl läuft lokal.
+- **Adapter für I/O:** Nur `aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `groq_services.py` baut das Groq-Modell für Laufzeit und Build (ADR 0014, 0023), nur `source_fetch.py` lädt Quellen aus dem Netz. Kein Modul startet Prozesse (ADR 0019). Die Demo-UI lädt weder `cli.py` noch `aws_services.py`, auch nicht über Umwege. Tests prüfen das.
+- **Keine Logik in Klebe-Code:** Einstiegsdateien und Workflow-YAML verbinden nur. Was CLI und UI teilen, liegt in `audit_setup.py`; kein Einstieg importiert einen anderen. Ein Workflow meldet sich an, ruft `python -m …` auf und öffnet den PR. Derselbe Befehl läuft lokal.
 - **src-Layout:** Der CDK-Stack packt mit `Code.from_asset("src/govguard")` genau den Laufzeit-Kern, ohne Build-Code, UI oder Daten.
 
 ### Neue Quelle hinzufügen

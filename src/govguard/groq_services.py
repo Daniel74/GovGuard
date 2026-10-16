@@ -17,11 +17,16 @@ class MissingApiKeyError(RuntimeError):
     """No silent switch to Bedrock (ADR 0016): without a key the audit does not start."""
 
 
+def model_name() -> str:
+    """The Groq model in use; it can be switched with GROQ_MODEL."""
+    return os.getenv("GROQ_MODEL", DEFAULT_MODEL)
+
+
 def groq_model() -> GroqModel:
-    """Build the Pydantic AI model; the model name can be switched with GROQ_MODEL."""
+    """Build the Pydantic AI model for model_name()."""
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
         raise MissingApiKeyError("GROQ_API_KEY fehlt: im Terminal mit export setzen, nie "
                                  "committen. Für echte Daten: --provider bedrock.")
     provider = GroqProvider(groq_client=AsyncGroq(api_key=api_key, max_retries=MAX_RETRIES))
-    return GroqModel(os.getenv("GROQ_MODEL", DEFAULT_MODEL), provider=provider)
+    return GroqModel(model_name(), provider=provider)

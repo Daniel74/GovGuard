@@ -58,7 +58,7 @@ def test_modules_stay_small() -> None:
     assert too_long == {}
 
 
-DATA_PATH_OWNERS = {"kb_build/paths.py", "govguard/cli.py",  # cli.py: one default catalog
+DATA_PATH_OWNERS = {"kb_build/paths.py", "govguard/audit_setup.py",  # the two catalogs
                     "govguard_ui/paths.py"}
 
 
@@ -81,3 +81,26 @@ def test_data_paths_only_in_the_paths_module() -> None:
         and (literals := data_path_literals(path))
     }
     assert offenders == {}
+
+
+def module_file(name: str) -> Path | None:
+    path = SRC / (name.replace(".", "/") + ".py")
+    return path if path.exists() else None
+
+
+def reachable_modules(start: Path) -> set[str]:
+    """Own modules `start` loads, directly or through other own modules."""
+    seen: set[str] = set()
+    todo = [start]
+    while todo:
+        for name in imported_modules(todo.pop()):
+            if name not in seen and (path := module_file(name)):
+                seen.add(name)
+                todo.append(path)
+    return seen
+
+
+@pytest.mark.parametrize("path", sorted((SRC / "govguard_ui").glob("*.py")), ids=lambda p: p.name)
+def test_demo_ui_loads_no_aws_and_no_entry_point(path: Path) -> None:
+    """Demo without AWS (ADR 0023): the UI never imports the CLI or the Bedrock adapter."""
+    assert reachable_modules(path) & {"govguard.cli", "govguard.aws_services"} == set()
