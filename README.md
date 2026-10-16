@@ -21,6 +21,12 @@ Build-Werkzeug, läuft lokal: `uv run python -m kb_build <befehl>`. Hintergrund:
 - `uv run python -m govguard.cli spec <datei>` bzw. `arch <datei>`; Standard ist Groq (`GROQ_API_KEY`, nur fiktive Daten). `--provider bedrock` nimmt Bedrock `eu.`, den einzigen Weg für echte Daten ([ADR 0001](docs/adr/0001-eu-inferenzprofil.md)).
 - Exit-Codes: 0 Report auf stdout, 1 Eingabe über 100.000 Zeichen (vor jedem LLM-Aufruf), 2 fail closed, 3 `GROQ_API_KEY` fehlt.
 
+## Demo-UI: Screenshot-Regression (#40)
+
+- **Einmalig Browser installieren:** `uv run playwright install chromium`. Normales `uv run pytest` braucht ihn nicht und überspringt den Marker `visual`.
+- **Prüfen:** `uv run pytest -m visual` startet `streamlit_app.py` lokal und fotografiert 4 Ansichten bei 1440 px. Es vergleicht sie mit den Referenzbildern in `tests/visual/` (erlaubt sind höchstens 100 geänderte Pixel). In `tests/visual/output/` landen das Foto, bei Abweichung `<ansicht>-diff.png` (Änderungen rot) und `<ansicht>-design.png` („Design | Streamlit“, Design aus `tests/visual/design/`).
+- **Freigeben:** War die Änderung gewollt, schreibt `uv run pytest -m visual --update-snapshots` die Referenzbilder neu; danach ansehen und committen. Die Referenzbilder stammen von macOS, auf einem anderen System rendern die Schriften anders.
+
 ## Bekannte Grenzen
 
 - **Groq im Audit:** Groq (`openai/gpt-oss-120b`) schwankt stärker als Bedrock. Im Spec-Audit änderten zwischen zwei Läufen 42 von 151 Prüfregeln ihren Status, bei Bedrock 19 (#29). Der FAIL-Prüfer fängt FAILs ohne festgelegten Verstoß ab (#31), PASS und WARN schwanken weiter. Trotzdem ist Groq Standard, denn Bedrock ist für die Demo nicht verfügbar; jeder Report nennt seine `model_id` ([ADR 0023](docs/adr/0023-demo-und-recruiter-stand.md)).

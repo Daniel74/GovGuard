@@ -16,3 +16,6 @@ data/input/presets/*.local.md
 # Local secrets (Groq key for the build, ADR 0014) must never be committed
 .env
 .streamlit/secrets.toml
+
+# Screenshots, diff and side-by-side images of the visual tests (#40)
+tests/visual/output/

@@ -13,6 +13,7 @@ build = [
 ]
 dev = [
     "pytest==9.1.1",
+    "pytest-playwright==0.10.0",  # screenshot regression of the demo UI (#40)
     "ruff==0.16.10",
 ]
 ui = [
@@ -31,6 +32,8 @@ packages = ["src/govguard", "src/govguard_ui"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
+addopts = "-m 'not visual'"  # `pytest -m visual` overrides it and starts a browser (#40)
+markers = ["visual: screenshot regression in a real browser, needs `playwright install chromium`"]
 
 [tool.ruff]
 target-version = "py313"

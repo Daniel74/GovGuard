@@ -6,6 +6,12 @@ from govguard.models import CrossReference, Rule, RuleCatalog, Trace
 from kb_build.extract.models import Requirement
 
 
+def pytest_addoption(parser: pytest.Parser) -> None:
+    """Here, not in tests/visual/: pytest reads options only from the top conftest."""
+    parser.addoption("--update-snapshots", action="store_true",
+                     help="write the reference images in tests/visual/ anew (#40)")
+
+
 @pytest.fixture
 def spec_input() -> str:
     return (

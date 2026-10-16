@@ -568,9 +568,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritt 12. Läuft komplett ohne AWS.
 
 - [x] **Soll-Bilder** 🤖 _Opus_ · 👤 loggt sich in einem Chrome mit eigenem Profil ein, 🤖 fotografiert die Artboards per Playwright über CDP → `tests/visual/design/start.png`, `gallery-spec.png`, `gallery-arch.png`, `create.png`. Ändert sich das Design: 👤 `/design-screenshots`
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #40 umsetzen` → Plan → Go
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #40 umsetzen` → Plan → Go
       Reihenfolge: Abhängigkeiten und Marker → Server-Fixture → Bildvergleich (Unit-Test ohne Browser) → vier Ansichten → Vergleichsbilder → zweimal stabil grün
-- [ ] **Freigeben** 👤 Referenzbilder in `tests/visual/` ansehen: Sie zeigen bewusst den heutigen Stand
+- [x] **Freigeben** 👤 Referenzbilder in `tests/visual/` ansehen: Sie zeigen bewusst den heutigen Stand
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #40`
 - [ ] **Abschließen** 👤 committet und pusht
 
