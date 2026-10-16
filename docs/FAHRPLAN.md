@@ -2,7 +2,7 @@
 
 Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich: Du brauchst kein anderes Dokument, um ihn abzuarbeiten. Hake die Kästchen im Editor ab.
 
-**Legende:** 👤 du · 🤖 Claude · 🛠 Junie (PyCharm) · ☁ braucht AWS-Zugriff · `/…` Befehl zum Eintippen. `/verstehen N <Schwerpunkt>` erklärt das Ticket als Lernkarte und fragt sie ab. Claude zeigt pro Ticket einen Plan und arbeitet nach deinem **Go** am Stück (CLAUDE.md). Junie baut nur die UI und gibt bei #12 und #9 eine zweite Meinung. Alles läuft direkt auf `main`, ohne Branches.
+**Legende:** 👤 du · 🤖 Claude · 🛠 Junie (PyCharm) · ☁ braucht AWS-Zugriff · `/…` Befehl zum Eintippen. `/verstehen N <Schwerpunkt>` erklärt das Ticket als Lernkarte und fragt sie ab. Claude zeigt pro Ticket einen Plan und arbeitet nach deinem **Go** am Stück (CLAUDE.md). Die UI baut Claude Code nach einem Design-Artefakt, das Claude Code selbst anlegt und nach deinen Kommentaren überarbeitet; Junie gibt bei #9 eine zweite Meinung. Alles läuft direkt auf `main`, ohne Branches.
 
 **Rhythmus jedes Eintrags:** _Starten → Bauen → Prüfen → Verstehen → Abschließen._
 
@@ -13,13 +13,13 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - **Sonnet baut, Opus urteilt.** Sonnet 5.5 für TDD-Zyklen mit klaren Kriterien; Opus 5.5 für Grilling, Review, Security-Review, Diagnose und IHK-Check. Opus baut auch die heiklen Tickets #1 (Fundament), #7 (Freigabe-Schleife) und #9 (IAM, KMS). Wechsel mit `/model sonnet` bzw. `/model opus`.
 - **🆕 = neue Session** (`/clear`). Erste Nachricht: „Lies docs/FAHRPLAN.md Schritt N und Issue #X.“ Jeder Schritt startet frisch. Das Review läuft in einer zweiten frischen Session, damit keine Sitzung ihren eigenen Code prüft (Vier-Augen-Prinzip).
 - Zusätzlich neu starten, wenn eine Session lang wird und Claude Absprachen vergisst oder sich wiederholt. Vorher den Stand committen.
-- **Junie ist zweite Meinung, nicht Bauer.** Bei #4 und #5 lieferte Junie (GPT-5.2) grüne Tests mit falschen Daten; der Neubau kostete mehr Claude-Budget, als er sparte. Junie baut deshalb nur noch die Streamlit-UI (Fehler sieht man sofort) und prüft bei #12 und #9 den Diff als zweite Modellfamilie (Vier-Augen-Prinzip). Junie liest `AGENTS.md` und committet nicht. Wird das Claude-Budget knapp, bekommt Junie ein Ticket nur mit vorab geschriebenen roten Tests.
+- **Junie ist zweite Meinung, nicht Bauer.** Bei #4 und #5 lieferte Junie (GPT-5.2) grüne Tests mit falschen Daten; der Neubau kostete mehr Claude-Budget, als er sparte. Junie prüft deshalb nur noch bei #9 den Diff als zweite Modellfamilie (Vier-Augen-Prinzip). Junie liest `AGENTS.md` und committet nicht. Wird das Claude-Budget knapp, bekommt Junie ein Ticket nur mit vorab geschriebenen roten Tests.
 
-**Priorität:** Erst die Audits, dann die Architektur-Generierung.
+**Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Deploy, Selbst-Audit und Demo-UI. Offene Schritte in dieser Reihenfolge: 15, 10g, 11, 12, dann der AWS-Nachholblock (10h und alle ☁-Kästchen), zuletzt die Doku 13–14.
-- **B – Ausbau (entfällt):** Audit-Reports in S3 (#34, Schritt 12a, als Erstes, wenn Zeit bleibt), Preset-Gate und Build-Workflow (#8, Schritt 16; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, Schritte 17–18, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
-- **Stand 15.10.:** Kein AWS-Zugriff. Jeder Schritt läuft bis zum ersten ☁-Kästchen; der Rest folgt gesammelt im AWS-Nachholblock.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 11b, 11a, 12b, dann der AWS-Nachholblock (10h und alle ☁-Kästchen), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
+- **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
+- **Stand 16.10.:** Kein AWS-Zugriff. Die Demo läuft ohne AWS (Schritt 10i); jeder Schritt läuft bis zum ersten ☁-Kästchen, der Rest folgt gesammelt im AWS-Nachholblock.
 
 **Zeitplan bis zur Präsentation:**
 
@@ -27,11 +27,11 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
 | Mi 14.10.  | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                          |
 | Do 15.10.  | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                |
-| Fr 16.10.  | Schritt 10g: #32 klären und per TDD bauen (bis ☁). Schritt 11: #9 `Trace`, `AuditEvent`, Handler, Groq-Adapter                            |
-| Sa 17.10.  | Schritt 11: CDK-Stack mit Assertions-Tests, cdk-nag, `/security-review` (bis ☁)                                                           |
-| So 18.10.  | Schritt 12: #11 `deploy.yml` und Wizard-Skript (bis ☁); Junie baut parallel die UI gegen einen gespeicherten Report                       |
-| Mo 19.10.  | AWS zurück: AWS-Nachholblock. Kein AWS: Weichenstellung Demo-Fallback lokal mit Groq (Datenresidenz). Das Claude-Wochenlimit setzt zurück |
-| Di 20.10.  | Rest des AWS-Nachholblocks. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                         |
+| Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                             |
+| Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                                |
+| So 18.10.  | Schritt 12: UI fertig, live auf Streamlit Community Cloud                                                                                 |
+| Mo 19.10.  | Schritt 11b: Stack per CDK (bis `cdk synth`). Schritt 11a: #34 Bucket im Stack. AWS zurück: AWS-Nachholblock. Das Claude-Wochenlimit setzt zurück |
+| Di 20.10.  | Schritt 12b: GovGuard-Spezifikation, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                       |
 | Mi 21.10.  | Abgabe, Puffer                                                                                                                            |
 | 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                            |
 | Mo 26.10.  | Präsentation und Fachgespräch                                                                                                             |
@@ -64,16 +64,17 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 10f     | A    | #31 FAIL-Prüfer zur Laufzeit    | 🤖 Opus                                          | 🤖 Opus                    |
 | 15      | A    | #24 Pflichtanker stabil         | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 10g     | A    | #32 Fail closed nach Retry      | 🤖 Opus                                          | 🤖 Opus                    |
-| 11      | A    | #9 Stack + Endpunkte            | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
-| 12      | A    | #11 Deploy + UI                 | 🛠 Junie (UI) · 🤖 Sonnet (`deploy.yml`, Wizard) | 🤖 Opus                    |
+| 10i     | A    | UI und Hosting klären           | 👤 + 🤖 Opus (Design-Artefakt)                  | 👤                         |
+| 11      | A    | #9 Laufzeit: Groq, Fortschritt  | 🤖 Opus                                          | 🤖 Opus                    |
+| 12      | A    | #11 Demo-UI                     | 🤖 Sonnet (nach Design-Artefakt)                 | 🤖 Opus                    |
+| 11b     | A    | #9 Stack (CDK, IAM, KMS)        | 🤖 Opus                                          | 🤖 Opus · 🛠 Junie         |
+| 11a     | A    | #34 S3 im Stack                 | 🤖 Opus                                          | 🤖 Opus                    |
+| 12b     | A    | Selbst-Audit und Galerie        | 👤 + 🤖 Opus                                     | 👤                         |
 | 10h     | A ☁  | #33 Gegenprobe Bedrock          | 👤 Messung                                       | 👤                         |
 | 13      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                                        | 👤                         |
 | 14      | A    | #16 Doku nachziehen             | 👤 + 🤖 Sonnet                                   | 👤                         |
-| 12a     | B    | #34 Audit-Reports in S3         | 🤖 Opus                                          | 🤖 Opus                    |
-| 16      | B    | #8 Preset-Gate + Workflow       | 🤖 Sonnet                                        | 🤖 Opus                    |
-| 17      | B    | #7 Golden Archetypes            | 🤖 Opus                                          | 🤖 Opus                    |
-| 18      | B    | #10 Archetyp-Auswahl            | 🤖 Sonnet                                        | 🤖 Opus                    |
 | 19      | –    | #23 Lehrbuch fertigstellen      | 👤 + Claude Web                                  | 👤                         |
+| R       | ☁    | Recruiter-Stand                 | 🤖 Opus                                          | 🤖 Opus                    |
 
 ---
 
@@ -507,60 +508,114 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-### Schritt 11 – #9 GovGuard-Stack und Audit-Endpunkte
+### Schritt 10i – UI und Hosting klären (Demo und Recruiter-Stand)
 
-**Ziel:** Die Audit-API läuft in eu-central-1 über eine Lambda Function URL mit IAM-Auth (ADR 0018), protokolliert jeden Aufruf und bleibt im Lambda-Timeout.
-**Voraussetzung:** Schritte 10b und 10c, Durchlauf aus Schritt 10a.
+**Ziel:** ADR 0023 hält Hosting, Datenfluss und Kosten für Demo und Recruiter-Stand fest; #9, #11 und #34 sind danach neu geschnitten, ohne offene Fragen.
+**Voraussetzung:** keine. Eingang: `docs/research/ui-hosting/ergebnisse-2026-10-16.md` (Entscheidungen, Fakten und offene Fragen vom 16.10.). Datenresidenz, Verschlüsselung und Kosten sind Weichenstellungen.
 
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #9 umsetzen`
-      Reihenfolge: `Trace` und `AuditEvent` bauen → `handler.py` mit Feld `provider` (Groq-Adapter ins Lambda-Paket, `GROQ_API_KEY` aus SSM SecureString) → CDK-Stack mit Assertions-Tests (Tests auf das erzeugte Template).
-- [ ] **Sicherheit** 👤 `/security-review` vor dem ersten Deploy
-- [ ] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und `gh issue view 9`. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #9` (Code-Stand, ohne Deploy)
-- [ ] **Einrichten** falls nötig: 👤 `/wizard cdk bootstrap für eu-central-1` (Wizard erzeugen geht ohne AWS)
-- [ ] ☁ **Einrichten** 👤 Wizard ausführen
-- [ ] ☁ **Deploy + Test** 👤 „Deploye den Stack und ruf /audit/architecture mit dem größten Preset auf“ → Go → 👤 `/run`. Läuft es in den Lambda-Timeout: 👤 `/model opus`, dann `/diagnosing-bugs`
+- [ ] **Klären** 🆕 _Opus_ · 👤 `/grill-with-docs UI und Hosting: Lies docs/research/ui-hosting/ergebnisse-2026-10-16.md und gh issue view 9, 11, 34. Kläre die offenen Fragen, schreib ADR 0023, ergänze CONTEXT.md`
+- [ ] **Tickets** 🤖 _Opus_ (gleiche Session) · 👤 `/to-tickets nach ADR 0023: #9 in Laufzeit und Stack teilen, #11 auf Demo-UI, #34 neu, Ticket Recruiter-Stand` → 🤖 passt die Ticketnummern in den Schritten 11–12b und R an
+- [ ] **Design** 🆕 _Opus_ · 👤 „Lege nach `docs/research/ui-hosting/claude-design-brief.md` das Design-Artefakt für die UI an, mit Daten aus `beispiel-reports/`“ → 🤖 baut die drei Seiten als Artboards (nur baubar mit Streamlit) und schreibt den Link in #11 → 👤 kommentiert im Artefakt → 👤 „Arbeite meine Kommentare im Design-Artefakt ein“, bis es passt
+- [ ] **Recherche** (optional) 👤 Gemini Deep Research mit `docs/research/ui-hosting/gemini-research-fragen.md` → Ergebnis in denselben Ordner
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** ADR 0023 steht, die Tickets keine offenen Fragen mehr haben und das Design-Artefakt alle drei Seiten der UI zeigt, ohne offene Kommentare und mit Link in #11.
+**Fürs Fachgespräch:** Bewusster Trade-off zwischen Datenresidenz, Kosten und Verfügbarkeit; teuer ist nicht AWS, sondern das Modell.
+
+---
+
+### Schritt 11 – #9 Laufzeit: Groq-Adapter, Provider und Fortschritt
+
+**Ziel:** `run_audit` läuft mit Groq oder Bedrock nach ausdrücklicher Wahl und meldet seinen Fortschritt; die UI kann es ohne AWS direkt aufrufen.
+**Voraussetzung:** Schritt 10i. Läuft komplett ohne AWS.
+
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Ticket Laufzeit aus #9 umsetzen` → Plan → Go
+      Reihenfolge: Groq-Adapter von `kb_build` nach `govguard` → Flag `--provider` in der CLI → Fortschritt aus `run_audit` (Prüflogik bleibt rein, Test mit `FunctionModel`)
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen das Ticket`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** `python -m govguard.cli spec --provider groq …` einen Report liefert und der Test die Fortschrittsmeldungen in der richtigen Reihenfolge sieht.
+**Fürs Fachgespräch:** Kein stilles Umschalten, `model_id` im Report, Fortschritt als Naht ohne Seiteneffekt in der Prüflogik.
+
+---
+
+### Schritt 12 – #11 Demo-UI auf Streamlit Community Cloud
+
+**Ziel:** Die UI zeigt gespeicherte Audits samt Quelldokument (Befund → Textstelle) und erstellt Audits mit Fortschrittsanzeige; sie läuft öffentlich auf Streamlit Community Cloud.
+**Voraussetzung:** Schritte 10i (Design-Artefakt) und 11.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #11 umsetzen, das Design-Artefakt aus #11 ist die Vorlage` → Plan → Go
+- [ ] **Ausprobieren** 👤 `/run Streamlit-UI lokal mit Beispiel-Report starten, Screenshot`
+- [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review` (Passwort, Secrets, Eingabelänge)
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #11`
+- [ ] **Live** 👤 App auf Streamlit Community Cloud anlegen, `GROQ_API_KEY` und Passwort als Secrets eintragen → ein Preset auditieren
+- [ ] **Verstehen** 👤 `/verstehen 11`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Die öffentliche UI ein gespeichertes Audit mit Sprung zur Textstelle zeigt und ein neues Audit mit Fortschrittsanzeige erstellt.
+**Fürs Fachgespräch:** Bewusstes US-Hosting nur mit fiktiven Daten (ADR 0004, 0016), Passwort als Kostenbremse.
+
+---
+
+### Schritt 11b – #9 Stack: CDK, IAM und KMS (bis `cdk synth`)
+
+**Ziel:** Der GovGuard-Stack (Lambda Function URL, KMS-CMK, Log-Gruppe, Rollen, Budget-Alarm) steht als CDK mit Assertions-Tests und cdk-nag. Das Template aus `cdk synth` ist Audit-Ziel in Schritt 12b.
+**Voraussetzung:** Schritt 11. Ohne AWS bis `cdk synth`; Deploy im AWS-Nachholblock.
+
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Ticket Stack aus #9 umsetzen` → Plan → Go
+      Reihenfolge: `Trace` und `AuditEvent` → `handler.py` mit Feld `provider` (`GROQ_API_KEY` aus SSM SecureString) → CDK-Stack mit Assertions-Tests auf das erzeugte Template
+- [ ] **Sicherheit** 👤 `/security-review`
+- [ ] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und das Ticket. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen das Ticket`
+- [ ] **Einrichten** 👤 `/wizard cdk bootstrap für eu-central-1` (Wizard erzeugen geht ohne AWS)
 - [ ] **Verstehen** 👤 `/verstehen 9` (Schwerpunkt: IAM, KMS und Audit-Protokoll)
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Ein Aufruf einen Audit-Report liefert, das Audit-Ereignis in CloudWatch Logs steht (ohne Eingabetext) und die Laufzeit im Issue steht.
+**Fertig, wenn:** `cdk synth`, cdk-nag und die Assertions-Tests grün sind.
 **Fürs Fachgespräch:** Least Privilege, KMS-CMK, Datenminimierung, Rückverfolgung, 0 € Leerlaufkosten.
 
 ---
 
-### Schritt 12 – #11 Deploy-Pipeline und Demo-UI
+### Schritt 11a – #34 S3 im Stack
 
-**Ziel:** Jeder Push auf `main` rollt GovGuard nach dem Selbst-Audit aus; die Demo-UI auditiert Spezifikationen und Architekturen öffentlich.
-**Voraussetzung:** Schritte 9 und 11.
+**Ziel:** Der Stack bekommt S3 nach ADR 0023 (Zweck, Löschfrist und Rechte aus Schritt 10i), verschlüsselt mit dem KMS-CMK.
+**Voraussetzung:** Schritt 11b. Ohne AWS bis `cdk synth`.
 
-- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard Einmalige AWS-Einrichtung für deploy.yml: OIDC-Deploy-Rolle, IAM-User für Streamlit, Secrets, GROQ_API_KEY als SSM SecureString`. Der Wizard ist zugleich die Anleitung, die das Ticket verlangt.
-- [ ] **Bauen Pipeline** 🤖 _Sonnet_ · 👤 „Setze aus Issue #11 die `deploy.yml` um“ → Plan → Go. Die Ausnahmen für Prüfregeln (z. B. FSBP `APIGateway.4`, `Lambda.3`) entstehen hier, mit Begründung (Weichenstellung).
-- [ ] **Bauen UI** 🛠 _Junie_ · 👤 „Lies docs/FAHRPLAN.md Schritt 12 und `gh issue view 11`. Baue nur die Streamlit-UI in `ui/`, ohne Archetyp-Abruf. Zum Testen ohne AWS zeigt die UI einen gespeicherten Report (JSON).“
-- [ ] **Ausprobieren** 👤 `/run Streamlit-UI lokal mit gespeichertem Report starten, Screenshot`
-- [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review`
-- [ ] **Prüfen** 👤 `/code-review gegen Issue #11` (Code-Stand, ohne Live)
-- [ ] ☁ **Einrichten** 👤 Wizard ausführen
-- [ ] ☁ **Live** 👤 Pushen → Pipeline beobachten → UI auf Streamlit Community Cloud öffnen, Preset auditieren
-- [ ] **Verstehen** 👤 `/verstehen 11`, danach `/verstehen probe` (Generalprobe)
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #34 umsetzen` → Plan → Go
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #34`
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Ein Push den Deploy mit Selbst-Audit auslöst und die öffentliche UI ein Preset auditiert.
-**Fürs Fachgespräch:** Dogfooding, begründete Ausnahmen, ein einziger Weg in die Produktion, bewusstes US-Hosting nur mit fiktiven Daten.
+**Fertig, wenn:** Assertions-Tests KMS, nur TLS, Block Public Access, Lifecycle und die Rechte belegen und das Template den Bucket enthält.
+**Fürs Fachgespräch:** Nachvollziehbarkeit gegen Datenminimierung, Löschfrist statt Object Lock (Art. 17 DSGVO), Least Privilege.
+
+---
+
+### Schritt 12b – GovGuard prüft sich selbst: Spezifikation, Stack und Galerie
+
+**Ziel:** Die Galerie der UI enthält Audits zu den Presets, zur GovGuard-Spezifikation und zum eigenen CloudFormation-Template, jeweils mit Quelldokument.
+**Voraussetzung:** Schritte 11a, 11b und 12.
+
+- [ ] **Schreiben** 🆕 _Opus_ · 👤 „Schreibe die GovGuard-Spezifikation nach dem Ticket aus 10i“ → 👤 liest sie und legt das Soll fest (Testorakel, wie bei #3)
+- [ ] **Erzeugen** 👤 `/audit-messen alle Presets, GovGuard-Spezifikation und Stack-Template mit Groq` → nur Reports, die das Soll erfüllen, kommen in die Galerie
+- [ ] **Ausprobieren** 👤 `/run` → jede Galerie-Seite öffnen
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Jede Galerie-Seite Report und Dokument zeigt und Abweichungen vom Soll im Ticket stehen.
+**Fürs Fachgespräch:** Dogfooding: Ein Prüfwerkzeug muss seine eigenen Befunde aushalten.
 
 ---
 
 ## AWS-Nachholblock (sobald AWS zurück ist)
 
-**Ziel:** Alle ☁-Kästchen am Stück nachholen: erst die Bedrock-Messungen (#32, #33), dann Deploy (#9) und Pipeline (#11). Die Messungen kommen zuerst, damit der Deploy auf geprüftem Audit-Code aufsetzt. Hake danach auch das ☁-Kästchen im jeweiligen Schritt ab.
-**Kein Zugriff bis Mo 19.10.:** 🆕 _Opus_ · 👤 `/grilling Demo-Fallback ohne AWS: lokale UI mit Groq?` (Datenresidenz ist eine Weichenstellung).
+**Ziel:** Kommt der AWS-Zugang vor der Präsentation zurück, alle ☁-Kästchen am Stück nachholen: erst die Bedrock-Messungen (#32, #33), dann Deploy (#9, #34), Pipeline und Haiku in der UI. Die Messungen kommen zuerst, damit der Deploy auf geprüftem Audit-Code aufsetzt. Ohne AWS läuft die Demo wie in Schritt 12; der Deploy folgt im Recruiter-Stand.
 
 - [ ] **Anmelden** 👤 `aws sso login`, dann `aws sts get-caller-identity`. Zeigt es nicht dein Konto, geht keines der folgenden Kästchen.
 - [ ] ☁ **Messen #32 und #33** 🆕 _Opus_ · 👤 eine Session `/audit-messen`, alles mit Bedrock: - Schritt 10g (#32): `arch-antragseingang-fehlerhaft` 1×, `spec-meldeportal-gesundheit` 2×, voller Katalog. Prüfe: kein fail closed nach Retry, `expected` erfüllt, Korrekturzeilen „Empfehlung aus der Prüfregel ergänzt“ bzw. „Widersprüchliche Befunde“ im Report, keine Antwort bei 8.000 Output-Tokens abgeschnitten. - Schritt 10h (#33): `spec-meldeportal-gesundheit` mit kleinem Katalog (Art. 9, M60.P01), `spec-wohngeld-openapi`. Prüfe: Der FAIL-Prüfer stuft Art. 9 nicht herab, Wohngeld zeigt WARN.
       → 🤖 notiert die Ergebnisse je Issue. Bleibt ein Gegenprobe-Preset rot: neues Ticket statt Abschluss.
-- [ ] ☁ **Deploy #9** (Schritt 11) 👤 Wizard `cdk bootstrap` ausführen → Stack deployen → `/audit/architecture` mit dem größten Preset aufrufen. Prüfe: Report kommt innerhalb des Lambda-Timeouts (ADR 0018), Audit-Ereignis in CloudWatch Logs ohne Eingabetext.
-- [ ] ☁ **Live #11** (Schritt 12) 👤 Einrichtungs-Wizard ausführen (OIDC-Rolle, Secrets) → pushen → Pipeline mit Selbst-Audit beobachten → öffentliche UI auditiert ein Preset.
+- [ ] ☁ **Deploy #9 und #34** (Schritte 11b, 11a) 👤 Wizard `cdk bootstrap` ausführen → Stack deployen → `/audit/architecture` mit dem größten Preset aufrufen. Prüfe: Report kommt innerhalb des Lambda-Timeouts (ADR 0018), Audit-Ereignis in CloudWatch Logs ohne Eingabetext.
+- [ ] ☁ **Pipeline und Haiku** (Ticket aus 10i) 👤 Einrichtungs-Wizard ausführen (OIDC-Rolle, Secrets) → pushen → Pipeline mit Selbst-Audit beobachten → in der UI Haiku über die Function URL zuschalten.
 
-**Fertig, wenn:** Alle ☁-Kästchen in den Schritten 10g, 10h, 11 und 12 abgehakt sind.
+**Fertig, wenn:** Alle ☁-Kästchen in den Schritten 10g und 10h und in diesem Block abgehakt sind.
 
 ### Schritt 10h – #33 Messung: Gegenprobe FAIL-Prüfer mit Bedrock (Art. 9, Ergebnisse aus #29)
 
@@ -602,77 +657,22 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-## Priorität B – Ausbau (entfällt, Stand 15.10.)
+## Nach der Präsentation – Recruiter-Stand
 
-Im Fachgespräch Ausbau: Der Build läuft lokal per `python -m kb_build`; für die Archetypen liegen Steckbriefe, ADR 0003 und 0009 vor.
+### Schritt R – GovGuard im eigenen AWS-Konto
 
-### Schritt 12a – #34 Audit-Reports in S3 speichern (mit Löschfrist)
+**Ziel:** GovGuard läuft dauerhaft im eigenen AWS-Konto mit Groq. S3 hält Wissensbasis, Galerie und Audit-Jobs; die UI zeigt echten Fortschritt aus dem asynchronen Job. Live-Audits gibt es nur mit Passwort, im Leerlauf kostet nur KMS (ca. 1 $/Monat).
+**Voraussetzung:** Schritte 11a, 11b, 12 und 12b, ADR 0023.
 
-**Ziel:** Der Handler speichert jeden Audit-Report verschlüsselt in einem eigenen Bucket mit Löschfrist; das `AuditEvent` verweist über `request_id` darauf.
-**Voraussetzung:** Schritt 12 (Selbst-Audit in `deploy.yml`). Erst, wenn A fertig ist und ein Tag frei bleibt.
-
-- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #34: Zweck, Löschfrist, Reports mit oder ohne evidence` (Datenschutz und IAM sind Weichenstellungen) → 🤖 schreibt das ADR
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #34 umsetzen` → Plan → Go
-      Reihenfolge: `put_report()` in `aws_services.py` (Stubber) → Handler (Fehler beim Speichern blockiert den Report nicht) → CDK-Bucket mit Assertions-Tests (KMS, TLS, Lifecycle, nur `PutObject`) → cdk-nag und Ausnahmen
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #34`
-- [ ] ☁ **Deploy + Test** 👤 Pushen → Selbst-Audit grün? → einen Aufruf machen, Objekt unter `reports/` mit der Auditor-Rolle lesen
+- [ ] **Einrichten** 👤 eigenes AWS-Konto mit Budget-Alarm anlegen, dann Wizard `cdk bootstrap` aus Schritt 11b ausführen
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Ticket Recruiter-Stand umsetzen` → Plan → Go (asynchroner Job mit Fortschritt in S3, Galerie aus S3, UI über Function URL)
+- [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen das Ticket`
+- [ ] ☁ **Deploy + Test** 👤 Stack deployen → Streamlit-Secrets umstellen → ein Live-Audit mit Passwort, Galerie ohne Passwort
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Ein Aufruf einen Report in S3 ablegt, die Lambda ihn nicht lesen kann und das Selbst-Audit grün bleibt.
-**Fürs Fachgespräch:** Nachvollziehbarkeit gegen Datenminimierung, Löschfrist statt Object Lock (Art. 17 DSGVO), Least Privilege (nur Schreiben).
-
----
-
-### Schritt 16 – #8 Preset-Gate und Build-Workflow
-
-**Ziel:** Der Build der Wissensbasis läuft per Knopfdruck in GitHub Actions und öffnet nur bei Grün einen Pull Request.
-**Voraussetzung:** Schritte 8, 9e, 10 und 15.
-
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #8 umsetzen` → Plan → Go
-      Reihenfolge: Preset-Gate (Gesamtstatus, Pflicht-Befunde, Hash-Check; den Soll-Archetyp prüft erst #10) → `python -m kb_build` → `build-kb.yml` ohne Logik
-- [ ] **Einrichten** 🆕 _Sonnet_ · 👤 `/wizard OIDC-Provider und Rolle für build-kb.yml, nur Bedrock eu.-Profil (Preset-Gate), Secret GROQ_API_KEY` → 👤 Wizard ausführen
-- [ ] **Ausprobieren** 👤 Workflow in GitHub Actions starten → PR lesen, Kosten prüfen
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #8`
-- [ ] **Verstehen** 👤 `/verstehen 8` (Kernfrage: warum OIDC besser ist als ein Access Key in GitHub)
-- [ ] **Abschließen** 👤 committet und pusht
-
-**Fertig, wenn:** Ein Workflow-Lauf einen grünen PR mit Kostenangabe geöffnet hat.
-**Fürs Fachgespräch:** OIDC statt langlebiger Keys, Gate vor Merge, alte Version bleibt bei Rot aktiv.
-
----
-
-### Schritt 17 – #7 Golden Archetypes mit Freigabe
-
-**Ziel:** ARCH-01 bis -03 sind als CDK gebaut und freigegeben, mit dokumentierten Ausnahmen.
-**Voraussetzung:** Schritt 14. Node.js und CDK CLI lokal installiert.
-
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #7 umsetzen`
-      Reihenfolge: Allowlist-Filter (cdk-nag und Prüfregeln, aus Schritt 12) → Struktur-Soll → Compliance-Soll (N/A-Sperre) → Schleife mit höchstens 3 Runden (mit Fakes) → `cdk_runner.py`
-- [ ] **Echter Build** 👤 „Baue die 3 Archetypen“ → Go. Bei Fehlern von synth oder cdk-nag: 👤 `/diagnosing-bugs`
-- [ ] **Offene Frage** 👤 „Klär, ob Lambda-Logging `log-group:NAME:*` braucht“ → bei Ja: Ausnahme mit Begründung in `data/input/nag_allowlist.json`
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #7`
-- [ ] **Verstehen** 👤 `/verstehen 7` (Schwerpunkt: cdk-nag und Ausnahmen)
-- [ ] **Abschließen** 👤 committet und pusht
-
-**Fertig, wenn:** `archetypes.json` 3 freigegebene Archetypen mit `approval` enthält.
-**Fürs Fachgespräch:** Vier-Augen-Prinzip, Risikoakzeptanz, Funktionstrennung, Least Privilege.
-
----
-
-### Schritt 18 – #10 Archetyp-Auswahl
-
-**Ziel:** Bei einer Spezifikation ohne FAIL liefert GovGuard ARCH-01, -02, -03 oder „keiner“; die UI zeigt den Archetyp.
-**Voraussetzung:** Schritt 17.
-
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #10 umsetzen` → Plan → Go (Auswahl, Ablehnung bei FAIL, `NONE`, Soll-Archetyp im Preset-Gate)
-- [ ] **UI** 🛠 _Junie_ · 👤 „Ergänze in `ui/` den Archetyp-Abruf nach Issue #10.“
-- [ ] **Deploy + Test** 🆕 _Sonnet_ · 👤 „Deploye und ruf /archetype/select mit einem Spec-Preset auf“ → Go → 👤 `/run`
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #10`
-- [ ] **Verstehen** 👤 `/verstehen 10` (Kernfrage: warum „keiner passt“ eine erlaubte Antwort ist)
-- [ ] **Abschließen** 👤 committet und pusht
-
-**Fertig, wenn:** Das Preset liefert den Soll-Archetyp, und ein Report mit FAIL wird mit HTTP 422 abgelehnt.
-**Fürs Fachgespräch:** geschlossene Antwortmenge, keine Generierung zur Laufzeit.
+**Fertig, wenn:** Ein Besucher die Galerie ohne Passwort sieht, ein Live-Audit mit Passwort Fortschritt zeigt und die Rechnung im Leerlauf nur KMS enthält.
+**Fürs Fachgespräch:** Asynchroner Ablauf mit Job-ID statt Timeout, Fortschritt über S3, 0 € Leerlauf bis auf Sicherheit.
 
 ---
 
@@ -681,9 +681,9 @@ Im Fachgespräch Ausbau: Der Build läuft lokal per `python -m kb_build`; für d
 ### Schritt 19 – #23 Lehrbuch fertigstellen und korrigieren
 
 **Ziel:** Das Lehrbuch aus `learning/lehrbuch/` (Faktenbasis, Stand 13.10.2026) beschreibt den gebauten Stand, ist in Claude Web ausformuliert, von dir korrigiert und in NotebookLM geladen.
-**Voraussetzung:** Schritt 13 (#22), Schritt 16 (#8) nur, falls gebaut; sonst steht #8 wie Priorität B als Ausbau im Lehrbuch. Läuft vom 22. bis 25.10. als Vorbereitung auf das Fachgespräch (siehe Zeitplan).
+**Voraussetzung:** Schritt 13 (#22); #8 steht als Ausbau im Lehrbuch. Läuft vom 22. bis 25.10. als Vorbereitung auf das Fachgespräch (siehe Zeitplan).
 
-- [ ] **Faktenbasis aktualisieren** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 23` und `learning/lehrbuch/README.md` und zieh die Kapitel auf den Code-Stand nach“ → Plan → Go (Kapitel zu #8 nur, falls gebaut; Kapitel 00, 08, 10, 99; Archetypen-Kapitel nur, falls #7 gebaut ist)
+- [ ] **Faktenbasis aktualisieren** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 23` und `learning/lehrbuch/README.md` und zieh die Kapitel auf den Code-Stand nach“ → Plan → Go (Kapitel 00, 08, 10, 99; #7, #8 und #10 nur als Ausbau)
 - [ ] **Ausformulieren** 👤 Claude Web, ein Chat je Kapitel: Faktenbasis, `CONTEXT.md` und `docs/adr/` in ein Project laden, mit Kapitel 05 beginnen und den Stil-Prompt für alle Kapitel wiederverwenden. Zum Schluss fragen: „Welche Aussagen stehen nicht in den Dateien?“
 - [ ] **Korrigieren** 👤 Zahlen, ADR-Nummern und `Datei:Funktion`-Belege gegen das Repo prüfen; alle [OFFEN] klären
 - [ ] **NotebookLM** 👤 Kapitel hochladen, drei Stichprobenfragen stellen (z. B. zu Gates, Cache, Provider)
