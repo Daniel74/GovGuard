@@ -38,48 +38,48 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Wer baut was:**
 
-| Schritt | Prio | Ticket                          | Baut                             | Prüft                      |
-| ------- | ---- | ------------------------------- | -------------------------------- | -------------------------- |
-| 1       | –    | #1 Prüfkern                     | 🤖 Opus                          | 🤖 Opus                    |
-| 2       | –    | #3 Presets                      | 👤 + 🤖 Opus                     | 👤                         |
-| 3       | –    | #2 Bedrock + CLI                | 🤖 Sonnet                        | 🤖 Opus                    |
-| 4       | –    | #4 BSI + CIS                    | 🛠 Junie                         | 🤖 Opus                    |
-| 5       | –    | #5 DSGVO + SDM                  | 🛠 Junie                         | 🤖 Opus                    |
-| 6       | A    | #13 Quellen FSBP + C5           | 🤖 Sonnet                        | 🤖 Opus                    |
-| 7       | A    | #6 Bounded Catalog              | 🤖 Sonnet                        | 👤 Kontrollpunkt + 🤖 Opus |
-| 8       | A    | #15 5. Preset                   | 👤 + 🤖 Opus                     | 👤                         |
-| 9       | A    | #12 Prüfregeln + Gate           | 🤖 Opus                          | 🤖 Opus · 🛠 Junie         |
-| 9a      | A    | #18 Kontoweite Pflichten        | 🤖 Sonnet                        | 👤 Kontrollpunkt + 🤖 Opus |
-| 9b      | A    | #17 Gate Eigenschaftsnamen      | 🤖 Sonnet                        | 🤖 Opus                    |
-| 9c      | A    | #20 Ordnerstruktur              | 🤖 Opus                          | 🤖 Opus                    |
-| 9d      | A    | #19 Typen im Prüfumfang         | 🤖 Sonnet                        | 🤖 Opus                    |
-| 9e      | A    | #21 Groq als Build-Standard     | 🤖 Sonnet                        | 🤖 Opus                    |
-| 9g      | A    | #25 ADR 0015 Terraform-Grenze   | 🤖 Sonnet                        | 👤                         |
-| 10      | A    | #14 Ressourceninventar + Pakete | 🤖 Opus                          | 🤖 Opus                    |
-| 10a     | A    | #26 Belege bei großen Eingaben  | 🤖 Opus                          | 🤖 Opus                    |
-| 10b     | A    | #27 KI-Governance sichtbar      | 🤖 Sonnet                        | 🤖 Opus                    |
-| 10c     | A    | #28 FAIL nur bei Verstoß        | 🤖 Opus                          | 🤖 Opus                    |
-| 10d     | A    | #29 Spec-Katalog Festlegungen   | 🤖 Opus                          | 🤖 Opus                    |
-| 10e     | A    | #30 Build-Log Retry-Gründe      | 🤖 Sonnet                        | 🤖 Opus                    |
-| 10f     | A    | #31 FAIL-Prüfer zur Laufzeit    | 🤖 Opus                          | 🤖 Opus                    |
-| 15      | A    | #24 Pflichtanker stabil         | 🤖 Sonnet                        | 🤖 Opus                    |
-| 10g     | A    | #32 Fail closed nach Retry      | 🤖 Opus                          | 🤖 Opus                    |
-| 10i     | A    | UI und Hosting klären           | 👤 + 🤖 Opus (Design-Artefakt)   | 👤                         |
-| 11      | A    | #35 Laufzeit: Groq, Fortschritt | 🤖 Opus                          | 🤖 Opus                    |
-| 12      | A    | #11 Demo-UI                     | 🤖 Sonnet (nach Design-Artefakt) | 🤖 Opus                    |
-| 12c     | A    | #40 Screenshot-Regression       | 🤖 Opus                          | 🤖 Opus                    |
-| 12d     | A    | #41 Breite, Start, Erstellen    | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
-| 12e     | A    | #42 Kopf und Kacheln            | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
-| 12f     | A    | #43 Befundtabelle, Quelle, Lücken | 🤖 Opus                        | 👤 Vergleichsbild + 🤖 Opus |
-| 12a     | A    | #39 Zitatprüfung ohne Markdown  | 🤖 Sonnet                        | 🤖 Opus                    |
-| 11b     | A    | #9 Stack (CDK, IAM, KMS)        | 🤖 Opus                          | 🤖 Opus · 🛠 Junie         |
-| 11a     | A    | #34 Audit-Jobs in S3            | 🤖 Opus                          | 🤖 Opus                    |
-| 12b     | A    | #36 Selbst-Audit und Galerie    | 👤 + 🤖 Opus                     | 👤                         |
-| 10h     | A    | #33 Gegenprobe (Groq, erledigt) | 👤 Messung                       | 👤                         |
-| 13      | A    | #22 Doku zu kb_build nachziehen | 🤖 Sonnet                        | 👤                         |
-| 14      | A    | #16 Doku nachziehen             | 👤 + 🤖 Sonnet                   | 👤                         |
-| 19      | –    | #23 Lehrbuch fertigstellen      | 👤 + Claude Web                  | 👤                         |
-| R       | ☁    | #38 Recruiter-Stand             | 🤖 Opus                          | 🤖 Opus                    |
+| Schritt | Prio | Ticket                            | Baut                             | Prüft                       |
+| ------- | ---- | --------------------------------- | -------------------------------- | --------------------------- |
+| 1       | –    | #1 Prüfkern                       | 🤖 Opus                          | 🤖 Opus                     |
+| 2       | –    | #3 Presets                        | 👤 + 🤖 Opus                     | 👤                          |
+| 3       | –    | #2 Bedrock + CLI                  | 🤖 Sonnet                        | 🤖 Opus                     |
+| 4       | –    | #4 BSI + CIS                      | 🛠 Junie                         | 🤖 Opus                     |
+| 5       | –    | #5 DSGVO + SDM                    | 🛠 Junie                         | 🤖 Opus                     |
+| 6       | A    | #13 Quellen FSBP + C5             | 🤖 Sonnet                        | 🤖 Opus                     |
+| 7       | A    | #6 Bounded Catalog                | 🤖 Sonnet                        | 👤 Kontrollpunkt + 🤖 Opus  |
+| 8       | A    | #15 5. Preset                     | 👤 + 🤖 Opus                     | 👤                          |
+| 9       | A    | #12 Prüfregeln + Gate             | 🤖 Opus                          | 🤖 Opus · 🛠 Junie          |
+| 9a      | A    | #18 Kontoweite Pflichten          | 🤖 Sonnet                        | 👤 Kontrollpunkt + 🤖 Opus  |
+| 9b      | A    | #17 Gate Eigenschaftsnamen        | 🤖 Sonnet                        | 🤖 Opus                     |
+| 9c      | A    | #20 Ordnerstruktur                | 🤖 Opus                          | 🤖 Opus                     |
+| 9d      | A    | #19 Typen im Prüfumfang           | 🤖 Sonnet                        | 🤖 Opus                     |
+| 9e      | A    | #21 Groq als Build-Standard       | 🤖 Sonnet                        | 🤖 Opus                     |
+| 9g      | A    | #25 ADR 0015 Terraform-Grenze     | 🤖 Sonnet                        | 👤                          |
+| 10      | A    | #14 Ressourceninventar + Pakete   | 🤖 Opus                          | 🤖 Opus                     |
+| 10a     | A    | #26 Belege bei großen Eingaben    | 🤖 Opus                          | 🤖 Opus                     |
+| 10b     | A    | #27 KI-Governance sichtbar        | 🤖 Sonnet                        | 🤖 Opus                     |
+| 10c     | A    | #28 FAIL nur bei Verstoß          | 🤖 Opus                          | 🤖 Opus                     |
+| 10d     | A    | #29 Spec-Katalog Festlegungen     | 🤖 Opus                          | 🤖 Opus                     |
+| 10e     | A    | #30 Build-Log Retry-Gründe        | 🤖 Sonnet                        | 🤖 Opus                     |
+| 10f     | A    | #31 FAIL-Prüfer zur Laufzeit      | 🤖 Opus                          | 🤖 Opus                     |
+| 15      | A    | #24 Pflichtanker stabil           | 🤖 Sonnet                        | 🤖 Opus                     |
+| 10g     | A    | #32 Fail closed nach Retry        | 🤖 Opus                          | 🤖 Opus                     |
+| 10i     | A    | UI und Hosting klären             | 👤 + 🤖 Opus (Design-Artefakt)   | 👤                          |
+| 11      | A    | #35 Laufzeit: Groq, Fortschritt   | 🤖 Opus                          | 🤖 Opus                     |
+| 12      | A    | #11 Demo-UI                       | 🤖 Sonnet (nach Design-Artefakt) | 🤖 Opus                     |
+| 12c     | A    | #40 Screenshot-Regression         | 🤖 Opus                          | 🤖 Opus                     |
+| 12d     | A    | #41 Breite, Start, Erstellen      | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
+| 12e     | A    | #42 Kopf und Kacheln              | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
+| 12f     | A    | #43 Befundtabelle, Quelle, Lücken | 🤖 Opus                          | 👤 Vergleichsbild + 🤖 Opus |
+| 12a     | A    | #39 Zitatprüfung ohne Markdown    | 🤖 Sonnet                        | 🤖 Opus                     |
+| 11b     | A    | #9 Stack (CDK, IAM, KMS)          | 🤖 Opus                          | 🤖 Opus · 🛠 Junie          |
+| 11a     | A    | #34 Audit-Jobs in S3              | 🤖 Opus                          | 🤖 Opus                     |
+| 12b     | A    | #36 Selbst-Audit und Galerie      | 👤 + 🤖 Opus                     | 👤                          |
+| 10h     | A    | #33 Gegenprobe (Groq, erledigt)   | 👤 Messung                       | 👤                          |
+| 13      | A    | #22 Doku zu kb_build nachziehen   | 🤖 Sonnet                        | 👤                          |
+| 14      | A    | #16 Doku nachziehen               | 👤 + 🤖 Sonnet                   | 👤                          |
+| 19      | –    | #23 Lehrbuch fertigstellen        | 👤 + Claude Web                  | 👤                          |
+| R       | ☁    | #38 Recruiter-Stand               | 🤖 Opus                          | 🤖 Opus                     |
 
 ---
 
@@ -567,7 +567,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Ein Test fotografiert die vier Ansichten der UI und vergleicht sie mit freigegebenen Referenzbildern; je Ansicht entsteht ein Vergleichsbild „Design | Streamlit“.
 **Voraussetzung:** Schritt 12. Läuft komplett ohne AWS.
 
-- [ ] **Soll-Bilder** 👤 Im Design-Artefakt aus #11 die Artboards Start, Main, Arch und Erstellen im Play-Modus bei 1440 px öffnen, je ein ganzseitiger Screenshot (Chrome DevTools: ⌘⇧P → „Capture full size screenshot“) → `tests/visual/design/start.png`, `gallery-spec.png`, `gallery-arch.png`, `create.png`
+- [x] **Soll-Bilder** 🤖 _Opus_ · 👤 loggt sich in einem Chrome mit eigenem Profil ein (`--remote-debugging-port`), 🤖 fotografiert die Artboards Start, Main, Arch und Erstellen im Play-Modus bei 1440 px per Playwright über CDP → `tests/visual/design/start.png`, `gallery-spec.png`, `gallery-arch.png`, `create.png`
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #40 umsetzen` → Plan → Go
       Reihenfolge: Abhängigkeiten und Marker → Server-Fixture → Bildvergleich (Unit-Test ohne Browser) → vier Ansichten → Vergleichsbilder → zweimal stabil grün
 - [ ] **Freigeben** 👤 Referenzbilder in `tests/visual/` ansehen: Sie zeigen bewusst den heutigen Stand
