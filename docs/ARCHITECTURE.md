@@ -169,7 +169,7 @@ Den Aufruf baut Pydantic AI (ADR 0005): Aus dem Draft-Modell entsteht das Tool-S
 # aws_services.py – einziger Ort mit boto3
 model = BedrockConverseModel("eu.anthropic.claude-haiku-4-5-20251001-v1:0")   # EU-Profil, ADR 0001
 
-# audit_engine.py – rein, bekommt das Modell übergeben
+# audit_packages.py – rein, bekommt das Modell übergeben
 audit_agent = Agent(
     output_type=ToolOutput(AuditResponse, name="submit_audit",       # Groq: NativeOutput (ADR 0016)
                            description="Gib genau einen Befund je Prüfregel ab.",
@@ -240,12 +240,12 @@ flowchart TB
     R["kb_build/*/run.py<br/>Dateien lesen + schreiben,<br/>Pfade aus paths.py"]
   end
   subgraph L["Logik – rein, ohne I/O"]
-    AE["govguard/audit_engine.py<br/>+ audit_gates.py, corrections.py, evidence.py,<br/>fail_judge.py, inventory.py, models.py, repairs.py, text.py"]
+    AE["govguard/audit_engine.py<br/>+ audit_packages.py, audit_gates.py, corrections.py,<br/>evidence.py, fail_judge.py, inventory.py, models.py,<br/>repairs.py, text.py"]
     KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py, build_log.py"]
   end
   subgraph A["Adapter – einziger Ort für AWS, Groq, HTTP"]
     AWS["govguard/aws_services.py<br/>boto3, Bedrock-Modell"]
-    GQ["kb_build/groq_services.py<br/>Groq-Modell, nur Build"]
+    GQ["govguard/groq_services.py<br/>Groq-Modell, Laufzeit + Build"]
     FE["kb_build/source_fetch.py<br/>HTTP + SHA-256"]
   end
   subgraph X["Extern"]
@@ -255,7 +255,7 @@ flowchart TB
     HG["Herausgeber<br/>GitHub, CELLAR, DSK"]
   end
   H & C --> AE
-  H & C --> AWS
+  H & C --> AWS & GQ
   M --> R --> KB
   M --> AWS & GQ & FE
   KB --> AE
@@ -271,7 +271,7 @@ Jeder Ordner auf oberster Ebene ist eine eigene Deployment-Einheit oder eine Dat
 ```
 src/govguard/         Laufzeit-Kern, wird zum Lambda-Paket
 src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, nie umgekehrt)
-  __main__.py         Einstieg; gates.py, build_log.py (Retries im Build-Log), paths.py (alle Datenpfade), source_fetch.py, groq_services.py
+  __main__.py         Einstieg; gates.py, build_log.py (Retries im Build-Log), paths.py (alle Datenpfade), source_fetch.py
   extract/            Adapter je Quelle (bsi, cis, c5, dsgvo, fsbp, sdm, prowler), models.py, run.py
   select/             classify, curation, judgement_cache, models.py, run.py
   rules/              catalog, formulate, prompts, criteria, violation_judge, quality, run.py
@@ -289,7 +289,7 @@ tests/                pytest, flach
 .github/workflows/    build-kb.yml, deploy.yml
 ```
 
-- **Adapter für I/O:** Nur `aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `groq_services.py` baut das Groq-Modell für den Build (ADR 0014), nur `source_fetch.py` lädt Quellen aus dem Netz. Kein Modul startet Prozesse (ADR 0019). Ein Test prüft das.
+- **Adapter für I/O:** Nur `aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `groq_services.py` baut das Groq-Modell für Laufzeit und Build (ADR 0014, 0023), nur `source_fetch.py` lädt Quellen aus dem Netz. Kein Modul startet Prozesse (ADR 0019). Ein Test prüft das.
 - **Keine Logik in Klebe-Code:** Einstiegsdateien und Workflow-YAML verbinden nur. Ein Workflow meldet sich an, ruft `python -m …` auf und öffnet den PR. Derselbe Befehl läuft lokal.
 - **src-Layout:** Der CDK-Stack packt mit `Code.from_asset("src/govguard")` genau den Laufzeit-Kern, ohne Build-Code, UI oder Daten.
 

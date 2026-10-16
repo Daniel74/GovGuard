@@ -12,9 +12,9 @@ ADAPTER_ONLY: dict[str, str | None] = {  # I/O import -> the only module allowed
     "botocore": "govguard/aws_services.py",
     "pydantic_ai.models.bedrock": "govguard/aws_services.py",
     "pydantic_ai.providers.bedrock": "govguard/aws_services.py",
-    "groq": "kb_build/groq_services.py",  # build default (ADR 0014)
-    "pydantic_ai.models.groq": "kb_build/groq_services.py",
-    "pydantic_ai.providers.groq": "kb_build/groq_services.py",
+    "groq": "govguard/groq_services.py",  # runtime and build default (ADR 0014, 0023)
+    "pydantic_ai.models.groq": "govguard/groq_services.py",
+    "pydantic_ai.providers.groq": "govguard/groq_services.py",
     "subprocess": None,  # no cdk_runner.py, no archetypes are built (ADR 0019)
     "urllib.request": "kb_build/source_fetch.py",
     "http.client": "kb_build/source_fetch.py",

@@ -53,7 +53,7 @@ def _label(params, retry: list) -> str:
 def _model_and_prices() -> tuple:
     """MEASURE_MODEL=groq: explicit option with fictitious presets only (ADR 0016)."""
     if os.getenv("MEASURE_MODEL") == "groq":
-        from kb_build.groq_services import groq_model
+        from govguard.groq_services import groq_model
         return groq_model(), 0.15e-6, 0.60e-6  # gpt-oss-120b, Groq model docs
     return bedrock_model(), 1.10e-6, 5.50e-6  # Haiku 4.5 eu. profile: +10 % on 1 $/5 $
 

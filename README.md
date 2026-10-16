@@ -16,6 +16,11 @@ Build-Werkzeug, läuft lokal: `uv run python -m kb_build <befehl>`. Hintergrund:
 - **Echte Ressourcentypen:** `data/input/cfn_resource_types.json` (1926 Typen) stammt aus `aws cloudformation list-types --visibility PUBLIC --type RESOURCE --filters Category=AWS_TYPES --query 'TypeSummaries[].TypeName'`. Das LLM darf keine anderen Typen nennen; sonst gibt es einen Retry.
 - **Echte Eigenschaften:** `data/input/cfn_properties.json` hält je Typ des Prüfumfangs alle Eigenschaftspfade (z. B. `RedirectConfig.Protocol`). Neu ziehen: Schemas per `for t in $(jq -r '.[][]' data/input/scope.json); do aws cloudformation describe-type --type RESOURCE --type-name $t --query Schema --output text > schemas/${t//::/-}.json; done` in einen Ordner `schemas/` laden, dann `uv run python -m kb_build cfn-properties` (Ordner per `--schema-dir`). Nennt eine Prüfregel eine Eigenschaft, die keiner ihrer Typen kennt, oder einen Typ außerhalb von `scope.json`, gibt es einen Retry; der Qualitätsbericht zählt `unknown_properties`.
 
+## Audit lokal (`govguard.cli`)
+
+- `uv run python -m govguard.cli spec <datei>` bzw. `arch <datei>`; Standard ist Groq (`GROQ_API_KEY`, nur fiktive Daten). `--provider bedrock` nimmt Bedrock `eu.`, den einzigen Weg für echte Daten ([ADR 0001](docs/adr/0001-eu-inferenzprofil.md)).
+- Exit-Codes: 0 Report auf stdout, 1 Eingabe über 100.000 Zeichen (vor jedem LLM-Aufruf), 2 fail closed.
+
 ## Bekannte Grenzen
 
-- **Groq im Audit:** Groq (`openai/gpt-oss-120b`) schwankt stärker als Bedrock. Im Spec-Audit änderten zwischen zwei Läufen 42 von 151 Prüfregeln ihren Status, bei Bedrock 19 (#29). Der FAIL-Prüfer fängt FAILs ohne festgelegten Verstoß ab (#31), PASS und WARN schwanken weiter. Groq ist deshalb nur eine ausdrückliche Option für günstige Läufe, Standard bleibt Bedrock `eu.` ([ADR 0016](docs/adr/0016-groq-zur-laufzeit-im-prototyp.md)).
+- **Groq im Audit:** Groq (`openai/gpt-oss-120b`) schwankt stärker als Bedrock. Im Spec-Audit änderten zwischen zwei Läufen 42 von 151 Prüfregeln ihren Status, bei Bedrock 19 (#29). Der FAIL-Prüfer fängt FAILs ohne festgelegten Verstoß ab (#31), PASS und WARN schwanken weiter. Trotzdem ist Groq Standard, denn Bedrock ist für die Demo nicht verfügbar; jeder Report nennt seine `model_id` ([ADR 0023](docs/adr/0023-demo-und-recruiter-stand.md)).

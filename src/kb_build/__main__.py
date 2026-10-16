@@ -7,8 +7,8 @@ from pathlib import Path
 from pydantic_ai.models import Model
 
 from govguard.aws_services import GLOBAL_MODEL_ID, bedrock_model
+from govguard.groq_services import groq_model
 from kb_build.extract.run import extract_all
-from kb_build.groq_services import groq_model
 from kb_build.paths import BuildPaths
 from kb_build.reference.run import snapshot_scope
 from kb_build.rules.run import formulate_all

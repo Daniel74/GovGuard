@@ -1,109 +1,64 @@
 """Audit engine: pure audit logic, gets the model injected (ADR 0005). No boto3."""
 
 import asyncio
-import json
-from collections.abc import Iterable
+from collections.abc import Callable, Coroutine, Iterable
+from typing import Any
 
-from pydantic import BaseModel
-from pydantic_ai import Agent, ModelRetry, NativeOutput, RunContext, ToolOutput
 from pydantic_ai.exceptions import ModelAPIError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
-from govguard.audit_gates import answer_problems, completeness_problems
-from govguard.corrections import AuditValidationError, Corrections, downgrades_of
-from govguard.evidence import MAX_SPAN, evidence_of, numbered, without_unproven_verdict
-from govguard.fail_judge import judge_fails, provider_of
+from govguard.audit_gates import completeness_problems
+from govguard.audit_packages import SPEC_FAIL_RULE, package_requests
+from govguard.corrections import AuditValidationError, Corrections
+from govguard.evidence import evidence_of
+from govguard.fail_judge import judge_fails
 from govguard.inventory import resource_inventory
 from govguard.models import (
     SEVERITY,
     AuditReport,
-    AuditResponse,
     Finding,
     FindingDraft,
+    Progress,
     Rule,
     RuleCatalog,
     Status,
     Trace,
 )
-from govguard.repairs import with_rule_recommendations, worst_of_duplicates
 
-SYSTEM_PROMPT = f"""\
-Du bist ein Compliance-Prüfer für Behörden-IT. Bewerte die Eingabe gegen jede Prüfregel.
-- PASS: Einhaltung ist in der Eingabe belegt.
-- FAIL: Ein Verstoß ist in der Eingabe belegt.
-- WARN: Aus der Eingabe nicht entscheidbar.
-- N/A: Die Prüfregel ist auf die Eingabe nicht anwendbar.
-Jede Zeile der Eingabe beginnt mit ihrer Nummer, z. B. "12| ". Belege per Zeilenbereich:
-"line_start" und "line_end" nennen die Zeilen, die den Befund belegen (höchstens {MAX_SPAN} Zeilen).
-Bei PASS und FAIL sind sie Pflicht, sonst null.
-Bei WARN und FAIL ist "recommendation" Pflicht. Schreibe Begründungen auf Deutsch."""
-# Spec audit only, open world; a template is a closed world: missing means default (ADR 0020)
-SPEC_FAIL_RULE = """\
-Spezifikation (offene Welt): Was die Eingabe nicht erwähnt, kann anderswo geregelt sein. \
-Beschreibt "violation_if" ein Fehlen, belegt fehlender Text nur "nicht beschrieben": WARN. FAIL \
-nur, wenn die Belegzeilen etwas festlegen, das der Prüfregel widerspricht; "rationale" nennt es."""
+__all__ = ["SPEC_FAIL_RULE", "AuditValidationError", "InputTooLongError", "overall_status",
+           "run_audit"]
 
-PACKAGE_SIZE = 10  # rules per model call; 166 architecture rules -> 17 parallel calls
-GROQ_MAX_PARALLEL = 2  # ~110,000 tokens/min per slot measured (#26), Groq tier allows 250,000
+type OnProgress = Callable[[Progress], None]
+MAX_INPUT_CHARS = 100_000  # largest preset fits the Lambda timeout (ADR 0018, 0023)
 
 
-class AuditDeps(BaseModel):  # deps_type of the audit agent, input for the code checks
-    rules: list[Rule]
-    input_text: str
-    na_forbidden: str | None  # prompt hint; set when N/A was already decided by code (ADR 0011)
-    corrections: Corrections  # shared by all packages; the validator reports into it (#27)
-    reason_sent: bool = False  # the code sent the package back with reasons (#27)
+class InputTooLongError(ValueError):
+    """Raised before the first LLM call, so a too long input costs nothing."""
+
+    def __init__(self, length: int) -> None:
+        super().__init__(f"Eingabe zu lang: {_german(length)} Zeichen, erlaubt sind höchstens "
+                         f"{_german(MAX_INPUT_CHARS)}.")
 
 
-_OUTPUT = {"name": "submit_audit", "description": "Gib genau einen Befund je Prüfregel ab.",
-           "strict": True}  # static schema, every field required (ADR 0017)
-_SETTINGS = {"temperature": 0, "max_tokens": 8000}  # same status; a loop ends in ~25 s (#28)
-# Bedrock: forced tool (ADR 0005); Groq: json_schema with constrained decoding (ADR 0016)
-_AGENTS = {
-    system: Agent(output_type=output_type, instructions=SYSTEM_PROMPT, deps_type=AuditDeps,
-                  model_settings=_SETTINGS, retries=1)  # one retry: within the 180 s (ADR 0018)
-    for system, output_type in [("bedrock", ToolOutput(AuditResponse, **_OUTPUT)),
-                                ("groq", NativeOutput(AuditResponse, **_OUTPUT))]
-}
-_MAX_PARALLEL = {"groq": GROQ_MAX_PARALLEL}  # Bedrock: no limit, all packages at once
-
-
-def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditResponse:
-    """Repair and downgrade first, then check: what the code can fix needs no retry (ADR 0017)."""
-    text, last, rules = ctx.deps.input_text, ctx.last_attempt, ctx.deps.rules
-    if ctx.retry:  # once per package: one retry at most
-        ctx.deps.corrections.record_retry(ctx.deps.reason_sent)
-    kept, contradictions = worst_of_duplicates(response.findings)
-    checked = [without_unproven_verdict(f, text, last) for f in kept]
-    filled, filled_in = with_rule_recommendations(checked, rules)
-    expected = {rule.id for rule in rules}
-    problems = answer_problems(expected, filled, text, ctx.deps.na_forbidden)
-    ctx.deps.corrections.record_repairs(expected, contradictions + filled_in)
-    ctx.deps.corrections.record_attempt(
-        sorted(expected), downgrades_of(kept, checked), problems, last)
-    if problems:
-        ctx.deps.reason_sent = True
-        raise ModelRetry("\n".join(p.text for p in problems))
-    return AuditResponse(findings=filled)
-
-
-def _status_rule(ctx: RunContext[AuditDeps]) -> str:
-    return SPEC_FAIL_RULE if ctx.deps.rules[0].audit_type == "spec" else ""  # one type per catalog
-
-
-for _agent in _AGENTS.values():  # the same gates for both models (ADR 0016)
-    _agent.output_validator(_validate)
-    _agent.instructions(_status_rule)
+def _german(number: int) -> str:
+    return f"{number:,}".replace(",", ".")
 
 
 def overall_status(statuses: Iterable[Status]) -> Status:
     return max(statuses, key=SEVERITY.__getitem__)
 
 
-def run_audit(catalog: RuleCatalog, input_text: str, model: Model, trace: Trace) -> AuditReport:
+def run_audit(
+    catalog: RuleCatalog, input_text: str, model: Model, trace: Trace,
+    on_progress: OnProgress | None = None,
+) -> AuditReport:
+    """on_progress gets each phase and finished package; the audit logic stays pure (ADR 0023)."""
+    if len(input_text) > MAX_INPUT_CHARS:
+        raise InputTooLongError(len(input_text))
     corrections = Corrections()
     try:
-        drafts = asyncio.run(_drafts(catalog, input_text, model, corrections))
+        drafts = asyncio.run(_drafts(catalog, input_text, model, corrections,
+                                     on_progress or (lambda _: None)))
     except (ModelAPIError, UnexpectedModelBehavior) as error:
         raise corrections.fail_closed(error) from error
     if problems := completeness_problems({rule.id for rule in catalog.rules}, drafts):
@@ -122,60 +77,47 @@ def run_audit(catalog: RuleCatalog, input_text: str, model: Model, trace: Trace)
 
 
 async def _drafts(
-    catalog: RuleCatalog, input_text: str, model: Model, corrections: Corrections
+    catalog: RuleCatalog, input_text: str, model: Model, corrections: Corrections,
+    report: OnProgress,
 ) -> list[FindingDraft]:
     """Spec, a template too: every FAIL goes to the judge (open world, #31). Architecture:
     N/A by code via the resource inventory."""
     if catalog.audit_type != "architecture":
-        drafts = await _ask_in_packages(catalog.rules, input_text, None, model, corrections)
+        drafts = await _counted(
+            package_requests(catalog.rules, input_text, None, model, corrections), report)
+        if any(draft.status == "FAIL" for draft in drafts):  # the judge only runs on a FAIL
+            report(Progress(phase="fail_judge"))
         return await judge_fails(catalog.rules, drafts, input_text, model, corrections)
+    report(Progress(phase="inventory"))
     inventory = await resource_inventory(catalog.rules, input_text, model, corrections)
     to_model = [rule for rule in catalog.rules if inventory.applies(rule)]
     drafts = [_na_by_code(rule, inventory.na_rationale)
               for rule in catalog.rules if not inventory.applies(rule)]
-    return drafts + await _ask_in_packages(
-        to_model, input_text, inventory.na_forbidden, model, corrections)
+    return drafts + await _counted(package_requests(
+        to_model, input_text, inventory.na_forbidden, model, corrections), report)
 
 
-async def _ask_in_packages(
-    rules: list[Rule], input_text: str, na_forbidden: str | None, model: Model,
-    corrections: Corrections,
+async def _counted(
+    requests: list[Coroutine[Any, Any, list[FindingDraft]]], report: OnProgress
 ) -> list[FindingDraft]:
-    """Packages in parallel, so the audit stays within the 180 s (ADR 0018); Groq throttled."""
-    packages = [rules[i:i + PACKAGE_SIZE] for i in range(0, len(rules), PACKAGE_SIZE)]
-    slots = asyncio.Semaphore(_MAX_PARALLEL.get(provider_of(model), len(packages) or 1))
+    """All packages at once; each finished one is reported."""
+    total, done = len(requests), 0
+    report(Progress(phase="packages", packages_total=total))
 
-    async def ask(package: list[Rule]) -> list[FindingDraft]:
-        async with slots:
-            deps = AuditDeps(rules=package, input_text=input_text, na_forbidden=na_forbidden,
-                             corrections=corrections)
-            return await _ask_model(deps, model)
+    async def counted(request: Coroutine[Any, Any, list[FindingDraft]]) -> list[FindingDraft]:
+        nonlocal done
+        drafts = await request
+        done += 1
+        report(Progress(phase="packages", packages_done=done, packages_total=total))
+        return drafts
 
-    answers = await asyncio.gather(*(ask(p) for p in packages))
+    answers = await asyncio.gather(*(counted(r) for r in requests))
     return [draft for answer in answers for draft in answer]
 
 
 def _na_by_code(rule: Rule, rationale: str) -> FindingDraft:
     return FindingDraft(rule_id=rule.id, status="N/A", line_start=None, line_end=None,
                         rationale=rationale, recommendation=None)
-
-
-async def _ask_model(deps: AuditDeps, model: Model) -> list[FindingDraft]:
-    agent = _AGENTS[provider_of(model)]
-    result = await agent.run(_user_prompt(deps), model=model, deps=deps)
-    return result.output.findings
-
-
-def _user_prompt(deps: AuditDeps) -> str:
-    rules = [
-        r.model_dump(include={"id", "title", "compliant_if", "violation_if"})
-        for r in deps.rules
-    ]
-    hint = f"{deps.na_forbidden}\n\n" if deps.na_forbidden else ""
-    return (
-        f"Prüfregeln:\n{json.dumps(rules, ensure_ascii=False, indent=1)}\n\n{hint}"
-        f"Eingabe:\n<eingabe>\n{numbered(deps.input_text)}\n</eingabe>"
-    )
 
 
 def _complete_findings(

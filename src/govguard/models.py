@@ -91,6 +91,12 @@ class FailJudgeCount(BaseModel):  # verdicts of the FAIL judge in one spec audit
     unavailable: int = 0  # judge failed or gave no verdict: the FAIL stays unchecked
 
 
+class Progress(BaseModel):  # reported while an audit runs, for UI and audit job (ADR 0023)
+    phase: Literal["inventory", "packages", "fail_judge"]
+    packages_done: int = 0
+    packages_total: int = 0  # counts belong to phase "packages" only, known after the inventory
+
+
 class AuditReport(BaseModel):
     audit_type: AuditType
     overall_status: Status

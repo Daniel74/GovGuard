@@ -7,7 +7,7 @@ from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
-from govguard.cli import main
+from govguard.cli import main, model_for, parse_args
 from govguard.models import AuditReport, RuleCatalog
 
 
@@ -123,3 +123,60 @@ def test_api_error_gets_its_own_sentence_without_library_text(
     assert exit_code == 2
     assert "nicht erreichbar oder überlastet" in err
     assert "ThrottlingException" not in err and "429" not in err
+
+
+def test_groq_is_the_default_provider_bedrock_an_explicit_option() -> None:
+    # ADR 0023: Groq in UI and Lambda; Bedrock `eu.` only for real data (ADR 0001)
+    assert parse_args(["spec", "x.txt"]).provider == "groq"
+    assert parse_args(["spec", "x.txt", "--provider", "bedrock"]).provider == "bedrock"
+
+
+def test_missing_groq_key_aborts_without_falling_back_to_bedrock(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.delenv("GROQ_API_KEY", raising=False)
+
+    def bedrock_must_not_be_called(**_: object) -> None:
+        raise AssertionError("silent fallback to Bedrock")
+
+    monkeypatch.setattr("govguard.cli.bedrock_model", bedrock_must_not_be_called)
+
+    with pytest.raises(RuntimeError, match="GROQ_API_KEY"):
+        model_for("groq")
+
+
+def test_each_provider_builds_its_own_model(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("GROQ_API_KEY", "test")
+    monkeypatch.delenv("GROQ_MODEL", raising=False)
+
+    assert model_for("groq").model_name == "openai/gpt-oss-120b"
+    assert model_for("bedrock").model_name.startswith("eu.")  # EU only (ADR 0001)
+
+
+def test_the_report_names_the_model_of_the_chosen_provider(
+    spec_catalog: RuleCatalog, spec_input: str, tmp_path: Path,
+    capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    spec_file = tmp_path / "spec.txt"
+    spec_file.write_text(spec_input, encoding="utf-8")
+    catalog_file = tmp_path / "rules_spec.json"
+    catalog_file.write_text(spec_catalog.model_dump_json(), encoding="utf-8")
+    monkeypatch.setattr("govguard.cli.groq_model", lambda: fake_model(spec_catalog))
+
+    exit_code = main(["spec", str(spec_file), "--catalog", str(catalog_file)])
+
+    assert exit_code == 0
+    assert AuditReport.model_validate_json(capsys.readouterr().out).model_id == "fake-model"
+
+
+def test_too_long_input_ends_with_exit_code_1_and_a_plain_sentence(
+    spec_catalog: RuleCatalog, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    def never_called(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        raise AssertionError("no model call for a rejected input")
+
+    exit_code, err = run_failing(spec_catalog, "x" * 100_001, tmp_path,
+                                 FunctionModel(never_called), capsys)
+
+    assert exit_code == 1  # 2 stays fail closed
+    assert err.strip() == "Eingabe zu lang: 100.001 Zeichen, erlaubt sind höchstens 100.000."

@@ -1,9 +1,9 @@
-"""Groq adapter: default LLM for the knowledge-base build (ADR 0014)."""
+"""Groq adapter: default LLM at runtime (ADR 0023) and in the build (ADR 0014)."""
 
 import pytest
 from pydantic_ai.models.groq import GroqModel
 
-from kb_build.groq_services import DEFAULT_MODEL, groq_model
+from govguard.groq_services import DEFAULT_MODEL, groq_model
 
 
 def test_groq_model_uses_the_default_model(monkeypatch: pytest.MonkeyPatch) -> None:

@@ -1,6 +1,6 @@
-"""Groq adapter: default LLM for the knowledge-base build (ADR 0014).
+"""Groq adapter: default LLM at runtime (ADR 0023) and in the build (ADR 0014).
 
-Never used at runtime (Lambda); only public norm texts are sent, never user input.
+At runtime user input goes to the USA: fictitious data only; real data need `eu.` (ADR 0001).
 """
 
 import os
