@@ -17,7 +17,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12a, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 16.10.:** Kein AWS-Zugriff. Die Demo läuft ohne AWS (Schritt 10i); jeder Schritt läuft bis zum ersten ☁-Kästchen, der Rest folgt gesammelt im AWS-Nachholblock.
 
@@ -67,6 +67,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 10i     | A    | UI und Hosting klären           | 👤 + 🤖 Opus (Design-Artefakt)   | 👤                         |
 | 11      | A    | #35 Laufzeit: Groq, Fortschritt | 🤖 Opus                          | 🤖 Opus                    |
 | 12      | A    | #11 Demo-UI                     | 🤖 Sonnet (nach Design-Artefakt) | 🤖 Opus                    |
+| 12a     | A    | #39 Zitatprüfung ohne Markdown  | 🤖 Sonnet                        | 🤖 Opus                    |
 | 11b     | A    | #9 Stack (CDK, IAM, KMS)        | 🤖 Opus                          | 🤖 Opus · 🛠 Junie         |
 | 11a     | A    | #34 Audit-Jobs in S3            | 🤖 Opus                          | 🤖 Opus                    |
 | 12b     | A    | #36 Selbst-Audit und Galerie    | 👤 + 🤖 Opus                     | 👤                         |
@@ -554,6 +555,22 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Fertig, wenn:** Die öffentliche UI ein gespeichertes Audit mit Sprung zur Textstelle zeigt und ein neues Audit mit Fortschrittsanzeige erstellt.
 **Fürs Fachgespräch:** Bewusstes US-Hosting nur mit fiktiven Daten (ADR 0004, 0016), Passwort als Kostenbremse.
+
+---
+
+### Schritt 12a – #39 Inventur: Zitatprüfung ignoriert Markdown-Hervorhebung
+
+**Ziel:** Ein Architektur-Audit von Freitext mit `**…**` bricht nicht mehr fail closed ab, weil das Modell ohne Sternchen zitiert.
+**Voraussetzung:** Schritt 12. Läuft komplett ohne AWS.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #39 umsetzen` → Plan → Go
+      Reihenfolge: Test für `contains_quote` mit und ohne `**` → Umsetzung in `text.py` → Gate-Tests von `kb_build` grün
+- [ ] **Messen** 🆕 _Opus_ · 👤 `/audit-messen arch-protokollarchiv mit Groq, Report nach data/gallery/`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #39`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** `arch-protokollarchiv` mit Groq durchläuft und sein Report in der Galerie liegt.
+**Fürs Fachgespräch:** Fail closed ist richtig, aber die Prüfung muss dieselbe Normalisierung wie das Lesen haben: Formatierung ist kein Inhalt.
 
 ---
 
