@@ -7,18 +7,18 @@ import streamlit as st
 from govguard.models import Finding
 from govguard_ui.findings_view import lines_text
 from govguard_ui.review import category, document_window
-from govguard_ui.style import LOOKS, badge, paragraph, tag
+from govguard_ui.style import badge, paragraph, tag
 
 
 def render_detail(finding: Finding) -> None:
     kind = category(finding)
-    tags = [LOOKS[kind].word]
+    tags = []
     if finding.downgraded_from:
         tags.append(f"↓ herabgestuft von {finding.downgraded_from}")
     if kind == "GAP":
         tags.append("kein Verstoß")  # CONTEXT: Lücke, never "nicht entscheidbar"
     with st.container(border=True):
-        st.html(badge(kind) + "".join(tag(t) for t in tags))
+        st.html(badge(kind, word=True) + "".join(tag(t) for t in tags))
         st.markdown(f"#### {finding.title}")
         evidence = "keine Zeilen" if finding.line_start is None else f"Zeilen {lines_text(finding)}"
         st.caption(f"{finding.primary_anchor} · {finding.rule_id} · Beleg: {evidence}")

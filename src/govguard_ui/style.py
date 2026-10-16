@@ -18,6 +18,10 @@ class Look(BaseModel):  # the one table per category: badge, counter, help and s
     css: str  # class suffix in CSS
     meaning: str  # what the category says about the finding
     todo: str  # what the reader should do
+    text: str  # colours of badge, tile and box
+    background: str
+    border: str
+    border_style: str = "solid"
 
 
 LOOKS: dict[Category, Look] = {
@@ -25,29 +29,48 @@ LOOKS: dict[Category, Look] = {
         symbol="✕", label="FAIL", word="Verstoß belegt", css="fail",
         meaning="Verstoß belegt: Die Belegzeilen legen etwas fest, das der Prüfregel widerspricht. "
                 "Fehlt nur eine Angabe, ist das kein FAIL, sondern eine Lücke.",
-        todo="Beheben. Die Empfehlung im Befund nennt einen Weg."),
+        todo="Beheben. Die Empfehlung im Befund nennt einen Weg.",
+        text="#A3191B", background="#FCEBEB", border="#F0B9B9"),
     "WARN": Look(
         symbol="!", label="WARN", word="Prüfbedarf", css="warn",
         meaning="Prüfbedarf mit Beleg: Die Zeilen reichen für kein klares Urteil, oder der Code "
                 "hat ein PASS oder FAIL herabgestuft, das die KI nicht belegt oder der "
                 "FAIL-Prüfer nicht bestätigt hat.",
-        todo="Fachlich nachprüfen."),
+        todo="Fachlich nachprüfen.", text="#7A4A00", background="#FFF3D1", border="#EBCB7A"),
     "GAP": Look(
         symbol="○", label="Lücke", word="nicht beschrieben", css="gap",
         meaning="WARN ohne Belegzeilen: Die Eingabe beschreibt die Anforderung nicht. Eine "
                 "Spezifikation ist eine offene Welt, deshalb ist das kein Verstoß, sondern eine "
                 "offene Frage.",
         todo="Als Checkliste unter der Befundliste nutzen: vor der Umsetzung klären oder bewusst "
-             "ausschließen."),
+             "ausschließen.",
+        text="#4A5361", background="#FFFFFF", border="#A7AFBA", border_style="dashed"),
     "PASS": Look(
         symbol="✓", label="PASS", word="Einhaltung belegt", css="pass",
         meaning="Einhaltung belegt: Die Belegzeilen zeigen, dass die Anforderung erfüllt ist.",
-        todo="Nichts. Der Beleg dient als Nachweis."),
+        todo="Nichts. Der Beleg dient als Nachweis.",
+        text="#1B6236", background="#E6F3EA", border="#A8D3B5"),
     "N/A": Look(
         symbol="–", label="N/A", word="nicht anwendbar", css="na",
         meaning="Nicht anwendbar, z. B. weil der Ressourcentyp in der Architektur nicht vorkommt.",
-        todo="Nichts. In der Liste standardmäßig ausgeblendet."),
+        todo="Nichts. In der Liste standardmäßig ausgeblendet.",
+        text="#4A5361", background="#EDEFF2", border="#C9CFD8"),
 }
+
+
+def _status_css() -> str:
+    """Badge, tile, overall status and expected strip share the colours of LOOKS (#42)."""
+    rules = []
+    for look in LOOKS.values():
+        tile, overall, strip = (f'[class*="_{box}_{look.css}"]'
+                                for box in ("tile", "overall", "expected"))
+        colours = (f"background:{look.background};border-color:{look.border};"
+                   f"border-style:{look.border_style}")
+        rules += [f".gg-{look.css}{{color:{look.text};{colours}}}",
+                  f"{tile},{overall},{strip}{{{colours}}}",
+                  f"{tile} :is(p,label),{overall} p,{strip} strong{{color:{look.text}}}"]
+    return "\n".join(rules)
+
 
 # Own CSS only where Streamlit has no option; tests/visual/test_browser.py guards the frame
 CSS = """<style>
@@ -67,12 +90,18 @@ CSS = """<style>
 .gg-brand span{font-size:13px;color:#4A5361}
 .gg-badge{display:inline-block;padding:2px 10px;border-radius:4px;font-weight:700;
   border:1px solid;white-space:nowrap}
-.gg-big{font-size:24px;padding:8px 14px;border-width:2px;border-radius:8px}
-.gg-fail{color:#A3191B;background:#FCEBEB;border-color:#F0B9B9}
-.gg-warn{color:#7A4A00;background:#FFF3D1;border-color:#EBCB7A}
-.gg-gap{color:#4A5361;background:#FFFFFF;border-color:#A7AFBA;border-style:dashed}
-.gg-pass{color:#1B6236;background:#E6F3EA;border-color:#A8D3B5}
-.gg-na{color:#4A5361;background:#EDEFF2;border-color:#C9CFD8}
+.gg-overall{font-size:40px;font-weight:700;line-height:1.2;margin:0;text-align:center}
+[class*="_overall_"] p{text-align:center}
+[class*="_overall_"] [data-testid="stElementContainer"]:first-child p{font-size:13px;
+  font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+[class*="_tile_"]{gap:4px}
+[class*="_tile_"] [data-testid="stMetricLabel"]{align-items:flex-start}
+[class*="_tile_"] [data-testid="stMetricLabel"] *{white-space:normal;overflow:visible}
+[class*="_tile_"] [data-testid="stMetricValue"]{font-size:28px;font-weight:700}
+[class*="_expected_"]{gap:4px 24px}
+[class*="_expected_"] [data-testid="stBaseButton-tertiary"] p{text-decoration:underline}
+.gg-meta th{font-weight:400;color:#4A5361;padding:2px 16px 2px 0;text-align:left}
+.gg-meta td{padding:2px 0}
 .gg-tag{display:inline-block;margin-left:8px;padding:1px 8px;border-radius:4px;
   font-size:14px;color:#4A5361;border:1px solid #C9CFD8}
 .gg-doc{font-family:'Source Code Pro',ui-monospace,monospace;font-size:13px;line-height:1.6}
@@ -86,13 +115,16 @@ CSS = """<style>
 .gg-table td,.gg-table th{text-align:left;vertical-align:top;padding:10px 12px;
   border-top:1px solid #E3E7EC}
 .gg-table th{background:#EEF0F4;color:#4A5361;font-size:14px}
-</style>"""
+""" + _status_css() + "</style>"
 
 
-def badge(category: Category, big: bool = False) -> str:
+
+
+def badge(category: Category, word: bool = False) -> str:
+    """word: status and meaning as one mark, e.g. "✕ FAIL · Verstoß belegt" (#42)."""
     look = LOOKS[category]
-    size = " gg-big" if big else ""
-    return f'<span class="gg-badge gg-{look.css}{size}">{look.symbol} {look.label}</span>'
+    meaning = f" · {look.word}" if word else ""
+    return f'<span class="gg-badge gg-{look.css}">{look.symbol} {look.label}{meaning}</span>'
 
 
 def tag(text: str) -> str:

@@ -599,8 +599,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Titel, Download und Gesamtstatus in einem Rahmen, farbige Statuskacheln, Soll-Abgleich als Kachel.
 **Voraussetzung:** Schritt 12d.
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #42 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
-- [ ] **Ansehen** 👤 Vergleichsbilder für Audits ansehen prüfen, dann Referenzbilder nur dieser Seite neu schreiben
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #42 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
+- [x] **Ansehen** 👤 Vergleichsbilder für Audits ansehen prüfen, dann Referenzbilder nur dieser Seite neu schreiben
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #42`
 - [ ] **Abschließen** 👤 committet und pusht
 

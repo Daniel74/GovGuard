@@ -16,9 +16,10 @@ def _gallery() -> list[GalleryEntry]:
 
 def render() -> None:
     st.html(CSS)
-    st.title("Audits ansehen")
+    title, choice = st.columns([3, 2], vertical_alignment="bottom")
+    title.title("Audits ansehen")
     entries = {entry.preset_id: entry for entry in _gallery()}
-    preset_id = st.selectbox(
+    preset_id = choice.selectbox(
         "Gespeichertes Audit aus der Galerie", list(entries), key="gallery_preset",
         filter_mode=None,  # a choice, no typing (#41)
         format_func=lambda i: f"{entries[i].preset.title} "

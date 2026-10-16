@@ -132,7 +132,7 @@ def test_the_ui_uses_the_glossary_terms() -> None:
 
     assert not gallery.exception
     assert [word for word in AVOIDED if word in text] == []
-    assert all(term in text for term in ("Primäranker", "Audit-Art", "Rückverfolgung", "Lücke"))
+    assert all(term in text for term in ("Primäranker", "Audit-Art", "Gesamtstatus", "Lücke"))
 
 
 def first_gap_rule() -> str:
@@ -144,3 +144,10 @@ def first_gap_rule() -> str:
     entries = {e.preset_id: e for e in load_gallery(PRESETS, GALLERY)}
     report = entries["spec-meldeportal-gesundheit"].report
     return next(f.rule_id for f in report.findings if category(f) == "GAP")
+
+
+def test_the_detail_shows_status_and_meaning_as_one_mark() -> None:
+    app = page(gallery_script)
+
+    detail = next(n.proto.body for n in app.get("html") if "gg-badge" in n.proto.body)
+    assert detail == '<span class="gg-badge gg-fail">✕ FAIL · Verstoß belegt</span>'
