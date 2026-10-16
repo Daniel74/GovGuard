@@ -1,6 +1,6 @@
 # 0016 – Groq als ausdrückliche Laufzeit-Option im Prototyp
 
-_Weicht für die Laufzeit von [ADR 0001](0001-eu-inferenzprofil.md) ab. Ergänzt [ADR 0004](0004-streamlit-community-cloud.md) und [ADR 0014](0014-groq-standard-im-build.md). Umsetzung: #26. Standard-Provider ist seit [ADR 0023](0023-demo-und-recruiter-stand.md) Groq, Bedrock `eu.` ausdrücklich wählbar._
+_Weicht für die Laufzeit von [ADR 0001](0001-eu-inferenzprofil.md) ab. Ergänzt [ADR 0004](0004-streamlit-community-cloud.md) und [ADR 0014](0014-groq-standard-im-build.md). Umsetzung: #26. Seit [ADR 0023](0023-demo-und-recruiter-stand.md) einziger Provider in UI und Lambda; Bedrock `eu.` nur noch per CLI._
 
 ## Kontext
 
