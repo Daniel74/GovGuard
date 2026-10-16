@@ -17,7 +17,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12a, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12c–12f, 12a, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 16.10.:** Kein AWS-Zugriff. Die Demo läuft ohne AWS (Schritt 10i); jeder Schritt läuft bis zum ersten ☁-Kästchen, der Rest folgt gesammelt im AWS-Nachholblock.
 
@@ -67,6 +67,10 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 10i     | A    | UI und Hosting klären           | 👤 + 🤖 Opus (Design-Artefakt)   | 👤                         |
 | 11      | A    | #35 Laufzeit: Groq, Fortschritt | 🤖 Opus                          | 🤖 Opus                    |
 | 12      | A    | #11 Demo-UI                     | 🤖 Sonnet (nach Design-Artefakt) | 🤖 Opus                    |
+| 12c     | A    | #40 Screenshot-Regression       | 🤖 Opus                          | 🤖 Opus                    |
+| 12d     | A    | #41 Breite, Start, Erstellen    | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
+| 12e     | A    | #42 Kopf und Kacheln            | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
+| 12f     | A    | #43 Befundtabelle, Quelle, Lücken | 🤖 Opus                        | 👤 Vergleichsbild + 🤖 Opus |
 | 12a     | A    | #39 Zitatprüfung ohne Markdown  | 🤖 Sonnet                        | 🤖 Opus                    |
 | 11b     | A    | #9 Stack (CDK, IAM, KMS)        | 🤖 Opus                          | 🤖 Opus · 🛠 Junie         |
 | 11a     | A    | #34 Audit-Jobs in S3            | 🤖 Opus                          | 🤖 Opus                    |
@@ -555,6 +559,70 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Fertig, wenn:** Die öffentliche UI ein gespeichertes Audit mit Sprung zur Textstelle zeigt und ein neues Audit mit Fortschrittsanzeige erstellt.
 **Fürs Fachgespräch:** Bewusstes US-Hosting nur mit fiktiven Daten (ADR 0004, 0016), Passwort als Kostenbremse.
+
+---
+
+### Schritt 12c – #40 Demo-UI: Screenshot-Regression mit Playwright
+
+**Ziel:** Ein Test fotografiert die vier Ansichten der UI und vergleicht sie mit freigegebenen Referenzbildern; je Ansicht entsteht ein Vergleichsbild „Design | Streamlit“.
+**Voraussetzung:** Schritt 12. Läuft komplett ohne AWS.
+
+- [ ] **Soll-Bilder** 👤 Im Design-Artefakt aus #11 die Artboards Start, Main, Arch und Erstellen im Play-Modus bei 1440 px öffnen, je ein ganzseitiger Screenshot (Chrome DevTools: ⌘⇧P → „Capture full size screenshot“) → `tests/visual/design/start.png`, `gallery-spec.png`, `gallery-arch.png`, `create.png`
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #40 umsetzen` → Plan → Go
+      Reihenfolge: Abhängigkeiten und Marker → Server-Fixture → Bildvergleich (Unit-Test ohne Browser) → vier Ansichten → Vergleichsbilder → zweimal stabil grün
+- [ ] **Freigeben** 👤 Referenzbilder in `tests/visual/` ansehen: Sie zeigen bewusst den heutigen Stand
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #40`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** `uv run pytest -m visual` zweimal hintereinander grün ist und normales `uv run pytest` ohne Browser läuft.
+**Fürs Fachgespräch:** Regressionstest als Sicherheitsnetz, Referenzbild als freigegebener Soll-Stand, warum ein Mockup kein Pixel-Orakel ist.
+
+---
+
+### Schritt 12d – #41 Demo-UI: Seitenbreite, Start & Hilfe und Audit erstellen
+
+**Ziel:** Breite, Start-Seite und das Formular „Audit erstellen“ entsprechen dem Design-Artefakt.
+**Voraussetzung:** Schritt 12c.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #41 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
+- [ ] **Ansehen** 👤 Vergleichsbilder für Start und Audit erstellen prüfen, dann `uv run pytest -m visual --update-snapshots` nur für diese Seiten
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #41`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Nur die Referenzbilder von Start und Audit erstellen sich geändert haben und `pytest -m visual` grün ist.
+**Fürs Fachgespräch:** Native Streamlit-Mittel (Theme, Rahmen) vor eigenem CSS.
+
+---
+
+### Schritt 12e – #42 Demo-UI: Audits ansehen – Kopf und Kacheln
+
+**Ziel:** Titel, Download und Gesamtstatus in einem Rahmen, farbige Statuskacheln, Soll-Abgleich als Kachel.
+**Voraussetzung:** Schritt 12d.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #42 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
+- [ ] **Ansehen** 👤 Vergleichsbilder für Audits ansehen prüfen, dann Referenzbilder nur dieser Seite neu schreiben
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #42`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Nur die Referenzbilder von Audits ansehen sich geändert haben und `pytest -m visual` grün ist.
+**Fürs Fachgespräch:** Nie Farbe allein: Symbol, Wort und Farbe je Status (WCAG AA).
+
+---
+
+### Schritt 12f – #43 Demo-UI: Audits ansehen – Befundtabelle, Quellenfilter und Lücken
+
+**Ziel:** Befundtabelle mit Zeilenumbruch und Klick auf die Zeile, Quellenfilter mit „Alle“, Lückenliste mit Scrollbalken.
+**Voraussetzung:** Schritt 12e.
+
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #43 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
+- [ ] **Ansehen** 👤 Vergleichsbilder für Audits ansehen prüfen, dann Referenzbilder nur dieser Seite neu schreiben
+- [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review` (eigene Tabellen-Komponente zeigt LLM-Text)
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #43`
+- [ ] **Live** 👤 Streamlit Community Cloud neu laden, ein Preset ansehen
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Ein Klick auf eine Tabellenzeile den Befund wählt, lange Texte umbrechen und `pytest -m visual` grün ist.
+**Fürs Fachgespräch:** LLM-Text nur als Text ins HTML (Schutz vor Injection), Komponente statt CSS-Hack.
 
 ---
 
