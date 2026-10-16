@@ -1,0 +1,10 @@
+# Colours of the design artefact (#11, artboard Statusfarben); fonts are the Streamlit default
+[theme]
+base = "light"
+primaryColor = "#0B4F8A"
+backgroundColor = "#FFFFFF"
+secondaryBackgroundColor = "#F0F2F6"
+textColor = "#1A2233"
+
+[client]
+toolbarMode = "minimal"  # no developer menu in the public demo

@@ -33,12 +33,7 @@ def main(argv: list[str] | None = None, model: Model | None = None) -> int:
     args = parse_args(argv)
     input_text = args.file.read_text(encoding="utf-8")
     catalog_bytes = args.catalog.read_bytes()
-    trace = Trace(
-        audit_id=str(uuid.uuid4()),
-        input_sha256=hashlib.sha256(input_text.encode()).hexdigest(),
-        catalog_sha256=hashlib.sha256(catalog_bytes).hexdigest(),
-        kb_commit=os.environ.get("KB_COMMIT", "local"),
-    )
+    trace = make_trace(input_text, catalog_bytes)
     try:
         check_input_length(input_text)  # before the model: no key needed to learn it's too long
         model = model or model_for(args.provider)
@@ -50,13 +45,23 @@ def main(argv: list[str] | None = None, model: Model | None = None) -> int:
         print(error, file=sys.stderr)
         return 3
     except AuditValidationError as error:  # fail closed, like HTTP 502
-        print(_failure_text(error), file=sys.stderr)
+        print(failure_text(error), file=sys.stderr)
         return 2
     print(report.model_dump_json(indent=2))
     return 0
 
 
-def _failure_text(error: AuditValidationError) -> str:
+def make_trace(input_text: str, catalog_bytes: bytes) -> Trace:
+    """Hashes only, never the input itself (ADR 0006); shared with the UI."""
+    return Trace(
+        audit_id=str(uuid.uuid4()),
+        input_sha256=hashlib.sha256(input_text.encode()).hexdigest(),
+        catalog_sha256=hashlib.sha256(catalog_bytes).hexdigest(),
+        kb_commit=os.environ.get("KB_COMMIT", "local"),
+    )
+
+
+def failure_text(error: AuditValidationError) -> str:
     """One plain sentence, then the reasons per rule; never the library's error text."""
     if error.api_error:
         return ("Audit fehlgeschlagen: Der KI-Dienst war nicht erreichbar oder überlastet. "

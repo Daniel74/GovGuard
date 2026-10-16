@@ -58,7 +58,8 @@ def test_modules_stay_small() -> None:
     assert too_long == {}
 
 
-DATA_PATH_OWNERS = {"kb_build/paths.py", "govguard/cli.py"}  # cli.py: one default catalog
+DATA_PATH_OWNERS = {"kb_build/paths.py", "govguard/cli.py",  # cli.py: one default catalog
+                    "govguard_ui/paths.py"}
 
 
 def data_path_literals(path: Path) -> list[str]:

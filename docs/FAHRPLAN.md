@@ -544,8 +544,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Die UI zeigt gespeicherte Audits samt Quelldokument (Befund → Textstelle) und erstellt Audits mit Fortschrittsanzeige; sie läuft öffentlich auf Streamlit Community Cloud.
 **Voraussetzung:** Schritte 10i (Design-Artefakt) und 11.
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #11 umsetzen, das Design-Artefakt aus #11 ist die Vorlage` → Plan → Go
-- [ ] **Ausprobieren** 👤 `/run Streamlit-UI lokal mit Beispiel-Report starten, Screenshot`
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #11 umsetzen, das Design-Artefakt aus #11 ist die Vorlage` → Plan → Go
+- [x] **Ausprobieren** 👤 `/run Streamlit-UI lokal mit Beispiel-Report starten, Screenshot`
 - [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review` (Passwort, Secrets, Eingabelänge)
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #11`
 - [ ] **Live** 👤 App auf Streamlit Community Cloud anlegen, `GROQ_API_KEY` und Passwort als Secrets eintragen → ein Preset auditieren
