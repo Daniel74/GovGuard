@@ -549,9 +549,9 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Ausprobieren** 👤 `/run Streamlit-UI lokal mit Beispiel-Report starten, Screenshot`
 - [x] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review` (Passwort, Secrets, Eingabelänge)
 - [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #11`
-- [ ] **Live** 👤 App auf Streamlit Community Cloud anlegen, `GROQ_API_KEY` und Passwort als Secrets eintragen → ein Preset auditieren
-- [ ] **Verstehen** 👤 `/verstehen 11`
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Live** 👤 App auf Streamlit Community Cloud anlegen, `GROQ_API_KEY` und Passwort als Secrets eintragen → ein Preset auditieren
+- [-] **Verstehen** 👤 `/verstehen 11`
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Die öffentliche UI ein gespeichertes Audit mit Sprung zur Textstelle zeigt und ein neues Audit mit Fortschrittsanzeige erstellt.
 **Fürs Fachgespräch:** Bewusstes US-Hosting nur mit fiktiven Daten (ADR 0004, 0016), Passwort als Kostenbremse.
