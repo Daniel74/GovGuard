@@ -72,31 +72,6 @@ def source_counts(findings: list[Finding]) -> dict[str, int]:
     return {ALL_SOURCES: len(findings), **dict(sorted(counted.items()))}
 
 
-GROUP_ORDER = ("BSI", "CIS", "FSBP", "C5")  # architecture audit, as in the design artefact
-
-
-class SourceGroup(BaseModel):  # findings of one source in the architecture audit
-    source: str
-    listed: list[Finding]  # FAIL first, then by line
-    not_applicable: list[Finding]  # collapsed in the group
-    counts: dict[Category, int]
-
-
-def source_groups(findings: list[Finding]) -> list[SourceGroup]:
-    groups = []
-    for source in sorted({source_of(f) for f in findings}, key=_group_rank):
-        own = [f for f in findings if source_of(f) == source]
-        groups.append(SourceGroup(
-            source=source, listed=visible_findings(own, {"FAIL", "WARN", "PASS"}, None),
-            not_applicable=[f for f in own if f.status == "N/A"], counts=category_counts(own)))
-    return groups
-
-
-def _group_rank(source: str) -> tuple[int, str]:
-    """Known sources in design order, unknown ones after them by name."""
-    return (GROUP_ORDER.index(source) if source in GROUP_ORDER else len(GROUP_ORDER), source)
-
-
 class DocumentLine(BaseModel):
     number: int  # 1-based, counted like the engine counts (str.splitlines)
     text: str

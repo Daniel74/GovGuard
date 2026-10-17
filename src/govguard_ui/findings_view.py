@@ -1,18 +1,18 @@
-"""Finding list with filters (spec) or groups (architecture), the gap checklist and the
-selected finding (#11, #43)."""
+"""Finding table with status and source filter, the gap checklist and the selected finding;
+the same for spec and architecture audits (#11, #43, #45)."""
 
 from collections import defaultdict
 
 import streamlit as st
 
 from govguard.models import AuditReport, Finding
-from govguard_ui.finding_list import ROWS_HEIGHT, group_size, plain, render_groups, render_rows
+from govguard_ui.finding_detail import plain
+from govguard_ui.finding_list import render_rows
 from govguard_ui.review import (
     ALL_SOURCES,
     category,
     category_counts,
     source_counts,
-    source_groups,
     source_of,
     visible_findings,
 )
@@ -23,27 +23,7 @@ GAPS_HEIGHT = 360  # a long gap list scrolls
 
 
 def render_findings(report: AuditReport, key: str) -> Finding:
-    """Draws the list and returns the selected finding (state key <key>_selected)."""
-    if report.audit_type == "architecture":
-        return _grouped(report, key)
-    return _filtered(report, key)
-
-
-def _grouped(report: AuditReport, key: str) -> Finding:
-    """No filters: the groups replace the source filter, N/A is collapsed in each group."""
-    st.markdown("### Befunde nach Quelle")
-    groups = source_groups(report.findings)
-    size = sum(group_size(group) for group in groups)
-    st.caption(f"{size} Befunde in {len(groups)} Quellen · je Gruppe FAIL zuerst · N/A eingeklappt")
-    listed = [f for group in groups for f in group.listed]
-    collapsed = [f for group in groups for f in group.not_applicable]
-    selected = _selected(report.findings, listed or collapsed, key)  # never a gap
-    render_groups(groups, key, selected)
-    _gap_checklist(report.findings, None, key)
-    return selected
-
-
-def _filtered(report: AuditReport, key: str) -> Finding:
+    """Draws the table and returns the selected finding (state key <key>_selected)."""
     st.markdown("### Befunde")
     counts = category_counts(report.findings)
     chosen = st.pills("Status", STATUS_FILTERS, selection_mode="multi", default=DEFAULT_FILTERS,
@@ -51,11 +31,10 @@ def _filtered(report: AuditReport, key: str) -> Finding:
                       label_visibility="collapsed")  # the colours say it (design artefact)
     source = _source_filter(report.findings, key)
     shown = visible_findings(report.findings, set(chosen), source)
-    st.caption(f"{len(shown)} Befunde angezeigt · {counts['GAP']} Lücken stehen unter der Liste "
-               "· sortiert: FAIL zuerst, dann nach Zeile")
+    gaps = f" · {counts['GAP']} Lücken stehen unter der Tabelle" if counts["GAP"] else ""
+    st.caption(f"{len(shown)} Befunde angezeigt{gaps} · sortiert: FAIL zuerst, dann nach Zeile")
     selected = _selected(report.findings, shown, key)
-    with st.container(height=ROWS_HEIGHT, border=True):
-        render_rows(shown, key, selected)
+    render_rows(shown, key, selected)
     if hidden := [f"{counts[c]} {c}" for c in STATUS_FILTERS if c not in chosen and counts[c]]:
         st.caption(f"Ausgeblendet: {', '.join(hidden)}.")
     _gap_checklist(report.findings, source, key)

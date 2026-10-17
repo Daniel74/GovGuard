@@ -1,9 +1,9 @@
 """Guard of the interaction inventory: every control of the demo UI has its test (ADR 0024, #44).
 
 The inventory lists each widget, page link and download of src/govguard_ui with the test that
-uses it. A control is any call with a key, so a new widget type needs no list here. A new control
-without an entry, an entry whose control is gone and an entry whose test does not exist make this
-test red.
+uses it. A control is any call with a key or of an own component (CCv2, #45), so a new widget type
+needs no list here. A new control without an entry, an entry whose control is gone and an entry
+whose test does not exist make this test red.
 """
 
 import ast
@@ -31,17 +31,32 @@ def key_pattern(call: ast.Call) -> str:
     return "-"
 
 
-def is_control(node: ast.AST) -> bool:
-    if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
-        return False
+def components_in(tree: ast.AST) -> set[str]:
+    """Names bound to an own component: NAME = st.components.v2.component(...)."""
+    return {target.id for node in ast.walk(tree) if isinstance(node, ast.Assign)
+            and isinstance(node.value, ast.Call) and isinstance(node.value.func, ast.Attribute)
+            and node.value.func.attr == "component"
+            for target in node.targets if isinstance(target, ast.Name)}
+
+
+def control_name(node: ast.AST, components: set[str]) -> str | None:
+    """st.<widget>(..., key=...), a page change or a call of an own component."""
+    if not isinstance(node, ast.Call):
+        return None
+    if isinstance(node.func, ast.Name):
+        return node.func.id if node.func.id in components else None
+    if not isinstance(node.func, ast.Attribute):
+        return None
     name = node.func.attr
     has_key = any(keyword.arg == "key" for keyword in node.keywords)
-    return name not in NO_CONTROL and (has_key or name in WITHOUT_KEY)
+    return name if name not in NO_CONTROL and (has_key or name in WITHOUT_KEY) else None
 
 
 def controls_in(source: str) -> set[str]:
-    return {f"{node.func.attr}:{key_pattern(node)}"
-            for node in ast.walk(ast.parse(source)) if is_control(node)}
+    tree = ast.parse(source)
+    components = components_in(tree)
+    return {f"{name}:{key_pattern(node)}" for node in ast.walk(tree)
+            if (name := control_name(node, components))}
 
 
 def controls_in_code() -> set[str]:
@@ -71,3 +86,10 @@ def test_the_guard_sees_any_widget_with_a_key_and_every_page_change_but_no_conta
               'tile.container(border=True, key=f"{key}_tile")\nst.markdown("Text")\n')
 
     assert controls_in(source) == {"checkbox:new", "page_link:-", "switch_page:-"}
+
+
+def test_the_guard_sees_a_call_of_an_own_component_but_no_other_function_with_a_key() -> None:
+    source = ('TABLE = st.components.v2.component("t", html="<table>")\n'
+              'TABLE(data=rows, key=f"{key}_table")\nrender_report(report, key="created")\n')
+
+    assert controls_in(source) == {"TABLE:{}_table"}

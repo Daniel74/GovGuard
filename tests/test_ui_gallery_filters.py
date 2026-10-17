@@ -1,4 +1,4 @@
-"""Status and source filter of the spec audit on "Audits ansehen", via AppTest (#44, #43).
+"""Status and source filter of the spec audit on "Audits ansehen", via AppTest (#44, #43, #45).
 
 Numbers of the spec report as in the design artefact of #11: 16 FAIL, 14 WARN with evidence,
 7 PASS, 8 N/A, 106 gaps; DSGVO 35 findings, SDM 116.
@@ -6,11 +6,11 @@ Numbers of the spec report as in the design artefact of #11: 16 FAIL, 14 WARN wi
 
 from streamlit.testing.v1 import AppTest
 from test_ui_pages import shown_text
-from ui_helpers import spec_key, spec_page
+from ui_helpers import finding_tables, spec_key, spec_page, table_rows
 
 
 def listed(app: AppTest) -> int:
-    return sum(1 for button in app.button if "_row_" in button.key)
+    return len(table_rows(app))
 
 
 def test_by_default_fail_warn_and_pass_are_listed_and_na_is_hidden() -> None:
@@ -19,6 +19,12 @@ def test_by_default_fail_warn_and_pass_are_listed_and_na_is_hidden() -> None:
     assert listed(app) == 16 + 14 + 7
     assert "37 Befunde angezeigt" in shown_text(app)
     assert "Ausgeblendet: 8 N/A." in shown_text(app)
+
+
+def test_the_spec_findings_stand_in_one_table_the_first_row_selected() -> None:
+    [table] = finding_tables(spec_page())
+
+    assert table["selected"] == table["rows"][0]["id"] == "SPEC-SDM-M50.D01"
 
 
 def test_switching_a_status_on_or_off_changes_the_list_and_the_hidden_note() -> None:

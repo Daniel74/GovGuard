@@ -1,7 +1,8 @@
 """LLM text stays text on the whole page "Audits ansehen": a poisoned report (#43).
 
 Titles, anchors and reasons come from the LLM. Markdown renders links and images, HTML renders
-tags; the test looks at every text of the page, so a forgotten spot fails too.
+tags; the test looks at every text of the page, so a forgotten spot fails too. The finding
+table is an own component: tests/visual/test_browser_findings.py checks its cells (#45).
 """
 
 import pytest

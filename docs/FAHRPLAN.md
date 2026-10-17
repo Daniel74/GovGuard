@@ -17,7 +17,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12c–12e, 12g, 12f, 12a, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12c–12e, 12g, 12f, 12h, 12a, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 16.10.:** Kein AWS-Zugriff. Die Demo läuft ohne AWS (Schritt 10i); jeder Schritt läuft bis zum ersten ☁-Kästchen, der Rest folgt gesammelt im AWS-Nachholblock.
 
@@ -72,6 +72,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 12e     | A    | #42 Kopf und Kacheln              | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
 | 12g     | A    | #44 UI-Interaktionen testen       | 🤖 Sonnet                        | 🤖 Opus                     |
 | 12f     | A    | #43 Befundtabelle, Quelle, Lücken | 🤖 Opus                          | 👤 Vergleichsbild + 🤖 Opus |
+| 12h     | A    | #45 Befundtabelle mit Spalten     | 🤖 Opus                          | 👤 Vergleichsbild + 🤖 Opus |
 | 12a     | A    | #39 Zitatprüfung ohne Markdown    | 🤖 Sonnet                        | 🤖 Opus                     |
 | 11b     | A    | #9 Stack (CDK, IAM, KMS)          | 🤖 Opus                          | 🤖 Opus · 🛠 Junie          |
 | 11a     | A    | #34 Audit-Jobs in S3              | 🤖 Opus                          | 🤖 Opus                     |
@@ -633,12 +634,29 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #43 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
 - [x] **Ansehen** 👤 Vergleichsbilder für Audits ansehen prüfen, dann Referenzbilder nur dieser Seite neu schreiben
 - [x] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review` (Button-Labels zeigen LLM-Text als Markdown)
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #43`
-- [ ] **Live** 👤 Streamlit Community Cloud neu laden, ein Preset ansehen
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #43`
+- [x] **Live** 👤 Streamlit Community Cloud neu laden, ein Preset ansehen
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Ein Klick auf eine Tabellenzeile den Befund wählt, lange Texte umbrechen und `pytest -m visual` grün ist.
 **Fürs Fachgespräch:** LLM-Text escaped ins Label (Schutz vor Injection), native Widgets vor eigener Komponente (ADR 0024).
+
+---
+
+### Schritt 12h – #45 Demo-UI: Befundtabelle mit Spalten und Pfeiltasten wie im Design
+
+**Ziel:** Spec- und Architektur-Audit zeigen die Befunde als Tabelle wie im Design; Klick, ↑/↓ und Enter wählen einen Befund; der Quellenfilter mit „Alle“ sieht aus wie im Design.
+**Voraussetzung:** Schritt 12f. Grundlage ist Variante A im Branch `prototype/43-row-click`.
+
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #45 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
+- [x] **Ansehen** 👤 Vergleichsbilder für Audits ansehen prüfen, ↑/↓ und Enter in Chrome ausprobieren, dann Referenzbilder nur dieser Seite neu schreiben
+- [x] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review` (eigenes HTML und JS zeigen LLM-Text)
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #45`
+- [x] **Live** 👤 Streamlit Community Cloud neu laden, ein Spec- und ein Architektur-Preset ansehen
+- [x] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Beide Audit-Arten aussehen wie die Soll-Bilder, ↑/↓ + Enter einen Befund wählt und `pytest -m visual` grün ist.
+**Fürs Fachgespräch:** Roving Tabindex (nur eine Zeile ist per Tab erreichbar, die Pfeile wandern darin, WAI-ARIA) und `textContent` statt `innerHTML` für LLM-Text.
 
 ---
 

@@ -9,7 +9,6 @@ from govguard_ui.review import (
     document_window,
     expected_checks,
     source_counts,
-    source_groups,
     source_of,
     visible_findings,
 )
@@ -86,22 +85,6 @@ def test_each_source_counts_all_its_findings_with_gaps_and_na() -> None:
     findings = ENTRIES["spec-meldeportal-gesundheit"].report.findings
 
     assert source_counts(findings) == {"Alle": 151, "DSGVO": 35, "SDM": 116}
-
-
-def test_arch_findings_group_by_source_in_the_order_of_the_design() -> None:
-    """Numbers as in the design artefact of #11: BSI ✕10 ✓8 –16, CIS ✕5 ✓3 –12, ..."""
-    groups = source_groups(ENTRIES["arch-antragseingang-fehlerhaft"].report.findings)
-
-    assert [(g.source, g.counts["FAIL"], g.counts["PASS"], g.counts["N/A"]) for g in groups] == [
-        ("BSI", 10, 8, 16), ("CIS", 5, 3, 12), ("FSBP", 12, 14, 80), ("C5", 2, 3, 1)]
-
-
-def test_a_group_lists_fail_first_and_keeps_na_apart() -> None:
-    bsi, *_ = source_groups(ENTRIES["arch-antragseingang-fehlerhaft"].report.findings)
-
-    assert [category(f) for f in bsi.listed] == ["FAIL"] * 10 + ["PASS"] * 8
-    assert {category(f) for f in bsi.not_applicable} == {"N/A"}
-    assert {source_of(f) for f in bsi.listed + bsi.not_applicable} == {"BSI"}
 
 
 TEN_LINES = "\n".join(f"Zeile {n}" for n in range(1, 11)) + "\n"

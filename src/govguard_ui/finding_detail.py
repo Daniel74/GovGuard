@@ -5,9 +5,17 @@ import html
 import streamlit as st
 
 from govguard.models import Finding
-from govguard_ui.finding_list import lines_text, plain
+from govguard_ui.finding_list import lines_text
 from govguard_ui.review import category, document_window
 from govguard_ui.style import badge, paragraph, tag
+
+MARKDOWN_SIGNS = set("\\`*_{}[]()#+-.!|<>~$:")  # incl. Streamlit's :colour[...] and $formula$
+
+
+def plain(text: str) -> str:
+    """Streamlit renders Markdown with links and images: escape every sign of it."""
+    return "".join(f"\\{sign}" if sign in MARKDOWN_SIGNS else sign
+                   for sign in " ".join(text.split()))
 
 
 def render_detail(finding: Finding) -> None:

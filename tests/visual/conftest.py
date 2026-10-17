@@ -10,6 +10,7 @@ import sys
 import time
 import urllib.request
 from collections.abc import Iterator
+from contextlib import contextmanager
 from pathlib import Path
 
 import pytest
@@ -17,7 +18,7 @@ import pytest
 ROOT = Path(__file__).parents[2]
 WIDTH, HEIGHT = 1440, 900  # width of the design artboards (#11)
 START_TIMEOUT = 30
-SERVER_LOG = ROOT / "tests" / "visual" / "output" / "streamlit.log"  # cause of a failed start
+LOGS = ROOT / "tests" / "visual" / "output"  # <script>.log: cause of a failed start
 
 
 @pytest.fixture
@@ -31,7 +32,7 @@ def free_port() -> int:
         return sock.getsockname()[1]
 
 
-def wait_until_healthy(url: str) -> None:
+def wait_until_healthy(url: str, log: Path) -> None:
     deadline = time.monotonic() + START_TIMEOUT
     while time.monotonic() < deadline:
         try:
@@ -39,24 +40,25 @@ def wait_until_healthy(url: str) -> None:
                 return
         except OSError:
             time.sleep(0.3)
-    raise TimeoutError(f"Streamlit did not answer within {START_TIMEOUT} s, see {SERVER_LOG}")
+    raise TimeoutError(f"Streamlit did not answer within {START_TIMEOUT} s, see {log}")
 
 
-@pytest.fixture(scope="session")
-def app_url() -> Iterator[str]:
-    """streamlit_app.py on a free local port, demo backend without secrets (ADR 0023)."""
+@contextmanager
+def serve(script: str) -> Iterator[str]:
+    """A Streamlit script on a free local port, demo backend without secrets (ADR 0023)."""
     port = free_port()
     env = {**os.environ, "AUDIT_BACKEND": "local"}
-    SERVER_LOG.parent.mkdir(exist_ok=True)
-    with SERVER_LOG.open("w") as log:
+    log_path = LOGS / f"{Path(script).stem}.log"
+    LOGS.mkdir(exist_ok=True)
+    with log_path.open("w") as log:
         server = subprocess.Popen(
-            [sys.executable, "-m", "streamlit", "run", "streamlit_app.py",
+            [sys.executable, "-m", "streamlit", "run", script,
              "--server.headless=true", f"--server.port={port}",
              "--browser.gatherUsageStats=false"],
             cwd=ROOT, env=env, stdout=log, stderr=subprocess.STDOUT)
         url = f"http://127.0.0.1:{port}"
         try:
-            wait_until_healthy(url)
+            wait_until_healthy(url, log_path)
             yield url
         finally:
             server.terminate()
@@ -65,6 +67,19 @@ def app_url() -> Iterator[str]:
             except subprocess.TimeoutExpired:  # Streamlit waits ~10 s for open sessions (#44)
                 server.kill()
                 server.wait(timeout=10)
+
+
+@pytest.fixture(scope="session")
+def app_url() -> Iterator[str]:
+    with serve("streamlit_app.py") as url:
+        yield url
+
+
+@pytest.fixture(scope="session")
+def poisoned_url() -> Iterator[str]:
+    """A report whose LLM text carries a link, an image and a tag (#45)."""
+    with serve("tests/visual/poisoned_app.py") as url:
+        yield url
 
 
 @pytest.fixture(scope="session")

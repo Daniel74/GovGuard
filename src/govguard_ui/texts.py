@@ -15,8 +15,6 @@ HELP = {  # help on the report head; status help lives in style.LOOKS
 
 TYPE_LABELS = {"spec": "Spezifikation (DSGVO, SDM)",
                "architecture": "Architektur (BSI IT-Grundschutz, BSI C5, CIS, AWS FSBP)"}
-SOURCE_NAMES = {"BSI": "BSI IT-Grundschutz++", "CIS": "CIS AWS Foundations v7.0.0",
-                "FSBP": "AWS Foundational Security Best Practices", "C5": "BSI C5"}
 TYPE_CHOICES = {  # radio options on "Audit erstellen": norms and input formats (#41)
     "spec": "**Spezifikation** · DSGVO, SDM · Markdown oder OpenAPI",
     "architecture": "**Architektur** · BSI IT-Grundschutz, BSI C5, CIS, AWS FSBP · "

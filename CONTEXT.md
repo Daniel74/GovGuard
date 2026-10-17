@@ -10,7 +10,7 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 - **Quelle**: Regelwerk, aus dem Prüfregeln abgeleitet werden (DSGVO, SDM, BSI Grundschutz++, BSI C5, CIS AWS, AWS FSBP). _Code_: `Source`. _Vermeiden_: Framework, Datensatz
 - **Anforderung**: Einzelne, zitierfähige Vorgabe innerhalb einer Quelle, z. B. BSI DET.3.1 oder DSGVO Art. 9. _Code_: `Requirement`. _Vermeiden_: Control, Kontrolle, Baustein
 - **Prüfregel**: Atomare, prüfbare Regel aus genau einer Anforderung, mit Kriterien für „konform“ und „Verstoß“. _Code_: `Rule`. _Vermeiden_: Chunk, Unified Audit Rule, Regel
-- **Primäranker**: Die eine Anforderung, aus der eine Prüfregel abgeleitet ist. _Code_: `primary_anchor`. _Vermeiden_: Anchor, Referenz
+- **Primäranker**: Die eine Anforderung, aus der eine Prüfregel abgeleitet ist. _Code_: `primary_anchor`. In der Befundtabelle Spalte „Normanker“ wie im Design (#45). _Vermeiden_: Anchor, Referenz
 - **Querverweis**: KI-vorgeschlagener, nicht verifizierter Bezug einer Prüfregel auf eine Anforderung einer anderen Quelle; beeinflusst keinen Status. _Code_: `cross_reference`. _Vermeiden_: Mapping
 - **Bounded Catalog**: Zur Build-Zeit festgelegte Menge aller prüfbaren und relevanten Prüfregeln je Audit-Art, die in jedem Audit vollständig bewertet wird. _Code_: `catalog`. _Vermeiden_: Top-K, Retrieval-Set
 - **Auswahlprotokoll**: Je Anforderung einer Quelle das Ergebnis der Auswahl (aufgenommen oder verworfen) mit Begründung, vom LLM oder vom Code. _Code_: `verdicts`. _Vermeiden_: Verdict, Log

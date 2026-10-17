@@ -61,16 +61,22 @@ LOOKS: dict[Category, Look] = {
 STATUS_FILTERS: tuple[Category, ...] = ("FAIL", "WARN", "PASS", "N/A")  # gaps: own list
 
 
+def badge_css(prefix: str) -> str:
+    """Badge colours per category: on the page (gg-) and in the shadow DOM of the table (b-)."""
+    return "".join(f".{prefix}{look.css}{{color:{look.text};background:{look.background};"
+                   f"border-color:{look.border};border-style:{look.border_style}}}"
+                   for look in LOOKS.values())
+
+
 def _status_css() -> str:
     """Badge, tile, overall status and expected strip share the colours of LOOKS (#42)."""
-    rules = []
+    rules = [badge_css("gg-")]
     for look in LOOKS.values():
         tile, overall, strip = (f'[class*="_{box}_{look.css}"]'
                                 for box in ("tile", "overall", "expected"))
         colours = (f"background:{look.background};border-color:{look.border};"
                    f"border-style:{look.border_style}")
-        rules += [f".gg-{look.css}{{color:{look.text};{colours}}}",
-                  f"{tile},{overall},{strip}{{{colours}}}",
+        rules += [f"{tile},{overall},{strip}{{{colours}}}",
                   f"{tile} :is(p,label),{overall} p,{strip} strong{{color:{look.text}}}"]
     for index, name in enumerate(STATUS_FILTERS, 1):  # an active status pill (#43)
         look = LOOKS[name]
@@ -117,10 +123,12 @@ CSS = """<style>
 .gg-line .n{flex:0 0 40px;text-align:right;color:#6B7482}
 .gg-mark{background:#E3EEF9;border-left-color:#0B4F8A}
 .gg-mark .n{color:#0B4F8A;font-weight:700}
-[class*="_row_"] button{justify-content:flex-start;padding:6px 10px;border-radius:4px}
-[class*="_row_"] button > div{justify-content:flex-start;width:100%}
-[class*="_row_"] button p{text-align:left}
-[class*="_row_"] button:hover{background:#F2F5F9}
+[class*="_source"] [role="radiogroup"]{gap:8px}
+[class*="_source"] [role="radiogroup"] button{margin:0;border:1px solid #C9CFD8;
+  border-radius:6px;background:#FFFFFF}
+[class*="_source"] [role="radiogroup"] button[aria-checked="true"]{background:#0B4F8A;
+  border-color:#0B4F8A}
+[class*="_source"] button[aria-checked="true"] p{color:#FFFFFF;font-weight:600}
 [class*="_gaps"] details{border-style:dashed}
 [class*="_document_head"]{background:#F5F6F8;margin:-15px -15px 0;width:calc(100% + 30px);
   max-width:none;padding:.5rem 15px;flex-wrap:nowrap;border-radius:7px 7px 0 0}

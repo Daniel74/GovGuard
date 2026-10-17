@@ -17,7 +17,7 @@ _Umsetzung: #44; gilt ab #43 für jedes UI-Ticket._
 
 ## Konsequenzen
 
-- Eigenes HTML mit Klick, etwa die Tabelle aus #43, lässt sich nur in Playwright prüfen und kostet mehr Testzeit. Bei gleicher UX haben native Widgets Vorrang.
+- Eigenes HTML mit Klick, etwa die Tabelle aus #43, lässt sich nur in Playwright prüfen und kostet mehr Testzeit. Bei gleicher UX haben native Widgets Vorrang. Schaffen sie die UX nicht, etwa Spalten mit Pfeiltasten (#45), ist eine eigene Komponente (CCv2) erlaubt.
 - Abgedeckt heißt hier: Jede Interaktion steht im Inventar und hat ihren Test. Ein Coverage-Werkzeug ist dafür nicht nötig.
 
 ## Fachgespräch-Satz

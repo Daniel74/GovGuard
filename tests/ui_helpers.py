@@ -1,9 +1,12 @@
 """Shared AppTest helpers of the demo UI tests: create page and gallery (#44)."""
 
+import json
+
 import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 from streamlit.testing.v1 import AppTest
+from streamlit.testing.v1.element_tree import Block
 from test_run_audit_progress import warn_for_every_rule
 from test_ui_pages import create_script, gallery_script, page
 
@@ -61,6 +64,16 @@ def arch_page() -> AppTest:
 
 def spec_page() -> AppTest:
     return page(gallery_script)
+
+
+def finding_tables(block: AppTest | Block) -> list[dict]:
+    """Data of every finding table inside the block; AppTest sees it, but cannot click (#45)."""
+    return [json.loads(node.proto.json) for node in block.get("bidi_component")]
+
+
+def table_rows(block: AppTest | Block) -> list[str]:
+    """Rule ids of all rows in the finding tables of the block, nested ones included."""
+    return [row["id"] for table in finding_tables(block) for row in table["rows"]]
 
 
 def gallery_entry(preset_id: str) -> GalleryEntry:

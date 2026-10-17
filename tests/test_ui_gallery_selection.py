@@ -1,7 +1,7 @@
 """Selected finding and "Ganzes Dokument" on "Audits ansehen", via AppTest (#44).
 
-The finding rows are buttons (#43): AppTest clicks them. Other tests set the selection in the
-session state, as the expected strip does.
+The finding table is an own component (#45): AppTest cannot click it, so these tests set the
+selection in the session state, as a click does; tests/visual clicks the rows.
 """
 
 from streamlit.testing.v1 import AppTest
@@ -29,16 +29,6 @@ def test_the_detail_shows_the_selected_finding_and_its_evidence_lines() -> None:
 
     assert not app.exception
     assert "#### Block Public Access für S3 Buckets" in [m.value for m in app.markdown]
-    assert "CIS AWS v7.0.0 3.1.4 · ARCH-CIS-3.1.4 · Beleg: Zeilen 120–125" in shown_text(app)
-    assert document(app).count("gg-mark") == 6
-
-
-def test_a_click_on_a_row_shows_that_finding_and_its_evidence() -> None:
-    app = arch_page()
-
-    app.button(key=arch_key(f"row_{S3_PUBLIC_ACCESS}")).click().run()
-
-    assert not app.exception
     assert "CIS AWS v7.0.0 3.1.4 · ARCH-CIS-3.1.4 · Beleg: Zeilen 120–125" in shown_text(app)
     assert document(app).count("gg-mark") == 6
 

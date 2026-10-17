@@ -22,8 +22,8 @@ INVENTORY: dict[str, str] = {
                        "test_switching_a_status_on_or_off_changes_the_list_and_the_hidden_note",
     "segmented_control:{}_source": "tests/test_ui_gallery_filters.py::"
                                    "test_the_source_filter_keeps_only_findings_of_that_source",
-    "button:{}_row_{}": "tests/test_ui_gallery_selection.py::"
-                        "test_a_click_on_a_row_shows_that_finding_and_its_evidence",
+    "finding_table:{}": "tests/visual/test_browser_findings.py::"
+                        "test_a_click_on_a_row_selects_the_finding_and_marks_only_this_row",
     "button:{}_required_{}": "tests/test_ui_report_header.py::"
                              "test_a_click_on_a_required_finding_shows_it_in_the_detail",
     "expander:{}_gaps": "tests/visual/test_browser_findings.py::"
