@@ -84,3 +84,13 @@ def document_window(text: str, finding: Finding, full: bool) -> DocumentWindow:
         for number, line in enumerate(text.splitlines(), 1) if number >= first
     ]
     return DocumentWindow(lines=lines, hidden_above=first - 1)
+
+
+TableClick = tuple[str, int]  # table key, row; a filter change draws a new table
+
+
+def new_click(rows: list[int], table_key: str, last: TableClick | None) -> TableClick | None:
+    """The clicked row if the click is new; every rerun reports the old click again."""
+    if rows and last != (table_key, rows[0]):
+        return table_key, rows[0]
+    return None

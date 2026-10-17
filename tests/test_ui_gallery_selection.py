@@ -1,14 +1,14 @@
 """Selected finding and "Ganzes Dokument" on "Audits ansehen", via AppTest (#44).
 
-The click on a table row is not testable here: AppTest cannot select a dataframe row. The row
-click gets its own test with the table of #43; here the selection comes from the session state.
+AppTest cannot select a dataframe row: the logic behind the click is tested in test_review.py,
+the click itself with the table of #43. Here the selection comes from the session state.
 """
 
 from streamlit.testing.v1 import AppTest
-from test_ui_gallery_filters import ARCH, arch_page
 from test_ui_pages import shown_text
+from ui_helpers import arch_key, arch_page
 
-SELECTED = f"gallery_{ARCH}_selected"
+SELECTED = arch_key("selected")
 S3_PUBLIC_ACCESS = "ARCH-CIS-3.1.4"  # template.json lines 120–125 of 485
 FULL_ACCESS_POLICY = "ARCH-CIS-2.14"  # template.json lines 265–268
 
@@ -57,7 +57,7 @@ def test_whole_document_shows_every_line_and_marks_the_evidence_still() -> None:
     app = arch_page()
     select(app, S3_PUBLIC_ACCESS)
 
-    app.toggle(key=f"gallery_{ARCH}_full").set_value(True).run()
+    app.toggle(key=arch_key("full")).set_value(True).run()
 
     assert document(app).count('class="gg-line') == 485
     assert document(app).count("gg-mark") == 6
@@ -67,9 +67,8 @@ def test_whole_document_shows_every_line_and_marks_the_evidence_still() -> None:
 def test_switching_whole_document_off_returns_to_the_window() -> None:
     app = arch_page()
     select(app, S3_PUBLIC_ACCESS)
-    app.toggle(key=f"gallery_{ARCH}_full").set_value(True).run()
+    app.toggle(key=arch_key("full")).set_value(True).run()
 
-    app.toggle(key=f"gallery_{ARCH}_full").set_value(False).run()
+    app.toggle(key=arch_key("full")).set_value(False).run()
 
     assert "▲ Zeilen 1–115 ausgeblendet" in shown_text(app)
-

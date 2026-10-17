@@ -8,6 +8,7 @@ from govguard_ui.review import (
     category_counts,
     document_window,
     expected_checks,
+    new_click,
     source_of,
     visible_findings,
 )
@@ -126,3 +127,10 @@ def test_source_alle_keeps_every_source() -> None:
     findings = ENTRIES["spec-meldeportal-gesundheit"].report.findings
 
     assert len(visible_findings(findings, {"PASS", "N/A"}, source=None)) == 7 + 8
+
+
+def test_only_a_new_click_on_a_table_row_selects_a_finding() -> None:
+    assert new_click([], "table_FAIL", None) is None  # nothing clicked
+    assert new_click([2], "table_FAIL", None) == ("table_FAIL", 2)
+    assert new_click([2], "table_FAIL", ("table_FAIL", 2)) is None  # a rerun repeats the old click
+    assert new_click([2], "table_PASS", ("table_FAIL", 2)) == ("table_PASS", 2)  # filter changed

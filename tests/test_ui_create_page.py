@@ -6,6 +6,7 @@ from streamlit.proto.SelectWidgetFilterMode_pb2 import FILTER_MODE_NONE
 from streamlit.testing.v1 import AppTest
 from test_run_audit_progress import warn_for_every_rule
 from test_ui_pages import DATA_WARNING, create_script, gallery_script, page, shown_text
+from ui_helpers import create_page, open_text_tab
 
 from govguard.audit_engine import MAX_INPUT_CHARS, with_thousand_dots
 
@@ -24,10 +25,7 @@ def test_create_page_without_the_password_starts_no_audit() -> None:
 
 def test_create_page_shows_the_input_limit_and_the_model(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("GROQ_MODEL", "openai/gpt-oss-20b")
-    app = page(create_script, APP_PASSWORD="geheim", AUDIT_BACKEND="local")
-
-    app.session_state["input_mode"] = "Text einfügen"  # the second tab
-    app.run()
+    app = open_text_tab(create_page())
 
     assert f"0 / {with_thousand_dots(MAX_INPUT_CHARS)} Zeichen" in shown_text(app)
     assert "openai/gpt-oss-20b" in app.radio(key="model").options[0]

@@ -22,4 +22,4 @@ _Umsetzung: #44; gilt ab #43 für jedes UI-Ticket._
 
 ## Fachgespräch-Satz
 
-„Testpyramide: Jede Interaktion teste ich auf der billigsten Ebene, die sie sehen kann. Logik ohne UI, Widgets ohne Browser mit AppTest, nur CSS und eigenes HTML im echten Browser, und ein Wächter-Test sorgt dafür, dass kein neues Bedienelement ungetestet bleibt.“
+„Testpyramide: Jede Interaktion teste ich auf der billigsten Ebene, die sie sehen kann, also Logik ohne UI, Widgets mit AppTest ohne Browser und nur CSS und eigenes HTML im echten Browser, und ein Wächter-Test sorgt dafür, dass kein neues Bedienelement ungetestet bleibt.“

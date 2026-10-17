@@ -616,8 +616,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Voraussetzung:** Schritt 12e.
 
 - [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #44 umsetzen` → Plan → Go
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #44`
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #44`
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Der Wächter-Test grün ist, `uv run pytest` ohne Browser läuft und `pytest -m visual` zweimal grün ist.
 **Fürs Fachgespräch:** Testpyramide (ADR 0024): Logik ohne UI, Widgets mit AppTest, nur CSS und eigenes HTML im Browser.

@@ -1,8 +1,9 @@
 """Guard of the interaction inventory: every control of the demo UI has its test (ADR 0024, #44).
 
 The inventory lists each widget, page link and download of src/govguard_ui with the test that
-uses it. A new control without an entry, an entry whose control is gone and an entry whose test
-does not exist make this test red.
+uses it. A control is any call with a key, so a new widget type needs no list here. A new control
+without an entry, an entry whose control is gone and an entry whose test does not exist make this
+test red.
 """
 
 import ast
@@ -12,8 +13,8 @@ from ui_inventory import INVENTORY
 
 TESTS = Path(__file__).parent
 UI = TESTS.parent / "src" / "govguard_ui"
-CONTROLS = {"button", "download_button", "page_link", "switch_page", "pills", "segmented_control",
-            "toggle", "selectbox", "radio", "text_input", "text_area", "tabs", "dataframe"}
+NO_CONTROL = {"container"}  # takes a key for its CSS class, nobody clicks it
+WITHOUT_KEY = {"page_link", "switch_page"}  # page changes need no key
 
 
 def key_pattern(call: ast.Call) -> str:
@@ -30,14 +31,21 @@ def key_pattern(call: ast.Call) -> str:
     return "-"
 
 
+def is_control(node: ast.AST) -> bool:
+    if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
+        return False
+    name = node.func.attr
+    has_key = any(keyword.arg == "key" for keyword in node.keywords)
+    return name not in NO_CONTROL and (has_key or name in WITHOUT_KEY)
+
+
+def controls_in(source: str) -> set[str]:
+    return {f"{node.func.attr}:{key_pattern(node)}"
+            for node in ast.walk(ast.parse(source)) if is_control(node)}
+
+
 def controls_in_code() -> set[str]:
-    found = set()
-    for path in sorted(UI.glob("*.py")):
-        for node in ast.walk(ast.parse(path.read_text())):
-            if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
-                    and node.func.attr in CONTROLS):
-                found.add(f"{node.func.attr}:{key_pattern(node)}")
-    return found
+    return set().union(*(controls_in(path.read_text()) for path in sorted(UI.rglob("*.py"))))
 
 
 def test_every_control_of_the_ui_is_in_the_inventory() -> None:
@@ -56,3 +64,10 @@ def test_every_inventory_entry_names_an_existing_test() -> None:
     missing = [f"{control} -> {test}" for control, test in INVENTORY.items()
                if test.split("::")[1] not in tests_in(test.split("::")[0])]
     assert missing == []
+
+
+def test_the_guard_sees_any_widget_with_a_key_and_every_page_change_but_no_container() -> None:
+    source = ('st.checkbox("Neu", key="new")\nst.page_link("p.py")\nst.switch_page("p.py")\n'
+              'tile.container(border=True, key=f"{key}_tile")\nst.markdown("Text")\n')
+
+    assert controls_in(source) == {"checkbox:new", "page_link:-", "switch_page:-"}

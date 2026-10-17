@@ -5,7 +5,13 @@ from collections import defaultdict
 import streamlit as st
 
 from govguard.models import AuditReport, Finding
-from govguard_ui.review import category, category_counts, source_of, visible_findings
+from govguard_ui.review import (
+    category,
+    category_counts,
+    new_click,
+    source_of,
+    visible_findings,
+)
 from govguard_ui.style import LOOKS
 
 FILTERS = ("FAIL", "WARN", "PASS", "N/A")  # gaps are no filter: they stand below the list
@@ -44,10 +50,9 @@ def _pick_from_table(shown: list[Finding], key: str, table_key: str) -> None:
              "Zeilen": lines_text(f)} for f in shown]
     event = st.dataframe(rows, hide_index=True, on_select="rerun", selection_mode="single-row",
                          key=table_key, height=420, column_config=COLUMNS)
-    picked = event.selection.rows
-    if picked and st.session_state.get(f"{key}_picked") != (table_key, picked[0]):
-        st.session_state[f"{key}_picked"] = (table_key, picked[0])  # only a new click selects
-        st.session_state[f"{key}_selected"] = shown[picked[0]].rule_id
+    if click := new_click(event.selection.rows, table_key, st.session_state.get(f"{key}_picked")):
+        st.session_state[f"{key}_picked"] = click
+        st.session_state[f"{key}_selected"] = shown[click[1]].rule_id
 
 
 def _status_text(finding: Finding) -> str:
