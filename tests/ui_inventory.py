@@ -22,11 +22,12 @@ INVENTORY: dict[str, str] = {
                        "test_switching_a_status_on_or_off_changes_the_list_and_the_hidden_note",
     "segmented_control:{}_source": "tests/test_ui_gallery_filters.py::"
                                    "test_the_source_filter_keeps_only_findings_of_that_source",
-    # AppTest cannot click a row: the logic behind the click is tested without UI, the click
-    # itself gets its browser test with the table of #43
-    "dataframe:{}": "tests/test_review.py::test_only_a_new_click_on_a_table_row_selects_a_finding",
+    "button:{}_row_{}": "tests/test_ui_gallery_selection.py::"
+                        "test_a_click_on_a_row_shows_that_finding_and_its_evidence",
     "button:{}_required_{}": "tests/test_ui_report_header.py::"
                              "test_a_click_on_a_required_finding_shows_it_in_the_detail",
+    "expander:{}_gaps": "tests/visual/test_browser_findings.py::"
+                        "test_the_gap_list_stays_open_when_the_source_changes_and_scrolls",
     "toggle:{}_full": "tests/test_ui_gallery_selection.py::"
                       "test_whole_document_shows_every_line_and_marks_the_evidence_still",
     "download_button:{}_download": "tests/test_ui_report_header.py::"

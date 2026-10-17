@@ -8,7 +8,8 @@ from govguard_ui.review import (
     category_counts,
     document_window,
     expected_checks,
-    new_click,
+    source_counts,
+    source_groups,
     source_of,
     visible_findings,
 )
@@ -80,6 +81,29 @@ def test_source_filter_names_come_from_the_rule_id() -> None:
     assert {source_of(f) for f in findings} == {"BSI", "C5", "CIS", "FSBP"}
 
 
+def test_each_source_counts_all_its_findings_with_gaps_and_na() -> None:
+    """Numbers as in the design artefact of #11: Alle (151), DSGVO (35), SDM (116)."""
+    findings = ENTRIES["spec-meldeportal-gesundheit"].report.findings
+
+    assert source_counts(findings) == {"Alle": 151, "DSGVO": 35, "SDM": 116}
+
+
+def test_arch_findings_group_by_source_in_the_order_of_the_design() -> None:
+    """Numbers as in the design artefact of #11: BSI ✕10 ✓8 –16, CIS ✕5 ✓3 –12, ..."""
+    groups = source_groups(ENTRIES["arch-antragseingang-fehlerhaft"].report.findings)
+
+    assert [(g.source, g.counts["FAIL"], g.counts["PASS"], g.counts["N/A"]) for g in groups] == [
+        ("BSI", 10, 8, 16), ("CIS", 5, 3, 12), ("FSBP", 12, 14, 80), ("C5", 2, 3, 1)]
+
+
+def test_a_group_lists_fail_first_and_keeps_na_apart() -> None:
+    bsi, *_ = source_groups(ENTRIES["arch-antragseingang-fehlerhaft"].report.findings)
+
+    assert [category(f) for f in bsi.listed] == ["FAIL"] * 10 + ["PASS"] * 8
+    assert {category(f) for f in bsi.not_applicable} == {"N/A"}
+    assert {source_of(f) for f in bsi.listed + bsi.not_applicable} == {"BSI"}
+
+
 TEN_LINES = "\n".join(f"Zeile {n}" for n in range(1, 11)) + "\n"
 
 
@@ -128,9 +152,3 @@ def test_source_alle_keeps_every_source() -> None:
 
     assert len(visible_findings(findings, {"PASS", "N/A"}, source=None)) == 7 + 8
 
-
-def test_only_a_new_click_on_a_table_row_selects_a_finding() -> None:
-    assert new_click([], "table_FAIL", None) is None  # nothing clicked
-    assert new_click([2], "table_FAIL", None) == ("table_FAIL", 2)
-    assert new_click([2], "table_FAIL", ("table_FAIL", 2)) is None  # a rerun repeats the old click
-    assert new_click([2], "table_PASS", ("table_FAIL", 2)) == ("table_PASS", 2)  # filter changed

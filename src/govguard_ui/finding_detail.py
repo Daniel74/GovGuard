@@ -5,7 +5,7 @@ import html
 import streamlit as st
 
 from govguard.models import Finding
-from govguard_ui.findings_view import lines_text
+from govguard_ui.finding_list import lines_text
 from govguard_ui.review import category, document_window
 from govguard_ui.style import badge, paragraph, tag
 
@@ -38,16 +38,21 @@ def render_detail(finding: Finding) -> None:
 
 
 def render_document(source_name: str, source_text: str, finding: Finding, key: str) -> None:
-    st.markdown(f"**Geprüftes Dokument** · `{source_name}` · "
-                f"{len(source_text.splitlines())} Zeilen")
-    full = st.toggle("Ganzes Dokument", key=f"{key}_full")
-    window = document_window(source_text, finding, full)
-    if finding.line_start is None:
-        st.info("Kein Beleg: Zu dieser Prüfregel nennt der Befund keine Stelle im Dokument.")
-    if window.hidden_above:
-        st.caption(f"▲ Zeilen 1–{window.hidden_above} ausgeblendet (Belegzeilen stehen oben)")
-    lines = "".join(
-        f'<div class="gg-line{" gg-mark" if line.marked else ""}"><span class="n">{line.number}'
-        f"</span><span>{html.escape(line.text) or ' '}</span></div>" for line in window.lines)
-    with st.container(height=560, border=True):
-        st.html(f'<div class="gg-doc">{lines}</div>')
+    """One frame: title and "Ganzes Dokument" in its head row, the lines below (#43)."""
+    with st.container(border=True, key=f"{key}_document"):
+        with st.container(horizontal=True, horizontal_alignment="distribute",
+                          vertical_alignment="center", key=f"{key}_document_head"):
+            st.markdown(f"**Geprüftes Dokument** · `{source_name}` · "
+                        f"{len(source_text.splitlines())} Zeilen", width="content")
+            full = st.toggle("Ganzes Dokument", key=f"{key}_full", width="content")
+        window = document_window(source_text, finding, full)
+        if finding.line_start is None:
+            st.info("Kein Beleg: Zu dieser Prüfregel nennt der Befund keine Stelle im Dokument.")
+        if window.hidden_above:
+            st.caption(f"▲ Zeilen 1–{window.hidden_above} ausgeblendet (Belegzeilen stehen oben)")
+        lines = "".join(
+            f'<div class="gg-line{" gg-mark" if line.marked else ""}"><span class="n">'
+            f"{line.number}</span><span>{html.escape(line.text) or ' '}</span></div>"
+            for line in window.lines)
+        with st.container(height=560, border=False):
+            st.html(f'<div class="gg-doc">{lines}</div>')

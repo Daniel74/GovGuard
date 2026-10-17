@@ -18,7 +18,6 @@ def render_report(
         render_expected(report, expected, key)
     findings, detail = st.columns([11, 10])
     with findings:
-        st.markdown("### Befunde")
         selected = render_findings(report, key)
     with detail:
         render_detail(selected)

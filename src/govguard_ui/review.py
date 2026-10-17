@@ -63,6 +63,40 @@ def source_of(finding: Finding) -> str:
     return finding.rule_id.split("-")[1]
 
 
+ALL_SOURCES = "Alle"  # option of the source filter that keeps every source
+
+
+def source_counts(findings: list[Finding]) -> dict[str, int]:
+    """Every finding of a source counts, gaps and N/A included: "Alle" first, then by name."""
+    counted = Counter(source_of(finding) for finding in findings)
+    return {ALL_SOURCES: len(findings), **dict(sorted(counted.items()))}
+
+
+GROUP_ORDER = ("BSI", "CIS", "FSBP", "C5")  # architecture audit, as in the design artefact
+
+
+class SourceGroup(BaseModel):  # findings of one source in the architecture audit
+    source: str
+    listed: list[Finding]  # FAIL first, then by line
+    not_applicable: list[Finding]  # collapsed in the group
+    counts: dict[Category, int]
+
+
+def source_groups(findings: list[Finding]) -> list[SourceGroup]:
+    groups = []
+    for source in sorted({source_of(f) for f in findings}, key=_group_rank):
+        own = [f for f in findings if source_of(f) == source]
+        groups.append(SourceGroup(
+            source=source, listed=visible_findings(own, {"FAIL", "WARN", "PASS"}, None),
+            not_applicable=[f for f in own if f.status == "N/A"], counts=category_counts(own)))
+    return groups
+
+
+def _group_rank(source: str) -> tuple[int, str]:
+    """Known sources in design order, unknown ones after them by name."""
+    return (GROUP_ORDER.index(source) if source in GROUP_ORDER else len(GROUP_ORDER), source)
+
+
 class DocumentLine(BaseModel):
     number: int  # 1-based, counted like the engine counts (str.splitlines)
     text: str
@@ -85,12 +119,3 @@ def document_window(text: str, finding: Finding, full: bool) -> DocumentWindow:
     ]
     return DocumentWindow(lines=lines, hidden_above=first - 1)
 
-
-TableClick = tuple[str, int]  # table key, row; a filter change draws a new table
-
-
-def new_click(rows: list[int], table_key: str, last: TableClick | None) -> TableClick | None:
-    """The clicked row if the click is new; every rerun reports the old click again."""
-    if rows and last != (table_key, rows[0]):
-        return table_key, rows[0]
-    return None

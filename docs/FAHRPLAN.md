@@ -629,16 +629,16 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Befundtabelle mit Zeilenumbruch und Klick auf die Zeile, Quellenfilter mit „Alle“, Lückenliste mit Scrollbalken.
 **Voraussetzung:** Schritt 12g.
 
-- [ ] **Klick-Technik** 🆕 _Opus_ · 👤 `/prototype Klick auf Tabellenzeile: eigene Komponente gegen gestylte Streamlit-Widgets, mit einem Galerie-Report` → beide Varianten ausprobieren, Wahl als Kommentar in #43
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #43 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
-- [ ] **Ansehen** 👤 Vergleichsbilder für Audits ansehen prüfen, dann Referenzbilder nur dieser Seite neu schreiben
-- [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review` (eigene Tabellen-Komponente zeigt LLM-Text)
+- [x] **Klick-Technik** 🆕 _Opus_ · 👤 `/prototype Klick auf Tabellenzeile: eigene Komponente gegen gestylte Streamlit-Widgets, mit einem Galerie-Report` → beide Varianten ausprobieren, Wahl als Kommentar in #43
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #43 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
+- [x] **Ansehen** 👤 Vergleichsbilder für Audits ansehen prüfen, dann Referenzbilder nur dieser Seite neu schreiben
+- [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review` (Button-Labels zeigen LLM-Text als Markdown)
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #43`
 - [ ] **Live** 👤 Streamlit Community Cloud neu laden, ein Preset ansehen
 - [ ] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Ein Klick auf eine Tabellenzeile den Befund wählt, lange Texte umbrechen und `pytest -m visual` grün ist.
-**Fürs Fachgespräch:** LLM-Text nur als Text ins HTML (Schutz vor Injection), Komponente statt CSS-Hack.
+**Fürs Fachgespräch:** LLM-Text escaped ins Label (Schutz vor Injection), native Widgets vor eigener Komponente (ADR 0024).
 
 ---
 

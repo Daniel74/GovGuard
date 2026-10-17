@@ -5,6 +5,7 @@ import html
 import streamlit as st
 
 from govguard.models import AuditReport, Expected
+from govguard_ui.finding_list import select
 from govguard_ui.review import Category, category_counts, expected_checks
 from govguard_ui.style import LOOKS
 from govguard_ui.texts import HELP, TYPE_LABELS
@@ -86,8 +87,4 @@ def render_expected(report: AuditReport, expected: Expected, key: str) -> None:
                       icon=":material/check:" if check.ok else ":material/close:",
                       type="tertiary", disabled=check.rule_id is None,
                       key=f"{key}_required_{check.label}",
-                      on_click=_select, args=(key, check.rule_id))
-
-
-def _select(key: str, rule_id: str | None) -> None:
-    st.session_state[f"{key}_selected"] = rule_id
+                      on_click=select, args=(key, check.rule_id))

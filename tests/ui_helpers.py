@@ -7,10 +7,8 @@ from streamlit.testing.v1 import AppTest
 from test_run_audit_progress import warn_for_every_rule
 from test_ui_pages import create_script, gallery_script, page
 
-from govguard_ui.gallery import load_gallery
-from govguard_ui.paths import GALLERY, PRESETS
-
 ARCH = "arch-antragseingang-fehlerhaft"  # 29 FAIL, 28 PASS, 109 N/A, no WARN
+SPEC = "spec-meldeportal-gesundheit"  # first in the gallery; numbers in the design of #11
 
 
 def create_page() -> AppTest:
@@ -58,13 +56,15 @@ def arch_page() -> AppTest:
     return app
 
 
+def spec_page() -> AppTest:
+    return page(gallery_script)
+
+
+def spec_key(suffix: str) -> str:
+    return f"gallery_{SPEC}_{suffix}"
+
+
 def arch_key(suffix: str) -> str:
     """State key of a gallery widget of the ARCH preset, e.g. status -> gallery_<ARCH>_status."""
     return f"gallery_{ARCH}_{suffix}"
 
-
-def stored(status: str, source: str | None = None) -> int:
-    """Findings of the stored report counted straight from the JSON, not by the view logic."""
-    report = next(e.report for e in load_gallery(PRESETS, GALLERY) if e.preset_id == ARCH)
-    return sum(1 for f in report.findings if f.status == status
-               and source in (None, f.rule_id.split("-")[1]))
