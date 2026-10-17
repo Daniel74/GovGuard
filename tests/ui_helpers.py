@@ -7,6 +7,9 @@ from streamlit.testing.v1 import AppTest
 from test_run_audit_progress import warn_for_every_rule
 from test_ui_pages import create_script, gallery_script, page
 
+from govguard_ui.gallery import GalleryEntry, load_gallery
+from govguard_ui.paths import GALLERY, PRESETS
+
 ARCH = "arch-antragseingang-fehlerhaft"  # 29 FAIL, 28 PASS, 109 N/A, no WARN
 SPEC = "spec-meldeportal-gesundheit"  # first in the gallery; numbers in the design of #11
 
@@ -60,6 +63,10 @@ def spec_page() -> AppTest:
     return page(gallery_script)
 
 
+def gallery_entry(preset_id: str) -> GalleryEntry:
+    return next(e for e in load_gallery(PRESETS, GALLERY) if e.preset_id == preset_id)
+
+
 def spec_key(suffix: str) -> str:
     return f"gallery_{SPEC}_{suffix}"
 
@@ -68,3 +75,18 @@ def arch_key(suffix: str) -> str:
     """State key of a gallery widget of the ARCH preset, e.g. status -> gallery_<ARCH>_status."""
     return f"gallery_{ARCH}_{suffix}"
 
+
+
+def report_script(entry_json: str) -> None:
+    """Renders one gallery entry with a changed report, e.g. poisoned LLM text."""
+    from govguard_ui.gallery import GalleryEntry
+    from govguard_ui.report_view import render_report
+
+    entry = GalleryEntry.model_validate_json(entry_json)
+    render_report(entry.report, entry.preset.title, (entry.source_name, entry.source_text),
+                  None, key="report")
+
+
+def report_page(entry: GalleryEntry) -> AppTest:
+    return AppTest.from_function(report_script, args=(entry.model_dump_json(),),
+                                 default_timeout=30).run()

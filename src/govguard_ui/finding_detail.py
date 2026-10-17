@@ -5,7 +5,7 @@ import html
 import streamlit as st
 
 from govguard.models import Finding
-from govguard_ui.finding_list import lines_text
+from govguard_ui.finding_list import lines_text, plain
 from govguard_ui.review import category, document_window
 from govguard_ui.style import badge, paragraph, tag
 
@@ -19,9 +19,9 @@ def render_detail(finding: Finding) -> None:
         tags.append("kein Verstoß")  # CONTEXT: Lücke, never "nicht entscheidbar"
     with st.container(border=True):
         st.html(badge(kind, word=True) + "".join(tag(t) for t in tags))
-        st.markdown(f"#### {finding.title}")
+        st.markdown(f"#### {plain(finding.title)}")  # LLM text stays text
         evidence = "keine Zeilen" if finding.line_start is None else f"Zeilen {lines_text(finding)}"
-        st.caption(f"{finding.primary_anchor} · {finding.rule_id} · Beleg: {evidence}")
+        st.caption(f"{plain(finding.primary_anchor)} · {finding.rule_id} · Beleg: {evidence}")
         st.markdown("**Begründung**")
         st.html(paragraph(finding.rationale))
         if finding.recommendation:
@@ -34,7 +34,7 @@ def render_detail(finding: Finding) -> None:
                 for c in finding.corrections) + "</ul>")
         if finding.cross_references:
             st.markdown("**Querverweise** (Vorschlag der KI, ohne Einfluss auf den Status)")
-            st.caption(" · ".join(ref.anchor for ref in finding.cross_references))
+            st.caption(" · ".join(plain(ref.anchor) for ref in finding.cross_references))
 
 
 def render_document(source_name: str, source_text: str, finding: Finding, key: str) -> None:

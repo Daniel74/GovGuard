@@ -632,7 +632,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 - [x] **Klick-Technik** 🆕 _Opus_ · 👤 `/prototype Klick auf Tabellenzeile: eigene Komponente gegen gestylte Streamlit-Widgets, mit einem Galerie-Report` → beide Varianten ausprobieren, Wahl als Kommentar in #43
 - [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #43 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
 - [x] **Ansehen** 👤 Vergleichsbilder für Audits ansehen prüfen, dann Referenzbilder nur dieser Seite neu schreiben
-- [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review` (Button-Labels zeigen LLM-Text als Markdown)
+- [x] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review` (Button-Labels zeigen LLM-Text als Markdown)
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #43`
 - [ ] **Live** 👤 Streamlit Community Cloud neu laden, ein Preset ansehen
 - [ ] **Abschließen** 👤 committet und pusht

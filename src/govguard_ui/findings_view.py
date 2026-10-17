@@ -6,7 +6,7 @@ from collections import defaultdict
 import streamlit as st
 
 from govguard.models import AuditReport, Finding
-from govguard_ui.finding_list import ROWS_HEIGHT, plain, render_groups, render_rows
+from govguard_ui.finding_list import ROWS_HEIGHT, group_size, plain, render_groups, render_rows
 from govguard_ui.review import (
     ALL_SOURCES,
     category,
@@ -33,9 +33,11 @@ def _grouped(report: AuditReport, key: str) -> Finding:
     """No filters: the groups replace the source filter, N/A is collapsed in each group."""
     st.markdown("### Befunde nach Quelle")
     groups = source_groups(report.findings)
-    st.caption(f"{len(report.findings)} Befunde in {len(groups)} Quellen · je Gruppe FAIL "
-               "zuerst · N/A eingeklappt")
-    selected = _selected(report.findings, groups[0].listed, key)
+    size = sum(group_size(group) for group in groups)
+    st.caption(f"{size} Befunde in {len(groups)} Quellen · je Gruppe FAIL zuerst · N/A eingeklappt")
+    listed = [f for group in groups for f in group.listed]
+    collapsed = [f for group in groups for f in group.not_applicable]
+    selected = _selected(report.findings, listed or collapsed, key)  # never a gap
     render_groups(groups, key, selected)
     _gap_checklist(report.findings, None, key)
     return selected
@@ -98,7 +100,7 @@ def _gap_checklist(findings: list[Finding], source: str | None, key: str) -> Non
                    "WARN ohne Belegzeilen.")
         with st.container(height=GAPS_HEIGHT, border=False):
             for name, items in groups.items():
-                st.markdown(f"**{name}** · {len(items)}")
+                st.markdown(f"**{plain(name)}** · {len(items)}")
                 st.markdown("\n".join(f"- {plain(f.title)} · {plain(f.primary_anchor)}"
                                       for f in items))
 

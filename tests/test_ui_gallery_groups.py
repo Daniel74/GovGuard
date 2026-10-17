@@ -4,10 +4,15 @@ Numbers as in the design artefact of #11: BSI ✕10 ✓8 –16, CIS ✕5 ✓3 �
 C5 ✕2 ✓3 –1.
 """
 
+import re
+
 from streamlit.testing.v1 import AppTest
 from streamlit.testing.v1.element_tree import Expander
 from test_ui_pages import gallery_script, page, shown_text
-from ui_helpers import arch_key, arch_page
+from ui_helpers import arch_key, arch_page, gallery_entry, report_page
+
+from govguard_ui.finding_list import css_class
+from govguard_ui.review import category, source_groups, source_of
 
 
 def groups(app: AppTest) -> list[Expander]:
@@ -63,3 +68,32 @@ def test_gaps_of_an_arch_audit_stand_below_the_groups() -> None:
     app.selectbox(key="gallery_preset").select("arch-fristenwecker").run()
 
     assert any(e.label == "Was die Eingabe nicht beschreibt · 3 Lücken" for e in app.expander)
+
+
+def test_a_group_counts_what_its_badges_show_gaps_stand_in_their_own_list() -> None:
+    """arch-fristenwecker has 3 gaps (BSI 2, C5 1): they have neither badge nor row here."""
+    app = page(gallery_script)
+    app.selectbox(key="gallery_preset").select("arch-fristenwecker").run()
+    totals = []
+
+    for group in groups(app):
+        total = int(re.search(r" · (\d+) Befunde · ", group.label)[1])
+        badges = sum(int(n) for n in re.findall(r"-badge\[\S+ (\d+)\]", group.label))
+        assert total == badges == rows(group), group.label
+        totals.append(total)
+    assert f"{sum(totals)} Befunde in 4 Quellen" in shown_text(app)
+
+
+def test_without_rows_in_the_first_group_the_first_row_of_the_next_group_is_selected() -> None:
+    """BSI keeps only N/A and its 2 gaps: a gap is never the selected finding of the list."""
+    entry = gallery_entry("arch-fristenwecker")
+    findings = [f.model_copy(update={"status": "N/A"})
+                if source_of(f) == "BSI" and category(f) != "GAP" else f
+                for f in entry.report.findings]
+    entry.report.findings = findings
+
+    app = report_page(entry)
+
+    first_row = source_groups(findings)[1].listed[0]  # CIS
+    marks = [node.proto.body for node in app.get("html") if "_row_" in node.proto.body]
+    assert marks and css_class(f"report_row_{first_row.rule_id}") in marks[0]

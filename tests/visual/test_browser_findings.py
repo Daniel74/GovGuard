@@ -10,7 +10,7 @@ from playwright.sync_api import Locator, Page, expect
 from test_browser import rgb
 from test_screens import open_view, settled
 
-from govguard_ui.style import LOOKS
+from govguard_ui.style import LOOKS, STATUS_FILTERS
 
 pytestmark = pytest.mark.visual
 
@@ -82,12 +82,20 @@ def test_the_gap_list_stays_open_when_the_source_changes_and_scrolls(page: Page,
 
 
 def test_the_status_pills_carry_the_status_colours(page: Page, app_url: str) -> None:
+    """Every status, not only two: the CSS finds a pill by its position (style.py)."""
     pills = spec(page, app_url).locator('button[data-variant="pills"]')
-    fail, na = pills.filter(has_text="FAIL"), pills.filter(has_text="N/A")
-
-    assert style(fail, "backgroundColor") == rgb(LOOKS["FAIL"].background)
-    assert style(fail, "borderTopColor") == rgb(LOOKS["FAIL"].border)
+    na = pills.filter(has_text="N/A")
     assert style(na, "backgroundColor") != rgb(LOOKS["N/A"].background)  # off: no colour
+
+    na.click()
+    expect(na).to_have_attribute("aria-pressed", "true")
+    page.mouse.move(0, 0)  # hover and focus would paint over the colours
+    na.blur()
+
+    for name in STATUS_FILTERS:
+        pill = pills.filter(has_text=name)
+        assert style(pill, "backgroundColor") == rgb(LOOKS[name].background), name
+        assert style(pill, "borderTopColor") == rgb(LOOKS[name].border), name
 
 
 def test_document_title_and_whole_document_stand_in_one_row_inside_the_frame(

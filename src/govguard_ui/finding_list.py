@@ -6,7 +6,7 @@ import streamlit as st
 
 from govguard.models import Finding
 from govguard_ui.review import SourceGroup, category
-from govguard_ui.style import LOOKS
+from govguard_ui.style import LOOKS, STATUS_FILTERS
 from govguard_ui.texts import SOURCE_NAMES
 
 BADGE_COLOURS = {"FAIL": "red", "WARN": "orange", "GAP": "gray", "PASS": "green", "N/A": "gray"}
@@ -33,11 +33,16 @@ def render_groups(groups: list[SourceGroup], key: str, selected: Finding) -> Non
 
 
 def group_label(group: SourceGroup) -> str:
-    """Name, size and one badge per status that occurs, e.g. ✕ 10 ✓ 8 – 16."""
+    """Name, size and one badge per status that occurs, e.g. ✕ 10 ✓ 8 – 16; the size counts
+    the rows of the group, its gaps stand in the gap list."""
     badges = " ".join(f":{BADGE_COLOURS[name]}-badge[{LOOKS[name].symbol} {group.counts[name]}]"
-                      for name in ("FAIL", "WARN", "PASS", "N/A") if group.counts[name])
-    name = SOURCE_NAMES.get(group.source, group.source)
-    return f"**{name}** · {sum(group.counts.values())} Befunde · {badges}"
+                      for name in STATUS_FILTERS if group.counts[name])
+    name = SOURCE_NAMES.get(group.source, plain(group.source))
+    return f"**{name}** · {group_size(group)} Befunde · {badges}"
+
+
+def group_size(group: SourceGroup) -> int:
+    return len(group.listed) + len(group.not_applicable)
 
 
 def _mark(key: str, selected: Finding) -> None:

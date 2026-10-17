@@ -1,5 +1,7 @@
 """Smoke tests of the Streamlit pages, headless via AppTest (#11). Layout: tests/visual (#40)."""
 
+import re
+
 from streamlit.testing.v1 import AppTest
 
 from govguard.audit_engine import MAX_INPUT_CHARS, with_thousand_dots
@@ -36,6 +38,7 @@ def shown_text(app: AppTest) -> str:
              *app.warning, *app.error, *app.info, *app.success]
     html = [node.proto.body for node in app.get("html")]
     text = "\n".join([str(part.value) for part in parts] + html)
+    text = re.sub(r"\\(.)", r"\1", text)  # escaped LLM text reads without backslashes
     return text.replace("**", "").replace("  \n", " ")  # as read, without markdown
 
 
