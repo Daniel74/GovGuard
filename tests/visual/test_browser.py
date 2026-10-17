@@ -86,3 +86,20 @@ def test_the_help_icons_of_all_tiles_stand_at_one_height(page: Page, app_url: st
                          '[data-testid="stTooltipIcon"]').all()
 
     assert len({icon.bounding_box()["y"] for icon in icons}) == 1  # also with a wrapped label
+
+
+@pytest.mark.parametrize(("link", "path", "heading"), [
+    ("Start & Hilfe", "/", "GovGuard – Compliance Copilot für Behörden-IT"),
+    ("Audits ansehen", "/audits", "Audits ansehen"),
+    ("Audit erstellen", "/erstellen", "Audit erstellen"),
+])
+def test_the_sidebar_links_open_all_three_pages(page: Page, app_url: str, link: str, path: str,
+                                                heading: str) -> None:
+    start_elsewhere = "/audits" if path == "/" else "/"  # every link is clicked from another page
+    page.goto(f"{app_url}{start_elsewhere}")
+    settled(page)
+
+    page.get_by_test_id("stSidebar").get_by_role("link", name=link).click()
+
+    page.get_by_role("heading", name=heading, level=1).wait_for()
+    assert page.url.removeprefix(app_url).rstrip("/") == path.rstrip("/")

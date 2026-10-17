@@ -17,7 +17,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12c–12f, 12a, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12c–12e, 12g, 12f, 12a, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 16.10.:** Kein AWS-Zugriff. Die Demo läuft ohne AWS (Schritt 10i); jeder Schritt läuft bis zum ersten ☁-Kästchen, der Rest folgt gesammelt im AWS-Nachholblock.
 
@@ -70,6 +70,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 12c     | A    | #40 Screenshot-Regression         | 🤖 Opus                          | 🤖 Opus                     |
 | 12d     | A    | #41 Breite, Start, Erstellen      | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
 | 12e     | A    | #42 Kopf und Kacheln              | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
+| 12g     | A    | #44 UI-Interaktionen testen       | 🤖 Sonnet                        | 🤖 Opus                     |
 | 12f     | A    | #43 Befundtabelle, Quelle, Lücken | 🤖 Opus                          | 👤 Vergleichsbild + 🤖 Opus |
 | 12a     | A    | #39 Zitatprüfung ohne Markdown    | 🤖 Sonnet                        | 🤖 Opus                     |
 | 11b     | A    | #9 Stack (CDK, IAM, KMS)          | 🤖 Opus                          | 🤖 Opus · 🛠 Junie          |
@@ -601,19 +602,34 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 - [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #42 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
 - [x] **Ansehen** 👤 Vergleichsbilder für Audits ansehen prüfen, dann Referenzbilder nur dieser Seite neu schreiben
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #42`
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #42`
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** Nur die Referenzbilder von Audits ansehen sich geändert haben und `pytest -m visual` grün ist.
 **Fürs Fachgespräch:** Nie Farbe allein: Symbol, Wort und Farbe je Status (WCAG AA).
 
 ---
 
+### Schritt 12g – #44 Demo-UI: Interaktionen automatisiert testen
+
+**Ziel:** Jede Interaktion der Demo-UI hat einen Test auf der billigsten Ebene, die sie sieht; ein Wächter-Test findet neue Bedienelemente ohne Test (ADR 0024).
+**Voraussetzung:** Schritt 12e.
+
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #44 umsetzen` → Plan → Go
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #44`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** Der Wächter-Test grün ist, `uv run pytest` ohne Browser läuft und `pytest -m visual` zweimal grün ist.
+**Fürs Fachgespräch:** Testpyramide (ADR 0024): Logik ohne UI, Widgets mit AppTest, nur CSS und eigenes HTML im Browser.
+
+---
+
 ### Schritt 12f – #43 Demo-UI: Audits ansehen – Befundtabelle, Quellenfilter und Lücken
 
 **Ziel:** Befundtabelle mit Zeilenumbruch und Klick auf die Zeile, Quellenfilter mit „Alle“, Lückenliste mit Scrollbalken.
-**Voraussetzung:** Schritt 12e.
+**Voraussetzung:** Schritt 12g.
 
+- [ ] **Klick-Technik** 🆕 _Opus_ · 👤 `/prototype Klick auf Tabellenzeile: eigene Komponente gegen gestylte Streamlit-Widgets, mit einem Galerie-Report` → beide Varianten ausprobieren, Wahl als Kommentar in #43
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #43 umsetzen, Soll-Bilder in tests/visual/design/` → Plan → Go
 - [ ] **Ansehen** 👤 Vergleichsbilder für Audits ansehen prüfen, dann Referenzbilder nur dieser Seite neu schreiben
 - [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review` (eigene Tabellen-Komponente zeigt LLM-Text)

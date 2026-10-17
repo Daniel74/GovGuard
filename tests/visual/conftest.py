@@ -60,7 +60,11 @@ def app_url() -> Iterator[str]:
             yield url
         finally:
             server.terminate()
-            server.wait(timeout=10)
+            try:
+                server.wait(timeout=3)
+            except subprocess.TimeoutExpired:  # Streamlit waits ~10 s for open sessions (#44)
+                server.kill()
+                server.wait(timeout=10)
 
 
 @pytest.fixture(scope="session")
