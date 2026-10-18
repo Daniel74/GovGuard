@@ -13,6 +13,7 @@ _TYPOGRAPHIC = str.maketrans({
     "–": "-", "—": "-",
 })
 _WHITESPACE = re.compile(r"\s+")
+_MARKDOWN_EMPHASIS = re.compile(r"[*_`]")
 
 MIN_QUOTE_LENGTH = 15  # shorter quotes such as "S3" prove nothing
 
@@ -26,16 +27,27 @@ def normalize(text: str) -> str:
     return _WHITESPACE.sub(" ", text).strip()
 
 
+def _comparable(text: str) -> str:
+    return _MARKDOWN_EMPHASIS.sub("", normalize(text))
+
+
 def _without_spaces(text: str) -> str:
-    return normalize(text).replace(" ", "")
+    return _comparable(text).replace(" ", "")
+
+
+def too_short_to_prove(text: str) -> bool:
+    """Shorter than MIN_QUOTE_LENGTH without markdown emphasis; one measure for quote and range."""
+    return len(_comparable(text)) < MIN_QUOTE_LENGTH
 
 
 def contains_quote(text: str, quote: str) -> bool:
     """True if the quote appears verbatim in the text after normalization.
 
     Spaces do not count: pypdf splits words in the SDM PDFs ("Protokollie rung").
+    Markdown emphasis (`*`, `_`, backticks) does not count either: models quote
+    "**Name:** text" without the asterisks.
     """
-    if len(normalize(quote)) < MIN_QUOTE_LENGTH:
+    if too_short_to_prove(quote):
         return False
     return _without_spaces(quote) in _without_spaces(text)
 

@@ -6,7 +6,7 @@ Draft pattern: the LLM fills only *Draft models; the code adds what it already k
 from datetime import datetime
 from typing import Literal
 
-from pydantic import BaseModel, Field, model_validator
+from pydantic import AliasChoices, BaseModel, Field, model_validator
 from pydantic_ai.models import Model
 
 Status = Literal["PASS", "WARN", "FAIL", "N/A"]
@@ -67,8 +67,10 @@ class AuditResponse(BaseModel):  # schema of tool submit_audit
 
 
 class RecognizedType(BaseModel):  # written by the LLM, one item of tool submit_inventory
-    resource_type: str  # must be a type of the catalog
-    evidence: str  # verbatim quote from the input that names the service
+    # must be a type of the catalog; Groq often writes "type" (#39)
+    resource_type: str = Field(validation_alias=AliasChoices("resource_type", "type"))
+    line_start: int  # evidence by line reference (ADR 0017): the lines that name the service
+    line_end: int
 
 
 class InventoryResponse(BaseModel):  # schema of tool submit_inventory (free-text pre-run)

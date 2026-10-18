@@ -1,4 +1,4 @@
-"""Free-text architecture: LLM pre-run names resource types with evidence (ADR 0011, 0015)."""
+"""Free-text architecture: LLM pre-run names resource types with evidence lines (ADR 0011, 0017)."""
 
 import pytest
 from conftest import make_rule
@@ -13,7 +13,7 @@ FREE_TEXT = (
     "Eine Lambda-Funktion legt die Bescheide in einem S3-Bucket mit Versionierung ab.\n"
     "Der Zugriff ist nur aus dem Behördennetz erlaubt."
 )
-S3_SEEN = {"resource_type": "AWS::S3::Bucket", "evidence": "in einem S3-Bucket mit Versionierung"}
+S3_SEEN = {"resource_type": "AWS::S3::Bucket", "line_start": 1, "line_end": 1}
 
 
 def arch_rule(requirement_id: str, cfn_type: str):
@@ -36,14 +36,15 @@ def warn(rule_id: str) -> dict:
             "rationale": "Unklar.", "recommendation": "Nachweisen."}
 
 
-def fake(*inventories: list[dict], audit_prompts: list[str], status: str = "WARN") -> FunctionModel:
+def fake(*inventories: list[dict], audit_prompts: list[str], status: str = "WARN",
+         inventory_prompts: list[str] | None = None) -> FunctionModel:
     """Pre-run answers turn by turn; the audit answers each rule ID it finds in its prompt."""
-    inventory_calls: list[int] = []
+    inventory_calls: list[str] = [] if inventory_prompts is None else inventory_prompts
 
     def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
         tool = info.output_tools[0].name
         if tool == "submit_inventory":
-            inventory_calls.append(1)
+            inventory_calls.append(str(messages[0]))
             seen = inventories[min(len(inventory_calls), len(inventories)) - 1]
             return ModelResponse(parts=[ToolCallPart(tool, {"resource_types": seen})])
         prompt = str(messages[0])
@@ -74,9 +75,9 @@ def test_rules_for_services_not_recognized_get_na(free_catalog, trace) -> None:
 @pytest.mark.parametrize(
     "invalid",
     [
-        {**S3_SEEN, "evidence": "Die Daten liegen in einem Bucket"},  # not in the input
-        {**S3_SEEN, "evidence": "S3-Bucket"},  # verbatim, but too short to prove anything
-        {"resource_type": "AWS::EC2::Instance", "evidence": S3_SEEN["evidence"]},  # not in list
+        {**S3_SEEN, "line_start": 3, "line_end": 3},  # the input has two lines
+        {**S3_SEEN, "line_start": 2, "line_end": 1},  # reversed
+        {**S3_SEEN, "resource_type": "AWS::EC2::Instance"},  # not in the list
     ],
 )
 def test_pre_run_retries_once_then_fails_closed(free_catalog, trace, invalid: dict) -> None:
@@ -89,13 +90,42 @@ def test_pre_run_retries_once_then_fails_closed(free_catalog, trace, invalid: di
 
 
 def test_pre_run_retry_can_correct_the_answer(free_catalog, trace) -> None:
-    invented = {**S3_SEEN, "evidence": "Die Daten liegen in einem Bucket"}
+    invented = {**S3_SEEN, "line_start": 3, "line_end": 3}
     prompts: list[str] = []
 
     report = run_audit(free_catalog, FREE_TEXT, fake([invented], [S3_SEEN], audit_prompts=prompts),
                        trace)
 
     assert by_id(report, "ARCH-CIS-3.1.4").status == "WARN"
+
+
+def test_pre_run_accepts_type_as_field_name_without_a_retry(free_catalog, trace) -> None:
+    # Groq writes "type" instead of "resource_type" in nearly every run (#39)
+    seen = {"type": S3_SEEN["resource_type"], "line_start": 1, "line_end": 1}
+
+    report = run_audit(free_catalog, FREE_TEXT, fake([seen], audit_prompts=[]), trace)
+
+    assert (report.retries, by_id(report, "ARCH-CIS-3.1.4").status) == (0, "WARN")
+
+
+def test_pre_run_gets_the_input_with_line_numbers(free_catalog, trace) -> None:
+    inventory_prompts: list[str] = []
+
+    run_audit(free_catalog, FREE_TEXT,
+              fake([S3_SEEN], audit_prompts=[], inventory_prompts=inventory_prompts), trace)
+
+    assert "1| Eine Lambda-Funktion" in inventory_prompts[0]
+    assert "2| Der Zugriff" in inventory_prompts[0]
+
+
+def test_pre_run_retry_names_the_range_problem(free_catalog, trace) -> None:
+    beyond = {**S3_SEEN, "line_start": 3, "line_end": 3}
+
+    with pytest.raises(AuditValidationError) as failure:
+        run_audit(free_catalog, FREE_TEXT, fake([beyond], audit_prompts=[]), trace)
+
+    assert failure.value.problems == [
+        ("", "AWS::S3::Bucket: Zeilenbereich 3-3 ungültig (die Eingabe hat die Zeilen 1-2)")]
 
 
 @pytest.mark.parametrize("cfn_type", ["AWS::IAM::Role", "AWS::KMS::Key", "AWS::Logs::LogGroup"])

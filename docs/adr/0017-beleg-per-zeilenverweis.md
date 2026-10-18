@@ -34,6 +34,12 @@ _Ergänzt [ADR 0005](0005-pydantic-ai.md) und [ADR 0016](0016-groq-zur-laufzeit-
   - Beide Fälle bekommen eine Korrekturzeile. Wie eine Herabstufung zählt eine Reparatur nur aus dem letzten Versuch.
 - **Konsequenzen:** Fail closed bleibt das Sicherheitsnetz, z. B. wenn auch die Prüfregel keine Empfehlung hat. `downgrades` zählt weiter nur Statusänderungen auf WARN, für Reparaturen gibt es keinen Zähler. `max_tokens` und der Retry des ganzen Pakets bleiben. Die Bedrock-Messung zeigt, ob ein abgeschnittener Retry dasselbe Muster ist.
 
+## Nachtrag (#39): Zeilenverweis auch im Inventar-Vorlauf
+
+- **Kontext:** Der Freitext-Vorlauf verlangte noch ein wörtliches Zitat. Groq kürzte Zitate mit „...“ ab oder formulierte sie um und wiederholte sie im Retry unverändert: `arch-protokollarchiv` brach zufällig fail closed ab (Messung 18.10.2026).
+- **Entscheidung:** `RecognizedType` nennt `line_start` und `line_end` in der nummerierten Eingabe. Der Code prüft den Bereich mit `range_problem()` wie bei einem Befund, ein Retry, dann fail closed.
+- **Konsequenzen:** Belege im Vorlauf sind per Konstruktion wörtlich. `contains_quote` nutzt nur noch der Build. Ein falscher Zeilenverweis bleibt möglich, so wie vorher ein passendes Zitat zum falschen Dienst. Das Schema nimmt statt `resource_type` auch `type` an, denn Groq schrieb es fast immer und brauchte dafür einen Retry. Die Lockerung betrifft nur den Feldnamen; der Wert muss weiter im Katalog stehen.
+
 ## Fachgespräch-Satz
 
 „Das Modell zeigt nur noch auf Zeilen, den Beleg schneidet mein Code aus. So ist jedes Zitat per Konstruktion wörtlich, und was das Modell nicht belegen kann, wird höchstens WARN, nie PASS oder FAIL.“

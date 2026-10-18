@@ -11,13 +11,15 @@ from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput
 from pydantic_ai.models import Model
 
 from govguard.corrections import Corrections, Problem
+from govguard.evidence import NUMBERED_LINES, numbered, range_problem
 from govguard.models import InventoryResponse, RecognizedType, Rule
-from govguard.text import MIN_QUOTE_LENGTH, contains_quote, template_resource_types
+from govguard.text import template_resource_types
 
-INVENTORY_PROMPT = """\
+INVENTORY_PROMPT = f"""\
 Du erkennst AWS-Dienste in einer Architekturbeschreibung.
 Nenne jeden Ressourcentyp aus der Liste, den die Eingabe verwendet.
-"evidence" ist ein wörtliches Zitat aus der Eingabe (mindestens 15 Zeichen), das den Dienst belegt.
+{NUMBERED_LINES}
+"line_start" und "line_end" nennen die Zeilen, die den Dienst belegen, meist nur eine.
 Nenne keinen Typ ohne Beleg."""
 
 NA_BY_CODE = "Ressourcentyp nicht im Template"
@@ -77,9 +79,8 @@ def _validate(ctx: RunContext[InventoryDeps], response: InventoryResponse) -> In
 def _problem(seen: RecognizedType, deps: InventoryDeps) -> str | None:
     if seen.resource_type not in deps.candidate_types:
         return f"{seen.resource_type}: Typ steht nicht in der Liste"
-    if not contains_quote(deps.input_text, seen.evidence):
-        return (f"{seen.resource_type}: Beleg ist kein wörtliches Zitat aus der Eingabe "
-                f"(mind. {MIN_QUOTE_LENGTH} Zeichen)")
+    if problem := range_problem(deps.input_text, seen.line_start, seen.line_end):
+        return f"{seen.resource_type}: {problem}"
     return None
 
 
@@ -101,5 +102,5 @@ async def resource_inventory(
 def _user_prompt(deps: InventoryDeps) -> str:
     return (
         f"Ressourcentypen:\n{json.dumps(deps.candidate_types, indent=1)}\n\n"
-        f"Eingabe:\n<eingabe>\n{deps.input_text}\n</eingabe>"
+        f"Eingabe:\n<eingabe>\n{numbered(deps.input_text)}\n</eingabe>"
     )

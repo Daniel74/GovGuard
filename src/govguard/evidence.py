@@ -2,11 +2,12 @@
 
 from govguard.corrections import Problem
 from govguard.models import FindingDraft
-from govguard.text import MIN_QUOTE_LENGTH, normalize
+from govguard.text import MIN_QUOTE_LENGTH, too_short_to_prove
 
 MAX_SPAN = 200  # lines per evidence, about one section; 40 was too tight (prototype #26)
 UNPROVEN_PASS = ("Einhaltung selbst prüfen: Die KI hat PASS vergeben, aber auch nach einer "
                  "Korrektur keinen brauchbaren Zeilenbereich als Beleg genannt.")
+NUMBERED_LINES = 'Jede Zeile der Eingabe beginnt mit ihrer Nummer, z. B. "12| ".'  # prompt hint
 
 
 def numbered(text: str) -> str:
@@ -20,7 +21,7 @@ def evidence_problem(draft: FindingDraft, text: str) -> Problem | None:
     label = f"{draft.rule_id} ({draft.status})"  # the status shows in the fail-closed message
     if draft.status == "PASS" and lines is None:
         return Problem(draft.rule_id, f"{label}: Zeilenbereich fehlt (Pflicht bei PASS)")
-    if lines and (problem := _range_problem(text, *lines)):
+    if lines and (problem := range_problem(text, *lines)):
         return Problem(draft.rule_id, f"{label}: {problem}")
     return None
 
@@ -31,7 +32,7 @@ def without_unproven_verdict(draft: FindingDraft, text: str, last_attempt: bool)
     Only PASS needs a usable range; at WARN, FAIL and N/A an unusable one counts as no range.
     """
     lines = _lines(draft)
-    if draft.status != "PASS" and lines and _range_problem(text, *lines):
+    if draft.status != "PASS" and lines and range_problem(text, *lines):
         draft = draft.model_copy(update={"line_start": None, "line_end": None})
     if draft.status == "FAIL" and _lines(draft) is None:
         return draft.model_copy(update={"status": "WARN"})
@@ -62,7 +63,7 @@ def _cut(text: str, line_start: int, line_end: int) -> str:
     return "".join(lines[:-1]) + lines[-1].splitlines()[0]  # without the final line break
 
 
-def _range_problem(text: str, line_start: int, line_end: int) -> str | None:
+def range_problem(text: str, line_start: int, line_end: int) -> str | None:
     """The range lies in the input, spans at most MAX_SPAN lines and proves something."""
     label = f"Zeilenbereich {line_start}-{line_end}"
     last = len(text.splitlines())
@@ -70,6 +71,6 @@ def _range_problem(text: str, line_start: int, line_end: int) -> str | None:
         return f"{label} ungültig (die Eingabe hat die Zeilen 1-{last})"
     if line_end - line_start + 1 > MAX_SPAN:
         return f"{label} zu groß (höchstens {MAX_SPAN} Zeilen)"
-    if len(normalize(_cut(text, line_start, line_end))) < MIN_QUOTE_LENGTH:
+    if too_short_to_prove(_cut(text, line_start, line_end)):
         return f"{label} zu kurz als Beleg (mind. {MIN_QUOTE_LENGTH} Zeichen)"
     return None

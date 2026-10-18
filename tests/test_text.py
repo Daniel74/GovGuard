@@ -46,6 +46,33 @@ def test_contains_quote_rejects_quotes_shorter_than_15_chars() -> None:
     assert not contains_quote(SPEC, "   S3-Bucket   ")  # padding does not count
 
 
+ARCH_LINE = "- **API Gateway (REST, regional):** Die Fachanwendung ruft `POST /akten` auf."
+
+
+def test_contains_quote_accepts_quote_without_markdown_emphasis() -> None:
+    assert contains_quote(ARCH_LINE, "API Gateway (REST, regional): Die Fachanwendung")
+
+
+@pytest.mark.parametrize(
+    ("text", "quote"),
+    [
+        ("Der *Bucket* ist _öffentlich_ erreichbar", "Der Bucket ist öffentlich erreichbar"),
+        ("Der Bucket ist öffentlich erreichbar", "Der **Bucket** ist `öffentlich` erreichbar"),
+    ],
+)
+def test_contains_quote_ignores_markdown_emphasis_on_both_sides(text: str, quote: str) -> None:
+    assert contains_quote(text, quote)
+
+
+def test_contains_quote_still_rejects_invented_quote_next_to_markdown() -> None:
+    assert not contains_quote(ARCH_LINE, "API Gateway (REST, regional): Die Datenbank speichert")
+
+
+def test_contains_quote_measures_min_length_without_markdown() -> None:
+    assert not contains_quote("**S3-Bucket** ist da", "**S3-Bucket** ist")  # 13 chars stripped
+    assert not contains_quote("*" * 40, "*" * 20)  # nothing left to prove
+
+
 def test_template_resource_types_lists_types_of_cloudformation_json() -> None:
     template = json.dumps({
         "Resources": {

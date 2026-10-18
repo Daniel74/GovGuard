@@ -14,7 +14,7 @@ from pydantic_ai.models import Model
 
 from govguard.audit_gates import answer_problems
 from govguard.corrections import Corrections, downgrades_of
-from govguard.evidence import MAX_SPAN, numbered, without_unproven_verdict
+from govguard.evidence import MAX_SPAN, NUMBERED_LINES, numbered, without_unproven_verdict
 from govguard.models import AuditResponse, FindingDraft, Provider, Rule, provider_of
 from govguard.repairs import with_rule_recommendations, worst_of_duplicates
 
@@ -24,7 +24,7 @@ Du bist ein Compliance-Prüfer für Behörden-IT. Bewerte die Eingabe gegen jede
 - FAIL: Ein Verstoß ist in der Eingabe belegt.
 - WARN: Aus der Eingabe nicht entscheidbar.
 - N/A: Die Prüfregel ist auf die Eingabe nicht anwendbar.
-Jede Zeile der Eingabe beginnt mit ihrer Nummer, z. B. "12| ". Belege per Zeilenbereich:
+{NUMBERED_LINES} Belege per Zeilenbereich:
 "line_start" und "line_end" nennen die Zeilen, die den Befund belegen (höchstens {MAX_SPAN} Zeilen).
 Bei PASS und FAIL sind sie Pflicht, sonst null.
 Bei WARN und FAIL ist "recommendation" Pflicht. Schreibe Begründungen auf Deutsch."""

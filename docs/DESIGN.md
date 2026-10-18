@@ -288,15 +288,16 @@ class InventoryResponse(BaseModel):      # Schema des Tools submit_inventory (Fr
     resource_types: list[RecognizedType]
 
 class RecognizedType(BaseModel):         # ein Eintrag im Tool submit_inventory
-    resource_type: str                   # muss im Katalog vorkommen
-    evidence: str                        # wörtliches Zitat aus der Eingabe
+    resource_type: str                   # muss im Katalog vorkommen; nimmt auch „type“ an (Groq, #39)
+    line_start: int                      # Beleg per Zeilenverweis wie im Audit (ADR 0017, #39)
+    line_end: int
 
 class ArchetypeChoice(BaseModel):        # Schema des Tools select_archetype
     archetype: Literal["ARCH-01", "ARCH-02", "ARCH-03", "NONE"]
     rationale: str
 ```
 
-Vor dem Audit bestimmt `inventory.resource_inventory()` im Architektur-Audit das Ressourceninventar (ADR 0011, 0015). Bei CloudFormation-JSON liest es `template_resource_types()` (3); N/A heißt dann „Ressourcentyp nicht im Template“. Sonst nennt ein LLM-Vorlauf (`submit_inventory`) die Typen mit Beleg, der Code prüft Typ und Beleg (ein Retry, dann `AuditValidationError`); N/A heißt dann „Dienst in der Eingabe nicht erkannt“, und IAM, KMS und Logs sind immer anwendbar. Regeln mit N/A gehen nicht ans Modell. Im Spec-Audit geht auch ein Template vollständig ans Modell, denn ein stilles N/A würde eine falsch eingereichte Eingabe verdecken.
+Vor dem Audit bestimmt `inventory.resource_inventory()` im Architektur-Audit das Ressourceninventar (ADR 0011, 0015). Bei CloudFormation-JSON liest es `template_resource_types()` (3); N/A heißt dann „Ressourcentyp nicht im Template“. Sonst nennt ein LLM-Vorlauf (`submit_inventory`) die Typen mit Zeilenbereich in der nummerierten Eingabe, der Code prüft Typ und Bereich mit `evidence.range_problem()` wie bei einem Befund (ein Retry, dann `AuditValidationError`); N/A heißt dann „Dienst in der Eingabe nicht erkannt“, und IAM, KMS und Logs sind immer anwendbar. Regeln mit N/A gehen nicht ans Modell. Im Spec-Audit geht auch ein Template vollständig ans Modell, denn ein stilles N/A würde eine falsch eingereichte Eingabe verdecken.
 
 Die übrigen Prüfregeln gehen in Paketen à 10 gleichzeitig ans Modell (`asyncio.gather`). Bei Groq laufen höchstens 2 Pakete gleichzeitig (`GROQ_MAX_PARALLEL`), damit der volle Katalog unter dem Tarif-Limit von 250.000 Tokens/min bleibt. Jedes Paket enthält die Eingabe mit Zeilennummern (`12| …`). Das Schema ist strikt: Bedrock bekommt ein erzwungenes Tool mit `strict` (ADR 0005), Groq `NativeOutput` (ADR 0016). Danach prüft der Code genau einen Befund je Prüfregel und sortiert den Report nach dem ersten Ressourcentyp.
 
@@ -358,14 +359,15 @@ class AuditEvent(BaseModel):             # eine JSON-Zeile in CloudWatch Logs
 
 ## 3. Gemeinsame Funktionen
 
-Build (Zitat-Check), Freitext-Vorlauf (Beleg im Ressourceninventar) und Mindestlänge eines Zeilenbelegs normalisieren mit **derselben** Funktion. Sonst würde ein Zitat im Build bestehen und zur Laufzeit scheitern oder umgekehrt.
+Build (Zitat-Check) und Mindestlänge eines Zeilenbelegs (Audit und Freitext-Vorlauf) messen mit **derselben** Funktion `too_short_to_prove()`. Sonst würde ein Text als Zitat im Build scheitern und als Zeilenbeleg zur Laufzeit bestehen oder umgekehrt.
 
 ```python
 # src/govguard/text.py – rein
 MIN_QUOTE_LENGTH = 15                        # kürzere Zitate wie "S3" beweisen nichts
 
 def normalize(text: str) -> str
-def contains_quote(text: str, quote: str) -> bool  # len >= MIN_QUOTE_LENGTH, Vergleich nach normalize() ohne Leerzeichen
+def too_short_to_prove(text: str) -> bool  # kürzer als MIN_QUOTE_LENGTH nach normalize() ohne Hervorhebung
+def contains_quote(text: str, quote: str) -> bool  # nicht too_short_to_prove(), Vergleich ohne Leerzeichen und Hervorhebung
 def template_resource_types(text: str) -> set[str] | None  # Typen aus "Resources" eines CloudFormation-JSON, sonst None
 ```
 
@@ -376,7 +378,7 @@ def template_resource_types(text: str) -> set[str] | None  # Typen aus "Resource
 4. Typografische Anführungszeichen und Gedankenstriche durch ASCII-Zeichen ersetzen, damit „…“ und "…" gleich sind.
 5. Alle Leerzeichen und Zeilenumbrüche zu einem Leerzeichen zusammenfassen.
 
-`contains_quote()` vergleicht danach ohne Leerzeichen, denn pypdf zerteilt Wörter im SDM-PDF (`M60.S06`: „Protokollie rung“). Die Mindestlänge zählt mit Leerzeichen.
+`contains_quote()` vergleicht danach ohne Leerzeichen, denn pypdf zerteilt Wörter im SDM-PDF (`M60.S06`: „Protokollie rung“). Markdown-Hervorhebung (`*`, `_`, Backticks) wird auf beiden Seiten ignoriert, denn Modelle zitieren `**Name:** Text` ohne Sterne (#39). Gefunden wurde das im Freitext-Vorlauf, der seitdem per Zeilenverweis belegt (ADR 0017). Die Toleranz gilt heute nur noch für Zitate im Build. Die Mindestlänge zählt mit Leerzeichen, aber ohne Hervorhebung, auch beim Zeilenbeleg.
 
 Groß- und Kleinschreibung bleibt erhalten, denn „wörtlich“ heißt wörtlich. Eine bekannte Grenze: Silbentrennung am Zeilenende („Verarbei- tung“) wird nicht repariert, weil sich echte Bindestriche („Cloud-Dienst“) nicht sicher davon unterscheiden lassen.
 

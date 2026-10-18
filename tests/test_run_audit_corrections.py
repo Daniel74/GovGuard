@@ -142,7 +142,7 @@ def test_report_without_a_retry_counts_zero(spec_catalog, spec_input, trace) -> 
 
 
 def test_pre_run_retry_reason_stands_in_unassigned_corrections(arch_catalog, trace) -> None:
-    invented = {"resource_type": "AWS::EC2::Instance", "evidence": S3_SEEN["evidence"]}
+    invented = {**S3_SEEN, "resource_type": "AWS::EC2::Instance"}
 
     report = run_audit(arch_catalog, FREE_TEXT, fake([invented], [S3_SEEN], audit_prompts=[]),
                        trace)
@@ -152,7 +152,7 @@ def test_pre_run_retry_reason_stands_in_unassigned_corrections(arch_catalog, tra
 
 
 def test_pre_run_fail_closed_names_its_reason_not_the_schema(arch_catalog, trace) -> None:
-    invented = {"resource_type": "AWS::EC2::Instance", "evidence": S3_SEEN["evidence"]}
+    invented = {**S3_SEEN, "resource_type": "AWS::EC2::Instance"}
 
     with pytest.raises(AuditValidationError) as failure:
         run_audit(arch_catalog, FREE_TEXT, fake([invented], audit_prompts=[]), trace)

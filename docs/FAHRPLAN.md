@@ -74,6 +74,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 12f     | A    | #43 Befundtabelle, Quelle, Lücken | 🤖 Opus                          | 👤 Vergleichsbild + 🤖 Opus |
 | 12h     | A    | #45 Befundtabelle mit Spalten     | 🤖 Opus                          | 👤 Vergleichsbild + 🤖 Opus |
 | 12a     | A    | #39 Zitatprüfung ohne Markdown    | 🤖 Sonnet                        | 🤖 Opus                     |
+| 12i     | A    | #46 Arch-Freitext: offene Welt    | 🤖 Opus                          | 🤖 Opus                     |
 | 11b     | A    | #9 Stack (CDK, IAM, KMS)          | 🤖 Opus                          | 🤖 Opus · 🛠 Junie          |
 | 11a     | A    | #34 Audit-Jobs in S3              | 🤖 Opus                          | 🤖 Opus                     |
 | 12b     | A    | #36 Selbst-Audit und Galerie      | 👤 + 🤖 Opus                     | 👤                          |
@@ -665,14 +666,30 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Ein Architektur-Audit von Freitext mit `**…**` bricht nicht mehr fail closed ab, weil das Modell ohne Sternchen zitiert.
 **Voraussetzung:** Schritt 12. Läuft komplett ohne AWS.
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #39 umsetzen` → Plan → Go
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #39 umsetzen` → Plan → Go
       Reihenfolge: Test für `contains_quote` mit und ohne `**` → Umsetzung in `text.py` → Gate-Tests von `kb_build` grün
-- [ ] **Messen** 🆕 _Opus_ · 👤 `/audit-messen arch-protokollarchiv mit Groq, Report nach data/gallery/`
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #39`
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Messen** 🆕 _Opus_ · 👤 `/audit-messen arch-protokollarchiv mit Groq, Report nach data/gallery/`
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #39`
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** `arch-protokollarchiv` mit Groq durchläuft und sein Report in der Galerie liegt.
 **Fürs Fachgespräch:** Fail closed ist richtig, aber die Prüfung muss dieselbe Normalisierung wie das Lesen haben: Formatierung ist kein Inhalt.
+
+---
+
+### Schritt 12i – #46 Architektur-Freitext: FAIL nur bei festgelegtem Verstoß (offene Welt)
+
+**Ziel:** Ein Architektur-Audit von Freitext vergibt FAIL nur für einen festgelegten Verstoß, nicht für eine fehlende Angabe. Ein CloudFormation-Template bleibt geschlossene Welt (ADR 0020).
+**Voraussetzung:** Schritt 12a (#39). Läuft komplett ohne AWS.
+
+- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Frage in #46: Prompt-Regel oder FAIL-Prüfer für Architektur-Freitext?` (Prompt-Design ist eine Weichenstellung)
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #46 umsetzen` → Plan → Go. Halt beim Prompt (Weichenstellung Prompt-Design).
+- [ ] **Messen** 🆕 _Opus_ · 👤 `/audit-messen arch-protokollarchiv 2× mit Groq, Report nach data/gallery/` → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Schwankung.
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #46`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** `arch-protokollarchiv` mit Groq zweimal `expected` erreicht (WARN, CIS 3.1.4 PASS, DET.3.1 PASS) und Templates weiter FAIL für fehlende Einstellungen zeigen.
+**Fürs Fachgespräch:** Offene und geschlossene Welt: Bei Freitext ist eine fehlende Angabe Prüfbedarf (WARN), bei einem Template der unsichere Standardwert (FAIL). Das entscheidet der Code, nicht das Modell.
 
 ---
 
