@@ -19,6 +19,11 @@ def test_vague_terms_finds_each_word_once_in_its_written_form() -> None:
     assert vague_terms(text) == ["erforderliche", "relevante"]
 
 
+def test_equivalent_is_vague_because_only_listed_implementations_are_decidable() -> None:
+    # #47: "oder gleichwertig" needs knowledge beyond the template; list the variants instead
+    assert vague_terms("Deny bei false oder eine gleichwertige Policy.") == ["gleichwertige"]
+
+
 def test_the_report_counts_vague_account_level_and_invented_property_rules_per_source() -> None:
     catalog = RuleCatalog(audit_type="architecture", source_versions={}, model_id="m", rules=[
         rule("a", "CIS", "Der CloudTrail-Bucket AWS::S3::Bucket hat LoggingConfiguration."),

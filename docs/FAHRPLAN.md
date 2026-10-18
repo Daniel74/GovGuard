@@ -17,7 +17,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12c–12e, 12g, 12f, 12h, 12a, 12i, 12j, 12k, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12c–12e, 12g, 12f, 12h, 12a, 12i, 12j, 12l, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
+- **Eingefroren ab Schritt 12l:** `kb_build` und Audit-Engine werden nicht mehr geändert, Katalog und Prompts bleiben. Bekannte Grenzen stehen im README; #48 (YAML), #49 (Build-Abbrüche) und #50 (Allow/Deny, Platzhalter) sind Ausbau.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 16.10.:** Kein AWS-Zugriff. Die Demo läuft ohne AWS (Schritt 10i); jeder Schritt läuft bis zum ersten ☁-Kästchen, der Rest folgt gesammelt im AWS-Nachholblock.
 
@@ -29,7 +30,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | Do 15.10.  | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                   |
 | Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                                 |
 | Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                                   |
-| So 18.10.  | Schritt 12: UI fertig, live auf Streamlit Community Cloud                                                                                    |
+| So 18.10.  | Schritte 12i, 12j: #46, #47. Schritt 12l: Galerie, bekannte Grenzen. Danach sind `kb_build` und Audit eingefroren                            |
 | Mo 19.10.  | Schritt 11b: Stack per CDK (bis `cdk synth`). Schritt 11a: #34 Audit-Jobs. AWS zurück: AWS-Nachholblock. Das Claude-Wochenlimit setzt zurück |
 | Di 20.10.  | Schritt 12b: GovGuard-Spezifikation, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                          |
 | Mi 21.10.  | Abgabe, Puffer                                                                                                                               |
@@ -700,30 +701,33 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Prüfregeln im Architektur-Katalog werten eine gleichwertige Umsetzung nicht als Verstoß. Behoben im Build, nicht von Hand im Katalog.
 **Voraussetzung:** Schritt 12i (#46). Läuft komplett ohne AWS.
 
-- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #47: Einzelfälle oder Muster, Teil- oder Voll-Rebuild?` (Prompt-Design ist eine Weichenstellung)
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #47 umsetzen` → Plan → Go. Halt beim Prompt (Weichenstellung Prompt-Design).
-- [ ] **Bauen** 🆕 _Opus_ · 👤 `python -m kb_build` für den Architektur-Katalog (Umfang laut Klären)
-- [ ] **Messen** 🆕 _Opus_ · 👤 `/audit-messen arch-protokollarchiv 2× mit Groq, Report nach data/gallery/`, danach `arch-fristenwecker` und `arch-antragseingang-fehlerhaft` je 1× → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Schwankung.
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #47`
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #47: Einzelfälle oder Muster, Teil- oder Voll-Rebuild?` (Prompt-Design ist eine Weichenstellung)
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #47 umsetzen` → Plan → Go. Halt beim Prompt (Weichenstellung Prompt-Design).
+- [x] **Bauen** 🆕 _Opus_ · 👤 `python -m kb_build` für den Architektur-Katalog (Umfang laut Klären)
+- [x] **Messen** 🆕 _Opus_ · 👤 `/audit-messen arch-protokollarchiv 2× mit Groq, Report nach data/gallery/`, danach `arch-fristenwecker` und `arch-antragseingang-fehlerhaft` je 1× → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Schwankung.
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #47`
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** `arch-protokollarchiv` mit Groq zweimal `expected` erreicht und beide Templates weiter `expected` erreichen.
 **Fürs Fachgespräch:** Eine Prüfregel prüft das Schutzziel, nicht eine Schreibweise: Deny bei `false` und Allow nur bei `true` erzwingen beide TLS.
 
 ---
 
-### Schritt 12k – #48 Architektur: CloudFormation-YAML mit Code-Inventar (geschlossene Welt)
+### Schritt 12l – Audit und kb_build abschließen: Galerie und bekannte Grenzen (#47–#50)
 
-**Ziel:** Ein CloudFormation-Template in YAML wird wie JSON geprüft: Code-Inventar, N/A durch den Code, geschlossene Welt. Terraform bleibt Freitext.
-**Voraussetzung:** Schritt 12i (#46). Läuft komplett ohne AWS und ohne LLM. Streichbar, wenn die Zeit knapp wird.
+**Ziel:** Die Galerie zeigt die Architektur-Reports zum neuen Katalog aus #47. #48, #49 und #50 sind als bekannte Grenzen dokumentiert und mit Label `ausbau` geschlossen. Danach bleiben `kb_build` und Audit-Engine unverändert.
+**Voraussetzung:** Schritt 12j (#47) committet. Kein LLM-Lauf, keine Kosten: Die Reports stammen aus den Messläufen von #47 und liegen in `data/intermediate/reports_47/` (gleicher Katalog-Hash wie `rules_arch.json`).
 
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #48 umsetzen` → Plan → Go
-      Reihenfolge: Test `template_resource_types` mit YAML-Fixture aus `arch-fristenwecker` → Loader mit Kurzformen (`!Ref`, `!Sub`, `!GetAtt`) in `text.py` → Fake-Modell-Test: FAIL wegen Fehlens bleibt FAIL
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #48`
-- [ ] **Abschließen** 👤 committet und pusht
+- [ ] **Galerie** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12l. Ersetze die drei Architektur-Reports in `data/gallery/` durch die Reports aus `data/intermediate/reports_47/` und zieh die Tests nach“ → Plan → Go
+      Zuordnung: `report_protokoll1` → `arch-protokollarchiv`, `report_fristenwecker` → `arch-fristenwecker`, `report_antragseingang` → `arch-antragseingang-fehlerhaft`. Neun Tests schreiben Zahlen der alten Reports fest (`test_review`, `test_ui_gallery_arch`, `test_ui_gallery_selection`, `test_ui_pages`, `test_ui_report_header`). `preset.json` bleibt unverändert: Die UI zeigt die Abweichung DET.3.1 (Soll PASS, Ist WARN) ehrlich an.
+- [ ] **Ansehen** 👤 `uv run pytest -m visual`, Vergleichsbilder der Architektur-Galerie ansehen, dann `--update-snapshots`
+- [ ] **Bekannte Grenzen** 🤖 im selben Lauf: README → *Bekannte Grenzen* um drei Punkte ergänzen (je ein Satz mit Ticket): YAML gilt als offene Welt (#48); der Build bricht mit Groq oft an einer Regel ab, Wiederholen hilft (#49); S3.5, DLS.2.2, IAM-09.01AC und BER.5.9 werten Deny bei `false` als Verstoß, 12 Regeln enthalten Platzhalter (#50)
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen FAHRPLAN Schritt 12l`
+- [ ] **Live** 👤 Streamlit Community Cloud neu laden, `arch-protokollarchiv` ansehen
+- [ ] **Abschließen** 👤 committet und pusht, schließt #47; #48, #49 und #50 bekommen das Label `ausbau`, einen Kommentar mit Verweis auf README *Bekannte Grenzen* und werden geschlossen (`gh issue close N --reason "not planned"`)
 
-**Fertig, wenn:** YAML-Template und JSON-Template liefern dasselbe Ressourceninventar und dieselbe geschlossene Welt, ADR 0015 hat den Nachtrag.
-**Fürs Fachgespräch:** Die Welt hängt am Format, das der Code lesen kann: Was er als Bauplan parst, ist geschlossene Welt; Terraform nimmt er nur als Freitext an, deshalb offene Welt.
+**Fertig, wenn:** Die Galerie die Reports zum Katalog-Hash von `rules_arch.json` zeigt, `pytest` und `pytest -m visual` grün sind und das README die drei Grenzen nennt.
+**Fürs Fachgespräch:** Bewusst eingefroren: Ein bekannter, dokumentierter Fehler mit Ticket ist besser als eine letzte Änderung ohne Messung. Jeder Report trägt `catalog_sha256`, damit ist nachweisbar, mit welchem Katalog er entstand.
 
 ---
 

@@ -19,10 +19,22 @@ Prüfregel für ein {audit}. Inhalte auf Deutsch, außer dem Zitat.
   Format, z. B. "BSI GS++ DET.3.1", "DSGVO Art. 32", "AWS FSBP S3.1". Im Zweifel leer lassen."""
 
 ARCHITECTURE_CRITERIA = """
-- Architektur: "compliant_if" und "violation_if" nennen mindestens einen der Ressourcentypen
-  wörtlich (z. B. AWS::RDS::DBInstance) und die konkrete Eigenschaft mit Wert (z. B.
-  DeletionProtection: true). Keine Wörter, die Wissen außerhalb des Templates brauchen, z. B.
-  "relevant", "erforderlich", "angemessen", "entsprechend". Gilt die Pflicht nur für eine
+- Architektur: "compliant_if" und "violation_if" beschreiben zuerst den Sachverhalt in Worten,
+  dann woran man ihn im Template erkennt: mindestens einen der Ressourcentypen wörtlich und die
+  Eigenschaft mit Wert, z. B. "Die Datenbank ist gegen Löschen geschützt
+  (AWS::RDS::DBInstance mit DeletionProtection: true)."
+- Gibt es mehrere übliche Umsetzungen, zähle sie auf; ein Verstoß liegt erst vor, wenn keine
+  davon vorliegt. Konkrete Werte wie IP-Bereiche, Ports, ARNs, Tags oder Regionen nur, wenn
+  die Anforderung sie nennt.
+- Bedingungen in Policies erfüllen eine Pflicht in zwei Formen: Allow nur mit der Bedingung
+  oder Deny mit der umgekehrten Bedingung. Zähle beide auf.
+- Verlangt die Anforderung, etwas einzuschränken oder zu blockieren, prüfe das Gegenteil: was
+  uneingeschränkt offen ist. "violation_if" nennt dann nur das Offene, nie das Fehlen einer
+  zusätzlichen Sperr-Regel oder Ressource. Beispiel BSI ARCH.5.1 "Verbindungen zwischen IT-Systemen
+  einschränken": Verstoß ist eine AWS::EC2::SecurityGroup mit einer Ingress-Regel für CidrIp
+  0.0.0.0/0, nicht das Fehlen einer Security Group ohne Regeln.
+- Keine Wörter, die Wissen außerhalb des Templates brauchen, z. B. "relevant",
+  "erforderlich", "angemessen", "entsprechend", "gleichwertig". Gilt die Pflicht nur für eine
   Variante (z. B. bestimmte Engines oder Protokolle), nenne diese Bedingung."""
 
 SPEC_CRITERIA = """

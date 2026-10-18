@@ -26,7 +26,8 @@ def criteria_problems(
     if vague:
         words = ", ".join(f"„{w}“" for w in vague)
         problems.append(f"Die Kriterien enthalten Wörter, die am Template nicht entscheidbar "
-                        f"sind: {words}. Nenne stattdessen konkrete Eigenschaften und Werte.")
+                        f"sind: {words}. Nenne stattdessen die Eigenschaft mit Wert oder zähle "
+                        "die zulässigen Umsetzungen auf.")
     outside = scope.outside(TYPE_PATTERN.findall(criteria))
     if outside:
         problems.append(f"Diese Ressourcentypen liegen außerhalb des Prüfumfangs: "

@@ -16,7 +16,7 @@ from kb_build.reference.cfn_properties import (
 # Words that need knowledge beyond the template, e.g. "nicht erforderlich" (BSI KONF.6.1)
 _VAGUE = re.compile(
     r"\b(relevant|erforderlich|notwendig|angemessen|entsprechend|geeignet|ausreichend|"
-    r"gegebenenfalls|ggf\.|unnötig|übermäßig|regelmäßig|sensibel|sensibl)\w*",
+    r"gegebenenfalls|ggf\.|unnötig|übermäßig|regelmäßig|sensibel|sensibl|gleichwertig)\w*",
     re.IGNORECASE,
 )
 
