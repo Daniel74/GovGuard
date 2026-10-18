@@ -1,4 +1,6 @@
-"""The FAIL judge confirms or downgrades every FAIL of a spec audit (open world, ADR 0020, #31)."""
+"""The FAIL judge confirms or downgrades every FAIL of a spec audit (open world, ADR 0020, #31).
+
+Free-text architecture: test_run_audit_open_world.py (#46)."""
 
 import json
 
@@ -31,6 +33,19 @@ def audit_and_judge(
     return FunctionModel(respond, model_name="fake-model")
 
 
+SPEC_JUDGE_BEFORE_46 = """\
+Du prüfst FAIL-Befunde aus dem Audit einer fachlichen Spezifikation. Eine Spezifikation ist
+eine offene Welt: Was sie nicht erwähnt, kann anderswo geregelt sein. Ein FAIL ist nur
+richtig, wenn die Belegzeilen selbst etwas festlegen, das das Verstoßkriterium
+("violation_if") erfüllt: eine Festlegung, die der Prüfregel widerspricht, oder einen
+erklärten Verzicht oder Aufschub.
+Bestätige ein FAIL nicht, wenn die Belegzeilen das Kriterium nicht zeigen, also zum
+Thema schweigen, es nur vage oder unvollständig beschreiben.
+- Bestätigt: Kriterium "legt als Exportformat nur PDF fest", Beleg "Der Export erfolgt
+  ausschließlich als PDF."
+- Nicht bestätigt: gleiches Kriterium, Beleg "Bürger können ihre Daten exportieren."
+Gib je Befund genau ein Urteil ab: "confirmed" true oder false, "reason" ein Satz auf
+Deutsch, woran du es erkennst."""
 FAIL_9 = {"rule_id": "SPEC-DSGVO-Art.9", "status": "FAIL", "line_start": 1, "line_end": 1,
           "rationale": "Gesundheitsdaten liegen im Klartext.", "recommendation": "Verschlüsseln."}
 
@@ -47,6 +62,7 @@ def test_judge_sees_only_the_evidence_lines_and_confirms_the_fail(
 
     request = str(judged[0])
     assert len(judged) == 1
+    assert judged[0][0].instructions == SPEC_JUDGE_BEFORE_46  # open world filled in (#46)
     assert "1| Das Bürgerportal speichert Gesundheitsdaten im Klartext" in request
     assert "Die Maßnahme fehlt nachweislich." in request  # violation_if of the rule
     assert "Gesundheitsdaten liegen im Klartext." not in request  # the judge echoed it (#31)

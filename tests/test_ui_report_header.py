@@ -87,7 +87,25 @@ def test_an_architecture_without_gaps_has_no_gap_tile_and_no_fail_judge() -> Non
         ("FAIL-Prüfer", "entfällt")]
     assert "! WARN · Prüfbedarf\nmit Beleg" in frames(app)  # no "davon 0 herabgestuft"
     assert "– N/A\nRessourcentyp nicht in der Architektur" in frames(app)
-    assert "FAIL-Prüfer\nNur bei Spezifikationen." in frames(app)
+    assert "FAIL-Prüfer\nNur bei offener Welt: Spezifikation, Architektur als Freitext." \
+        in frames(app)  # the stored architecture is a template, a closed world (#46)
+
+
+def free_text_without_fail_script() -> None:
+    from govguard.models import FailJudgeCount
+    from govguard_ui.gallery import load_gallery
+    from govguard_ui.paths import GALLERY, PRESETS
+    from govguard_ui.report_header import render_header
+
+    entry = next(e for e in load_gallery(PRESETS, GALLERY) if e.preset_id == "arch-protokollarchiv")
+    render_header(entry.report.model_copy(update={"fail_judge": FailJudgeCount()}), "t", "ft")
+
+
+def test_free_text_architecture_without_fail_shows_zero_checked_not_omitted() -> None:
+    app = AppTest.from_function(free_text_without_fail_script, default_timeout=30).run()
+
+    assert not app.exception
+    assert ("FAIL-Prüfer", "0") in [(m.label, m.value) for m in app.metric]  # open world (#46)
 
 
 def test_the_expected_result_is_one_strip_and_overall_status_is_no_button() -> None:

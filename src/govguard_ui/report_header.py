@@ -8,7 +8,7 @@ from govguard.models import AuditReport, Expected
 from govguard_ui.finding_list import select
 from govguard_ui.review import Category, category_counts, expected_checks
 from govguard_ui.style import LOOKS
-from govguard_ui.texts import HELP, TYPE_LABELS
+from govguard_ui.texts import HELP, OPEN_WORLD_ONLY, TYPE_LABELS
 
 TILES: tuple[Category, ...] = ("FAIL", "WARN", "PASS", "N/A", "GAP")  # gaps last (design)
 TILE_LABELS = {"WARN": "WARN · Prüfbedarf", "GAP": "Lücken"}  # longer than on a badge
@@ -63,13 +63,13 @@ def _counters(report: AuditReport, key: str) -> None:
 
 def _judge(report: AuditReport) -> None:
     judge = report.fail_judge
-    if report.audit_type == "spec":
+    if report.closed_world:  # a template: a missing setting is the default (ADR 0020, #46)
+        st.metric("FAIL-Prüfer", "entfällt", help=HELP["judge"])
+        st.caption(OPEN_WORLD_ONLY)
+    else:
         st.metric("FAIL-Prüfer", judge.checked, help=HELP["judge"])
         st.caption(f"geprüft · {judge.confirmed} bestätigt · {judge.downgraded} "
                    f"herabgestuft · {judge.unavailable} nicht verfügbar")
-    else:
-        st.metric("FAIL-Prüfer", "entfällt", help=HELP["judge"])
-        st.caption("Nur bei Spezifikationen.")
 
 
 def render_expected(report: AuditReport, expected: Expected, key: str) -> None:

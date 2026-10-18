@@ -3,10 +3,11 @@
 DATA_RULE = "Keine echten oder personenbezogenen Daten eingeben."  # ADR 0004, 0016, 0023
 DATA_FLOW_US = "Eingaben gehen zur Inferenz an Groq in die USA."
 
+OPEN_WORLD_ONLY = "Nur bei offener Welt: Spezifikation, Architektur als Freitext."  # ADR 0020
 HELP = {  # help on the report head; status help lives in style.LOOKS
     "judge": "Ein zweiter Modellaufruf sieht je FAIL nur das Verstoßkriterium und die "
              "Belegzeilen. Bestätigt er nicht, stuft der Code auf WARN herab. „Nicht "
-             "verfügbar“: Das FAIL bleibt ungeprüft stehen. Nur bei Spezifikationen.",
+             "verfügbar“: Das FAIL bleibt ungeprüft stehen. " + OPEN_WORLD_ONLY,
     "expected": "Jedes Preset hat ein festgelegtes Soll: Gesamtstatus und Pflichtbefunde. Weicht "
                 "ein Report ab, zeigt GovGuard das offen, statt neu zu würfeln. Ein Klick auf "
                 "einen Pflichtbefund springt zu ihm.",

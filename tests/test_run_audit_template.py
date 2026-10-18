@@ -5,7 +5,6 @@ from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from govguard.audit_engine import AuditValidationError, run_audit
-from govguard.audit_packages import SPEC_FAIL_RULE
 from govguard.inventory import NA_FORBIDDEN
 
 S3_PASS = {"rule_id": "ARCH-CIS-3.1.4", "status": "PASS", "line_start": 7, "line_end": 7,
@@ -43,7 +42,7 @@ def test_architecture_prompt_keeps_fail_for_a_missing_setting(
     run_audit(arch_catalog, bucket_template, fake(S3_PASS, prompts), trace)
 
     # A template is a blueprint: a missing setting means the default, a violation (ADR 0020)
-    assert SPEC_FAIL_RULE not in prompts[0]
+    assert "offene Welt" not in prompts[0]
     assert "was fehlt" not in prompts[0]
 
 

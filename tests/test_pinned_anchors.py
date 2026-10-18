@@ -27,7 +27,7 @@ def test_spec_audit_pins_the_required_findings_of_the_spec_presets() -> None:
 def test_architecture_audit_pins_each_anchor_once() -> None:
     assert pinned_anchors(PRESETS, "architecture") == {
         "CIS AWS v7.0.0 3.1.4", "CIS AWS v7.0.0 4.6", "BSI GS++ BER.4.1",
-        "AWS FSBP SNS.1", "AWS FSBP StepFunctions.1",
+        "AWS FSBP SNS.1", "AWS FSBP StepFunctions.1", "BSI GS++ DET.3.1",
     }
 
 

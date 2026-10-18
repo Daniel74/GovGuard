@@ -2341,5 +2341,6 @@
     "confirmed": 0,
     "downgraded": 0,
     "unavailable": 0
-  }
+  },
+  "closed_world": true
 }

@@ -23,6 +23,7 @@ from govguard.models import (
     Status,
     Trace,
 )
+from govguard.open_world import AuditInput, audit_input
 
 __all__ = ["AuditValidationError", "InputTooLongError", "check_input_length", "overall_status",
            "run_audit"]
@@ -60,8 +61,9 @@ def run_audit(
     """on_progress gets each phase and finished package; the audit logic stays pure (ADR 0023)."""
     check_input_length(input_text)
     corrections = Corrections()
+    given = audit_input(catalog.audit_type, input_text)  # the code decides the world (#46)
     try:
-        drafts = asyncio.run(_drafts(catalog, input_text, model, corrections,
+        drafts = asyncio.run(_drafts(catalog, given, model, corrections,
                                      on_progress or (lambda _: None)))
     except (ModelAPIError, UnexpectedModelBehavior) as error:
         raise corrections.fail_closed(error) from error
@@ -77,28 +79,39 @@ def run_audit(
         unassigned_corrections=corrections.unassigned({rule.id for rule in catalog.rules}),
         retries=corrections.retries,
         fail_judge=corrections.fail_judge,
+        closed_world=given.world is None,
     )
 
 
 async def _drafts(
-    catalog: RuleCatalog, input_text: str, model: Model, corrections: Corrections,
+    catalog: RuleCatalog, given: AuditInput, model: Model, corrections: Corrections,
     on_progress: OnProgress,
 ) -> list[FindingDraft]:
-    """Spec, a template too: every FAIL goes to the judge (open world, #31). Architecture:
-    N/A by code via the resource inventory."""
-    if catalog.audit_type != "architecture":
+    """In an open world every FAIL goes to the judge (#31, #46)."""
+    if catalog.audit_type == "architecture":
+        drafts = await _architecture_drafts(catalog, given, model, corrections, on_progress)
+    else:
         drafts = await _counted(
-            package_requests(catalog.rules, input_text, None, model, corrections), on_progress)
-        if any(draft.status == "FAIL" for draft in drafts):  # the judge only runs on a FAIL
-            on_progress(Progress(phase="fail_judge"))
-        return await judge_fails(catalog.rules, drafts, input_text, model, corrections)
+            package_requests(catalog.rules, given, None, model, corrections), on_progress)
+    if given.world is None:  # closed world: a missing setting is the default, the FAIL stays
+        return drafts
+    if any(draft.status == "FAIL" for draft in drafts):  # the judge only runs on a FAIL
+        on_progress(Progress(phase="fail_judge"))
+    return await judge_fails(catalog.rules, drafts, given, model, corrections)
+
+
+async def _architecture_drafts(
+    catalog: RuleCatalog, given: AuditInput, model: Model, corrections: Corrections,
+    on_progress: OnProgress,
+) -> list[FindingDraft]:
+    """N/A by code via the resource inventory, the rest goes to the model."""
     on_progress(Progress(phase="inventory"))
-    inventory = await resource_inventory(catalog.rules, input_text, model, corrections)
+    inventory = await resource_inventory(catalog.rules, given.text, model, corrections)
     to_model = [rule for rule in catalog.rules if inventory.applies(rule)]
     drafts = [_na_by_code(rule, inventory.na_rationale)
               for rule in catalog.rules if not inventory.applies(rule)]
     return drafts + await _counted(package_requests(
-        to_model, input_text, inventory.na_forbidden, model, corrections), on_progress)
+        to_model, given, inventory.na_forbidden, model, corrections), on_progress)
 
 
 async def _counted(

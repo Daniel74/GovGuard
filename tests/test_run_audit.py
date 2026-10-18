@@ -3,9 +3,15 @@ from pydantic_ai.messages import ModelMessage, ModelResponse, RetryPromptPart, T
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from govguard.audit_engine import AuditValidationError, run_audit
-from govguard.audit_packages import SPEC_FAIL_RULE
 from govguard.evidence import UNPROVEN_PASS
 from govguard.inventory import NA_FORBIDDEN
+
+SPEC_RULE_BEFORE_46 = (
+    "Spezifikation (offene Welt): Was die Eingabe nicht erwähnt, kann anderswo geregelt sein. "
+    'Beschreibt "violation_if" ein Fehlen, belegt fehlender Text nur "nicht beschrieben": WARN. '
+    'FAIL nur, wenn die Belegzeilen etwas festlegen, das der Prüfregel widerspricht; '
+    '"rationale" nennt es.'
+)
 
 
 def answer_with(*findings: dict) -> FunctionModel:
@@ -88,7 +94,8 @@ def test_spec_prompt_allows_fail_only_for_a_violation_the_lines_lay_down(
 
     run_audit(spec_catalog, spec_input, answer_in_turns([PASS_32, WARN_9], seen=seen), trace)
 
-    assert SPEC_FAIL_RULE in str(seen[0])  # missing or vague is WARN (ADR 0020)
+    # the text of ADR 0020, character for character: open world placeholders filled (#46)
+    assert SPEC_RULE_BEFORE_46 in seen[0][0].instructions  # missing or vague is WARN
 
 
 def test_spec_audit_sends_templates_to_the_model(spec_catalog, bucket_template, trace) -> None:

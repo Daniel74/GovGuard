@@ -8,6 +8,10 @@
       {
         "anchor": "CIS AWS v7.0.0 3.1.4",
         "status": "PASS"
+      },
+      {
+        "anchor": "BSI GS++ DET.3.1",
+        "status": "PASS"
       }
     ]
   }

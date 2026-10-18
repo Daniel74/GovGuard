@@ -242,7 +242,7 @@ flowchart TB
     R["kb_build/*/run.py<br/>Dateien lesen + schreiben,<br/>Pfade aus paths.py"]
   end
   subgraph L["Logik – rein, ohne I/O"]
-    AE["govguard/audit_engine.py<br/>+ audit_packages.py, audit_gates.py, corrections.py,<br/>evidence.py, fail_judge.py, inventory.py, models.py,<br/>repairs.py, text.py"]
+    AE["govguard/audit_engine.py<br/>+ audit_packages.py, audit_gates.py, corrections.py,<br/>evidence.py, fail_judge.py, inventory.py, models.py,<br/>open_world.py, repairs.py, text.py"]
     KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py, build_log.py"]
     RV["govguard_ui/review.py<br/>Report lesen: Lücke, Soll-Abgleich"]
   end

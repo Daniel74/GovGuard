@@ -93,7 +93,7 @@ class Trace(BaseModel):  # links a report to input, knowledge base and deploy (A
     kb_commit: str
 
 
-class FailJudgeCount(BaseModel):  # verdicts of the FAIL judge in one spec audit (#31)
+class FailJudgeCount(BaseModel):  # verdicts of the FAIL judge in one open-world audit (#31, #46)
     checked: int = 0
     confirmed: int = 0
     downgraded: int = 0  # set to WARN, the reason stands in the finding's corrections
@@ -115,6 +115,7 @@ class AuditReport(BaseModel):
     unassigned_corrections: list[str] = []  # reasons without a finding, e.g. an unknown rule_id
     retries: int = 0  # packages and the FAIL judge sent back once; no per-package view (#27)
     fail_judge: FailJudgeCount = FailJudgeCount()
+    closed_world: bool = False  # a template the code parsed: no FAIL judge (ADR 0020, #46)
 
 
 class AuditEvent(BaseModel):  # one JSON line in CloudWatch Logs, no evidence (DSGVO Art. 5(1)(c))

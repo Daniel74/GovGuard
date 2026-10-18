@@ -1,4 +1,4 @@
-"""FAIL judge: a second LLM opinion on every FAIL of a spec audit (open world, ADR 0020, #31).
+"""FAIL judge: a second LLM opinion on every FAIL in an open world (ADR 0020, #31, #46).
 
 Whether evidence lines lay down a violation is a question of meaning, no code gate decides it.
 One request for all FAILs, with only criterion and evidence lines. Pure logic: model injected.
@@ -14,21 +14,21 @@ from pydantic_ai.models import Model
 from govguard.corrections import Corrections, service_down
 from govguard.evidence import evidence_of
 from govguard.models import FindingDraft, Provider, Rule, provider_of
+from govguard.open_world import AuditInput, OpenWorld
 
 _DOWN = "KI-Dienst nicht erreichbar oder überlastet"  # never the library's error text
 _INVALID = "Antwort auch nach einer Korrektur nicht verwertbar"
 
 FAIL_JUDGE_PROMPT = """\
-Du prüfst FAIL-Befunde aus dem Audit einer fachlichen Spezifikation. Eine Spezifikation ist
+Du prüfst FAIL-Befunde aus dem Audit {audit_of}. {subject_sentence} ist
 eine offene Welt: Was sie nicht erwähnt, kann anderswo geregelt sein. Ein FAIL ist nur
 richtig, wenn die Belegzeilen selbst etwas festlegen, das das Verstoßkriterium
 ("violation_if") erfüllt: eine Festlegung, die der Prüfregel widerspricht, oder einen
 erklärten Verzicht oder Aufschub.
 Bestätige ein FAIL nicht, wenn die Belegzeilen das Kriterium nicht zeigen, also zum
 Thema schweigen, es nur vage oder unvollständig beschreiben.
-- Bestätigt: Kriterium "legt als Exportformat nur PDF fest", Beleg "Der Export erfolgt
-  ausschließlich als PDF."
-- Nicht bestätigt: gleiches Kriterium, Beleg "Bürger können ihre Daten exportieren."
+- Bestätigt: {confirmed}
+- Nicht bestätigt: {rejected}
 Gib je Befund genau ein Urteil ab: "confirmed" true oder false, "reason" ein Satz auf
 Deutsch, woran du es erkennst."""
 
@@ -44,6 +44,7 @@ class FailVerdicts(BaseModel):  # schema of tool submit_fail_verdicts
 
 
 class JudgeDeps(BaseModel):  # deps_type of the judge
+    world: OpenWorld  # subject and example pair of the prompt (#46)
     fail_ids: list[str]  # rule_ids of the FAILs, each needs a verdict
     corrections: Corrections  # the judge's retry counts like a package retry (#27)
     reason_sent: bool = False  # the code asked for missing verdicts
@@ -54,8 +55,7 @@ _OUTPUT = {"name": "submit_fail_verdicts", "strict": True,
 _SETTINGS = {"temperature": 0, "max_tokens": 8000}  # like the audit (#28)
 # Bedrock: forced tool (ADR 0005); Groq: json_schema with constrained decoding (ADR 0016)
 _JUDGES: dict[Provider, Agent] = {
-    provider: Agent(output_type=output_type, instructions=FAIL_JUDGE_PROMPT,
-                    deps_type=JudgeDeps, model_settings=_SETTINGS,
+    provider: Agent(output_type=output_type, deps_type=JudgeDeps, model_settings=_SETTINGS,
                     retries=1)  # one retry, for a schema slip or missing verdicts
     for provider, output_type in [("bedrock", ToolOutput(FailVerdicts, **_OUTPUT)),
                                   ("groq", NativeOutput(FailVerdicts, **_OUTPUT))]
@@ -74,23 +74,32 @@ def _all_judged(ctx: RunContext[JudgeDeps], output: FailVerdicts) -> FailVerdict
     return output
 
 
+def _prompt(ctx: RunContext[JudgeDeps]) -> str:
+    world = ctx.deps.world
+    return FAIL_JUDGE_PROMPT.format(
+        audit_of=world.audit_of, subject_sentence=world.subject_sentence,
+        confirmed=world.confirmed, rejected=world.rejected)
+
+
 for _judge in _JUDGES.values():
     _judge.output_validator(_all_judged)
+    _judge.instructions(_prompt)
 
 
 async def judge_fails(
-    rules: list[Rule], drafts: list[FindingDraft], input_text: str, model: Model,
+    rules: list[Rule], drafts: list[FindingDraft], given: AuditInput, model: Model,
     corrections: Corrections,
 ) -> list[FindingDraft]:
     """Confirmed FAILs stay, rejected ones become WARN; every verdict lands in corrections.
 
     Without a verdict the FAIL stays unchecked: the stricter status, no fail closed (#31).
+    A closed world (template) never gets here: a missing setting is the default (ADR 0020).
     """
     fails = {d.rule_id: d for d in drafts if d.status == "FAIL"}
-    if not fails:
+    if not fails or given.world is None:
         return drafts
-    deps = JudgeDeps(fail_ids=list(fails), corrections=corrections)
-    verdicts, no_verdict_reason = await _verdicts(rules, list(fails.values()), input_text,
+    deps = JudgeDeps(world=given.world, fail_ids=list(fails), corrections=corrections)
+    verdicts, no_verdict_reason = await _verdicts(rules, list(fails.values()), given.text,
                                                   model, deps)
     for rule_id in fails:
         if verdict := verdicts.get(rule_id):

@@ -17,7 +17,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12c–12e, 12g, 12f, 12h, 12a, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12c–12e, 12g, 12f, 12h, 12a, 12i, 12j, 12k, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 16.10.:** Kein AWS-Zugriff. Die Demo läuft ohne AWS (Schritt 10i); jeder Schritt läuft bis zum ersten ☁-Kästchen, der Rest folgt gesammelt im AWS-Nachholblock.
 
@@ -75,6 +75,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 12h     | A    | #45 Befundtabelle mit Spalten     | 🤖 Opus                          | 👤 Vergleichsbild + 🤖 Opus |
 | 12a     | A    | #39 Zitatprüfung ohne Markdown    | 🤖 Sonnet                        | 🤖 Opus                     |
 | 12i     | A    | #46 Arch-Freitext: offene Welt    | 🤖 Opus                          | 🤖 Opus                     |
+| 12j     | A    | #47 Arch-Katalog zu wörtlich      | 🤖 Opus                          | 🤖 Opus                     |
+| 12k     | A    | #48 CloudFormation-YAML           | 🤖 Sonnet                        | 🤖 Opus                     |
 | 11b     | A    | #9 Stack (CDK, IAM, KMS)          | 🤖 Opus                          | 🤖 Opus · 🛠 Junie          |
 | 11a     | A    | #34 Audit-Jobs in S3              | 🤖 Opus                          | 🤖 Opus                     |
 | 12b     | A    | #36 Selbst-Audit und Galerie      | 👤 + 🤖 Opus                     | 👤                          |
@@ -682,14 +684,46 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Ein Architektur-Audit von Freitext vergibt FAIL nur für einen festgelegten Verstoß, nicht für eine fehlende Angabe. Ein CloudFormation-Template bleibt geschlossene Welt (ADR 0020).
 **Voraussetzung:** Schritt 12a (#39). Läuft komplett ohne AWS.
 
-- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Frage in #46: Prompt-Regel oder FAIL-Prüfer für Architektur-Freitext?` (Prompt-Design ist eine Weichenstellung)
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #46 umsetzen` → Plan → Go. Halt beim Prompt (Weichenstellung Prompt-Design).
-- [ ] **Messen** 🆕 _Opus_ · 👤 `/audit-messen arch-protokollarchiv 2× mit Groq, Report nach data/gallery/` → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Schwankung.
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #46`
+- [x] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Frage in #46: Prompt-Regel oder FAIL-Prüfer für Architektur-Freitext?` (Prompt-Design ist eine Weichenstellung)
+- [x] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #46 umsetzen` → Plan → Go. Prompt laut Akzeptanzkriterien in #46, Spec-Text bleibt zeichengleich.
+- [x] **Messen** 🆕 _Opus_ · 👤 `/audit-messen arch-protokollarchiv 2× mit Groq, Report nach data/gallery/` → 🤖 notiert im Issue die FAILs wegen Fehlens, CIS 3.1.4, DET.3.1 und die Schwankung.
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #46`
+- [x] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** `arch-protokollarchiv` mit Groq in zwei Läufen kein FAIL wegen Fehlens zeigt, CIS 3.1.4 PASS ist und Templates weiter FAIL für fehlende Einstellungen zeigen. DET.3.1 PASS und `expected` folgen in Schritt 12j (#47).
+**Fürs Fachgespräch:** Offene und geschlossene Welt: Bei Freitext ist eine fehlende Angabe Prüfbedarf (WARN), bei einem Template der unsichere Standardwert (FAIL). Das entscheidet der Code, nicht das Modell.
+
+---
+
+### Schritt 12j – #47 Architektur-Katalog: zu wörtliche Prüfregeln (S3.5, KONF.11.7.2.1)
+
+**Ziel:** Prüfregeln im Architektur-Katalog werten eine gleichwertige Umsetzung nicht als Verstoß. Behoben im Build, nicht von Hand im Katalog.
+**Voraussetzung:** Schritt 12i (#46). Läuft komplett ohne AWS.
+
+- [ ] **Klären** 🆕 _Opus_ · 👤 `/grilling Offene Fragen in #47: Einzelfälle oder Muster, Teil- oder Voll-Rebuild?` (Prompt-Design ist eine Weichenstellung)
+- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #47 umsetzen` → Plan → Go. Halt beim Prompt (Weichenstellung Prompt-Design).
+- [ ] **Bauen** 🆕 _Opus_ · 👤 `python -m kb_build` für den Architektur-Katalog (Umfang laut Klären)
+- [ ] **Messen** 🆕 _Opus_ · 👤 `/audit-messen arch-protokollarchiv 2× mit Groq, Report nach data/gallery/`, danach `arch-fristenwecker` und `arch-antragseingang-fehlerhaft` je 1× → 🤖 notiert im Issue die Ergebnisse gegen `expected` und die Schwankung.
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #47`
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** `arch-protokollarchiv` mit Groq zweimal `expected` erreicht (WARN, CIS 3.1.4 PASS, DET.3.1 PASS) und Templates weiter FAIL für fehlende Einstellungen zeigen.
-**Fürs Fachgespräch:** Offene und geschlossene Welt: Bei Freitext ist eine fehlende Angabe Prüfbedarf (WARN), bei einem Template der unsichere Standardwert (FAIL). Das entscheidet der Code, nicht das Modell.
+**Fertig, wenn:** `arch-protokollarchiv` mit Groq zweimal `expected` erreicht und beide Templates weiter `expected` erreichen.
+**Fürs Fachgespräch:** Eine Prüfregel prüft das Schutzziel, nicht eine Schreibweise: Deny bei `false` und Allow nur bei `true` erzwingen beide TLS.
+
+---
+
+### Schritt 12k – #48 Architektur: CloudFormation-YAML mit Code-Inventar (geschlossene Welt)
+
+**Ziel:** Ein CloudFormation-Template in YAML wird wie JSON geprüft: Code-Inventar, N/A durch den Code, geschlossene Welt. Terraform bleibt Freitext.
+**Voraussetzung:** Schritt 12i (#46). Läuft komplett ohne AWS und ohne LLM. Streichbar, wenn die Zeit knapp wird.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #48 umsetzen` → Plan → Go
+      Reihenfolge: Test `template_resource_types` mit YAML-Fixture aus `arch-fristenwecker` → Loader mit Kurzformen (`!Ref`, `!Sub`, `!GetAtt`) in `text.py` → Fake-Modell-Test: FAIL wegen Fehlens bleibt FAIL
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #48`
+- [ ] **Abschließen** 👤 committet und pusht
+
+**Fertig, wenn:** YAML-Template und JSON-Template liefern dasselbe Ressourceninventar und dieselbe geschlossene Welt, ADR 0015 hat den Nachtrag.
+**Fürs Fachgespräch:** Die Welt hängt am Format, das der Code lesen kann: Was er als Bauplan parst, ist geschlossene Welt; Terraform nimmt er nur als Freitext an, deshalb offene Welt.
 
 ---
 

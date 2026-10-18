@@ -20,7 +20,7 @@ _Ergänzt [ADR 0017](0017-beleg-per-zeilenverweis.md). Umsetzung und Messungen: 
 - Die Regel steht nur im Prompt, auch die Pflicht für `rationale`. Ein falsches FAIL mit Beleg bleibt möglich und fällt nur in der Messung gegen `expected` auf. Allein reicht die Regel nicht, erst mit #29 kann `expected` grün werden.
 - Gemessen werden in #29 auch die Gegenproben (Art. 9 bleibt FAIL) und die Schwankung: die Zahl der Prüfregeln, deren Status sich zwischen zwei Läufen ändert. `temperature: 0` macht Läufe nicht identisch.
 - Ein Bedrock-Retry lief in einer Schleife bis 64.000 Output-Tokens (204 s). Mit der Obergrenze bricht eine Schleife nach ca. 25 s ab, normal sind unter 4.000 Tokens. Der abgeschnittene Tool-Call beendet das Audit sofort fail closed, ohne Retry, aber innerhalb der 180 s (ADR 0018).
-- Offen: Eine Architektur als Freitext ist eigentlich auch offene Welt, wird aber heute wie ein Template geprüft.
+- ~~Offen: Eine Architektur als Freitext ist eigentlich auch offene Welt, wird aber heute wie ein Template geprüft.~~ Gelöst mit #46, siehe Nachtrag.
 
 ## Nachtrag (#29)
 
@@ -40,6 +40,12 @@ _Ergänzt [ADR 0017](0017-beleg-per-zeilenverweis.md). Umsetzung und Messungen: 
   - Pakete auflösen: ca. 9-fache Tokens, mit dem Groq-Limit ca. 18 min statt 180 s, und der Zufall bliebe.
 - **Konsequenzen:** Ein Request mehr je Spec-Audit mit FAIL, mit wenigen tausend Tokens. Ein fälschlich bestätigtes FAIL bleibt möglich und fällt nur in der Messung gegen `expected` auf.
 
+## Nachtrag (#46): Architektur als Freitext ist offene Welt
+
+- **Kontext:** `arch-protokollarchiv` (Freitext, Groq) bekam 4–9 FAILs je Lauf wie „keine LifecycleConfiguration erwähnt“, Gesamtstatus FAIL statt WARN.
+- **Entscheidung:** Die Welt hängt nicht mehr an der Audit-Art, sondern an der Eingabe. Geschlossen ist nur, was der Code als Bauplan liest: CloudFormation-JSON (`template_resource_types`, wie beim Inventar). Für alles andere gelten Prompt-Regel (`OPEN_WORLD_FAIL_RULE`) und FAIL-Prüfer. Beide haben Platzhalter für Gegenstand und Beispielpaar (`OpenWorld`); für das Spec-Audit entsteht zeichengenau der alte Text. Der Report speichert die Welt (`closed_world`), damit die UI den FAIL-Prüfer nur beim Template als „entfällt“ zeigt. Einschränkung: CloudFormation-YAML und Terraform gelten als offene Welt, solange der Code sie nicht liest; YAML folgt in #48.
+- **Messung** (Groq, 2 Läufe): FAILs wegen Fehlens nach dem Prüfer 0 und 0 (der Prüfer stufte 1 bzw. 2 herab). Es blieb 1 FAIL mit Festlegung (KONF.11.7.2.1, „REST, regional“, zu wörtlich, #47). CIS 3.1.4 PASS in beiden Läufen, DET.3.1 WARN und PASS („1 Jahr“ nicht als `RetentionInDays` gelesen); beides ist eine zu wörtliche Prüfregel und nach #47 verschoben. Die Schwankung beträgt 9 Prüfregeln.
+
 ## Fachgespräch-Satz
 
-„Eine Spezifikation ist eine offene Welt: Was sie nicht erwähnt, ist Prüfbedarf, also WARN. Ein Template ist eine geschlossene Welt, dort bedeutet eine fehlende Einstellung den unsicheren Standardwert, also FAIL.“
+„Eine Spezifikation oder eine Architektur als Freitext ist eine offene Welt: Was sie nicht erwähnt, ist Prüfbedarf, also WARN. Ein Template, das der Code liest, ist eine geschlossene Welt, dort bedeutet eine fehlende Einstellung den unsicheren Standardwert, also FAIL.“
