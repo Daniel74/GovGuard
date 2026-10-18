@@ -718,13 +718,13 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Ziel:** Die Galerie zeigt die Architektur-Reports zum neuen Katalog aus #47. #48, #49 und #50 sind als bekannte Grenzen dokumentiert und mit Label `ausbau` geschlossen. Danach bleiben `kb_build` und Audit-Engine unverändert.
 **Voraussetzung:** Schritt 12j (#47) committet. Kein LLM-Lauf, keine Kosten: Die Reports stammen aus den Messläufen von #47 und liegen in `data/intermediate/reports_47/` (gleicher Katalog-Hash wie `rules_arch.json`).
 
-- [ ] **Galerie** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12l. Ersetze die drei Architektur-Reports in `data/gallery/` durch die Reports aus `data/intermediate/reports_47/` und zieh die Tests nach“ → Plan → Go
+- [x] **Galerie** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12l. Ersetze die drei Architektur-Reports in `data/gallery/` durch die Reports aus `data/intermediate/reports_47/` und zieh die Tests nach“ → Plan → Go
       Zuordnung: `report_protokoll1` → `arch-protokollarchiv`, `report_fristenwecker` → `arch-fristenwecker`, `report_antragseingang` → `arch-antragseingang-fehlerhaft`. Neun Tests schreiben Zahlen der alten Reports fest (`test_review`, `test_ui_gallery_arch`, `test_ui_gallery_selection`, `test_ui_pages`, `test_ui_report_header`). `preset.json` bleibt unverändert: Die UI zeigt die Abweichung DET.3.1 (Soll PASS, Ist WARN) ehrlich an.
-- [ ] **Ansehen** 👤 `uv run pytest -m visual`, Vergleichsbilder der Architektur-Galerie ansehen, dann `--update-snapshots`
-- [ ] **Bekannte Grenzen** 🤖 im selben Lauf: README → *Bekannte Grenzen* um drei Punkte ergänzen (je ein Satz mit Ticket): YAML gilt als offene Welt (#48); der Build bricht mit Groq oft an einer Regel ab, Wiederholen hilft (#49); S3.5, DLS.2.2, IAM-09.01AC und BER.5.9 werten Deny bei `false` als Verstoß, 12 Regeln enthalten Platzhalter (#50)
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen FAHRPLAN Schritt 12l`
-- [ ] **Live** 👤 Streamlit Community Cloud neu laden, `arch-protokollarchiv` ansehen
-- [ ] **Abschließen** 👤 committet und pusht, schließt #47; #48, #49 und #50 bekommen das Label `ausbau`, einen Kommentar mit Verweis auf README *Bekannte Grenzen* und werden geschlossen (`gh issue close N --reason "not planned"`)
+- [x] **Ansehen** 👤 `uv run pytest -m visual`, Vergleichsbilder der Architektur-Galerie ansehen, dann `--update-snapshots`
+- [x] **Bekannte Grenzen** 🤖 im selben Lauf: README → _Bekannte Grenzen_ um drei Punkte ergänzen (je ein Satz mit Ticket): YAML gilt als offene Welt (#48); der Build bricht mit Groq oft an einer Regel ab, Wiederholen hilft (#49); S3.5, DLS.2.2, IAM-09.01AC und BER.5.9 werten Deny bei `false` als Verstoß, 12 Regeln enthalten Platzhalter (#50)
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen FAHRPLAN Schritt 12l`
+- [x] **Live** 👤 Streamlit Community Cloud neu laden, `arch-protokollarchiv` ansehen
+- [x] **Abschließen** 👤 committet und pusht, schließt #47; #48, #49 und #50 bekommen das Label `ausbau`, einen Kommentar mit Verweis auf README _Bekannte Grenzen_ und werden geschlossen (`gh issue close N --reason "not planned"`)
 
 **Fertig, wenn:** Die Galerie die Reports zum Katalog-Hash von `rules_arch.json` zeigt, `pytest` und `pytest -m visual` grün sind und das README die drei Grenzen nennt.
 **Fürs Fachgespräch:** Bewusst eingefroren: Ein bekannter, dokumentierter Fehler mit Ticket ist besser als eine letzte Änderung ohne Messung. Jeder Report trägt `catalog_sha256`, damit ist nachweisbar, mit welchem Katalog er entstand.

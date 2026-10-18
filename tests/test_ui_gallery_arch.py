@@ -1,8 +1,8 @@
 """Architecture audit on "Audits ansehen": one table with status and source filter, like the
 spec audit, via AppTest (#45).
 
-Numbers of arch-antragseingang-fehlerhaft: 29 FAIL, 28 PASS, 109 N/A, no WARN, no gaps;
-BSI 34 findings, C5 6, CIS 20 (✕5 ✓3), FSBP 106.
+Numbers of arch-antragseingang-fehlerhaft: 36 FAIL, 27 PASS, 1 WARN, 111 N/A, no gaps;
+BSI 39 findings, C5 11, CIS 20 (✕4 ✓4), FSBP 105.
 """
 
 from test_ui_pages import gallery_script, page, shown_text
@@ -13,26 +13,26 @@ def test_arch_findings_stand_in_one_table_with_a_head_na_hidden() -> None:
     app = arch_page()
 
     assert len(finding_tables(app)) == 1
-    assert len(table_rows(app)) == 29 + 28
-    assert "57 Befunde angezeigt · sortiert: FAIL zuerst, dann nach Zeile" in shown_text(app)
-    assert "Ausgeblendet: 109 N/A." in shown_text(app)
+    assert len(table_rows(app)) == 36 + 27 + 1
+    assert "64 Befunde angezeigt · sortiert: FAIL zuerst, dann nach Zeile" in shown_text(app)
+    assert "Ausgeblendet: 111 N/A." in shown_text(app)
 
 
 def test_the_arch_status_filter_counts_like_the_spec_one() -> None:
     pills = arch_page().pills(key=arch_key("status"))
 
-    assert pills.options == ["✕ FAIL 29", "! WARN · Prüfbedarf 0", "✓ PASS 28", "– N/A 109"]
+    assert pills.options == ["✕ FAIL 36", "! WARN · Prüfbedarf 1", "✓ PASS 27", "– N/A 111"]
 
 
 def test_the_arch_source_filter_starts_with_all_and_keeps_only_that_source() -> None:
     app = arch_page()
     sources = app.segmented_control(key=arch_key("source"))
     assert sources.value == "Alle"
-    assert sources.options == ["Alle (166)", "BSI (34)", "C5 (6)", "CIS (20)", "FSBP (106)"]
+    assert sources.options == ["Alle (175)", "BSI (39)", "C5 (11)", "CIS (20)", "FSBP (105)"]
 
     sources.set_value("CIS").run()
 
-    assert len(table_rows(app)) == 5 + 3
+    assert len(table_rows(app)) == 4 + 4
 
 
 def test_gaps_of_an_arch_audit_stand_below_the_table() -> None:

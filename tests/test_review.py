@@ -26,9 +26,11 @@ def test_spec_report_of_16_october_meets_its_expected_result() -> None:
     assert deviations("spec-meldeportal-gesundheit") == []
 
 
-def test_arch_report_of_16_october_shows_the_ber_4_1_deviation() -> None:
-    """Measured on 16.10.2026: BSI BER.4.1 PASS instead of FAIL (ADR 0023)."""
-    assert deviations("arch-antragseingang-fehlerhaft") == [("BSI GS++ BER.4.1", "FAIL", "PASS")]
+def test_arch_reports_of_the_catalog_of_47_show_only_the_det_3_1_deviation() -> None:
+    """Measured for #47 (catalog f97cc6bf): only DET.3.1 of arch-protokollarchiv misses."""
+    assert deviations("arch-antragseingang-fehlerhaft") == []
+    assert deviations("arch-fristenwecker") == []
+    assert deviations("arch-protokollarchiv") == [("BSI GS++ DET.3.1", "PASS", "WARN")]
 
 
 def test_overall_status_comes_first_and_a_check_points_to_its_finding() -> None:
@@ -62,7 +64,7 @@ def test_spec_report_separates_gaps_from_warnings_with_evidence() -> None:
 
 def test_arch_report_counts_every_category_even_when_empty() -> None:
     assert counts("arch-antragseingang-fehlerhaft") == {
-        "FAIL": 29, "WARN": 0, "GAP": 0, "PASS": 28, "N/A": 109}
+        "FAIL": 36, "WARN": 1, "GAP": 0, "PASS": 27, "N/A": 111}
 
 
 def test_a_downgraded_finding_without_lines_needs_review_and_is_no_gap() -> None:

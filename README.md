@@ -30,3 +30,6 @@ Build-Werkzeug, läuft lokal: `uv run python -m kb_build <befehl>`. Hintergrund:
 ## Bekannte Grenzen
 
 - **Groq im Audit:** Groq (`openai/gpt-oss-120b`) schwankt stärker als Bedrock. Im Spec-Audit änderten zwischen zwei Läufen 42 von 151 Prüfregeln ihren Status, bei Bedrock 19 (#29). Der FAIL-Prüfer fängt FAILs ohne festgelegten Verstoß ab (#31), PASS und WARN schwanken weiter. Trotzdem ist Groq Standard, denn Bedrock ist für die Demo nicht verfügbar; jeder Report nennt seine `model_id` ([ADR 0023](docs/adr/0023-demo-und-recruiter-stand.md)).
+- **YAML:** CloudFormation-YAML gilt als Freitext und damit als offene Welt; ein fehlender Baustein wird dort nur WARN, kein FAIL (#48).
+- **Build mit Groq:** `kb_build` bricht mit Groq oft an einer einzelnen Regel ab; Wiederholen hilft (#49).
+- **Prüfregeln:** S3.5, DLS.2.2, IAM-09.01AC und BER.5.9 werten Deny bei `false` als Verstoß, 12 Regeln enthalten Platzhalter, nur `<Mindestfrist>` in DET.3.1 verfälscht das Ergebnis (WARN statt PASS, #50).

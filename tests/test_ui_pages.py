@@ -73,10 +73,10 @@ def test_gallery_shows_the_first_preset_with_its_source_and_expected_result() ->
 def test_gallery_shows_the_deviation_of_the_arch_preset() -> None:
     app = page(gallery_script)
 
-    app.selectbox(key="gallery_preset").select("arch-antragseingang-fehlerhaft").run()
+    app.selectbox(key="gallery_preset").select("arch-protokollarchiv").run()
 
     assert not app.exception
-    assert "BSI GS++ BER.4.1: Soll FAIL, Ist PASS" in [b.label for b in app.button]
+    assert "BSI GS++ DET.3.1: Soll PASS, Ist WARN" in [b.label for b in app.button]
 
 
 def test_the_app_opens_on_start_and_help() -> None:

@@ -83,7 +83,7 @@ def test_an_architecture_without_gaps_has_no_gap_tile_and_no_fail_judge() -> Non
     app.selectbox(key="gallery_preset").select(ARCH).run()
 
     assert [(m.label, m.value) for m in app.metric] == [
-        ("✕ FAIL", "29"), ("! WARN · Prüfbedarf", "0"), ("✓ PASS", "28"), ("– N/A", "109"),
+        ("✕ FAIL", "36"), ("! WARN · Prüfbedarf", "1"), ("✓ PASS", "27"), ("– N/A", "111"),
         ("FAIL-Prüfer", "entfällt")]
     assert "! WARN · Prüfbedarf\nmit Beleg" in frames(app)  # no "davon 0 herabgestuft"
     assert "– N/A\nRessourcentyp nicht in der Architektur" in frames(app)
