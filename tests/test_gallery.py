@@ -27,6 +27,17 @@ def test_spec_presets_come_first_and_each_names_its_source_file() -> None:
     assert entries[0].source_name == "input.md"
 
 
+def test_the_self_audit_follows_the_fictional_spec_presets(tmp_path: Path) -> None:  # #36
+    shutil.copytree(PRESETS / "arch-fristenwecker", tmp_path / "arch-fristenwecker")
+    for preset_id in ("spec-govguard", "spec-meldeportal-gesundheit"):
+        shutil.copytree(PRESETS / "spec-meldeportal-gesundheit", tmp_path / preset_id)
+
+    entries = load_gallery(tmp_path, tmp_path / "gallery")
+
+    assert [e.preset_id for e in entries] == [
+        "spec-meldeportal-gesundheit", "spec-govguard", "arch-fristenwecker"]
+
+
 def test_a_preset_without_a_stored_report_stays_in_the_gallery(tmp_path: Path) -> None:
     shutil.copytree(PRESETS / "arch-fristenwecker", tmp_path / "presets" / "arch-fristenwecker")
 

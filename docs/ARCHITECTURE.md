@@ -1,6 +1,6 @@
 # GovGuard – Big Picture
 
-GovGuard hat zwei Betriebsarten: **Build-Zeit** (Wissensbasis erzeugen) und **Laufzeit** (Audits beantworten). Beide nutzen dieselbe **Audit-Engine**. Begriffe: [CONTEXT.md](../CONTEXT.md), Anforderungen: [SPEC.md](SPEC.md).
+GovGuard hat zwei Betriebsarten: **Build-Zeit** (Wissensbasis erzeugen) und **Laufzeit** (Audits beantworten). Beide nutzen dieselbe **Audit-Engine**. Begriffe: [CONTEXT.md](../CONTEXT.md), Systembeschreibung des Demo-Stands: [SPEC.md](SPEC.md).
 
 ## Arbeitsteilung LLM ↔ Code
 
@@ -51,7 +51,7 @@ Das erste Gate prüft jede Prüfregel in drei Punkten:
 
 Den Primäranker setzt zwar der Code, der Check sichert aber die Extraktion ab. Querverweise schlägt dagegen das LLM vor; hier fängt der Check erfundene IDs ab.
 
-Zum Schluss müssen die 5 Presets ihr festgelegtes Soll-Ergebnis liefern. Nur wenn alle Gates grün sind, öffnet der Workflow einen Pull Request mit der neuen Wissensbasis. Nach S3 gelangt sie erst nach dem Merge, über den normalen Deploy (Abschnitt 3). Jeder Fehler bricht den Build ab, und die alte Version bleibt aktiv.
+Zum Schluss müssen die 6 Presets ihr festgelegtes Soll-Ergebnis liefern. Nur wenn alle Gates grün sind, öffnet der Workflow einen Pull Request mit der neuen Wissensbasis. Nach S3 gelangt sie erst nach dem Merge, über den normalen Deploy (Abschnitt 3). Jeder Fehler bricht den Build ab, und die alte Version bleibt aktiv.
 
 Der Workflow startet nur manuell: Er kostet viele LLM-Aufrufe, liefert bei jedem Lauf leicht andere Texte, und die Quellen ändern sich selten. Golden Archetypes baut der Build nicht (ADR 0019).
 
@@ -71,8 +71,22 @@ Jede Quelle durchläuft dieselben Stufen; nur die Parameter unterscheiden sich. 
 - **① Vorfilter:** reiner Code auf Metadaten (OSCAL-Props, Kapitel, Bereiche, Dienste, Maßnahmen-IDs). Er ist billig, reproduzierbar und wirft Organisatorisches früh weg. Für jede verworfene Anforderung schreibt er einen festen Begründungssatz ins Auswahlprotokoll.
 - **② LLM:** bekommt **eine** Anforderung und den Prüfumfang und antwortet nur ja/nein mit Begründung, bei Architektur zusätzlich mit `cfn_resource_types` (per Tool-Choice, siehe 2.1). Es zählt nicht und wählt nicht aus. Das Urteil wird gecacht (Text-Hash, Prompt-Version, `model_id`); ein neuer Lauf fragt nur neue oder geänderte Anforderungen.
 - **Relevanz (Code, nur Architektur):** Es bleiben nur Anforderungen, deren erster (wichtigster) `cfn_resource_type` im Prüfumfang liegt (`data/input/scope.json`): Serverless-Dienste, dazu RDS/Aurora und Fargate (ECS) mit dem, was beide brauchen: VPC-Typen, ECR und ELBv2. Kontoweite Pflichten wie Root-MFA oder CloudTrail fallen damit heraus, denn sie sind an keinem Template entscheidbar.
-- **Aufnahme:** Jede prüfbare und relevante Anforderung kommt in den Bounded Catalog. Das Auswahlprotokoll (`verdicts_*.json`) hält für jede Anforderung Ergebnis und Begründung fest (SPEC). Die Liste der aufgenommenen (`selection_spec.json`, `selection_arch.json`) liegt versioniert im Repo; Änderungen zwischen zwei Builds zeigt der Git-Diff.
+- **Aufnahme:** Jede prüfbare und relevante Anforderung kommt in den Bounded Catalog. Das Auswahlprotokoll (`verdicts_*.json`) hält für jede Anforderung Ergebnis und Begründung fest (1.1.1). Die Liste der aufgenommenen (`selection_spec.json`, `selection_arch.json`) liegt versioniert im Repo; Änderungen zwischen zwei Builds zeigt der Git-Diff.
 - **Gates:** Die Pflichtanker der Presets müssen aufgenommen sein, und jede Komponente der Archetypen (Pflicht-Ressourcentypen, 1.4) braucht mindestens eine Prüfregel. Sonst bricht der Build ab.
+
+#### 1.1.1 Aufnahme in den Bounded Catalog
+
+Jede Anforderung jeder Quelle bekommt genau einen Eintrag im **Auswahlprotokoll** (`data/intermediate/verdicts_<arch|spec>.json`, versioniert). Das LLM urteilt nur über „prüfbar“, Ebene der Pflicht und Ressourcentypen. Über die Aufnahme entscheidet der Code (ADR 0011).
+
+| Ergebnis | Bedeutung | Entscheidet |
+|---|---|---|
+| `selected` | prüfbar und relevant, steht im Bounded Catalog | Code |
+| `prefiltered` | vom Vorfilter verworfen, mit festem Begründungssatz (z. B. „Praktik SENS liegt außerhalb des Architektur-Audits“) | Code |
+| `not_relevant` | Architektur: die Pflicht liegt nicht am Template, sondern bei Konto, Personen oder Anbieter (z. B. CIS 4.4, MFA für Admins), oder der erste Ressourcentyp liegt nicht im Prüfumfang (z. B. EC2-Instanz) | Code |
+| `not_testable` | an einer Spezifikation bzw. einem Template nicht entscheidbar | LLM |
+| `llm_error` | Antwort auch nach zwei Retries ungültig (z. B. erfundener Ressourcentyp); die Anforderung ist ausgeschlossen und im Protokoll sichtbar. Bei einem Pflichtanker bricht der Build ab | Code |
+
+Vor den Prüfregeln liest der Projektbetreiber das Auswahlprotokoll (Kontrollpunkt, FAHRPLAN Schritt 6). Fehlt etwas Wichtiges bei `not_testable` oder `not_relevant`, werden Prompt oder Prüfumfang angepasst.
 
 ### 1.2 Prüfregel-Schema
 
@@ -287,7 +301,7 @@ src/govguard_ui/      Streamlit-Demo (ADR 0023): ruft run_audit im eigenen Proze
                       Start über streamlit_app.py im Root
 data/input/           von Hand gepflegt: sources.json (URL, Version, SHA-256, Lizenz; ADR 0008),
                       scope.json (Prüfumfang, ADR 0011), archetype_profiles.json,
-                      cfn_resource_types.json, cfn_properties.json, presets/ (5 Presets mit Soll-Ergebnis)
+                      cfn_resource_types.json, cfn_properties.json, presets/ (6 Presets mit Soll-Ergebnis)
 data/intermediate/    Zwischenergebnisse, eingecheckt fürs Review: extracted/ (cis, fsbp, c5 nur lokal),
                       judgement_cache.json, selection_*.json, verdicts_*.json; sources/ = Download-Cache, in .gitignore
                       logs/<kommando>[_spec|_arch].log: Build-Log je Lauf (Retries mit Grund, Tokens), mit dem Ergebnis committen

@@ -1,5 +1,7 @@
 # GovGuard
 
+Compliance-Copilot, der Spezifikationen gegen DSGVO/SDM und Architekturen gegen BSI/CIS prüft. Was GovGuard fachlich leistet, beschreibt die Systembeschreibung [docs/SPEC.md](docs/SPEC.md); GovGuard prüft sie in der Galerie selbst (Preset `spec-govguard`).
+
 ## Wissensbasis bauen (`kb_build`)
 
 Build-Werkzeug, läuft lokal: `uv run python -m kb_build <befehl>`. Hintergrund: [ARCHITECTURE](docs/ARCHITECTURE.md) 1.
@@ -7,7 +9,7 @@ Build-Werkzeug, läuft lokal: `uv run python -m kb_build <befehl>`. Hintergrund:
 | Befehl | Was passiert | Ergebnis |
 |---|---|---|
 | `extract` (Standard) | Lädt die Quellen (SHA-256 geprüft) und zerlegt sie in Anforderungen. Kein LLM. | `data/intermediate/extracted/*.json` |
-| `select` | Das LLM klassifiziert „prüfbar ja/nein“, der Code wählt aus (Relevanz, gesetzte Plätze, Ranking). | `data/intermediate/selection_<arch\|spec>.json`, dazu `verdicts_*.json` (Urteil je Anforderung: gesetzt, gewählt, nicht prüfbar, nicht relevant, über der Obergrenze; [SPEC](docs/SPEC.md)) |
+| `select` | Das LLM klassifiziert „prüfbar ja/nein“, der Code wählt aus (Relevanz, gesetzte Plätze, Ranking). | `data/intermediate/selection_<arch\|spec>.json`, dazu `verdicts_*.json` (Urteil je Anforderung: vorgefiltert, aufgenommen, nicht prüfbar, nicht relevant, LLM-Fehler; [ARCHITECTURE](docs/ARCHITECTURE.md) 1.1.1) |
 
 - **Modell:** Standard im Build ist Groq ([ADR 0014](docs/adr/0014-groq-standard-im-build.md)): `export GROQ_API_KEY=…`, Modell optional über `GROQ_MODEL`. Fehlt der Schlüssel, bricht der Lauf ab, ohne auf Bedrock auszuweichen. Bedrock nur ausdrücklich mit `--provider bedrock` (`eu-central-1`, Profil `eu.`, `AWS_PROFILE=…` und gültigem Login) oder `--provider bedrock-global` ([ADR 0012](docs/adr/0012-globales-profil-im-build.md)).
 - **Nur eine Audit-Art:** `select --audit-type spec` oder `architecture` rechnet nur diese Liste neu (ca. 100 bzw. 425 Aufrufe nacheinander).

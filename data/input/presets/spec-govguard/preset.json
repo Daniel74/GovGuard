@@ -1,0 +1,14 @@
+{
+  "title": "GovGuard prüft sich selbst: Systembeschreibung des Demo-Stands",
+  "audit_type": "spec",
+  "input_file": "SPEC.md",
+  "expected": {
+    "overall_status": "FAIL",
+    "required_findings": [
+      {
+        "anchor": "DSGVO Art. 46",
+        "status": "FAIL"
+      }
+    ]
+  }
+}

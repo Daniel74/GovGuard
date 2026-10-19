@@ -18,11 +18,29 @@ def load(preset_dir: Path) -> Preset:
     return Preset.model_validate_json((preset_dir / "preset.json").read_text(encoding="utf-8"))
 
 
-def test_five_presets_with_expected_result() -> None:
+def test_six_presets_with_expected_result() -> None:
     assert [path.name for path in PRESET_DIRS if (path / "preset.json").is_file()] == [
         path.name for path in PRESET_DIRS
     ]
-    assert len(PRESET_DIRS) == 5
+    assert len(PRESET_DIRS) == 6
+
+
+def test_self_audit_preset_is_exactly_the_spec() -> None:  # dogfooding, issue #36
+    preset_dir = PRESETS / "spec-govguard"
+    preset = load(preset_dir)
+    spec = Path("docs/SPEC.md").read_text(encoding="utf-8")
+
+    assert (preset.audit_type, preset.input_file) == ("spec", "SPEC.md")
+    assert (preset_dir / preset.input_file).read_text(encoding="utf-8") == spec
+
+
+def test_self_audit_expects_only_anchors_of_the_frozen_catalog() -> None:  # issue #36
+    catalog = json.loads((PATHS.knowledge_base / "rules_spec.json").read_text(encoding="utf-8"))
+    anchors = {rule["primary_anchor"] for rule in catalog["rules"]}
+    expected = load(PRESETS / "spec-govguard").expected
+
+    assert expected.required_findings
+    assert {finding.anchor for finding in expected.required_findings} <= anchors
 
 
 @pytest.mark.parametrize("preset_dir", PRESET_DIRS, ids=lambda path: path.name)

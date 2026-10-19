@@ -6,6 +6,8 @@ from pydantic import BaseModel
 
 from govguard.models import AuditReport, Preset
 
+SELF_AUDIT = "spec-govguard"  # GovGuard audits its own SPEC.md (#36)
+
 
 class GalleryEntry(BaseModel):
     preset_id: str
@@ -16,10 +18,11 @@ class GalleryEntry(BaseModel):
 
 
 def load_gallery(presets_dir: Path, gallery_dir: Path) -> list[GalleryEntry]:
-    """Every preset, spec audits first; a missing report keeps the preset visible."""
+    """Every preset, spec audits first and the self-audit after the fictional ones;
+    a missing report keeps the preset visible."""
     entries = [_entry(path, gallery_dir) for path in sorted(presets_dir.iterdir())
                if (path / "preset.json").is_file()]
-    return sorted(entries, key=lambda e: e.preset.audit_type != "spec")
+    return sorted(entries, key=lambda e: (e.preset.audit_type != "spec", e.preset_id == SELF_AUDIT))
 
 
 def _entry(preset_dir: Path, gallery_dir: Path) -> GalleryEntry:

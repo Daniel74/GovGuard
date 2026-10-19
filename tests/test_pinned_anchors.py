@@ -21,7 +21,8 @@ PRESETS = [
 
 
 def test_spec_audit_pins_the_required_findings_of_the_spec_presets() -> None:
-    assert pinned_anchors(PRESETS, "spec") == {"DSGVO Art. 9", "SDM Löschen M60.P01"}
+    assert pinned_anchors(PRESETS, "spec") == {
+        "DSGVO Art. 9", "DSGVO Art. 46", "SDM Löschen M60.P01"}
 
 
 def test_architecture_audit_pins_each_anchor_once() -> None:
