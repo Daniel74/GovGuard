@@ -13,11 +13,22 @@ from contextlib import contextmanager
 from pydantic import ValidationError
 from pydantic_ai import ModelRetry, UnexpectedModelBehavior
 from pydantic_ai.agent import capture_run_messages
+from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import RetryPromptPart
 from pydantic_core import ErrorDetails
 
 logger = logging.getLogger("kb_build")
 NOTE = "build log: "  # marks a rejection a nested run has logged already
+INVALID_ANSWER = (UnexpectedModelBehavior, ModelHTTPError)
+
+
+def raise_if_no_answer(error: Exception) -> None:
+    """Groq's HTTP 400 "Parsing failed" is an invalid answer, like spent retries (ADR 0026).
+
+    401, 429 and server errors are no answer at all: they abort the build.
+    """
+    if isinstance(error, ModelHTTPError) and error.status_code != 400:
+        raise error
 
 
 def code_gate(reason: str) -> str:

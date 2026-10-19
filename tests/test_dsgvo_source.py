@@ -64,3 +64,9 @@ def test_prefilter_reason_names_the_chapter_rule() -> None:
     reqs = extract_by_id()
     assert reqs["Art. 4"].prefilter_reason == "Kapitel gehört nicht zu II–V (Art. 5–49)."
     assert reqs["Art. 32"].prefilter_reason is None
+
+
+def test_requirement_carries_the_sections_of_its_article() -> None:
+    [section] = extract_by_id()["Art. 32"].sections
+    assert section.mark == "Art. 32 Abs. 1 lit. a"
+    assert section.lead_in == "Diese Maßnahmen schließen ein:"

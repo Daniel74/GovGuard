@@ -22,7 +22,7 @@ PRESETS = [
 
 def test_spec_audit_pins_the_required_findings_of_the_spec_presets() -> None:
     assert pinned_anchors(PRESETS, "spec") == {
-        "DSGVO Art. 9", "DSGVO Art. 46", "SDM Löschen M60.P01"}
+        "DSGVO Art. 9 Abs. 2", "DSGVO Art. 46 Abs. 1", "SDM Löschen M60.P01"}
 
 
 def test_architecture_audit_pins_each_anchor_once() -> None:
@@ -38,9 +38,10 @@ def source_of(anchor: str) -> str:
 
 @pytest.mark.parametrize("source", SOURCES)
 def test_every_pinned_anchor_exists_in_the_extracted_sources(source: str) -> None:
-    path = PATHS.extracted / f"{source}.json"
+    folder = PATHS.decomposed if source == "dsgvo" else PATHS.extracted  # #53: parts are anchors
+    path = folder / f"{source}.json"
     if not path.exists():  # cis.json, c5.json and fsbp.json stay local (ADR 0008)
-        pytest.skip(f"{path.name} not extracted on this machine")
+        pytest.skip(f"{path} not built on this machine")
     extracted = ExtractedSource.model_validate_json(path.read_text(encoding="utf-8"))
     anchors = {r.primary_anchor for r in extracted.requirements}
     pinned = pinned_anchors(PRESETS, "spec") | pinned_anchors(PRESETS, "architecture")

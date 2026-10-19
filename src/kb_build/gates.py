@@ -68,8 +68,16 @@ Anchors = dict[str, tuple[SourceName, Requirement]]  # primary anchor -> (source
 
 
 def requirements_by_anchor(sources: list[ExtractedSource]) -> Anchors:
-    """All requirements, not only the selected ones: cross references may point anywhere."""
-    return {r.primary_anchor: (s.source, r) for s in sources for r in s.requirements}
+    """All requirements, not only the selected ones: cross references may point anywhere.
+
+    The article of a decomposed part stays a known anchor, e.g. "DSGVO Art. 32" (#53).
+    """
+    anchors: Anchors = {r.primary_anchor: (s.source, r) for s in sources for r in s.requirements}
+    for source in sources:
+        for r in source.requirements:
+            if "article" in r.attributes:
+                anchors.setdefault(f"{source.source} {r.attributes['article']}", (source.source, r))
+    return anchors
 
 
 def is_quoted(requirement: Requirement, quote: str) -> bool:

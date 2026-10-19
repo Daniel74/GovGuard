@@ -65,11 +65,12 @@ Jede Quelle durchläuft dieselben Stufen; nur die Parameter unterscheiden sich. 
 | BSI C5:2025 | Kriterium, z. B. `CRY-03.01B` | Bereiche OPS, IAM, CRY, COS, PSS | wie BSI Grundschutz++ |
 | CIS AWS v7 | Empfehlung, z. B. `3.1.4` | Kapitel 2 IAM, 3 Storage, 4 Logging, 6 Networking (Security Groups für Aurora) | wie BSI Grundschutz++ |
 | AWS FSBP | Control, z. B. `SNS.1` | Dienst (`Service`) gehört zum Prüfumfang, z. B. Lambda, ECS, ECR, ELB, RDS; EC2 wegen der VPC-Controls, Instanzen und Classic LB sortiert die Relevanz aus | wie BSI Grundschutz++ |
-| DSGVO | Artikel | Kapitel II–V (Art. 5–49) | „An einer Spezifikation prüfbar?“ |
-| KI-VO | Artikel | Art. 4, 5, 6, 13, 14, 26, 27, 50 (ADR 0025) | „An einer Spezifikation prüfbar?“ |
+| DSGVO | Abschnitt oder Gruppe aus der Zerlegung, z. B. `Art. 32 Abs. 1 lit. a`, `Art. 6 Abs. 1` (ADR 0026) | Kapitel II–V (Art. 5–49) | „An einer Spezifikation prüfbar?“ |
+| KI-VO | wie DSGVO (ADR 0026) | Art. 4, 5, 6, 13, 14, 26, 27, 50 (ADR 0025) | „An einer Spezifikation prüfbar?“ |
 | SDM | Maßnahme, z. B. `M60.D01` | Bausteine Löschen (M60), Trennen (M50), Zugriffe regeln (M51); alle Ebenen (Daten, Systeme, Prozesse), denn Löschfristen stehen auf Ebene P | „An einer Spezifikation prüfbar?“ |
 
 - **① Vorfilter:** reiner Code auf Metadaten (OSCAL-Props, Kapitel, Bereiche, Dienste, Maßnahmen-IDs). Er ist billig, reproduzierbar und wirft Organisatorisches früh weg. Für jede verworfene Anforderung schreibt er einen festen Begründungssatz ins Auswahlprotokoll.
+- **Zerlegung (nur DSGVO, KI-VO):** Zwischen ① und ② gruppiert das LLM die Abschnitte jedes Artikels, der Code setzt Anker und Wortlaut. `keine_pflicht` landet als `prefiltered` im Auswahlprotokoll, das Zerlegungsprotokoll steht in `decompositions_spec.json` (ADR 0026).
 - **② LLM:** bekommt **eine** Anforderung und den Prüfumfang und antwortet nur ja/nein mit Begründung, bei Architektur zusätzlich mit `cfn_resource_types` (per Tool-Choice, siehe 2.1). Es zählt nicht und wählt nicht aus. Das Urteil wird gecacht (Text-Hash, Prompt-Version, `model_id`); ein neuer Lauf fragt nur neue oder geänderte Anforderungen.
 - **Relevanz (Code, nur Architektur):** Es bleiben nur Anforderungen, deren erster (wichtigster) `cfn_resource_type` im Prüfumfang liegt (`data/input/scope.json`): Serverless-Dienste, dazu RDS/Aurora und Fargate (ECS) mit dem, was beide brauchen: VPC-Typen, ECR und ELBv2. Kontoweite Pflichten wie Root-MFA oder CloudTrail fallen damit heraus, denn sie sind an keinem Template entscheidbar.
 - **Aufnahme:** Jede prüfbare und relevante Anforderung kommt in den Bounded Catalog. Das Auswahlprotokoll (`verdicts_*.json`) hält für jede Anforderung Ergebnis und Begründung fest (1.1.1). Die Liste der aufgenommenen (`selection_spec.json`, `selection_arch.json`) liegt versioniert im Repo; Änderungen zwischen zwei Builds zeigt der Git-Diff.
@@ -199,6 +200,7 @@ result = audit_agent.run_sync(catalog_and_input, model=model, deps=deps)
 
 | Tool | Schema (vereinfacht) | Wo |
 |---|---|---|
+| `decompose_article` | `groups: [{marks: [str], kind, rationale}]`, kein Zitat | Build, Zerlegung (ADR 0026) |
 | `classify_requirement` | `testable: bool`, `rationale: str`, `cfn_resource_types: [str]` (nur Architektur) | Build, Stufe ② |
 | `formulate_rule` | LLM-Felder der Prüfregel (siehe 1.2) | Build, Stufe 5 |
 | `judge_violation` | `describes_absence: bool`, `reason: str` | Build, Stufe 5, nur Spec |
@@ -259,7 +261,7 @@ flowchart TB
   end
   subgraph L["Logik – rein, ohne I/O"]
     AE["govguard/audit_engine.py<br/>+ audit_packages.py, audit_gates.py, corrections.py,<br/>evidence.py, fail_judge.py, inventory.py, models.py,<br/>open_world.py, repairs.py, text.py"]
-    KB["kb_build/extract, select, rules,<br/>reference (ohne run.py), gates.py, build_log.py"]
+    KB["kb_build/extract, decompose, select, rules,<br/>reference (ohne run.py), gates.py, build_log.py"]
     RV["govguard_ui/review.py<br/>Report lesen: Lücke, Soll-Abgleich"]
   end
   subgraph A["Adapter – einziger Ort für AWS, Groq, HTTP"]
@@ -294,7 +296,8 @@ Jeder Ordner auf oberster Ebene ist eine eigene Deployment-Einheit oder eine Dat
 src/govguard/         Laufzeit-Kern, wird zum Lambda-Paket
 src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, nie umgekehrt)
   __main__.py         Einstieg; gates.py, build_log.py (Retries im Build-Log), paths.py (alle Datenpfade), source_fetch.py
-  extract/            Adapter je Quelle (bsi, cis, c5, dsgvo, fsbp, sdm, prowler), models.py, run.py
+  extract/            Adapter je Quelle (bsi, cis, c5, dsgvo, fsbp, sdm, prowler), formex.py, models.py, run.py
+  decompose/          parts, split, cache, models.py, run.py: Rechtsakte in Einzelpflichten (ADR 0026)
   select/             classify, curation, judgement_cache, models.py, run.py
   rules/              catalog, formulate, prompts, criteria, violation_judge, quality, run.py
   reference/          scope, cfn_types, cfn_properties, archetype_profiles, run.py (cfn-properties)
@@ -305,6 +308,7 @@ data/input/           von Hand gepflegt: sources.json (URL, Version, SHA-256, Li
                       scope.json (Prüfumfang, ADR 0011), archetype_profiles.json,
                       cfn_resource_types.json, cfn_properties.json, presets/ (6 Presets mit Soll-Ergebnis)
 data/intermediate/    Zwischenergebnisse, eingecheckt fürs Review: extracted/ (cis, fsbp, c5 nur lokal),
+                      decomposed/ (DSGVO, KI-VO zerlegt), decompositions_spec.json, decomposition_cache.json,
                       judgement_cache.json, selection_*.json, verdicts_*.json; sources/ = Download-Cache, in .gitignore
                       logs/<kommando>[_spec|_arch].log: Build-Log je Lauf (Retries mit Grund, Tokens), mit dem Ergebnis committen
 data/knowledge_base/  nur das Endergebnis: rules_spec.json, rules_arch.json; geht nach S3

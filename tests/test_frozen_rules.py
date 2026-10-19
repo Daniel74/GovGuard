@@ -4,8 +4,9 @@ import hashlib
 import json
 
 from govguard.models import Rule, RuleCatalog
+from kb_build.extract.models import Requirement
 from kb_build.paths import BuildPaths
-from kb_build.rules.frozen import merge, missing
+from kb_build.rules.frozen import merge, missing, quoted_by_code
 from kb_build.select.models import SelectedRequirement, Selection
 
 
@@ -51,17 +52,34 @@ def test_merge_keeps_old_rules_unchanged_in_selection_order() -> None:
     assert merged.model_id == "old"  # the frozen part names the catalog's origin
 
 
-# Catalog of 18.10.2026 (step 12l): 151 rules from DSGVO and SDM, the base of every gallery report
-FROZEN_RULES = 151
-FROZEN_SHA256 = "b8a381b97460cd5884a602cc902f8595a8cd94d3e121625e599ec92324cc13ea"
+# Catalog of 18.10.2026 (step 12l): 116 SDM rules. DSGVO is decomposed anew (#53, ADR 0026);
+# the SDM rules stay byte for byte, and with them their cross references to whole articles
+FROZEN_RULES = 116
+FROZEN_SHA256 = "47e0186e60590f63894a26a456537315e9647f55af8562f8ef2b344eb65c0bc3"
 
 
-def test_the_checked_in_spec_catalog_keeps_the_151_frozen_rules_byte_for_byte() -> None:
+def test_the_checked_in_spec_catalog_keeps_the_116_frozen_sdm_rules_byte_for_byte() -> None:
     # SPEC G13: changing them means a new gallery and new Soll results for every preset
     raw = json.loads((BuildPaths().knowledge_base / "rules_spec.json").read_text("utf-8"))
-    frozen = [r for r in raw["rules"] if r["source"] in ("DSGVO", "SDM")]
+    frozen = [r for r in raw["rules"] if r["source"] == "SDM"]
     canonical = json.dumps(frozen, sort_keys=True, ensure_ascii=False).encode()
 
     assert len(frozen) == FROZEN_RULES
     assert hashlib.sha256(canonical).hexdigest() == FROZEN_SHA256
-    assert raw["rules"][:FROZEN_RULES] == frozen  # new sources only append
+
+
+def test_parts_of_a_decomposed_act_get_the_code_quote_and_sdm_keeps_its_own() -> None:
+    # ADR 0026: a rule of an earlier run gets the quote of its section, no LLM call
+    part = Requirement(id="Art. 5 Abs. 1 lit. a", title="t", text="Daten müssen a) rechtmäßig sein",
+                       primary_anchor="DSGVO Art. 5 Abs. 1 lit. a", prefilter_passed=True,
+                       attributes={"article": "Art. 5", "quote": "a) rechtmäßig sein"})
+    sdm = Requirement(id="M60.D01", title="t", text="Zitat", primary_anchor="SDM M60.D01",
+                      attributes={}, prefilter_passed=True)
+    anchors = {"DSGVO Art. 5 Abs. 1 lit. a": ("DSGVO", part), "DSGVO Art. 5": ("DSGVO", part),
+               "SDM M60.D01": ("SDM", sdm)}
+    old = catalog([rule("DSGVO", "Art. 5 Abs. 1 lit. a"), rule("DSGVO", "Art. 5"),
+                   rule("SDM", "M60.D01")], {})
+
+    quotes = [r.source_quote for r in quoted_by_code(old, anchors).rules]
+
+    assert quotes == ["a) rechtmäßig sein", "Zitat", "Zitat"]  # an article anchor is no part

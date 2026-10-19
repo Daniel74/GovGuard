@@ -1,4 +1,4 @@
-"""Build entry point: python -m kb_build [extract|select|rules|cfn-properties] (ARCHITECTURE)."""
+"""Build entry point: python -m kb_build [extract|decompose|select|rules|cfn-properties]."""
 
 import argparse
 import logging
@@ -8,6 +8,7 @@ from pydantic_ai.models import Model
 
 from govguard.aws_services import GLOBAL_MODEL_ID, bedrock_model
 from govguard.groq_services import groq_model
+from kb_build.decompose.run import decompose_all
 from kb_build.extract.run import extract_all
 from kb_build.paths import BuildPaths
 from kb_build.reference.run import snapshot_scope
@@ -45,7 +46,7 @@ def configure_logging(log_file: Path) -> None:
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(prog="python -m kb_build")
     parser.add_argument("command", nargs="?", default="extract",
-                        choices=["extract", "select", "rules", "cfn-properties"])
+                        choices=["extract", "decompose", "select", "rules", "cfn-properties"])
     parser.add_argument("--provider", default="groq",
                         choices=["bedrock", "bedrock-global", "groq"])
     parser.add_argument("--audit-type", choices=["spec", "architecture"], default=None)
@@ -57,7 +58,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 if __name__ == "__main__":
     args = parse_args()
     configure_logging(BuildPaths().build_log(args.command, args.audit_type))
-    if args.command == "select":
+    if args.command == "decompose":  # legal acts into duties, spec audit only (#53)
+        decompose_all(model_for(args.provider))
+    elif args.command == "select":
         select_all(model_for(args.provider), only=args.audit_type,
                    only_missing=args.only_missing)
     elif args.command == "rules":

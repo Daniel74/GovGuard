@@ -270,6 +270,9 @@ Audit-Reports der Galerie untereinander vergleichbar.
 Eine neue Quelle darf nur Prüfregeln hinzufügen. Ändert eine Erweiterung bestehende Prüfregeln,
 müssen alle Audit-Reports der Galerie neu entstehen und alle Soll-Ergebnisse erneut geprüft werden.
 
+Diese Ausnahme gilt bewusst für die Zerlegung von DSGVO und KI-VO in Einzelpflichten (#53,
+[ADR 0026](adr/0026-rechtsartikel-zerlegen.md)): Die Spec-Galerie ist danach neu entstanden.
+
 ## 7 Daten und Datenschutz
 
 ### Datenflüsse

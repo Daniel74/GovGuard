@@ -5,6 +5,7 @@ from collections.abc import Iterator
 from dataclasses import dataclass
 
 from govguard.text import normalize
+from kb_build.extract.models import Section
 
 ROMAN = {"I": 1, "II": 2, "III": 3, "IV": 4, "V": 5, "VI": 6, "VII": 7, "VIII": 8, "IX": 9,
          "X": 10, "XI": 11, "XII": 12, "XIII": 13}
@@ -20,6 +21,7 @@ class Article:
     chapter: int
     title: str
     text: str
+    sections: tuple[Section, ...] = ()
 
 
 def _render(element: ET.Element) -> str:
@@ -42,13 +44,52 @@ def _chapters(root: ET.Element) -> Iterator[tuple[int, ET.Element]]:
             yield ROMAN[heading.removeprefix("KAPITEL ")], division
 
 
+def _items(alinea: ET.Element, mark: str) -> list[Section]:
+    """One section per list item; the words around the list are its lead-in."""
+    lead_in = normalize(" ".join(_render(c) for c in alinea if c.tag != "LIST"))
+    sections = []
+    for item in alinea.find("LIST").findall("ITEM"):
+        label = item.findtext("NP/NO.P", "")  # "a)"; a nested list stays in the item's text
+        text = normalize(_render(item)).removeprefix(label).strip()
+        sections.append(Section(mark=f"{mark} lit. {label.strip('(). ')}", text=text,
+                                lead_in=lead_in))
+    return sections
+
+
+def _paragraph(parts: list[ET.Element], mark: str) -> list[Section]:
+    """A paragraph without a list is one section; with one, each item and each other
+    subparagraph (UAbs.) is a section of its own. Formex has at most one list per paragraph.
+    """
+    if all(part.find("LIST") is None for part in parts):
+        return [Section(mark=mark, text=normalize(" ".join(_render(p) for p in parts)))]
+    sections = []
+    for n, part in enumerate(parts, start=1):
+        if part.find("LIST") is not None:
+            sections += _items(part, mark)
+        else:
+            sections.append(Section(mark=f"{mark} UAbs. {n}", text=normalize(_render(part))))
+    return sections
+
+
+def _sections(element: ET.Element, mark: str) -> list[Section]:
+    parags = element.findall("PARAG") or [element]  # some articles have no numbered paragraphs
+    sections = []
+    for parag in parags:
+        number = parag.findtext("NO.PARAG")
+        parts = [c for c in parag if c.tag not in {"NO.PARAG", "TI.ART", "STI.ART"}]
+        sections += _paragraph(parts, f"{mark} Abs. {number.strip('(). ')}" if number else mark)
+    return sections
+
+
 def _article(element: ET.Element, chapter: int) -> Article:
     body = [child for child in element if child.tag not in {"TI.ART", "STI.ART"}]
+    number = element.attrib["IDENTIFIER"].lstrip("0").lower()  # "004A" -> "4a"
     return Article(
-        number=element.attrib["IDENTIFIER"].lstrip("0").lower(),  # "004A" -> "4a"
+        number=number,
         chapter=chapter,
         title=normalize(_render(element.find("STI.ART"))),
         text=normalize(" ".join(_render(child) for child in body)),
+        sections=tuple(_sections(element, f"Art. {number}")),
     )
 
 

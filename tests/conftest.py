@@ -1,9 +1,11 @@
 import json
+import shutil
 
 import pytest
 
 from govguard.models import CrossReference, Rule, RuleCatalog, Trace
 from kb_build.extract.models import Requirement
+from kb_build.paths import DECOMPOSED, BuildPaths
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:
@@ -18,6 +20,19 @@ def spec_input() -> str:
         "Das Bürgerportal speichert Gesundheitsdaten im Klartext in einem öffentlichen S3-Bucket.\n"
         "Alle Zugriffe erfolgen ausschließlich über TLS 1.3."
     )
+
+
+def copy_sources(real: BuildPaths, paths: BuildPaths) -> None:
+    """Extracted sources and decomposed legal acts (#53). Without a decomposition on disk the
+    acts come as extracted, articles whole: the state before #53.
+    """
+    shutil.copytree(real.extracted, paths.extracted)
+    if real.decomposed.exists():
+        shutil.copytree(real.decomposed, paths.decomposed)
+        return
+    paths.decomposed.mkdir(parents=True)
+    for name in DECOMPOSED:
+        shutil.copy(real.extracted / f"{name.lower()}.json", paths.source_file(name))
 
 
 def retry_lines(caplog: pytest.LogCaptureFixture) -> list[str]:

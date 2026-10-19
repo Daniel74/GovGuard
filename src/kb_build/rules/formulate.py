@@ -11,13 +11,13 @@ from pydantic_ai.models import Model
 from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, Rule, RuleDraft
-from kb_build.build_log import logged_retries
+from kb_build.build_log import INVALID_ANSWER, logged_retries, raise_if_no_answer
 from kb_build.extract.models import Requirement
 from kb_build.gates import Anchors, GateCounts, invalid_cross_references, is_quoted, quote_deviation
 from kb_build.reference.cfn_properties import PropertyIndex
 from kb_build.reference.scope import Scope
 from kb_build.rules.criteria import criteria_problems
-from kb_build.rules.prompts import PROMPTS, USER_PROMPT
+from kb_build.rules.prompts import KIND_LINES, PROMPTS, USER_PROMPT
 from kb_build.rules.violation_judge import judge_violation
 from kb_build.select.models import SelectedRequirement
 
@@ -98,9 +98,15 @@ async def _absence_problems(ctx: RunContext[FormulateDeps], draft: RuleDraft) ->
             "oder Aufschub."]
 
 
+def code_quote(requirement: Requirement) -> str | None:
+    """A part of a decomposed legal act is quoted by the code, never by the LLM (ADR 0026)."""
+    quote = requirement.attributes.get("quote")
+    return quote if isinstance(quote, str) else None
+
+
 def _code_problems(deps: FormulateDeps, draft: RuleDraft) -> list[str]:
     problems = []
-    if not is_quoted(deps.requirement, draft.source_quote):
+    if code_quote(deps.requirement) is None and not is_quoted(deps.requirement, draft.source_quote):
         deviation = quote_deviation(deps.requirement.text, draft.source_quote)
         problems.append(f"Das Zitat steht nicht wörtlich im Text in <anforderung>. {deviation}")
     if deps.audit_type == "architecture":
@@ -120,6 +126,7 @@ def user_prompt(deps: FormulateDeps) -> str:
         source=selected.source, id=requirement.id, title=requirement.title,
         rationale=selected.rationale, text=requirement.text,
         types=f"Ressourcentypen: {', '.join(types)}\n" if types else "",
+        kind=KIND_LINES.get(str(requirement.attributes.get("kind")), ""),
     )
 
 
@@ -142,15 +149,17 @@ def complete_rule(deps: FormulateDeps, model: Model, total: RunUsage) -> Rule:
     selected, requirement, usage = deps.selected, deps.requirement, RunUsage()
     try:  # one usage per call: Pydantic AI checks its request limit against it
         draft = formulate_rule(deps, model, usage)
-    except UnexpectedModelBehavior as error:  # fail closed: no rule may silently go missing
+    except INVALID_ANSWER as error:  # fail closed: no rule is lost
+        raise_if_no_answer(error)
         if not deps.judge_counts.llm_errors:  # a failed judge has counted already
             deps.counts.retries += FORMULATE_RETRIES - deps.judge_counts.retries  # all spent
             deps.counts.llm_errors += 1
         raise ValueError(f"{selected.source} {requirement.id}: no valid rule: {error}") from error
     finally:
         total.incr(usage)  # failed retries cost tokens too
+    quote = code_quote(requirement) or draft.source_quote
     return Rule(
-        **draft.model_dump(),
+        **draft.model_dump() | {"source_quote": quote},
         id=rule_id(deps.audit_type, selected.source, requirement.id),
         audit_type=deps.audit_type, source=selected.source,
         primary_anchor=requirement.primary_anchor, selection_rationale=selected.rationale,

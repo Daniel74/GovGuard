@@ -4,6 +4,8 @@ import shutil
 from pathlib import Path
 
 import pytest
+from conftest import copy_sources
+from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart, UserPromptPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
@@ -20,7 +22,7 @@ REAL = BuildPaths()
 def paths_in(tmp: Path) -> BuildPaths:
     """Real input, extracts and selection lists; everything written goes to `tmp`."""
     paths = BuildPaths(REAL.input, tmp / "intermediate", tmp / "knowledge_base")
-    shutil.copytree(REAL.extracted, paths.extracted)
+    copy_sources(REAL, paths)
     for audit_type in ("architecture", "spec"):
         shutil.copy(REAL.out_file("selection", audit_type), paths.out_file("selection", audit_type))
     return paths
@@ -114,3 +116,37 @@ def test_the_property_index_holds_nested_paths_and_names_of_all_resource_types()
 
     assert "LoggingConfiguration.LogFilePrefix" in index.paths["AWS::S3::Bucket"]
     assert "BucketPolicy" in index.resource_names  # AWS::S3::BucketPolicy, a resource itself
+
+
+def test_an_aborted_run_keeps_its_rules_and_the_next_run_asks_only_for_the_rest(
+    tmp_path: Path,
+) -> None:
+    # #53: the checkpoint keeps every paid rule of an aborted --only-missing run
+    paths = paths_in(tmp_path)
+    formulate_all(quoting_model(), paths, only="spec")
+    rules_file = paths.out_file("rules", "spec")
+    full = RuleCatalog.model_validate_json(rules_file.read_text("utf-8"))
+    rules_file.write_text(full.model_copy(update={"rules": full.rules[2:]}).model_dump_json())
+    with pytest.raises(ValueError, match="1 rules failed"):
+        formulate_all(fails_first_rule(quoting_model()), paths, only="spec", only_missing=True)
+    assert paths.rules_checkpoint("spec").exists()
+    calls: list[str] = []
+    formulate_all(quoting_model(calls=calls), paths, only="spec", only_missing=True)
+
+    assert RuleCatalog.model_validate_json(rules_file.read_text("utf-8")).rules == full.rules
+    assert calls.count("formulate_rule") == 1  # only the failed rule
+    assert not paths.rules_checkpoint("spec").exists()
+
+
+def fails_first_rule(valid: FunctionModel) -> FunctionModel:
+    """Groq's HTTP 400 for the first rule asked about, `valid` answers for the others."""
+    first: list[str] = []
+
+    def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        prompt = next(p for p in messages[0].parts if isinstance(p, UserPromptPart)).content
+        first.extend([] if first else [prompt])
+        if prompt == first[0]:
+            raise ModelHTTPError(status_code=400, model_name="fake-model", body="Parsing failed")
+        return valid.function(messages, info)
+
+    return FunctionModel(respond, model_name="fake-model")

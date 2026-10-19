@@ -56,7 +56,7 @@ def test_title_meta_download_and_overall_status_share_one_frame() -> None:
 
     assert "Online-Anmeldung zur Schuleingangsuntersuchung mit US-Analysedienst" in head
     for term, value in (("Audit-Art", "Spezifikation (DSGVO, SDM)"),
-                        ("Modell", "openai/gpt-oss-120b"), ("Retries", "0")):
+                        ("Modell", "openai/gpt-oss-120b"), ("Retries", "1")):
         assert f"<th>{term}</th><td>{value}</td>" in head
     assert "Gesamtstatus" in head and "✕ Verstoß belegt" in head
     assert "FAIL" not in head  # the head shows the word, the help maps it to the code (#51)
@@ -68,16 +68,16 @@ def test_each_tile_is_a_frame_with_its_explanation_inside() -> None:
 
     tiles = [frame for frame in frames(app) if frame in SPEC_TILES]
     assert tiles == SPEC_TILES
-    assert [m.value for m in app.metric] == ["16", "14", "7", "8", "106", "23"]
+    assert [m.value for m in app.metric] == ["28", "42", "28", "8", "268", "60"]
 
 
 SPEC_TILES = [  # label and explanation of the stored spec report, as in the design artefact
     "✕ Verstoß belegt",  # "belegt" says it all, no caption (#51)
-    "! Prüfbedarf\nmit Beleg · davon 7 herabgestuft",
+    "! Prüfbedarf\nmit Beleg · davon 32 herabgestuft",
     "✓ Einhaltung belegt",
     "– Nicht anwendbar\nRegel betrifft das Vorhaben nicht",
     "○ Lücken\nnicht beschrieben · kein Verstoß",
-    "Verstoß-Prüfer\ngeprüft · 16 bestätigt · 7 herabgestuft · 0 nicht verfügbar",
+    "Verstoß-Prüfer\ngeprüft · 28 bestätigt · 32 herabgestuft · 0 nicht verfügbar",
 ]
 
 
@@ -117,7 +117,7 @@ def test_the_expected_result_is_one_strip_and_overall_status_is_no_button() -> N
     strip = next(frame for frame in frames(app) if "Soll-Abgleich: wie erwartet" in frame)
     assert strip.split("\n")[1:] == [
         "✓ Gesamtstatus Soll Verstoß belegt, Ist Verstoß belegt",
-        "DSGVO Art. 9: Soll Verstoß belegt, Ist Verstoß belegt",
+        "DSGVO Art. 9 Abs. 2: Soll Verstoß belegt, Ist Verstoß belegt",
         "SDM Löschen M60.P01: Soll Verstoß belegt, Ist Verstoß belegt"]
     assert [b.label for b in app.button if "Gesamtstatus" in b.label] == []
 
@@ -125,9 +125,9 @@ def test_the_expected_result_is_one_strip_and_overall_status_is_no_button() -> N
 def test_a_click_on_a_required_finding_shows_it_in_the_detail() -> None:
     app = page(gallery_script)
 
-    next(b for b in app.button if b.label.startswith("DSGVO Art. 9")).click().run()
+    next(b for b in app.button if b.label.startswith("DSGVO Art. 9 Abs. 2")).click().run()
 
-    assert "#### Einwilligung für besondere Kategorien" in [m.value for m in app.markdown]
+    assert "#### Einwilligung als Ausnahme" in [m.value for m in app.markdown]
 
 
 def deviating_script() -> None:

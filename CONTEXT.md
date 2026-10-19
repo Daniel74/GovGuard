@@ -8,7 +8,10 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 
 - **Wissensbasis**: Gesamtheit aller Prüfregeln und Golden Archetypes. _Code_: `knowledge_base`. _Vermeiden_: Knowledge Base, Index, Seeds
 - **Quelle**: Regelwerk, aus dem Prüfregeln abgeleitet werden (DSGVO, SDM, BSI Grundschutz++, BSI C5, CIS AWS, AWS FSBP). _Code_: `Source`. _Vermeiden_: Framework, Datensatz
-- **Anforderung**: Einzelne, zitierfähige Vorgabe innerhalb einer Quelle, z. B. BSI DET.3.1 oder DSGVO Art. 9. _Code_: `Requirement`. _Vermeiden_: Control, Kontrolle, Baustein
+- **Anforderung**: Einzelne, zitierfähige Vorgabe innerhalb einer Quelle, z. B. BSI DET.3.1 oder DSGVO Art. 9 Abs. 2. _Code_: `Requirement`. _Vermeiden_: Control, Kontrolle, Baustein
+- **Abschnitt**: Kleinste zitierfähige Einheit eines Rechtsakts (Absatz, Unterabsatz oder Listenpunkt) mit Marke wie `Art. 32 Abs. 1 lit. b`; Baustein der Zerlegung (#53). _Code_: `Section` (`mark`). _Vermeiden_: Segment, Chunk
+- **Zerlegung**: Bau-Stufe zwischen Extraktion und Auswahl: Das LLM gruppiert die Abschnitte eines DSGVO- oder KI-VO-Artikels als `alle_gelten`, `eine_genuegt`, `je_nach_risiko` oder `keine_pflicht`, der Code macht daraus Anforderungen (ADR 0026). _Code_: `decompose`, `Kind`. _Vermeiden_: Splitting, Segmentierung
+- **Zerlegungsprotokoll**: Je Artikel die Gruppen der Zerlegung mit Art, Begründung und Anker, oder `llm_error`, wenn der Artikel ganz bleibt. _Code_: `decompositions_spec.json` (`ArticleDecomposition`). _Vermeiden_: Log
 - **Prüfregel**: Atomare, prüfbare Regel aus genau einer Anforderung, mit Kriterien für „konform“ und „Verstoß“. _Code_: `Rule`. _Vermeiden_: Chunk, Unified Audit Rule, Regel
 - **Primäranker**: Die eine Anforderung, aus der eine Prüfregel abgeleitet ist. _Code_: `primary_anchor`. In der Befundtabelle Spalte „Normanker“ wie im Design (#45). _Vermeiden_: Anchor, Referenz
 - **Querverweis**: KI-vorgeschlagener, nicht verifizierter Bezug einer Prüfregel auf eine Anforderung einer anderen Quelle; beeinflusst keinen Status. _Code_: `cross_reference`. _Vermeiden_: Mapping

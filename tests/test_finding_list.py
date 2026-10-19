@@ -5,14 +5,14 @@ from govguard_ui.gallery import load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
 
 ART9 = next(f for e in load_gallery(PRESETS, GALLERY) if e.report
-            for f in e.report.findings if f.rule_id == "SPEC-DSGVO-Art.9")  # FAIL, lines 46–49
+            for f in e.report.findings if f.rule_id == "SPEC-DSGVO-Art.9Abs.2")  # FAIL, 46–49
 
 
 def test_a_row_holds_status_rule_anchor_and_lines() -> None:
     assert table_rows([ART9]) == [{
-        "id": "SPEC-DSGVO-Art.9", "look": "fail", "status": "✕ Verstoß belegt",
-        "title": "Einwilligung für besondere Kategorien", "primary_anchor": "DSGVO Art. 9",
-        "lines": "46–49"}]
+        "id": "SPEC-DSGVO-Art.9Abs.2", "look": "fail", "status": "✕ Verstoß belegt",
+        "title": "Einwilligung als Ausnahme",
+        "primary_anchor": "DSGVO Art. 9 Abs. 2", "lines": "46–49"}]
 
 
 def test_llm_text_reaches_the_row_unchanged_the_cell_shows_it_as_text() -> None:

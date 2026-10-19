@@ -7,7 +7,13 @@ from conftest import make_requirement
 
 from govguard.models import CrossReference, Rule, RuleCatalog
 from kb_build.extract.models import ExtractedSource
-from kb_build.gates import check_coverage, check_pinned, check_rules, is_quoted
+from kb_build.gates import (
+    check_coverage,
+    check_pinned,
+    check_rules,
+    is_quoted,
+    requirements_by_anchor,
+)
 from kb_build.reference.scope import Scope
 from kb_build.select.models import SelectedRequirement, Selection
 
@@ -123,6 +129,18 @@ def test_an_invented_or_same_source_cross_reference_aborts_and_is_named(anchor: 
 
     with pytest.raises(ValueError, match=re.escape(f"ARCH-CIS-3.1.4: cross reference {anchor!r}")):
         check_rules(catalog(linked), selection_of("3.1.4"), SOURCES, SCOPE)
+
+
+def test_the_article_of_a_decomposed_part_stays_a_target_for_cross_references() -> None:
+    # #53: frozen SDM rules point to "DSGVO Art. 32", the source now has Art. 32 Abs. 1 lit. a ...
+    part = make_requirement("Art. 32 Abs. 1 lit. a", "DSGVO Art. 32 Abs. 1 lit. a")
+    part.attributes["article"] = "Art. 32"
+    dsgvo = ExtractedSource(source="DSGVO", version="v", origin="o", requirements=[part])
+
+    anchors = requirements_by_anchor([dsgvo])
+
+    assert anchors["DSGVO Art. 32"] == ("DSGVO", part)
+    assert anchors["DSGVO Art. 32 Abs. 1 lit. a"] == ("DSGVO", part)
 
 
 def test_a_selected_requirement_without_a_rule_aborts_and_is_named() -> None:

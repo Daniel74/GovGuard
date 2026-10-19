@@ -54,5 +54,18 @@ PROMPTS: dict[AuditType, str] = {
 
 USER_PROMPT = (
     "Quelle: {source}\nID: {id}\nTitel: {title}\nBegründung der Auswahl: {rationale}\n{types}"
-    "<anforderung>\n{text}\n</anforderung>"
+    "{kind}<anforderung>\n{text}\n</anforderung>"
 )
+
+# Per kind of a decomposed part (#53, ADR 0026); "alle_gelten" needs no hint: one duty, one rule
+KIND_LINES: dict[str, str] = {
+    "eine_genuegt": (
+        "Art der Pflicht: Alternativen, eine genügt. \"compliant_if\": Die Spezifikation legt "
+        "mindestens eine der Alternativen fest. \"violation_if\": Sie stützt sich auf etwas, "
+        "das keine der Alternativen ist, oder schließt alle aus.\n"),
+    "je_nach_risiko": (
+        "Art der Pflicht: Maßnahme, soweit das Risiko sie erfordert. \"compliant_if\": Die "
+        "Spezifikation sieht die Maßnahme vor oder begründet, warum das Risiko sie nicht "
+        "erfordert. \"violation_if\": Sie schließt die Maßnahme trotz eines genannten Risikos "
+        "aus.\n"),
+}

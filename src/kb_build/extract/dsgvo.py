@@ -24,6 +24,7 @@ def _requirement(article: Article) -> Requirement:
         primary_anchor=f"DSGVO Art. {article.number}",
         attributes={"chapter": article.chapter, "fine_tier": _fine_tier(int(article.number))},
         prefilter_passed=False,
+        sections=list(article.sections),
     )
 
 

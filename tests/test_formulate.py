@@ -4,6 +4,7 @@ import re
 
 import pytest
 from conftest import make_requirement, retry_lines
+from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import (
     ModelMessage,
     ModelResponse,
@@ -16,7 +17,7 @@ from pydantic_ai.models.function import AgentInfo, FunctionModel
 from kb_build.extract.models import ExtractedSource
 from kb_build.reference.cfn_properties import PropertyIndex
 from kb_build.reference.scope import Scope
-from kb_build.rules.catalog import formulate_rules
+from kb_build.rules.catalog import RuleInputs, formulate_rules
 from kb_build.rules.formulate import FORMULATE_RETRIES
 from kb_build.rules.violation_judge import JUDGE_TOOL_NAME
 from kb_build.select.models import SelectedRequirement, Selection
@@ -42,7 +43,7 @@ STIPULATION = "Die Spezifikation legt als Exportformat nur PDF fest."
 
 
 def run_formulate(model, selection, sources):
-    return formulate_rules(model, selection, sources, PROPERTIES, SCOPE)
+    return formulate_rules(model, selection, RuleInputs(sources, PROPERTIES, SCOPE))
 
 
 def draft(rid: str, **changes) -> dict:
@@ -437,8 +438,8 @@ def test_the_retry_names_the_type_that_really_has_the_property() -> None:
     sent_back: list[str] = []
     first = draft("3.1.4", compliant_if="AWS::S3::Bucket setzt RotationRules.")
 
-    formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"), SOURCES, properties,
-                    SCOPE)
+    formulate_rules(retry_prompts(sent_back, first), arch_selection("3.1.4"),
+                    RuleInputs(SOURCES, properties, SCOPE))
 
     assert "AWS::SecretsManager::RotationSchedule" in sent_back[0]
 
@@ -526,3 +527,96 @@ def test_an_aborted_rule_logs_every_retry_once_and_why_the_last_answer_was_rejec
     assert numbers == [str(n) for n in range(1, FORMULATE_RETRIES + 1)]
     # the last answer aborts the build: no retry, but its reason makes the abort traceable
     assert lines[-1] == lines[-2].replace(f"retry {FORMULATE_RETRIES} (code)", "rejected (code)")
+
+
+def test_a_failed_rule_does_not_stop_the_others_and_the_build_names_it() -> None:
+    # #53: the run of 19.10.2026 lost 50 paid rules to one invalid rule
+    sources = [ExtractedSource(source="CIS", version="v7.0.0", origin="o", requirements=[
+        make_requirement("3.1.4", "CIS AWS v7.0.0 3.1.4"),
+        make_requirement("3.1.5", "CIS AWS v7.0.0 3.1.5")])]
+    invented = draft("3.1.4", source_quote="erfundener Normtext")
+    answers = {"3.1.4": [invented] * (FORMULATE_RETRIES + 1), "3.1.5": [draft("3.1.5")]}
+    done = []
+
+    with pytest.raises(ValueError, match=r"1 rules failed:\nCIS 3\.1\.4: no valid rule"):
+        formulate_rules(fake_llm(answers), arch_selection("3.1.4", "3.1.5"),
+                        RuleInputs(sources, PROPERTIES, SCOPE), on_rule=done.append)
+
+    assert [r.id for r in done] == ["ARCH-CIS-3.1.5"]
+
+
+def test_an_unparsable_answer_of_groq_fails_only_its_rule() -> None:
+    # Groq answers HTTP 400 "Parsing failed" for a broken tool call: no verdict on the others
+    sources = [ExtractedSource(source="CIS", version="v7.0.0", origin="o", requirements=[
+        make_requirement("3.1.4", "CIS AWS v7.0.0 3.1.4"),
+        make_requirement("3.1.5", "CIS AWS v7.0.0 3.1.5")])]
+
+    def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        prompt = next(p.content for m in messages for p in m.parts
+                      if isinstance(p, UserPromptPart))
+        if "ID: 3.1.4" in prompt:
+            raise ModelHTTPError(status_code=400, model_name="fake-model", body="Parsing failed")
+        return ModelResponse(parts=[ToolCallPart("formulate_rule", draft("3.1.5"))])
+
+    done = []
+    with pytest.raises(ValueError, match=r"1 rules failed:\nCIS 3\.1\.4: no valid rule"):
+        formulate_rules(FunctionModel(respond, model_name="fake-model"),
+                        arch_selection("3.1.4", "3.1.5"), RuleInputs(sources, PROPERTIES, SCOPE),
+                        on_rule=done.append)
+
+    assert [r.id for r in done] == ["ARCH-CIS-3.1.5"]
+
+
+def test_a_part_of_a_decomposed_act_is_quoted_by_the_code_not_the_llm() -> None:
+    # ADR 0026: the model "corrected" DSGVO Art. 6 Abs. 4 lit. a ("für die die") three times
+    part = make_requirement("Art. 6 Abs. 4 lit. a", "DSGVO Art. 6 Abs. 4 lit. a",
+                            "Er berücksichtigt a) die Zwecke, für die die Daten erhoben wurden,")
+    part.attributes["quote"] = "a) die Zwecke, für die die Daten erhoben wurden,"
+    dsgvo = ExtractedSource(source="DSGVO", version="v", origin="o", requirements=[part])
+    selection = Selection(audit_type="architecture", model_id="m", selected=[SelectedRequirement(
+        requirement_id="Art. 6 Abs. 4 lit. a", source="DSGVO", rationale="prüfbar",
+        cfn_resource_types=["AWS::S3::Bucket"])])
+    corrected = draft("x", source_quote="für die Daten erhoben wurden")
+    asked: list[str] = []
+
+    rules = run_formulate(fake_llm({"Art. 6 Abs. 4 lit. a": [corrected]}, asked), selection,
+                          [dsgvo]).rules
+
+    assert rules[0].source_quote == "a) die Zwecke, für die die Daten erhoben wurden,"
+    assert len(asked) == 1  # no retry for the quote
+
+
+def first_prompt(requirement, source: str = "DSGVO") -> str:
+    """The user prompt the model gets for a spec rule of `requirement`."""
+    found = ExtractedSource(source=source, version="v", origin="o", requirements=[requirement])
+    selection = Selection(audit_type="spec", model_id="m", selected=[SelectedRequirement(
+        requirement_id=requirement.id, source=source, rationale="prüfbar",
+        cfn_resource_types=[])])
+    seen: list[str] = []
+
+    def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        if info.output_tools[0].name == JUDGE_TOOL_NAME:
+            return ModelResponse(parts=[ToolCallPart(JUDGE_TOOL_NAME, {
+                "describes_absence": False, "reason": "Festlegung."})])
+        seen.append(next(p.content for p in messages[0].parts if isinstance(p, UserPromptPart)))
+        return ModelResponse(parts=[ToolCallPart("formulate_rule", draft(requirement.id))])
+
+    run_formulate(FunctionModel(respond, model_name="fake-model"), selection, [found])
+    return seen[0]
+
+
+@pytest.mark.parametrize(("kind", "sentence"), [
+    ("eine_genuegt", "mindestens eine der Alternativen"),
+    ("je_nach_risiko", "soweit das Risiko"),
+])
+def test_the_model_learns_the_kind_of_a_decomposed_part(kind: str, sentence: str) -> None:
+    # #53: the rule of DSGVO Art. 9 Abs. 2 (lit. a-j, one is enough) checked consent only
+    part = make_requirement("Art. 9 Abs. 2", "DSGVO Art. 9 Abs. 2")
+    part.attributes["kind"] = kind
+
+    assert sentence in first_prompt(part)
+
+
+def test_a_requirement_without_kind_gets_no_kind_line() -> None:
+    prompt = first_prompt(make_requirement("M60.P01", "SDM Löschen M60.P01"), source="SDM")
+    assert "Art der Pflicht" not in prompt

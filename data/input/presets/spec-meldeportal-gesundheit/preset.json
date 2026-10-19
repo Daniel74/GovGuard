@@ -6,7 +6,7 @@
     "overall_status": "FAIL",
     "required_findings": [
       {
-        "anchor": "DSGVO Art. 9",
+        "anchor": "DSGVO Art. 9 Abs. 2",
         "status": "FAIL"
       },
       {

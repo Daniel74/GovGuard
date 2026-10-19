@@ -8,9 +8,12 @@ from conftest import make_rule
 from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelMessage, ModelResponse, TextPart, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
+from test_token_budget import FakeTime
 
+from govguard import audit_packages
 from govguard.audit_engine import AuditValidationError, run_audit
 from govguard.models import RuleCatalog
+from govguard.token_budget import TokenBudget
 
 INPUT = "Alle Zugriffe erfolgen ausschließlich über TLS 1.3."
 
@@ -66,6 +69,19 @@ class GroqFake(FunctionModel):
     @property
     def system(self) -> str:
         return "groq"
+
+
+def test_groq_packages_wait_for_the_token_budget_bedrock_does_not(trace, monkeypatch) -> None:
+    # #53: 37 packages of an 84 KB input broke Groq's 250,000 tokens per minute
+    time = FakeTime()
+    monkeypatch.setattr(audit_packages, "_budget_for", lambda provider: TokenBudget(
+        1, time.clock, time.sleep) if provider == "groq" else None)
+
+    run_audit(catalog_of(30), INPUT, FunctionModel(Recorder().respond), trace)
+    assert time.slept == []
+    run_audit(catalog_of(30), INPUT, GroqFake(GroqRecorder().respond), trace)
+
+    assert len(time.slept) == 2  # every package is bigger than the budget: one per minute
 
 
 def test_groq_runs_at_most_two_packages_at_once(trace) -> None:

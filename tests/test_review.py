@@ -23,8 +23,13 @@ def deviations(preset_id: str) -> list[tuple[str, str, str]]:
     return [(c.label, c.expected, c.actual) for c in checks if not c.ok]
 
 
-def test_spec_report_of_16_october_meets_its_expected_result() -> None:
+def test_spec_report_of_19_october_meets_its_expected_result() -> None:
     assert deviations("spec-meldeportal-gesundheit") == []
+
+
+def test_wohngeld_report_of_19_october_shows_only_the_overall_status_deviation() -> None:
+    """Five false FAIL after #53 (Art. 27, 30, SDM M60.S04/S05), shown, not rerolled (ADR 0023)."""
+    assert deviations("spec-wohngeld-openapi") == [("Gesamtstatus", "WARN", "FAIL")]
 
 
 def test_arch_reports_of_the_catalog_of_47_show_only_the_det_3_1_deviation() -> None:
@@ -40,7 +45,7 @@ def test_overall_status_comes_first_and_a_check_points_to_its_finding() -> None:
     overall, art9, _ = expected_checks(entry.report, entry.preset.expected)
 
     assert (overall.label, overall.rule_id) == ("Gesamtstatus", None)
-    assert art9.rule_id == "SPEC-DSGVO-Art.9"
+    assert art9.rule_id == "SPEC-DSGVO-Art.9Abs.2"
 
 
 def test_a_required_anchor_missing_in_the_report_is_a_deviation() -> None:
@@ -58,9 +63,9 @@ def counts(preset_id: str) -> dict[str, int]:
 
 
 def test_spec_report_separates_gaps_from_warnings_with_evidence() -> None:
-    """Numbers as in the design artefact of #11 (Groq run of 16.10.2026)."""
+    """Groq run of 19.10.2026 on the decomposed catalog (#53, 374 rules)."""
     assert counts("spec-meldeportal-gesundheit") == {
-        "FAIL": 16, "WARN": 14, "GAP": 106, "PASS": 7, "N/A": 8}
+        "FAIL": 28, "WARN": 42, "GAP": 268, "PASS": 28, "N/A": 8}
 
 
 def test_arch_report_counts_every_category_even_when_empty() -> None:
@@ -90,16 +95,16 @@ def test_the_source_of_ki_vo_keeps_its_hyphen() -> None:
 
 
 def test_each_source_counts_its_findings_with_na_but_without_gaps() -> None:
-    """Gaps stand in their own list below the table: DSGVO 35 - 18 gaps, SDM 116 - 88."""
+    """Gaps stand in their own list below the table: DSGVO 193-116, KI-VO 65-52, SDM 116-100."""
     findings = ENTRIES["spec-meldeportal-gesundheit"].report.findings
 
-    assert source_counts(findings) == {"Alle": 45, "DSGVO": 17, "SDM": 28}
+    assert source_counts(findings) == {"Alle": 106, "DSGVO": 77, "KI-VO": 13, "SDM": 16}
 
 
 def test_of_source_keeps_the_findings_of_one_source_or_all() -> None:
     findings = ENTRIES["spec-meldeportal-gesundheit"].report.findings
 
-    assert (len(of_source(findings, "DSGVO")), len(of_source(findings, None))) == (35, 151)
+    assert (len(of_source(findings, "DSGVO")), len(of_source(findings, None))) == (193, 374)
 
 
 TEN_LINES = "\n".join(f"Zeile {n}" for n in range(1, 11)) + "\n"
@@ -148,5 +153,5 @@ def test_list_shows_chosen_categories_fail_first_then_by_line_and_never_gaps() -
 def test_source_alle_keeps_every_source() -> None:
     findings = ENTRIES["spec-meldeportal-gesundheit"].report.findings
 
-    assert len(visible_findings(findings, {"PASS", "N/A"}, source=None)) == 7 + 8
+    assert len(visible_findings(findings, {"PASS", "N/A"}, source=None)) == 28 + 8
 

@@ -1,0 +1,3063 @@
+[
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 5",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 5 Abs. 1 lit. a",
+          "Art. 5 Abs. 1 lit. b",
+          "Art. 5 Abs. 1 lit. c",
+          "Art. 5 Abs. 1 lit. d",
+          "Art. 5 Abs. 1 lit. e",
+          "Art. 5 Abs. 1 lit. f",
+          "Art. 5 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Grundsätze gelten gleichzeitig für die Verarbeitung personenbezogener Daten.",
+        "anchors": [
+          "DSGVO Art. 5 Abs. 1 lit. a",
+          "DSGVO Art. 5 Abs. 1 lit. b",
+          "DSGVO Art. 5 Abs. 1 lit. c",
+          "DSGVO Art. 5 Abs. 1 lit. d",
+          "DSGVO Art. 5 Abs. 1 lit. e",
+          "DSGVO Art. 5 Abs. 1 lit. f",
+          "DSGVO Art. 5 Abs. 2"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 6",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 6 Abs. 1 lit. a",
+          "Art. 6 Abs. 1 lit. b",
+          "Art. 6 Abs. 1 lit. c",
+          "Art. 6 Abs. 1 lit. d",
+          "Art. 6 Abs. 1 lit. e",
+          "Art. 6 Abs. 1 lit. f"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die Aufzählung gibt alternative Rechtsgrundlagen; es genügt, wenn eine der Bedingungen erfüllt ist.",
+        "anchors": [
+          "DSGVO Art. 6 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 1 UAbs. 2"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz stellt eine Ausnahme zu einer der vorherigen Bedingungen dar und enthält keine eigenständige Verpflichtung.",
+        "anchors": [
+          "DSGVO Art. 6 Abs. 1 UAbs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 2"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Regelt nur die Möglichkeit von Mitgliedstaaten, weitere Bestimmungen zu erlassen, ohne Pflichten für den Verantwortlichen zu schaffen.",
+        "anchors": [
+          "DSGVO Art. 6 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 3 lit. a",
+          "Art. 6 Abs. 3 lit. b"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Für die Rechtsgrundlage von Absatz 1 Buchstaben c und e reicht entweder Unionsrecht oder das Recht der Mitgliedstaaten aus.",
+        "anchors": [
+          "DSGVO Art. 6 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 3 UAbs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Anforderungen an die Rechtsgrundlage und deren Inhalte müssen gleichzeitig erfüllt sein.",
+        "anchors": [
+          "DSGVO Art. 6 Abs. 3 UAbs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 4 lit. a",
+          "Art. 6 Abs. 4 lit. b",
+          "Art. 6 Abs. 4 lit. c",
+          "Art. 6 Abs. 4 lit. d",
+          "Art. 6 Abs. 4 lit. e"
+        ],
+        "kind": "je_nach_risiko",
+        "rationale": "Die Kriterien sind als zu prüfende Faktoren angegeben („unter anderem“), die je nach Risiko berücksichtigt werden müssen.",
+        "anchors": [
+          "DSGVO Art. 6 Abs. 4 lit. a",
+          "DSGVO Art. 6 Abs. 4 lit. b",
+          "DSGVO Art. 6 Abs. 4 lit. c",
+          "DSGVO Art. 6 Abs. 4 lit. d",
+          "DSGVO Art. 6 Abs. 4 lit. e"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 7",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 7 Abs. 1",
+          "Art. 7 Abs. 2",
+          "Art. 7 Abs. 3",
+          "Art. 7 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle Absätze enthalten jeweils Pflichten bzw. verbindliche Vorgaben, die gleichzeitig gelten müssen.",
+        "anchors": [
+          "DSGVO Art. 7 Abs. 1",
+          "DSGVO Art. 7 Abs. 2",
+          "DSGVO Art. 7 Abs. 3",
+          "DSGVO Art. 7 Abs. 4"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 8",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 8 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Bedingungen müssen erfüllt sein, um die Rechtmäßigkeit der Verarbeitung zu gewährleisten.",
+        "anchors": [
+          "DSGVO Art. 8 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 8 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Verantwortliche hat die Pflicht, angemessene Anstrengungen zu unternehmen, um die elterliche Einwilligung zu verifizieren.",
+        "anchors": [
+          "DSGVO Art. 8 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 8 Abs. 3"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Enthält lediglich den Hinweis, dass das allgemeine Vertragsrecht der Mitgliedstaaten unberührt bleibt, ohne eigene Verpflichtung zu begründen.",
+        "anchors": [
+          "DSGVO Art. 8 Abs. 3"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 9",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 9 Abs. 1"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz stellt ein Verbot dar; keine Pflicht für den Verantwortlichen, sondern ein Verbot, dessen Ausnahmen in einem eigenen Absatz geregelt sind.",
+        "anchors": [
+          "DSGVO Art. 9 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 9 Abs. 2 lit. a",
+          "Art. 9 Abs. 2 lit. b",
+          "Art. 9 Abs. 2 lit. c",
+          "Art. 9 Abs. 2 lit. d",
+          "Art. 9 Abs. 2 lit. e",
+          "Art. 9 Abs. 2 lit. f",
+          "Art. 9 Abs. 2 lit. g",
+          "Art. 9 Abs. 2 lit. h",
+          "Art. 9 Abs. 2 lit. i",
+          "Art. 9 Abs. 2 lit. j"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die Aufzählung nennt Ausnahmen zum Verbot; das Vorliegen einer beliebigen genannten Bedingung reicht aus, damit das Verbot nicht greift.",
+        "anchors": [
+          "DSGVO Art. 9 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 9 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Voraussetzungen (Fachpersonal, Berufsgeheimnis oder Geheimhaltungspflicht) müssen gleichzeitig erfüllt sein, damit die Verarbeitung zulässig ist.",
+        "anchors": [
+          "DSGVO Art. 9 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 9 Abs. 4"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz gibt den Mitgliedstaaten Ermächtigung, zusätzliche Bedingungen zu setzen; er schafft keine unmittelbare Pflicht für den Verantwortlichen.",
+        "anchors": [
+          "DSGVO Art. 9 Abs. 4"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 10",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 10"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz enthält eine zusammengefasste Pflicht, die sowohl die Verarbeitung als auch das Führen eines Registers regelt, ohne separate alternative Abschnitte.",
+        "anchors": [
+          "DSGVO Art. 10"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 11",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 11 Abs. 1",
+          "Art. 11 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Beide Absätze enthalten jeweils eigene Pflichten bzw. Bedingungen, die gleichzeitig gelten.",
+        "anchors": [
+          "DSGVO Art. 11 Abs. 1",
+          "DSGVO Art. 11 Abs. 2"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 12",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 12 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Pflicht zur Bereitstellung aller Informationen in präziser, transparenter, verständlicher und leicht zugänglicher Form.",
+        "anchors": [
+          "DSGVO Art. 12 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 12 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Pflicht, der betroffenen Person die Ausübung ihrer Rechte zu erleichtern, mit Ausnahme bei fehlender Identifizierung.",
+        "anchors": [
+          "DSGVO Art. 12 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 12 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Pflicht, unverzüglich und spätestens innerhalb eines Monats über ergriffene Maßnahmen und Fristverlängerungen zu informieren.",
+        "anchors": [
+          "DSGVO Art. 12 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 12 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Pflicht, bei Untätigkeit die betroffene Person über Gründe und Beschwerde‑ bzw. Rechtsbehelfs‑Möglichkeiten zu unterrichten.",
+        "anchors": [
+          "DSGVO Art. 12 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 12 Abs. 5 lit. a",
+          "Art. 12 Abs. 5 lit. b"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Alternative Maßnahmen bei offenkundig unbegründeten oder exzessiven Anträgen: Entgelt verlangen oder Antrag ablehnen.",
+        "anchors": [
+          "DSGVO Art. 12 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 12 Abs. 5 UAbs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Pflicht, den Nachweis für den unbegründeten oder exzessiven Charakter des Antrags zu erbringen.",
+        "anchors": [
+          "DSGVO Art. 12 Abs. 5 UAbs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 12 Abs. 6"
+        ],
+        "kind": "je_nach_risiko",
+        "rationale": "Möglichkeit, bei begründeten Identitätszweifeln zusätzliche Informationen anzufordern.",
+        "anchors": [
+          "DSGVO Art. 12 Abs. 6"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 12 Abs. 7"
+        ],
+        "kind": "je_nach_risiko",
+        "rationale": "Möglichkeit, Informationen mittels standardisierter Bildsymbole bereitzustellen, wenn dies geeignet ist.",
+        "anchors": [
+          "DSGVO Art. 12 Abs. 7"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 12 Abs. 8"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Übertragung einer Befugnis an die Kommission; keine direkte Pflicht für den Verantwortlichen.",
+        "anchors": [
+          "DSGVO Art. 12 Abs. 8"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 13",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 13 Abs. 1 lit. a",
+          "Art. 13 Abs. 1 lit. b",
+          "Art. 13 Abs. 1 lit. c",
+          "Art. 13 Abs. 1 lit. d",
+          "Art. 13 Abs. 1 lit. e",
+          "Art. 13 Abs. 1 lit. f"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Unterpunkte sind eigenständige Informationspflichten, die gleichzeitig zu erfüllen sind.",
+        "anchors": [
+          "DSGVO Art. 13 Abs. 1 lit. a",
+          "DSGVO Art. 13 Abs. 1 lit. b",
+          "DSGVO Art. 13 Abs. 1 lit. c",
+          "DSGVO Art. 13 Abs. 1 lit. d",
+          "DSGVO Art. 13 Abs. 1 lit. e",
+          "DSGVO Art. 13 Abs. 1 lit. f"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 13 Abs. 2 lit. a",
+          "Art. 13 Abs. 2 lit. b",
+          "Art. 13 Abs. 2 lit. c",
+          "Art. 13 Abs. 2 lit. d",
+          "Art. 13 Abs. 2 lit. e",
+          "Art. 13 Abs. 2 lit. f"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Jeder Unterpunkt stellt eine weitere, gleichzeitig geltende Informationspflicht dar.",
+        "anchors": [
+          "DSGVO Art. 13 Abs. 2 lit. a",
+          "DSGVO Art. 13 Abs. 2 lit. b",
+          "DSGVO Art. 13 Abs. 2 lit. c",
+          "DSGVO Art. 13 Abs. 2 lit. d",
+          "DSGVO Art. 13 Abs. 2 lit. e",
+          "DSGVO Art. 13 Abs. 2 lit. f"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 13 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Vorschrift ist eine eigenständige Pflicht, die bei geplanter Weiterverarbeitung zu erfüllen ist.",
+        "anchors": [
+          "DSGVO Art. 13 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 13 Abs. 4"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz enthält lediglich eine Ausnahme‑ bzw. Nicht‑Anwendungsregel zu den vorherigen Pflichten.",
+        "anchors": [
+          "DSGVO Art. 13 Abs. 4"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 14",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 14 Abs. 1 lit. a",
+          "Art. 14 Abs. 1 lit. b",
+          "Art. 14 Abs. 1 lit. c",
+          "Art. 14 Abs. 1 lit. d",
+          "Art. 14 Abs. 1 lit. e",
+          "Art. 14 Abs. 1 lit. f"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Informationspflichten des Absatzes 1 gelten gleichzeitig.",
+        "anchors": [
+          "DSGVO Art. 14 Abs. 1 lit. a",
+          "DSGVO Art. 14 Abs. 1 lit. b",
+          "DSGVO Art. 14 Abs. 1 lit. c",
+          "DSGVO Art. 14 Abs. 1 lit. d",
+          "DSGVO Art. 14 Abs. 1 lit. e",
+          "DSGVO Art. 14 Abs. 1 lit. f"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 14 Abs. 2 lit. a",
+          "Art. 14 Abs. 2 lit. b",
+          "Art. 14 Abs. 2 lit. c",
+          "Art. 14 Abs. 2 lit. d",
+          "Art. 14 Abs. 2 lit. e",
+          "Art. 14 Abs. 2 lit. f",
+          "Art. 14 Abs. 2 lit. g"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle zusätzlichen Informationspflichten des Absatzes 2 müssen zusammen erfüllt werden.",
+        "anchors": [
+          "DSGVO Art. 14 Abs. 2 lit. a",
+          "DSGVO Art. 14 Abs. 2 lit. b",
+          "DSGVO Art. 14 Abs. 2 lit. c",
+          "DSGVO Art. 14 Abs. 2 lit. d",
+          "DSGVO Art. 14 Abs. 2 lit. e",
+          "DSGVO Art. 14 Abs. 2 lit. f",
+          "DSGVO Art. 14 Abs. 2 lit. g"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 14 Abs. 3 lit. a",
+          "Art. 14 Abs. 3 lit. b",
+          "Art. 14 Abs. 3 lit. c"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Je nach Situation reicht eine der genannten Fristen für die Bereitstellung der Informationen aus.",
+        "anchors": [
+          "DSGVO Art. 14 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 14 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Einzelne Pflicht zur Information bei neuer Zweckbestimmung, gilt allein.",
+        "anchors": [
+          "DSGVO Art. 14 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 14 Abs. 5 lit. a",
+          "Art. 14 Abs. 5 lit. b",
+          "Art. 14 Abs. 5 lit. c",
+          "Art. 14 Abs. 5 lit. d"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Jede genannte Ausnahme reicht aus, um die Informationspflichten des Artikels auszuschließen.",
+        "anchors": [
+          "DSGVO Art. 14 Abs. 5"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 15",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 15 Abs. 1 lit. a",
+          "Art. 15 Abs. 1 lit. b",
+          "Art. 15 Abs. 1 lit. c",
+          "Art. 15 Abs. 1 lit. d",
+          "Art. 15 Abs. 1 lit. e",
+          "Art. 15 Abs. 1 lit. f",
+          "Art. 15 Abs. 1 lit. g",
+          "Art. 15 Abs. 1 lit. h"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Aufzählung in Absatz 1 definiert die einzelnen Informationspflichten, die dem Verantwortlichen gleichzeitig zu erfüllen sind, sobald das Auskunftsrecht ausgeübt wird.",
+        "anchors": [
+          "DSGVO Art. 15 Abs. 1 lit. a",
+          "DSGVO Art. 15 Abs. 1 lit. b",
+          "DSGVO Art. 15 Abs. 1 lit. c",
+          "DSGVO Art. 15 Abs. 1 lit. d",
+          "DSGVO Art. 15 Abs. 1 lit. e",
+          "DSGVO Art. 15 Abs. 1 lit. f",
+          "DSGVO Art. 15 Abs. 1 lit. g",
+          "DSGVO Art. 15 Abs. 1 lit. h"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 15 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 2 stellt eine eigenständige Informationspflicht über Garantien bei Datenübermittlungen in Drittländer dar, die zusätzlich zu den Informationen aus Absatz 1 zu erteilen ist.",
+        "anchors": [
+          "DSGVO Art. 15 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 15 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 3 regelt die Pflicht, eine Kopie der personenbezogenen Daten zur Verfügung zu stellen und ggf. ein angemessenes Entgelt zu erheben – eine weitere, eigenständige Verpflichtung des Verantwortlichen.",
+        "anchors": [
+          "DSGVO Art. 15 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 15 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 4 legt eine zwingende Einschränkung fest, dass das Auskunftsrecht nicht die Rechte und Freiheiten anderer Personen beeinträchtigen darf; diese Vorgabe gilt ebenfalls uneingeschränkt.",
+        "anchors": [
+          "DSGVO Art. 15 Abs. 4"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 16",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 16"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Beide Sätze beschreiben jeweils ein eigenes Recht, das gleichzeitig gilt, also keine Alternative oder Risikobedingung.",
+        "anchors": [
+          "DSGVO Art. 16"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 17",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 17 Abs. 1 lit. a",
+          "Art. 17 Abs. 1 lit. b",
+          "Art. 17 Abs. 1 lit. c",
+          "Art. 17 Abs. 1 lit. d",
+          "Art. 17 Abs. 1 lit. e",
+          "Art. 17 Abs. 1 lit. f"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die Aufzählung gibt alternative Gründe an, von denen einer ausreichen muss, damit das Recht auf Löschung greift.",
+        "anchors": [
+          "DSGVO Art. 17 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 17 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Es handelt sich um eine eigenständige Pflicht des Verantwortlichen, die immer zu erfüllen ist, wenn die Voraussetzungen von Absatz 1 vorliegen.",
+        "anchors": [
+          "DSGVO Art. 17 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 17 Abs. 3 lit. a",
+          "Art. 17 Abs. 3 lit. b",
+          "Art. 17 Abs. 3 lit. c",
+          "Art. 17 Abs. 3 lit. d",
+          "Art. 17 Abs. 3 lit. e"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die Aufzählung stellt alternative Ausnahmetatbestände dar, von denen einer ausreicht, damit die Pflichten aus Absatz 1 und 2 nicht gelten.",
+        "anchors": [
+          "DSGVO Art. 17 Abs. 3"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 18",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 18 Abs. 1 lit. a",
+          "Art. 18 Abs. 1 lit. b",
+          "Art. 18 Abs. 1 lit. c",
+          "Art. 18 Abs. 1 lit. d"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die Aufzählung stellt alternative Voraussetzungen dar, von denen mindestens eine erfüllt sein muss, damit das Recht auf Einschränkung besteht.",
+        "anchors": [
+          "DSGVO Art. 18 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 18 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Bestimmungen regeln, unter welchen Bedingungen die Daten nach einer eingeschränkten Verarbeitung verarbeitet werden dürfen; alle genannten Bedingungen gelten gleichzeitig.",
+        "anchors": [
+          "DSGVO Art. 18 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 18 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Verantwortliche muss die betroffene Person informieren, bevor die Einschränkung aufgehoben wird; diese Informationspflicht gilt stets.",
+        "anchors": [
+          "DSGVO Art. 18 Abs. 3"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 19",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 19"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Abschnitt stellt eine einzelne, verbindliche Informationspflicht des Verantwortlichen dar, die ohne Alternativen gilt.",
+        "anchors": [
+          "DSGVO Art. 19"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 20",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 20 Abs. 1 lit. a",
+          "Art. 20 Abs. 1 lit. b"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Beide Bedingungen müssen gleichzeitig erfüllt sein, damit das Recht auf Datenübertragbarkeit greift.",
+        "anchors": [
+          "DSGVO Art. 20 Abs. 1 lit. a",
+          "DSGVO Art. 20 Abs. 1 lit. b"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 20 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Eigenständiges Recht, das unabhängig von anderen Bestimmungen gilt.",
+        "anchors": [
+          "DSGVO Art. 20 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 20 Abs. 3"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Enthält eine Ausnahme, die das Recht einschränkt, aber keine eigenständige Pflicht darstellt.",
+        "anchors": [
+          "DSGVO Art. 20 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 20 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Stellt eine Bedingung dar, die bei Ausübung des Rechts stets zu beachten ist.",
+        "anchors": [
+          "DSGVO Art. 20 Abs. 4"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 21",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 21 Abs. 1",
+          "Art. 21 Abs. 2",
+          "Art. 21 Abs. 3",
+          "Art. 21 Abs. 4",
+          "Art. 21 Abs. 5",
+          "Art. 21 Abs. 6"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Jeder Absatz definiert eine eigenständige Pflicht oder Bedingung, die alle gleichzeitig gelten.",
+        "anchors": [
+          "DSGVO Art. 21 Abs. 1",
+          "DSGVO Art. 21 Abs. 2",
+          "DSGVO Art. 21 Abs. 3",
+          "DSGVO Art. 21 Abs. 4",
+          "DSGVO Art. 21 Abs. 5",
+          "DSGVO Art. 21 Abs. 6"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 22",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 22 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Das Grundrecht, nicht einer ausschließlich automatisierten Entscheidung unterworfen zu werden, gilt grundsätzlich für jede betroffene Person.",
+        "anchors": [
+          "DSGVO Art. 22 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 22 Abs. 2 lit. a",
+          "Art. 22 Abs. 2 lit. b",
+          "Art. 22 Abs. 2 lit. c"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die genannten Bedingungen sind Ausnahmen vom Recht nach Absatz 1; das Vorliegen einer beliebigen Bedingung reicht aus, um die Ausnahme anzuwenden.",
+        "anchors": [
+          "DSGVO Art. 22 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 22 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Ist eine der Ausnahmen a oder c des Absatzes 2 erfüllt, muss der Verantwortliche zwingend die genannten Schutzmaßnahmen ergreifen.",
+        "anchors": [
+          "DSGVO Art. 22 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 22 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Für Entscheidungen nach Absatz 2 gilt grundsätzlich das Verbot, besondere Kategorien personenbezogener Daten zu verwenden, außer bei den genannten Ausnahmen.",
+        "anchors": [
+          "DSGVO Art. 22 Abs. 4"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 23",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 23 Abs. 1 lit. a",
+          "Art. 23 Abs. 1 lit. b",
+          "Art. 23 Abs. 1 lit. c",
+          "Art. 23 Abs. 1 lit. d",
+          "Art. 23 Abs. 1 lit. e",
+          "Art. 23 Abs. 1 lit. f",
+          "Art. 23 Abs. 1 lit. g",
+          "Art. 23 Abs. 1 lit. h",
+          "Art. 23 Abs. 1 lit. i",
+          "Art. 23 Abs. 1 lit. j"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle aufgelisteten Zwecke müssen gleichzeitig erfüllt sein, damit eine Beschränkung zulässig ist.",
+        "anchors": [
+          "DSGVO Art. 23 Abs. 1 lit. a",
+          "DSGVO Art. 23 Abs. 1 lit. b",
+          "DSGVO Art. 23 Abs. 1 lit. c",
+          "DSGVO Art. 23 Abs. 1 lit. d",
+          "DSGVO Art. 23 Abs. 1 lit. e",
+          "DSGVO Art. 23 Abs. 1 lit. f",
+          "DSGVO Art. 23 Abs. 1 lit. g",
+          "DSGVO Art. 23 Abs. 1 lit. h",
+          "DSGVO Art. 23 Abs. 1 lit. i",
+          "DSGVO Art. 23 Abs. 1 lit. j"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 23 Abs. 2 lit. a",
+          "Art. 23 Abs. 2 lit. b",
+          "Art. 23 Abs. 2 lit. c",
+          "Art. 23 Abs. 2 lit. d",
+          "Art. 23 Abs. 2 lit. e",
+          "Art. 23 Abs. 2 lit. f",
+          "Art. 23 Abs. 2 lit. g",
+          "Art. 23 Abs. 2 lit. h"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Jede Gesetzgebungsmaßnahme muss alle genannten spezifischen Vorschriften enthalten.",
+        "anchors": [
+          "DSGVO Art. 23 Abs. 2 lit. a",
+          "DSGVO Art. 23 Abs. 2 lit. b",
+          "DSGVO Art. 23 Abs. 2 lit. c",
+          "DSGVO Art. 23 Abs. 2 lit. d",
+          "DSGVO Art. 23 Abs. 2 lit. e",
+          "DSGVO Art. 23 Abs. 2 lit. f",
+          "DSGVO Art. 23 Abs. 2 lit. g",
+          "DSGVO Art. 23 Abs. 2 lit. h"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 24",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 24 Abs. 1",
+          "Art. 24 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 1 und 2 legen verbindliche Pflichten des Verantwortlichen fest, die gleichzeitig gelten.",
+        "anchors": [
+          "DSGVO Art. 24 Abs. 1",
+          "DSGVO Art. 24 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 24 Abs. 3"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Absatz 3 stellt lediglich eine optionale Möglichkeit zum Nachweis der Pflichterfüllung dar, keine eigenständige Verpflichtung.",
+        "anchors": [
+          "DSGVO Art. 24 Abs. 3"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 25",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 25 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz legt eine eigenständige Pflicht des Verantwortlichen fest, geeignete technische und organisatorische Maßnahmen zu treffen; alle genannten Anforderungen gelten gleichzeitig.",
+        "anchors": [
+          "DSGVO Art. 25 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 25 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz definiert eine weitere eigenständige Pflicht, durch Voreinstellungen nur notwendige Daten zu verarbeiten; auch hier gelten alle genannten Vorgaben zugleich.",
+        "anchors": [
+          "DSGVO Art. 25 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 25 Abs. 3"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz beschreibt lediglich die Möglichkeit, ein Zertifizierungsverfahren als Nachweis zu nutzen, ohne eine verbindliche Verpflichtung zu schaffen.",
+        "anchors": [
+          "DSGVO Art. 25 Abs. 3"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 26",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 26 Abs. 1",
+          "Art. 26 Abs. 2",
+          "Art. 26 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle Absätze enthalten Pflichten, die gleichzeitig gelten.",
+        "anchors": [
+          "DSGVO Art. 26 Abs. 1",
+          "DSGVO Art. 26 Abs. 2",
+          "DSGVO Art. 26 Abs. 3"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 27",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 27 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Abs. 1 stellt die generelle Pflicht zur Benennung eines Vertreters in der Union für nicht in der Union niedergelassene Verantwortliche bzw. Auftragsverarbeiter.",
+        "anchors": [
+          "DSGVO Art. 27 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 27 Abs. 2 lit. a",
+          "Art. 27 Abs. 2 lit. b"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Abs. 2 lit. a und lit. b bilden die Ausnahmen zur Pflicht aus Abs. 1; reicht, wenn eine der Bedingungen erfüllt ist, gilt die Pflicht nicht.",
+        "anchors": [
+          "DSGVO Art. 27 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 27 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Abs. 3 legt die Bedingung fest, dass der Vertreter in einem Mitgliedstaat niedergelassen sein muss, in dem die betroffenen Personen sich befinden.",
+        "anchors": [
+          "DSGVO Art. 27 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 27 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Abs. 4 definiert die Aufgabe des Vertreters, als Anlaufstelle für Aufsichtsbehörden und betroffene Personen zu dienen.",
+        "anchors": [
+          "DSGVO Art. 27 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 27 Abs. 5"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Abs. 5 enthält lediglich einen Hinweis, dass die Benennung eines Vertreters keine Auswirkung auf etwaige Rechtsverfahren gegen den Verantwortlichen oder Auftragsverarbeiter hat; keine eigenständige Pflicht.",
+        "anchors": [
+          "DSGVO Art. 27 Abs. 5"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 28",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 28 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Einzelne Verpflichtung des Verantwortlichen, nur mit Auftragsverarbeitern mit hinreichenden Garantien zusammenzuarbeiten.",
+        "anchors": [
+          "DSGVO Art. 28 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 28 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Einzelne Verpflichtung des Auftragsverarbeiters, keinen weiteren Auftragsverarbeiter ohne schriftliche Genehmigung zu nutzen.",
+        "anchors": [
+          "DSGVO Art. 28 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 28 Abs. 3 lit. a",
+          "Art. 28 Abs. 3 lit. b",
+          "Art. 28 Abs. 3 lit. c",
+          "Art. 28 Abs. 3 lit. d",
+          "Art. 28 Abs. 3 lit. e",
+          "Art. 28 Abs. 3 lit. f",
+          "Art. 28 Abs. 3 lit. g",
+          "Art. 28 Abs. 3 lit. h"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Aufzählung von Pflichten des Auftragsverarbeiters, die alle gleichzeitig gelten.",
+        "anchors": [
+          "DSGVO Art. 28 Abs. 3 lit. a",
+          "DSGVO Art. 28 Abs. 3 lit. b",
+          "DSGVO Art. 28 Abs. 3 lit. c",
+          "DSGVO Art. 28 Abs. 3 lit. d",
+          "DSGVO Art. 28 Abs. 3 lit. e",
+          "DSGVO Art. 28 Abs. 3 lit. f",
+          "DSGVO Art. 28 Abs. 3 lit. g",
+          "DSGVO Art. 28 Abs. 3 lit. h"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 28 Abs. 3 UAbs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Zusätzliche Pflicht des Auftragsverarbeiters, den Verantwortlichen unverzüglich zu informieren, wenn eine Weisung gegen die Verordnung verstößt.",
+        "anchors": [
+          "DSGVO Art. 28 Abs. 3 UAbs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 28 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Pflicht des Auftragsverarbeiters, bei Einschaltung eines weiteren Auftragsverarbeiters dieselben Datenschutzpflichten weiterzugeben und Haftung zu übernehmen.",
+        "anchors": [
+          "DSGVO Art. 28 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 28 Abs. 5"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Keine unmittelbare Verpflichtung, sondern Hinweis, dass die Einhaltung von Verhaltensregeln/Zertifizierungen als Nachweis für Garantien herangezogen werden kann.",
+        "anchors": [
+          "DSGVO Art. 28 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 28 Abs. 6"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Regelung, dass der Vertrag auf Standardvertragsklauseln beruhen kann – keine direkte Pflicht, sondern Gestaltungsmöglichkeit.",
+        "anchors": [
+          "DSGVO Art. 28 Abs. 6"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 28 Abs. 7"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Befugnis der Kommission, Standardvertragsklauseln zu erlassen – Macht einer anderen Stelle.",
+        "anchors": [
+          "DSGVO Art. 28 Abs. 7"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 28 Abs. 8"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Befugnis einer Aufsichtsbehörde, Standardvertragsklauseln zu erlassen – Macht einer anderen Stelle.",
+        "anchors": [
+          "DSGVO Art. 28 Abs. 8"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 28 Abs. 9"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtung, den Vertrag schriftlich (auch elektronisch) zu fassen.",
+        "anchors": [
+          "DSGVO Art. 28 Abs. 9"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 28 Abs. 10"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Regel, dass ein Auftragsverarbeiter, der Zwecke und Mittel bestimmt, als Verantwortlicher gilt – Klassifizierungsregel, die für die Anwendung gilt.",
+        "anchors": [
+          "DSGVO Art. 28 Abs. 10"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 29",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 29"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz enthält eine einzige Verarbeitungspflicht mit einer im selben Satz genannten Ausnahme, daher gelten alle Bestimmungen zugleich.",
+        "anchors": [
+          "DSGVO Art. 29"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 30",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 30 Abs. 1 lit. a",
+          "Art. 30 Abs. 1 lit. b",
+          "Art. 30 Abs. 1 lit. c",
+          "Art. 30 Abs. 1 lit. d",
+          "Art. 30 Abs. 1 lit. e",
+          "Art. 30 Abs. 1 lit. f",
+          "Art. 30 Abs. 1 lit. g"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle aufgelisteten Angaben müssen im Verzeichnis des Verantwortlichen enthalten sein.",
+        "anchors": [
+          "DSGVO Art. 30 Abs. 1 lit. a",
+          "DSGVO Art. 30 Abs. 1 lit. b",
+          "DSGVO Art. 30 Abs. 1 lit. c",
+          "DSGVO Art. 30 Abs. 1 lit. d",
+          "DSGVO Art. 30 Abs. 1 lit. e",
+          "DSGVO Art. 30 Abs. 1 lit. f",
+          "DSGVO Art. 30 Abs. 1 lit. g"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 30 Abs. 2 lit. a",
+          "Art. 30 Abs. 2 lit. b",
+          "Art. 30 Abs. 2 lit. c",
+          "Art. 30 Abs. 2 lit. d"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle aufgelisteten Angaben müssen im Verzeichnis des Auftragsverarbeiters enthalten sein.",
+        "anchors": [
+          "DSGVO Art. 30 Abs. 2 lit. a",
+          "DSGVO Art. 30 Abs. 2 lit. b",
+          "DSGVO Art. 30 Abs. 2 lit. c",
+          "DSGVO Art. 30 Abs. 2 lit. d"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 30 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Das Verzeichnis muss schriftlich bzw. elektronisch geführt werden.",
+        "anchors": [
+          "DSGVO Art. 30 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 30 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Das Verzeichnis ist der Aufsichtsbehörde auf Anfrage zur Verfügung zu stellen.",
+        "anchors": [
+          "DSGVO Art. 30 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 30 Abs. 5"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die Pflichten gelten nicht, wenn eine der genannten Bedingungen erfüllt ist.",
+        "anchors": [
+          "DSGVO Art. 30 Abs. 5"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 31",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 31"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Abschnitt stellt eine einzelne, verbindliche Pflicht dar, die vom Verantwortlichen und Auftragsverarbeiter zu erfüllen ist.",
+        "anchors": [
+          "DSGVO Art. 31"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 32",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 32 Abs. 1 lit. a",
+          "Art. 32 Abs. 1 lit. b",
+          "Art. 32 Abs. 1 lit. c",
+          "Art. 32 Abs. 1 lit. d"
+        ],
+        "kind": "je_nach_risiko",
+        "rationale": "Die genannten Maßnahmen sind beispielhafte technische und organisatorische Maßnahmen, die je nach Risikobewertung anzuwenden sind.",
+        "anchors": [
+          "DSGVO Art. 32 Abs. 1 lit. a",
+          "DSGVO Art. 32 Abs. 1 lit. b",
+          "DSGVO Art. 32 Abs. 1 lit. c",
+          "DSGVO Art. 32 Abs. 1 lit. d"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 32 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Berücksichtigung der genannten Risiken ist eine zwingende Pflicht bei der Bestimmung des angemessenen Schutzniveaus.",
+        "anchors": [
+          "DSGVO Art. 32 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 32 Abs. 3"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz gibt lediglich einen optionalen Hinweis, dass die Einhaltung genehmigter Verhaltensregeln oder Zertifizierungen als Nachweisfaktor herangezogen werden kann.",
+        "anchors": [
+          "DSGVO Art. 32 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 32 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Verantwortliche und der Auftragsverarbeiter müssen sicherstellen, dass Personen nur auf Anweisung verarbeiten – eine verbindliche Pflicht.",
+        "anchors": [
+          "DSGVO Art. 32 Abs. 4"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 33",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 33 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 1 legt eine Pflicht zur Meldung innerhalb von 72 Stunden fest, die nur bei fehlendem Risiko entfällt, sodass die Pflicht grundsätzlich gilt.",
+        "anchors": [
+          "DSGVO Art. 33 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 33 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 2 enthält eine eindeutige Meldungspflicht des Auftragsverarbeiters an den Verantwortlichen.",
+        "anchors": [
+          "DSGVO Art. 33 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 33 Abs. 3 lit. a",
+          "Art. 33 Abs. 3 lit. b",
+          "Art. 33 Abs. 3 lit. c",
+          "Art. 33 Abs. 3 lit. d"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Aufzählung der Informationen ist als Mindestinhalt der Meldung verbindlich; alle Punkte müssen erfüllt sein.",
+        "anchors": [
+          "DSGVO Art. 33 Abs. 3 lit. a",
+          "DSGVO Art. 33 Abs. 3 lit. b",
+          "DSGVO Art. 33 Abs. 3 lit. c",
+          "DSGVO Art. 33 Abs. 3 lit. d"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 33 Abs. 4"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Absatz 4 gibt lediglich die Möglichkeit, Informationen schrittweise zu übermitteln, ohne eine Verpflichtung zu schaffen.",
+        "anchors": [
+          "DSGVO Art. 33 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 33 Abs. 5"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 5 verpflichtet den Verantwortlichen zur Dokumentation aller relevanten Fakten und Maßnahmen.",
+        "anchors": [
+          "DSGVO Art. 33 Abs. 5"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 34",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 34 Abs. 1",
+          "Art. 34 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Beide Absätze legen Pflichten des Verantwortlichen fest, die gleichzeitig gelten, sobald ein hohes Risiko besteht.",
+        "anchors": [
+          "DSGVO Art. 34 Abs. 1",
+          "DSGVO Art. 34 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 34 Abs. 3 lit. a",
+          "Art. 34 Abs. 3 lit. b",
+          "Art. 34 Abs. 3 lit. c"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die drei Bedingungen sind Alternativen; reicht eine davon aus, um die Benachrichtigungspflicht auszuschließen.",
+        "anchors": [
+          "DSGVO Art. 34 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 34 Abs. 4"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Regelt die Befugnisse der Aufsichtsbehörde und stellt keine direkte Pflicht für den Verantwortlichen dar.",
+        "anchors": [
+          "DSGVO Art. 34 Abs. 4"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 35",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 35 Abs. 1",
+          "Art. 35 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absätze 1 und 2 stellen eigenständige Pflichten dar, die gleichzeitig gelten.",
+        "anchors": [
+          "DSGVO Art. 35 Abs. 1",
+          "DSGVO Art. 35 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 35 Abs. 3 lit. a",
+          "Art. 35 Abs. 3 lit. b",
+          "Art. 35 Abs. 3 lit. c"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die Aufzählung gibt alternative Fälle an, von denen einer ausreicht, um die Pflicht aus Absatz 1 auszulösen.",
+        "anchors": [
+          "DSGVO Art. 35 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 35 Abs. 4",
+          "Art. 35 Abs. 5",
+          "Art. 35 Abs. 6"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Diese Absätze regeln ausschließlich Aufgaben der Aufsichtsbehörde und enthalten keine direkte Verpflichtung für den Verantwortlichen.",
+        "anchors": [
+          "DSGVO Art. 35 Abs. 4",
+          "DSGVO Art. 35 Abs. 5",
+          "DSGVO Art. 35 Abs. 6"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 35 Abs. 7 lit. a",
+          "Art. 35 Abs. 7 lit. b",
+          "Art. 35 Abs. 7 lit. c",
+          "Art. 35 Abs. 7 lit. d"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Punkte müssen in einer Datenschutz‑Folgenabschätzung enthalten sein.",
+        "anchors": [
+          "DSGVO Art. 35 Abs. 7 lit. a",
+          "DSGVO Art. 35 Abs. 7 lit. b",
+          "DSGVO Art. 35 Abs. 7 lit. c",
+          "DSGVO Art. 35 Abs. 7 lit. d"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 35 Abs. 8"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 8 stellt eine weitere zwingende Anforderung an den Verantwortlichen dar.",
+        "anchors": [
+          "DSGVO Art. 35 Abs. 8"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 35 Abs. 9"
+        ],
+        "kind": "je_nach_risiko",
+        "rationale": "Die Konsultation der betroffenen Personen ist nur dann erforderlich, wenn das Risiko dies erfordert („gegebenenfalls“).",
+        "anchors": [
+          "DSGVO Art. 35 Abs. 9"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 35 Abs. 10"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Absatz 10 enthält eine Ausnahme‑ bzw. Einschränkung der vorherigen Pflichten, keine eigenständige Verpflichtung.",
+        "anchors": [
+          "DSGVO Art. 35 Abs. 10"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 35 Abs. 11"
+        ],
+        "kind": "je_nach_risiko",
+        "rationale": "Die Überprüfung ist nur bei veränderten Risiken erforderlich („erforderlichenfalls“).",
+        "anchors": [
+          "DSGVO Art. 35 Abs. 11"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 36",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 36 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Abschnitt legt eine eigenständige Pflicht des Verantwortlichen fest, die in jedem Fall zu erfüllen ist.",
+        "anchors": [
+          "DSGVO Art. 36 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 36 Abs. 2"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Abschnitt beschreibt ausschließlich Befugnisse und Handlungen der Aufsichtsbehörde, keine Verpflichtung des Verantwortlichen.",
+        "anchors": [
+          "DSGVO Art. 36 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 36 Abs. 3 lit. a",
+          "Art. 36 Abs. 3 lit. b",
+          "Art. 36 Abs. 3 lit. c",
+          "Art. 36 Abs. 3 lit. d",
+          "Art. 36 Abs. 3 lit. e",
+          "Art. 36 Abs. 3 lit. f"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle Aufzählungspunkte sind Teil einer einheitlichen Informationspflicht, die gemeinsam zu erfüllen ist.",
+        "anchors": [
+          "DSGVO Art. 36 Abs. 3 lit. a",
+          "DSGVO Art. 36 Abs. 3 lit. b",
+          "DSGVO Art. 36 Abs. 3 lit. c",
+          "DSGVO Art. 36 Abs. 3 lit. d",
+          "DSGVO Art. 36 Abs. 3 lit. e",
+          "DSGVO Art. 36 Abs. 3 lit. f"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 36 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz stellt eine generelle Pflicht der Mitgliedstaaten dar, die in jedem Fall gilt.",
+        "anchors": [
+          "DSGVO Art. 36 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 36 Abs. 5"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz definiert eine mögliche zusätzliche Pflicht, die durch nationales Recht entstehen kann, und ist somit eine generelle Verpflichtung.",
+        "anchors": [
+          "DSGVO Art. 36 Abs. 5"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 37",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 37 Abs. 1 lit. a",
+          "Art. 37 Abs. 1 lit. b",
+          "Art. 37 Abs. 1 lit. c"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die drei Bedingungen sind Alternativen; das Vorliegen einer genügt, um die Benennungspflicht auszulösen.",
+        "anchors": [
+          "DSGVO Art. 37 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 37 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Möglichkeit einer gemeinsamen Benennung für eine Unternehmensgruppe ist eine eigenständige Verpflichtung.",
+        "anchors": [
+          "DSGVO Art. 37 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 37 Abs. 3"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz enthält ein optionales Recht („kann … benannt werden“), keine zwingende Pflicht.",
+        "anchors": [
+          "DSGVO Art. 37 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 37 Abs. 4"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz regelt eine optionale Benennung und eine bedingte Pflicht nur, wenn andere Rechtsvorschriften sie vorschreiben.",
+        "anchors": [
+          "DSGVO Art. 37 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 37 Abs. 5"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Benennung des DSB muss anhand festgelegter Qualifikationskriterien erfolgen – eine zwingende Vorgabe.",
+        "anchors": [
+          "DSGVO Art. 37 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 37 Abs. 6"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz gibt lediglich Spielräume (Mitarbeiter oder Vertrag) und schafft keine Verpflichtung.",
+        "anchors": [
+          "DSGVO Art. 37 Abs. 6"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 37 Abs. 7"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Veröffentlichung der Kontaktdaten und Mitteilung an die Aufsichtsbehörde ist eine klare Pflicht.",
+        "anchors": [
+          "DSGVO Art. 37 Abs. 7"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 38",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 38 Abs. 1",
+          "Art. 38 Abs. 2",
+          "Art. 38 Abs. 3",
+          "Art. 38 Abs. 4",
+          "Art. 38 Abs. 5",
+          "Art. 38 Abs. 6"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle Absätze enthalten Pflichten oder verbindliche Regelungen, die gleichzeitig gelten.",
+        "anchors": [
+          "DSGVO Art. 38 Abs. 1",
+          "DSGVO Art. 38 Abs. 2",
+          "DSGVO Art. 38 Abs. 3",
+          "DSGVO Art. 38 Abs. 4",
+          "DSGVO Art. 38 Abs. 5",
+          "DSGVO Art. 38 Abs. 6"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 39",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 39 Abs. 1 lit. a",
+          "Art. 39 Abs. 1 lit. b",
+          "Art. 39 Abs. 1 lit. c",
+          "Art. 39 Abs. 1 lit. d",
+          "Art. 39 Abs. 1 lit. e",
+          "Art. 39 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle aufgeführten Punkte sind zwingende Aufgaben des Datenschutzbeauftragten, die gleichzeitig gelten.",
+        "anchors": [
+          "DSGVO Art. 39 Abs. 1 lit. a",
+          "DSGVO Art. 39 Abs. 1 lit. b",
+          "DSGVO Art. 39 Abs. 1 lit. c",
+          "DSGVO Art. 39 Abs. 1 lit. d",
+          "DSGVO Art. 39 Abs. 1 lit. e",
+          "DSGVO Art. 39 Abs. 2"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 40",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 40 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Einzelner Absatz stellt eine verbindliche Pflicht für die genannten Stellen dar.",
+        "anchors": [
+          "DSGVO Art. 40 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 40 Abs. 2 lit. a",
+          "Art. 40 Abs. 2 lit. b",
+          "Art. 40 Abs. 2 lit. c",
+          "Art. 40 Abs. 2 lit. d",
+          "Art. 40 Abs. 2 lit. e",
+          "Art. 40 Abs. 2 lit. f",
+          "Art. 40 Abs. 2 lit. g",
+          "Art. 40 Abs. 2 lit. h",
+          "Art. 40 Abs. 2 lit. i",
+          "Art. 40 Abs. 2 lit. j",
+          "Art. 40 Abs. 2 lit. k"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Aufzählung möglicher Inhalte von Verhaltensregeln, keine Verpflichtung für die genannten Stellen.",
+        "anchors": [
+          "DSGVO Art. 40 Abs. 2 lit. a",
+          "DSGVO Art. 40 Abs. 2 lit. b",
+          "DSGVO Art. 40 Abs. 2 lit. c",
+          "DSGVO Art. 40 Abs. 2 lit. d",
+          "DSGVO Art. 40 Abs. 2 lit. e",
+          "DSGVO Art. 40 Abs. 2 lit. f",
+          "DSGVO Art. 40 Abs. 2 lit. g",
+          "DSGVO Art. 40 Abs. 2 lit. h",
+          "DSGVO Art. 40 Abs. 2 lit. i",
+          "DSGVO Art. 40 Abs. 2 lit. j",
+          "DSGVO Art. 40 Abs. 2 lit. k"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 40 Abs. 3"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Ermöglicht freiwillige Anwendung von genehmigten Verhaltensregeln, stellt keine Pflicht dar.",
+        "anchors": [
+          "DSGVO Art. 40 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 40 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet Verhaltensregeln, Verfahren zur obligatorischen Überwachung vorzusehen.",
+        "anchors": [
+          "DSGVO Art. 40 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 40 Abs. 5"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet Verbände, Entwürfe vorzulegen, und Aufsichtsbehörden, Stellungnahme und Genehmigung zu erteilen.",
+        "anchors": [
+          "DSGVO Art. 40 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 40 Abs. 6"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet Aufsichtsbehörde, genehmigte einstaatliche Verhaltensregeln zu verzeichnen und zu veröffentlichen.",
+        "anchors": [
+          "DSGVO Art. 40 Abs. 6"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 40 Abs. 7"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet Aufsichtsbehörde, mehrstaatliche Entwürfe dem Ausschuss vorzulegen.",
+        "anchors": [
+          "DSGVO Art. 40 Abs. 7"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 40 Abs. 8"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet Ausschuss, seine Stellungnahme an die Kommission zu übermitteln.",
+        "anchors": [
+          "DSGVO Art. 40 Abs. 8"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 40 Abs. 9"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Kommission hat Ermöglichungsbefugnis, keine zwingende Verpflichtung.",
+        "anchors": [
+          "DSGVO Art. 40 Abs. 9"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 40 Abs. 10"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet Kommission, veröffentlichte Verhaltensregeln angemessen zu publizieren.",
+        "anchors": [
+          "DSGVO Art. 40 Abs. 10"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 40 Abs. 11"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet Ausschuss, alle genehmigten Verhaltensregeln zu registrieren und zu veröffentlichen.",
+        "anchors": [
+          "DSGVO Art. 40 Abs. 11"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 41",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 41 Abs. 2 lit. a",
+          "Art. 41 Abs. 2 lit. b",
+          "Art. 41 Abs. 2 lit. c",
+          "Art. 41 Abs. 2 lit. d"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Bedingungen müssen gleichzeitig erfüllt sein, damit eine Stelle akkreditiert werden kann.",
+        "anchors": [
+          "DSGVO Art. 41 Abs. 2 lit. a",
+          "DSGVO Art. 41 Abs. 2 lit. b",
+          "DSGVO Art. 41 Abs. 2 lit. c",
+          "DSGVO Art. 41 Abs. 2 lit. d"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 41 Abs. 1"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Beschreibt lediglich die Qualifikationsvoraussetzungen für die Stelle, keine zu erfüllende Pflicht.",
+        "anchors": [
+          "DSGVO Art. 41 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 41 Abs. 3"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Regelt eine Aufgabe der Aufsichtsbehörde, nicht eine Verpflichtung für die akkreditierte Stelle.",
+        "anchors": [
+          "DSGVO Art. 41 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 41 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die akkreditierte Stelle muss bei Verstößen geeignete Maßnahmen ergreifen und die Aufsichtsbehörde informieren.",
+        "anchors": [
+          "DSGVO Art. 41 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 41 Abs. 5"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Verpflichtet die Aufsichtsbehörde zum Widerruf der Akkreditierung, keine Pflicht für die Stelle.",
+        "anchors": [
+          "DSGVO Art. 41 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 41 Abs. 6"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Stellt eine Ausnahme dar – der Artikel gilt nicht für Behörden oder öffentliche Stellen.",
+        "anchors": [
+          "DSGVO Art. 41 Abs. 6"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 42",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 42 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz legt eine fördernde Pflicht für die genannten Akteure fest, die für alle gilt.",
+        "anchors": [
+          "DSGVO Art. 42 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 42 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz definiert eine zusätzliche Möglichkeit, die für alle zutrifft, wenn die genannten Bedingungen erfüllt sind.",
+        "anchors": [
+          "DSGVO Art. 42 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 42 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz stellt eine zwingende Anforderung an die Art der Zertifizierung dar, die immer gelten muss.",
+        "anchors": [
+          "DSGVO Art. 42 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 42 Abs. 4"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz enthält lediglich eine Klarstellung, dass die Zertifizierung keine Auswirkungen auf bestehende Pflichten und Befugnisse hat.",
+        "anchors": [
+          "DSGVO Art. 42 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 42 Abs. 5"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz regelt, wer die Zertifizierung erteilen darf und nach welchen Kriterien – eine verbindliche Vorgabe für alle Fälle.",
+        "anchors": [
+          "DSGVO Art. 42 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 42 Abs. 6"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz verpflichtet den Verantwortlichen bzw. Auftragsverarbeiter, Informationen bereitzustellen – eine Pflicht, die immer gilt.",
+        "anchors": [
+          "DSGVO Art. 42 Abs. 6"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 42 Abs. 7"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz legt die Gültigkeitsdauer und die Bedingungen für Verlängerung bzw. Widerruf fest, die für jede erteilte Zertifizierung gelten.",
+        "anchors": [
+          "DSGVO Art. 42 Abs. 7"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 42 Abs. 8"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz verpflichtet den Ausschuss, ein Register zu führen und zu veröffentlichen – eine allgemeine Pflicht.",
+        "anchors": [
+          "DSGVO Art. 42 Abs. 8"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 43",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 43 Abs. 1 lit. a",
+          "Art. 43 Abs. 1 lit. b"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die beiden genannten Stellen sind alternative Möglichkeiten für die Akkreditierung; es genügt, wenn eine oder beide verwendet werden.",
+        "anchors": [
+          "DSGVO Art. 43 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 43 Abs. 2 lit. a",
+          "Art. 43 Abs. 2 lit. b",
+          "Art. 43 Abs. 2 lit. c",
+          "Art. 43 Abs. 2 lit. d",
+          "Art. 43 Abs. 2 lit. e"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle aufgelisteten Bedingungen müssen gleichzeitig erfüllt sein, damit eine Zertifizierungsstelle akkreditiert werden darf.",
+        "anchors": [
+          "DSGVO Art. 43 Abs. 2 lit. a",
+          "DSGVO Art. 43 Abs. 2 lit. b",
+          "DSGVO Art. 43 Abs. 2 lit. c",
+          "DSGVO Art. 43 Abs. 2 lit. d",
+          "DSGVO Art. 43 Abs. 2 lit. e"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 43 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Regelt die grundsätzliche Vorgehensweise bei der Akkreditierung und ist für jede Akkreditierung verbindlich.",
+        "anchors": [
+          "DSGVO Art. 43 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 43 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Bestimmt die Verantwortlichkeiten und die maximale Gültigkeitsdauer der Akkreditierung – eine zwingende Vorschrift.",
+        "anchors": [
+          "DSGVO Art. 43 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 43 Abs. 5"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet die Zertifizierungsstellen, den Aufsichtsbehörden die Gründe für Erteilung bzw. Widerruf mitzuteilen.",
+        "anchors": [
+          "DSGVO Art. 43 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 43 Abs. 6"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Vorschrift zur Veröffentlichung der Anforderungen und Kriterien – muss erfüllt werden.",
+        "anchors": [
+          "DSGVO Art. 43 Abs. 6"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 43 Abs. 7"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Ermächtigt die Aufsichtsbehörde bzw. Akkreditierungsstelle, die Akkreditierung zu widerrufen, wenn Voraussetzungen nicht mehr erfüllt sind.",
+        "anchors": [
+          "DSGVO Art. 43 Abs. 7"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 43 Abs. 8"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Überträgt der Kommission die Befugnis, delegierte Rechtsakte zu erlassen – handelt sich um eine Ermächtigung, nicht um eine Pflicht.",
+        "anchors": [
+          "DSGVO Art. 43 Abs. 8"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 43 Abs. 9"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Gibt der Kommission die Möglichkeit, Durchführungsrechtsakte zu erlassen – ebenfalls eine Ermächtigung, keine bindende Verpflichtung.",
+        "anchors": [
+          "DSGVO Art. 43 Abs. 9"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 44",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 44"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz formuliert eine allgemeine Bedingung, die für jede Übermittlung personenbezogener Daten gilt.",
+        "anchors": [
+          "DSGVO Art. 44"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 45",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 45 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Einzelne Bedingung, die erfüllt sein muss, damit Datenübermittlung zulässig ist.",
+        "anchors": [
+          "DSGVO Art. 45 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 45 Abs. 2 lit. a",
+          "Art. 45 Abs. 2 lit. b",
+          "Art. 45 Abs. 2 lit. c"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Kriterien müssen bei der Angemessenheitsprüfung berücksichtigt werden.",
+        "anchors": [
+          "DSGVO Art. 45 Abs. 2 lit. a",
+          "DSGVO Art. 45 Abs. 2 lit. b",
+          "DSGVO Art. 45 Abs. 2 lit. c"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 45 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Kommission muss einen Durchführungsrechtsakt mit regelmäßiger Überprüfung erlassen.",
+        "anchors": [
+          "DSGVO Art. 45 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 45 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Kommission hat die fortlaufende Überwachungsaufgabe.",
+        "anchors": [
+          "DSGVO Art. 45 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 45 Abs. 5"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Kommission muss bei Wegfall des Schutzniveaus Beschlüsse widerrufen, ändern oder ersetzen.",
+        "anchors": [
+          "DSGVO Art. 45 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 45 Abs. 6"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Kommission muss Beratungen mit dem Drittland bzw. der Organisation aufnehmen.",
+        "anchors": [
+          "DSGVO Art. 45 Abs. 6"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 45 Abs. 7"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Regelt, dass bestimmte Übermittlungen von einem Beschluss nach Absatz 5 nicht berührt werden – keine eigene Pflicht.",
+        "anchors": [
+          "DSGVO Art. 45 Abs. 7"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 45 Abs. 8"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Kommission muss eine Liste der Länder/Organisationen veröffentlichen.",
+        "anchors": [
+          "DSGVO Art. 45 Abs. 8"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 45 Abs. 9"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Beschreibt den Fortbestand von Feststellungen, keine aktive Verpflichtung.",
+        "anchors": [
+          "DSGVO Art. 45 Abs. 9"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 46",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 46 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Verantwortliche oder Auftragsverarbeiter darf Daten nur übermitteln, wenn beide genannten Bedingungen gleichzeitig erfüllt sind.",
+        "anchors": [
+          "DSGVO Art. 46 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 46 Abs. 2 lit. a",
+          "Art. 46 Abs. 2 lit. b",
+          "Art. 46 Abs. 2 lit. c",
+          "Art. 46 Abs. 2 lit. d",
+          "Art. 46 Abs. 2 lit. e",
+          "Art. 46 Abs. 2 lit. f"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die Aufzählung gibt alternative Formen geeigneter Garantien an; reicht eine der genannten Formen aus.",
+        "anchors": [
+          "DSGVO Art. 46 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 46 Abs. 3 lit. a",
+          "Art. 46 Abs. 3 lit. b"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Auch hier werden alternative Garantien genannt, von denen eine genügt, sofern sie von der Aufsichtsbehörde genehmigt sind.",
+        "anchors": [
+          "DSGVO Art. 46 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 46 Abs. 4"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Die Vorschrift regelt eine Aufgabe der Aufsichtsbehörde, nicht eine Verpflichtung des Verantwortlichen.",
+        "anchors": [
+          "DSGVO Art. 46 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 46 Abs. 5"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Hier werden Bestimmungen über das Fortbestehen von Genehmigungen anderer Stellen beschrieben, keine eigene Pflicht.",
+        "anchors": [
+          "DSGVO Art. 46 Abs. 5"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 47",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 47 Abs. 1 lit. a",
+          "Art. 47 Abs. 1 lit. b",
+          "Art. 47 Abs. 1 lit. c"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle drei Bedingungen müssen gleichzeitig erfüllt sein, damit die Aufsichtsbehörde die internen Datenschutzvorschriften genehmigt.",
+        "anchors": [
+          "DSGVO Art. 47 Abs. 1 lit. a",
+          "DSGVO Art. 47 Abs. 1 lit. b",
+          "DSGVO Art. 47 Abs. 1 lit. c"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 47 Abs. 2 lit. a",
+          "Art. 47 Abs. 2 lit. b",
+          "Art. 47 Abs. 2 lit. c",
+          "Art. 47 Abs. 2 lit. d",
+          "Art. 47 Abs. 2 lit. e",
+          "Art. 47 Abs. 2 lit. f",
+          "Art. 47 Abs. 2 lit. g",
+          "Art. 47 Abs. 2 lit. h",
+          "Art. 47 Abs. 2 lit. i",
+          "Art. 47 Abs. 2 lit. j",
+          "Art. 47 Abs. 2 lit. k",
+          "Art. 47 Abs. 2 lit. l",
+          "Art. 47 Abs. 2 lit. m",
+          "Art. 47 Abs. 2 lit. n"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Aufzählung definiert die Mindestangaben, die in den verbindlichen internen Datenschutzvorschriften enthalten sein müssen; alle Punkte gelten gleichzeitig.",
+        "anchors": [
+          "DSGVO Art. 47 Abs. 2 lit. a",
+          "DSGVO Art. 47 Abs. 2 lit. b",
+          "DSGVO Art. 47 Abs. 2 lit. c",
+          "DSGVO Art. 47 Abs. 2 lit. d",
+          "DSGVO Art. 47 Abs. 2 lit. e",
+          "DSGVO Art. 47 Abs. 2 lit. f",
+          "DSGVO Art. 47 Abs. 2 lit. g",
+          "DSGVO Art. 47 Abs. 2 lit. h",
+          "DSGVO Art. 47 Abs. 2 lit. i",
+          "DSGVO Art. 47 Abs. 2 lit. j",
+          "DSGVO Art. 47 Abs. 2 lit. k",
+          "DSGVO Art. 47 Abs. 2 lit. l",
+          "DSGVO Art. 47 Abs. 2 lit. m",
+          "DSGVO Art. 47 Abs. 2 lit. n"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 47 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Kommission hat die Möglichkeit, das Format und Verfahren festzulegen; dies ist eine einzelne, eigenständige Verpflichtung.",
+        "anchors": [
+          "DSGVO Art. 47 Abs. 3"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 48",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 48"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz stellt eine einzige Bedingung dar, die für die Anerkennung bzw. Vollstreckbarkeit von Urteilen und Entscheidungen eines Drittlands gilt.",
+        "anchors": [
+          "DSGVO Art. 48"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 49",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 49 Abs. 1 lit. a",
+          "Art. 49 Abs. 1 lit. b",
+          "Art. 49 Abs. 1 lit. c",
+          "Art. 49 Abs. 1 lit. d",
+          "Art. 49 Abs. 1 lit. e",
+          "Art. 49 Abs. 1 lit. f",
+          "Art. 49 Abs. 1 lit. g"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die Aufzählung stellt alternative Bedingungen dar, von denen eine genügt, um die Datenübermittlung zu erlauben.",
+        "anchors": [
+          "DSGVO Art. 49 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 49 Abs. 1 UAbs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Voraussetzungen müssen gleichzeitig erfüllt sein, damit eine Übermittlung ohne andere Ausnahme zulässig ist.",
+        "anchors": [
+          "DSGVO Art. 49 Abs. 1 UAbs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 49 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Einschränkungen für Register‑Übermittlungen gelten zwingend und müssen vollständig beachtet werden.",
+        "anchors": [
+          "DSGVO Art. 49 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 49 Abs. 3"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz definiert eine Ausnahme von den vorherigen Pflichten für hoheitliche Tätigkeiten von Behörden.",
+        "anchors": [
+          "DSGVO Art. 49 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 49 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Das öffentliche Interesse muss ausdrücklich im Unions‑ oder Mitgliedstaatenrecht anerkannt sein – eine zwingende Voraussetzung.",
+        "anchors": [
+          "DSGVO Art. 49 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 49 Abs. 5"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz regelt Befugnisse der Mitgliedstaaten und der Kommission, nicht Pflichten des Verantwortlichen.",
+        "anchors": [
+          "DSGVO Art. 49 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 49 Abs. 6"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Verantwortliche ist verpflichtet, die Bewertung und Garantien zu dokumentieren.",
+        "anchors": [
+          "DSGVO Art. 49 Abs. 6"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "DSGVO",
+    "requirement_id": "Art. 50",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 50 lit. a",
+          "Art. 50 lit. b",
+          "Art. 50 lit. c",
+          "Art. 50 lit. d"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Maßnahmen sind Pflichten, die gleichzeitig gelten.",
+        "anchors": [
+          "DSGVO Art. 50 lit. a",
+          "DSGVO Art. 50 lit. b",
+          "DSGVO Art. 50 lit. c",
+          "DSGVO Art. 50 lit. d"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 4",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 4 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 1 enthält eine eigenständige Verpflichtung, die für alle Anbieter und Betreiber von KI‑Systemen gilt.",
+        "anchors": [
+          "KI-VO Art. 4 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 4 Abs. 2",
+          "Art. 4 Abs. 3"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Absätze 2 und 3 regeln Unterstützungs‑ und Empfehlungsaufgaben von Kommission, Mitgliedstaaten bzw. KI‑Gremium und begründen keine Pflichten für die Anbieter oder Betreiber.",
+        "anchors": [
+          "KI-VO Art. 4 Abs. 2",
+          "KI-VO Art. 4 Abs. 3"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 5",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 5 Abs. 1 lit. a",
+          "Art. 5 Abs. 1 lit. b",
+          "Art. 5 Abs. 1 lit. ba",
+          "Art. 5 Abs. 1 lit. bb",
+          "Art. 5 Abs. 1 lit. c",
+          "Art. 5 Abs. 1 lit. d",
+          "Art. 5 Abs. 1 lit. e",
+          "Art. 5 Abs. 1 lit. f",
+          "Art. 5 Abs. 1 lit. g",
+          "Art. 5 Abs. 1 lit. h"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Punkte stellen einzelne verbotene Praktiken dar, die gleichzeitig gelten.",
+        "anchors": [
+          "KI-VO Art. 5 Abs. 1 lit. a",
+          "KI-VO Art. 5 Abs. 1 lit. b",
+          "KI-VO Art. 5 Abs. 1 lit. ba",
+          "KI-VO Art. 5 Abs. 1 lit. bb",
+          "KI-VO Art. 5 Abs. 1 lit. c",
+          "KI-VO Art. 5 Abs. 1 lit. d",
+          "KI-VO Art. 5 Abs. 1 lit. e",
+          "KI-VO Art. 5 Abs. 1 lit. f",
+          "KI-VO Art. 5 Abs. 1 lit. g",
+          "KI-VO Art. 5 Abs. 1 lit. h"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 5 Abs. 1a lit. a",
+          "Art. 5 Abs. 1a lit. b",
+          "Art. 5 Abs. 1b"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Diese Vorschriften definieren Bedingungen, unter denen die Verbote aus Absatz 1 Buchstaben ba und bb anwendbar sind; sie gelten jeweils.",
+        "anchors": [
+          "KI-VO Art. 5 Abs. 1a lit. a",
+          "KI-VO Art. 5 Abs. 1a lit. b",
+          "KI-VO Art. 5 Abs. 1b"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 5 Abs. 2 lit. a",
+          "Art. 5 Abs. 2 lit. b",
+          "Art. 5 Abs. 2 UAbs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Sie legen die zu berücksichtigenden Elemente und Schutzvorkehrungen für die zulässige Nutzung biometrischer Echtzeit‑Fernidentifizierungssysteme fest.",
+        "anchors": [
+          "KI-VO Art. 5 Abs. 2 lit. a",
+          "KI-VO Art. 5 Abs. 2 lit. b",
+          "KI-VO Art. 5 Abs. 2 UAbs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 5 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Regelt das generelle Verbot der Nutzung ohne vorherige Genehmigung und enthält die Ausnahme für dringende Fälle; das Verbot gilt grundsätzlich.",
+        "anchors": [
+          "KI-VO Art. 5 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 5 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet die Mitteilung der Nutzung an Markt‑ und Datenschutzbehörden.",
+        "anchors": [
+          "KI-VO Art. 5 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 5 Abs. 5"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Gibt den Mitgliedstaaten Ermächtigungsbefugnisse; keine direkte Verpflichtung für KI‑Betreiber.",
+        "anchors": [
+          "KI-VO Art. 5 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 5 Abs. 6"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet nationale Behörden, Jahresberichte an die Kommission zu übermitteln.",
+        "anchors": [
+          "KI-VO Art. 5 Abs. 6"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 5 Abs. 7"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet die Kommission, Jahresberichte zu veröffentlichen.",
+        "anchors": [
+          "KI-VO Art. 5 Abs. 7"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 5 Abs. 1 UAbs. 2"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Klarstellung, dass die Regelung zu Buchstabe h die Verarbeitung biometrischer Daten nach Art. 9 nicht berührt; keine Pflicht.",
+        "anchors": [
+          "KI-VO Art. 5 Abs. 1 UAbs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 5 Abs. 8"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Hinweis, dass andere EU‑Verbote unberührt bleiben; keine Pflicht.",
+        "anchors": [
+          "KI-VO Art. 5 Abs. 8"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 6",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 6 Abs. 1 lit. a",
+          "Art. 6 Abs. 1 lit. b"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Beide Bedingungen müssen gleichzeitig erfüllt sein, damit ein KI‑System als Hochrisiko‑KI‑System gilt.",
+        "anchors": [
+          "KI-VO Art. 6 Abs. 1 lit. a",
+          "KI-VO Art. 6 Abs. 1 lit. b"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 1a",
+          "Art. 6 Abs. 1b",
+          "Art. 6 Abs. 1c"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Dies sind Klassifizierungsregeln, die alle zusammen bestimmen, wann ein KI‑System als Sicherheitsbauteil gilt oder nicht.",
+        "anchors": [
+          "KI-VO Art. 6 Abs. 1a",
+          "KI-VO Art. 6 Abs. 1b",
+          "KI-VO Art. 6 Abs. 1c"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Erweitert die Liste der Hochrisiko‑KI‑Systeme um die in Anhang III genannten Systeme.",
+        "anchors": [
+          "KI-VO Art. 6 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 3 UAbs. 1"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Stellt eine Ausnahme zu Absatz 2 dar: Das genannte KI‑System ist nicht hochriskant, wenn kein erhebliches Risiko besteht.",
+        "anchors": [
+          "KI-VO Art. 6 Abs. 3 UAbs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 3 lit. a",
+          "Art. 6 Abs. 3 lit. b",
+          "Art. 6 Abs. 3 lit. c",
+          "Art. 6 Abs. 3 lit. d"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Eine der aufgeführten Bedingungen reicht aus, damit Unterabsatz 1 Anwendung findet.",
+        "anchors": [
+          "KI-VO Art. 6 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 3 UAbs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Unabhängig von anderen Voraussetzungen gilt ein KI‑System immer als hochriskant, wenn es Profiling natürlicher Personen vornimmt.",
+        "anchors": [
+          "KI-VO Art. 6 Abs. 3 UAbs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verpflichtet den Anbieter, seine Bewertung zu dokumentieren und der Registrierungspflicht nachzukommen.",
+        "anchors": [
+          "KI-VO Art. 6 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 5"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Verlangt von der Kommission, Leitlinien und praktische Beispiele bis zum genannten Termin zu veröffentlichen.",
+        "anchors": [
+          "KI-VO Art. 6 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 6 Abs. 6",
+          "Art. 6 Abs. 7",
+          "Art. 6 Abs. 8"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Regelt ausschließlich Befugnisse und Beschränkungen der Kommission, keine unmittelbare Verpflichtung für andere Akteure.",
+        "anchors": [
+          "KI-VO Art. 6 Abs. 6",
+          "KI-VO Art. 6 Abs. 7",
+          "KI-VO Art. 6 Abs. 8"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 13",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 13 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 1 stellt eine eigenständige Pflicht zur Gewährleistung von Transparenz im Design und Betrieb von Hochrisiko‑KI‑Systemen dar.",
+        "anchors": [
+          "KI-VO Art. 13 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 13 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 2 verpflichtet zur Bereitstellung von Betriebsanleitungen in geeigneter Form – eine eigenständige, immer zu erfüllende Pflicht.",
+        "anchors": [
+          "KI-VO Art. 13 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 13 Abs. 3 lit. a",
+          "Art. 13 Abs. 3 lit. b",
+          "Art. 13 Abs. 3 lit. c",
+          "Art. 13 Abs. 3 lit. d",
+          "Art. 13 Abs. 3 lit. e",
+          "Art. 13 Abs. 3 lit. f"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Die Aufzählung definiert die Mindestinhalte der Betriebsanleitungen; alle genannten Informationen müssen enthalten sein.",
+        "anchors": [
+          "KI-VO Art. 13 Abs. 3 lit. a",
+          "KI-VO Art. 13 Abs. 3 lit. b",
+          "KI-VO Art. 13 Abs. 3 lit. c",
+          "KI-VO Art. 13 Abs. 3 lit. d",
+          "KI-VO Art. 13 Abs. 3 lit. e",
+          "KI-VO Art. 13 Abs. 3 lit. f"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 14",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 14 Abs. 1",
+          "Art. 14 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Beide Absätze legen grundsätzliche Pflichten fest, die gleichzeitig gelten.",
+        "anchors": [
+          "KI-VO Art. 14 Abs. 1",
+          "KI-VO Art. 14 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 14 Abs. 3 lit. a",
+          "Art. 14 Abs. 3 lit. b"
+        ],
+        "kind": "eine_genuegt",
+        "rationale": "Die Aufsichtsmaßnahmen können durch eine oder beide der genannten Vorkehrungen erfüllt werden.",
+        "anchors": [
+          "KI-VO Art. 14 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 14 Abs. 4 lit. a",
+          "Art. 14 Abs. 4 lit. b",
+          "Art. 14 Abs. 4 lit. c",
+          "Art. 14 Abs. 4 lit. d",
+          "Art. 14 Abs. 4 lit. e"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle aufgeführten Fähigkeiten und Verhaltensweisen der Aufsichtspersonen müssen erfüllt sein.",
+        "anchors": [
+          "KI-VO Art. 14 Abs. 4 lit. a",
+          "KI-VO Art. 14 Abs. 4 lit. b",
+          "KI-VO Art. 14 Abs. 4 lit. c",
+          "KI-VO Art. 14 Abs. 4 lit. d",
+          "KI-VO Art. 14 Abs. 4 lit. e"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 14 Abs. 5"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Eine spezifische Pflicht für bestimmte Hochrisiko‑KI‑Systeme, die trotz Ausnahme weiterhin gilt.",
+        "anchors": [
+          "KI-VO Art. 14 Abs. 5"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 26",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 26 Abs. 1",
+          "Art. 26 Abs. 2",
+          "Art. 26 Abs. 4",
+          "Art. 26 Abs. 6",
+          "Art. 26 Abs. 7",
+          "Art. 26 Abs. 8",
+          "Art. 26 Abs. 10",
+          "Art. 26 Abs. 11",
+          "Art. 26 Abs. 12"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Jeder Abschnitt legt eine eigenständige, immer geltende Verpflichtung für die Betreiber fest.",
+        "anchors": [
+          "KI-VO Art. 26 Abs. 1",
+          "KI-VO Art. 26 Abs. 2",
+          "KI-VO Art. 26 Abs. 4",
+          "KI-VO Art. 26 Abs. 6",
+          "KI-VO Art. 26 Abs. 7",
+          "KI-VO Art. 26 Abs. 8",
+          "KI-VO Art. 26 Abs. 10",
+          "KI-VO Art. 26 Abs. 11",
+          "KI-VO Art. 26 Abs. 12"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 26 Abs. 5",
+          "Art. 26 Abs. 9"
+        ],
+        "kind": "je_nach_risiko",
+        "rationale": "Die Absätze enthalten Aufzählungen von Maßnahmen, die nur bei Vorliegen bestimmter Umstände (z. B. Risiko, Bedarf) zu ergreifen sind.",
+        "anchors": [
+          "KI-VO Art. 26 Abs. 5",
+          "KI-VO Art. 26 Abs. 9"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 26 Abs. 3"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Der Absatz enthält lediglich Hinweise, dass andere Pflichten und Freiheiten unberührt bleiben – keine eigene Verpflichtung.",
+        "anchors": [
+          "KI-VO Art. 26 Abs. 3"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 27",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 27 Abs. 1 lit. a",
+          "Art. 27 Abs. 1 lit. b",
+          "Art. 27 Abs. 1 lit. c",
+          "Art. 27 Abs. 1 lit. d",
+          "Art. 27 Abs. 1 lit. e",
+          "Art. 27 Abs. 1 lit. f"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Alle genannten Punkte sind einzelne Pflichten, die gemeinsam erfüllt werden müssen.",
+        "anchors": [
+          "KI-VO Art. 27 Abs. 1 lit. a",
+          "KI-VO Art. 27 Abs. 1 lit. b",
+          "KI-VO Art. 27 Abs. 1 lit. c",
+          "KI-VO Art. 27 Abs. 1 lit. d",
+          "KI-VO Art. 27 Abs. 1 lit. e",
+          "KI-VO Art. 27 Abs. 1 lit. f"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 27 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz enthält mehrere Bedingungen, die zusammen die Pflicht zur Erst‑ und ggf. aktualisierten Folgenabschätzung regeln.",
+        "anchors": [
+          "KI-VO Art. 27 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 27 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 3 legt die Pflicht zur Mitteilung an die Marktüberwachungsbehörde fest; die Ausnahme ist nur eine Bedingung, nicht eine eigenständige Pflicht.",
+        "anchors": [
+          "KI-VO Art. 27 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 27 Abs. 4"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Absatz 4 gibt lediglich eine Erleichterung bzw. Möglichkeit, keine verbindliche Pflicht.",
+        "anchors": [
+          "KI-VO Art. 27 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 27 Abs. 5"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Absatz 5 verpflichtet das Büro für Künstliche Intelligenz, ein Muster zu erstellen; die optionale Nutzung durch Betreiber ist keine Pflicht.",
+        "anchors": [
+          "KI-VO Art. 27 Abs. 5"
+        ]
+      }
+    ]
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 50",
+    "outcome": "decomposed",
+    "groups": [
+      {
+        "marks": [
+          "Art. 50 Abs. 1"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz enthält eine eigenständige Transparenzpflicht, die für alle genannten Fälle gleichzeitig gilt.",
+        "anchors": [
+          "KI-VO Art. 50 Abs. 1"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 50 Abs. 2"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz definiert eine eigenständige Kennzeichnungspflicht für generative KI‑Systeme, die für alle genannten Fälle gilt.",
+        "anchors": [
+          "KI-VO Art. 50 Abs. 2"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 50 Abs. 3"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz legt eine eigenständige Informations‑ und Datenverarbeitungspflicht für Betreiber von Emotionserkennungs‑ bzw. biometrischen Systemen fest.",
+        "anchors": [
+          "KI-VO Art. 50 Abs. 3"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 50 Abs. 4"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz enthält mehrere zusammengefasste Transparenzpflichten für Deep‑Fake‑ und Text‑KI‑Systeme, die alle gleichzeitig gelten.",
+        "anchors": [
+          "KI-VO Art. 50 Abs. 4"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 50 Abs. 5"
+        ],
+        "kind": "alle_gelten",
+        "rationale": "Der Absatz bestimmt, dass die in den vorherigen Absätzen genannten Informationen stets bereitgestellt werden müssen – eine eigenständige Pflicht.",
+        "anchors": [
+          "KI-VO Art. 50 Abs. 5"
+        ]
+      },
+      {
+        "marks": [
+          "Art. 50 Abs. 6",
+          "Art. 50 Abs. 7"
+        ],
+        "kind": "keine_pflicht",
+        "rationale": "Die Absätze enthalten nur Hinweis‑ bzw. Befugnisregelungen für andere Stellen (Unberührtheit anderer Pflichten, Leitlinien der Kommission) und begründen keine eigene Verpflichtung für Anbieter oder Betreiber.",
+        "anchors": [
+          "KI-VO Art. 50 Abs. 6",
+          "KI-VO Art. 50 Abs. 7"
+        ]
+      }
+    ]
+  }
+]

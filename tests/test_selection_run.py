@@ -2,11 +2,10 @@
 
 import itertools
 import re
-import shutil
 from pathlib import Path
 
 import pytest
-from conftest import retry_lines
+from conftest import copy_sources, retry_lines
 from pydantic import TypeAdapter
 from pydantic_ai.messages import (
     ModelMessage,
@@ -17,9 +16,10 @@ from pydantic_ai.messages import (
 )
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
+from kb_build.extract.models import ExtractedSource
 from kb_build.paths import BuildPaths
 from kb_build.select.models import Selection, Verdict
-from kb_build.select.run import chosen, select_all
+from kb_build.select.run import chosen, read_sources, select_all
 
 REAL = BuildPaths()
 ARCHITECTURE_SOURCES = ("BSI", "CIS", "FSBP", "C5")
@@ -33,7 +33,7 @@ def paths_in(tmp: Path) -> BuildPaths:
     """Real input and extracts, everything written goes to `tmp`."""
     paths = BuildPaths(REAL.input, tmp / "intermediate", tmp / "knowledge_base")
     if not paths.extracted.exists():
-        shutil.copytree(REAL.extracted, paths.extracted)
+        copy_sources(REAL, paths)
     return paths
 
 
@@ -79,8 +79,9 @@ def test_the_architecture_verdicts_cover_every_requirement_of_all_four_sources(w
 def test_the_spec_verdicts_cover_every_requirement_of_dsgvo_and_sdm(written) -> None:
     covered = {s: sum(v.source == s for v in verdicts(written, "verdicts_spec.json"))
                for s in ("DSGVO", "SDM")}
+    dsgvo = ExtractedSource.model_validate_json(REAL.source_file("DSGVO").read_text("utf-8"))
 
-    assert covered == {"DSGVO": 99, "SDM": 147}
+    assert covered == {"DSGVO": len(dsgvo.requirements), "SDM": 147}  # DSGVO decomposed (#53)
 
 
 def test_the_selection_is_exactly_the_selected_verdicts(written) -> None:
@@ -97,7 +98,7 @@ def test_the_selection_has_no_cap_and_keeps_the_pinned_anchors(written) -> None:
     spec = {(e.source, e.requirement_id) for e in load(written, "selection_spec.json").selected}
 
     assert {("CIS", "3.1.4"), ("CIS", "4.6"), ("BSI", "BER.4.1")} <= arch
-    assert {("DSGVO", "Art. 9"), ("SDM", "M60.P01")} <= spec
+    assert {("DSGVO", "Art. 9 Abs. 2"), ("SDM", "M60.P01")} <= spec
     assert len(arch) > 50 and len(spec) > 12  # the former caps were 12 per source and 16 + 8
 
 
@@ -124,11 +125,11 @@ def test_a_second_run_with_the_same_cache_asks_the_llm_nothing(tmp_path: Path) -
 def test_only_missing_keeps_the_old_selection_and_judges_only_the_new_source(
     tmp_path: Path,
 ) -> None:
-    # ADR 0025: the checked-in selection stays a byte-identical prefix, KI-VO is appended
+    # ADR 0025, 0026: the frozen SDM verdicts stay, the decomposed legal acts are judged anew
     paths = paths_in(tmp_path)
     real = load(REAL.intermediate, "selection_spec.json")
-    frozen = [e for e in real.selected if e.source != "KI-VO"]  # the state before #52
-    old = [v for v in verdicts(REAL.intermediate, "verdicts_spec.json") if v.source != "KI-VO"]
+    frozen = [e for e in real.selected if e.source == "SDM"]
+    old = [v for v in verdicts(REAL.intermediate, "verdicts_spec.json") if v.source == "SDM"]
     paths.out_file("selection", "spec").write_text(
         real.model_copy(update={"selected": frozen}).model_dump_json(), "utf-8")
     paths.out_file("verdicts", "spec").write_bytes(TypeAdapter(list[Verdict]).dump_json(old))
@@ -137,9 +138,9 @@ def test_only_missing_keeps_the_old_selection_and_judges_only_the_new_source(
     select_all(fake_model(calls), paths, only="spec", only_missing=True)
 
     new = load(paths.intermediate, "selection_spec.json")
-    assert new.selected[:len(frozen)] == frozen
-    assert {e.source for e in new.selected[len(frozen):]} == {"KI-VO"}
-    assert len(calls) == 8  # Art. 4, 5, 6, 13, 14, 26, 27, 50
+    acts = read_sources(paths, ["DSGVO", "KI-VO"])
+    assert [e for e in new.selected if e.source == "SDM"] == frozen
+    assert len(calls) == sum(r.prefilter_passed for a in acts for r in a.requirements)
     assert {v.source for v in verdicts(paths.intermediate, "verdicts_spec.json")} == {
         "DSGVO", "SDM", "KI-VO"}
 
@@ -237,7 +238,7 @@ def test_the_build_log_names_every_retry_of_a_paid_answer_and_none_of_a_cached_o
 
     assert len(paid) > 0
     assert paid_quality == f"spec quality classify: retries={len(paid)} llm_error=0"
-    assert "spec DSGVO Art. 9 retry 1 (schema): rationale: Field required" in paid
+    assert "spec DSGVO Art. 9 Abs. 2 retry 1 (schema): rationale: Field required" in paid
     assert retry_lines(caplog) == []
 
 
@@ -271,7 +272,7 @@ def test_the_build_log_names_why_the_last_answer_was_rejected(
     def never_explains_art_5(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
         prompt = next(p for p in messages[0].parts if isinstance(p, UserPromptPart)).content
         answer = {"testable": True, "cfn_resource_types": []}
-        if not prompt.startswith("Quelle: DSGVO\nID: Art. 5\n"):
+        if not prompt.startswith("Quelle: DSGVO\nID: Art. 5 Abs. 1 lit. a\n"):
             answer["rationale"] = "prüfbar"
         return ModelResponse(parts=[ToolCallPart("classify_requirement", answer)])
 
@@ -280,7 +281,7 @@ def test_the_build_log_names_why_the_last_answer_was_rejected(
                    paths_in(tmp_path), only="spec")
 
     assert [r.getMessage() for r in caplog.records
-            if r.getMessage().startswith("spec DSGVO Art. 5 ")] == [
-        "spec DSGVO Art. 5 retry 1 (schema): rationale: Field required",
-        "spec DSGVO Art. 5 retry 2 (schema): rationale: Field required",
-        "spec DSGVO Art. 5 rejected (schema): rationale: Field required"]  # then llm_error
+            if r.getMessage().startswith("spec DSGVO Art. 5 Abs. 1 lit. a ")] == [
+        "spec DSGVO Art. 5 Abs. 1 lit. a retry 1 (schema): rationale: Field required",
+        "spec DSGVO Art. 5 Abs. 1 lit. a retry 2 (schema): rationale: Field required",
+        "spec DSGVO Art. 5 Abs. 1 lit. a rejected (schema): rationale: Field required"]

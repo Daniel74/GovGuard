@@ -778,11 +778,12 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 
 **Teil 2 – Zerlegen (#53)**
 
-- [ ] **Plan** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12n Teil 2 und Issue #53“ → Plan → Go
-- [ ] **Bauen** 🤖 _Opus_ (gleiche Session) · Stufe „Zerlegen“ mit Prüfsteinen als Test, Anker und Gate für Absatz-Anker, ADR zu G13. Hält an bei Prompt-Design.
-- [ ] **Wissensbasis** 👤 Bau-Befehle laut Plan (Groq) → 👤 prüft: Zerlegungsprotokoll von DSGVO Art. 5, 9, 32 und KI-VO Art. 6 lesen, Architektur-Katalog unverändert, `pytest` grün
-- [ ] **Soll neu** 🤖 _Opus_ (vor jedem Lauf) · legt die Soll-Anker von `spec-meldeportal-gesundheit` und `spec-wohngeld-openapi` auf die neuen Absatz-Anker fest, Begründung in #53
-- [ ] **Spec-Galerie neu** 👤 `/audit-messen spec-meldeportal-gesundheit mit Groq`, dann `/audit-messen spec-wohngeld-openapi mit Groq` → 🤖 notiert die Soll-Abweichungen in #53
+- [x] **Plan** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12n Teil 2 und Issue #53“ → Plan → Go
+- [x] **Bauen** 🤖 _Opus_ (gleiche Session) · Stufe „Zerlegen“ mit Prüfsteinen als Test, Anker und Gate für Absatz-Anker, ADR 0026. Hält an bei Prompt-Design.
+- [x] **Zerlegen** 👤 `uv run python -m kb_build extract`, dann `uv run python -m kb_build decompose` (Groq) → 👤 prüft: Zerlegungsprotokoll `decompositions_spec.json` von DSGVO Art. 5, 9, 32 und KI-VO Art. 6 lesen, `pytest tests/test_decomposition_touchstones.py` grün
+- [x] **Soll neu** 🤖 _Opus_ (vor `select`, sonst bricht das Gate der Pflichtanker ab) · legt die Soll-Anker aller drei Spec-Presets auf die neuen Absatz-Anker fest, auch „DSGVO Art. 46“ von `spec-govguard`, Begründung in #53
+- [x] **Wissensbasis** 👤 `uv run python -m kb_build select --audit-type spec --only-missing`, dann `uv run python -m kb_build rules --audit-type spec --only-missing` (Groq; nach einem Abbruch denselben Befehl wiederholen, der Checkpoint behält die fertigen Regeln) → 👤 prüft: Architektur-Katalog unverändert, `pytest` und ruff grün bis auf die Galerie-Tests
+- [x] **Spec-Galerie neu** 👤 `/audit-messen spec-meldeportal-gesundheit mit Groq`, dann `/audit-messen spec-wohngeld-openapi mit Groq` → 🤖 notiert die Soll-Abweichungen in #53 und zieht die Regelzahlen in `tests/test_review.py` nach, bis `pytest` grün ist
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #53`
 - [ ] **Abschließen** 👤 committet und pusht, schließt #53
 

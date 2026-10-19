@@ -15,8 +15,9 @@ from govguard_ui.style import LOOKS, STATUS_FILTERS
 
 pytestmark = pytest.mark.visual
 
-ZWECK = 'tr[data-id="SPEC-SDM-M50.D01"]'  # "Dokumentation von Zweckbeschreibung ...", first
-ART9 = 'tr[data-id="SPEC-DSGVO-Art.9"]'  # third row; the locator pierces the shadow root
+FIRST = 'tr[data-id="SPEC-DSGVO-Art.5Abs.1lit.c"]'  # "Datenminimierung prüfen", first row
+THIRD = 'tr[data-id="SPEC-SDM-M50.D01"]'  # "Dokumentation von Zweckbeschreibung ...", third
+ART9 = 'tr[data-id="SPEC-DSGVO-Art.9Abs.2"]'  # the locator pierces the shadow root
 
 
 def spec(page: Page, app_url: str) -> Page:
@@ -38,7 +39,7 @@ def table_of(row: Locator) -> Locator:
 
 def test_the_spec_table_has_a_head_lines_between_rows_wraps_long_titles_and_scrolls(
         page: Page, app_url: str) -> None:
-    row = spec(page, app_url).locator(ZWECK)
+    row = spec(page, app_url).locator(THIRD)  # long title: wraps
     title = row.locator("td").nth(1)
 
     expect(table_of(row).locator("th")).to_have_text(["Status", "Prüfregel", "Normanker",
@@ -58,7 +59,7 @@ def test_the_table_shows_its_own_scrollbar(playwright: Playwright, browser_conte
     browser = playwright.chromium.launch(ignore_default_args=["--hide-scrollbars"])
     try:
         scroller = table_of(spec(browser.new_page(**browser_context_args), app_url)
-                            .locator(ZWECK)).locator("xpath=..")
+                            .locator(FIRST)).locator("xpath=..")
         bar = "e => e.offsetWidth - e.clientWidth - 2 * e.clientLeft"  # minus the two borders
         assert scroller.evaluate(bar) > 0
         thumb = style(scroller, "scrollbarColor").split(" rgba")[0]  # Streamlit's is transparent
@@ -71,32 +72,32 @@ def test_a_click_on_a_row_selects_the_finding_and_marks_only_this_row(page: Page
                                                                      app_url: str) -> None:
     spec(page, app_url).locator(ART9).click()
 
-    heading = page.get_by_role("heading", name="Einwilligung für besondere Kategorien")
+    heading = page.get_by_role("heading", name="Einwilligung als Ausnahme")
     expect(heading).to_be_visible()
     page.mouse.move(0, 0)  # hover paints the row, too
     assert style(page.locator(ART9), "backgroundColor") == rgb("#E3EEF9")
-    assert style(page.locator(ZWECK), "backgroundColor") != rgb("#E3EEF9")
+    assert style(page.locator(FIRST), "backgroundColor") != rgb("#E3EEF9")
 
 
 def test_arrows_move_the_focus_enter_selects_and_the_focus_stays_after_the_rerun(
         page: Page, app_url: str) -> None:
-    spec(page, app_url).locator(ZWECK).focus()
+    spec(page, app_url).locator(FIRST).focus()
 
     page.keyboard.press("ArrowDown")
     page.keyboard.press("ArrowDown")
-    expect(page.locator(ART9)).to_be_focused()
+    expect(page.locator(THIRD)).to_be_focused()
     expect(page.locator('tr[tabindex="0"]')).to_have_count(1)  # roving tabindex: the one Tab
-    expect(page.locator(ART9)).to_have_attribute("tabindex", "0")  # stop moves with the focus
+    expect(page.locator(THIRD)).to_have_attribute("tabindex", "0")  # stop moves with the focus
     page.keyboard.press("Enter")
 
-    heading = page.get_by_role("heading", name="Einwilligung für besondere Kategorien")
+    heading = page.get_by_role("heading", name="Dokumentation von Zweckbeschreibung und -bindung")
     expect(heading).to_be_visible()
     settled(page)
     grid = page.get_by_role("grid", name="Befunde")  # aria-selected is valid on a grid row
-    expect(grid.get_by_role("row", selected=True)).to_have_attribute("data-id", "SPEC-DSGVO-Art.9")
-    expect(page.locator(ART9)).to_be_focused()
+    expect(grid.get_by_role("row", selected=True)).to_have_attribute("data-id", "SPEC-SDM-M50.D01")
+    expect(page.locator(THIRD)).to_be_focused()
     page.keyboard.press("ArrowUp")
-    expect(page.locator(f"{ART9} >> xpath=preceding-sibling::tr[1]")).to_be_focused()
+    expect(page.locator(f"{THIRD} >> xpath=preceding-sibling::tr[1]")).to_be_focused()
 
 
 def test_llm_text_stands_in_the_cells_as_text_never_as_link_image_or_tag(
@@ -143,11 +144,11 @@ def test_the_gap_list_stays_open_when_the_source_changes_and_scrolls(page: Page,
     expect(gaps.locator("details")).to_have_attribute("open", "")
 
     source(page, "DSGVO").click()
-    expect(gaps.locator("summary")).to_contain_text("18 Lücken")
+    expect(gaps.locator("summary")).to_contain_text("116 Lücken")
 
     expect(gaps.locator("details")).to_have_attribute("open", "")
     source(page, "Alle").click()
-    expect(gaps.locator("summary")).to_contain_text("106 Lücken")
+    expect(gaps.locator("summary")).to_contain_text("268 Lücken")
     scroller = gaps.locator('[data-testid="stVerticalBlock"][height]').last
     assert scroller.evaluate("e => e.scrollHeight > e.clientHeight")
 

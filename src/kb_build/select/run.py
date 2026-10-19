@@ -26,7 +26,7 @@ logger = logging.getLogger("kb_build")
 # audit type -> extracted sources in catalog order
 SELECTIONS: dict[AuditType, list[SourceName]] = {
     "architecture": ["BSI", "C5", "CIS", "FSBP"],
-    "spec": ["DSGVO", "SDM", "KI-VO"],  # KI-VO last: the old rules keep their order (ADR 0025)
+    "spec": ["DSGVO", "SDM", "KI-VO"],  # DSGVO and KI-VO come decomposed (ADR 0026)
 }
 
 
@@ -35,9 +35,10 @@ def chosen(only: AuditType | None) -> list[AuditType]:
     return [audit_type for audit_type in SELECTIONS if only in (None, audit_type)]
 
 
-def read_sources(extracted: Path, names: list[SourceName]) -> list[ExtractedSource]:
-    paths = [extracted / f"{name.lower()}.json" for name in names]
-    return [ExtractedSource.model_validate_json(p.read_text(encoding="utf-8")) for p in paths]
+def read_sources(paths: BuildPaths, names: list[SourceName]) -> list[ExtractedSource]:
+    """Legal acts come decomposed (#53), every other source as extracted."""
+    files = [paths.source_file(name) for name in names]
+    return [ExtractedSource.model_validate_json(f.read_text(encoding="utf-8")) for f in files]
 
 
 def _read_presets(presets: Path) -> list[Preset]:
@@ -90,10 +91,11 @@ def _select(
     profiles = load_profiles(paths.archetype_profiles)
     components = frozenset(t for p in profiles for t in p.required_types)
     pinned = pinned_anchors(_read_presets(paths.presets), audit_type)
-    sources = read_sources(paths.extracted, SELECTIONS[audit_type])
+    everything = read_sources(paths, SELECTIONS[audit_type])
     old = _read_result(paths, audit_type) if only_missing else None
+    sources = everything
     if old:  # pinned anchors of the frozen part passed their gate in the old run
-        sources = unjudged(sources, old.verdicts)
+        sources = unjudged(everything, old.verdicts)
         pinned &= {r.primary_anchor for s in sources for r in s.requirements}
     judge = Judge(audit_type, model, read_scope(paths.scope), cache)  # it strips by scope
     try:
@@ -102,7 +104,7 @@ def _select(
         logger.info(usage_line(audit_type, judge.usage))
         logger.info(judge.counts.line(audit_type, "classify"))
     if old:
-        result = merge(old, result)
+        result = merge(old, result, everything)
     selection_file = paths.out_file("selection", audit_type)
     selection_file.parent.mkdir(parents=True, exist_ok=True)  # only after a successful run
     selection_file.write_text(result.selection.model_dump_json(indent=2) + "\n", encoding="utf-8")

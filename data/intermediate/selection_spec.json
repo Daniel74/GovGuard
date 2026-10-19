@@ -3,63 +3,417 @@
   "model_id": "openai/gpt-oss-120b",
   "selected": [
     {
-      "requirement_id": "Art. 5",
+      "requirement_id": "Art. 5 Abs. 1 lit. a",
       "source": "DSGVO",
-      "rationale": "Die Anforderung enthält prüfbare Aspekte wie Rechtsgrundlage, Zweckbindung, Datenminimierung, Speicherbegrenzung, Integrität und Rechenschaftspflicht, die in einer Spezifikation angegeben werden können.",
+      "rationale": "Die Anforderung bezieht sich auf Rechtsgrundlagen, Zwecke und Transparenz, die in einer Spezifikation angegeben werden können, sodass die Erfüllung geprüft werden kann.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 6",
+      "requirement_id": "Art. 5 Abs. 1 lit. b",
       "source": "DSGVO",
-      "rationale": "Die Anforderung verlangt Angaben zu Rechtsgrundlagen, Zwecken und ggf. Schutzmaßnahmen, die in einer Spezifikation enthalten sein können, sodass die Erfüllung prüfbar ist.",
+      "rationale": "Die Anforderung bezieht sich auf die Zweckbindung, die in einer Spezifikation durch Angabe der festgelegten Zwecke geprüft werden kann.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 7",
+      "requirement_id": "Art. 5 Abs. 1 lit. c",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf nachweisbare Prozesse (Einwilligungsnachweis, klare Formulierung, Widerrufsverfahren) und kann daher in einer Spezifikation beschrieben und geprüft werden.",
+      "rationale": "Die Anforderung lässt sich anhand von Angaben zu Zweck, Datenumfang und -kategorien in einer Spezifikation prüfen.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 8",
+      "requirement_id": "Art. 5 Abs. 1 lit. d",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf die Erfassung des Alters und die Einholung der elterlichen Einwilligung, was in einer Spezifikation durch entsprechende Angaben (z. B. Altersprüfung, Consent‑Workflow) geprüft werden kann.",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zu Prozessen, Verantwortlichkeiten und Maßnahmen zur Datenkorrektur enthalten kann.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 9",
+      "requirement_id": "Art. 5 Abs. 1 lit. e",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf Zwecke, Einwilligung und weitere organisatorische Maßnahmen, die in einer Spezifikation angegeben werden können, sodass sie prüfbar ist.",
+      "rationale": "Die Anforderung bezieht sich auf Speicherbegrenzung, die durch Angaben zu Zwecken, Aufbewahrungsfristen und technischen Maßnahmen in einer Spezifikation überprüfbar ist.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 11",
+      "requirement_id": "Art. 5 Abs. 1 lit. f",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf einen Prozess (Nachweis der Nicht‑Identifizierbarkeit und Information der betroffenen Person), der in einer Spezifikation beschrieben werden kann, sodass geprüft werden kann, ob entsprechende Angaben vorhanden sind.",
+      "rationale": "Eine Spezifikation kann die geforderten technischen und organisatorischen Maßnahmen (z. B. Verschlüsselung, Zugriffsrechte, Löschfristen) beschreiben, sodass geprüft werden kann, ob die Anforderung erfüllt ist.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 12",
+      "requirement_id": "Art. 6 Abs. 1",
       "source": "DSGVO",
-      "rationale": "Die Anforderung enthält konkrete Vorgaben zu Zwecken, Fristen, Kommunikationsformen und Identitätsprüfungen, die in einer Spezifikation beschrieben und damit geprüft werden können.",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation die Rechtsgrundlage, Zwecke und weitere Angaben zur Verarbeitung angegeben werden können, sodass geprüft werden kann, ob eine der genannten Bedingungen erfüllt ist.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 13",
+      "requirement_id": "Art. 6 Abs. 3",
       "source": "DSGVO",
-      "rationale": "Die Anforderung verlangt die Angabe mehrerer Informationspflichten, die in einer Spezifikation als Pflichtfelder definiert werden können, sodass geprüft werden kann, ob sie enthalten sind.",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation die Rechtsgrundlage für die Verarbeitung angegeben werden kann und damit überprüft werden kann, ob sie erfüllt ist.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 14",
+      "requirement_id": "Art. 6 Abs. 3 UAbs. 2",
       "source": "DSGVO",
-      "rationale": "Die Anforderung verlangt Angaben zu Zwecken, Rechtsgrundlage, Kategorien, Empfängern, Übermittlungen und Speicherfristen, die in einer Spezifikation enthalten sein können und damit prüfbar sind.",
+      "rationale": "Die Anforderung bezieht sich auf Zweckbindung und Rechtsgrundlage, die in einer Spezifikation angegeben werden können und somit prüfbar sind.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 15",
+      "requirement_id": "Art. 6 Abs. 4 lit. a",
       "source": "DSGVO",
-      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zu Verarbeitungszwecken, Datenkategorien, Empfängern, Speicherfristen und weiteren geforderten Informationen enthalten kann, anhand derer geprüft werden kann, ob die Auskunftspflicht erfüllt wird.",
+      "rationale": "Die Anforderung verlangt die Angabe und Prüfung von Zwecken der Datenverarbeitung, was in einer Spezifikation dokumentiert und damit überprüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 4 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Zwecke, Rechtsgrundlagen und den Kontext der Datenerhebung, die in einer Spezifikation angegeben werden können, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 4 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Zwecke, Rechtsgrundlagen und Datenkategorien, die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 4 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Zwecke, Rechtsgrundlagen und Folgen, die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob die Verarbeitung zulässig ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 4 lit. e",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zu Verschlüsselung oder Pseudonymisierung enthalten kann, die zeigen, ob geeignete Garantien vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 7 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation nachgewiesen werden kann, ob die Einwilligung dokumentiert ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 7 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Formulierung und Trennung der Einwilligungserklärung, die in einer Spezifikation eindeutig beschrieben und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 7 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Vorgaben, die in einer Spezifikation (z. B. Beschreibung des Widerrufsprozesses) angegeben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 7 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zu Zweck, Rechtsgrundlage und zur Abhängigkeit der Einwilligung vom Vertrag enthalten kann, anhand derer beurteilt werden kann, ob die Einwilligung freiwillig erteilt wurde.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 8 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Einwilligung von Kindern und kann anhand von Angaben zur Altersprüfung, Einwilligungsprozessen und ggf. niedrigeren Altersgrenzen in der Spezifikation geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 8 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation beschrieben werden kann, welche Maßnahmen und Rollen zur Verifizierung der elterlichen Einwilligung vorgesehen sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 9 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Verarbeitung besonderer Kategorien personenbezogener Daten und lässt sich anhand von Angaben zu Rechtsgrundlagen, Zwecken, Einwilligungen etc. in einer Spezifikation prüfen, daher ist sie testbar.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 9 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Rollen und Geheimhaltungspflichten, die in einer Spezifikation angegeben werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 11 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation angeben kann, ob die Identifizierung der betroffenen Person für den jeweiligen Zweck erforderlich ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 12 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung von Informationen, die in einer Spezifikation eindeutig beschrieben werden können (z. B. Zweck, Rechtsgrundlage, Form, Zielgruppe), sodass geprüft werden kann, ob sie erfüllt oder verletzt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 12 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Prozesse, Fristen und Kommunikationswege, die in einer Spezifikation (z. B. Ablaufbeschreibung oder OpenAPI) festgehalten werden können, sodass geprüft werden kann, ob die Vorgaben eingehalten werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 12 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Prozesse und Kommunikationswege, die in einer Spezifikation beschrieben werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 12 Abs. 5",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung von Informationen und mögliche Entgelte, die in einer Spezifikation als Hinweis auf Kostenfreiheit bzw. Gebührenregelungen angegeben werden können, sodass sie prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 12 Abs. 6",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe von Identitätsprüfungen im System, die in einer Spezifikation beschrieben und damit überprüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 12 Abs. 7",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung von Informationen in Form von Bildsymbolen und deren maschinenlesbare Darstellung, was in einer Spezifikation eindeutig angegeben oder ausgelassen werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 1 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung lässt sich anhand von Angaben zur Nennung des Verantwortlichen und seiner Kontaktdaten in der Spezifikation prüfen.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 1 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation angegeben werden kann, ob die Kontaktdaten des Datenschutzbeauftragten bei der Datenerhebung mitgeteilt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 1 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation die Zwecke und die Rechtsgrundlage der Datenverarbeitung angegeben werden können, sodass geprüft werden kann, ob die Informationspflicht erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 1 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf eine Informationspflicht, die in einer Spezifikation durch Angabe der zu übermittelnden Informationen (z. B. berechtigte Interessen) nachgewiesen werden kann, sodass sie prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 1 lit. e",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Informationspflichten, die in einer Spezifikation durch Angabe der Empfänger oder Kategorien von Empfängern dokumentiert werden können, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 1 lit. f",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt, dass im Rahmen der Spezifikation angegeben wird, ob die betroffene Person über die mögliche Übermittlung in Drittländer informiert wird, sodass die Erfüllung anhand der Dokumentation geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 2 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt Angaben zur Speicherdauer oder den Festlegungskriterien, die in einer Spezifikation (Freitext oder OpenAPI) dokumentiert werden können, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 2 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung von Informationspflichten, die in einer Spezifikation durch Angabe der bereitgestellten Informationen geprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 2 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Bereitstellung konkreter Informationsinhalte, die in einer Spezifikation eindeutig dokumentiert werden können, sodass geprüft werden kann, ob die genannten Informationen bereitgestellt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 2 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Angabe eines Beschwerderechts, was in einer Spezifikation (Freitext oder OpenAPI) dokumentiert werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 2 lit. e",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation angegeben werden kann, ob die geforderten Informationen zur Datenbereitstellung bereitgestellt werden und damit die Erfüllung nachgewiesen oder ein Verstoß festgestellt werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 2 lit. f",
+      "source": "DSGVO",
+      "rationale": "Eine Spezifikation kann angeben, ob automatisierte Entscheidungsfindung eingesetzt wird und die erforderlichen Informationen bereitstellt, sodass die Anforderung geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation festgehalten werden kann, ob und welche Informationen der betroffenen Person vor der Weiterverarbeitung bereitgestellt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 1 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation angeben kann, ob die geforderten Informationsinhalte bereitgestellt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 1 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation angegeben werden kann, ob die Kontaktdaten des Datenschutzbeauftragten bei nicht‑direkter Erhebung bereitgestellt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 1 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zu Zwecken und Rechtsgrundlage enthalten kann, die dann auf Erfüllung geprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 1 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung lässt sich anhand einer Spezifikation prüfen, weil die zu verarbeitenden Datenkategorien angegeben werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 1 lit. e",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Angabe von Empfängern oder Empfänger‑Kategorien, was in einer Spezifikation eindeutig dokumentiert werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 1 lit. f",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt, dass Informationen über beabsichtigte Übermittlungen in Drittländer im Hinweis an die betroffene Person enthalten sind, was in einer Spezifikation als Pflichtfeld definiert und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 2 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Angabe der Speicherdauer oder der Kriterien dafür, was in einer Spezifikation festgehalten werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 2 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe von Informationen in einer Spezifikation (z. B. Datenschutzhinweis) und kann daher durch Prüfung der Dokumentation verifiziert werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 2 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung von Informationspflichten, die in einer Spezifikation (z. B. als UI‑Beschreibung oder API‑Endpoint) angegeben werden können, sodass geprüft werden kann, ob die genannten Rechte kommuniziert werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 2 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Bereitstellung einer Informationspflicht, die in einer Spezifikation (z. B. als Hinweis im UI‑Design oder in OpenAPI‑Beschreibungen) dokumentiert werden kann, sodass geprüft werden kann, ob die Information zur Widerrufs‑Recht bereitgestellt wird.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 2 lit. e",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Angabe eines Beschwerderechts, was in einer Spezifikation (z. B. als Textfeld oder Hinweis) dokumentiert werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 2 lit. f",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation angeben kann, aus welcher Quelle die personenbezogenen Daten stammen, sodass geprüft werden kann, ob diese Information bereitgestellt wird.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 2 lit. g",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Angabe von Informationen zur automatisierten Entscheidungsfindung und Profiling, die in einer Spezifikation (z. B. als Metadaten) dokumentiert und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Informationspflichten und Fristen, die in einer Spezifikation eindeutig angegeben werden können, sodass geprüft werden kann, ob die Fristen eingehalten werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation die Zwecke, Rechtsgrundlagen und Informationspflichten festgehalten werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 5",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung lässt sich prüfen, wenn die Spezifikation Angaben zu den Ausnahmen (z. B. bereits vorhandene Information, Unmöglichkeit, gesetzliche Vorgaben) und zu den ergriffenen Schutzmaßnahmen enthält.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 15 Abs. 1 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zu den Verarbeitungszwecken und den auszugebenden Informationen enthalten kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 15 Abs. 1 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zu den verarbeiteten Datenkategorien enthalten kann, wodurch geprüft werden kann, ob die Auskunftspflicht erfüllt wird.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 15 Abs. 1 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation Angaben zu Empfängern bzw. Empfänger‑Kategorien (z. B. Drittländer) enthalten sein können, sodass geprüft werden kann, ob diese Informationen bereitgestellt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 15 Abs. 1 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt Angaben zur geplanten Speicherdauer oder den Kriterien dafür, die in einer Spezifikation enthalten sein können, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 15 Abs. 1 lit. e",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe von Rechten (Berichtigung, Löschung, Einschränkung, Widerspruch) und kann in einer Spezifikation durch entsprechende Angaben zu den bereitgestellten Informationen geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 15 Abs. 1 lit. f",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe des Beschwerderechts, was in einer Spezifikation (z. B. als Hinweis im Nutzer‑Interface) festgehalten werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 15 Abs. 1 lit. g",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung von Herkunftsinformationen, die in einer Spezifikation als Pflichtfeld oder API‑Antwort definiert werden kann und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 15 Abs. 1 lit. h",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung kann durch Angaben in der Spezifikation geprüft werden, ob automatisierte Entscheidungsfindung und Profiling stattfinden und ob die geforderten Informationen zur Logik, Tragweite und Auswirkungen bereitgestellt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 15 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Information über Garantien bei Datenübermittlung, die in einer Spezifikation (z. B. Zweckbeschreibung, Rechtsgrundlage, Übermittlungsdetails) angegeben werden kann und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 15 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation festgelegt werden kann, ob die Daten in einem gängigen elektronischen Format bereitgestellt werden und ob ein Entgelt verlangt wird.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 15 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung kann durch Angaben im Pflichtenheft, z. B. zu Redaktions‑ oder Anonymisierungsmaßnahmen, geprüft werden.",
       "cfn_resource_types": []
     },
     {
@@ -69,63 +423,285 @@
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 17",
+      "requirement_id": "Art. 17 Abs. 1",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf Löschfristen und -verfahren, die in einer Spezifikation beschrieben werden können, sodass sie prüfbar ist.",
+      "rationale": "Die Anforderung bezieht sich auf Löschfristen und -gründe, die in einer Spezifikation angegeben werden können, sodass sie prüfbar ist.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 18",
+      "requirement_id": "Art. 17 Abs. 2",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf Verarbeitungsbeschränkungen, die in einer Spezifikation (z. B. durch Angaben zu Prozessen, Zuständen oder API‑Endpunkten) nachgewiesen oder ausgeschlossen werden können, sodass sie prüfbar ist.",
+      "rationale": "Die Anforderung bezieht sich auf einen klar definierten Prozess (Information anderer Verantwortlicher), der in einer Spezifikation beschrieben und damit überprüft werden kann.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 20",
+      "requirement_id": "Art. 17 Abs. 3",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung personenbezogener Daten in einem strukturierten, maschinenlesbaren Format und kann durch Angaben in einer Spezifikation (z. B. Endpunkt, Format) geprüft werden.",
+      "rationale": "Da die Anforderung durch Angaben zu Rechtsgrundlagen, Zwecken und Ausnahmen in einer Spezifikation überprüft werden kann, ist sie prüfbar.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 21",
+      "requirement_id": "Art. 18 Abs. 1",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf Prozesse und technische Maßnahmen (Hinweis, Widerspruchsmechanismus, Stoppen der Verarbeitung), die in einer Spezifikation beschrieben werden können, sodass sie prüfbar ist.",
+      "rationale": "Die Anforderung bezieht sich auf ein Verfahren, das in einer Spezifikation durch Angaben zu Prozessen, Rollen und Zuständigkeiten beschrieben werden kann, sodass geprüft werden kann, ob das Recht auf Einschränkung der Verarbeitung umgesetzt wird.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 22",
+      "requirement_id": "Art. 18 Abs. 2",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf Vorgaben, die in einer Spezifikation durch Angaben zu Zwecken, Rechtsgrundlagen und Maßnahmen (z. B. menschliches Eingreifen) beschrieben werden können und damit prüfbar sind.",
+      "rationale": "Die Anforderung lässt sich anhand von in der Spezifikation angegebenen Rechtsgrundlagen, Zwecken und Zugriffsrechten prüfen, ob die Verarbeitung nur unter den genannten Bedingungen erfolgt.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 24",
+      "requirement_id": "Art. 18 Abs. 3",
       "source": "DSGVO",
-      "rationale": "Die Anforderung verlangt die Beschreibung und Nachweisführung technischer und organisatorischer Maßnahmen, die in einer Spezifikation (Freitext oder OpenAPI) angegeben werden können und somit prüfbar sind.",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation festgehalten werden kann, ob und wann die betroffene Person über die Aufhebung der Einschränkung informiert wird.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 25",
+      "requirement_id": "Art. 20 Abs. 1 lit. a",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf technische und organisatorische Maßnahmen wie Datenminimierung, Pseudonymisierung und Voreinstellungen, die in einer Spezifikation (z. B. Zwecke, Löschfristen, Zugriffsrechte) beschrieben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "rationale": "Die Anforderung lässt sich anhand von Angaben in einer Spezifikation prüfen, z. B. ob ein Export in einem strukturierten, gängigen, maschinenlesbaren Format angeboten wird und die rechtlichen Grundlagen angegeben sind.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 26",
+      "requirement_id": "Art. 20 Abs. 1 lit. b",
       "source": "DSGVO",
-      "rationale": "Die Anforderung verlangt eine dokumentierte Vereinbarung zwischen gemeinsam Verantwortlichen, deren Vorhandensein und Inhalte in einer Spezifikation geprüft werden können.",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation festgelegt werden kann, in welchem strukturierten, gängigen und maschinenlesbaren Format Daten bereitgestellt und ohne Behinderung an einen anderen Verantwortlichen übermittelt werden müssen.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 27",
+      "requirement_id": "Art. 20 Abs. 2",
       "source": "DSGVO",
-      "rationale": "Die Anforderung lässt sich prüfen, weil eine Spezifikation Angaben zu Zweck, Rolle (Vertreter), Rechtsgrundlage und Standort des Vertreters enthalten kann, sodass geprüft werden kann, ob ein schriftlicher Vertreter in der Union benannt ist.",
+      "rationale": "Die Anforderung bezieht sich auf die Möglichkeit der direkten Datenübermittlung, die in einer Spezifikation durch Angaben zu unterstützten Übertragungsmechanismen, technischen Voraussetzungen und Prozessen beschrieben werden kann, sodass sie prüfbar ist.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 28",
+      "requirement_id": "Art. 20 Abs. 4",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf Auftragsverarbeiter, Verträge und technische/organisatorische Maßnahmen, die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob die Vorgaben erfüllt sind.",
+      "rationale": "Die Anforderung bezieht sich auf die in der Spezifikation zu dokumentierenden Einschränkungen beim Datenexport, sodass geprüft werden kann, ob nur die Daten der betroffenen Person übertragen werden und keine Rechte Dritter verletzt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 21 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf ein Verfahren (Widerspruch), das in einer Spezifikation beschrieben werden kann, z. B. durch Angabe von Zwecken, Rechtsgrundlagen und Prozessen, sodass geprüft werden kann, ob die Anforderung erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 21 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf ein Verfahren (Widerspruch gegen Direktwerbung), das in einer Spezifikation beschrieben werden kann (z. B. Prozess, API‑Endpunkt), sodass geprüft werden kann, ob es umgesetzt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 21 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Verarbeitung von Daten für Direktwerbung und kann durch Angaben in der Spezifikation zu Zwecken, Rechtsgrundlagen und Prozessen zur Umsetzung des Widerspruchsrechts geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 21 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation festgehalten werden kann, dass der Hinweis bei der ersten Kommunikation erfolgt und damit überprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 21 Abs. 5",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung eines automatisierten Widerspruchsverfahrens und kann durch Angaben in einer technischen Spezifikation (z. B. Zweck, Rechtsgrundlage, Zugriffsrechte) geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 21 Abs. 6",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation Angaben zu Zweck, Rechtsgrundlage und dem Widerspruchsverfahren enthalten sein können, anhand derer geprüft werden kann, ob das Widerspruchsrecht umgesetzt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 22 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Eine Spezifikation kann Angaben zu automatisierten Entscheidungen, Profiling, Rechtsgrundlagen und betroffenen Rollen enthalten, sodass geprüft werden kann, ob die Anforderung erfüllt oder verletzt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 22 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Zwecke, Rechtsgrundlagen und Einwilligung, die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob die Ausnahmen erfüllt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 22 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf funktionale und organisatorische Maßnahmen (z. B. Möglichkeit zur menschlichen Intervention, Darlegung des Standpunkts, Anfechtung), die in einer Spezifikation eindeutig beschrieben und damit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 22 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Datenkategorien, Ausnahmen und Schutzmaßnahmen, die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 23 Abs. 2 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt Angaben zu Zwecken und Verarbeitungskategorien, die in einer Spezifikation enthalten sein können und damit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 23 Abs. 2 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die in einer Spezifikation zu beschreibenden Garantien gegen Missbrauch, unrechtmäßigen Zugang oder unrechtmäßige Übermittlung und kann daher anhand der Angaben in der Spezifikation geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 23 Abs. 2 lit. f",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt, dass die Spezifikation Angaben zu Speicherfristen und Garantien enthält, sodass geprüft werden kann, ob diese Angaben vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 24 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung lässt sich anhand von in der Spezifikation angegebenen technischen und organisatorischen Maßnahmen, Risikobewertung und Nachweisdokumentation prüfen.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 24 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf datenschutzrechtliche Maßnahmen, die in einer Spezifikation beschrieben werden können (z. B. Verschlüsselung, Zugriffsrechte), sodass sie prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 25 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf technische und organisatorische Maßnahmen, die in einer Spezifikation (z. B. durch Angabe von Pseudonymisierung, Datenminimierung etc.) nachgewiesen werden können, sodass sie prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 25 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation die Voreinstellungen, Datenmenge, Speicherfristen und Zugriffsrechte beschrieben werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Vereinbarung nachgewiesen werden kann, ob die Zwecke, Mittel, Rollen und Informationspflichten der gemeinsam Verantwortlichen klar definiert sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Inhalte einer Vereinbarung, die in einer Spezifikation dokumentiert werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Möglichkeit, Rechte gegenüber jedem einzelnen Verantwortlichen geltend zu machen, was durch Angaben zu Rollen, Verantwortlichkeiten und Vereinbarungen in einer Spezifikation prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Benennung eines Vertreters, die in einer Spezifikation angegeben werden kann und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt Angaben zu Art, Umfang, Datenkategorien und Risikobewertung der Verarbeitung, die in einer fachlichen Spezifikation beschrieben werden können, sodass geprüft werden kann, ob die Ausnahmekriterien erfüllt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe des Sitzes des Vertreters, die in einer Spezifikation als Attribut erfasst werden kann, sodass geprüft werden kann, ob er in einem geeigneten Mitgliedstaat niedergelassen ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zum benannten Vertreter, dessen Kontaktdaten und Aufgaben enthalten kann, wodurch geprüft werden kann, ob ein Vertreter bestellt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Auftragsverarbeiter und kann anhand von Angaben in einer Spezifikation (z. B. benannte Auftragsverarbeiter, Garantien, technische und organisatorische Maßnahmen) geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zu Genehmigung und Benachrichtigung von Unter‑Auftragsverarbeitern enthalten kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 3 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Dokumentation eines Auftragsverarbeitungsvertrags, die in einer Spezifikation angegeben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 3 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation (z. B. Vertrag oder OpenAPI) die Verpflichtung zur Vertraulichkeit der verarbeitenden Personen angegeben werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 3 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf in der Spezifikation zu dokumentierende Vertragsinhalte und kann somit geprüft werden, ob diese Angaben vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 3 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf vertragliche Regelungen, die in einer Spezifikation als Hinweis auf das Vorhandensein und den Inhalt des Auftragsverarbeitungsvertrags angegeben werden können, sodass geprüft werden kann, ob die genannten Bedingungen erfüllt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 3 lit. e",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf vertragliche Inhalte, die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob der Vertrag die geforderte Unterstützung bei Anträgen enthält.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 3 lit. f",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe eines Vertrags mit dem Auftragsverarbeiter und dessen Inhalte, die in einer Spezifikation dokumentiert werden können, sodass geprüft werden kann, ob die geforderten Punkte enthalten sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 3 lit. g",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt, dass die Spezifikation Angaben zu Vertrag, Datenlöschung bzw. -rückgabe enthält, sodass geprüft werden kann, ob diese Vorgaben erfüllt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 3 lit. h",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil sie verlangt, dass der Auftragsverarbeiter dem Verantwortlichen alle erforderlichen Informationen zur Nachweisführung und die Durchführung von Prüfungen ermöglicht, was anhand des Vertrags und der tatsächlich erbrachten Nachweise überprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 3 UAbs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung kann in einer Spezifikation durch Angabe eines Benachrichtigungsmechanismus dokumentiert werden, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt vertragliche und technische Vorgaben für Sub‑Auftragsverarbeiter, die in einer Spezifikation dokumentiert werden können, sodass geprüft werden kann, ob die Pflichten erfüllt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 28 Abs. 10",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Rollen und Verantwortlichkeiten, die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob ein Auftragsverarbeiter die Zwecke und Mittel bestimmt.",
       "cfn_resource_types": []
     },
     {
@@ -135,45 +711,297 @@
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 30",
+      "requirement_id": "Art. 30 Abs. 1 lit. a",
       "source": "DSGVO",
-      "rationale": "Die Anforderung verlangt ein Verzeichnis mit definierten Angaben, das in einer Spezifikation angegeben oder geprüft werden kann.",
+      "rationale": "Die Anforderung bezieht sich auf ein Verzeichnis, das in einer Spezifikation angegeben werden kann, sodass geprüft werden kann, ob die geforderten Angaben enthalten sind.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 32",
+      "requirement_id": "Art. 30 Abs. 1 lit. b",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf technische und organisatorische Maßnahmen, die in einer Spezifikation (z. B. Angaben zu Verschlüsselung, Zugriffsrechten, Wiederherstellungsprozessen) beschrieben und damit geprüft werden können.",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation die Zwecke der Verarbeitung und weitere Pflichtangaben enthalten kann, sodass geprüft werden kann, ob das Verzeichnis vollständig ist.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 33",
+      "requirement_id": "Art. 30 Abs. 1 lit. c",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf meldepflichtige Prozesse, die in einer Spezifikation beschrieben werden können (z. B. Frist, Inhalte, Dokumentation), sodass geprüft werden kann, ob sie erfüllt ist.",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation die geforderten Angaben zu Kategorien betroffener Personen und Daten enthalten kann.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 34",
+      "requirement_id": "Art. 30 Abs. 1 lit. d",
       "source": "DSGVO",
-      "rationale": "Die Anforderung enthält prüfbare Kriterien wie technische und organisatorische Sicherheitsvorkehrungen, Verschlüsselung und Risikobewertung, die in einer Spezifikation angegeben werden können.",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation die Kategorien von Empfängern, einschließlich Empfänger in Drittländern, enthalten kann, sodass geprüft werden kann, ob die Angaben vorhanden sind.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 35",
+      "requirement_id": "Art. 30 Abs. 1 lit. e",
       "source": "DSGVO",
-      "rationale": "Die Anforderung verlangt, dass bei Verarbeitungsvorgängen mit hohem Risiko eine Datenschutz‑Folgenabschätzung durchgeführt und dokumentiert wird; eine Spezifikation kann Angaben zu Zwecken, Risiken und Abhilfemaßnahmen enthalten, sodass geprüft werden kann, ob die Anforderung erfüllt ist.",
+      "rationale": "Die Anforderung bezieht sich auf Angaben, die in einem Verzeichnis der Verarbeitungstätigkeiten dokumentiert werden müssen und können in einer Spezifikation als Pflichtfelder definiert werden, sodass die Erfüllung prüfbar ist.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 36",
+      "requirement_id": "Art. 30 Abs. 1 lit. f",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf Angaben, die in einer Spezifikation (z. B. Zwecke, Auftragsverarbeiter, Maßnahmen) enthalten sein können, sodass geprüft werden kann, ob die Konsultation erfolgt ist oder nicht.",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation die vorgesehenen Löschfristen und weitere Angaben enthalten kann.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 38",
+      "requirement_id": "Art. 30 Abs. 1 lit. g",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf organisatorische Maßnahmen, die in einer Spezifikation (z. B. Freitext) beschrieben werden können, sodass geprüft werden kann, ob der Datenschutzbeauftragte eingebunden, mit Ressourcen ausgestattet und unabhängig ist.",
+      "rationale": "Die Anforderung verlangt eine Beschreibung der technischen und organisatorischen Maßnahmen, die in einer Spezifikation angegeben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 30 Abs. 2 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt, dass das Verzeichnis bestimmte Angaben enthält, die in einer Spezifikation nachgewiesen oder fehlen können, sodass sie prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 30 Abs. 2 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf inhaltliche Angaben, die in einer Spezifikation beschrieben werden können, sodass geprüft werden kann, ob das Verzeichnis die geforderten Kategorien enthält.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 30 Abs. 2 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Dokumentation von Drittlandübermittlungen, die in einer Spezifikation angegeben werden kann, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 30 Abs. 2 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt ein Verzeichnis mit Angaben zu technischen und organisatorischen Maßnahmen, das in einer Spezifikation enthalten sein kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 30 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf das Vorhandensein und Format des Verzeichnisses, das in einer Spezifikation angegeben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 30 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation angeben kann, dass das System das Verzeichnis auf Anfrage bereitstellt.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 30 Abs. 5",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Angaben, die in einer Spezifikation (z. B. Zweck, Risiko, Datenkategorien, Mitarbeiterzahl) enthalten sein können, sodass geprüft werden kann, ob die Ausnahmeregelung greift.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 32 Abs. 1 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt konkrete technische Maßnahmen wie Pseudonymisierung und Verschlüsselung, die in einer Spezifikation angegeben und damit überprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 32 Abs. 1 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf technische Maßnahmen wie die Wiederherstellung der Verfügbarkeit, die in einer Spezifikation als Backup‑ und Recovery‑Funktion beschrieben werden können, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 32 Abs. 1 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation ein Verfahren zur regelmäßigen Überprüfung, Bewertung und Evaluierung der technischen und organisatorischen Maßnahmen angegeben werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 32 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Rollen, Anweisungen und Zugriffsrechte, die in einer Spezifikation beschrieben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 33 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf einen Prozess (Meldung von Datenschutzverletzungen), der in einer Spezifikation durch Angaben zu Rollen, Abläufen und Fristen beschrieben werden kann, sodass geprüft werden kann, ob die Vorgaben erfüllt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 33 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf ein Verfahren, das in einer Spezifikation beschrieben werden kann (z. B. Meldeprozess, Rollen, Fristen), sodass sie prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 33 Abs. 3 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation die zu meldenden Informationen (Art der Verletzung, betroffene Kategorien und ungefähre Zahlen) festlegen und damit die Erfüllung oder Verletzung nachweisen kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 33 Abs. 3 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Inhalte eines Meldungsdokuments, die in einer Spezifikation eindeutig angegeben werden können, sodass geprüft werden kann, ob die geforderten Angaben enthalten sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 33 Abs. 3 lit. c",
+      "source": "DSGVO",
+      "rationale": "Da die Anforderung konkrete inhaltliche Vorgaben für die Meldung definiert, kann in einer Spezifikation (z. B. als Pflichtfeld) angegeben werden, ob diese Vorgabe umgesetzt wird, sodass die Anforderung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 33 Abs. 3 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation angeben kann, ob die geforderten Informationen zur Behebung der Verletzung enthalten sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 33 Abs. 5",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Datenschutzverletzungen, die in einer Spezifikation als Pflichtfeld beschrieben werden kann, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 34 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation angeben kann, ob und wann die Benachrichtigung der betroffenen Person erfolgt.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 34 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf den Inhalt einer Benachrichtigung, der in einer Spezifikation (z. B. Textvorlage) festgelegt werden kann, sodass geprüft werden kann, ob die geforderten Informationen enthalten sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 34 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf technische und organisatorische Maßnahmen wie Verschlüsselung, Risikominimierung und Aufwand, die in einer Spezifikation angegeben werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 35 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation angegeben werden kann, ob eine Datenschutz‑Folgenabschätzung durchgeführt wurde und welche Kriterien dafür gelten.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 35 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf einen Prozessschritt, der in einer Spezifikation (z. B. Ablaufbeschreibung) vermerkt werden kann, sodass geprüft werden kann, ob der Rat des Datenschutzbeauftragten eingeholt wurde.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 35 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung lässt sich prüfen, indem in der Spezifikation angegeben wird, ob für die genannten Verarbeitungsszenarien eine Datenschutz‑Folgenabschätzung durchgeführt wird.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 35 Abs. 7 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation nachgewiesen werden kann, ob die geforderte systematische Beschreibung der Verarbeitungsvorgänge und Zwecke enthalten ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 35 Abs. 7 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf inhaltliche Angaben einer Datenschutz‑Folgenabschätzung, die in einer Spezifikation dokumentiert werden können und damit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 35 Abs. 7 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Aufnahme einer Risikobewertung in die Folgenabschätzung, was in einer Spezifikation eindeutig angegeben und damit überprüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 35 Abs. 7 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Inhalte einer DPIA, die in der Spezifikation eindeutig angegeben werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 35 Abs. 8",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Berücksichtigung von Verhaltensregeln, die in einer Spezifikation als Hinweis auf die Einhaltung angegeben werden kann, sodass sie prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 36 Abs. 3 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt Angaben zu Zuständigkeiten, die in einer Spezifikation festgehalten werden können, sodass geprüft werden kann, ob sie bereitgestellt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 36 Abs. 3 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Angabe von Zwecken und Mitteln der Verarbeitung, die in einer Spezifikation dokumentiert werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 36 Abs. 3 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Angabe von Schutzmaßnahmen und Garantien, die in einer fachlichen Spezifikation dokumentiert werden können und damit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 36 Abs. 3 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation angegeben werden kann, ob die Kontaktdaten des Datenschutzbeauftragten bei einer Konsultation bereitgestellt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 36 Abs. 3 lit. e",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt, dass der Verantwortliche bei einer Konsultation die Datenschutz‑Folgenabschätzung bereitstellt; eine Spezifikation kann eindeutig festlegen, dass diese Information übergeben wird, sodass geprüft werden kann, ob sie vorhanden ist oder fehlt.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 37 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung lässt sich prüfen, indem in der Spezifikation ein benannter Datenschutzbeauftragter und dessen Erreichbarkeit von jeder Niederlassung dokumentiert werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 37 Abs. 7",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung von Kontaktdaten, die in einer Spezifikation eindeutig angegeben und damit überprüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 38 Abs. 1",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Einbindung des Datenschutzbeauftragten, was in einer fachlichen Spezifikation als Rolle und Prozess beschrieben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 38 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Bereitstellung von Ressourcen und Zugriffsrechten für den Datenschutzbeauftragten, die in einer Spezifikation dokumentiert werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 38 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf die Möglichkeit, den Datenschutzbeauftragten zu konsultieren, was in einer Spezifikation durch Angabe von Kontaktdaten, Zuständigkeiten oder Prozessen dokumentiert werden kann, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 38 Abs. 6",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Rollen und Aufgaben, die in einer Spezifikation als Rollen‑ und Aufgabenzuweisungen dokumentiert werden können, sodass geprüft werden kann, ob ein Interessenkonflikt vermieden wird.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 41 Abs. 2 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt festgelegte Verfahren zur Bewertung und Überwachung der Einhaltung von Verhaltensregeln, die in einer Spezifikation beschrieben werden können, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 41 Abs. 2 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf festgelegte Verfahren und Strukturen, die in einer Spezifikation beschrieben werden können, sodass geprüft werden kann, ob sie vorhanden und transparent sind.",
       "cfn_resource_types": []
     },
     {
@@ -183,21 +1011,117 @@
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 45",
+      "requirement_id": "Art. 45 Abs. 1",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf die Angemessenheitsentscheidung und kann in einer Spezifikation durch Angabe der Rechtsgrundlage, der zulässigen Drittländer und ggf. Übermittlungsmechanismen nachgewiesen oder verletzt werden.",
+      "rationale": "Die Anforderung bezieht sich auf die Datenübermittlung in Drittländer und kann durch Angaben in der Spezifikation zu Zweck, Rechtsgrundlage und Angemessenheitsbeschluss geprüft werden.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 46",
+      "requirement_id": "Art. 45 Abs. 8",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf die Datenübermittlung in Drittländer und kann anhand von Angaben zu Garantien, Vertragsklauseln oder Zertifizierungen in der Spezifikation geprüft werden.",
+      "rationale": "Die Anforderung ist prüfbar, weil geprüft werden kann, ob die Kommission die geforderte Liste von Drittländern und internationalen Organisationen veröffentlicht hat.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 47",
+      "requirement_id": "Art. 46 Abs. 1",
       "source": "DSGVO",
-      "rationale": "Die Anforderung verlangt konkrete Angaben (z. B. Rechtsgrundlagen, Zwecke, Löschfristen, Zugriffsrechte, Auftragsverarbeiter) die in einer Spezifikation dokumentiert werden können, sodass geprüft werden kann, ob sie vorhanden sind.",
+      "rationale": "Die Anforderung bezieht sich auf die Angabe von geeigneten Garantien, Rechtsgrundlagen und Durchsetzbarkeit, die in einer Spezifikation dokumentiert werden können, sodass sie prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 46 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Angabe konkreter Garantien für Datenübermittlungen, die in einer Spezifikation dokumentiert werden können, sodass geprüft werden kann, ob die genannten Garantien vorliegen.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 46 Abs. 3",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt Angaben zu Garantien, Vertragsklauseln und Verwaltungsvereinbarungen für Datenübermittlungen, die in einer Spezifikation dokumentiert werden können, sodass geprüft werden kann, ob sie erfüllt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 1 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf interne Datenschutzvorschriften, die als Spezifikation vorliegen können und damit prüfbar sind, ob sie die ausdrücklich durchsetzbaren Rechte der betroffenen Personen enthalten.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. a",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil geprüft werden kann, ob die internen Datenschutzvorschriften die geforderte Angabe von Struktur und Kontaktdaten der Unternehmensgruppe enthalten.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. b",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation die geforderten Angaben zu Datenübermittlungen, Datenarten, Zweck, betroffenen Personen und Drittland enthalten kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. c",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf den Inhalt von internen Datenschutzvorschriften, welcher in einer Spezifikation angegeben werden kann und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. d",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation die geforderten Angaben (Zwecke, Rechtsgrundlage, Speicherfristen, Sicherheitsmaßnahmen etc.) enthalten kann und damit überprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. e",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt, dass die internen Datenschutzvorschriften bestimmte Angaben enthalten, die in einer Spezifikation (z. B. Freitext) nachgewiesen und geprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. f",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt, dass die internen Datenschutzvorschriften einen konkreten Hinweis zur übernommenen Haftung enthalten, was durch Prüfung der Dokumentation nachweisbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. g",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Angaben, die in einer Spezifikation (z. B. als Freitext) enthalten sein können, sodass geprüft werden kann, ob die beschriebenen Informationswege und Inhalte vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. h",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation (z. B. internen Datenschutzvorschriften) die genannten Angaben enthalten sein müssen und damit überprüft werden kann, ob sie vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. i",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung lässt sich prüfen, indem geprüft wird, ob die internen Datenschutzvorschriften das Beschwerdeverfahren enthalten.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. j",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt nach dokumentierten Verfahren zur Überprüfung und Meldung, die in einer Spezifikation angegeben werden können, sodass ihre Erfüllung überprüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. k",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Angaben, die in einer fachlichen Spezifikation enthalten sein können, sodass geprüft werden kann, ob die genannten Verfahren zur Meldung und Erfassung von Änderungen beschrieben sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. m",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Angaben, die in einer Spezifikation (z. B. Beschreibung von Meldeverfahren) enthalten sein können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 47 Abs. 2 lit. n",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung ist prüfbar, weil die Spezifikation angeben kann, ob die internen Datenschutzvorschriften das geforderte Training für das Personal enthalten.",
       "cfn_resource_types": []
     },
     {
@@ -207,9 +1131,33 @@
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 49",
+      "requirement_id": "Art. 49 Abs. 1",
       "source": "DSGVO",
-      "rationale": "Die Anforderung bezieht sich auf die zulässige Übermittlung personenbezogener Daten in Drittländer und kann anhand von Angaben in einer Spezifikation (z. B. Rechtsgrundlage, Einwilligung, Zweck, Garantien) überprüft werden.",
+      "rationale": "Die Anforderung bezieht sich auf rechtliche Bedingungen für Datenübermittlungen, die in einer Spezifikation durch Angaben zu Rechtsgrundlage, Einwilligung, Vertragszweck etc. überprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 49 Abs. 1 UAbs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt Angaben zu Rechtsgrundlage, Zweck, Garantien, Benachrichtigung der Aufsichtsbehörde und betroffenen Personen, die in einer Spezifikation dokumentiert werden können, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 49 Abs. 2",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung bezieht sich auf Datenübermittlung und kann anhand von Angaben in einer Spezifikation zu Zwecken, Empfängern und Umfang der übermittelten Daten geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 49 Abs. 4",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Angabe einer Rechtsgrundlage (öffentliches Interesse), die in einer Spezifikation dokumentiert werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 49 Abs. 6",
+      "source": "DSGVO",
+      "rationale": "Die Anforderung verlangt die Dokumentation von Bewertung und Garantien, was in einer Spezifikation angegeben werden kann und somit prüfbar ist.",
       "cfn_resource_types": []
     },
     {
@@ -909,51 +1857,393 @@
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 4",
+      "requirement_id": "Art. 4 Abs. 1",
       "source": "KI-VO",
-      "rationale": "Die Anforderung verlangt nach Maßnahmen zur Förderung der KI‑Kompetenz, die in einer Spezifikation durch Angaben zu Schulungen, Qualifikationen und Trainingsprogrammen nachgewiesen oder nicht angegeben werden können, sodass die Erfüllung prüfbar ist.",
+      "rationale": "Die Anforderung bezieht sich auf Maßnahmen zur KI‑Kompetenz, die in einer Fachspezifikation als Hinweis (z. B. Trainings‑ oder Fortbildungsmaßnahmen) angegeben werden können, sodass geprüft werden kann, ob sie beschrieben sind oder nicht.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 5",
+      "requirement_id": "Art. 5 Abs. 1 lit. a",
       "source": "KI-VO",
-      "rationale": "Die Anforderung beschreibt verbotene KI‑Praktiken, die in einer Spezifikation eindeutig angegeben werden können, ob das System diese Praktiken einsetzt oder nicht, sodass die Erfüllung prüfbar ist.",
+      "rationale": "Die Anforderung bezieht sich auf das Vorhandensein oder Fehlen von manipulativen KI‑Techniken, was in einer Spezifikation angegeben werden kann, sodass geprüft werden kann, ob das System diese Praktiken einsetzt oder nicht.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 6",
+      "requirement_id": "Art. 5 Abs. 1 lit. b",
       "source": "KI-VO",
-      "rationale": "Die Anforderung definiert klare Kriterien (z. B. Einsatz als Sicherheitsbauteil, Konformitätsbewertung, Dokumentation) die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "rationale": "Die Anforderung bezieht sich auf ein verbotenes Verhalten, das in einer Spezifikation als ausgeschlossen angegeben werden kann, sodass die Erfüllung prüfbar ist.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 13",
+      "requirement_id": "Art. 5 Abs. 1 lit. ba",
       "source": "KI-VO",
-      "rationale": "Die Anforderung verlangt, dass die Betriebsanleitung bestimmte Angaben enthält; diese können in einer Spezifikation geprüft werden, ob sie vorhanden sind oder fehlen.",
+      "rationale": "Die Anforderung bezieht sich auf ein Verbot, das in einer Spezifikation durch Angaben zu erlaubten bzw. verbotenen Inhalten und ggf. Consent‑Mechanismen nachgewiesen oder ausgeschlossen werden kann, sodass sie prüfbar ist.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 14",
+      "requirement_id": "Art. 5 Abs. 1 lit. bb",
       "source": "KI-VO",
-      "rationale": "Die Anforderung beschreibt fachliche Vorgaben zu menschlicher Aufsicht, Rollen, Verfahren und Schnittstellen, die in einer Spezifikation dokumentiert und damit überprüft werden können.",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation angeben kann, ob das KI‑System Material gemäß Art. 2 c/e erzeugt oder manipuliert und damit das Verbot erfüllt oder verletzt wird.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 26",
+      "requirement_id": "Art. 5 Abs. 1 lit. c",
       "source": "KI-VO",
-      "rationale": "Die Anforderung umfasst technische und organisatorische Maßnahmen, Rollen, Prozesse und Dokumentationspflichten, die in einer Spezifikation (z. B. Zweck, Rollen, Abläufe, Auftragsverarbeiter) beschrieben und damit überprüft werden können.",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation angeben kann, ob das KI‑System solche Bewertungen vornimmt oder nicht.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 27",
+      "requirement_id": "Art. 5 Abs. 1 lit. d",
       "source": "KI-VO",
-      "rationale": "Die Anforderung verlangt, dass Betreiber eine Grundrechte‑Folgenabschätzung mit definierten Inhalten durchführen und der Marktüberwachungsbehörde melden; eine Spezifikation kann prüfen, ob diese Inhalte beschrieben und gemeldet werden, sodass die Anforderung testbar ist.",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation angegeben werden kann, ob das KI‑System zur Risikobewertung von Personen eingesetzt wird oder nicht.",
       "cfn_resource_types": []
     },
     {
-      "requirement_id": "Art. 50",
+      "requirement_id": "Art. 5 Abs. 1 lit. e",
       "source": "KI-VO",
-      "rationale": "Die Anforderung bezieht sich auf Transparenz‑ und Kennzeichnungspflichten, die in einer Spezifikation durch Angaben zu Informations‑ und Kennzeichnungsmechanismen nachgewiesen oder deren Fehlen erkannt werden können.",
+      "rationale": "Da die Anforderung ein Verbot beschreibt, kann in einer Spezifikation angegeben werden, dass das KI‑System keine Gesichtserkennungs‑Datenbanken aus dem Internet erstellt oder erweitert, wodurch die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 5 Abs. 1 lit. f",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation Zweck, Einsatzbereich und mögliche Ausnahmen (medizinische oder Sicherheitsgründe) angegeben werden können, sodass festgestellt werden kann, ob das KI‑System zur Emotionserkennung am Arbeitsplatz oder in Bildungseinrichtungen verwendet wird.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 5 Abs. 1 lit. g",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation angeben kann, ob das KI‑System biometrische Kategorisierung für die genannten Merkmale verwendet oder nicht.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 5 Abs. 1 lit. h",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung lässt sich anhand der Spezifikation prüfen, weil sie klar definiert, ob biometrische Echtzeit‑Fernidentifizierungssysteme eingesetzt werden und unter welchen Ausnahmen dies zulässig ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 5 Abs. 1a lit. a",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf Zweckbestimmung, technische Sicherheitsmaßnahmen und Schutzvorkehrungen, die in einer Spezifikation beschrieben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 5 Abs. 1a lit. b",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf den Verwendungszweck des KI‑Systems, welcher in einer Spezifikation angegeben werden kann, sodass geprüft werden kann, ob das System zum verbotenen Zweck eingesetzt wird.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 5 Abs. 1b",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung lässt sich anhand der in der Spezifikation beschriebenen Manipulationsarten prüfen, ob die Sichtbarkeit intimer Körperteile nicht erhöht und die dargestellten sexuellen Handlungen nicht verändert werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 5 Abs. 2 lit. a",
+      "source": "KI-VO",
+      "rationale": "Eine Spezifikation kann die Zwecke, Rechtsgrundlagen und Einsatzbedingungen angeben, sodass geprüft werden kann, ob die biometrische Echtzeit‑Fernidentifizierung nur zur bestätigten Identität der betroffenen Person verwendet wird.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 5 Abs. 2 UAbs. 2",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung enthält klare Vorgaben (Folgenabschätzung, Registrierung, Schutzvorkehrungen), die in einer Spezifikation geprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 5 Abs. 3",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung lässt sich anhand von Angaben zur Vorhandensein einer Genehmigung, Fristen und Löschvorgängen prüfen, sodass sie testbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 1 lit. a",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die Einstufung als Hochrisiko‑KI‑System und kann anhand von Angaben zur Zweckbestimmung, zum Einsatz als Sicherheitsbauteil und zur Zuordnung zu den in Anhang I genannten Produkten in der Spezifikation geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 1 lit. b",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zur erforderlichen Drittanbieter‑Konformitätsbewertung und zu den anzuwendenden Harmonisierungsrechtsvorschriften enthalten kann, sodass festgestellt werden kann, ob die Bedingungen erfüllt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 1a",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf Zwecke und Einstufung, die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob das KI‑System als Sicherheitsbauteil eingestuft wird oder nicht.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 1b",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die Einstufung von KI‑Systemen als Sicherheitsbauteile, was durch Angaben zur Risikobewertung, den betroffenen Bereichen und den Kriterien in einer Spezifikation überprüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 1c",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die Einstufung des KI‑Systems und kann durch Angaben in der Spezifikation (z. B. Angabe, ob das System als Hochrisiko eingestuft wird) überprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 2",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die Klassifizierung von KI‑Systemen und kann anhand von Angaben in der Spezifikation (z. B. Auflistung der Systeme aus Anhang III) überprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 3 UAbs. 1",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die Risikoeinstufung eines KI‑Systems und kann anhand von Angaben in der Spezifikation zu Zweck, Risikobewertung, Einfluss auf Entscheidungen etc. geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 3",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die Beschreibung von Zweck und Einsatz des KI‑Systems, die in einer Spezifikation angegeben werden können; damit lässt sich prüfen, ob die genannten Bedingungen erfüllt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 3 UAbs. 3",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung lässt sich prüfen, indem die Spezifikation angibt, ob das KI‑System ein Profiling natürlicher Personen durchführt, wodurch die Einstufung als Hochrisiko ermittelt werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6 Abs. 4",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt, dass der Anbieter seine Bewertung dokumentiert und bei Bedarf vorlegt, sodass in einer Spezifikation Hinweise wie die Dokumentation, Registrierungspflicht und Bereitstellung auf Anforderung geprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 1",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt Transparenz und Dokumentation des KI‑Systems, die in einer fachlichen Spezifikation (z. B. als Freitext oder OpenAPI‑Beschreibung) angegeben werden können, sodass geprüft werden kann, ob entsprechende Informationen vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 2",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung von Betriebsanleitungen, die in einer Spezifikation eindeutig als vorhanden bzw. nicht vorhanden angegeben werden können, sodass sie prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 3 lit. a",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation angeben kann, ob die geforderten Angaben in der Betriebsanleitung enthalten sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 3 lit. b",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt, dass die Betriebsanleitungen bestimmte Informationen enthalten; eine Spezifikation kann diese Angaben enthalten und damit prüfen, ob sie vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 3 lit. c",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf Angaben in der Betriebsanleitung, die in einer Spezifikation (Freitext) enthalten sein können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 3 lit. d",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt, dass die Betriebsanleitung bestimmte Informationen enthält, was durch Prüfung des Dokuments verifiziert werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 3 lit. e",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt, dass die Betriebsanleitung bestimmte Angaben enthält, die in einer Spezifikation nachprüfbar sind, sodass geprüft werden kann, ob die geforderten Informationen vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13 Abs. 3 lit. f",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt, dass die Betriebsanleitung in der Spezifikation die integrierten Protokollierungsmechanismen beschreibt, sodass sie anhand der Dokumentation geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 1",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die Konzeption und Entwicklung von Hochrisiko‑KI‑Systemen mit einer wirksamen menschlichen Aufsicht, die in einer Spezifikation durch Angaben zu Rollen, Prozessen und Schnittstellen beschrieben werden kann, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 2",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt menschliche Aufsicht, die in einer Spezifikation durch Angaben zu Rollen, Prozessen und Kontrollen beschrieben werden kann, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 3",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt die Angabe von Aufsichtsmaßnahmen und deren Umsetzung, die in einer fachlichen Spezifikation (z. B. Zweck, Rollen, Prozesse) dokumentiert werden können, sodass geprüft werden kann, ob sie erfüllt sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 4 lit. a",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf Rollen, Fähigkeiten und Überwachungsprozesse, die in einer fachlichen Spezifikation beschrieben werden können und damit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 4 lit. b",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die menschliche Aufsicht und kann durch Angaben im Pflichtenheft zu Rollen, Schulungen und Mechanismen zur Vermeidung von Automatisierungsbias geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 4 lit. c",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt, dass die Bereitstellung des Hochrisiko‑KI‑Systems Informationen zu Interpretationsinstrumenten und -methoden enthält, die in einer Spezifikation festgehalten und damit überprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 4 lit. d",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die Möglichkeit der menschlichen Aufsicht, die in einer Spezifikation als Vorgabe (z. B. Rollen, Entscheidungsbefugnisse) beschrieben werden kann und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 4 lit. e",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt eine konkrete Möglichkeit zum Eingriff bzw. eine Stop‑Taste, die in einer Spezifikation beschrieben werden kann und somit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14 Abs. 5",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf in der Spezifikation zu beschreibende Prozesse und Rollen, sodass geprüft werden kann, ob die geforderte getrennte Überprüfung durch mindestens zwei kompetente Personen vorgesehen ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26 Abs. 2",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf Rollen, Kompetenzen und Unterstützungsmaßnahmen, die in einer Spezifikation als Rollen‑ und Kompetenz‑Beschreibung angegeben werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26 Abs. 4",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf in der Spezifikation zu beschreibende Zwecke, Datenrepräsentativität und Kontrollen, sodass sie anhand der Angaben geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26 Abs. 6",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung ist prüfbar, weil nachgewiesen werden kann, ob die Protokolle für mindestens sechs Monate gemäß Zweckbestimmung aufbewahrt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26 Abs. 8",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung lässt sich prüfen, indem überprüft wird, ob das KI‑System in der EU‑Datenbank registriert ist und ob der Betreiber Verfahren zur Prüfung und Benachrichtigung implementiert hat.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26 Abs. 10",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung enthält prüfbare Vorgaben wie Genehmigungsantrag, Fristen, Löschpflichten, Dokumentations- und Meldepflichten, die in einer Spezifikation angegeben werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26 Abs. 11",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt eine Informationspflicht gegenüber natürlichen Personen, die in einer Spezifikation als Hinweis oder Anzeige beschrieben werden kann und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26 Abs. 5",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf Überwachungs- und Meldeprozesse, die in einer Spezifikation beschrieben werden können (z. B. Verfahren, Rollen, Schwellenwerte), sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26 Abs. 9",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt die Durchführung einer Datenschutz‑Folgenabschätzung, die in einer Spezifikation durch Angabe von Rechtsgrundlage, Zweck und Hinweis auf die DPIA nachgewiesen werden kann, sodass sie prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 1 lit. a",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt eine dokumentierte Beschreibung der Verfahren, die in einer Spezifikation nachweisbar ist, sodass geprüft werden kann, ob sie vorhanden ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 1 lit. b",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt, dass in der Spezifikation ein Zeitraum und eine Häufigkeit der Nutzung angegeben werden, sodass geprüft werden kann, ob diese Angaben vorhanden sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 1 lit. c",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation die durchgeführte Grundrechte‑Folgenabschätzung und die genannten Personengruppen angegeben werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 1 lit. d",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation angegeben werden kann, ob und wie eine Grundrechte‑Folgenabschätzung durchgeführt wird und welche Schadensrisiken sowie die vom Anbieter bereitgestellten Informationen berücksichtigt werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 1 lit. e",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt eine dokumentierte Grundrechte‑Folgenabschätzung inkl. Beschreibung der menschlichen Aufsicht, die in einer Spezifikation als Freitext angegeben werden kann und damit prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 1 lit. f",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die Durchführung und Dokumentation einer Grundrechte‑Folgenabschätzung inkl. Maßnahmen, interner Governance und Beschwerdemechanismen, die in einer Spezifikation angegeben werden können und somit prüfbar sind.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 2",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt die Durchführung und ggf. Aktualisierung einer Grundrechte‑Folgenabschätzung, die in einer Spezifikation dokumentiert werden kann, sodass geprüft werden kann, ob sie vorliegt und aktuell ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27 Abs. 5",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung beschreibt konkret, dass ein Musterfragebogen erstellt werden muss, der den Betreibern die Möglichkeit gibt, Verweise auf die Datenschutz‑Folgenabschätzung aufzunehmen; dies lässt sich prüfen, ob ein entsprechender Fragebogen vorliegt und die genannten Optionen enthält.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 50 Abs. 1",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf Transparenz und kann durch Angaben im Pflichtenheft oder in einer OpenAPI‑Spezifikation, z. B. Hinweis auf die Nutzerinformation, geprüft werden.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 50 Abs. 2",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt konkrete technische Vorgaben zur Kennzeichnung von KI‑Ausgaben, die in einer Spezifikation festgehalten und damit überprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 50 Abs. 3",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt Angaben zu Informationspflichten, Zwecken und Rechtsgrundlagen, die in einer Spezifikation (Freitext oder OpenAPI) dokumentiert werden können, sodass die Erfüllung geprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 50 Abs. 4",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf Transparenzpflichten, die in einer Spezifikation durch Angaben zu Offenlegung, Ausnahmen und Verfahren geprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 50 Abs. 5",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf die Bereitstellung von Informationen, die in einer Spezifikation beschrieben werden können (z. B. Inhalte, Zeitpunkt, Barrierefreiheit), sodass sie prüfbar ist.",
       "cfn_resource_types": []
     }
   ]

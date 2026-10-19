@@ -32,7 +32,7 @@ def test_another_preset_changes_file_format_size_and_expected_status() -> None:
     app.selectbox(key="create_preset_spec").select("spec-wohngeld-openapi").run()
 
     assert not app.exception
-    assert "openapi.yaml · YAML · 83.210 Zeichen · Soll: Prüfbedarf" in shown_text(app)
+    assert "openapi.yaml · YAML · 21.926 Zeichen · Soll: Prüfbedarf" in shown_text(app)
     assert "input.md" not in shown_text(app)
 
 

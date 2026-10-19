@@ -2,6 +2,7 @@
 
 input/          maintained by hand
 intermediate/   build results, checked in for the review (sources/ stays local, ADR 0008)
+                decomposed/ holds the legal acts split into duties (#53); select reads them
                 logs/ explains how a result came about: retries, judge, tokens (#29)
 knowledge_base/ only rules_*.json: read at runtime, deployed to S3
 """
@@ -10,10 +11,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
 
-from govguard.models import AuditType
+from govguard.models import AuditType, SourceName
 
 _FILE_SUFFIX: dict[AuditType, str] = {"architecture": "arch", "spec": "spec"}
-OutputKind = Literal["selection", "verdicts", "rules"]
+OutputKind = Literal["selection", "verdicts", "rules", "decompositions"]
+DECOMPOSED: list[SourceName] = ["DSGVO", "KI-VO"]  # legal acts with sections (#53)
 
 
 @dataclass(frozen=True)
@@ -55,13 +57,30 @@ class BuildPaths:
         return self.intermediate / "extracted"
 
     @property
+    def decomposed(self) -> Path:
+        return self.intermediate / "decomposed"
+
+    def source_file(self, name: SourceName) -> Path:
+        """What select and rules read: a legal act decomposed (#53), any other source extracted."""
+        folder = self.decomposed if name in DECOMPOSED else self.extracted
+        return folder / f"{name.lower()}.json"
+
+    @property
     def judgement_cache(self) -> Path:
         return self.intermediate / "judgement_cache.json"
 
+    @property
+    def decomposition_cache(self) -> Path:
+        return self.intermediate / "decomposition_cache.json"
+
     def out_file(self, kind: OutputKind, audit_type: AuditType) -> Path:
-        """E.g. selection_arch.json, verdicts_spec.json; only rules_*.json is deployed."""
+        """E.g. selection_arch.json, decompositions_spec.json; only rules_*.json is deployed."""
         folder = self.knowledge_base if kind == "rules" else self.intermediate
         return folder / f"{kind}_{_FILE_SUFFIX[audit_type]}.json"
+
+    def rules_checkpoint(self, audit_type: AuditType) -> Path:
+        """Rules of an aborted --only-missing run; the next run need not pay for them (#53)."""
+        return self.intermediate / f"rules_{_FILE_SUFFIX[audit_type]}.checkpoint.json"
 
     def build_log(self, command: str, audit_type: AuditType | None) -> Path:
         """E.g. logs/rules_spec.log; each run overwrites it, git keeps the older runs (#29)."""

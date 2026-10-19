@@ -27,6 +27,7 @@ def _requirement(article: Article) -> Requirement:
         primary_anchor=f"KI-VO Art. {article.number}",
         attributes={"chapter": article.chapter},
         prefilter_passed=False,
+        sections=list(article.sections),
     )
 
 

@@ -6,7 +6,7 @@
     "overall_status": "FAIL",
     "required_findings": [
       {
-        "anchor": "DSGVO Art. 46",
+        "anchor": "DSGVO Art. 46 Abs. 1",
         "status": "FAIL"
       }
     ]

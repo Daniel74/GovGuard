@@ -1,10 +1,16 @@
-2026-10-19T16:41:57 INFO KI-VO 1/8 Art. 4 testable
-2026-10-19T16:41:58 INFO KI-VO 2/8 Art. 5 testable
-2026-10-19T16:41:59 INFO KI-VO 3/8 Art. 6 testable
-2026-10-19T16:42:00 INFO KI-VO 4/8 Art. 13 testable
-2026-10-19T16:42:00 INFO KI-VO 5/8 Art. 14 testable
-2026-10-19T16:42:01 INFO KI-VO 6/8 Art. 26 testable
-2026-10-19T16:42:02 INFO KI-VO 7/8 Art. 27 testable
-2026-10-19T16:42:03 INFO KI-VO 8/8 Art. 50 testable
-2026-10-19T16:42:03 INFO spec: 8 requests, 13377 input tokens, 2608 output tokens
-2026-10-19T16:42:03 INFO spec quality classify: retries=0 llm_error=0
+2026-10-19T19:23:49 INFO DSGVO 1/13 Art. 12 Abs. 7 testable
+2026-10-19T19:23:50 INFO DSGVO 2/13 Art. 14 Abs. 5 testable
+2026-10-19T19:23:51 INFO DSGVO 3/13 Art. 17 Abs. 3 testable
+2026-10-19T19:23:52 INFO DSGVO 4/13 Art. 20 Abs. 4 testable
+2026-10-19T19:23:53 INFO DSGVO 5/13 Art. 21 Abs. 5 testable
+2026-10-19T19:23:54 INFO DSGVO 6/13 Art. 27 Abs. 2 testable
+2026-10-19T19:23:55 INFO DSGVO 7/13 Art. 30 Abs. 5 testable
+2026-10-19T19:23:56 INFO DSGVO 8/13 Art. 36 Abs. 4 not testable
+2026-10-19T19:23:57 INFO DSGVO 9/13 Art. 37 Abs. 2 testable
+2026-10-19T19:23:59 INFO DSGVO 10/13 Art. 42 Abs. 2 not testable
+2026-10-19T19:23:59 INFO DSGVO 11/13 Art. 43 Abs. 7 not testable
+2026-10-19T19:24:00 INFO DSGVO 12/13 Art. 47 Abs. 3 not testable
+2026-10-19T19:24:01 INFO DSGVO 13/13 Art. 49 Abs. 4 testable
+2026-10-19T19:24:03 INFO KI-VO 1/1 Art. 27 Abs. 5 testable
+2026-10-19T19:24:03 INFO spec: 14 requests, 8148 input tokens, 4887 output tokens
+2026-10-19T19:24:03 INFO spec quality classify: retries=0 llm_error=0

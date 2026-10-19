@@ -7,13 +7,12 @@ import json
 import logging
 from dataclasses import dataclass
 
-from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput, UnexpectedModelBehavior
-from pydantic_ai.exceptions import ModelHTTPError
+from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput
 from pydantic_ai.models import Model
 from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, SourceName
-from kb_build.build_log import logged_retries
+from kb_build.build_log import INVALID_ANSWER, logged_retries, raise_if_no_answer
 from kb_build.extract.models import Requirement
 from kb_build.gates import GateCounts
 from kb_build.reference.cfn_types import load_cfn_types
@@ -186,9 +185,8 @@ class Judge:
         try:
             with logged_retries(f"{self.audit_type} {source} {requirement.id}"):  # (#30)
                 return classify_requirement(requirement, source, self._deps, self._model, usage)
-        except (UnexpectedModelBehavior, ModelHTTPError) as error:
-            if isinstance(error, ModelHTTPError) and error.status_code != 400:
-                raise  # 401, 429 and server errors are no verdict on the requirement
+        except INVALID_ANSWER as error:
+            raise_if_no_answer(error)
             logger.warning(
                 "%s %s: invalid answer after retries: %s", source, requirement.id, error)
             self.counts.llm_errors += 1

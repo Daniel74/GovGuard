@@ -55,3 +55,7 @@ def test_mark_prefilter_stores_the_reason_of_every_rejected_requirement() -> Non
     assert [(r.prefilter_passed, r.prefilter_reason) for r in marked] == [
         (True, None), (False, "B verworfen"),
     ]
+
+
+def test_sources_without_sections_keep_their_json() -> None:
+    assert "sections" not in requirement("DET.3.1").model_dump_json()

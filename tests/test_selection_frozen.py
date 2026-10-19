@@ -41,7 +41,7 @@ def test_unjudged_keeps_only_requirements_without_an_old_verdict() -> None:
 def test_merge_appends_the_new_verdicts_and_keeps_the_old_selection_unchanged() -> None:
     old, new = result(OLD, "old"), result([verdict("KI-VO", "Art. 50")], "new")
 
-    merged = merge(old, new)
+    merged = merge(old, new, SOURCES)
 
     assert merged.verdicts == [*OLD, new.verdicts[0]]
     assert merged.selection.selected == [*old.selection.selected, *new.selection.selected]
@@ -53,7 +53,44 @@ def test_an_llm_error_is_no_verdict_and_is_asked_again() -> None:
     failed = [*OLD, verdict("KI-VO", "Art. 50", "llm_error")]
 
     todo = unjudged(SOURCES, failed)
-    merged = merge(result(failed, "old"), result([verdict("KI-VO", "Art. 50")], "new"))
+    merged = merge(result(failed, "old"), result([verdict("KI-VO", "Art. 50")], "new"),
+                   SOURCES)
 
     assert [(s.source, [r.id for r in s.requirements]) for s in todo] == [("KI-VO", ["Art. 50"])]
     assert [v.outcome for v in merged.verdicts] == ["selected", "not_testable", "selected"]
+
+
+def test_merge_drops_old_verdicts_of_decomposed_articles_and_keeps_the_order_of_the_acts() -> None:
+    # #53: DSGVO Art. 5 is now Art. 5 Abs. 1 lit. a ...; the old article verdict is stale
+    decomposed = [
+        ExtractedSource(source="DSGVO", version="1", origin="o",
+                        requirements=[requirement("Art. 5 Abs. 1 lit. a"), requirement("Art. 12")]),
+        SOURCES[1],
+    ]
+    old = result([verdict("DSGVO", "Art. 5"), verdict("DSGVO", "Art. 12"),
+                  verdict("KI-VO", "Art. 50")], "old")
+    new = result([verdict("DSGVO", "Art. 5 Abs. 1 lit. a")], "new")
+
+    merged = merge(old, new, decomposed)
+
+    expected = ["Art. 5 Abs. 1 lit. a", "Art. 12", "Art. 50"]
+    assert [v.requirement_id for v in merged.verdicts] == expected
+    assert [s.requirement_id for s in merged.selection.selected] == expected
+
+
+def test_a_requirement_that_is_prefiltered_now_loses_its_old_verdict_and_vice_versa() -> None:
+    # #53: DSGVO Art. 9 Abs. 1 became keine_pflicht, Art. 20 Abs. 4 became a duty
+    rejected = requirement("Art. 9 Abs. 1").model_copy(update={"prefilter_passed": False})
+    sources = [ExtractedSource(source="DSGVO", version="1", origin="o",
+                               requirements=[rejected, requirement("Art. 20 Abs. 4")])]
+    old = result([verdict("DSGVO", "Art. 9 Abs. 1"),
+                  verdict("DSGVO", "Art. 20 Abs. 4", "prefiltered")], "old")
+
+    todo = unjudged(sources, old.verdicts)
+    merged = merge(old, result([verdict("DSGVO", "Art. 9 Abs. 1", "prefiltered"),
+                                verdict("DSGVO", "Art. 20 Abs. 4")], "new"), sources)
+
+    assert [r.id for s in todo for r in s.requirements] == ["Art. 9 Abs. 1", "Art. 20 Abs. 4"]
+    assert [(v.requirement_id, v.outcome) for v in merged.verdicts] == [
+        ("Art. 9 Abs. 1", "prefiltered"), ("Art. 20 Abs. 4", "selected")]
+    assert [s.requirement_id for s in merged.selection.selected] == ["Art. 20 Abs. 4"]
