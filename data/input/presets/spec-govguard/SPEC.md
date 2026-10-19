@@ -46,7 +46,60 @@ Nicht zum Umfang gehören:
 - **Betrieb auf AWS** mit Programmierschnittstelle für automatische Abläufe: Er ist als Ausbau
   beschrieben ([AUSBAU.md](AUSBAU.md)), aber aus Budgetgründen nicht gebaut.
 
-## 3 Rollen
+## 3 Prüfgrundlagen
+
+GovGuard prüft nicht gegen ganze Regelwerke, sondern gegen ausgewählte Teile davon. Ein PASS heißt
+deshalb nie „konform mit der DSGVO“. Es heißt nur: Diese eine Prüfregel ist belegt eingehalten.
+
+### Wie die Teile ausgewählt werden
+
+Jede Anforderung eines Regelwerks durchläuft bis zu drei Filter:
+
+1. **Vorfilter (Programm):** behält nur festgelegte Kapitel, Bausteine oder Bereiche, mit festem
+   Begründungssatz für alles andere.
+2. **Prüfbarkeit (Sprachmodell):** Lässt sich die Anforderung an einer Spezifikation bzw. Architektur
+   überhaupt prüfen (G10)?
+3. **Relevanz (Programm, nur Architektur):** Betrifft sie einen Dienst im Prüfumfang? Der Prüfumfang
+   ist eine feste Liste von AWS-Diensten: vor allem Serverless-Dienste, dazu RDS/Aurora und Fargate.
+
+Jede Entscheidung steht mit Begründung im Auswahlprotokoll. Die Zahlen unten stammen daraus.
+
+### Für Spezifikationen
+
+| Regelwerk | Fassung | Verwendeter Teil | Anforderungen | nach Vorfilter | Prüfregeln |
+|---|---|---|---|---|---|
+| DSGVO | Verordnung (EU) 2016/679, Text von EUR-Lex | Kapitel II–V (Art. 5–49); je Artikel eine Anforderung | 99 | 46 | 35 |
+| SDM | Bausteine der Datenschutzkonferenz, V1.0 bzw. V1.0a | Löschen und Vernichten (M60), Trennen (M50), Zugriffe regeln (M51); alle Maßnahmen | 147 | 147 | 116 |
+
+Nicht verwendet werden bei der DSGVO Kapitel I, VI bis VIII, X und XI. Sie regeln Begriffe,
+Aufsicht, Rechtsbehelfe, Sanktionen und Schlussbestimmungen, also nichts, was eine Spezifikation
+erfüllen kann.
+
+Auch Kapitel IX fehlt. Es regelt besondere Fälle wie Beschäftigtendaten oder Forschung und wäre für
+manche Spezifikation einschlägig. Das ist eine bewusste Lücke.
+
+Die drei SDM-Bausteine setzen je einen Grundsatz aus Art. 5 DSGVO um, den die DSGVO-Prüfregel
+allein nicht prüfbar macht: Löschen die Speicherbegrenzung, Trennen die Zweckbindung, Zugriffe
+regeln die Vertraulichkeit. An diesen drei Punkten scheitern Cloud-Verfahren von Behörden häufig.
+
+Vom SDM fehlen alle übrigen Bausteine.
+
+### Für Architekturen
+
+| Regelwerk | Fassung | Verwendeter Teil | Anforderungen | nach Vorfilter | Prüfregeln |
+|---|---|---|---|---|---|
+| BSI IT-Grundschutz++ | Katalog des BSI auf GitHub, fester Stand | MUSS und SOLLTE bei normalem Schutzbedarf; sechs technische Praktiken (DLS, BER, DET, KONF, BES, ARCH) | 1.000 | 380 | 39 |
+| BSI C5:2025 | über Prowler 5.44.0 | Bereiche OPS, IAM, CRY, COS, PSS | 610 | 300 | 11 |
+| CIS AWS Foundations Benchmark | v7.0.0, über Prowler | Kapitel 2 (IAM), 3 (Speicher), 4 (Protokollierung), 6 (Netzwerk) | 70 | 54 | 20 |
+| AWS FSBP | über Prowler 5.44.0 | Controls zu Diensten im Prüfumfang | 286 | 150 | 105 |
+
+Prowler ist ein quelloffenes Prüfwerkzeug für AWS. Seine Dateien enthalten die Anforderungen dieser
+Regelwerke maschinenlesbar. Für CIS sichert eine Stichprobe gegen das Original die Texttreue ab.
+
+Die meisten BSI- und C5-Anforderungen fallen als nicht prüfbar heraus. Sie betreffen Organisation,
+Personen oder das ganze Konto, nicht ein einzelnes Template (B5).
+
+## 4 Rollen
 
 | Rolle                                    | Aufgabe                                                                                                                                                     |
 | ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -57,7 +110,7 @@ Nicht zum Umfang gehören:
 | Streamlit Community Cloud                | Dienstleister für den Betrieb der Web-Anwendung                                                                                                             |
 | GitHub                                   | Dienstleister für die Versionsverwaltung: Programmcode, Wissensbasis, Musterfälle und Galerie liegen dort öffentlich; Streamlit lädt die Anwendung von dort |
 
-## 4 Fachliche Anforderungen
+## 5 Fachliche Anforderungen
 
 ### F1 Audit einer Spezifikation
 
@@ -105,7 +158,7 @@ Eine neue Quelle braucht drei Dinge: einen Herausgeber mit festem Dokument und P
 mindestens einen Musterfall mit Soll und eine schriftliche Entscheidung mit Begründung.
 Das technische Vorgehen beschreibt [ARCHITECTURE.md](ARCHITECTURE.md) unter „Neue Quelle hinzufügen“.
 
-## 5 Geschäftsregeln
+## 6 Geschäftsregeln
 
 ### G1 Fester Prüfkatalog
 
@@ -213,7 +266,7 @@ Audit-Reports der Galerie untereinander vergleichbar.
 Eine neue Quelle darf nur Prüfregeln hinzufügen. Ändert eine Erweiterung bestehende Prüfregeln,
 müssen alle Audit-Reports der Galerie neu entstehen und alle Soll-Ergebnisse erneut geprüft werden.
 
-## 6 Daten und Datenschutz
+## 7 Daten und Datenschutz
 
 ### Datenflüsse
 
@@ -247,7 +300,7 @@ Was Groq und Streamlit selbst speichern und wann sie es löschen, regeln deren N
 GovGuard legt dafür keine eigene Löschfrist fest. Ein eigenes Audit-Protokoll führt der Demo-Stand
 nicht.
 
-## 7 Nicht-funktionale Anforderungen
+## 8 Nicht-funktionale Anforderungen
 
 | Merkmal             | Anforderung                                                                                                                                                                           |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -255,10 +308,10 @@ nicht.
 | Kosten              | Ein Audit kostet mit Groq 2 bis 3 Cent. Das Passwort verhindert, dass Fremde Kosten auslösen.                                                                                         |
 | Leerlaufkosten      | 0 €. Leerlaufkosten sind Kosten, die ohne Nutzung allein durch Zeit entstehen.                                                                                                        |
 | Sicherheit          | Passwort und Zugangsschlüssel für das Sprachmodell liegen nur in den geschützten Einstellungen von Streamlit, nicht im Programmcode. Ohne eingerichtetes Passwort startet kein Audit. |
-| Nachvollziehbarkeit | Jedes Audit und jeder Bau der Wissensbasis hinterlässt prüfbare Spuren (Abschnitt 8).                                                                                                 |
+| Nachvollziehbarkeit | Jedes Audit und jeder Bau der Wissensbasis hinterlässt prüfbare Spuren (Abschnitt 9).                                                                                                 |
 | Prüfbarkeit         | Alle automatischen Tests laufen ohne AWS und ohne Groq.                                                                                                                               |
 
-## 8 Beobachtbarkeit
+## 9 Beobachtbarkeit
 
 Beobachtbarkeit heißt: Man kann im Nachhinein erkennen, was das System getan hat und warum.
 GovGuard hält das auf drei Ebenen fest, ohne Eingabetexte zu speichern.
@@ -270,9 +323,9 @@ GovGuard hält das auf drei Ebenen fest, ohne Eingabetexte zu speichern.
 | Je Messlauf             | Laufzeit, Tokens, Kosten, Gründe für Wiederholungen und Abweichungen vom Soll                                                                                                                          | im zugehörigen Ticket                             | Projektbetreiber                      |
 
 Messläufe startet der Projektbetreiber von Hand, etwa vor und nach einer Änderung an der
-Wissensbasis. Was der Demo-Stand nicht festhält, steht in Abschnitt 10.
+Wissensbasis. Was der Demo-Stand nicht festhält, steht in Abschnitt 11.
 
-## 9 Qualität und Restrisiken
+## 10 Qualität und Restrisiken
 
 Ein Audit-Report ist ein Hinweis für Fachleute, kein Nachweis. Ein Sprachmodell kann irren, und
 GovGuard macht sichtbar, wo.
@@ -343,11 +396,11 @@ Bei einer Architektur als Freitext erkennt das Sprachmodell die verwendeten Dien
 - **Was bleibt:** Die Prüfregeln eines übersehenen Dienstes stehen auf N/A, mit dem Hinweis
   „Dienst in der Eingabe nicht erkannt“. Bewertet werden sie nicht.
 
-## 10 Bekannte Grenzen
+## 11 Bekannte Grenzen
 
 ### B1 Keine echten Daten
 
-Der Demo-Stand ist für echte Daten nicht geeignet (Abschnitt 6). Vorgesehen
+Der Demo-Stand ist für echte Daten nicht geeignet (Abschnitt 7). Vorgesehen
 ist dafür das Sprachmodell über AWS Bedrock in der EU (Region Frankfurt), mit einem Protokoll ohne
 Eingabetext. Dieser Weg besteht nur über die Kommandozeile. Betrieb auf AWS und Protokoll sind
 entworfen, aber nicht gebaut.
@@ -375,5 +428,8 @@ Wissensbasis geprüft hat, zeigt allein die Prüfsumme des Prüfkatalogs.
 
 ### B5 Umfang
 
-Protokollieren (SDM M43) und kontoweite AWS-Pflichten wie die Mehr-Faktor-Anmeldung des
-Hauptkontos fehlen bewusst. Terraform und CloudFormation-Vorlagen in YAML prüft GovGuard nur als Freitext.
+Protokollierung prüft GovGuard nicht an der Spezifikation (SDM M43), sondern an der Architektur
+(BSI DET, CIS Kapitel 4).
+
+Kontoweite AWS-Pflichten wie die Mehr-Faktor-Anmeldung des Hauptkontos fehlen bewusst. Terraform und
+CloudFormation-Vorlagen in YAML prüft GovGuard nur als Freitext.

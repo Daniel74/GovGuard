@@ -18,7 +18,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
 - **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft die Spezifikation seines Demo-Stands). Offene Schritte in dieser Reihenfolge: 12b bis „Soll festlegen“, 12m (#51), 12n (#52), Rest von 12b, zuletzt die Doku 13–14. Mit #36 ist der Prototyp fertig.
-- **Eingefroren ab Schritt 12l:** `kb_build` und Audit-Engine werden nicht mehr geändert, Katalog und Prompts bleiben. Bekannte Grenzen stehen im README; #48 (YAML), #49 (Build-Abbrüche) und #50 (Allow/Deny, Platzhalter) sind Ausbau.
+- **Eingefroren ab Schritt 12l:** `kb_build` und Audit-Engine werden nicht mehr geändert, Katalog und Prompts bleiben. Einzige Ausnahme ist 12n (#52): Eine neue Quelle kommt dazu, die bestehenden Regeln und Prompts bleiben (SPEC G13). Bekannte Grenzen stehen im README; #48 (YAML), #49 (Build-Abbrüche) und #50 (Allow/Deny, Platzhalter) sind Ausbau.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 19.10.:** Kaum Budget. Die Demo-Architektur bleibt (Streamlit und Groq), kein AWS-Deploy, kein CDK. Außerhalb des Umfangs (Label `ausbau`): Haiku/Bedrock, CDK-Stack #9, Audit-Jobs #34, Pipeline #37, Recruiter-Stand #38.
 
@@ -754,7 +754,7 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 
 - [x] **Klären** 👤 offene Frage in #51 beantworten („Erfüllt“ oder „Einhaltung belegt“), dann Label `ready-for-agent`
 - [ ] **Bauen** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12m und Issue #51“ → Plan → Go
-      Zuordnung nur in `style.LOOKS`. `docs/SPEC.md` G2 anpassen und nach `data/input/presets/spec-govguard/SPEC.md` kopieren; ein Test prüft, dass jede Bezeichnung aus `LOOKS` in `SPEC.md` steht.
+      Zuordnung nur in `style.LOOKS`. In `docs/SPEC.md` die Tabelle in G2 um die deutsche Bezeichnung ergänzen und nach `data/input/presets/spec-govguard/SPEC.md` kopieren; ein Test prüft, dass jede Bezeichnung aus `LOOKS` in `SPEC.md` steht. Zeilenangabe im Soll-Kommentar von #36 nachziehen.
 - [ ] **Ansehen** 👤 `uv run pytest -m visual`, Vergleichsbilder ansehen (die Design-Bilder zeigen noch die alten Kürzel), dann `--update-snapshots`
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #51`
 - [ ] **Abschließen** 👤 committet und pusht, schließt #51
@@ -773,7 +773,7 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
       Zeitlimit 1 h: Ohne brauchbare Formex-Datei Abbruch, #52 zurück auf `ausbau`, weiter mit 12b.
 - [ ] **Bauen** 🤖 _Opus_ (gleiche Session) · Adapter, Verdrahtung, „nur fehlende Regeln formulieren“ mit Test, ADR. Gemeinsame Spec-Prompts nicht ändern.
 - [ ] **Wissensbasis** 👤 `uv run python -m kb_build extract`, dann `select --audit-type spec` und `rules --audit-type spec`, Auswahlprotokoll der KI-VO lesen
-- [ ] **SPEC und Soll** 🤖 _Opus_ · Abschnitt „Einstufung nach KI-Verordnung“ in `docs/SPEC.md`, Kopie ins Preset, Soll von `spec-govguard` um KI-VO-Anker ergänzen, Begründung in #36
+- [ ] **SPEC und Soll** 🤖 _Opus_ · `docs/SPEC.md` nachziehen laut #52 (Einstufung, Kapitel 3, Kapitel 1, F1, F6, neue Grenze), Kopie ins Preset, Soll von `spec-govguard` um KI-VO-Anker ergänzen, Begründung in #36
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #52`
 - [ ] **Abschließen** 👤 committet und pusht, schließt #52
 
@@ -784,13 +784,13 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 
 ### Schritt 12b – #36 GovGuard prüft sich selbst: Spezifikation und Galerie
 
-**Ziel:** `docs/SPEC.md` beschreibt GovGuard im Demo-Stand (Streamlit Community Cloud und Groq, beide in den USA) und ist zugleich die Systembeschreibung für Recruiter: ein gekürztes Fachkonzept, wie es eine Behörden-IT verlangen würde (ca. 3 Seiten, mit Geschäftsregeln zu PASS, WARN und FAIL), verständlich ohne Fachwissen, jedes Fachwort in einem eigenen Satz erklärt, vom README verlinkt. Als Preset `spec-govguard` steht ihr Audit mit Soll-Ergebnis in der Galerie.
+**Ziel:** `docs/SPEC.md` beschreibt GovGuard im Demo-Stand (Streamlit Community Cloud und Groq, beide in den USA) und ist zugleich die Systembeschreibung für Recruiter: ein gekürztes Fachkonzept, wie es eine Behörden-IT verlangen würde (Länge nach Bedarf, gegliedert mit Unterüberschriften, mit Prüfgrundlagen und Geschäftsregeln zu PASS, WARN und FAIL), verständlich ohne Fachwissen, jedes Fachwort in einem eigenen Satz erklärt, vom README verlinkt. Als Preset `spec-govguard` steht ihr Audit mit Soll-Ergebnis in der Galerie.
 **Voraussetzung:** Schritt 12. Kein AWS nötig. „Erzeugen“ erst nach Schritt 12m (#51) und 12n (#52).
 
 - [x] **Schreiben** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12b und Issue #36. Schreibe `docs/SPEC.md` neu und lege das Preset `spec-govguard` an“ → Plan → Go
       Gliederung laut #36. Der Abschnitt „Aufnahme in den Bounded Catalog“ wandert nach `ARCHITECTURE.md`. Ein Test stellt sicher, dass das Preset genau `docs/SPEC.md` prüft.
 - [x] **Soll festlegen** 🤖 _Opus_ (gleiche Session, vor dem ersten Audit-Lauf) · legt `expected` in `preset.json` fest: `overall_status` und `required_findings` mit Anker und Status. Nur Anker, die schon in `rules_spec.json` stehen, denn der Katalog ist eingefroren (12l). Begründung je Anker (DSGVO-Artikel, Textstelle in SPEC.md) als Kommentar in #36.
-- [ ] **Lesen** 👤 SPEC.md als Recruiter lesen: in 10 Minuten verstanden, nichts Unklares? Dann die Soll-Begründung im Issue querlesen.
+- [ ] **Lesen** 👤 SPEC.md als Recruiter lesen: in 10 Minuten verstanden, nichts Unklares? Dann die Soll-Begründung im Issue querlesen. Geht schon jetzt; nach 12n nur den neuen Abschnitt zur KI-Verordnung nachlesen.
 - [ ] **Erzeugen** 👤 (nach 12m und 12n) `/audit-messen spec-govguard mit Groq` → Report kommt in die Galerie, Soll-Abweichungen sichtbar (ADR 0023) → 🤖 notiert die Abweichungen in #36
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #36`
 - [ ] **Ausprobieren** 👤 `/run` → jede Galerie-Seite öffnen
