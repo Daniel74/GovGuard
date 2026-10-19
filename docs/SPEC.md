@@ -55,6 +55,7 @@ Nicht zum Umfang gehören:
 | Projektbetreiber | baut die Wissensbasis, pflegt die Musterfälle, verwaltet Passwort und Zugangsschlüssel |
 | Groq | Dienstleister für das Sprachmodell (Inferenz) |
 | Streamlit Community Cloud | Dienstleister für den Betrieb der Web-Anwendung |
+| GitHub | Dienstleister für die Versionsverwaltung: Programmcode, Wissensbasis, Musterfälle und Galerie liegen dort öffentlich; Streamlit lädt die Anwendung von dort |
 
 Inferenz bedeutet: Das Sprachmodell berechnet eine Antwort auf eine Anfrage.
 
@@ -95,7 +96,7 @@ Jeder Befund hat genau einen von vier Status. Der Audit-Report nutzt die interna
 | PASS | Die Eingabe belegt, dass die Prüfregel eingehalten ist. |
 | WARN | Aus der Eingabe ist es nicht entscheidbar, es besteht Prüfbedarf. |
 | FAIL | Die Eingabe belegt einen Verstoß. |
-| N/A | Die Prüfregel betrifft keinen Dienst, der in der Architektur vorkommt. |
+| N/A | Die Prüfregel ist auf die Eingabe nicht anwendbar. Bei einer Architektur entscheidet das Programm das über die vorkommenden Dienste. |
 
 ### G3 Gesamtstatus
 
@@ -161,8 +162,9 @@ Dokument, muss der Audit-Report neu entstehen. Ein automatischer Test prüft das
 | Eingabe (Spezifikation oder Architektur) | prüfende Person | Streamlit Community Cloud (USA), Groq (USA) | GovGuard speichert sie nicht; sie lebt nur in der Sitzung |
 | Audit-Report mit Belegen | GovGuard | Browser der prüfenden Person | bis zum Ende der Sitzung oder als heruntergeladene Datei bei ihr |
 | Angaben zur Rückverfolgung | GovGuard | im Audit-Report | wie der Audit-Report |
-| Audit-Reports der Galerie | Projektbetreiber | öffentliche Versionsverwaltung (GitHub) | bis zur Löschung durch den Projektbetreiber |
+| Audit-Reports der Galerie | Projektbetreiber | öffentliche Versionsverwaltung (GitHub, USA) | bis zur Löschung durch den Projektbetreiber |
 | Zugriffsdaten der Besucher (z. B. IP-Adresse) | Browser | Streamlit Community Cloud (USA) | nach den Bedingungen von Streamlit |
+| Öffentliche Normtexte | Herausgeber der Regelwerke | Groq (USA), nur beim Bau der Wissensbasis | als Zitate in den Prüfregeln auf GitHub |
 
 Eine Sitzung ist die Verbindung eines Browsers mit der Web-Anwendung. Schließt man das Fenster,
 endet sie.
@@ -185,11 +187,6 @@ Was Groq und Streamlit selbst speichern und wann sie es löschen, regeln deren N
 GovGuard legt dafür keine eigene Löschfrist fest. Ein eigenes Audit-Protokoll führt der Demo-Stand
 nicht.
 
-### Weg für echte Daten
-
-Für echte Daten ist ein anderer Weg festgelegt: das Sprachmodell über AWS Bedrock in der EU
-(Region Frankfurt), mit einem Protokoll ohne Eingabetext.
-
 ## 7 Nicht-funktionale Anforderungen
 
 | Merkmal | Anforderung |
@@ -201,14 +198,78 @@ Für echte Daten ist ein anderer Weg festgelegt: das Sprachmodell über AWS Bedr
 | Nachvollziehbarkeit | Jeder Audit-Report nennt Sprachmodell und Prüfsummen (G9). Jeder Eingriff des Programms in eine Antwort des Sprachmodells steht als Korrektur am Befund. |
 | Prüfbarkeit | Alle automatischen Tests laufen ohne AWS und ohne Groq. |
 
-## 8 Bekannte Grenzen
+## 8 Qualität der Audits
 
-**Schwankung.** Ein Sprachmodell antwortet nicht immer gleich. Bei Spezifikationen änderten zwischen
-zwei Läufen mit Groq 42 von 151 Prüfregeln ihren Status. Die Zweitprüfung fängt falsche FAILs ab,
-PASS und WARN schwanken weiter.
+Ein Audit-Report ist ein Hinweis für Fachleute, kein Nachweis. Ein Sprachmodell kann irren, und
+GovGuard macht sichtbar, wo.
 
-**Wissensbasis per KI.** Ob eine Anforderung prüfbar ist, hat beim Bau ein Sprachmodell beurteilt.
-Einzelne Fehlurteile sind möglich. Programme sichern nur Zitate, Fundstellen und Pflichtanker ab.
+### So wird die Qualität gesichert
+
+- **Musterfälle mit Soll:** Das Soll steht vor dem ersten Lauf fest. Abweichungen zeigt die Galerie (G8).
+- **Programm prüft jede Antwort:** genau ein Befund je Prüfregel, gültige Belegzeilen, festes Format.
+  Sonst folgt eine Wiederholung oder der sichere Abbruch (G5, G7).
+- **Eingriffe sichtbar:** Jede Herabstufung und jedes Urteil der Zweitprüfung steht als Korrektur
+  am Befund (G6).
+
+### P1 Schwankung zwischen Läufen
+
+Dieselbe Eingabe kann im nächsten Lauf andere Status erhalten. Bei Spezifikationen änderten zwischen
+zwei Läufen mit Groq 42 von 151 Prüfregeln ihren Status, mit AWS Bedrock 19.
+
+- **Gegenmaßnahme:** Das Modell läuft ohne Zufallsanteil (Temperatur 0). Falsche FAILs fängt die
+  Zweitprüfung ab.
+- **Was bleibt:** PASS und WARN schwanken weiter. Jeder Audit-Report nennt deshalb sein Modell.
+
+### P2 Falsches FAIL bei bloßem Fehlen
+
+Das Modell wertet „nicht beschrieben“ gern als Verstoß, obwohl G4 das verbietet.
+
+- **Gegenmaßnahme:** Die Zweitprüfung. Beim Musterfall Wohngeld stufte sie 10 von 11 FAILs auf WARN herab.
+- **Was bleibt:** Die Zweitprüfung ist selbst ein Sprachmodell. Beim Musterfall Wohngeld blieb ein
+  FAIL stehen, der Gesamtstatus weicht vom Soll WARN ab.
+
+### P3 Falsches PASS
+
+Das Modell nennt Belegzeilen, die keine Einhaltung zeigen. Das Programm prüft nur, ob die Zeilen
+existieren und lang genug sind, bis zu einem Abschnitt von 200 Zeilen.
+
+- **Gegenmaßnahme:** Ohne gültige Zeilen wird PASS zu WARN (G5). Musterfälle legen PASS-Befunde fest.
+- **Was bleibt:** Für PASS gibt es keine Zweitprüfung. Das ist das größte Restrisiko. Beispiel:
+  Am 16.10.2026 ergab eine Messung beim Musterfall Antragseingang BSI BER.4.1 als PASS statt FAIL.
+
+### P4 Viele Lücken
+
+In der offenen Welt sind die meisten Befunde WARN, bei den Musterfällen 101 bis 120 von 151.
+Meist beschreibt die Eingabe die Anforderung einfach nicht.
+
+- **Gegenmaßnahme:** Die Oberfläche trennt Lücken (nicht beschrieben) vom Prüfbedarf (Beleg unklar).
+- **Was bleibt:** Der Audit-Report ist lang. Die Aussagekraft liegt in FAIL und Prüfbedarf.
+
+### P5 Schwächen im Prüfkatalog
+
+Ob eine Anforderung prüfbar ist und wie ihre Prüfregel lautet, hat beim Bau ein Sprachmodell
+formuliert. Einzelne Fehlurteile sind möglich. Zwölf Prüfregeln enthalten Platzhalter, vier werten
+eine Einstellung falsch herum.
+
+- **Gegenmaßnahme:** Programme prüfen Zitate, Fundstellen und Pflichtanker. Musterfälle decken
+  Fehler auf.
+- **Was bleibt:** Ein Fehler im Katalog wirkt in jedem Audit gleich. Beispiel: Im Musterfall
+  Protokollarchiv steht BSI DET.3.1 wegen eines Platzhalters auf WARN statt PASS.
+
+### P6 Übersehene Dienste in Freitext-Architekturen
+
+Bei einer Architektur als Freitext erkennt das Sprachmodell die verwendeten Dienste.
+
+- **Gegenmaßnahme:** Es muss jeden erkannten Dienst mit Zeilen belegen.
+- **Was bleibt:** Die Prüfregeln eines übersehenen Dienstes stehen auf N/A, mit dem Hinweis
+  „Dienst in der Eingabe nicht erkannt“. Bewertet werden sie nicht.
+
+## 9 Bekannte Grenzen
+
+**Keine echten Daten.** Der Demo-Stand ist für echte Daten nicht geeignet (Abschnitt 6). Vorgesehen
+ist dafür das Sprachmodell über AWS Bedrock in der EU (Region Frankfurt), mit einem Protokoll ohne
+Eingabetext. Dieser Weg besteht nur über die Kommandozeile. Betrieb auf AWS und Protokoll sind
+entworfen, aber nicht gebaut.
 
 **Umfang.** Protokollieren (SDM M43) und kontoweite AWS-Pflichten wie die Mehr-Faktor-Anmeldung des
 Hauptkontos fehlen bewusst. Terraform und CloudFormation-Vorlagen in YAML prüft GovGuard nur als Freitext.
