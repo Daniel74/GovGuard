@@ -1,0 +1,90 @@
+
+
+
+=== DSGVO Art. 5  (4 Anfragen)
+  [alle_gelten ] Grundprinzipien der Verarbeitung nach Art. 5 Abs. 1 DSGVO    <- 1 lit. a, 1 lit. b, 1 lit. c, 1 lit. d, 1 lit. e, 1 lit. f
+  [alle_gelten ] Rechenschaftspflicht des Verantwortlichen nach Art. 5 Abs. 2 <- 2
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 1 lit. d]: 'sachlich richtig und erforderlichenfalls auf dem neuesten St' | Zitat steht nicht wörtlich in [Abs. 1 lit. a]: 'auf rechtmäßige Weise, nach Treu und Glauben und in einer fü'
+
+=== DSGVO Art. 5: FEHLER ModelHTTPError: status_code: 400, model_name: openai/gpt-oss-120b, body: {'error': {'message': "Parsing failed. The model generated output that could not be parsed. P
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 1 lit. b]: 'für festgelegte, eindeutige und legitime Zwecke erhoben werd'
+
+=== DSGVO Art. 5  (2 Anfragen)
+  [alle_gelten ] Rechtmäßigkeit, Treu und Glauben, Transparenz                <- 1 lit. a
+  [alle_gelten ] Zweckbindung                                                 <- 1 lit. b
+  [alle_gelten ] Datenminimierung                                             <- 1 lit. c
+  [alle_gelten ] Richtigkeit                                                  <- 1 lit. d
+  [alle_gelten ] Speicherbegrenzung                                           <- 1 lit. e
+  [alle_gelten ] Integrität und Vertraulichkeit                               <- 1 lit. f
+  [alle_gelten ] Rechenschaftspflicht                                         <- 2
+
+=== DSGVO Art. 6: FEHLER UnexpectedModelBehavior: Exceeded maximum output retries (4)
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 4 lit. a]: 'jede Verbindung zwischen den Zwecken, für die personenbezoge' | Zitat steht nicht wörtlich in [Abs. 4 lit. a]: 'jede Verbindung zwischen den Zwecken, für die personenbezoge' | Zitat steht nicht wörtlich in [Abs. 4 lit. a]: 'jede Verbindung zwischen den Zwecken, für die personenbezoge' | Zitat steht nicht wörtlich in [Abs. 4 lit. a]: 'jede Verbindung zwischen den Zwecken, für die personenbezoge'
+
+=== DSGVO Art. 6  (2 Anfragen)
+  [eine_genuegt] Rechtsgrundlagen für die Rechtmäßigkeit der Verarbeitung     <- 1 lit. a, 1 lit. b, 1 lit. c, 1 lit. d, 1 lit. e, 1 lit. f
+  [alle_gelten ] Prüfung bei Weiterverarbeitung zu anderem Zweck              <- 4 lit. a, 4 lit. b, 4 lit. c, 4 lit. d, 4 lit. e
+
+=== DSGVO Art. 6: FEHLER ModelHTTPError: status_code: 400, model_name: openai/gpt-oss-120b, body: {'error': {'message': "Parsing failed. The model generated output that could not be parsed. P
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 4 lit. a]: 'jede Verbindung zwischen den Zwecken, für die personenbezoge' | Zitat steht nicht wörtlich in [Abs. 4 lit. a]: 'jede Verbindung zwischen den Zwecken, für die personenbezoge'
+
+=== DSGVO Art. 9  (4 Anfragen)
+  [alle_gelten ] Grundsatzverbot besonderer Kategorien personenbezogener Date <- 1
+  [eine_genuegt] Ausnahmen vom Grundsatzverbot (mindestens eine der Bedingung <- 2 lit. a, 2 lit. b, 2 lit. c, 2 lit. d, 2 lit. e, 2 lit. f, 2 lit. g, 2 lit. h, 2 lit. i, 2 lit. j
+  [alle_gelten ] Zusätzliche Voraussetzungen für Verarbeitung nach Abs. 2 lit <- 3
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 1]: 'Verarbeitung personenbezogener Daten, aus denen die rassisch'
+
+=== DSGVO Art. 9  (3 Anfragen)
+  [alle_gelten ] Verbot der Verarbeitung besonderer Kategorien                <- 1
+  [eine_genuegt] Ausnahmen vom Verbot nach Absatz 2                           <- 2 lit. a, 2 lit. b, 2 lit. c, 2 lit. d, 2 lit. e, 2 lit. f, 2 lit. g, 2 lit. h, 2 lit. i, 2 lit. j
+  [alle_gelten ] Besondere Anforderungen an die Verarbeitung nach lit. h (Abs <- 3
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 1]: 'Die Verarbeitung personenbezogener Daten, aus denen die rass'
+
+=== DSGVO Art. 9  (4 Anfragen)
+  [alle_gelten ] Grundsatzverbot nach Art. 9 Abs. 1                           <- 1
+  [eine_genuegt] Ausnahmen von dem Verbot nach Art. 9 Abs. 2                  <- 2 lit. a, 2 lit. b, 2 lit. c, 2 lit. d, 2 lit. e, 2 lit. f, 2 lit. g, 2 lit. h, 2 lit. i, 2 lit. j
+  [alle_gelten ] Zusätzliche Voraussetzung nach Art. 9 Abs. 3 für die Ausnahm <- 3
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 1]: 'Die Verarbeitung personenbezogener Daten ... ist untersagt.'
+
+=== DSGVO Art. 32  (2 Anfragen)
+  [alle_gelten ] Allgemeine technische und organisatorische Maßnahmen         <- 1
+  [eine_genuegt] Beispiele für geeignete Sicherheitsmaßnahmen (alternativ)    <- 1 lit. a, 1 lit. b, 1 lit. c, 1 lit. d
+  [alle_gelten ] Risiko‑Berücksichtigung bei der Schutzniveau‑Bewertung       <- 2
+  [eine_genuegt] Nachweis durch Verhaltensregeln oder Zertifizierung (alterna <- 3
+  [alle_gelten ] Verarbeitung nur nach Anweisung des Verantwortlichen         <- 4
+
+=== DSGVO Art. 32  (3 Anfragen)
+  [alle_gelten ] Allgemeine Pflicht zu geeigneten technischen und organisator <- 1
+  [eine_genuegt] Optionale Sicherheitsmaßnahmen aus Abs. 1 lit. a‑d           <- 1 lit. a, 1 lit. b, 1 lit. c, 1 lit. d
+  [alle_gelten ] Risiko‑Bewertung bei der Festlegung des Schutzniveaus        <- 2
+  [eine_genuegt] Nachweis durch Verhaltensregeln oder Zertifizierung          <- 3
+  [alle_gelten ] Verarbeitung nur auf Anweisung des Verantwortlichen          <- 4
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 3]: 'Die Einhaltung genehmigter Verhaltensregeln gemäß Artikel 40'
+
+=== DSGVO Art. 32  (3 Anfragen)
+  [alle_gelten ] Technische und organisatorische Maßnahmen insgesamt          <- 1
+  [eine_genuegt] Mögliche einzelne Sicherheitsmaßnahmen (alternativ)          <- 1 lit. a, 1 lit. b, 1 lit. c, 1 lit. d
+  [alle_gelten ] Berücksichtigung von Risiken bei der Bewertung des Schutzniv <- 2
+  [alle_gelten ] Verarbeitung nur auf Anweisung des Verantwortlichen          <- 4
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 1]: 'Unter Berücksichtigung des Stands der Technik, der Implement'
+
+=== KI-VO Art. 6: FEHLER UnexpectedModelBehavior: Exceeded maximum output retries (4)
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 1 lit. a]: 'das KI-System soll als Sicherheitsbauteil ... verwendet werd' | Zitat steht nicht wörtlich in [Abs. 2]: 'die in Anhang III genannten KI-Systeme gelten als hochriskan' | Zitat steht nicht wörtlich in [Abs. 2]: 'die in Anhang III genannten KI-Systeme gelten als hochriskan' | Zitat steht nicht wörtlich in [Abs. 1a]: 'KI‑Systeme, die ausschließlich für nicht sicherheitsrelevant'
+
+=== KI-VO Art. 6  (6 Anfragen)
+  [alle_gelten ] Bestimmung als Hochrisiko‑KI‑System (Abs. 1)                 <- 1, 1 lit. a, 1 lit. b
+  [alle_gelten ] Definition und Ausnahmen für Sicherheitsbauteile (Abs. 1a‑c) <- 1a, 1b, 1c
+  [alle_gelten ] Hochrisiko‑KI‑Systeme aus Anhang III (Abs. 2)                <- 2
+  [alle_gelten ] Ausnahmen und Profiling für KI‑Systeme aus Anhang III (Abs.  <- 3, 3
+  [eine_genuegt] Alternative Zwecke, die ein KI‑System aus Anhang III hochris <- 3 lit. a, 3 lit. b, 3 lit. c, 3 lit. d
+  [alle_gelten ] Dokumentations‑ und Registrierungspflicht des Anbieters (Abs <- 4
+  [alle_gelten ] Veröffentlichung von Leitlinien durch die Kommission (Abs. 5 <- 5
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 1 lit. a]: 'das KI‑System soll als Sicherheitsbauteil eines ... Produkts' | Zitat steht nicht wörtlich in [Abs. 1c]: 'Ein Produkt, das ausschließlich aufgrund anderer Risiken als'
+
+=== KI-VO Art. 6  (5 Anfragen)
+  [alle_gelten ] Klassifizierung als Hochrisiko‑KI‑System nach Absatz 1       <- 1 lit. a, 1 lit. b
+  [eine_genuegt] Definition und Ausnahmen von Sicherheitsbauteilen (Absatz 1a <- 1a, 1b, 1c
+  [alle_gelten ] Hochrisikoeinstufung nach Anhang III (Absatz 2)              <- 2
+  [eine_genuegt] Ausnahme von der Hochrisikoeinstufung nach Absatz 3 (Unterab <- 3 lit. a, 3 lit. b, 3 lit. c, 3 lit. d, 3
+  [alle_gelten ] Dokumentations‑ und Registrierungspflichten des Anbieters (A <- 4, 4, 4
+     Retry-Gründe: Zitat steht nicht wörtlich in [Abs. 2]: 'die in Anhang III genannten KI-Systeme gelten als hochriskan'
