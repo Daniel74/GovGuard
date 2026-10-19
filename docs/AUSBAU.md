@@ -1,6 +1,6 @@
-# GovGuard – Ausbau in zehn Szenarien (Post-MVP)
+# GovGuard – Ausbau in elf Szenarien (Post-MVP)
 
-Das GovGuard-MVP operiert bewusst mit definierten Limits: ein Prüfumfang aus Serverless-Diensten, RDS/Aurora und Fargate, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt zehn Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
+Das GovGuard-MVP operiert bewusst mit definierten Limits: ein Prüfumfang aus Serverless-Diensten, RDS/Aurora und Fargate, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt elf Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
 
 Drei fundamentale Prinzipien bleiben in jedem Ausbauszenario konstant:
 
@@ -121,9 +121,24 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 
 ## Szenario 10: KI-Verordnung als Quelle im Spec-Audit (#52)
 
+_Schlanke Variante in Umsetzung (#52, FAHRPLAN 12n): ca. 8 Artikel, ohne Vorstufe für die Hochrisiko-Einstufung. Offen bleiben die Vorstufe und der volle Umfang._
+
 - **Auslöser:** Behörden setzen KI-Systeme ein und haben dann eigene Pflichten nach der KI-Verordnung (Verordnung (EU) 2024/1689), z. B. als Betreiber (Art. 26) und als öffentliche Stelle mit Grundrechte-Folgenabschätzung (Art. 27). GovGuard ist selbst ein KI-System; das Selbst-Audit (`spec-govguard`) würde dann auch gegen die KI-Verordnung prüfen.
 - **Was bricht:** Die meisten Pflichten gelten nur für Hochrisiko-Systeme (Art. 6, Anhang III). Ob eine Spezifikation darunter fällt, muss vor allen anderen Regeln feststehen; sonst vergibt das Modell N/A je Regel einzeln, und das schwankt (SPEC P1). Der Katalog ist eingefroren (SPEC G13).
 - **Anpassung:** Neue Quelle über das Rezept (ARCHITECTURE, *Neue Quelle hinzufügen*). Der Text liegt wie die DSGVO im Formex-XML bei EUR-Lex; der DSGVO-Adapter ist vermutlich weitgehend wiederverwendbar. Dazu ein Musterfall mit KI-Einsatz und Soll, und für `spec-govguard` ein neues Soll. Vorher klären: Wer entscheidet die Hochrisiko-Einstufung (Code-Vorstufe oder Mensch), und welche Fristen gelten aktuell? _(Rechtsstand vor dem Bau prüfen.)_
+
+## Szenario 11: Prompt-Fassung und Betrieb beobachtbar machen
+
+- **Auslöser:** Prompts werden weiterentwickelt und sollen schrittweise eingeführt werden: eine neue Fassung erst für einen Teil der Audits, dann messbar mit der alten verglichen.
+- **Was bricht:** Der Audit-Report nennt `model_id` und `catalog_sha256`, aber keine Prompt-Fassung. `kb_commit` steht im Demo-Stand auf `local`. Ein Betriebsprotokoll gibt es nicht: `AuditEvent` existiert nur als Modell (ADR 0006). Prompts liegen als Python-Texte im Code; ihre Änderungen zeigt nur der Git-Verlauf (SPEC, Abschnitt 10).
+
+| Anpassung | Ausführende Schicht |
+|---|---|
+| **Prompt-Prüfsumme in der Rückverfolgung:** `Trace.prompt_sha256` über System-Prompt, Regel der offenen Welt, Prompt der Zweitprüfung und Tool-Schemas, nach dem Vorbild von `prompt_version` im Bau. Zwei Reports sind dann nur vergleichbar, wenn Modell, Katalog und Prompts gleich sind. | Code |
+| **Prompt-Fassung beim Formulieren:** dieselbe Prüfsumme im Bauprotokoll von `rules`, damit eine Prüfregel ihrer Prompt-Fassung zugeordnet werden kann. | Code |
+| **Versionsstand setzen:** `KB_COMMIT` in den Secrets von Streamlit bzw. im Deploy setzen. | Betrieb |
+| **Betriebsprotokoll:** `AuditEvent` je Audit schreiben (Recruiter-Stand: CloudWatch Logs, ADR 0006), ergänzt um Laufzeit, Tokens und Prompt-Prüfsumme. Daraus lassen sich Abbruchquote, Laufzeit und Kosten je Prompt-Fassung auswerten. | Code & Betrieb |
+| **Prompts als Dateien (optional):** erst, wenn Fachleute ohne Programmierkenntnis Prompts pflegen sollen. Der Lader gehört in den Einstieg, die Prüflogik bleibt ohne Datei-Zugriff. | Code |
 
 ## Weitere Typen im Prüfumfang (EFS, SSM-Klartext-Parameter)
 

@@ -48,35 +48,43 @@ Nicht zum Umfang gehören:
 
 ## 3 Rollen
 
-| Rolle | Aufgabe |
-|---|---|
-| Besucher (z. B. Personalverantwortliche) | sieht in der Galerie gespeicherte Audits an, ohne Anmeldung |
-| Prüfende Person | startet mit dem Demo-Passwort ein eigenes Audit und lädt den Audit-Report herunter |
-| Projektbetreiber | baut die Wissensbasis, pflegt die Musterfälle, verwaltet Passwort und Zugangsschlüssel |
-| Groq | Dienstleister für das Sprachmodell (Inferenz) |
-| Streamlit Community Cloud | Dienstleister für den Betrieb der Web-Anwendung |
-| GitHub | Dienstleister für die Versionsverwaltung: Programmcode, Wissensbasis, Musterfälle und Galerie liegen dort öffentlich; Streamlit lädt die Anwendung von dort |
-
-Inferenz bedeutet: Das Sprachmodell berechnet eine Antwort auf eine Anfrage.
+| Rolle                                    | Aufgabe                                                                                                                                                     |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Besucher (z. B. Personalverantwortliche) | sieht in der Galerie gespeicherte Audits an, ohne Anmeldung                                                                                                 |
+| Prüfende Person                          | startet mit dem Demo-Passwort ein eigenes Audit und lädt den Audit-Report herunter                                                                          |
+| Projektbetreiber                         | baut die Wissensbasis, pflegt die Musterfälle, verwaltet Passwort und Zugangsschlüssel                                                                      |
+| Groq                                     | Dienstleister für das Sprachmodell (Inferenz)                                                                                                               |
+| Streamlit Community Cloud                | Dienstleister für den Betrieb der Web-Anwendung                                                                                                             |
+| GitHub                                   | Dienstleister für die Versionsverwaltung: Programmcode, Wissensbasis, Musterfälle und Galerie liegen dort öffentlich; Streamlit lädt die Anwendung von dort |
 
 ## 4 Fachliche Anforderungen
 
-**F1 Audit einer Spezifikation.** Die prüfende Person gibt eine Spezifikation als Text, Markdown oder
+### F1 Audit einer Spezifikation
+
+Die prüfende Person gibt eine Spezifikation als Text, Markdown oder
 OpenAPI ein. GovGuard bewertet sie gegen alle 151 Prüfregeln aus DSGVO und SDM.
 
-**F2 Audit einer Architektur.** Die prüfende Person gibt eine Architektur als Freitext oder als
+### F2 Audit einer Architektur
+
+Die prüfende Person gibt eine Architektur als Freitext oder als
 CloudFormation-Vorlage ein. GovGuard bewertet sie gegen die Prüfregeln aus BSI, CIS und FSBP.
 Eine CloudFormation-Vorlage ist eine Datei, die AWS-Ressourcen als Bauplan beschreibt.
 
-**F3 Galerie.** Die Galerie zeigt gespeicherte Audit-Reports zu Musterfällen, je neben dem geprüften
+### F3 Galerie
+
+Die Galerie zeigt gespeicherte Audit-Reports zu Musterfällen, je neben dem geprüften
 Dokument. Ein Musterfall ist eine erfundene Eingabe mit festgelegtem Soll-Ergebnis.
 Weicht der Audit-Report vom Soll ab, zeigt die Galerie die Abweichung.
 
-**F4 Audit-Report.** Der Audit-Report nennt den Gesamtstatus und je Prüfregel genau einen Befund mit
+### F4 Audit-Report
+
+Der Audit-Report nennt den Gesamtstatus und je Prüfregel genau einen Befund mit
 Normanker, Status, Begründung, Beleg und Empfehlung. Die prüfende Person kann ihn als JSON-Datei
 herunterladen. Ein Normanker ist die Fundstelle im Regelwerk, etwa „DSGVO Art. 9“.
 
-**F5 Wissensbasis bauen.** Der Projektbetreiber erzeugt die Prüfregeln aus den öffentlichen
+### F5 Wissensbasis bauen
+
+Der Projektbetreiber erzeugt die Prüfregeln aus den öffentlichen
 Normtexten. Die Wissensbasis ist die Gesamtheit dieser Prüfregeln, je Audit-Art ein Prüfkatalog.
 
 Der Bau läuft in vier Schritten (G10–G13):
@@ -87,6 +95,15 @@ Der Bau läuft in vier Schritten (G10–G13):
 4. Programme prüfen das Ergebnis, der Projektbetreiber gibt es frei.
 
 Wie das technisch abläuft, beschreibt [ARCHITECTURE.md](ARCHITECTURE.md) Abschnitt 1.
+
+### F6 Wissensbasis erweitern
+
+Der Projektbetreiber kann ein weiteres Regelwerk als Quelle
+aufnehmen, etwa die KI-Verordnung der EU. Er stößt die Erweiterung an und gibt sie frei (G12).
+
+Eine neue Quelle braucht drei Dinge: einen Herausgeber mit festem Dokument und Prüfsumme (G9),
+mindestens einen Musterfall mit Soll und eine schriftliche Entscheidung mit Begründung.
+Das technische Vorgehen beschreibt [ARCHITECTURE.md](ARCHITECTURE.md) unter „Neue Quelle hinzufügen“.
 
 ## 5 Geschäftsregeln
 
@@ -99,12 +116,12 @@ feste, beim Bau der Wissensbasis bestimmte Menge.
 
 Jeder Befund hat genau einen von vier Status. Der Audit-Report nutzt die international üblichen Kürzel.
 
-| Status | Bedeutung |
-|---|---|
-| PASS | Die Eingabe belegt, dass die Prüfregel eingehalten ist. |
-| WARN | Aus der Eingabe ist es nicht entscheidbar, es besteht Prüfbedarf. |
-| FAIL | Die Eingabe belegt einen Verstoß. |
-| N/A | Die Prüfregel ist auf die Eingabe nicht anwendbar. Bei einer Architektur entscheidet das Programm das über die vorkommenden Dienste. |
+| Status | Bedeutung                                                                                                                            |
+| ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
+| PASS   | Die Eingabe belegt, dass die Prüfregel eingehalten ist.                                                                              |
+| WARN   | Aus der Eingabe ist es nicht entscheidbar, es besteht Prüfbedarf.                                                                    |
+| FAIL   | Die Eingabe belegt einen Verstoß.                                                                                                    |
+| N/A    | Die Prüfregel ist auf die Eingabe nicht anwendbar. Bei einer Architektur entscheidet das Programm das über die vorkommenden Dienste. |
 
 ### G3 Gesamtstatus
 
@@ -188,23 +205,26 @@ Wissensbasis freigibt.
 Gültig wird die neue Wissensbasis erst, wenn er sie in der Versionsverwaltung speichert. Dort ist
 jede Änderung mit Zeitpunkt und Autor nachvollziehbar.
 
-### G13 Eingefrorener Prüfkatalog
+### G13 Bestehende Prüfregeln bleiben unverändert
 
-Seit dem 18.10.2026 bleiben Prüfkatalog und Prüflogik unverändert. So bleiben die Audit-Reports der
-Galerie untereinander vergleichbar.
+Seit dem 18.10.2026 bleiben die bestehenden Prüfregeln und die Prüflogik unverändert. So bleiben die
+Audit-Reports der Galerie untereinander vergleichbar.
+
+Eine neue Quelle darf nur Prüfregeln hinzufügen. Ändert eine Erweiterung bestehende Prüfregeln,
+müssen alle Audit-Reports der Galerie neu entstehen und alle Soll-Ergebnisse erneut geprüft werden.
 
 ## 6 Daten und Datenschutz
 
 ### Datenflüsse
 
-| Daten | Herkunft | Wohin | Wie lange |
-|---|---|---|---|
-| Eingabe (Spezifikation oder Architektur) | prüfende Person | Streamlit Community Cloud (USA), Groq (USA) | GovGuard speichert sie nicht; sie lebt nur in der Sitzung |
-| Audit-Report mit Belegen | GovGuard | Browser der prüfenden Person | bis zum Ende der Sitzung oder als heruntergeladene Datei bei ihr |
-| Angaben zur Rückverfolgung | GovGuard | im Audit-Report | wie der Audit-Report |
-| Audit-Reports der Galerie | Projektbetreiber | öffentliche Versionsverwaltung (GitHub, USA) | bis zur Löschung durch den Projektbetreiber |
-| Zugriffsdaten der Besucher (z. B. IP-Adresse) | Browser | Streamlit Community Cloud (USA) | nach den Bedingungen von Streamlit |
-| Öffentliche Normtexte | Herausgeber der Regelwerke | Groq (USA), nur beim Bau der Wissensbasis | als Zitate in den Prüfregeln auf GitHub |
+| Daten                                         | Herkunft                   | Wohin                                        | Wie lange                                                        |
+| --------------------------------------------- | -------------------------- | -------------------------------------------- | ---------------------------------------------------------------- |
+| Eingabe (Spezifikation oder Architektur)      | prüfende Person            | Streamlit Community Cloud (USA), Groq (USA)  | GovGuard speichert sie nicht; sie lebt nur in der Sitzung        |
+| Audit-Report mit Belegen                      | GovGuard                   | Browser der prüfenden Person                 | bis zum Ende der Sitzung oder als heruntergeladene Datei bei ihr |
+| Angaben zur Rückverfolgung                    | GovGuard                   | im Audit-Report                              | wie der Audit-Report                                             |
+| Audit-Reports der Galerie                     | Projektbetreiber           | öffentliche Versionsverwaltung (GitHub, USA) | bis zur Löschung durch den Projektbetreiber                      |
+| Zugriffsdaten der Besucher (z. B. IP-Adresse) | Browser                    | Streamlit Community Cloud (USA)              | nach den Bedingungen von Streamlit                               |
+| Öffentliche Normtexte                         | Herausgeber der Regelwerke | Groq (USA), nur beim Bau der Wissensbasis    | als Zitate in den Prüfregeln auf GitHub                          |
 
 Eine Sitzung ist die Verbindung eines Browsers mit der Web-Anwendung. Schließt man das Fenster,
 endet sie.
@@ -229,16 +249,30 @@ nicht.
 
 ## 7 Nicht-funktionale Anforderungen
 
-| Merkmal | Anforderung |
-|---|---|
-| Leistung | Eine Eingabe hat höchstens 100.000 Zeichen; das prüft das Programm vor jedem Aufruf des Sprachmodells. Ein Audit dauert mit Groq ca. 20 bis 55 Sekunden (Messung 16.10.2026). |
-| Kosten | Ein Audit kostet mit Groq 2 bis 3 Cent. Das Passwort verhindert, dass Fremde Kosten auslösen. |
-| Leerlaufkosten | 0 €. Leerlaufkosten sind Kosten, die ohne Nutzung allein durch Zeit entstehen. |
-| Sicherheit | Passwort und Zugangsschlüssel für das Sprachmodell liegen nur in den geschützten Einstellungen von Streamlit, nicht im Programmcode. Ohne eingerichtetes Passwort startet kein Audit. |
-| Nachvollziehbarkeit | Jeder Audit-Report nennt Sprachmodell und Prüfsummen (G9). Jeder Eingriff des Programms in eine Antwort des Sprachmodells steht als Korrektur am Befund. |
-| Prüfbarkeit | Alle automatischen Tests laufen ohne AWS und ohne Groq. |
+| Merkmal             | Anforderung                                                                                                                                                                           |
+| ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Leistung            | Eine Eingabe hat höchstens 100.000 Zeichen; das prüft das Programm vor jedem Aufruf des Sprachmodells. Ein Audit dauert mit Groq ca. 20 bis 55 Sekunden (Messung 16.10.2026).         |
+| Kosten              | Ein Audit kostet mit Groq 2 bis 3 Cent. Das Passwort verhindert, dass Fremde Kosten auslösen.                                                                                         |
+| Leerlaufkosten      | 0 €. Leerlaufkosten sind Kosten, die ohne Nutzung allein durch Zeit entstehen.                                                                                                        |
+| Sicherheit          | Passwort und Zugangsschlüssel für das Sprachmodell liegen nur in den geschützten Einstellungen von Streamlit, nicht im Programmcode. Ohne eingerichtetes Passwort startet kein Audit. |
+| Nachvollziehbarkeit | Jedes Audit und jeder Bau der Wissensbasis hinterlässt prüfbare Spuren (Abschnitt 8).                                                                                                 |
+| Prüfbarkeit         | Alle automatischen Tests laufen ohne AWS und ohne Groq.                                                                                                                               |
 
-## 8 Qualität und Restrisiken
+## 8 Beobachtbarkeit
+
+Beobachtbarkeit heißt: Man kann im Nachhinein erkennen, was das System getan hat und warum.
+GovGuard hält das auf drei Ebenen fest, ohne Eingabetexte zu speichern.
+
+| Ebene                   | Was festgehalten wird                                                                                                                                                                                  | Wo                                                | Wer liest es                          |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------- | ------------------------------------- |
+| Je Audit                | Prüfsummen von Eingabe und Prüfkatalog, Sprachmodell und Kennung des Audits (G9); je Befund der ursprüngliche Status und jede Korrektur (G5, G6); Zahl der Wiederholungen und Urteile der Zweitprüfung | im Audit-Report                                   | prüfende Person, Besucher der Galerie |
+| Je Bau der Wissensbasis | Auswahlprotokoll mit Begründung je Anforderung (G10); Bauprotokoll mit jeder Wiederholung samt Grund, Zahl der Anfragen und Tokens; Qualitätsbericht je Quelle                                         | Versionsverwaltung, zusammen mit der Wissensbasis | Projektbetreiber                      |
+| Je Messlauf             | Laufzeit, Tokens, Kosten, Gründe für Wiederholungen und Abweichungen vom Soll                                                                                                                          | im zugehörigen Ticket                             | Projektbetreiber                      |
+
+Messläufe startet der Projektbetreiber von Hand, etwa vor und nach einer Änderung an der
+Wissensbasis. Was der Demo-Stand nicht festhält, steht in Abschnitt 10.
+
+## 9 Qualität und Restrisiken
 
 Ein Audit-Report ist ein Hinweis für Fachleute, kein Nachweis. Ein Sprachmodell kann irren, und
 GovGuard macht sichtbar, wo.
@@ -309,12 +343,37 @@ Bei einer Architektur als Freitext erkennt das Sprachmodell die verwendeten Dien
 - **Was bleibt:** Die Prüfregeln eines übersehenen Dienstes stehen auf N/A, mit dem Hinweis
   „Dienst in der Eingabe nicht erkannt“. Bewertet werden sie nicht.
 
-## 9 Bekannte Grenzen
+## 10 Bekannte Grenzen
 
-**Keine echten Daten.** Der Demo-Stand ist für echte Daten nicht geeignet (Abschnitt 6). Vorgesehen
+### B1 Keine echten Daten
+
+Der Demo-Stand ist für echte Daten nicht geeignet (Abschnitt 6). Vorgesehen
 ist dafür das Sprachmodell über AWS Bedrock in der EU (Region Frankfurt), mit einem Protokoll ohne
 Eingabetext. Dieser Weg besteht nur über die Kommandozeile. Betrieb auf AWS und Protokoll sind
 entworfen, aber nicht gebaut.
 
-**Umfang.** Protokollieren (SDM M43) und kontoweite AWS-Pflichten wie die Mehr-Faktor-Anmeldung des
+### B2 Prompt-Fassung nicht im Audit-Report
+
+Ein Prompt ist die Arbeitsanweisung an das
+Sprachmodell. Der Audit-Report nennt Sprachmodell und Prüfkatalog, aber nicht die Fassung der Prompts.
+
+Ändert sich ein Prompt, sehen zwei Audit-Reports gleich aus, obwohl sie unterschiedlich entstanden
+sind. Eine neue Fassung lässt sich deshalb nicht schrittweise einführen und messbar mit der alten
+vergleichen; das geht nur über Zeitpunkt und Versionsverwaltung. Nur beim Einstufen der
+Anforderungen ist die Prompt-Fassung Teil des Zwischenspeichers, sonst nirgends.
+
+### B3 Kein Betriebsprotokoll
+
+Wie viele Audits liefen, wie viele abbrachen und wie lange sie dauerten,
+erfasst der Demo-Stand nicht. Ein Protokolleintrag je Audit ohne Eingabetext ist entworfen, aber
+erst für den Betrieb auf AWS vorgesehen.
+
+### B4 Versionsstand der Wissensbasis
+
+Im Audit-Report steht dafür im Demo-Stand nur „local“. Welche
+Wissensbasis geprüft hat, zeigt allein die Prüfsumme des Prüfkatalogs.
+
+### B5 Umfang
+
+Protokollieren (SDM M43) und kontoweite AWS-Pflichten wie die Mehr-Faktor-Anmeldung des
 Hauptkontos fehlen bewusst. Terraform und CloudFormation-Vorlagen in YAML prüft GovGuard nur als Freitext.
