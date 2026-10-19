@@ -47,11 +47,11 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 - **Preset**: Fiktive Beispiel-Eingabe mit festgelegtem Soll-Ergebnis für Demo und Test. _Code_: `Preset`. _Vermeiden_: Testfall, Beispiel, Szenario
 - **Soll-Abweichung**: Gesamtstatus oder ein Pflichtbefund eines Audit-Reports weicht vom Soll-Ergebnis seines Presets ab; wird gezeigt, nicht nachgewürfelt (ADR 0023). _Code_: Abgleich mit `expected`. _Vermeiden_: Fehler, Testfehler
 - **Galerie**: Gespeicherte Audit-Reports zu Presets, je mit Quelldokument und Soll-Abweichung; wächst nur per Commit. _Code_: `gallery`. _Vermeiden_: Archiv, Verlauf
-- **Audit-Job**: Asynchron laufendes Audit mit ID, Fortschritt und Audit-Report; wird nach 1 Tag gelöscht. _Code_: `job_id`. _Vermeiden_: Task, Auftrag
+- **Audit-Job**: Asynchron laufendes Audit mit ID, Fortschritt und Audit-Report; wird nach 1 Tag gelöscht; Ausbau, nicht gebaut (ADR 0023). _Code_: `job_id`. _Vermeiden_: Task, Auftrag
 - **Fortschritt**: Phase und Anzahl fertiger Pakete eines laufenden Audits. _Code_: `Progress`
 
 ## Betrieb
 
 - **Leerlaufkosten**: Kosten, die ohne Anfragen allein durch Zeit entstehen; Speicher für gehaltene Daten und Fixkosten für Sicherheit (KMS-Schlüssel, Secret) zählen nicht dazu. GovGuard und jeder Golden Archetype haben 0 € Leerlaufkosten. _Code_: –. _Vermeiden_: Idle-Kosten, Grundgebühr
 - **Demo-Stand**: Hosting zur Präsentation: Streamlit führt das Audit selbst aus, ohne AWS-Infrastruktur (ADR 0023). _Code_: `AUDIT_BACKEND=local`. _Vermeiden_: Prod, Staging
-- **Recruiter-Stand**: Hosting nach der Präsentation: Streamlit startet Audit-Jobs auf der Lambda in `eu-central-1` (ADR 0023). _Code_: `AUDIT_BACKEND=lambda`. _Vermeiden_: Prod, Staging
+- **Recruiter-Stand**: Hosting nach der Präsentation: Streamlit startet Audit-Jobs auf der Lambda in `eu-central-1`; Ausbau, nicht gebaut (ADR 0023). _Code_: `AUDIT_BACKEND=lambda`. _Vermeiden_: Prod, Staging

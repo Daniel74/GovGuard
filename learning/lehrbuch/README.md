@@ -27,7 +27,7 @@ Diese Dateien sind die **Faktenbasis** für ein Lehrbuch über die Wissensbasis-
 ## Hinweise für das Ausformulieren
 
 - **Nichts erfinden.** Zahlen, Namen und Abläufe nur aus diesen Dateien. Fehlt etwas, offen lassen und markieren.
-- **Code-Namen englisch lassen** (`Requirement`, `scope_level`, `check_rules`), Erklärungen deutsch. Fachwort beim ersten Auftreten in einem Halbsatz erklären.
+- **Code-Namen englisch lassen** (`Requirement`, `scope_level`, `check_rules`), Erklärungen deutsch. Fachwort beim ersten Auftreten in einem eigenen ganzen Satz erklären.
 - **ADR-Nummern als Begründung nennen**, denn das Lehrbuch soll das Warum tragen. Gilt: ADR 0011 ersetzt ADR 0002; ADR 0014 ersetzt ADR 0010.
 - **Nur Gebautes als Gebautes beschreiben.** Preset-Gate, `build-kb.yml` und Golden Archetypes sind noch nicht gebaut (siehe `99-offen-und-grenzen.md`).
 - Jedes Kapitel hat dieselben Abschnitte: Zweck · Ablauf · Eigenschaften und Garantien · Warum so · Beispiel · Fachbegriffe · Grenzen · Fragen für das Fachgespräch.

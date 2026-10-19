@@ -8,7 +8,7 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 
 - AWS: Daten nur in `eu-central-1`. Inferenz für Nutzereingaben im Prototyp über Groq (ADR 0016, 0023), Bedrock `eu.` nur noch per CLI; für echte Daten nur in der EU (ADR 0001).
 - Ausnahme Build der Wissensbasis: Er schickt nur öffentliche Normtexte raus, standardmäßig an Groq (ADR 0014), nur auf ausdrücklichen Wunsch an Bedrock `global.` (ADR 0012).
-- 100 % serverless, 0 € Leerlaufkosten (FinOps, siehe `CONTEXT.md`): Im Leerlauf zahlen wir nur für gehaltene Daten und für Sicherheit, z. B. KMS-Schlüssel ca. 1 $/Monat.
+- 100 % serverless, 0 € Leerlaufkosten (FinOps, siehe `CONTEXT.md`): Der Prototyp läuft als Demo-Stand ohne AWS auf Streamlit Community Cloud mit Groq. AWS-Stack, KMS und Audit-Jobs sind Ausbau (ADR 0023, Nachtrag 19.10.).
 - Python, Pydantic, Pydantic AI auf der Bedrock Converse API mit Tool-Choice (ADR 0005), Streamlit-UI.
 - Wissensbasis als JSON in S3 bzw. im Repo, Bounded Catalog ohne Suche und ohne Obergrenze, keine Vektor-DB (ADR 0011).
 - Code modular nach `docs/ARCHITECTURE.md` → *Code-Struktur*: boto3 und das Bedrock-Modell für Pydantic AI nur in `aws_services.py`, kein subprocess in `src/` (ADR 0019; Tests dürfen Server starten), HTTP-Downloads nur in `src/kb_build/source_fetch.py`, Prüflogik rein, nie vermischt. Workflow-YAML enthält keine Logik, nur `python -m …`.
@@ -32,7 +32,7 @@ Ich arbeite allein und sequentiell direkt auf `main`. Commits mache ich selbst o
 ## Sprache
 
 - Deutsch, einfach und klar, Niveau pragmatischer Senior Engineer.
-- Fachwort beim ersten Auftreten in einem Halbsatz erklären.
+- Fachwort beim ersten Auftreten in einem eigenen ganzen Satz erklären, nicht in einem Halbsatz.
 - **Rule of 3**: maximal 3 Bulletpoints, Fließtext maximal 3 Zeilen. Code-Erklärungen: Was macht es? Warum so (Bezug BSI/AWS)? Welcher Begriff ist fürs Fachgespräch wichtig?
 - **Projektsprache:** Code, Bezeichner, JSON-Felder und Kommentare englisch (Normbezug als Kürzel, z. B. `# Enforces BSI OPS.1.1.2.A3`). LLM-Prompts, Doku, UI und Inhalte der Audit-Reports deutsch. Englische Code-Namen der Fachbegriffe stehen in `CONTEXT.md` (*Code*).
 

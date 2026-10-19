@@ -10,17 +10,17 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Modell und Session:**
 
-- **Sonnet baut, Opus urteilt.** Sonnet 5.5 für TDD-Zyklen mit klaren Kriterien; Opus 5.5 für Grilling, Review, Security-Review, Diagnose und IHK-Check. Opus baut auch die heiklen Tickets #1 (Fundament), #7 (Freigabe-Schleife) und #9 (IAM, KMS). Wechsel mit `/model sonnet` bzw. `/model opus`.
+- **Sonnet baut, Opus urteilt.** Sonnet 5.5 für TDD-Zyklen mit klaren Kriterien; Opus 5.5 für Grilling, Review, Security-Review, Diagnose und IHK-Check. Opus baut auch die heiklen Tickets #1 (Fundament), #7 (Freigabe-Schleife) und #9 (IAM). Wechsel mit `/model sonnet` bzw. `/model opus`.
 - **🆕 = neue Session** (`/clear`). Erste Nachricht: „Lies docs/FAHRPLAN.md Schritt N und Issue #X.“ Jeder Schritt startet frisch. Das Review läuft in einer zweiten frischen Session, damit keine Sitzung ihren eigenen Code prüft (Vier-Augen-Prinzip).
 - Zusätzlich neu starten, wenn eine Session lang wird und Claude Absprachen vergisst oder sich wiederholt. Vorher den Stand committen.
 - **Junie ist zweite Meinung, nicht Bauer.** Bei #4 und #5 lieferte Junie (GPT-5.2) grüne Tests mit falschen Daten; der Neubau kostete mehr Claude-Budget, als er sparte. Junie prüft deshalb nur noch bei #9 den Diff als zweite Modellfamilie (Vier-Augen-Prinzip). Junie liest `AGENTS.md` und committet nicht. Wird das Claude-Budget knapp, bekommt Junie ein Ticket nur mit vorab geschriebenen roten Tests.
 
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft seine eigene Spezifikation und seinen Stack). Offene Schritte in dieser Reihenfolge: 10i, 11, 12, 12c–12e, 12g, 12f, 12h, 12a, 12i, 12j, 12l, 11b, 11a, 12b, dann der AWS-Nachholblock (Deploy #9 und #34, Pipeline #37), zuletzt die Doku 13–14. Nach der Präsentation folgt der Recruiter-Stand.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft die Spezifikation seines Demo-Stands). Offene Schritte in dieser Reihenfolge: 12b, zuletzt die Doku 13–14. Mit #36 ist der Prototyp fertig.
 - **Eingefroren ab Schritt 12l:** `kb_build` und Audit-Engine werden nicht mehr geändert, Katalog und Prompts bleiben. Bekannte Grenzen stehen im README; #48 (YAML), #49 (Build-Abbrüche) und #50 (Allow/Deny, Platzhalter) sind Ausbau.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
-- **Stand 16.10.:** Kein AWS-Zugriff. Die Demo läuft ohne AWS (Schritt 10i); jeder Schritt läuft bis zum ersten ☁-Kästchen, der Rest folgt gesammelt im AWS-Nachholblock.
+- **Stand 19.10.:** Kaum Budget. Die Demo-Architektur bleibt (Streamlit und Groq), kein AWS-Deploy, kein CDK. Außerhalb des Umfangs (Label `ausbau`): Haiku/Bedrock, CDK-Stack #9, Audit-Jobs #34, Pipeline #37, Recruiter-Stand #38.
 
 **Zeitplan bis zur Präsentation:**
 
@@ -31,8 +31,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                                 |
 | Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                                   |
 | So 18.10.  | Schritte 12i, 12j: #46, #47. Schritt 12l: Galerie, bekannte Grenzen. Danach sind `kb_build` und Audit eingefroren                            |
-| Mo 19.10.  | Schritt 11b: Stack per CDK (bis `cdk synth`). Schritt 11a: #34 Audit-Jobs. AWS zurück: AWS-Nachholblock. Das Claude-Wochenlimit setzt zurück |
-| Di 20.10.  | Schritt 12b: GovGuard-Spezifikation, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                          |
+| Mo 19.10.  | Schritt 12b: GovGuard-Spezifikation schreiben, Soll festlegen. Das Claude-Wochenlimit setzt zurück                                           |
+| Di 20.10.  | Schritt 12b: Audit, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                           |
 | Mi 21.10.  | Abgabe, Puffer                                                                                                                               |
 | 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                               |
 | Mo 26.10.  | Präsentation und Fachgespräch                                                                                                                |
@@ -78,14 +78,14 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 12i     | A    | #46 Arch-Freitext: offene Welt    | 🤖 Opus                          | 🤖 Opus                     |
 | 12j     | A    | #47 Arch-Katalog zu wörtlich      | 🤖 Opus                          | 🤖 Opus                     |
 | 12k     | A    | #48 CloudFormation-YAML           | 🤖 Sonnet                        | 🤖 Opus                     |
-| 11b     | A    | #9 Stack (CDK, IAM, KMS)          | 🤖 Opus                          | 🤖 Opus · 🛠 Junie          |
-| 11a     | A    | #34 Audit-Jobs in S3              | 🤖 Opus                          | 🤖 Opus                     |
-| 12b     | A    | #36 Selbst-Audit und Galerie      | 👤 + 🤖 Opus                     | 👤                          |
+| 11b     | –    | #9 CDK-Stack (Ausbau)             | 🤖 Opus                          | 🤖 Opus · 🛠 Junie          |
+| 11a     | –    | #34 Audit-Jobs (Ausbau)           | 🤖 Opus                          | 🤖 Opus                     |
+| 12b     | A    | #36 Selbst-Audit Spec, Galerie    | 👤 + 🤖 Opus                     | 👤                          |
 | 10h     | A    | #33 Gegenprobe (Groq, erledigt)   | 👤 Messung                       | 👤                          |
 | 13      | A    | #22 Doku zu kb_build nachziehen   | 🤖 Sonnet                        | 👤                          |
 | 14      | A    | #16 Doku nachziehen               | 👤 + 🤖 Sonnet                   | 👤                          |
 | 19      | –    | #23 Lehrbuch fertigstellen        | 👤 + Claude Web                  | 👤                          |
-| R       | ☁    | #38 Recruiter-Stand               | 🤖 Opus                          | 🤖 Opus                     |
+| R       | –    | #38 Recruiter-Stand (Ausbau)      | 🤖 Opus                          | 🤖 Opus                     |
 
 ---
 
@@ -731,63 +731,42 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-### Schritt 11b – #9 Stack: CDK, IAM und KMS (bis `cdk synth`)
+### Schritt 11b – #9 Stack per CDK (Ausbau)
 
-**Ziel:** Der GovGuard-Stack (Lambda Function URL, KMS-CMK, Log-Gruppe, Rollen, Budget-Alarm) steht als CDK mit Assertions-Tests und cdk-nag. Das Template aus `cdk synth` ist Audit-Ziel in Schritt 12b.
-**Voraussetzung:** Schritt 11. Ohne AWS bis `cdk synth`; Deploy im AWS-Nachholblock.
-
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #9 umsetzen` → Plan → Go
-      Reihenfolge: `Trace` und `AuditEvent` → `handler.py` führt ein Audit aus dem Event aus (`GROQ_API_KEY` aus SSM SecureString) → CDK-Stack mit Assertions-Tests auf das erzeugte Template
-- [ ] **Sicherheit** 👤 `/security-review`
-- [ ] **Zweite Meinung** 🛠 _Junie_ · 👤 „Lies AGENTS.md → Review und das Ticket. Prüfe `git diff`.“ Befunde nimmst du ins Opus-Review mit.
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #9`
-- [ ] **Einrichten** 👤 `/wizard cdk bootstrap für eu-central-1` (Wizard erzeugen geht ohne AWS)
-- [ ] **Verstehen** 👤 `/verstehen 9` (Schwerpunkt: IAM, KMS und Audit-Protokoll)
-- [ ] **Abschließen** 👤 committet und pusht
-
-**Fertig, wenn:** `cdk synth`, cdk-nag und die Assertions-Tests grün sind.
-**Fürs Fachgespräch:** Least Privilege, KMS-CMK, Datenminimierung, Rückverfolgung, 0 € Leerlaufkosten.
+Am 19.10. aus dem Umfang genommen (Budget): Die Demo bleibt bei Streamlit und Groq, ohne AWS und ohne CDK. #9 ist mit Label `ausbau` geschlossen.
+**Fürs Fachgespräch:** Ausbau: Lambda mit Function URL, KMS-CMK, Least Privilege und cdk-nag als Gate (ADR 0018, 0023).
 
 ---
 
-### Schritt 11a – #34 Audit-Jobs in S3
+### Schritt 11a – #34 Audit-Jobs in S3 (Ausbau)
 
-**Ziel:** Ein Audit läuft als Audit-Job: `POST` startet ihn, `GET` liefert Fortschritt oder Report aus S3, Löschfrist 1 Tag (ADR 0023).
-**Voraussetzung:** Schritt 11b. Ohne AWS bis `cdk synth`.
-
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #34 umsetzen` → Plan → Go
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #34`
-- [ ] **Abschließen** 👤 committet und pusht
-
-**Fertig, wenn:** Assertions-Tests KMS, nur TLS, Block Public Access, Lifecycle und die Rechte belegen und das Template den Bucket enthält.
-**Fürs Fachgespräch:** Nachvollziehbarkeit gegen Datenminimierung, Löschfrist statt Object Lock (Art. 17 DSGVO), Least Privilege.
+Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschlossen; die Demo läuft synchron.
+**Fürs Fachgespräch:** Asynchroner Job mit Job-ID statt HTTP-Timeout, Löschfrist 1 Tag statt Object Lock (Art. 17 DSGVO).
 
 ---
 
-### Schritt 12b – #36 GovGuard prüft sich selbst: Spezifikation, Stack und Galerie
+### Schritt 12b – #36 GovGuard prüft sich selbst: Spezifikation und Galerie
 
-**Ziel:** Die Galerie der UI enthält Audits zu den Presets, zur GovGuard-Spezifikation und zum eigenen CloudFormation-Template, jeweils mit Quelldokument.
-**Voraussetzung:** Schritte 11a, 11b und 12.
+**Ziel:** `docs/SPEC.md` beschreibt GovGuard im Demo-Stand (Streamlit Community Cloud und Groq, beide in den USA) und ist zugleich die Systembeschreibung für Recruiter: ein gekürztes Fachkonzept, wie es eine Behörden-IT verlangen würde (ca. 3 Seiten, mit Geschäftsregeln zu PASS, WARN und FAIL), verständlich ohne Fachwissen, jedes Fachwort in einem eigenen Satz erklärt, vom README verlinkt. Als Preset `spec-govguard` steht ihr Audit mit Soll-Ergebnis in der Galerie.
+**Voraussetzung:** Schritt 12. Kein AWS nötig.
 
-- [ ] **Schreiben** 🆕 _Opus_ · 👤 „Schreibe die GovGuard-Spezifikation nach Issue #36“ → 👤 liest sie und legt das Soll fest (Testorakel, wie bei #3)
-- [ ] **Erzeugen** 👤 `/audit-messen alle Presets, GovGuard-Spezifikation und Stack-Template mit Groq` → alle Reports kommen in die Galerie, Soll-Abweichungen sichtbar (ADR 0023)
+- [ ] **Schreiben** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12b und Issue #36. Schreibe `docs/SPEC.md` neu und lege das Preset `spec-govguard` an“ → Plan → Go
+      Gliederung laut #36. Der Abschnitt „Aufnahme in den Bounded Catalog“ wandert nach `ARCHITECTURE.md`. Ein Test stellt sicher, dass das Preset genau `docs/SPEC.md` prüft.
+- [ ] **Soll festlegen** 🤖 _Opus_ (gleiche Session, vor dem ersten Audit-Lauf) · legt `expected` in `preset.json` fest: `overall_status` und `required_findings` mit Anker und Status. Nur Anker, die schon in `rules_spec.json` stehen, denn der Katalog ist eingefroren (12l). Begründung je Anker (DSGVO-Artikel, Textstelle in SPEC.md) als Kommentar in #36.
+- [ ] **Lesen** 👤 SPEC.md als Recruiter lesen: in 10 Minuten verstanden, nichts Unklares? Dann die Soll-Begründung im Issue querlesen.
+- [ ] **Erzeugen** 👤 `/audit-messen spec-govguard mit Groq` → Report kommt in die Galerie, Soll-Abweichungen sichtbar (ADR 0023) → 🤖 notiert die Abweichungen in #36
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #36`
 - [ ] **Ausprobieren** 👤 `/run` → jede Galerie-Seite öffnen
 - [ ] **Abschließen** 👤 committet und pusht
 
-**Fertig, wenn:** Jede Galerie-Seite Report und Dokument zeigt und Abweichungen vom Soll im Ticket stehen.
-**Fürs Fachgespräch:** Dogfooding: Ein Prüfwerkzeug muss seine eigenen Befunde aushalten.
+**Fertig, wenn:** `pytest` und ruff grün sind, die Galerie `spec-govguard` mit Report und Dokument zeigt und die Abweichungen vom Soll in #36 stehen.
+**Fürs Fachgespräch:** Dogfooding: Ein Prüfwerkzeug muss seine eigenen Befunde aushalten, auch die Drittlandübermittlung der eigenen Demo. Das Soll steht vor dem ersten Lauf fest, sonst wäre es kein Testorakel, sondern eine Kopie des Ergebnisses.
 
 ---
 
-## AWS-Nachholblock (sobald AWS zurück ist)
+## AWS-Nachholblock (entfällt)
 
-**Ziel:** Kommt der AWS-Zugang vor der Präsentation zurück, alle ☁-Kästchen am Stück nachholen: Deploy (#9, #34), dann die Pipeline (#37). Ohne AWS läuft die Demo wie in Schritt 12; der Deploy folgt im Recruiter-Stand.
-
-- [ ] **Anmelden** 👤 `aws sso login`, dann `aws sts get-caller-identity`. Zeigt es nicht dein Konto, geht keines der folgenden Kästchen.
-- [ ] ☁ **Deploy #9 und #34** (Schritte 11b, 11a) 👤 Wizard `cdk bootstrap` ausführen → Stack deployen → Audit-Job mit dem größten Preset starten und abfragen. Prüfe: Report kommt innerhalb von 300 s (ADR 0023), Audit-Ereignis in CloudWatch Logs ohne Eingabetext.
-- [ ] ☁ **Pipeline #37** 🆕 _Opus_ · 👤 `/tdd Issue #37 umsetzen` → Plan → Go → Einrichtungs-Wizard ausführen (OIDC-Rolle) → pushen → Pipeline mit cdk-nag-Gate beobachten
-
-**Fertig, wenn:** Alle ☁-Kästchen in diesem Block abgehakt sind.
+Kein AWS-Deploy und kein CDK (19.10., Budget). #9, #34 und die Pipeline #37 sind Ausbau.
 
 ### Schritt 10h – #33 Messung: Gegenprobe FAIL-Prüfer (mit Groq erledigt, ADR 0023)
 
@@ -804,7 +783,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ### Schritt 13 – #22 Doku zu kb_build nachziehen
 
-**Ziel:** `ARCHITECTURE.md`, `SPEC.md`, `METHODIK.md` und die Lernkarten stimmen mit dem Code nach #19, #20 und #21 überein (Relevanzregel nach ADR 0013, Korrekturrunden, kein Ranking mehr, Pfade nach #20). Ergänzt #16, das README und die drei Erklär-Dokumente übernimmt.
+**Ziel:** `ARCHITECTURE.md`, `METHODIK.md` und die Lernkarten (`SPEC.md` schreibt #36 neu) stimmen mit dem Code nach #19, #20 und #21 überein (Relevanzregel nach ADR 0013, Korrekturrunden, kein Ranking mehr, Pfade nach #20). Ergänzt #16, das README und die drei Erklär-Dokumente übernimmt.
 **Voraussetzung:** Schritt 9e. Kein Code, nur Doku. Läuft nach dem Deploy (Zeitplan: Di 20.10.).
 
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies `gh issue view 22` und zieh die Dokumente und Lernkarten auf den Code-Stand nach“ → Plan → Go
@@ -829,22 +808,10 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 ---
 
-## Nach der Präsentation – Recruiter-Stand
+## Ausbau – Recruiter-Stand (#38)
 
-### Schritt R – #38 GovGuard im eigenen AWS-Konto
-
-**Ziel:** GovGuard läuft dauerhaft im eigenen AWS-Konto mit Groq. S3 hält Wissensbasis und Audit-Jobs, die Galerie kommt aus dem Repo; die UI zeigt echten Fortschritt aus dem asynchronen Job. Live-Audits gibt es nur mit Passwort, im Leerlauf kostet nur KMS (ca. 1 $/Monat).
-**Voraussetzung:** Schritte 11a, 11b und 12, ADR 0023.
-
-- [ ] **Einrichten** 👤 eigenes AWS-Konto mit Budget-Alarm anlegen, dann Wizard `cdk bootstrap` aus Schritt 11b ausführen
-- [ ] **Starten** 🆕 _Opus_ · 👤 `/tdd Issue #38 umsetzen` → Plan → Go
-- [ ] **Sicherheit** 🆕 _Opus_ · 👤 `/security-review`
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen das Ticket`
-- [ ] ☁ **Deploy + Test** 👤 Stack deployen → Streamlit-Secrets umstellen → ein Live-Audit mit Passwort, Galerie ohne Passwort
-- [ ] **Abschließen** 👤 committet und pusht
-
-**Fertig, wenn:** Ein Besucher die Galerie ohne Passwort sieht, ein Live-Audit mit Passwort Fortschritt zeigt und die Rechnung im Leerlauf nur KMS enthält.
-**Fürs Fachgespräch:** Asynchroner Ablauf mit Job-ID statt Timeout, Fortschritt über S3, 0 € Leerlauf bis auf Sicherheit.
+Am 19.10. aus dem Umfang genommen (Budget): Der Recruiter-Stand braucht Audit-Jobs (#34) und dauerhaften Betrieb. #38 ist mit Label `ausbau` geschlossen.
+**Fürs Fachgespräch:** Asynchroner Ablauf mit Job-ID statt Timeout, Fortschritt über S3, Live-Audits nur mit Passwort.
 
 ---
 

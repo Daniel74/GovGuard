@@ -1,6 +1,6 @@
 # 0023 – Demo-Stand ohne AWS, Recruiter-Stand mit Audit-Jobs
 
-_Ändert [ADR 0004](0004-streamlit-community-cloud.md) (Aufrufweg der UI), [ADR 0006](0006-cloudwatch-audit-protokoll.md) (Reports kurz in S3) und [ADR 0018](0018-lambda-function-url.md) (asynchroner Ablauf); kehrt in [ADR 0016](0016-groq-zur-laufzeit-im-prototyp.md) den Standard-Provider um. Umsetzung: #9, #11, #34._
+_Ändert [ADR 0004](0004-streamlit-community-cloud.md) (Aufrufweg der UI), [ADR 0006](0006-cloudwatch-audit-protokoll.md) (Reports kurz in S3) und [ADR 0018](0018-lambda-function-url.md) (asynchroner Ablauf); kehrt in [ADR 0016](0016-groq-zur-laufzeit-im-prototyp.md) den Standard-Provider um. Umsetzung: #11, #36. **Nachtrag 19.10.2026:** Nur der Demo-Stand wird gebaut, siehe unten._
 
 ## Kontext
 
@@ -28,6 +28,12 @@ _Ändert [ADR 0004](0004-streamlit-community-cloud.md) (Aufrufweg der UI), [ADR 
 - Die Lambda braucht `lambda:InvokeFunction` auf sich selbst sowie `s3:PutObject`/`GetObject` nur auf `audits/*`. Die Galerie zeigt Abweichungen statt nachzuwürfeln.
 - Im Leerlauf zahlt der Recruiter-Stand nur KMS (ca. 1 $/Monat) und Cent-Beträge für S3.
 
+## Nachtrag 19.10.2026: nur Demo-Stand
+
+- AWS ist zurück, aber das Budget reicht nicht für Betrieb und Bau. Recruiter-Stand, Audit-Jobs, CDK-Stack und Pipeline sind Ausbau (#9, #34, #37, #38, Label `ausbau`); Haiku/Bedrock bleibt außen vor.
+- Das Selbst-Audit prüft nur `docs/SPEC.md` als Preset `spec-govguard` (#36); `arch-govguard-stack` entfällt. Kein Template, kein KMS-Schlüssel, keine Leerlaufkosten.
+- Die Entscheidungen oben zu Recruiter-Stand, S3 und CI gelten als Entwurf für den Ausbau.
+
 ## Fachgespräch-Satz
 
-„Teuer ist nicht AWS, sondern das Modell: Die Demo läuft ohne Infrastruktur, der Recruiter-Stand zeigt mit Audit-Jobs, KMS und einem Tag Löschfrist, wie ich Fortschritt ohne Streaming und Nachvollziehbarkeit ohne Datensammlung löse.“
+„Teuer ist nicht AWS, sondern das Modell: Die Demo läuft ohne Infrastruktur, der Recruiter-Stand zeigt mit Audit-Jobs, KMS und einem Tag Löschfrist, wie ich Fortschritt ohne Streaming und Nachvollziehbarkeit ohne Datensammlung löse.“ Seit 19.10.: „Den Recruiter-Stand habe ich entworfen, aber aus Budgetgründen bewusst nicht gebaut.“
