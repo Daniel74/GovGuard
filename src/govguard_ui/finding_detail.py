@@ -29,7 +29,7 @@ def render_detail(finding: Finding) -> None:
         st.html(badge(kind) + "".join(tag(t) for t in tags))
         st.markdown(f"#### {plain(finding.title)}")  # LLM text stays text
         evidence = "keine Zeilen" if finding.line_start is None else f"Zeilen {lines_text(finding)}"
-        st.caption(f"{plain(finding.primary_anchor)} · {finding.rule_id} · Beleg: {evidence}")
+        st.caption(f"{plain(finding.primary_anchor)} · Beleg: {evidence}")  # rule_id stays internal
         st.markdown("**Begründung**")
         st.html(paragraph(finding.rationale))
         if finding.recommendation:

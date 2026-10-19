@@ -28,7 +28,8 @@ def test_the_detail_shows_the_selected_finding_and_its_evidence_lines() -> None:
 
     assert not app.exception
     assert "#### Block Public Access für S3\\-Buckets" in [m.value for m in app.markdown]
-    assert "CIS AWS v7.0.0 3.1.4 · ARCH-CIS-3.1.4 · Beleg: Zeilen 120–125" in shown_text(app)
+    assert "CIS AWS v7.0.0 3.1.4 · Beleg: Zeilen 120–125" in shown_text(app)
+    assert "ARCH-CIS-3.1.4" not in shown_text(app)  # the anchor once, not again as code
     assert document(app).count("gg-mark") == 6
 
 
@@ -38,7 +39,7 @@ def test_selecting_another_finding_moves_the_document_to_its_lines() -> None:
 
     select(app, FULL_ACCESS_POLICY)
 
-    assert "ARCH-BSI-BER.4.1 · Beleg: Zeilen 265–268" in shown_text(app)
+    assert "· Beleg: Zeilen 265–268" in shown_text(app)
     assert document(app).count("gg-mark") == 4
     assert "▲ Zeilen 1–260 ausgeblendet" in shown_text(app)
 
