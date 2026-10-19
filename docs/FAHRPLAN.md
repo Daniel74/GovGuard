@@ -17,7 +17,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft die Spezifikation seines Demo-Stands). Offene Schritte in dieser Reihenfolge: Rest von 12b, zuletzt die Doku 13–14. Mit #36 ist der Prototyp fertig.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft die Spezifikation seines Demo-Stands). Offene Schritte in dieser Reihenfolge: Rest von 12b, 12o (#54), zuletzt die Doku 13–14. Mit #36 ist der Prototyp fertig.
 - **Eingefroren ab Schritt 12l:** `kb_build` und Audit-Engine werden nicht mehr geändert, Katalog und Prompts bleiben. Ausnahme ist 12n (#52, #53): Die KI-VO kommt als Quelle dazu, DSGVO und KI-VO werden in Einzelpflichten zerlegt. Das bricht G13 für den Spec-Katalog bewusst: Spec-Regeln, Spec-Galerie und Spec-Soll entstehen neu, der Architektur-Katalog bleibt. Bekannte Grenzen stehen im README; #48 (YAML), #49 (Build-Abbrüche) und #50 (Allow/Deny, Platzhalter) sind Ausbau.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 19.10.:** Kaum Budget. Die Demo-Architektur bleibt (Streamlit und Groq), kein AWS-Deploy, kein CDK. Außerhalb des Umfangs (Label `ausbau`): Haiku/Bedrock, CDK-Stack #9, Audit-Jobs #34, Pipeline #37, Recruiter-Stand #38.
@@ -33,7 +33,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | So 18.10.  | Schritte 12i, 12j: #46, #47. Schritt 12l: Galerie, bekannte Grenzen. Danach sind `kb_build` und Audit eingefroren                     |
 | Mo 19.10.  | Schritt 12b: GovGuard-Spezifikation schreiben, Soll festlegen. Schritt 12m: #51 UI-Texte deutsch. Das Claude-Wochenlimit setzt zurück |
 | Di 20.10.  | Schritt 12n: Teil 1 Zwischenstand committen, Teil 2 Stufe „Zerlegen“ bauen (#53)                                                      |
-| Mi 21.10.  | 12n: Teil 2 Wissensbasis, Spec-Galerie neu; Teil 3 SPEC und Soll. 12b: Audit, Galerie. 13–14: Doku #22, #16. A fertig. Abgabe         |
+| Mi 21.10.  | 12n: Teil 2 Wissensbasis, Spec-Galerie neu; Teil 3 SPEC und Soll. 12b: Audit, Galerie. 12o: Messkampagne #54. 13–14: Doku #22, #16. A fertig. Abgabe |
 | 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                        |
 | Mo 26.10.  | Präsentation und Fachgespräch                                                                                                         |
 
@@ -83,6 +83,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 12m     | A    | #51 UI-Texte deutsch              | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
 | 12n     | A    | #52 KI-VO, #53 Zerlegen           | 🤖 Opus                          | 🤖 Opus                     |
 | 12b     | A    | #36 Selbst-Audit Spec, Galerie    | 👤 + 🤖 Opus                     | 👤                          |
+| 12o     | A    | #54 Messkampagne Stabilität       | 👤 Messung + 🤖 Sonnet           | 🤖 Opus                     |
 | 10h     | A    | #33 Gegenprobe (Groq, erledigt)   | 👤 Messung                       | 👤                          |
 | 13      | A    | #22 Doku zu kb_build nachziehen   | 🤖 Sonnet                        | 👤                          |
 | 14      | A    | #16 Doku nachziehen               | 👤 + 🤖 Sonnet                   | 👤                          |
@@ -810,10 +811,27 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 - [x] **Erzeugen** 👤 `/audit-messen spec-govguard mit Groq` → Report kommt in die Galerie, Soll-Abweichungen sichtbar (ADR 0023) → 🤖 notiert die Abweichungen in #36, bis `pytest` grün ist
 - [x] **Ausprobieren** 👤 `/run` → nur die Galerie-Seite `spec-govguard` öffnen
 - [x] ~~**Prüfen** `/code-review gegen Issue #36`~~ entfällt: SPEC und Soll sind mit `/code-review gegen Issue #52` geprüft, „Erzeugen“ schreibt nur Daten
-- [ ] **Abschließen** 👤 committet und pusht
+- [x] **Abschließen** 👤 committet und pusht
 
 **Fertig, wenn:** `pytest` und ruff grün sind, die Galerie `spec-govguard` mit Report und Dokument zeigt und die Abweichungen vom Soll in #36 stehen.
 **Fürs Fachgespräch:** Dogfooding: Ein Prüfwerkzeug muss seine eigenen Befunde aushalten, auch die Drittlandübermittlung der eigenen Demo. Das Soll steht vor dem ersten Lauf fest, sonst wäre es kein Testorakel, sondern eine Kopie des Ergebnisses.
+
+---
+
+### Schritt 12o – #54 Messkampagne: Stabilität des Spec-Audits
+
+**Ziel:** Belastbare Zahlen für die Präsentation: Soll-Treffer, stabile Prüfregeln und Wechsel nach Art, je 3 Läufe für die 3 Spec-Presets auf dem Katalog mit 374 Regeln. Die Reports liegen als Rohdaten im Repo.
+**Voraussetzung:** Schritt 12b. Kein AWS nötig. Groq, ca. 1 $. `src/` bleibt eingefroren, das Auswerteskript liegt beim Skill `audit-messen`.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12o und Issue #54“ → Plan → Go
+- [ ] **Bauen** 🤖 _Sonnet_ (gleiche Session) · Auswerteskript mit Test an kleinen Fixtures, Ablage `data/measurements/`
+- [ ] **Messen** 👤 `/audit-messen spec-govguard, spec-meldeportal-gesundheit und spec-wohngeld-openapi je 3× mit Groq, Reports nach data/measurements/` → 🤖 wertet aus und notiert das Ergebnis in #54
+- [ ] **Nachziehen** 🤖 _Sonnet_ · SPEC P1 mit den neuen Zahlen, Kopie ins Preset → 👤 `/audit-messen spec-govguard mit Groq`, Report nach `data/gallery/` (G9) → 🤖 notiert Soll-Abweichungen in #36
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #54`
+- [ ] **Abschließen** 👤 committet und pusht, schließt #54
+
+**Fertig, wenn:** Die 9 Reports im Repo liegen, das Skript die Kennzahlen je Preset ausgibt, SPEC P1 sie nennt und `pytest` und ruff grün sind.
+**Fürs Fachgespräch:** `temperature: 0` macht ein LLM nicht deterministisch. Stabilität programmiert man nicht, man misst sie: Entscheidend ist nicht, wie viele Befunde kippen, sondern welche. Kippen nur Lücken und N/A, während FAIL und Pflichtbefunde stehen, ist das Audit für die Fachleute brauchbar.
 
 ---
 

@@ -121,11 +121,16 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 
 ## Szenario 10: KI-Verordnung als Quelle im Spec-Audit (#52)
 
-_Schlanke Variante in Umsetzung (#52, FAHRPLAN 12n): ca. 8 Artikel, ohne Vorstufe für die Hochrisiko-Einstufung. Offen bleiben die Vorstufe und der volle Umfang._
+_Schlanke Variante umgesetzt (#52, #53): 8 Artikel in Einzelpflichten, ohne Vorstufe für die Einstufung (SPEC B6). Offen bleiben die Vorstufe (unten) und der volle Umfang._
 
 - **Auslöser:** Behörden setzen KI-Systeme ein und haben dann eigene Pflichten nach der KI-Verordnung (Verordnung (EU) 2024/1689), z. B. als Betreiber (Art. 26) und als öffentliche Stelle mit Grundrechte-Folgenabschätzung (Art. 27). GovGuard ist selbst ein KI-System; das Selbst-Audit (`spec-govguard`) würde dann auch gegen die KI-Verordnung prüfen.
-- **Was bricht:** Die meisten Pflichten gelten nur für Hochrisiko-Systeme (Art. 6, Anhang III). Ob eine Spezifikation darunter fällt, muss vor allen anderen Regeln feststehen; sonst vergibt das Modell N/A je Regel einzeln, und das schwankt (SPEC P1). Der Katalog ist eingefroren (SPEC G13).
+- **Was bricht:** Die meisten Pflichten gelten nur für Hochrisiko-Systeme (Art. 6, Anhang III). Ob eine Spezifikation darunter fällt, muss vor allen anderen Regeln feststehen; sonst vergibt das Modell N/A je Regel einzeln, und das schwankt (SPEC P1).
 - **Anpassung:** Neue Quelle über das Rezept (ARCHITECTURE, *Neue Quelle hinzufügen*). Der Text liegt wie die DSGVO im Formex-XML bei EUR-Lex; der DSGVO-Adapter ist vermutlich weitgehend wiederverwendbar. Dazu ein Musterfall mit KI-Einsatz und Soll, und für `spec-govguard` ein neues Soll. Vorher klären: Wer entscheidet die Hochrisiko-Einstufung (Code-Vorstufe oder Mensch), und welche Fristen gelten aktuell? _(Rechtsstand vor dem Bau prüfen.)_
+- **Vorstufe Systemprofil (offen):** Ein Aufruf vor dem Audit legt fest, was für ein System die Spezifikation beschreibt: KI-System, Hochrisiko-Bereich nach Anhang III, besondere Kategorien von Daten, Drittland. Jede Angabe braucht Belegzeilen; ohne Beleg gilt „unbekannt“.
+  - **Befund (#36, 19.10.2026):** Ohne Abschnitt 8 ergab `spec-govguard` für alle 65 KI-VO-Regeln nur Lücken, obwohl die SPEC das Sprachmodell nennt. Die N/A der Hochrisiko-Pflichten schwankten zwischen zwei Läufen von 0 auf 25.
+  - **N/A per Code:** Ist das System belegt nicht hochriskant, setzt der Code Art. 13, 14, 26 und 27 auf N/A, wie heute die Dienste im Architektur-Audit. Das nimmt die größte Schwankung heraus.
+  - **Pflicht-Lücke statt FAIL:** Was das Profil verlangt, aber fehlt, bleibt WARN (offene Welt, ADR 0020) und erscheint oben im Report, z. B. „KI-System erkannt, Einstufung fehlt“ (Art. 6 Abs. 4 KI-VO verlangt die Dokumentation). Ein FAIL aus bloßem Fehlen würde G4 brechen.
+  - **Risiko:** Ein falsches Profil verdeckt Pflichten per N/A. Deshalb steht das Profil mit Belegen im Report, und ohne Beleg setzt der Code kein N/A. Neue Weichen: Prompt-Design und Statusmodell; ein Musterfall mit verschwiegener KI-Nutzung als Soll.
 
 ## Szenario 11: Prompt-Fassung und Betrieb beobachtbar machen
 
