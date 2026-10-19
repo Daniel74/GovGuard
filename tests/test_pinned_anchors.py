@@ -9,10 +9,11 @@ from kb_build.paths import BuildPaths
 from kb_build.select.models import Selection
 
 PATHS = BuildPaths()
-SOURCES = ["bsi", "c5", "cis", "dsgvo", "fsbp", "sdm"]
+SOURCES = ["bsi", "c5", "cis", "dsgvo", "fsbp", "ki-vo", "sdm"]
+DECOMPOSED = {"dsgvo", "ki-vo"}  # #53: parts are anchors
 ANCHOR_PREFIX = {  # the first word is ambiguous: "BSI C5 …" is not BSI GS++, "AWS FSBP …" is FSBP
     "BSI": "BSI GS++ ", "C5": "BSI C5 ", "CIS": "CIS AWS ", "FSBP": "AWS FSBP ",
-    "DSGVO": "DSGVO ", "SDM": "SDM ",
+    "DSGVO": "DSGVO ", "KI-VO": "KI-VO ", "SDM": "SDM ",
 }
 PRESETS = [
     Preset.model_validate_json(path.read_text(encoding="utf-8"))
@@ -22,7 +23,8 @@ PRESETS = [
 
 def test_spec_audit_pins_the_required_findings_of_the_spec_presets() -> None:
     assert pinned_anchors(PRESETS, "spec") == {
-        "DSGVO Art. 9 Abs. 2", "DSGVO Art. 46 Abs. 1", "SDM Löschen M60.P01"}
+        "DSGVO Art. 9 Abs. 2", "DSGVO Art. 46 Abs. 1", "SDM Löschen M60.P01",
+        "KI-VO Art. 4 Abs. 1", "KI-VO Art. 50 Abs. 2"}
 
 
 def test_architecture_audit_pins_each_anchor_once() -> None:
@@ -38,7 +40,7 @@ def source_of(anchor: str) -> str:
 
 @pytest.mark.parametrize("source", SOURCES)
 def test_every_pinned_anchor_exists_in_the_extracted_sources(source: str) -> None:
-    folder = PATHS.decomposed if source == "dsgvo" else PATHS.extracted  # #53: parts are anchors
+    folder = PATHS.decomposed if source in DECOMPOSED else PATHS.extracted
     path = folder / f"{source}.json"
     if not path.exists():  # cis.json, c5.json and fsbp.json stay local (ADR 0008)
         pytest.skip(f"{path} not built on this machine")

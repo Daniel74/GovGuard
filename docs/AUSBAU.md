@@ -130,7 +130,7 @@ _Schlanke Variante in Umsetzung (#52, FAHRPLAN 12n): ca. 8 Artikel, ohne Vorstuf
 ## Szenario 11: Prompt-Fassung und Betrieb beobachtbar machen
 
 - **Auslöser:** Prompts werden weiterentwickelt und sollen schrittweise eingeführt werden: eine neue Fassung erst für einen Teil der Audits, dann messbar mit der alten verglichen.
-- **Was bricht:** Der Audit-Report nennt `model_id` und `catalog_sha256`, aber keine Prompt-Fassung. `kb_commit` steht im Demo-Stand auf `local`. Ein Betriebsprotokoll gibt es nicht: `AuditEvent` existiert nur als Modell (ADR 0006). Prompts liegen als Python-Texte im Code; ihre Änderungen zeigt nur der Git-Verlauf (SPEC, Abschnitt 11).
+- **Was bricht:** Der Audit-Report nennt `model_id` und `catalog_sha256`, aber keine Prompt-Fassung. `kb_commit` steht im Demo-Stand auf `local`. Ein Betriebsprotokoll gibt es nicht: `AuditEvent` existiert nur als Modell (ADR 0006). Prompts liegen als Python-Texte im Code; ihre Änderungen zeigt nur der Git-Verlauf (SPEC, Abschnitt 12).
 
 | Anpassung | Ausführende Schicht |
 |---|---|

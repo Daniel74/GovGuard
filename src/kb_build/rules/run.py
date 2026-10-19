@@ -81,6 +81,8 @@ def formulate_all(
     `only_missing` keeps the rules already on disk and formulates the rest (ADR 0025).
     A file is written only after the gate passed; otherwise the old catalog stays.
     """
+    if only_missing and only != "spec":
+        raise ValueError("--only-missing is built only for the spec audit (ADR 0025)")
     properties = read_property_index(paths)
     inputs = RuleInputs(read_sources(paths, ALL_SOURCES), properties, read_scope(paths.scope))
     for audit_type in chosen(only):

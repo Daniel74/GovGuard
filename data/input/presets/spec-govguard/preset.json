@@ -8,6 +8,14 @@
       {
         "anchor": "DSGVO Art. 46 Abs. 1",
         "status": "FAIL"
+      },
+      {
+        "anchor": "KI-VO Art. 4 Abs. 1",
+        "status": "PASS"
+      },
+      {
+        "anchor": "KI-VO Art. 50 Abs. 2",
+        "status": "PASS"
       }
     ]
   }

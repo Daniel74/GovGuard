@@ -18,11 +18,14 @@ Geprüft wird gegen Regelwerke:
 
 - Die **DSGVO** ist das EU-Gesetz zum Schutz personenbezogener Daten.
 - Das **Standard-Datenschutzmodell (SDM)** der Datenschutzkonferenz übersetzt die DSGVO in Maßnahmen.
+- Die **KI-Verordnung (KI-VO)** ist das EU-Gesetz für KI-Systeme. Ein KI-System ist Software, die
+  aus Eingaben selbst Ergebnisse wie Empfehlungen ableitet. Die KI-VO stuft solche Systeme nach
+  ihrem Risiko ein.
 - Der **IT-Grundschutz** des Bundesamts für Sicherheit in der Informationstechnik (BSI) beschreibt
   Sicherheitsanforderungen an IT-Systeme.
 
 GovGuard ist ein digitaler Prüfassistent für diese Vorprüfung. Er prüft eine Spezifikation gegen
-DSGVO und SDM und eine Architektur gegen BSI IT-Grundschutz, BSI C5, CIS AWS und AWS FSBP.
+DSGVO, KI-VO und SDM und eine Architektur gegen BSI IT-Grundschutz, BSI C5, CIS AWS und AWS FSBP.
 
 Ein solcher Prüflauf heißt Audit. Sein Ergebnis ist ein Audit-Report: je Prüfregel ein Befund mit
 Status, wörtlichem Beleg und Empfehlung.
@@ -36,7 +39,7 @@ Diese Beschreibung gilt für den Demo-Stand, der zur Präsentation am 26.10.2026
 Der Demo-Stand ist eine Web-Anwendung auf Streamlit Community Cloud. Das ist ein kostenloser Dienst
 zum Betrieb von Python-Anwendungen.
 
-Die Prüfregeln wendet ein Sprachmodell beim Anbieter Groq an. Ein Sprachmodell ist eine KI, die Text
+Die Prüfregeln wendet ein Sprachmodell beim Dienstleister Groq an. Ein Sprachmodell ist eine KI, die Text
 liest und Text oder strukturierte Daten zurückgibt.
 
 Nicht zum Umfang gehören:
@@ -53,10 +56,17 @@ deshalb nie „konform mit der DSGVO“. Es heißt nur: Diese eine Prüfregel is
 
 ### Wie die Teile ausgewählt werden
 
-Jede Anforderung eines Regelwerks durchläuft bis zu drei Filter:
+Bei DSGVO und KI-VO wird jeder Artikel zuerst zerlegt. Ein Artikel enthält oft mehrere Pflichten,
+etwa Art. 5 DSGVO sechs Grundsätze. Ein Sprachmodell teilt ihn deshalb in Einzelpflichten mit
+eigener Fundstelle, z. B. „DSGVO Art. 5 Abs. 1 lit. a“.
 
-1. **Vorfilter (Programm):** behält nur festgelegte Kapitel, Bausteine oder Bereiche, mit festem
-   Begründungssatz für alles andere.
+Dabei sagt das Sprachmodell nur, ob Absätze alle gelten, ob einer genügt oder ob sie gar keine
+Pflicht enthalten. Wortlaut und Fundstelle übernimmt das Programm aus dem Normtext.
+
+Jede Anforderung eines Regelwerks durchläuft danach bis zu drei Filter:
+
+1. **Vorfilter (Programm):** behält nur festgelegte Kapitel, Artikel, Bausteine oder Bereiche, mit
+   festem Begründungssatz für alles andere. Verworfen wird auch, was laut Zerlegung keine Pflicht ist.
 2. **Prüfbarkeit (Sprachmodell):** Lässt sich die Anforderung an einer Spezifikation bzw. Architektur
    überhaupt prüfen (G10)?
 3. **Relevanz (Programm, nur Architektur):** Betrifft sie einen Dienst im Prüfumfang? Der Prüfumfang
@@ -68,7 +78,8 @@ Jede Entscheidung steht mit Begründung im Auswahlprotokoll. Die Zahlen unten st
 
 | Regelwerk | Fassung | Verwendeter Teil | Anforderungen | nach Vorfilter | Prüfregeln |
 |---|---|---|---|---|---|
-| DSGVO | Verordnung (EU) 2016/679, Text von EUR-Lex | Kapitel II–V (Art. 5–49); je Artikel eine Anforderung | 99 | 46 | 35 |
+| DSGVO | Verordnung (EU) 2016/679, Text von EUR-Lex | Kapitel II–V (Art. 5–49); je Einzelpflicht eine Anforderung | 383 | 278 | 193 |
+| KI-VO | Verordnung (EU) 2024/1689, konsolidierte Fassung vom 27.07.2026, Text von EUR-Lex | Art. 4, 5, 6, 13, 14, 26, 27 und 50; je Einzelpflicht eine Anforderung | 197 | 74 | 65 |
 | SDM | Bausteine der Datenschutzkonferenz, V1.0 bzw. V1.0a | Löschen und Vernichten (M60), Trennen (M50), Zugriffe regeln (M51); alle Maßnahmen | 147 | 147 | 116 |
 
 Nicht verwendet werden bei der DSGVO Kapitel I, VI bis VIII, X und XI. Sie regeln Begriffe,
@@ -77,6 +88,13 @@ erfüllen kann.
 
 Auch Kapitel IX fehlt. Es regelt besondere Fälle wie Beschäftigtendaten oder Forschung und wäre für
 manche Spezifikation einschlägig. Das ist eine bewusste Lücke.
+
+Von der KI-VO werden acht Artikel verwendet: KI-Kompetenz (Art. 4), verbotene Praktiken (Art. 5),
+Einstufung als Hochrisiko-System (Art. 6), dessen Pflichten (Art. 13, 14, 26, 27) und Transparenz
+(Art. 50). Ein Hochrisiko-System ist ein KI-System, das die KI-VO wegen seines Einsatzbereichs,
+etwa bei Sozialleistungen, strengen Pflichten unterwirft.
+
+Alle übrigen Artikel der KI-VO fehlen, etwa das Risikomanagement der Anbieter (Art. 9).
 
 Die drei SDM-Bausteine setzen je einen Grundsatz aus Art. 5 DSGVO um, den die DSGVO-Prüfregel
 allein nicht prüfbar macht: Löschen die Speicherbegrenzung, Trennen die Zweckbindung, Zugriffe
@@ -115,7 +133,7 @@ Personen oder das ganze Konto, nicht ein einzelnes Template (B5).
 ### F1 Audit einer Spezifikation
 
 Die prüfende Person gibt eine Spezifikation als Text, Markdown oder
-OpenAPI ein. GovGuard bewertet sie gegen alle 151 Prüfregeln aus DSGVO und SDM.
+OpenAPI ein. GovGuard bewertet sie gegen alle 374 Prüfregeln aus DSGVO, KI-VO und SDM.
 
 ### F2 Audit einer Architektur
 
@@ -142,7 +160,8 @@ Normtexten. Die Wissensbasis ist die Gesamtheit dieser Prüfregeln, je Audit-Art
 
 Der Bau läuft in vier Schritten (G10–G13):
 
-1. Normtexte vom Herausgeber laden, nur mit der hinterlegten Prüfsumme (G9).
+1. Normtexte vom Herausgeber laden, nur mit der hinterlegten Prüfsumme (G9). DSGVO und KI-VO in
+   Einzelpflichten zerlegen (Abschnitt 3).
 2. Je Anforderung urteilt ein Sprachmodell, ob sie an einer Spezifikation oder Architektur prüfbar ist.
 3. Das Programm wählt aus, und ein Sprachmodell formuliert aus jeder Anforderung eine Prüfregel.
 4. Programme prüfen das Ergebnis, der Projektbetreiber gibt es frei.
@@ -152,7 +171,7 @@ Wie das technisch abläuft, beschreibt [ARCHITECTURE.md](ARCHITECTURE.md) Abschn
 ### F6 Wissensbasis erweitern
 
 Der Projektbetreiber kann ein weiteres Regelwerk als Quelle
-aufnehmen, etwa die KI-Verordnung der EU. Er stößt die Erweiterung an und gibt sie frei (G12).
+aufnehmen, etwa das Bundesdatenschutzgesetz. Er stößt die Erweiterung an und gibt sie frei (G12).
 
 Eine neue Quelle braucht drei Dinge: einen Herausgeber mit festem Dokument und Prüfsumme (G9),
 mindestens einen Musterfall mit Soll und eine schriftliche Entscheidung mit Begründung.
@@ -277,14 +296,14 @@ Diese Ausnahme gilt bewusst für die Zerlegung von DSGVO und KI-VO in Einzelpfli
 
 ### Datenflüsse
 
-| Daten                                         | Herkunft                   | Wohin                                        | Wie lange                                                        |
-| --------------------------------------------- | -------------------------- | -------------------------------------------- | ---------------------------------------------------------------- |
-| Eingabe (Spezifikation oder Architektur)      | prüfende Person            | Streamlit Community Cloud (USA), Groq (USA)  | GovGuard speichert sie nicht; sie lebt nur in der Sitzung        |
-| Audit-Report mit Belegen                      | GovGuard                   | Browser der prüfenden Person                 | bis zum Ende der Sitzung oder als heruntergeladene Datei bei ihr |
-| Angaben zur Rückverfolgung                    | GovGuard                   | im Audit-Report                              | wie der Audit-Report                                             |
-| Audit-Reports der Galerie                     | Projektbetreiber           | öffentliche Versionsverwaltung (GitHub, USA) | bis zur Löschung durch den Projektbetreiber                      |
-| Zugriffsdaten der Besucher (z. B. IP-Adresse) | Browser                    | Streamlit Community Cloud (USA)              | nach den Bedingungen von Streamlit                               |
-| Öffentliche Normtexte                         | Herausgeber der Regelwerke | Groq (USA), nur beim Bau der Wissensbasis    | als Zitate in den Prüfregeln auf GitHub                          |
+| Daten                                         | Herkunft                   | Wohin                                   | Wie lange                                                        |
+| --------------------------------------------- | -------------------------- | --------------------------------------- | ---------------------------------------------------------------- |
+| Eingabe (Spezifikation oder Architektur)      | prüfende Person            | Streamlit Community Cloud, Groq         | GovGuard speichert sie nicht; sie lebt nur in der Sitzung        |
+| Audit-Report mit Belegen                      | GovGuard                   | Browser der prüfenden Person            | bis zum Ende der Sitzung oder als heruntergeladene Datei bei ihr |
+| Angaben zur Rückverfolgung                    | GovGuard                   | im Audit-Report                         | wie der Audit-Report                                             |
+| Audit-Reports der Galerie                     | Projektbetreiber           | öffentliche Versionsverwaltung (GitHub) | bis zur Löschung durch den Projektbetreiber                      |
+| Zugriffsdaten der Besucher (z. B. IP-Adresse) | Browser                    | Streamlit Community Cloud               | nach den Bedingungen von Streamlit                               |
+| Öffentliche Normtexte                         | Herausgeber der Regelwerke | Groq, nur beim Bau der Wissensbasis     | als Zitate in den Prüfregeln auf GitHub                          |
 
 Eine Sitzung ist die Verbindung eines Browsers mit der Web-Anwendung. Schließt man das Fenster,
 endet sie.
@@ -292,13 +311,13 @@ endet sie.
 Zur Rückverfolgung stehen im Audit-Report nur Prüfsummen, das verwendete Sprachmodell und eine
 zufällige Kennung des Audits (G9). Daten über die prüfende Person enthält er nicht.
 
-### Übermittlung in die USA
+### Verarbeitung außerhalb der EU
 
-Betrieb und Sprachmodell laufen in den USA. Die USA sind aus Sicht der DSGVO ein Drittland, also ein
-Staat außerhalb der EU.
+Streamlit, Groq und GitHub verarbeiten Daten auch außerhalb der EU. Ein Staat außerhalb der EU heißt
+in der DSGVO Drittland.
 
-Für diese Übermittlung legt der Demo-Stand keine eigenen Garantien nach Art. 46 DSGVO fest.
-Deshalb gilt die Regel: nur fiktive Daten.
+Für diese Übermittlung in ein Drittland legt der Demo-Stand keine eigenen Garantien nach Art. 46
+DSGVO fest. Deshalb gilt die Regel: nur fiktive Daten.
 
 ### Speicherung und Löschung
 
@@ -306,7 +325,24 @@ Was Groq und Streamlit selbst speichern und wann sie es löschen, regeln deren N
 GovGuard legt dafür keine eigene Löschfrist fest. Ein eigenes Audit-Protokoll führt der Demo-Stand
 nicht.
 
-## 8 Nicht-funktionale Anforderungen
+## 8 Einstufung nach KI-Verordnung
+
+GovGuard ist ein KI-System nach Art. 3 Nr. 1 KI-VO, denn ein Sprachmodell leitet die Befunde aus
+der Eingabe ab.
+
+GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen
+und entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter
+keinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.
+
+Für GovGuard gelten deshalb nur die allgemeinen Pflichten der KI-VO:
+
+| Pflicht                                     | Umsetzung                                                                                                                                        |
+| ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| KI-Kompetenz der Nutzer (Art. 4)            | Die Seite „Start & Hilfe“ erklärt jeder prüfenden Person, wie ein Befund entsteht, wie der Code ihn nachprüft und wie Korrekturen zu lesen sind. |
+| Hinweis auf das KI-System (Art. 50 Abs. 1)  | Die Seite „Start & Hilfe“ nennt das Sprachmodell als Quelle der Befunde.                                                                         |
+| Kennzeichnung der Ausgaben (Art. 50 Abs. 2) | Jeder Audit-Report nennt im Feld `model_id` maschinenlesbar das Sprachmodell, das ihn erzeugt hat.                                               |
+
+## 9 Nicht-funktionale Anforderungen
 
 | Merkmal             | Anforderung                                                                                                                                                                           |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -314,10 +350,10 @@ nicht.
 | Kosten              | Ein Audit kostet mit Groq 2 bis 3 Cent. Das Passwort verhindert, dass Fremde Kosten auslösen.                                                                                         |
 | Leerlaufkosten      | 0 €. Leerlaufkosten sind Kosten, die ohne Nutzung allein durch Zeit entstehen.                                                                                                        |
 | Sicherheit          | Passwort und Zugangsschlüssel für das Sprachmodell liegen nur in den geschützten Einstellungen von Streamlit, nicht im Programmcode. Ohne eingerichtetes Passwort startet kein Audit. |
-| Nachvollziehbarkeit | Jedes Audit und jeder Bau der Wissensbasis hinterlässt prüfbare Spuren (Abschnitt 9).                                                                                                 |
+| Nachvollziehbarkeit | Jedes Audit und jeder Bau der Wissensbasis hinterlässt prüfbare Spuren (Abschnitt 10).                                                                                                |
 | Prüfbarkeit         | Alle automatischen Tests laufen ohne AWS und ohne Groq.                                                                                                                               |
 
-## 9 Beobachtbarkeit
+## 10 Beobachtbarkeit
 
 Beobachtbarkeit heißt: Man kann im Nachhinein erkennen, was das System getan hat und warum.
 GovGuard hält das auf drei Ebenen fest, ohne Eingabetexte zu speichern.
@@ -329,9 +365,9 @@ GovGuard hält das auf drei Ebenen fest, ohne Eingabetexte zu speichern.
 | Je Messlauf             | Laufzeit, Tokens, Kosten, Gründe für Wiederholungen und Abweichungen vom Soll                                                                                                                          | im zugehörigen Ticket                             | Projektbetreiber                      |
 
 Messläufe startet der Projektbetreiber von Hand, etwa vor und nach einer Änderung an der
-Wissensbasis. Was der Demo-Stand nicht festhält, steht in Abschnitt 11.
+Wissensbasis. Was der Demo-Stand nicht festhält, steht in Abschnitt 12.
 
-## 10 Qualität und Restrisiken
+## 11 Qualität und Restrisiken
 
 Ein Audit-Report ist ein Hinweis für Fachleute, kein Nachweis. Ein Sprachmodell kann irren, und
 GovGuard macht sichtbar, wo.
@@ -352,7 +388,8 @@ zeigen den Ist-Stand, keine Anforderung.
 ### P1 Schwankung zwischen Läufen
 
 Dieselbe Eingabe kann im nächsten Lauf andere Status erhalten. Bei Spezifikationen änderten zwischen
-zwei Läufen mit Groq 42 von 151 Prüfregeln ihren Status, mit AWS Bedrock 19.
+zwei Läufen mit Groq 42 von 151 Prüfregeln ihren Status, mit AWS Bedrock 19. Gemessen wurde mit dem
+Katalog von 151 Prüfregeln, vor KI-VO und Zerlegung.
 
 - **Gegenmaßnahme:** Das Modell läuft ohne Zufallsanteil (Temperatur 0). Falsche FAILs fängt die
   Zweitprüfung ab.
@@ -362,9 +399,9 @@ zwei Läufen mit Groq 42 von 151 Prüfregeln ihren Status, mit AWS Bedrock 19.
 
 Das Modell wertet „nicht beschrieben“ gern als Verstoß, obwohl G4 das verbietet.
 
-- **Gegenmaßnahme:** Die Zweitprüfung. Beim Musterfall Wohngeld stufte sie 10 von 11 FAILs auf WARN herab.
-- **Was bleibt:** Die Zweitprüfung ist selbst ein Sprachmodell. Beim Musterfall Wohngeld blieb ein
-  FAIL stehen, der Gesamtstatus weicht vom Soll WARN ab.
+- **Gegenmaßnahme:** Die Zweitprüfung. Beim Musterfall Wohngeld stufte sie 9 von 14 FAILs auf WARN herab.
+- **Was bleibt:** Die Zweitprüfung ist selbst ein Sprachmodell. Beim Musterfall Wohngeld blieben fünf
+  FAILs stehen, der Gesamtstatus weicht vom Soll WARN ab.
 
 ### P3 Falsches PASS
 
@@ -377,7 +414,8 @@ existieren und lang genug sind, bis zu einem Abschnitt von 200 Zeilen.
 
 ### P4 Viele Lücken
 
-In der offenen Welt sind die meisten Befunde WARN, bei den Musterfällen 101 bis 120 von 151.
+In der offenen Welt sind die meisten Befunde WARN, bei den Musterfällen 101 bis 120 von 151
+(Katalog von 151 Prüfregeln).
 Meist beschreibt die Eingabe die Anforderung einfach nicht.
 
 - **Gegenmaßnahme:** Die Oberfläche trennt Lücken (nicht beschrieben) vom Prüfbedarf (Beleg unklar).
@@ -402,7 +440,7 @@ Bei einer Architektur als Freitext erkennt das Sprachmodell die verwendeten Dien
 - **Was bleibt:** Die Prüfregeln eines übersehenen Dienstes stehen auf N/A, mit dem Hinweis
   „Dienst in der Eingabe nicht erkannt“. Bewertet werden sie nicht.
 
-## 11 Bekannte Grenzen
+## 12 Bekannte Grenzen
 
 ### B1 Keine echten Daten
 
@@ -439,3 +477,12 @@ Protokollierung prüft GovGuard nicht an der Spezifikation (SDM M43), sondern an
 
 Kontoweite AWS-Pflichten wie die Mehr-Faktor-Anmeldung des Hauptkontos fehlen bewusst. Terraform und
 CloudFormation-Vorlagen in YAML prüft GovGuard nur als Freitext.
+
+### B6 Hochrisiko-Einstufung ohne eigene Vorstufe
+
+Ob eine Spezifikation ein Hochrisiko-System beschreibt, entscheidet das Sprachmodell im Audit
+anhand der Prüfregeln zu Art. 6 KI-VO. Eine Vorstufe, die erst einstuft und dann nur die passenden
+Pflichten prüft, gibt es nicht.
+
+Die Prüfregeln zu Art. 13, 14, 26 und 27 stehen deshalb in jedem Audit-Report. Bei einem System
+ohne hohes Risiko muss das Sprachmodell sie selbst als nicht anwendbar erkennen.

@@ -784,14 +784,14 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 - [x] **Soll neu** 🤖 _Opus_ (vor `select`, sonst bricht das Gate der Pflichtanker ab) · legt die Soll-Anker aller drei Spec-Presets auf die neuen Absatz-Anker fest, auch „DSGVO Art. 46“ von `spec-govguard`, Begründung in #53
 - [x] **Wissensbasis** 👤 `uv run python -m kb_build select --audit-type spec --only-missing`, dann `uv run python -m kb_build rules --audit-type spec --only-missing` (Groq; nach einem Abbruch denselben Befehl wiederholen, der Checkpoint behält die fertigen Regeln) → 👤 prüft: Architektur-Katalog unverändert, `pytest` und ruff grün bis auf die Galerie-Tests
 - [x] **Spec-Galerie neu** 👤 `/audit-messen spec-meldeportal-gesundheit mit Groq`, dann `/audit-messen spec-wohngeld-openapi mit Groq` → 🤖 notiert die Soll-Abweichungen in #53 und zieht die Regelzahlen in `tests/test_review.py` nach, bis `pytest` grün ist
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #53`
-- [ ] **Abschließen** 👤 committet und pusht, schließt #53
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #53`
+- [x] **Abschließen** 👤 committet und pusht, schließt #53
 
 **Teil 3 – SPEC und Soll von `spec-govguard` (#52)**
 
-- [ ] **SPEC und Soll** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12n Teil 3 und Issue #52 und #53. Ziehe SPEC und Soll nach“ · `docs/SPEC.md` nachziehen laut #52 (Einstufung, Kapitel 3, Kapitel 1, F1, F6, neue Grenze), Kopie ins Preset, Soll von `spec-govguard` um KI-VO-Anker der Zerlegung ergänzen, Begründung in #36
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #52`
-- [ ] **Abschließen** 👤 Akzeptanzkriterien in #52 anpassen (die Kriterien „151 Regeln unverändert“ und „Spec-Prompts unverändert“ sind durch ADR 0025 und #53 ersetzt), committet und pusht, schließt #52
+- [x] **SPEC und Soll** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12n Teil 3 und Issue #52 und #53. Ziehe SPEC und Soll nach“ · `docs/SPEC.md` nachziehen laut #52 (Einstufung, Kapitel 3, Kapitel 1, F1, F6, neue Grenze), Kopie ins Preset, Soll von `spec-govguard` um KI-VO-Anker der Zerlegung ergänzen, Begründung in #36
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #52`
+- [x] **Abschließen** 👤 Akzeptanzkriterien in #52 anpassen (die Kriterien „151 Regeln unverändert“ und „Spec-Prompts unverändert“ sind durch ADR 0025 und #53 ersetzt), committet und pusht, schließt #52
 
 **Fertig, wenn:** Jede DSGVO- und KI-VO-Regel einen Absatz-Anker hat, die Prüfsteine grün sind, Spec-Galerie, `SPEC.md` und das Soll von `spec-govguard` zum neuen Katalog passen und `pytest` und ruff grün sind.
 **Fürs Fachgespräch:** GovGuard ist selbst ein KI-System und muss seine eigene Einstufung belegen. Erst die neue Quelle zeigte, dass eine Regel je Artikel nur einen Aspekt prüft. Format ist nicht Semantik: Ob eine Aufzählung „alle gelten“ oder „eine genügt“ bedeutet, sagt kein Parser. Das LLM urteilt über die Gruppen, der Code prüft Anker und Zitat.

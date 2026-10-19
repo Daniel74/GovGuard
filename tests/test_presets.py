@@ -34,13 +34,19 @@ def test_self_audit_preset_is_exactly_the_spec() -> None:  # dogfooding, issue #
     assert (preset_dir / preset.input_file).read_text(encoding="utf-8") == spec
 
 
-def test_self_audit_expects_only_anchors_of_the_frozen_catalog() -> None:  # issue #36
+def test_self_audit_expects_only_anchors_of_the_catalog() -> None:  # issue #36
     catalog = json.loads((PATHS.knowledge_base / "rules_spec.json").read_text(encoding="utf-8"))
     anchors = {rule["primary_anchor"] for rule in catalog["rules"]}
     expected = load(PRESETS / "spec-govguard").expected
 
     assert expected.required_findings
     assert {finding.anchor for finding in expected.required_findings} <= anchors
+
+
+def test_self_audit_expects_its_own_ai_act_classification() -> None:  # issue #52
+    expected = load(PRESETS / "spec-govguard").expected
+
+    assert any(finding.anchor.startswith("KI-VO ") for finding in expected.required_findings)
 
 
 @pytest.mark.parametrize("preset_dir", PRESET_DIRS, ids=lambda path: path.name)

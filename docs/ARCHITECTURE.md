@@ -129,7 +129,7 @@ Der Primäranker ist die **eine** Anforderung, aus der eine Prüfregel stammt. I
 | BSI | `BSI GS++ DET.3.1` + Commit-SHA des Katalogs | ID existiert im Katalog-JSON |
 | CIS | `CIS AWS v7.0.0 3.1.4` | `Id` existiert im Prowler-JSON (fester Commit) |
 | DSGVO | `DSGVO Art. 32` (optional Abs./lit.) | `ARTICLE IDENTIFIER="032"` existiert im Formex-XML |
-| KI-VO | `KI-VO Art. 50` | `ARTICLE IDENTIFIER="050"` existiert im Formex-XML (ZIP) |
+| KI-VO | `KI-VO Art. 50 Abs. 2` (wie DSGVO) | `ARTICLE IDENTIFIER="050"` existiert im Formex-XML (ZIP) |
 | SDM | `SDM Löschen M60.D01` | Maßnahmen-ID steht im Baustein-Text |
 | C5 | `BSI C5 CRY-03.01B` | `Id` existiert im Prowler-JSON (fester Commit) |
 | FSBP | `AWS FSBP SNS.1` | `Id` existiert im Prowler-JSON (fester Commit) |
@@ -328,7 +328,7 @@ tests/                pytest, flach
 3. Je ein Eintrag in `ADAPTERS` (`extract/run.py`) und `SourceName` (`models.py`). In `SELECTIONS` (`select/run.py`) kommt die Quelle zu ihrer Audit-Art.
 4. Lizenz: offen → Extrakt einchecken, Vermerk in `NOTICE`; sonst Extrakt in `.gitignore` (CIS, FSBP, C5).
 5. Test mit kleinem Fixture: Anzahl, Stichprobe, Vorfilter mit Begründung.
-6. Ist der Katalog eingefroren (SPEC G13), baut der Schalter „nur fehlende Regeln formulieren“: `select --only-missing` und `rules --only-missing`. Vorhandene Urteile und Regeln bleiben Byte für Byte, das LLM bewertet nur die neuen Anforderungen (ADR 0025, nur Spec-Audit).
+6. Ist der Katalog eingefroren (SPEC G13), baut der Schalter „nur fehlende Regeln formulieren“: `select --only-missing` und `rules --only-missing`. Vorhandene Urteile und Regeln bleiben erhalten, das LLM bewertet nur die neuen Anforderungen (ADR 0025, nur Spec-Audit). Byte für Byte gilt das nur für Quellen ohne Zerlegung; zerlegte Regeln bekommen ihr Zitat vom Code (ADR 0026).
 
 **Fallstrick:** Die Prompts der Einstufung gelten je Audit-Art, nicht je Quelle. Ihre Version steckt im Cache-Schlüssel (`prompt_version`). Ändert sich der Prompt, verliert die ganze Audit-Art den Cache, und ein normales `select` würfelt die alte Auswahl neu. Deshalb verlässt sich `--only-missing` auf die eingecheckte Auswahl, nicht auf den Cache: Der Spec-Katalog stammt von einer älteren Prompt-Version als der Code.
 

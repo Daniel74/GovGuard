@@ -46,6 +46,10 @@ def test_prefilter_keeps_only_the_slim_selection_with_a_fixed_reason() -> None:
     assert reqs["Art. 50"].prefilter_passed
     assert not reqs["Art. 3"].prefilter_passed
     assert reqs["Art. 3"].prefilter_reason == PREFILTER_REASON
+    # the reason is in the checked-in selection protocol: its wording must not drift
+    assert PREFILTER_REASON == (
+        "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52)."
+    )
 
 
 def test_kept_articles_are_pinned_to_issue_52() -> None:

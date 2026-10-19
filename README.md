@@ -1,6 +1,6 @@
 # GovGuard
 
-Compliance-Copilot, der Spezifikationen gegen DSGVO/SDM und Architekturen gegen BSI/CIS prüft. Was GovGuard fachlich leistet, beschreibt die Systembeschreibung [docs/SPEC.md](docs/SPEC.md); GovGuard prüft sie in der Galerie selbst (Preset `spec-govguard`).
+Compliance-Copilot, der Spezifikationen gegen DSGVO/KI-VO/SDM und Architekturen gegen BSI/CIS prüft. Was GovGuard fachlich leistet, beschreibt die Systembeschreibung [docs/SPEC.md](docs/SPEC.md); GovGuard prüft sie in der Galerie selbst (Preset `spec-govguard`).
 
 ## Wissensbasis bauen (`kb_build`)
 

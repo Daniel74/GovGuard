@@ -9,7 +9,10 @@ from kb_build.extract.models import ExtractedSource, Requirement, mark_prefilter
 # Slim selection (issue #52): AI literacy, prohibitions, high-risk classification, the high-risk
 # duties a specification can show, fundamental rights impact assessment, transparency
 KEPT = frozenset({"4", "5", "6", "13", "14", "26", "27", "50"})
-PREFILTER_REASON = "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52)."
+_LISTED = sorted(KEPT, key=int)
+PREFILTER_REASON = (
+    f"Artikel gehört nicht zur Auswahl Art. {', '.join(_LISTED[:-1])} und {_LISTED[-1]} (#52)."
+)
 
 
 def _act(archive: bytes) -> bytes:

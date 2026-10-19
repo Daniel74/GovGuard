@@ -111,6 +111,12 @@ def test_only_missing_formulates_just_the_requirements_without_a_rule(tmp_path: 
     assert calls.count("formulate_rule") == 1
 
 
+def test_only_missing_is_not_built_for_the_architecture_audit(tmp_path: Path) -> None:
+    # same guard as select: architecture keeps the full run (ADR 0025)
+    with pytest.raises(ValueError, match="only for the spec audit"):
+        formulate_all(quoting_model(), paths_in(tmp_path), only="architecture", only_missing=True)
+
+
 def test_the_property_index_holds_nested_paths_and_names_of_all_resource_types() -> None:
     index = read_property_index(REAL)
 

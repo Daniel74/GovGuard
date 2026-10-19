@@ -1,6 +1,6 @@
 # 0025 – KI-Verordnung als neue Quelle bei eingefrorenem Katalog
 
-_Ergänzt [ADR 0008](0008-quellformate.md) (Quellformate) und [ADR 0011](0011-vollstaendiger-katalog.md) (Bounded Catalog); setzt SPEC G13 um (#52)._
+_Ergänzt [ADR 0008](0008-quellformate.md) (Quellformate) und [ADR 0011](0011-vollstaendiger-katalog.md) (Bounded Catalog); setzt SPEC G13 um (#52). Für DSGVO und KI-VO teilweise ersetzt durch [ADR 0026](0026-rechtsartikel-zerlegen.md), siehe Nachtrag._
 
 ## Kontext
 
@@ -27,3 +27,9 @@ _Ergänzt [ADR 0008](0008-quellformate.md) (Quellformate) und [ADR 0011](0011-vo
 ## Fachgespräch-Satz
 
 „Eine neue Rechtsquelle kommt dazu, ohne dass sich eine einzige alte Prüfregel ändert: Das macht der Hash-Test beweisbar, nicht nur behauptet.“
+
+## Nachtrag 19.10.2026: Zerlegung bricht das Einfrieren für DSGVO und KI-VO (#53)
+
+- ADR 0026 zerlegt DSGVO- und KI-VO-Artikel in Einzelpflichten. Deren Regeln entstehen neu, mit Absatz-Ankern wie `KI-VO Art. 50 Abs. 2`. Der Spec-Katalog hat jetzt 374 Prüfregeln, die beiden Spec-Galerie-Reports sind neu erzeugt.
+- Eingefroren bleiben nur die 116 SDM-Regeln; der Hash-Test pinnt nur noch sie. Alte Regeln bekommen ihr `source_quote` vom Code (`quoted_by_code`), Kriterien und Empfehlung bleiben.
+- `--only-missing` bleibt der Weg für neue Quellen, beide Befehle nur fürs Spec-Audit. Der Fachgespräch-Satz gilt seither für SDM.

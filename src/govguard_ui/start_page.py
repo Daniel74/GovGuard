@@ -8,7 +8,8 @@ from govguard_ui.style import CSS, JUDGE_NAME, LOOKS, badge
 from govguard_ui.texts import DATA_RULE
 
 INTRO = "\n".join(f"- {sentence}" for sentence in [  # one per item: spacing like the steps
-    "GovGuard prüft Spezifikationen gegen DSGVO und das Standard-Datenschutzmodell (SDM).",
+    "GovGuard prüft Spezifikationen gegen DSGVO, KI-Verordnung und das Standard-Datenschutzmodell "
+    "(SDM).",
     "AWS-Architekturen prüft es gegen BSI IT-Grundschutz, BSI C5, CIS und AWS FSBP.",
     "Für jede Prüfregel des Katalogs liefert ein Sprachmodell einen Befund mit Beleg aus der "
     "Eingabe.",

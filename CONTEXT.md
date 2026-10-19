@@ -7,7 +7,7 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 ## Wissensbasis
 
 - **Wissensbasis**: Gesamtheit aller Prüfregeln und Golden Archetypes. _Code_: `knowledge_base`. _Vermeiden_: Knowledge Base, Index, Seeds
-- **Quelle**: Regelwerk, aus dem Prüfregeln abgeleitet werden (DSGVO, SDM, BSI Grundschutz++, BSI C5, CIS AWS, AWS FSBP). _Code_: `Source`. _Vermeiden_: Framework, Datensatz
+- **Quelle**: Regelwerk, aus dem Prüfregeln abgeleitet werden (DSGVO, KI-VO, SDM, BSI Grundschutz++, BSI C5, CIS AWS, AWS FSBP). _Code_: `Source`. _Vermeiden_: Framework, Datensatz
 - **Anforderung**: Einzelne, zitierfähige Vorgabe innerhalb einer Quelle, z. B. BSI DET.3.1 oder DSGVO Art. 9 Abs. 2. _Code_: `Requirement`. _Vermeiden_: Control, Kontrolle, Baustein
 - **Abschnitt**: Kleinste zitierfähige Einheit eines Rechtsakts (Absatz, Unterabsatz oder Listenpunkt) mit Marke wie `Art. 32 Abs. 1 lit. b`; Baustein der Zerlegung (#53). _Code_: `Section` (`mark`). _Vermeiden_: Segment, Chunk
 - **Zerlegung**: Bau-Stufe zwischen Extraktion und Auswahl: Das LLM gruppiert die Abschnitte eines DSGVO- oder KI-VO-Artikels als `alle_gelten`, `eine_genuegt`, `je_nach_risiko` oder `keine_pflicht`, der Code macht daraus Anforderungen (ADR 0026). _Code_: `decompose`, `Kind`. _Vermeiden_: Splitting, Segmentierung
@@ -16,6 +16,7 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 - **Primäranker**: Die eine Anforderung, aus der eine Prüfregel abgeleitet ist. _Code_: `primary_anchor`. In der Befundtabelle Spalte „Normanker“ wie im Design (#45). _Vermeiden_: Anchor, Referenz
 - **Querverweis**: KI-vorgeschlagener, nicht verifizierter Bezug einer Prüfregel auf eine Anforderung einer anderen Quelle; beeinflusst keinen Status. _Code_: `cross_reference`. _Vermeiden_: Mapping
 - **Bounded Catalog**: Zur Build-Zeit festgelegte Menge aller prüfbaren und relevanten Prüfregeln je Audit-Art, die in jedem Audit vollständig bewertet wird. _Code_: `catalog`. _Vermeiden_: Top-K, Retrieval-Set
+- **Eingefrorener Katalog**: Teil des Spec-Katalogs, der beim Bau Byte für Byte bleibt, damit Galerie und Soll vergleichbar bleiben (SPEC G13); heute die SDM-Regeln. Eine neue Quelle kommt mit „nur fehlende Regeln formulieren“ dazu (ADR 0025, 0026). _Code_: `frozen`, `only_missing` (`--only-missing`). _Vermeiden_: Snapshot, gesperrter Katalog
 - **Auswahlprotokoll**: Je Anforderung einer Quelle das Ergebnis der Auswahl (aufgenommen oder verworfen) mit Begründung, vom LLM oder vom Code. _Code_: `verdicts`. _Vermeiden_: Verdict, Log
 - **Prüfumfang**: Feste Liste der AWS-Dienste samt Begleittypen (AWS Backup, Application Auto Scaling), für die das Architektur-Audit Prüfregeln führt; Prüfregeln nennen nur Typen daraus. _Code_: `scope`. _Vermeiden_: Scope, Whitelist
 - **Begleittyp**: Ressourcentyp, den ein Dienst im Prüfumfang braucht, ohne selbst Workload zu sein (AWS Backup, Application Auto Scaling). _Code_: companion type (Kommentare, Tests)
@@ -32,7 +33,7 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 - **Prüfassistent**: Was GovGuard für Externe ist: ein digitales Werkzeug für die Vorprüfung, das Befunde mit Beleg liefert und die Fachleute nicht ersetzt (SPEC.md). _Vermeiden_: Compliance Copilot, Copilot
 - **Spezifikation**: Fachliche Beschreibung eines Vorhabens (Freitext oder OpenAPI); Eingabe des Spec-Audits. _Code_: `spec`. _Vermeiden_: Spec-Dokument, Anforderungsdokument
 - **Architektur**: Technische Beschreibung eines Systems (Freitext, Terraform oder CloudFormation; nur CloudFormation-JSON hat ein Code-Inventar, Terraform ist ungetestet, ADR 0015); Eingabe des Architektur-Audits. _Code_: `architecture`. _Vermeiden_: Design, Infrastruktur
-- **Spec-Audit**: Prüfung einer Spezifikation gegen die Prüfregeln aus DSGVO und SDM. _Code_: `spec_audit`. _Vermeiden_: Spec Review, Evaluation
+- **Spec-Audit**: Prüfung einer Spezifikation gegen die Prüfregeln aus DSGVO, KI-VO und SDM. _Code_: `spec_audit`. _Vermeiden_: Spec Review, Evaluation
 - **Architektur-Audit**: Prüfung einer Architektur gegen die Prüfregeln aus BSI Grundschutz++, BSI C5, CIS und AWS FSBP. _Code_: `architecture_audit`. _Vermeiden_: Architecture Review, Evaluation
 - **Befund**: Ergebnis genau einer Prüfregel in einem Audit, mit Status, Beleg und Empfehlung. _Code_: `Finding`. _Vermeiden_: Finding, Issue
 - **Status**: PASS (Einhaltung belegt), WARN (aus der Eingabe nicht entscheidbar oder von der KI nicht belegt und herabgestuft, Prüfbedarf), FAIL (Verstoß belegt; in offener Welt nur, wenn die Belegzeilen ihn festlegen, ADR 0020) oder N/A (nicht anwendbar). Der Audit-Report nutzt die Kürzel, die UI zeigt die deutschen Bezeichnungen „Einhaltung belegt“, „Prüfbedarf“, „Verstoß belegt“ und „Nicht anwendbar“ (#51). _Code_: `Status`, UI-Bezeichnung in `style.LOOKS`
