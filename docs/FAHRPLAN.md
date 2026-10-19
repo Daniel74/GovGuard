@@ -17,8 +17,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft die Spezifikation seines Demo-Stands). Offene Schritte in dieser Reihenfolge: 12b bis „Soll festlegen“, 12m (#51), 12n (#52), Rest von 12b, zuletzt die Doku 13–14. Mit #36 ist der Prototyp fertig.
-- **Eingefroren ab Schritt 12l:** `kb_build` und Audit-Engine werden nicht mehr geändert, Katalog und Prompts bleiben. Einzige Ausnahme ist 12n (#52): Eine neue Quelle kommt dazu, die bestehenden Regeln und Prompts bleiben (SPEC G13). Bekannte Grenzen stehen im README; #48 (YAML), #49 (Build-Abbrüche) und #50 (Allow/Deny, Platzhalter) sind Ausbau.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft die Spezifikation seines Demo-Stands). Offene Schritte in dieser Reihenfolge: 12b bis „Soll festlegen“, 12m (#51), 12n (#52, #53), Rest von 12b, zuletzt die Doku 13–14. Mit #36 ist der Prototyp fertig.
+- **Eingefroren ab Schritt 12l:** `kb_build` und Audit-Engine werden nicht mehr geändert, Katalog und Prompts bleiben. Ausnahme ist 12n (#52, #53): Die KI-VO kommt als Quelle dazu, DSGVO und KI-VO werden in Einzelpflichten zerlegt. Das bricht G13 für den Spec-Katalog bewusst: Spec-Regeln, Spec-Galerie und Spec-Soll entstehen neu, der Architektur-Katalog bleibt. Bekannte Grenzen stehen im README; #48 (YAML), #49 (Build-Abbrüche) und #50 (Allow/Deny, Platzhalter) sind Ausbau.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 19.10.:** Kaum Budget. Die Demo-Architektur bleibt (Streamlit und Groq), kein AWS-Deploy, kein CDK. Außerhalb des Umfangs (Label `ausbau`): Haiku/Bedrock, CDK-Stack #9, Audit-Jobs #34, Pipeline #37, Recruiter-Stand #38.
 
@@ -32,8 +32,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                            |
 | So 18.10.  | Schritte 12i, 12j: #46, #47. Schritt 12l: Galerie, bekannte Grenzen. Danach sind `kb_build` und Audit eingefroren                     |
 | Mo 19.10.  | Schritt 12b: GovGuard-Spezifikation schreiben, Soll festlegen. Schritt 12m: #51 UI-Texte deutsch. Das Claude-Wochenlimit setzt zurück |
-| Di 20.10.  | Schritt 12n: #52 KI-Verordnung (Abbruch nach 1 h ohne Formex-Datei)                                                                   |
-| Mi 21.10.  | Vormittag: 12n abschließen. Schritt 12b: Audit, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig. Abgabe                 |
+| Di 20.10.  | Schritt 12n: Teil 1 Zwischenstand committen, Teil 2 Stufe „Zerlegen“ bauen (#53)                                                      |
+| Mi 21.10.  | 12n: Teil 2 Wissensbasis, Spec-Galerie neu; Teil 3 SPEC und Soll. 12b: Audit, Galerie. 13–14: Doku #22, #16. A fertig. Abgabe         |
 | 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                        |
 | Mo 26.10.  | Präsentation und Fachgespräch                                                                                                         |
 
@@ -81,7 +81,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 11b     | –    | #9 CDK-Stack (Ausbau)             | 🤖 Opus                          | 🤖 Opus · 🛠 Junie          |
 | 11a     | –    | #34 Audit-Jobs (Ausbau)           | 🤖 Opus                          | 🤖 Opus                     |
 | 12m     | A    | #51 UI-Texte deutsch              | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
-| 12n     | A    | #52 KI-Verordnung, schlank        | 🤖 Opus                          | 🤖 Opus                     |
+| 12n     | A    | #52 KI-VO, #53 Zerlegen           | 🤖 Opus                          | 🤖 Opus                     |
 | 12b     | A    | #36 Selbst-Audit Spec, Galerie    | 👤 + 🤖 Opus                     | 👤                          |
 | 10h     | A    | #33 Gegenprobe (Groq, erledigt)   | 👤 Messung                       | 👤                          |
 | 13      | A    | #22 Doku zu kb_build nachziehen   | 🤖 Sonnet                        | 👤                          |
@@ -764,28 +764,43 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 
 ---
 
-### Schritt 12n – #52 KI-Verordnung als Quelle im Spec-Audit (schlank)
+### Schritt 12n – #52 und #53 KI-Verordnung als Quelle, DSGVO und KI-VO zerlegt
 
-**Ziel:** Der Spec-Katalog wächst um ca. 8 Artikel der KI-Verordnung, die 151 bestehenden Regeln bleiben unverändert. `spec-govguard` prüft GovGuards eigene Einstufung.
-**Voraussetzung:** Schritt 12m. Muss vor „Erzeugen“ in 12b fertig sein: neuer Katalog, neues Soll, neue `SPEC.md`. Groq-Bau kostet wenige Cent.
+**Ziel:** Die KI-Verordnung kommt als Quelle ins Spec-Audit (#52). Eine Bau-Stufe „Zerlegen“ macht aus DSGVO- und KI-VO-Artikeln Einzelpflichten mit Anker auf Absatz oder Buchstabe (#53): Der Code liefert Abschnitte und Zitate, das LLM gruppiert sie (`alle_gelten`, `eine_genuegt`, `je_nach_risiko`, `keine_pflicht`). `spec-govguard` prüft GovGuards eigene Einstufung.
+**Voraussetzung:** Schritt 12m. Muss vor „Erzeugen“ in 12b fertig sein. Prototyp der Zerlegung: Branch `prototype/zerlegen-rechtsquellen`, Ergebnis im ersten Kommentar von #53. Groq-Bau kostet wenige Cent.
 
-- [ ] **Quelle** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12n und Issue #52. Beginne mit der Formex-Datei der KI-Verordnung“ → Plan → Go
-      Zeitlimit 1 h: Ohne brauchbare Formex-Datei Abbruch, #52 zurück auf `ausbau`, weiter mit 12b.
-- [ ] **Bauen** 🤖 _Opus_ (gleiche Session) · Adapter, Verdrahtung, „nur fehlende Regeln formulieren“ mit Test, ADR. Gemeinsame Spec-Prompts nicht ändern.
-- [ ] **Wissensbasis** 👤 `uv run python -m kb_build extract`, dann `select --audit-type spec` und `rules --audit-type spec`, Auswahlprotokoll der KI-VO lesen
-- [ ] **SPEC und Soll** 🤖 _Opus_ · `docs/SPEC.md` nachziehen laut #52 (Einstufung, Kapitel 3, Kapitel 1, F1, F6, neue Grenze), Kopie ins Preset, Soll von `spec-govguard` um KI-VO-Anker ergänzen, Begründung in #36
+**Teil 1 – Quelle KI-VO (#52)**
+
+- [x] **Quelle** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12n und Issue #52. Beginne mit der Formex-Datei der KI-Verordnung“ → Plan → Go
+- [x] **Bauen** 🤖 _Opus_ (gleiche Session) · Adapter, Verdrahtung, `--only-missing` für `select` und `rules` mit Test, ADR 0025
+- [x] **Wissensbasis** 🤖 `select` und `rules --audit-type spec --only-missing` (Groq), Spec-Prompt um Beispiele für KI-Systeme ergänzt (ADR 0025)
+- [x] **Zwischenstand** 👤 committet und pusht den Stand von #52; #52 bleibt offen
+
+**Teil 2 – Zerlegen (#53)**
+
+- [ ] **Plan** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12n Teil 2 und Issue #53“ → Plan → Go
+- [ ] **Bauen** 🤖 _Opus_ (gleiche Session) · Stufe „Zerlegen“ mit Prüfsteinen als Test, Anker und Gate für Absatz-Anker, ADR zu G13. Hält an bei Prompt-Design.
+- [ ] **Wissensbasis** 👤 Bau-Befehle laut Plan (Groq) → 👤 prüft: Zerlegungsprotokoll von DSGVO Art. 5, 9, 32 und KI-VO Art. 6 lesen, Architektur-Katalog unverändert, `pytest` grün
+- [ ] **Soll neu** 🤖 _Opus_ (vor jedem Lauf) · legt die Soll-Anker von `spec-meldeportal-gesundheit` und `spec-wohngeld-openapi` auf die neuen Absatz-Anker fest, Begründung in #53
+- [ ] **Spec-Galerie neu** 👤 `/audit-messen spec-meldeportal-gesundheit mit Groq`, dann `/audit-messen spec-wohngeld-openapi mit Groq` → 🤖 notiert die Soll-Abweichungen in #53
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #53`
+- [ ] **Abschließen** 👤 committet und pusht, schließt #53
+
+**Teil 3 – SPEC und Soll von `spec-govguard` (#52)**
+
+- [ ] **SPEC und Soll** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12n Teil 3 und Issue #52 und #53. Ziehe SPEC und Soll nach“ · `docs/SPEC.md` nachziehen laut #52 (Einstufung, Kapitel 3, Kapitel 1, F1, F6, neue Grenze), Kopie ins Preset, Soll von `spec-govguard` um KI-VO-Anker der Zerlegung ergänzen, Begründung in #36
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #52`
-- [ ] **Abschließen** 👤 committet und pusht, schließt #52
+- [ ] **Abschließen** 👤 Akzeptanzkriterien in #52 anpassen (die Kriterien „151 Regeln unverändert“ und „Spec-Prompts unverändert“ sind durch ADR 0025 und #53 ersetzt), committet und pusht, schließt #52
 
-**Fertig, wenn:** `rules_spec.json` die KI-VO-Regeln enthält, die 151 alten Regeln unverändert sind, `pytest` und ruff grün sind.
-**Fürs Fachgespräch:** Eine neue Quelle, ohne den eingefrorenen Katalog anzufassen. GovGuard ist selbst ein KI-System und muss seine eigene Einstufung belegen.
+**Fertig, wenn:** Jede DSGVO- und KI-VO-Regel einen Absatz-Anker hat, die Prüfsteine grün sind, Spec-Galerie, `SPEC.md` und das Soll von `spec-govguard` zum neuen Katalog passen und `pytest` und ruff grün sind.
+**Fürs Fachgespräch:** GovGuard ist selbst ein KI-System und muss seine eigene Einstufung belegen. Erst die neue Quelle zeigte, dass eine Regel je Artikel nur einen Aspekt prüft. Format ist nicht Semantik: Ob eine Aufzählung „alle gelten“ oder „eine genügt“ bedeutet, sagt kein Parser. Das LLM urteilt über die Gruppen, der Code prüft Anker und Zitat.
 
 ---
 
 ### Schritt 12b – #36 GovGuard prüft sich selbst: Spezifikation und Galerie
 
 **Ziel:** `docs/SPEC.md` beschreibt GovGuard im Demo-Stand (Streamlit Community Cloud und Groq, beide in den USA) und ist zugleich die Systembeschreibung für Recruiter: ein gekürztes Fachkonzept, wie es eine Behörden-IT verlangen würde (Länge nach Bedarf, gegliedert mit Unterüberschriften, mit Prüfgrundlagen und Geschäftsregeln zu PASS, WARN und FAIL), verständlich ohne Fachwissen, jedes Fachwort in einem eigenen Satz erklärt, vom README verlinkt. Als Preset `spec-govguard` steht ihr Audit mit Soll-Ergebnis in der Galerie.
-**Voraussetzung:** Schritt 12. Kein AWS nötig. „Erzeugen“ erst nach Schritt 12m (#51) und 12n (#52).
+**Voraussetzung:** Schritt 12. Kein AWS nötig. „Erzeugen“ erst nach Schritt 12m (#51) und 12n (#52, #53).
 
 - [x] **Schreiben** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12b und Issue #36. Schreibe `docs/SPEC.md` neu und lege das Preset `spec-govguard` an“ → Plan → Go
       Gliederung laut #36. Der Abschnitt „Aufnahme in den Bounded Catalog“ wandert nach `ARCHITECTURE.md`. Ein Test stellt sicher, dass das Preset genau `docs/SPEC.md` prüft.

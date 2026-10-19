@@ -341,3 +341,9 @@ def test_an_answer_that_stays_invalid_still_logs_every_retry(
         Judge("architecture", answer_in_turns(no_rationale))("CIS", REQUIREMENT)
 
     assert len(retry_lines(caplog)) == 2  # the Judge's retries=2, then llm_error
+
+
+def test_the_spec_prompt_names_what_a_specification_says_about_an_ai_system() -> None:
+    # #52: without these examples the model rejected KI-VO Art. 4, 5 and 6 as not testable
+    prompt = build_deps("spec").instructions
+    assert "Einstufung" in prompt and "verbotene" in prompt and "KI-Kompetenz" in prompt

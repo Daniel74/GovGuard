@@ -73,6 +73,18 @@ def test_contains_quote_measures_min_length_without_markdown() -> None:
     assert not contains_quote("*" * 40, "*" * 20)  # nothing left to prove
 
 
+@pytest.mark.parametrize("hyphen", ["\u2010", "\u2011"])
+def test_contains_quote_accepts_unicode_hyphens_of_the_model(hyphen: str) -> None:
+    # Groq writes "Hochrisiko‐KI‐Systems" with U+2010, EUR-Lex has "-" (KI-VO Art. 13, #52)
+    text = "die Zweckbestimmung des Hochrisiko-KI-Systems, einschließlich"
+    assert contains_quote(text, f"Zweckbestimmung des Hochrisiko{hyphen}KI{hyphen}Systems")
+
+
+def test_normalize_keeps_unicode_hyphens_so_the_frozen_extracts_stay() -> None:
+    # NFKC turns U+2011 into U+2010; the extracts keep it, only the quote comparison maps it
+    assert normalize("Ende\u2011zu\u2010Ende") == "Ende\u2010zu\u2010Ende"
+
+
 def test_template_resource_types_lists_types_of_cloudformation_json() -> None:
     template = json.dumps({
         "Resources": {

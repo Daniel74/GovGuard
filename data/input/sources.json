@@ -34,6 +34,13 @@
     "license": "EU law (EUR-Lex/CELLAR Open Data)",
     "filename": "dsgvo_02016R0679-20160504.xml"
   },
+  "ki_vo_formex": {
+    "url": "http://publications.europa.eu/resource/cellar/b1730fb2-8f1c-11f1-9262-01aa75ed71a1.0003.01/DOC_2",
+    "version": "001.002.0",
+    "sha256": "3e7d21321a07183326a3c77365488f714c02f767eaaca9e775d8480515dee657",
+    "license": "EU law (EUR-Lex/CELLAR Open Data)",
+    "filename": "ki_vo_02024R1689-20260727.zip"
+  },
   "sdm_m60_loeschen_pdf": {
     "url": "https://www.datenschutz-mv.de/static/DS/Dateien/Datenschutzmodell/SDM-V2.0_L%C3%B6schen_und_Vernichten_V1.0a.pdf",
     "version": "V1.0a",

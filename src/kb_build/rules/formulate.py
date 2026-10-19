@@ -28,6 +28,11 @@ TOOL_DESCRIPTION = "Gib genau eine Prüfregel zur Anforderung ab."
 FORMULATE_RETRIES = 6  # build only, no 29 s timeout; Groq needs more than Haiku (ADR 0014)
 
 
+def rule_id(audit_type: AuditType, source: str, requirement_id: str) -> str:
+    """Stable across builds, e.g. "SPEC-DSGVO-Art.5": the frozen catalog matches on it."""
+    return f"{ID_PREFIX[audit_type]}-{source}-{requirement_id.replace(' ', '')}"
+
+
 @dataclass(frozen=True)
 class FormulateDeps:
     """Run dependencies of the agent (ADR 0005): what the validator checks against."""
@@ -146,7 +151,7 @@ def complete_rule(deps: FormulateDeps, model: Model, total: RunUsage) -> Rule:
         total.incr(usage)  # failed retries cost tokens too
     return Rule(
         **draft.model_dump(),
-        id=f"{ID_PREFIX[deps.audit_type]}-{selected.source}-{requirement.id.replace(' ', '')}",
+        id=rule_id(deps.audit_type, selected.source, requirement.id),
         audit_type=deps.audit_type, source=selected.source,
         primary_anchor=requirement.primary_anchor, selection_rationale=selected.rationale,
         cfn_resource_types=selected.cfn_resource_types,

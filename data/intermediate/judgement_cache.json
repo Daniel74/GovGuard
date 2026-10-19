@@ -6070,6 +6070,18 @@
       "AWS::RDS::DBCluster"
     ]
   },
+  "2e62af4d64010a4460c03609977d3e7cb2c858047b4f8c00e1dc975bd200b393|1e5c8db015c1|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung verlangt, dass die Betriebsanleitung bestimmte Angaben enthält; diese können in einer Spezifikation geprüft werden, ob sie vorhanden sind oder fehlen.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
+  "2e62af4d64010a4460c03609977d3e7cb2c858047b4f8c00e1dc975bd200b393|7c67212e69aa|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung verlangt, dass Betriebsanleitungen bestimmte Angaben (z. B. Zweckbestimmung, Leistungsgrenzen, Daten‑ und Modellinformationen, Sicherheits‑ und Überwachungsmaßnahmen) enthalten; diese Informationen können in einer Spezifikation (Freitext oder OpenAPI) nachgewiesen oder deren Fehlen erkannt werden, sodass die Anforderung prüfbar ist.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
   "2e9859f4d134622fabd81ff8367d7210cc3e4a600e787ca60c740c7f76033780|8311a96b574c|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf Prozesse und Fristen für die Remediation und lässt sich nicht anhand der Konfiguration von Ressourcen in einem CloudFormation‑Template prüfen.",
@@ -7237,6 +7249,18 @@
   "36eb2eda66372e3b589d737e4a815a14aa7b0b8736662f4a0c6a22b7564cf0dd|c651a116e5cf|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die physische Vernichtung von Datenträgern und ist keine Spezifikation, daher nicht prüfbar.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
+  "36ffbdb241b730342e62b1e84b9f7881fbda760cb971b9282381b2cbb124880c|1e5c8db015c1|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung verlangt, dass Betreiber eine Grundrechte‑Folgenabschätzung mit definierten Inhalten durchführen und der Marktüberwachungsbehörde melden; eine Spezifikation kann prüfen, ob diese Inhalte beschrieben und gemeldet werden, sodass die Anforderung testbar ist.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
+  "36ffbdb241b730342e62b1e84b9f7881fbda760cb971b9282381b2cbb124880c|7c67212e69aa|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung verlangt eine dokumentierte Grundrechte‑Folgenabschätzung mit definierten Inhalten und die Meldung an die Marktüberwachungsbehörde, sodass geprüft werden kann, ob die Angaben vorliegen.",
     "scope_level": "template",
     "cfn_resource_types": []
   },
@@ -11198,6 +11222,18 @@
     "scope_level": "people",
     "cfn_resource_types": []
   },
+  "55a0c2f109d789d6a43d4968797b764b8fd375ca8a84836bf764f66c53ccb0f2|1e5c8db015c1|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung beschreibt fachliche Vorgaben zu menschlicher Aufsicht, Rollen, Verfahren und Schnittstellen, die in einer Spezifikation dokumentiert und damit überprüft werden können.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
+  "55a0c2f109d789d6a43d4968797b764b8fd375ca8a84836bf764f66c53ccb0f2|7c67212e69aa|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische und technische Maßnahmen (z. B. Mensch‑Maschine‑Schnittstelle, Stop‑Taste, Rollen, Prüfungen), die in einer Spezifikation beschrieben werden können, sodass geprüft werden kann, ob sie vorhanden sind.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
   "565405e9d3bdef043aa5615ad6d7563bb8de3dec6e3cd247cc3f7f7ea3882c47|8311a96b574c|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Konfiguration eines DNS‑Servers, die nicht über die geprüften CloudFormation‑Ressourcen abgebildet werden kann.",
@@ -11652,6 +11688,18 @@
     "scope_level": "people",
     "cfn_resource_types": []
   },
+  "58ddcd6b30f6cc2c76bcb9b8ba2f57a7999dc7e42f49b5333a9497eb133639ed|1e5c8db015c1|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung umfasst technische und organisatorische Maßnahmen, Rollen, Prozesse und Dokumentationspflichten, die in einer Spezifikation (z. B. Zweck, Rollen, Abläufe, Auftragsverarbeiter) beschrieben und damit überprüft werden können.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
+  "58ddcd6b30f6cc2c76bcb9b8ba2f57a7999dc7e42f49b5333a9497eb133639ed|7c67212e69aa|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung bezieht sich auf technische und organisatorische Maßnahmen, die in einer Spezifikation beschrieben werden können (z. B. Betriebsanleitung, Aufbewahrungsfristen, Zugriffsrechte, menschliche Aufsicht), sodass sie prüfbar ist.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
   "58e09adc93ec06131b79c8de3934b860c5bb6650ecddc2d39e84aba97f29c838|8311a96b574c|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Anwendungsebene und lässt sich nicht anhand von CloudFormation-Ressourcen prüfen.",
@@ -11812,6 +11860,18 @@
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Dokumentation von Zuständigkeiten im Beschaffungsmanagement und ist ein Prozess‑ bzw. Personen‑Aspekt, nicht auf die Konfiguration von CloudFormation‑Ressourcen prüfbar.",
     "scope_level": "people",
+    "cfn_resource_types": []
+  },
+  "5a4cda15b8a29670e78d2ba1981772346aaaf9c753c83afc27445b065d57ad12|1e5c8db015c1|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung verlangt nach Maßnahmen zur Förderung der KI‑Kompetenz, die in einer Spezifikation durch Angaben zu Schulungen, Qualifikationen und Trainingsprogrammen nachgewiesen oder nicht angegeben werden können, sodass die Erfüllung prüfbar ist.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
+  "5a4cda15b8a29670e78d2ba1981772346aaaf9c753c83afc27445b065d57ad12|7c67212e69aa|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf organisatorische Maßnahmen zur Kompetenzentwicklung und enthält keine Angaben zu Zwecken, Rechtsgrundlagen, Löschfristen, Verschlüsselung oder ähnlichen Spezifikations‑Elementen, sodass sie nicht anhand einer Spezifikation prüfbar ist.",
+    "scope_level": "template",
     "cfn_resource_types": []
   },
   "5a5deec55d1450ec6871ba4318af88a31b4bcec841e8d58ae51f3142590ea17d|8311a96b574c|openai/gpt-oss-120b": {
@@ -24277,6 +24337,18 @@
     "scope_level": "people",
     "cfn_resource_types": []
   },
+  "b0f725e2f6dbf67c056bd12567fb766e02f5c59d2976addcb1468a78b8e285da|1e5c8db015c1|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung beschreibt verbotene KI‑Praktiken, die in einer Spezifikation eindeutig angegeben werden können, ob das System diese Praktiken einsetzt oder nicht, sodass die Erfüllung prüfbar ist.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
+  "b0f725e2f6dbf67c056bd12567fb766e02f5c59d2976addcb1468a78b8e285da|7c67212e69aa|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung beschreibt ein Verbot von KI‑Praktiken und enthält keine Angaben zu Zwecken, Rechtsgrundlagen, Löschfristen, Zugriffsrechten oder Auftragsverarbeitern, die in einer Spezifikation geprüft werden könnten; sie betrifft rein behördliche Pflichten und ist daher nicht prüfbar.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
   "b109b7eb2a7e58f3354f4dd79cc2882e321c7a95e7e29573ea59798d0d5fb2cd|8311a96b574c|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf die Nutzung des Management‑Accounts und lässt sich nicht aus den im CloudFormation‑Template definierten Ressourcen ableiten.",
@@ -32082,6 +32154,18 @@
     "scope_level": "people",
     "cfn_resource_types": []
   },
+  "eb560de0e0cb1cb1d44f62358fadeaf2b88e816569db478298b2eaa1d923f5c3|1e5c8db015c1|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung definiert klare Kriterien (z. B. Einsatz als Sicherheitsbauteil, Konformitätsbewertung, Dokumentation) die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
+  "eb560de0e0cb1cb1d44f62358fadeaf2b88e816569db478298b2eaa1d923f5c3|7c67212e69aa|openai/gpt-oss-120b": {
+    "testable": false,
+    "rationale": "Die Anforderung bezieht sich auf die Einstufung und Dokumentation von KI‑Systemen und enthält keine Angaben, die in einer Fachspezifikation (z. B. Zwecke, Rechtsgrundlagen, Löschfristen etc.) geprüft werden könnten; sie ist daher nicht prüfbar.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
   "eb5ccf771161b2cb6c0dc291b4fdd5a0e1b6673de3debc2819109002d00cb6f0|8311a96b574c|openai/gpt-oss-120b": {
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf das Beschaffungsmanagement und die Dokumentation von Kompatibilitätsbedarfen, was ein Prozess‑ bzw. Personen‑Thema ist und nicht anhand von CloudFormation‑Ressourcen prüfbar ist.",
@@ -33771,6 +33855,18 @@
     "testable": false,
     "rationale": "Die Anforderung bezieht sich auf das Laufzeitverhalten der Anwendung (Blockierung nach fehlgeschlagenen Anmeldeversuchen) und kann nicht aus den in einem CloudFormation‑Template definierten Ressourcen abgeleitet werden.",
     "scope_level": "people",
+    "cfn_resource_types": []
+  },
+  "f8a925d4af47136a7512b5e527119156907bb1d161806fa92d1dab8b7b6cf8e4|1e5c8db015c1|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung bezieht sich auf Transparenz‑ und Kennzeichnungspflichten, die in einer Spezifikation durch Angaben zu Informations‑ und Kennzeichnungsmechanismen nachgewiesen oder deren Fehlen erkannt werden können.",
+    "scope_level": "template",
+    "cfn_resource_types": []
+  },
+  "f8a925d4af47136a7512b5e527119156907bb1d161806fa92d1dab8b7b6cf8e4|7c67212e69aa|openai/gpt-oss-120b": {
+    "testable": true,
+    "rationale": "Die Anforderung bezieht sich auf Transparenz‑ und Kennzeichnungspflichten, die in einer Spezifikation (z. B. als Hinweis‑ oder Kennzeichnungs‑Elemente, Rollen‑ und Prozessbeschreibungen) festgehalten werden können, sodass geprüft werden kann, ob sie umgesetzt sind.",
+    "scope_level": "template",
     "cfn_resource_types": []
   },
   "f98f02ca7b2a0b834071f20a5b8f7aaf082f4be5d82d73ebfc30f1ef49a7a06e|6d06b0abd0dc|openai/gpt-oss-120b": {

@@ -23,7 +23,7 @@ flowchart TD
   subgraph Q[Quellen]
     BSI["BSI Grundschutz++<br/>OSCAL-JSON (GitHub)"]
     CIS["CIS AWS v7, AWS FSBP, BSI C5<br/>Prowler-JSON (GitHub)"]
-    DS["DSGVO Formex-XML (CELLAR)<br/>+ SDM-PDFs (DSK)"]
+    DS["DSGVO, KI-VO Formex-XML (CELLAR)<br/>+ SDM-PDFs (DSK)"]
   end
   BSI & CIS & DS -->|"gepinnt + SHA-256"| E["1 Extrahieren"]
   E --> F["2 Vorfiltern (deterministisch)"]
@@ -66,6 +66,7 @@ Jede Quelle durchläuft dieselben Stufen; nur die Parameter unterscheiden sich. 
 | CIS AWS v7 | Empfehlung, z. B. `3.1.4` | Kapitel 2 IAM, 3 Storage, 4 Logging, 6 Networking (Security Groups für Aurora) | wie BSI Grundschutz++ |
 | AWS FSBP | Control, z. B. `SNS.1` | Dienst (`Service`) gehört zum Prüfumfang, z. B. Lambda, ECS, ECR, ELB, RDS; EC2 wegen der VPC-Controls, Instanzen und Classic LB sortiert die Relevanz aus | wie BSI Grundschutz++ |
 | DSGVO | Artikel | Kapitel II–V (Art. 5–49) | „An einer Spezifikation prüfbar?“ |
+| KI-VO | Artikel | Art. 4, 5, 6, 13, 14, 26, 27, 50 (ADR 0025) | „An einer Spezifikation prüfbar?“ |
 | SDM | Maßnahme, z. B. `M60.D01` | Bausteine Löschen (M60), Trennen (M50), Zugriffe regeln (M51); alle Ebenen (Daten, Systeme, Prozesse), denn Löschfristen stehen auf Ebene P | „An einer Spezifikation prüfbar?“ |
 
 - **① Vorfilter:** reiner Code auf Metadaten (OSCAL-Props, Kapitel, Bereiche, Dienste, Maßnahmen-IDs). Er ist billig, reproduzierbar und wirft Organisatorisches früh weg. Für jede verworfene Anforderung schreibt er einen festen Begründungssatz ins Auswahlprotokoll.
@@ -127,6 +128,7 @@ Der Primäranker ist die **eine** Anforderung, aus der eine Prüfregel stammt. I
 | BSI | `BSI GS++ DET.3.1` + Commit-SHA des Katalogs | ID existiert im Katalog-JSON |
 | CIS | `CIS AWS v7.0.0 3.1.4` | `Id` existiert im Prowler-JSON (fester Commit) |
 | DSGVO | `DSGVO Art. 32` (optional Abs./lit.) | `ARTICLE IDENTIFIER="032"` existiert im Formex-XML |
+| KI-VO | `KI-VO Art. 50` | `ARTICLE IDENTIFIER="050"` existiert im Formex-XML (ZIP) |
 | SDM | `SDM Löschen M60.D01` | Maßnahmen-ID steht im Baustein-Text |
 | C5 | `BSI C5 CRY-03.01B` | `Id` existiert im Prowler-JSON (fester Commit) |
 | FSBP | `AWS FSBP SNS.1` | `Id` existiert im Prowler-JSON (fester Commit) |
@@ -322,6 +324,9 @@ tests/                pytest, flach
 3. Je ein Eintrag in `ADAPTERS` (`extract/run.py`) und `SourceName` (`models.py`). In `SELECTIONS` (`select/run.py`) kommt die Quelle zu ihrer Audit-Art.
 4. Lizenz: offen → Extrakt einchecken, Vermerk in `NOTICE`; sonst Extrakt in `.gitignore` (CIS, FSBP, C5).
 5. Test mit kleinem Fixture: Anzahl, Stichprobe, Vorfilter mit Begründung.
+6. Ist der Katalog eingefroren (SPEC G13), baut der Schalter „nur fehlende Regeln formulieren“: `select --only-missing` und `rules --only-missing`. Vorhandene Urteile und Regeln bleiben Byte für Byte, das LLM bewertet nur die neuen Anforderungen (ADR 0025, nur Spec-Audit).
+
+**Fallstrick:** Die Prompts der Einstufung gelten je Audit-Art, nicht je Quelle. Ihre Version steckt im Cache-Schlüssel (`prompt_version`). Ändert sich der Prompt, verliert die ganze Audit-Art den Cache, und ein normales `select` würfelt die alte Auswahl neu. Deshalb verlässt sich `--only-missing` auf die eingecheckte Auswahl, nicht auf den Cache: Der Spec-Katalog stammt von einer älteren Prompt-Version als der Code.
 
 ## Endpunkte
 

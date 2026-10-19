@@ -14,6 +14,8 @@ _TYPOGRAPHIC = str.maketrans({
 })
 _WHITESPACE = re.compile(r"\s+")
 _MARKDOWN_EMPHASIS = re.compile(r"[*_`]")
+# Models write "KI‐System" with U+2010; normalize() keeps it, so the frozen extracts stay (#52)
+_HYPHENS = str.maketrans({"\u2010": "-"})
 
 MIN_QUOTE_LENGTH = 15  # shorter quotes such as "S3" prove nothing
 
@@ -28,7 +30,7 @@ def normalize(text: str) -> str:
 
 
 def _comparable(text: str) -> str:
-    return _MARKDOWN_EMPHASIS.sub("", normalize(text))
+    return _MARKDOWN_EMPHASIS.sub("", normalize(text)).translate(_HYPHENS)
 
 
 def _without_spaces(text: str) -> str:

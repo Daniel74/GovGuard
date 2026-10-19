@@ -18,6 +18,12 @@ def test_groq_is_the_default_provider() -> None:
     assert parse_args(["--provider", "bedrock-global"]).provider == "bedrock-global"
 
 
+def test_only_missing_is_an_explicit_switch() -> None:
+    # ADR 0025: by default the build formulates every rule anew
+    assert parse_args(["rules"]).only_missing is False
+    assert parse_args(["rules", "--only-missing"]).only_missing is True
+
+
 def test_missing_groq_key_aborts_without_falling_back_to_bedrock(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:

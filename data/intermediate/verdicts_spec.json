@@ -1966,5 +1966,957 @@
     "outcome": "not_testable",
     "rationale": "Die Anforderung bezieht sich auf organisatorische Prozesse zur Identifizierung und Dokumentation von Verstößen und berührt keine spezifizierbaren technischen oder fachlichen Angaben, daher ist sie nicht prüfbar.",
     "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 1",
+    "title": "Gegenstand",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 2",
+    "title": "Anwendungsbereich",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 3",
+    "title": "Begriffsbestimmungen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 4",
+    "title": "KI-Kompetenz",
+    "outcome": "selected",
+    "rationale": "Die Anforderung verlangt nach Maßnahmen zur Förderung der KI‑Kompetenz, die in einer Spezifikation durch Angaben zu Schulungen, Qualifikationen und Trainingsprogrammen nachgewiesen oder nicht angegeben werden können, sodass die Erfüllung prüfbar ist.",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 4a",
+    "title": "Verarbeitung besonderer Kategorien personenbezogener Daten zur Erkennung und Korrektur von Verzerrungen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 5",
+    "title": "Verbotene Praktiken im KI-Bereich",
+    "outcome": "selected",
+    "rationale": "Die Anforderung beschreibt verbotene KI‑Praktiken, die in einer Spezifikation eindeutig angegeben werden können, ob das System diese Praktiken einsetzt oder nicht, sodass die Erfüllung prüfbar ist.",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 6",
+    "title": "Einstufungsvorschriften für Hochrisiko-KI-Systeme",
+    "outcome": "selected",
+    "rationale": "Die Anforderung definiert klare Kriterien (z. B. Einsatz als Sicherheitsbauteil, Konformitätsbewertung, Dokumentation) die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 7",
+    "title": "Änderungen des Anhangs III",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 8",
+    "title": "Einhaltung der Anforderungen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 9",
+    "title": "Risikomanagementsystem",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 10",
+    "title": "Daten und Daten-Governance",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 11",
+    "title": "Technische Dokumentation",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 12",
+    "title": "Aufzeichnungspflichten",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 13",
+    "title": "Transparenz und Bereitstellung von Informationen für die Betreiber",
+    "outcome": "selected",
+    "rationale": "Die Anforderung verlangt, dass die Betriebsanleitung bestimmte Angaben enthält; diese können in einer Spezifikation geprüft werden, ob sie vorhanden sind oder fehlen.",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 14",
+    "title": "Menschliche Aufsicht",
+    "outcome": "selected",
+    "rationale": "Die Anforderung beschreibt fachliche Vorgaben zu menschlicher Aufsicht, Rollen, Verfahren und Schnittstellen, die in einer Spezifikation dokumentiert und damit überprüft werden können.",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 15",
+    "title": "Genauigkeit, Robustheit und Cybersicherheit",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 16",
+    "title": "Pflichten der Anbieter von Hochrisiko-KI-Systemen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 17",
+    "title": "Qualitätsmanagementsystem",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 18",
+    "title": "Aufbewahrung der Dokumentation",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 19",
+    "title": "Automatisch erzeugte Protokolle",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 20",
+    "title": "Korrekturmaßnahmen und Informationspflicht",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 21",
+    "title": "Zusammenarbeit mit den zuständigen Behörden",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 22",
+    "title": "Bevollmächtigte der Anbieter von Hochrisiko-KI-Systemen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 23",
+    "title": "Pflichten der Einführer",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 24",
+    "title": "Pflichten der Händler",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 25",
+    "title": "Verantwortlichkeiten entlang der KI-Wertschöpfungskette",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 26",
+    "title": "Pflichten der Betreiber von Hochrisiko-KI-Systemen",
+    "outcome": "selected",
+    "rationale": "Die Anforderung umfasst technische und organisatorische Maßnahmen, Rollen, Prozesse und Dokumentationspflichten, die in einer Spezifikation (z. B. Zweck, Rollen, Abläufe, Auftragsverarbeiter) beschrieben und damit überprüft werden können.",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 27",
+    "title": "Grundrechte-Folgenabschätzung für Hochrisiko-KI-Systeme",
+    "outcome": "selected",
+    "rationale": "Die Anforderung verlangt, dass Betreiber eine Grundrechte‑Folgenabschätzung mit definierten Inhalten durchführen und der Marktüberwachungsbehörde melden; eine Spezifikation kann prüfen, ob diese Inhalte beschrieben und gemeldet werden, sodass die Anforderung testbar ist.",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 28",
+    "title": "Notifizierende Behörden",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 29",
+    "title": "Antrag einer Konformitätsbewertungsstelle auf Notifizierung",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 30",
+    "title": "Notifizierungsverfahren",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 31",
+    "title": "Anforderungen an notifizierte Stellen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 32",
+    "title": "Vermutung der Konformität mit den Anforderungen an notifizierte Stellen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 33",
+    "title": "Zweigstellen notifizierter Stellen und Vergabe von Unteraufträgen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 34",
+    "title": "Operative Pflichten der notifizierten Stellen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 35",
+    "title": "Identifizierungsnummern und Verzeichnisse notifizierter Stellen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 36",
+    "title": "Änderungen der Notifizierungen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 37",
+    "title": "Anfechtungen der Kompetenz notifizierter Stellen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 38",
+    "title": "Koordinierung der notifizierten Stellen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 39",
+    "title": "Konformitätsbewertungsstellen in Drittländern",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 40",
+    "title": "Harmonisierte Normen und Normungsdokumente",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 41",
+    "title": "Gemeinsame Spezifikationen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 42",
+    "title": "Vermutung der Konformität mit bestimmten Anforderungen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 43",
+    "title": "Konformitätsbewertung",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 44",
+    "title": "Bescheinigungen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 45",
+    "title": "Informationspflichten der notifizierten Stellen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 46",
+    "title": "Ausnahme vom Konformitätsbewertungsverfahren",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 47",
+    "title": "EU-Konformitätserklärung",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 48",
+    "title": "CE-Kennzeichnung",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 49",
+    "title": "Registrierung",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 50",
+    "title": "Transparenzpflichten für Anbieter und Betreiber bestimmter KI-Systeme",
+    "outcome": "selected",
+    "rationale": "Die Anforderung bezieht sich auf Transparenz‑ und Kennzeichnungspflichten, die in einer Spezifikation durch Angaben zu Informations‑ und Kennzeichnungsmechanismen nachgewiesen oder deren Fehlen erkannt werden können.",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 51",
+    "title": "Einstufung von KI-Modellen mit allgemeinem Verwendungszweck als KI-Modelle mit allgemeinem Verwendungszweck mit systemischem Risiko",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 52",
+    "title": "Verfahren",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 53",
+    "title": "Pflichten für Anbieter von KI-Modellen mit allgemeinem Verwendungszweck",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 54",
+    "title": "Bevollmächtigte der Anbieter von KI-Modellen mit allgemeinem Verwendungszweck",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 55",
+    "title": "Pflichten der Anbieter von KI-Modellen mit allgemeinem Verwendungszweck mit systemischem Risiko",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 56",
+    "title": "Praxisleitfäden",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 57",
+    "title": "KI-Reallabore",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 58",
+    "title": "Detaillierte Regelungen für KI-Reallabore und deren Funktionsweise",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 59",
+    "title": "Weiterverarbeitung personenbezogener Daten zur Entwicklung bestimmter KI-Systeme im öffentlichen Interesse im KI-Reallabor",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 60",
+    "title": "Tests von Hochrisiko-KI-Systemen unter Realbedingungen außerhalb von KI-Reallaboren",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 60a",
+    "title": "Tests von Hochrisiko-KI-Systemen, die unter die in Anhang I Abschnitt B aufgeführten Harmonisierungsrechtsvorschriften der Union fallen, unter Realbedingungen außerhalb von KI-Reallaboren",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 61",
+    "title": "Informierte Einwilligung zur Teilnahme an einem Test unter Realbedingungen außerhalb von KI-Reallaboren",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 62",
+    "title": "Maßnahmen für Anbieter und Betreiber, insbesondere KMU, einschließlich Start-up-Unternehmen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 63",
+    "title": "Ausnahmen für bestimmte Akteure",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 64",
+    "title": "Büro für Künstliche Intelligenz",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 65",
+    "title": "Einrichtung und Struktur des Europäischen Gremiums für Künstliche Intelligenz",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 66",
+    "title": "Aufgaben des KI-Gremiums",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 67",
+    "title": "Beratungsforum",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 68",
+    "title": "Wissenschaftliches Gremium unabhängiger Sachverständiger",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 69",
+    "title": "Zugang zum Pool von Sachverständigen durch die Mitgliedstaaten",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 70",
+    "title": "Benennung von zuständigen nationalen Behörden und zentrale Anlaufstelle",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 71",
+    "title": "EU-Datenbank für die in Anhang III aufgeführten Hochrisiko-KI-Systeme",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 72",
+    "title": "Beobachtung nach dem Inverkehrbringen durch die Anbieter und Plan für die Beobachtung nach dem Inverkehrbringen für Hochrisiko-KI-Systeme",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 73",
+    "title": "Meldung schwerwiegender Vorfälle",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 74",
+    "title": "Marktüberwachung und Kontrolle von KI-Systemen auf dem Unionsmarkt",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 75",
+    "title": "Marktüberwachung und Kontrolle von KI-Systemen sowie Amtshilfe",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 75a",
+    "title": "Aufsichts- und Durchsetzungsbefugnisse des Büros für Künstliche Intelligenz",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 75b",
+    "title": "Verpflichtungszusagen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 75c",
+    "title": "Verstöße, Geldbußen und Zwangsgelder",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 75d",
+    "title": "Schutzvorkehrungen und weitere Spezifizierung",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 76",
+    "title": "Beaufsichtigung von Tests unter Realbedingungen durch Marktüberwachungsbehörden",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 77",
+    "title": "Befugnisse der für den Schutz der Grundrechte zuständigen Behörden und Zusammenarbeit mit den Marktüberwachungsbehörden",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 78",
+    "title": "Vertraulichkeit",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 79",
+    "title": "Verfahren auf nationaler Ebene für den Umgang mit KI-Systemen, die ein Risiko bergen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 80",
+    "title": "Verfahren für den Umgang mit KI-Systemen, die vom Anbieter gemäß Anhang III als nicht hochriskant eingestuft werden",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 81",
+    "title": "Schutzklauselverfahren der Union",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 82",
+    "title": "Konforme KI-Systeme, die ein Risiko bergen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 83",
+    "title": "Formale Nichtkonformität",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 84",
+    "title": "Unionsstrukturen zur Unterstützung der Prüfung von KI",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 85",
+    "title": "Recht auf Beschwerde bei einer Marktüberwachungsbehörde",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 86",
+    "title": "Recht auf Erläuterung der Entscheidungsfindung im Einzelfall",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 87",
+    "title": "Meldung von Verstößen und Schutz von Hinweisgebern",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 88",
+    "title": "Durchsetzung der Pflichten der Anbieter von KI-Modellen mit allgemeinem Verwendungszweck",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 89",
+    "title": "Überwachungsmaßnahmen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 90",
+    "title": "Warnungen des wissenschaftlichen Gremiums vor systemischen Risiken",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 91",
+    "title": "Befugnis zur Anforderung von Dokumentation und Informationen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 92",
+    "title": "Befugnis zur Durchführung von Bewertungen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 93",
+    "title": "Befugnis zur Aufforderung zu Maßnahmen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 94",
+    "title": "Verfahrensrechte der Wirtschaftsakteure des KI-Modells mit allgemeinem Verwendungszweck",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 95",
+    "title": "Verhaltenskodizes für die freiwillige Anwendung bestimmter Anforderungen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 96",
+    "title": "Leitlinien der Kommission zur Durchführung dieser Verordnung",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 97",
+    "title": "Ausübung der Befugnisübertragung",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 98",
+    "title": "Ausschussverfahren",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 99",
+    "title": "Sanktionen",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 100",
+    "title": "Verhängung von Geldbußen gegen Organe, Einrichtungen und sonstige Stellen der Union",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 101",
+    "title": "Geldbußen für Anbieter von KI-Modellen mit allgemeinem Verwendungszweck",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 102",
+    "title": "Änderung der Verordnung (EG) Nr. 300/2008",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 103",
+    "title": "Änderung der Verordnung (EU) Nr. 167/2013",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 104",
+    "title": "Änderung der Verordnung (EU) Nr. 168/2013",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 105",
+    "title": "Änderung der Richtlinie 2014/90/EU",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 106",
+    "title": "Änderung der Richtlinie (EU) 2016/797",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 107",
+    "title": "Änderung der Verordnung (EU) 2018/858",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 108",
+    "title": "Änderungen der Verordnung (EU) 2018/1139",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 109",
+    "title": "Änderung der Verordnung (EU) 2019/2144",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 110",
+    "title": "Änderung der Richtlinie (EU) 2020/1828",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 111",
+    "title": "Bereits in Verkehr gebrachte oder in Betrieb genommene KI-Systeme und bereits in Verkehr gebrachte KI-Modelle mit allgemeinem Verwendungszweck",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 112",
+    "title": "Bewertung und Überprüfung",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
+  },
+  {
+    "source": "KI-VO",
+    "requirement_id": "Art. 113",
+    "title": "Inkrafttreten und Geltungsbeginn",
+    "outcome": "prefiltered",
+    "rationale": "Artikel gehört nicht zur Auswahl Art. 4, 5, 6, 13, 14, 26, 27 und 50 (#52).",
+    "cfn_resource_types": []
   }
 ]

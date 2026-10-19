@@ -3,7 +3,7 @@
 The file I/O of the extraction lives here: sources.json and the download cache in, extracted out.
 """
 
-from kb_build.extract import bsi, c5, cis, dsgvo, fsbp, sdm
+from kb_build.extract import bsi, c5, cis, dsgvo, fsbp, ki_vo, sdm
 from kb_build.extract.models import merge_sources
 from kb_build.paths import BuildPaths
 from kb_build.source_fetch import fetch_to_cache, load_sources_json, read_cached
@@ -15,6 +15,7 @@ ADAPTERS = {
     "fsbp.json": (fsbp, ["fsbp_aws_prowler"]),
     "c5.json": (c5, ["c5_aws_prowler"]),
     "dsgvo.json": (dsgvo, ["dsgvo_formex"]),
+    "ki-vo.json": (ki_vo, ["ki_vo_formex"]),
     "sdm.json": (
         sdm, ["sdm_m60_loeschen_pdf", "sdm_m50_trennen_pdf", "sdm_m51_zugriffe_regeln_pdf"]
     ),

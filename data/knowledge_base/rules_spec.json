@@ -2,7 +2,8 @@
   "audit_type": "spec",
   "source_versions": {
     "DSGVO": "000.003",
-    "SDM": "V1.0a, V1.0, V1.0"
+    "SDM": "V1.0a, V1.0, V1.0",
+    "KI-VO": "001.002.0"
   },
   "model_id": "openai/gpt-oss-120b",
   "rules": [
@@ -2123,6 +2124,123 @@
       "source": "SDM",
       "primary_anchor": "SDM Zugriffe regeln M51.P60",
       "selection_rationale": "Die Anforderung verlangt, dass das RBK einen konkreten Hinweis zur Administration durch Auftragsverarbeiter enthält, was in der Spezifikation nachgeprüft werden kann.",
+      "cfn_resource_types": []
+    },
+    {
+      "source_quote": "Die Anbieter und Betreiber von KI-Systemen ergreifen Maßnahmen, um die Entwicklung der KI‑Kompetenz ihres Personals und anderer Personen zu unterstützen",
+      "title": "Nachweis von KI‑Kompetenzförderungsmaßnahmen",
+      "compliant_if": "Die Spezifikation enthält konkrete Angaben zu geplanten Schulungen, Qualifikationsnachweisen oder Trainingsprogrammen zur Entwicklung der KI‑Kompetenz des Personals.",
+      "violation_if": "Die Spezifikation erklärt, dass keine Maßnahmen zur Entwicklung der KI‑Kompetenz des Personals ergriffen werden.",
+      "recommendation": "Ergänzen Sie die Spezifikation um einen Abschnitt, der geplante Schulungs‑ und Qualifizierungsmaßnahmen sowie deren Zeitplan detailliert beschreibt.",
+      "cross_references": [],
+      "id": "SPEC-KI-VO-Art.4",
+      "audit_type": "spec",
+      "source": "KI-VO",
+      "primary_anchor": "KI-VO Art. 4",
+      "selection_rationale": "Die Anforderung verlangt nach Maßnahmen zur Förderung der KI‑Kompetenz, die in einer Spezifikation durch Angaben zu Schulungen, Qualifikationen und Trainingsprogrammen nachgewiesen oder nicht angegeben werden können, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "source_quote": "realistische Bild-, Video-, Ton- oder ähnliche Inhalte erzeugt oder manipuliert, in denen intime Körperteile einer bestimmbaren natürlichen Person dargestellt werden",
+      "title": "Verbot nicht einvernehmlicher intimer Darstellungen",
+      "compliant_if": "Die Spezifikation erklärt ausdrücklich, dass das KI‑System keine realistischen Bild‑, Video‑, Ton‑ oder ähnlichen Inhalte erzeugt oder manipuliert, in denen intime Körperteile einer bestimmbaren natürlichen Person dargestellt werden, ohne dass eine aus freien Stücken erteilte, spezifische, aufgeklärte und eindeutige Zustimmung vorliegt.",
+      "violation_if": "Die Spezifikation legt fest, dass das KI‑System realistische Bild‑, Video‑, Ton‑ oder ähnliche Inhalte erzeugt oder manipuliert, in denen intime Körperteile einer bestimmbaren natürlichen Person dargestellt werden, ohne dass eine ausdrückliche Einwilligung der betroffenen Person dokumentiert ist, oder sie erklärt einen Verzicht auf diese Einwilligung.",
+      "recommendation": "Entfernen Sie die entsprechende Generierungs‑ bzw. Manipulationsfunktion oder implementieren Sie eine zwingende Einwilligungsprüfung und dokumentieren Sie die Einhaltung.",
+      "cross_references": [
+        {
+          "anchor": "DSGVO Art. 9",
+          "origin": "ai_suggested"
+        }
+      ],
+      "id": "SPEC-KI-VO-Art.5",
+      "audit_type": "spec",
+      "source": "KI-VO",
+      "primary_anchor": "KI-VO Art. 5",
+      "selection_rationale": "Die Anforderung beschreibt verbotene KI‑Praktiken, die in einer Spezifikation eindeutig angegeben werden können, ob das System diese Praktiken einsetzt oder nicht, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "source_quote": "das KI-System soll als Sicherheitsbauteil eines unter die in Anhang I aufgeführten Harmonisierungsrechtsvorschriften der Union fallenden Produkts verwendet werden",
+      "title": "Klassifizierung als Hochrisiko‑KI",
+      "compliant_if": "Die Spezifikation klassifiziert das KI‑System eindeutig als Sicherheitsbauteil eines in Anhang I genannten Produkts oder als eigenständiges Produkt.",
+      "violation_if": "Die Spezifikation weist das KI‑System nicht als Sicherheitsbauteil eines in Anhang I genannten Produkts aus und erklärt, dass es kein solches Produkt ist, obwohl die genannten Bedingungen erfüllt sind.",
+      "recommendation": "Fügen Sie eine klare Klassifizierung des KI‑Systems als Sicherheitsbauteil bzw. eigenständiges Produkt gemäß Anhang I hinzu.",
+      "cross_references": [],
+      "id": "SPEC-KI-VO-Art.6",
+      "audit_type": "spec",
+      "source": "KI-VO",
+      "primary_anchor": "KI-VO Art. 6",
+      "selection_rationale": "Die Anforderung definiert klare Kriterien (z. B. Einsatz als Sicherheitsbauteil, Konformitätsbewertung, Dokumentation) die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "source_quote": "Die Betriebsanleitungen enthalten mindestens folgende Informationen: a) den Namen und die Kontaktangaben des Anbieters sowie gegebenenfalls seines Bevollmächtigten;",
+      "title": "Anbieter‑Kontaktangaben in Betriebsanleitung",
+      "compliant_if": "Die Spezifikation enthält in der Betriebsanleitung den vollständigen Namen und die Kontaktangaben des Anbieters (bzw. seines Bevollmächtigten).",
+      "violation_if": "Die Spezifikation legt fest, dass die Namen und Kontaktangaben des Anbieters nicht in der Betriebsanleitung aufgenommen werden müssen, oder dass sie erst zu einem späteren Zeitpunkt bereitgestellt werden.",
+      "recommendation": "Fügen Sie in der Betriebsanleitung einen Abschnitt mit den vollständigen Namen und Kontaktinformationen des Anbieters (bzw. Bevollmächtigten) ein.",
+      "cross_references": [],
+      "id": "SPEC-KI-VO-Art.13",
+      "audit_type": "spec",
+      "source": "KI-VO",
+      "primary_anchor": "KI-VO Art. 13",
+      "selection_rationale": "Die Anforderung verlangt, dass die Betriebsanleitung bestimmte Angaben enthält; diese können in einer Spezifikation geprüft werden, ob sie vorhanden sind oder fehlen.",
+      "cfn_resource_types": []
+    },
+    {
+      "source_quote": "Vorkehrungen, die vor dem Inverkehrbringen oder der Inbetriebnahme vom Anbieter bestimmt und, sofern technisch machbar, in das Hochrisiko-KI-System eingebaut werden;",
+      "title": "Menschliche Aufsicht sicherstellen",
+      "compliant_if": "Die Spezifikation beschreibt, dass vor Inbetriebnahme vom Anbieter festgelegte, technisch machbare Aufsichts‑Vorkehrungen in das Hochrisiko‑KI‑System eingebaut werden.",
+      "violation_if": "Die Spezifikation legt fest, dass keine Vorkehrungen vor Inbetriebnahme eingebaut werden oder dass solche Vorkehrungen ausschließlich vom Betreiber nachträglich umgesetzt werden.",
+      "recommendation": "Fügen Sie in der Spezifikation fest, dass der Anbieter geeignete, technisch umsetzbare Aufsichts‑Vorkehrungen vor Inbetriebnahme integriert.",
+      "cross_references": [],
+      "id": "SPEC-KI-VO-Art.14",
+      "audit_type": "spec",
+      "source": "KI-VO",
+      "primary_anchor": "KI-VO Art. 14",
+      "selection_rationale": "Die Anforderung beschreibt fachliche Vorgaben zu menschlicher Aufsicht, Rollen, Verfahren und Schnittstellen, die in einer Spezifikation dokumentiert und damit überprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "source_quote": "Die Betreiber übertragen natürlichen Personen, die über die erforderliche Kompetenz, Ausbildung und Befugnis verfügen, die menschliche Aufsicht und lassen ihnen die erforderliche Unterstützung zukommen.",
+      "title": "Menschliche Aufsicht – Kompetenz und Unterstützung",
+      "compliant_if": "Die Spezifikation nennt ausdrücklich, dass die menschliche Aufsicht von Personen mit nachgewiesener Kompetenz, Ausbildung und Befugnis durchgeführt wird und dass diesen Personen die erforderliche Unterstützung zugesichert ist.",
+      "violation_if": "Die Spezifikation legt die Aufsicht Personen ohne nachgewiesene Kompetenz, Ausbildung oder Befugnis fest oder erwähnt keine Unterstützung für die Aufsichtspersonen.",
+      "recommendation": "Ergänzen Sie die Spezifikation um klare Qualifikationskriterien und konkrete Unterstützungsmaßnahmen für die verantwortlichen Aufsichtspersonen.",
+      "cross_references": [],
+      "id": "SPEC-KI-VO-Art.26",
+      "audit_type": "spec",
+      "source": "KI-VO",
+      "primary_anchor": "KI-VO Art. 26",
+      "selection_rationale": "Die Anforderung umfasst technische und organisatorische Maßnahmen, Rollen, Prozesse und Dokumentationspflichten, die in einer Spezifikation (z. B. Zweck, Rollen, Abläufe, Auftragsverarbeiter) beschrieben und damit überprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "source_quote": "teilt der Betreiber der Marktüberwachungsbehörde ihre Ergebnisse mit, indem er das ausgefüllte, in Absatz 5 des vorliegenden Artikels genannte Muster als Teil der Mitteilung übermittelt.",
+      "title": "Meldung der Folgenabschätzung",
+      "compliant_if": "Die Spezifikation beschreibt, dass nach Abschluss der Grundrechte‑Folgenabschätzung die Ergebnisse an die Marktüberwachungsbehörde mittels des in Art. 27 Abs. 5 genannten Musters übermittelt werden.",
+      "violation_if": "Die Spezifikation legt fest, dass die Ergebnisse der Grundrechte‑Folgenabschätzung nicht an die Marktüberwachungsbehörde gemeldet werden oder ein abweichendes Verfahren verwendet wird.",
+      "recommendation": "Ergänzen Sie in der Spezifikation einen Schritt, der die Übermittlung des ausgefüllten Musters an die Marktüberwachungsbehörde nach Abschluss der Abschätzung vorsieht.",
+      "cross_references": [],
+      "id": "SPEC-KI-VO-Art.27",
+      "audit_type": "spec",
+      "source": "KI-VO",
+      "primary_anchor": "KI-VO Art. 27",
+      "selection_rationale": "Die Anforderung verlangt, dass Betreiber eine Grundrechte‑Folgenabschätzung mit definierten Inhalten durchführen und der Marktüberwachungsbehörde melden; eine Spezifikation kann prüfen, ob diese Inhalte beschrieben und gemeldet werden, sodass die Anforderung testbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "source_quote": "Anbieter von KI-Systemen, einschließlich KI-Systemen mit allgemeinem Verwendungszweck, die synthetische Audio-, Bild-, Video- oder Textinhalte erzeugen, stellen sicher, dass die Ausgaben des KI-Systems in einem maschinenlesbaren Format gekennzeichnet und als künstlich erzeugt oder manipuliert erkennbar sind.",
+      "title": "Maschinenlesbare Kennzeichnung synthetischer Inhalte",
+      "compliant_if": "Die Spezifikation definiert für alle vom KI-System erzeugten Audio-, Bild-, Video- oder Textausgaben ein maschinenlesbares Kennzeichen, das eindeutig als künstlich erzeugt oder manipuliert gekennzeichnet ist.",
+      "violation_if": "Die Spezifikation enthält eine Bestimmung, dass synthetische Inhalte nicht gekennzeichnet werden müssen.",
+      "recommendation": "Implementieren Sie ein standardisiertes, maschinenlesbares Tagging‑Schema (z. B. JSON‑Metadata), das jede erzeugte Ausgabe eindeutig als KI‑generiert kennzeichnet.",
+      "cross_references": [],
+      "id": "SPEC-KI-VO-Art.50",
+      "audit_type": "spec",
+      "source": "KI-VO",
+      "primary_anchor": "KI-VO Art. 50",
+      "selection_rationale": "Die Anforderung bezieht sich auf Transparenz‑ und Kennzeichnungspflichten, die in einer Spezifikation durch Angaben zu Informations‑ und Kennzeichnungsmechanismen nachgewiesen oder deren Fehlen erkannt werden können.",
       "cfn_resource_types": []
     }
   ]

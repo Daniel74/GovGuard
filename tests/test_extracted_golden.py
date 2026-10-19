@@ -63,6 +63,17 @@ def test_dsgvo_exactly_99_articles_and_chapters_2_to_5_as_candidates() -> None:
     assert reqs["Art. 32"].text.startswith("(1) Unter Berücksichtigung des Stands der Technik")
 
 
+def test_ki_vo_all_119_articles_and_the_8_of_issue_52_as_candidates() -> None:
+    reqs = {r.id: r for r in extract_cached("ki-vo.json").requirements}
+    assert len(reqs) == 119  # 113 plus Art. 4a, 60a, 75a-75d of the 2026 amendment
+    assert [rid for rid, r in reqs.items() if r.prefilter_passed] == [
+        f"Art. {n}" for n in (4, 5, 6, 13, 14, 26, 27, 50)
+    ]
+    assert reqs["Art. 50"].title == (
+        "Transparenzpflichten für Anbieter und Betreiber bestimmter KI-Systeme")
+    assert reqs["Art. 6"].primary_anchor == "KI-VO Art. 6"
+
+
 def test_sdm_all_147_measures_pass_the_prefilter() -> None:
     reqs = {r.id: r for r in extract_cached("sdm.json").requirements}
     assert len(reqs) == 147
@@ -72,7 +83,7 @@ def test_sdm_all_147_measures_pass_the_prefilter() -> None:
 
 
 def test_checked_in_extracts_match_a_fresh_build() -> None:
-    for filename in ("bsi.json", "dsgvo.json", "sdm.json"):
+    for filename in ("bsi.json", "dsgvo.json", "ki-vo.json", "sdm.json"):
         checked_in = (PATHS.extracted / filename).read_text(encoding="utf-8")
         assert ExtractedSource.model_validate_json(checked_in).requirements == (
             extract_cached(filename).requirements

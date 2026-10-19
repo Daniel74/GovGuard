@@ -907,6 +907,54 @@
       "source": "SDM",
       "rationale": "Die Anforderung verlangt, dass das RBK einen konkreten Hinweis zur Administration durch Auftragsverarbeiter enthält, was in der Spezifikation nachgeprüft werden kann.",
       "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 4",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt nach Maßnahmen zur Förderung der KI‑Kompetenz, die in einer Spezifikation durch Angaben zu Schulungen, Qualifikationen und Trainingsprogrammen nachgewiesen oder nicht angegeben werden können, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 5",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung beschreibt verbotene KI‑Praktiken, die in einer Spezifikation eindeutig angegeben werden können, ob das System diese Praktiken einsetzt oder nicht, sodass die Erfüllung prüfbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 6",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung definiert klare Kriterien (z. B. Einsatz als Sicherheitsbauteil, Konformitätsbewertung, Dokumentation) die in einer Spezifikation angegeben werden können, sodass geprüft werden kann, ob sie erfüllt ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 13",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt, dass die Betriebsanleitung bestimmte Angaben enthält; diese können in einer Spezifikation geprüft werden, ob sie vorhanden sind oder fehlen.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 14",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung beschreibt fachliche Vorgaben zu menschlicher Aufsicht, Rollen, Verfahren und Schnittstellen, die in einer Spezifikation dokumentiert und damit überprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 26",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung umfasst technische und organisatorische Maßnahmen, Rollen, Prozesse und Dokumentationspflichten, die in einer Spezifikation (z. B. Zweck, Rollen, Abläufe, Auftragsverarbeiter) beschrieben und damit überprüft werden können.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 27",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung verlangt, dass Betreiber eine Grundrechte‑Folgenabschätzung mit definierten Inhalten durchführen und der Marktüberwachungsbehörde melden; eine Spezifikation kann prüfen, ob diese Inhalte beschrieben und gemeldet werden, sodass die Anforderung testbar ist.",
+      "cfn_resource_types": []
+    },
+    {
+      "requirement_id": "Art. 50",
+      "source": "KI-VO",
+      "rationale": "Die Anforderung bezieht sich auf Transparenz‑ und Kennzeichnungspflichten, die in einer Spezifikation durch Angaben zu Informations‑ und Kennzeichnungsmechanismen nachgewiesen oder deren Fehlen erkannt werden können.",
+      "cfn_resource_types": []
     }
   ]
 }

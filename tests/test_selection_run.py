@@ -121,6 +121,35 @@ def test_a_second_run_with_the_same_cache_asks_the_llm_nothing(tmp_path: Path) -
     assert len(calls) == first
 
 
+def test_only_missing_keeps_the_old_selection_and_judges_only_the_new_source(
+    tmp_path: Path,
+) -> None:
+    # ADR 0025: the checked-in selection stays a byte-identical prefix, KI-VO is appended
+    paths = paths_in(tmp_path)
+    real = load(REAL.intermediate, "selection_spec.json")
+    frozen = [e for e in real.selected if e.source != "KI-VO"]  # the state before #52
+    old = [v for v in verdicts(REAL.intermediate, "verdicts_spec.json") if v.source != "KI-VO"]
+    paths.out_file("selection", "spec").write_text(
+        real.model_copy(update={"selected": frozen}).model_dump_json(), "utf-8")
+    paths.out_file("verdicts", "spec").write_bytes(TypeAdapter(list[Verdict]).dump_json(old))
+    calls: list[int] = []
+
+    select_all(fake_model(calls), paths, only="spec", only_missing=True)
+
+    new = load(paths.intermediate, "selection_spec.json")
+    assert new.selected[:len(frozen)] == frozen
+    assert {e.source for e in new.selected[len(frozen):]} == {"KI-VO"}
+    assert len(calls) == 8  # Art. 4, 5, 6, 13, 14, 26, 27, 50
+    assert {v.source for v in verdicts(paths.intermediate, "verdicts_spec.json")} == {
+        "DSGVO", "SDM", "KI-VO"}
+
+
+def test_only_missing_is_not_built_for_the_architecture_audit(tmp_path: Path) -> None:
+    # the coverage gate needs the whole selection; architecture keeps the full run
+    with pytest.raises(ValueError, match="only for the spec audit"):
+        select_all(fake_model(), paths_in(tmp_path), only="architecture", only_missing=True)
+
+
 def test_the_paid_answers_are_saved_even_if_a_gate_aborts_the_build(tmp_path: Path) -> None:
     def only_s3(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
         answer = {"testable": True, "rationale": "x", "cfn_resource_types": ["AWS::S3::Bucket"]}

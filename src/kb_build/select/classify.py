@@ -52,7 +52,9 @@ Sie nennt z. B. Zwecke, Rechtsgrundlagen, Rollen, Abläufe und Auftragsverarbeit
 Frage: Kann eine Spezifikation (Freitext oder OpenAPI) Hinweise enthalten, ob die Anforderung
 erfüllt oder verletzt wird, oder sich dazu bewusst ausschweigen? Dann ist sie prüfbar; fehlende
 Angaben ergeben später eine Warnung. Beispiele: Rechtsgrundlagen, Zwecke, Löschfristen,
-Verschlüsselung, Zugriffsrechte, Auftragsverarbeiter, Übermittlung in Drittländer.
+Verschlüsselung, Zugriffsrechte, Auftragsverarbeiter, Übermittlung in Drittländer; bei
+KI-Systemen auch die Einstufung (z. B. Hochrisiko oder nicht), ausgeschlossene verbotene
+Praktiken und die KI-Kompetenz der Nutzenden.
 Nein gilt nur für Pflichten der Behörde, die keine Spezifikation berühren (z. B.
 Bußgeldverfahren, Befugnisse der Aufsicht, Zertifizierung).
 - "testable": ja oder nein. "rationale": ein deutscher Satz zur Begründung.

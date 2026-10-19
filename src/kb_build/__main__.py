@@ -49,6 +49,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--provider", default="groq",
                         choices=["bedrock", "bedrock-global", "groq"])
     parser.add_argument("--audit-type", choices=["spec", "architecture"], default=None)
+    parser.add_argument("--only-missing", action="store_true")  # keep the frozen part (ADR 0025)
     parser.add_argument("--schema-dir", type=Path, default=Path("schemas"))  # describe-type
     return parser.parse_args(argv)
 
@@ -57,9 +58,11 @@ if __name__ == "__main__":
     args = parse_args()
     configure_logging(BuildPaths().build_log(args.command, args.audit_type))
     if args.command == "select":
-        select_all(model_for(args.provider), only=args.audit_type)
+        select_all(model_for(args.provider), only=args.audit_type,
+                   only_missing=args.only_missing)
     elif args.command == "rules":
-        formulate_all(model_for(args.provider), only=args.audit_type)
+        formulate_all(model_for(args.provider), only=args.audit_type,
+                      only_missing=args.only_missing)
     elif args.command == "cfn-properties":
         snapshot_scope(args.schema_dir)
     else:

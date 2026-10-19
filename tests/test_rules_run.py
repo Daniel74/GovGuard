@@ -35,10 +35,15 @@ def test_the_checked_in_selection_names_only_types_of_the_scope() -> None:
     assert sorted(named - scope_types) == []
 
 
-def quoting_model(quote: str | None = None) -> FunctionModel:
-    """Quotes the whole requirement text from the prompt, or always `quote`; names the types."""
+def quoting_model(quote: str | None = None, calls: list[str] | None = None) -> FunctionModel:
+    """Quotes the whole requirement text from the prompt, or always `quote`; names the types.
+
+    `calls` collects the tool name of every request.
+    """
 
     def respond(messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
+        if calls is not None:
+            calls.append(info.output_tools[0].name)
         if info.output_tools[0].name == JUDGE_TOOL_NAME:  # every spec violation is a stipulation
             check = {"describes_absence": False, "reason": "Festlegung."}
             return ModelResponse(parts=[ToolCallPart(JUDGE_TOOL_NAME, check)])
@@ -85,6 +90,23 @@ def test_a_failed_rule_aborts_the_build_and_writes_no_file(tmp_path: Path) -> No
         formulate_all(quoting_model(quote="erfundener Normtext"), paths, only="spec")
 
     assert not (paths.knowledge_base / "rules_spec.json").exists()
+
+
+def test_only_missing_formulates_just_the_requirements_without_a_rule(tmp_path: Path) -> None:
+    # ADR 0025: the frozen rules stay byte for byte, a new source only adds rules
+    paths = paths_in(tmp_path)
+    formulate_all(quoting_model(), paths, only="spec")
+    rules_file = paths.out_file("rules", "spec")
+    full = RuleCatalog.model_validate_json(rules_file.read_text("utf-8"))
+    frozen = [r.model_copy(update={"title": "eingefroren"}) for r in full.rules[1:]]
+    rules_file.write_text(full.model_copy(update={"rules": frozen}).model_dump_json(), "utf-8")
+    calls: list[str] = []
+
+    formulate_all(quoting_model(calls=calls), paths, only="spec", only_missing=True)
+
+    merged = RuleCatalog.model_validate_json(rules_file.read_text("utf-8"))
+    assert merged.rules == [full.rules[0], *frozen]
+    assert calls.count("formulate_rule") == 1
 
 
 def test_the_property_index_holds_nested_paths_and_names_of_all_resource_types() -> None:
