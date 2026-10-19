@@ -1,11 +1,11 @@
 """Pure view logic for reading an audit report; no Streamlit (#11)."""
 
 from collections import Counter
-from typing import Literal
+from typing import Literal, get_args
 
 from pydantic import BaseModel
 
-from govguard.models import AuditReport, Expected, Finding, Status
+from govguard.models import AuditReport, Expected, Finding, SourceName, Status
 
 # GAP: WARN without evidence lines, the input does not describe the rule (CONTEXT: Lücke)
 Category = Literal["FAIL", "WARN", "GAP", "PASS", "N/A"]
@@ -58,8 +58,11 @@ def visible_findings(
 
 
 def source_of(finding: Finding) -> str:
-    """Rule ids read <SPEC|ARCH>-<SOURCE>-<requirement>, e.g. ARCH-CIS-3.1.4."""
-    return finding.rule_id.split("-")[1]
+    """Rule ids read <SPEC|ARCH>-<SOURCE>-<requirement>, e.g. ARCH-CIS-3.1.4; a source name
+    may hold a hyphen itself (SPEC-KI-VO-Art.6Abs.2).
+    """
+    rest = finding.rule_id.partition("-")[2]
+    return next(s for s in get_args(SourceName) if rest.startswith(f"{s}-"))
 
 
 def of_source(findings: list[Finding], source: str | None) -> list[Finding]:

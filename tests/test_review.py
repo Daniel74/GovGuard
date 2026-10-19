@@ -83,6 +83,12 @@ def test_source_filter_names_come_from_the_rule_id() -> None:
     assert {source_of(f) for f in findings} == {"BSI", "C5", "CIS", "FSBP"}
 
 
+def test_the_source_of_ki_vo_keeps_its_hyphen() -> None:
+    finding = ENTRIES["spec-meldeportal-gesundheit"].report.findings[0]
+
+    assert source_of(finding.model_copy(update={"rule_id": "SPEC-KI-VO-Art.6Abs.2"})) == "KI-VO"
+
+
 def test_each_source_counts_its_findings_with_na_but_without_gaps() -> None:
     """Gaps stand in their own list below the table: DSGVO 35 - 18 gaps, SDM 116 - 88."""
     findings = ENTRIES["spec-meldeportal-gesundheit"].report.findings
