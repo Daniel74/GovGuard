@@ -17,7 +17,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft die Spezifikation seines Demo-Stands). Offene Schritte in dieser Reihenfolge: 12b, zuletzt die Doku 13–14. Mit #36 ist der Prototyp fertig.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft die Spezifikation seines Demo-Stands). Offene Schritte in dieser Reihenfolge: 12b bis „Soll festlegen“, 12m (#51), Rest von 12b, zuletzt die Doku 13–14. Mit #36 ist der Prototyp fertig.
 - **Eingefroren ab Schritt 12l:** `kb_build` und Audit-Engine werden nicht mehr geändert, Katalog und Prompts bleiben. Bekannte Grenzen stehen im README; #48 (YAML), #49 (Build-Abbrüche) und #50 (Allow/Deny, Platzhalter) sind Ausbau.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 19.10.:** Kaum Budget. Die Demo-Architektur bleibt (Streamlit und Groq), kein AWS-Deploy, kein CDK. Außerhalb des Umfangs (Label `ausbau`): Haiku/Bedrock, CDK-Stack #9, Audit-Jobs #34, Pipeline #37, Recruiter-Stand #38.
@@ -31,7 +31,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                                 |
 | Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                                   |
 | So 18.10.  | Schritte 12i, 12j: #46, #47. Schritt 12l: Galerie, bekannte Grenzen. Danach sind `kb_build` und Audit eingefroren                            |
-| Mo 19.10.  | Schritt 12b: GovGuard-Spezifikation schreiben, Soll festlegen. Das Claude-Wochenlimit setzt zurück                                           |
+| Mo 19.10.  | Schritt 12b: GovGuard-Spezifikation schreiben, Soll festlegen. Schritt 12m: #51 UI-Texte deutsch. Das Claude-Wochenlimit setzt zurück        |
 | Di 20.10.  | Schritt 12b: Audit, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig.                                                           |
 | Mi 21.10.  | Abgabe, Puffer                                                                                                                               |
 | 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                               |
@@ -80,6 +80,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 12k     | A    | #48 CloudFormation-YAML           | 🤖 Sonnet                        | 🤖 Opus                     |
 | 11b     | –    | #9 CDK-Stack (Ausbau)             | 🤖 Opus                          | 🤖 Opus · 🛠 Junie          |
 | 11a     | –    | #34 Audit-Jobs (Ausbau)           | 🤖 Opus                          | 🤖 Opus                     |
+| 12m     | A    | #51 UI-Texte deutsch              | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
 | 12b     | A    | #36 Selbst-Audit Spec, Galerie    | 👤 + 🤖 Opus                     | 👤                          |
 | 10h     | A    | #33 Gegenprobe (Groq, erledigt)   | 👤 Messung                       | 👤                          |
 | 13      | A    | #22 Doku zu kb_build nachziehen   | 🤖 Sonnet                        | 👤                          |
@@ -745,16 +746,33 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 
 ---
 
+### Schritt 12m – #51 UI-Texte deutsch: Musterfall und Status-Bezeichnungen
+
+**Ziel:** Die Oberfläche sagt „Musterfall“ statt „Preset“ und zeigt die Status deutsch (Einhaltung belegt, Prüfbedarf, Verstoß belegt, Nicht anwendbar). JSON-Report, Code und Prompts behalten PASS/WARN/FAIL/N/A.
+**Voraussetzung:** Schritt 12b bis „Soll festlegen“. Muss vor „Erzeugen“ in 12b fertig sein, denn #51 ändert `docs/SPEC.md` (G2), und der Galerie-Report hängt an ihrer Prüfsumme. Kein LLM-Lauf.
+
+- [x] **Klären** 👤 offene Frage in #51 beantworten („Erfüllt“ oder „Einhaltung belegt“), dann Label `ready-for-agent`
+- [ ] **Bauen** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12m und Issue #51“ → Plan → Go
+      Zuordnung nur in `style.LOOKS`. `docs/SPEC.md` G2 anpassen und nach `data/input/presets/spec-govguard/SPEC.md` kopieren; ein Test prüft, dass jede Bezeichnung aus `LOOKS` in `SPEC.md` steht.
+- [ ] **Ansehen** 👤 `uv run pytest -m visual`, Vergleichsbilder ansehen (die Design-Bilder zeigen noch die alten Kürzel), dann `--update-snapshots`
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #51`
+- [ ] **Abschließen** 👤 committet und pusht, schließt #51
+
+**Fertig, wenn:** Kein UI-Text „Preset“ enthält, die Status deutsch erscheinen, der JSON-Report unverändert ist und `pytest`, `pytest -m visual` und ruff grün sind.
+**Fürs Fachgespräch:** Anzeige und Datenwert sind getrennt: Die Oberfläche spricht die Sprache der Behörde, der JSON-Report bleibt maschinenlesbar und stabil.
+
+---
+
 ### Schritt 12b – #36 GovGuard prüft sich selbst: Spezifikation und Galerie
 
 **Ziel:** `docs/SPEC.md` beschreibt GovGuard im Demo-Stand (Streamlit Community Cloud und Groq, beide in den USA) und ist zugleich die Systembeschreibung für Recruiter: ein gekürztes Fachkonzept, wie es eine Behörden-IT verlangen würde (ca. 3 Seiten, mit Geschäftsregeln zu PASS, WARN und FAIL), verständlich ohne Fachwissen, jedes Fachwort in einem eigenen Satz erklärt, vom README verlinkt. Als Preset `spec-govguard` steht ihr Audit mit Soll-Ergebnis in der Galerie.
-**Voraussetzung:** Schritt 12. Kein AWS nötig.
+**Voraussetzung:** Schritt 12. Kein AWS nötig. „Erzeugen“ erst nach Schritt 12m (#51).
 
-- [ ] **Schreiben** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12b und Issue #36. Schreibe `docs/SPEC.md` neu und lege das Preset `spec-govguard` an“ → Plan → Go
+- [x] **Schreiben** 🆕 _Opus_ · 👤 „Lies FAHRPLAN Schritt 12b und Issue #36. Schreibe `docs/SPEC.md` neu und lege das Preset `spec-govguard` an“ → Plan → Go
       Gliederung laut #36. Der Abschnitt „Aufnahme in den Bounded Catalog“ wandert nach `ARCHITECTURE.md`. Ein Test stellt sicher, dass das Preset genau `docs/SPEC.md` prüft.
-- [ ] **Soll festlegen** 🤖 _Opus_ (gleiche Session, vor dem ersten Audit-Lauf) · legt `expected` in `preset.json` fest: `overall_status` und `required_findings` mit Anker und Status. Nur Anker, die schon in `rules_spec.json` stehen, denn der Katalog ist eingefroren (12l). Begründung je Anker (DSGVO-Artikel, Textstelle in SPEC.md) als Kommentar in #36.
+- [x] **Soll festlegen** 🤖 _Opus_ (gleiche Session, vor dem ersten Audit-Lauf) · legt `expected` in `preset.json` fest: `overall_status` und `required_findings` mit Anker und Status. Nur Anker, die schon in `rules_spec.json` stehen, denn der Katalog ist eingefroren (12l). Begründung je Anker (DSGVO-Artikel, Textstelle in SPEC.md) als Kommentar in #36.
 - [ ] **Lesen** 👤 SPEC.md als Recruiter lesen: in 10 Minuten verstanden, nichts Unklares? Dann die Soll-Begründung im Issue querlesen.
-- [ ] **Erzeugen** 👤 `/audit-messen spec-govguard mit Groq` → Report kommt in die Galerie, Soll-Abweichungen sichtbar (ADR 0023) → 🤖 notiert die Abweichungen in #36
+- [ ] **Erzeugen** 👤 (nach 12m) `/audit-messen spec-govguard mit Groq` → Report kommt in die Galerie, Soll-Abweichungen sichtbar (ADR 0023) → 🤖 notiert die Abweichungen in #36
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #36`
 - [ ] **Ausprobieren** 👤 `/run` → jede Galerie-Seite öffnen
 - [ ] **Abschließen** 👤 committet und pusht
