@@ -16,10 +16,10 @@ HELP = {  # help on the report head; status help lives in style.LOOKS
                + " vor ".join(LOOKS[name].label for name in STATUS_FILTERS) + ".",
 }
 
-TYPE_LABELS = {"spec": "Spezifikation (DSGVO, SDM)",
+TYPE_LABELS = {"spec": "Spezifikation (DSGVO, KI-VO, SDM)",
                "architecture": "Architektur (BSI IT-Grundschutz, BSI C5, CIS, AWS FSBP)"}
 TYPE_CHOICES = {  # radio options on "Audit erstellen": norms and input formats (#41)
-    "spec": "**Spezifikation** · DSGVO, SDM · Markdown oder OpenAPI",
+    "spec": "**Spezifikation** · DSGVO, KI-VO, SDM · Markdown oder OpenAPI",
     "architecture": "**Architektur** · BSI IT-Grundschutz, BSI C5, CIS, AWS FSBP · "
                     "CloudFormation-JSON, Terraform oder Freitext",
 }

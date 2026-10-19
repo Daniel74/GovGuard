@@ -486,3 +486,8 @@ Pflichten prüft, gibt es nicht.
 
 Die Prüfregeln zu Art. 13, 14, 26 und 27 stehen deshalb in jedem Audit-Report. Bei einem System
 ohne hohes Risiko muss das Sprachmodell sie selbst als nicht anwendbar erkennen.
+
+Ob überhaupt ein KI-System vorliegt, erkennt GovGuard nur, wenn die Spezifikation es ausdrücklich
+einstuft. Ein Versuch am 19.10.2026 mit dieser Systembeschreibung ohne Abschnitt 8 ergab für alle 65
+Prüfregeln der KI-VO nur Lücken und kein FAIL, obwohl Abschnitt 2 das Sprachmodell nennt. Eine
+verschwiegene Einstufung fällt deshalb nicht auf.

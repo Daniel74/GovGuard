@@ -55,7 +55,7 @@ def test_create_page_names_norms_and_formats_of_each_audit_type() -> None:
     app = page(create_script, APP_PASSWORD="geheim", AUDIT_BACKEND="local")
 
     assert app.radio(key="audit_type").options == [
-        "**Spezifikation** · DSGVO, SDM · Markdown oder OpenAPI",
+        "**Spezifikation** · DSGVO, KI-VO, SDM · Markdown oder OpenAPI",
         "**Architektur** · BSI IT-Grundschutz, BSI C5, CIS, AWS FSBP · CloudFormation-JSON, "
         "Terraform oder Freitext",
     ]

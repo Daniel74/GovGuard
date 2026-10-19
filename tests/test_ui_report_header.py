@@ -55,7 +55,7 @@ def test_title_meta_download_and_overall_status_share_one_frame() -> None:
     head = head_frame(page(gallery_script))
 
     assert "Online-Anmeldung zur Schuleingangsuntersuchung mit US-Analysedienst" in head
-    for term, value in (("Audit-Art", "Spezifikation (DSGVO, SDM)"),
+    for term, value in (("Audit-Art", "Spezifikation (DSGVO, KI-VO, SDM)"),
                         ("Modell", "openai/gpt-oss-120b"), ("Retries", "1")):
         assert f"<th>{term}</th><td>{value}</td>" in head
     assert "Gesamtstatus" in head and "✕ Verstoß belegt" in head

@@ -50,7 +50,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser = argparse.ArgumentParser(prog="govguard.cli", description="GovGuard Audit lokal")
     commands = parser.add_subparsers(dest="command", required=True)
     for name, help_text, file_help, catalog in [
-        ("spec", "Spec-Audit (DSGVO/SDM)", "Spezifikation als Textdatei", SPEC_CATALOG),
+        ("spec", "Spec-Audit (DSGVO/KI-VO/SDM)", "Spezifikation als Textdatei", SPEC_CATALOG),
         ("arch", "Architektur-Audit (BSI/CIS)", "CloudFormation-Template oder Freitext",
          ARCH_CATALOG),
     ]:
