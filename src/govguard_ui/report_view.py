@@ -16,7 +16,7 @@ def render_report(
     render_header(report, title, key)
     if expected:
         render_expected(report, expected, key)
-    findings, detail = st.columns([11, 10])
+    findings, detail = st.columns([3, 2])  # table without side scroll at 1280 px too (#51)
     with findings:
         selected = render_findings(report, key)
     with detail:

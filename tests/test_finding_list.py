@@ -10,7 +10,7 @@ ART9 = next(f for e in load_gallery(PRESETS, GALLERY) if e.report
 
 def test_a_row_holds_status_rule_anchor_and_lines() -> None:
     assert table_rows([ART9]) == [{
-        "id": "SPEC-DSGVO-Art.9", "look": "fail", "status": "✕ FAIL",
+        "id": "SPEC-DSGVO-Art.9", "look": "fail", "status": "✕ Verstoß belegt",
         "title": "Einwilligung für besondere Kategorien", "primary_anchor": "DSGVO Art. 9",
         "lines": "46–49"}]
 
@@ -25,10 +25,10 @@ def test_llm_text_reaches_the_row_unchanged_the_cell_shows_it_as_text() -> None:
 
 
 def test_a_downgrade_stays_visible_in_the_row() -> None:
-    """ADR 0017: the original status shows next to the WARN."""
+    """ADR 0017: the original status shows below the WARN; one line would widen the column."""
     finding = ART9.model_copy(update={"status": "WARN", "downgraded_from": "FAIL"})
 
-    assert table_rows([finding])[0]["status"] == "! WARN ↓ von FAIL"
+    assert table_rows([finding])[0]["status"] == "! Prüfbedarf\n↓ von Verstoß belegt"
     assert table_rows([finding])[0]["look"] == "warn"
 
 

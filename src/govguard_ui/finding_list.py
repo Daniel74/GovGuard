@@ -7,7 +7,7 @@ import streamlit as st
 from govguard.models import Finding
 from govguard_ui.finding_table import render_table
 from govguard_ui.review import category
-from govguard_ui.style import LOOKS
+from govguard_ui.style import LOOKS, status_word
 
 
 def render_rows(findings: list[Finding], key: str, selected: Finding) -> None:
@@ -27,9 +27,10 @@ def table_rows(findings: list[Finding]) -> list[dict[str, str]]:
 
 
 def status_text(finding: Finding) -> str:
-    status = f"{LOOKS[category(finding)].symbol} {finding.status}"
+    look = LOOKS[category(finding)]
+    status = f"{look.symbol} {look.label}"
     if finding.downgraded_from:  # a downgrade stays visible in the list (ADR 0017)
-        status += f" ↓ von {finding.downgraded_from}"
+        status += f"\n↓ von {status_word(finding.downgraded_from)}"  # own line: narrow column
     return status
 
 

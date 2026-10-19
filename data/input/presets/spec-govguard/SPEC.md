@@ -167,14 +167,18 @@ feste, beim Bau der Wissensbasis bestimmte Menge.
 
 ### G2 Status
 
-Jeder Befund hat genau einen von vier Status. Der Audit-Report nutzt die international üblichen Kürzel.
+Jeder Befund hat genau einen von vier Status. Der Audit-Report nutzt die international üblichen
+Kürzel, die Oberfläche zeigt deutsche Bezeichnungen.
 
-| Status | Bedeutung                                                                                                                            |
-| ------ | ------------------------------------------------------------------------------------------------------------------------------------ |
-| PASS   | Die Eingabe belegt, dass die Prüfregel eingehalten ist.                                                                              |
-| WARN   | Aus der Eingabe ist es nicht entscheidbar, es besteht Prüfbedarf.                                                                    |
-| FAIL   | Die Eingabe belegt einen Verstoß.                                                                                                    |
-| N/A    | Die Prüfregel ist auf die Eingabe nicht anwendbar. Bei einer Architektur entscheidet das Programm das über die vorkommenden Dienste. |
+| Kürzel | Oberfläche        | Bedeutung                                                                                                                            |
+| ------ | ----------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| PASS   | Einhaltung belegt | Die Eingabe belegt, dass die Prüfregel eingehalten ist.                                                                              |
+| WARN   | Prüfbedarf        | Aus der Eingabe ist es nicht entscheidbar, es besteht Prüfbedarf.                                                                    |
+| FAIL   | Verstoß belegt    | Die Eingabe belegt einen Verstoß.                                                                                                    |
+| N/A    | Nicht anwendbar   | Die Prüfregel ist auf die Eingabe nicht anwendbar. Bei einer Architektur entscheidet das Programm das über die vorkommenden Dienste. |
+
+Ein Befund mit WARN ohne Belegzeilen heißt in der Oberfläche „Lücke“: Die Eingabe beschreibt die
+Prüfregel nicht.
 
 ### G3 Gesamtstatus
 
@@ -291,8 +295,7 @@ Betrieb und Sprachmodell laufen in den USA. Die USA sind aus Sicht der DSGVO ein
 Staat außerhalb der EU.
 
 Für diese Übermittlung legt der Demo-Stand keine eigenen Garantien nach Art. 46 DSGVO fest.
-Deshalb gilt die Regel: nur fiktive Daten. Die Oberfläche weist vor jedem Audit auf den Datenfluss
-in die USA hin.
+Deshalb gilt die Regel: nur fiktive Daten.
 
 ### Speicherung und Löschung
 

@@ -16,18 +16,19 @@ def _gallery() -> list[GalleryEntry]:
 
 def render() -> None:
     st.html(CSS)
-    title, choice = st.columns([3, 2], vertical_alignment="bottom")
-    title.title("Audits ansehen")
+    st.title("Audits ansehen")
     entries = {entry.preset_id: entry for entry in _gallery()}
-    preset_id = choice.selectbox(
-        "Gespeichertes Audit aus der Galerie", list(entries), key="gallery_preset",
-        filter_mode=None,  # a choice, no typing (#41)
-        format_func=lambda i: f"{entries[i].preset.title} "
-                              f"({TYPE_LABELS[entries[i].preset.audit_type].split(' ')[0]})")
+    with st.container(border=True):  # a frame with a heading, like a step on "Audit erstellen"
+        st.markdown("#### Gespeichertes Audit aus der Galerie")
+        preset_id = st.selectbox(  # full width: the longest title is not cut off
+            "Gespeichertes Audit aus der Galerie", list(entries), key="gallery_preset",
+            filter_mode=None, label_visibility="collapsed",  # a choice, no typing (#41)
+            format_func=lambda i: f"{entries[i].preset.title} "
+                                  f"({TYPE_LABELS[entries[i].preset.audit_type].split(' ')[0]})")
     entry = entries[preset_id]
     if entry.report is None:
-        st.info("Zu diesem Preset liegt noch kein Report in der Galerie. Sie wächst nur per "
-                "Commit; unter „Audit erstellen“ können Sie das Preset selbst prüfen.")
+        st.info("Zu diesem Musterfall liegt noch kein Report in der Galerie. Sie wächst nur per "
+                "Commit; unter „Audit erstellen“ können Sie den Musterfall selbst prüfen.")
         return
     render_report(entry.report, entry.preset.title, (entry.source_name, entry.source_text),
                   entry.preset.expected, key=f"gallery_{preset_id}")

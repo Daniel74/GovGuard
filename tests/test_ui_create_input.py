@@ -1,8 +1,15 @@
 """Input of "Audit erstellen": audit type, preset and own text, via AppTest (#44)."""
 
 import pytest
-from test_ui_pages import shown_text
-from ui_helpers import create_page, fake_groq, open_text_tab, preset_boxes, start, typed_text
+from ui_helpers import (
+    create_page,
+    fake_groq,
+    open_text_tab,
+    preset_boxes,
+    shown_text,
+    start,
+    typed_text,
+)
 
 from govguard.audit_engine import MAX_INPUT_CHARS, with_thousand_dots
 
@@ -16,7 +23,7 @@ def test_the_audit_type_decides_which_presets_can_be_chosen() -> None:
     assert not app.exception
     assert app.selectbox(key="create_preset_architecture").value == "arch-antragseingang-fehlerhaft"
     assert preset_boxes(app) == ["create_preset_architecture"]
-    assert "template.json · JSON · 12.591 Zeichen · Soll: FAIL" in shown_text(app)
+    assert "template.json · JSON · 12.591 Zeichen · Soll: Verstoß belegt" in shown_text(app)
 
 
 def test_another_preset_changes_file_format_size_and_expected_status() -> None:
@@ -25,7 +32,7 @@ def test_another_preset_changes_file_format_size_and_expected_status() -> None:
     app.selectbox(key="create_preset_spec").select("spec-wohngeld-openapi").run()
 
     assert not app.exception
-    assert "openapi.yaml · YAML · 83.210 Zeichen · Soll: WARN" in shown_text(app)
+    assert "openapi.yaml · YAML · 83.210 Zeichen · Soll: Prüfbedarf" in shown_text(app)
     assert "input.md" not in shown_text(app)
 
 
@@ -36,7 +43,7 @@ def test_a_preset_without_a_stored_report_can_still_be_chosen() -> None:
     app.selectbox(key="create_preset_architecture").select("arch-protokollarchiv").run()
 
     assert not app.exception
-    assert "input.md · Markdown · 2.730 Zeichen · Soll: WARN" in shown_text(app)
+    assert "input.md · Markdown · 2.730 Zeichen · Soll: Prüfbedarf" in shown_text(app)
 
 
 def test_the_text_tab_counts_the_typed_characters_against_the_limit() -> None:
@@ -85,7 +92,7 @@ def test_an_audit_of_an_architecture_preset_runs_the_architecture_catalog(
 
 
 @pytest.mark.parametrize(("text", "message"), [
-    ("   ", "Die Eingabe ist leer"),
+    ("   ", "Bitte einen Text einfügen oder einen Musterfall wählen."),
     ("x" * (MAX_INPUT_CHARS + 1), "zu lang"),
 ])
 def test_empty_or_too_long_text_starts_no_audit(

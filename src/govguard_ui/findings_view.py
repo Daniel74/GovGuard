@@ -12,8 +12,8 @@ from govguard_ui.review import (
     ALL_SOURCES,
     category,
     category_counts,
+    of_source,
     source_counts,
-    source_of,
     visible_findings,
 )
 from govguard_ui.style import LOOKS, STATUS_FILTERS
@@ -23,28 +23,26 @@ GAPS_HEIGHT = 360  # a long gap list scrolls
 
 
 def render_findings(report: AuditReport, key: str) -> Finding:
-    """Draws the table and returns the selected finding (state key <key>_selected)."""
+    """Draws the table and returns the selected finding (state key <key>_selected).
+    Every number follows the source: source count = sum of the status counts."""
     st.markdown("### Befunde")
-    counts = category_counts(report.findings)
+    source = _source_filter(report.findings, key)
+    counts = category_counts(of_source(report.findings, source))
     chosen = st.pills("Status", STATUS_FILTERS, selection_mode="multi", default=DEFAULT_FILTERS,
                       key=f"{key}_status", format_func=lambda c: _filter_label(c, counts[c]),
                       label_visibility="collapsed")  # the colours say it (design artefact)
-    source = _source_filter(report.findings, key)
     shown = visible_findings(report.findings, set(chosen), source)
-    gaps = f" · {counts['GAP']} Lücken stehen unter der Tabelle" if counts["GAP"] else ""
-    st.caption(f"{len(shown)} Befunde angezeigt{gaps} · sortiert: FAIL zuerst, dann nach Zeile")
+    listed = sum(counts[c] for c in STATUS_FILTERS)
+    st.caption(f"{len(shown)} von {listed} Befunden angezeigt")
     selected = _selected(report.findings, shown, key)
     render_rows(shown, key, selected)
-    if hidden := [f"{counts[c]} {c}" for c in STATUS_FILTERS if c not in chosen and counts[c]]:
-        st.caption(f"Ausgeblendet: {', '.join(hidden)}.")
     _gap_checklist(report.findings, source, key)
     return selected
 
 
 def _filter_label(name: str, count: int) -> str:
     look = LOOKS[name]
-    label = "WARN · Prüfbedarf" if name == "WARN" else look.label
-    return f"{look.symbol} {label} {count}"
+    return f"{look.symbol} {look.label} {count}"
 
 
 def _source_filter(findings: list[Finding], key: str) -> str | None:
@@ -67,16 +65,16 @@ def _selected(findings: list[Finding], shown: list[Finding], key: str) -> Findin
 def _gap_checklist(findings: list[Finding], source: str | None, key: str) -> None:
     """The key keeps the list open while its label counts the gaps of another source."""
     groups: dict[str, list[Finding]] = defaultdict(list)
-    for finding in findings:
-        if category(finding) == "GAP" and source in (None, source_of(finding)):
+    for finding in of_source(findings, source):
+        if category(finding) == "GAP":
             groups[_gap_group(finding.primary_anchor)].append(finding)
     total = sum(len(items) for items in groups.values())
     if not total:
         return
     with st.expander(f"Was die Eingabe nicht beschreibt · {total} Lücken", key=f"{key}_gaps"):
         st.caption("Kein Verstoß. Zu diesen Prüfregeln sagt die Eingabe nichts; vor der "
-                   "Umsetzung klären oder bewusst ausschließen. Im Report haben sie den Status "
-                   "WARN ohne Belegzeilen.")
+                   "Umsetzung klären oder bewusst ausschließen. Im JSON-Report haben sie den "
+                   f"Status {LOOKS['GAP'].code}.")
         with st.container(height=GAPS_HEIGHT, border=False):
             for name, items in groups.items():
                 st.markdown(f"**{plain(name)}** · {len(items)}")

@@ -8,6 +8,7 @@ from govguard_ui.review import (
     category_counts,
     document_window,
     expected_checks,
+    of_source,
     source_counts,
     source_of,
     visible_findings,
@@ -82,11 +83,17 @@ def test_source_filter_names_come_from_the_rule_id() -> None:
     assert {source_of(f) for f in findings} == {"BSI", "C5", "CIS", "FSBP"}
 
 
-def test_each_source_counts_all_its_findings_with_gaps_and_na() -> None:
-    """Numbers as in the design artefact of #11: Alle (151), DSGVO (35), SDM (116)."""
+def test_each_source_counts_its_findings_with_na_but_without_gaps() -> None:
+    """Gaps stand in their own list below the table: DSGVO 35 - 18 gaps, SDM 116 - 88."""
     findings = ENTRIES["spec-meldeportal-gesundheit"].report.findings
 
-    assert source_counts(findings) == {"Alle": 151, "DSGVO": 35, "SDM": 116}
+    assert source_counts(findings) == {"Alle": 45, "DSGVO": 17, "SDM": 28}
+
+
+def test_of_source_keeps_the_findings_of_one_source_or_all() -> None:
+    findings = ENTRIES["spec-meldeportal-gesundheit"].report.findings
+
+    assert (len(of_source(findings, "DSGVO")), len(of_source(findings, None))) == (35, 151)
 
 
 TEN_LINES = "\n".join(f"Zeile {n}" for n in range(1, 11)) + "\n"

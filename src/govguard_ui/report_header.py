@@ -7,11 +7,11 @@ import streamlit as st
 from govguard.models import AuditReport, Expected
 from govguard_ui.finding_list import select
 from govguard_ui.review import Category, category_counts, expected_checks
-from govguard_ui.style import LOOKS
+from govguard_ui.style import JUDGE_NAME, LOOKS, status_word
 from govguard_ui.texts import HELP, OPEN_WORLD_ONLY, TYPE_LABELS
 
 TILES: tuple[Category, ...] = ("FAIL", "WARN", "PASS", "N/A", "GAP")  # gaps last (design)
-TILE_LABELS = {"WARN": "WARN · Prüfbedarf", "GAP": "Lücken"}  # longer than on a badge
+TILE_LABELS = {"GAP": "Lücken"}  # plural, the tile counts
 
 
 def render_header(report: AuditReport, title: str, key: str) -> None:
@@ -28,7 +28,6 @@ def render_header(report: AuditReport, title: str, key: str) -> None:
         with overall.container(border=True, key=f"{key}_overall_{look.css}"):
             st.markdown("Gesamtstatus", help=HELP["overall"])
             st.html(f'<p class="gg-overall">{look.symbol} {look.label}</p>')
-            st.markdown(f"**{look.word}**")
     _counters(report, key)
 
 
@@ -44,11 +43,11 @@ def _counters(report: AuditReport, key: str) -> None:
     """One frame per tile, the explanation inside; the key lets CSS colour it (#42)."""
     counts = category_counts(report.findings)
     downgraded = sum(1 for f in report.findings if f.downgraded_from)
-    words = {**{name: LOOKS[name].word for name in TILES},
-             "WARN": f"mit Beleg · davon {downgraded} herabgestuft" if downgraded else "mit Beleg",
-             "GAP": "nicht beschrieben · kein Verstoß"}
+    words = {  # FAIL and PASS: "belegt" says it all (#51)
+        "WARN": f"mit Beleg · davon {downgraded} herabgestuft" if downgraded else "mit Beleg",
+        "N/A": "Regel betrifft das Vorhaben nicht", "GAP": "nicht beschrieben · kein Verstoß"}
     if report.audit_type == "architecture":
-        words["N/A"] = "Ressourcentyp nicht in der Architektur"
+        words["N/A"] = "AWS-Dienst der Regel kommt nicht vor"
     shown = [name for name in TILES if name != "GAP" or counts["GAP"]]  # design: no empty gaps
     *tiles, judge_tile = st.columns(len(shown) + 1)
     for tile, name in zip(tiles, shown, strict=True):
@@ -56,7 +55,8 @@ def _counters(report: AuditReport, key: str) -> None:
         with tile.container(border=True, height="stretch", key=f"{key}_tile_{look.css}"):
             st.metric(f"{look.symbol} {TILE_LABELS.get(name, look.label)}", counts[name],
                       help=look.meaning)
-            st.caption(words[name])
+            if name in words:
+                st.caption(words[name])
     with judge_tile.container(border=True, height="stretch", key=f"{key}_tile_judge"):
         _judge(report)
 
@@ -64,10 +64,10 @@ def _counters(report: AuditReport, key: str) -> None:
 def _judge(report: AuditReport) -> None:
     judge = report.fail_judge
     if report.closed_world:  # a template: a missing setting is the default (ADR 0020, #46)
-        st.metric("FAIL-Prüfer", "entfällt", help=HELP["judge"])
+        st.metric(JUDGE_NAME, "entfällt", help=HELP["judge"])
         st.caption(OPEN_WORLD_ONLY)
     else:
-        st.metric("FAIL-Prüfer", judge.checked, help=HELP["judge"])
+        st.metric(JUDGE_NAME, judge.checked, help=HELP["judge"])
         st.caption(f"geprüft · {judge.confirmed} bestätigt · {judge.downgraded} "
                    f"herabgestuft · {judge.unavailable} nicht verfügbar")
 
@@ -80,10 +80,12 @@ def render_expected(report: AuditReport, expected: Expected, key: str) -> None:
                       key=f"{key}_expected_{LOOKS['PASS' if ok else 'FAIL'].css}"):
         st.markdown(f"**{'Soll-Abgleich: wie erwartet' if ok else 'Soll-Abweichung'}**",
                     help=HELP["expected"], width="content")
-        st.markdown(f"{'✓' if overall.ok else '✕'} Gesamtstatus Soll {overall.expected}, "
-                    f"Ist {overall.actual}", width="content")
+        st.markdown(f"{'✓' if overall.ok else '✕'} Gesamtstatus Soll "
+                    f"{status_word(overall.expected)}, Ist {status_word(overall.actual)}",
+                    width="content")
         for check in required:  # a link look: a click selects the finding
-            st.button(f"{check.label}: Soll {check.expected}, Ist {check.actual}",
+            st.button(f"{check.label}: Soll {status_word(check.expected)}, "
+                      f"Ist {status_word(check.actual)}",
                       icon=":material/check:" if check.ok else ":material/close:",
                       type="tertiary", disabled=check.rule_id is None,
                       key=f"{key}_required_{check.label}",

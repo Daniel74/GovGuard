@@ -155,7 +155,7 @@ def test_the_gap_list_stays_open_when_the_source_changes_and_scrolls(page: Page,
 def test_the_status_pills_carry_the_status_colours(page: Page, app_url: str) -> None:
     """Every status, not only two: the CSS finds a pill by its position (style.py)."""
     pills = spec(page, app_url).locator('button[data-variant="pills"]')
-    na = pills.filter(has_text="N/A")
+    na = pills.filter(has_text=LOOKS["N/A"].label)
     assert style(na, "backgroundColor") != rgb(LOOKS["N/A"].background)  # off: no colour
 
     na.click()
@@ -164,7 +164,7 @@ def test_the_status_pills_carry_the_status_colours(page: Page, app_url: str) -> 
     na.blur()
 
     for name in STATUS_FILTERS:
-        pill = pills.filter(has_text=name)
+        pill = pills.filter(has_text=LOOKS[name].label)
         assert style(pill, "backgroundColor") == rgb(LOOKS[name].background), name
         assert style(pill, "borderTopColor") == rgb(LOOKS[name].border), name
 
@@ -181,3 +181,13 @@ def test_document_title_and_whole_document_stand_in_one_row_inside_the_frame(
     for box in (title, toggle):
         assert frame["x"] < box["x"] and box["x"] + box["width"] < frame["x"] + frame["width"]
         assert frame["y"] < box["y"]
+
+
+def test_the_german_status_pills_wrap_instead_of_being_cut_off(page: Page, app_url: str) -> None:
+    """German words are longer than the codes (#51): every pill stays fully visible."""
+    pills = spec(page, app_url).locator('button[data-variant="pills"]')
+    column = pills.first.locator('xpath=ancestor::*[@data-testid="stColumn"][1]').bounding_box()
+
+    for index in range(pills.count()):
+        box = pills.nth(index).bounding_box()
+        assert box["x"] + box["width"] <= column["x"] + column["width"], index

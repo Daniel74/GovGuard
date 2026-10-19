@@ -6,20 +6,14 @@ Streamlit widgets, Playwright (tests/visual) for what only the browser shows. Th
 tests/test_ui_inventory.py; a new control needs its entry here and its test.
 """
 
-START = "tests/visual/test_browser.py::test_the_start_page_buttons_open_their_page"
-
 INVENTORY: dict[str, str] = {
-    # Start & Hilfe: both buttons switch the page, only a browser sees the new page
-    "button:to_create": START,
-    "button:to_gallery": START,
-    "switch_page:-": START,
     # Sidebar: one link per page
     "page_link:-": "tests/visual/test_browser.py::test_the_sidebar_links_open_all_three_pages",
     # Audits ansehen: filters, finding list, document, download
     "selectbox:gallery_preset": "tests/test_ui_pages.py::"
                                 "test_gallery_shows_the_deviation_of_the_arch_preset",
     "pills:{}_status": "tests/test_ui_gallery_filters.py::"
-                       "test_switching_a_status_on_or_off_changes_the_list_and_the_hidden_note",
+                       "test_switching_a_status_on_or_off_changes_the_list_and_its_count",
     "segmented_control:{}_source": "tests/test_ui_gallery_filters.py::"
                                    "test_the_source_filter_keeps_only_findings_of_that_source",
     "finding_table:{}": "tests/visual/test_browser_findings.py::"

@@ -5,8 +5,7 @@ import json
 import pytest
 from streamlit.runtime.media_file_manager import MediaFileManager
 from streamlit.testing.v1 import AppTest
-from test_ui_create_page import frames
-from test_ui_pages import gallery_script, page
+from ui_helpers import frames, gallery_script, page
 
 from govguard_ui.texts import HELP
 
@@ -34,7 +33,10 @@ def test_the_json_download_keeps_the_trace(monkeypatch: pytest.MonkeyPatch) -> N
 
     page(gallery_script)
 
-    assert json.loads(downloads[0])["trace"]["audit_id"]
+    report = json.loads(downloads[0])
+    assert report["trace"]["audit_id"]
+    assert report["overall_status"] == "FAIL"  # the JSON keeps the codes (#51)
+    assert {f["status"] for f in report["findings"]} == {"FAIL", "WARN", "PASS", "N/A"}
 
 
 def test_overall_status_and_expected_strip_carry_a_help() -> None:
@@ -56,7 +58,8 @@ def test_title_meta_download_and_overall_status_share_one_frame() -> None:
     for term, value in (("Audit-Art", "Spezifikation (DSGVO, SDM)"),
                         ("Modell", "openai/gpt-oss-120b"), ("Retries", "0")):
         assert f"<th>{term}</th><td>{value}</td>" in head
-    assert "Gesamtstatus" in head and "Verstoß belegt" in head
+    assert "Gesamtstatus" in head and "✕ Verstoß belegt" in head
+    assert "FAIL" not in head  # the head shows the word, the help maps it to the code (#51)
     assert "151 Befunde" not in head  # the tiles count, the head does not
 
 
@@ -69,12 +72,12 @@ def test_each_tile_is_a_frame_with_its_explanation_inside() -> None:
 
 
 SPEC_TILES = [  # label and explanation of the stored spec report, as in the design artefact
-    "✕ FAIL\nVerstoß belegt",
-    "! WARN · Prüfbedarf\nmit Beleg · davon 7 herabgestuft",
-    "✓ PASS\nEinhaltung belegt",
-    "– N/A\nnicht anwendbar",
+    "✕ Verstoß belegt",  # "belegt" says it all, no caption (#51)
+    "! Prüfbedarf\nmit Beleg · davon 7 herabgestuft",
+    "✓ Einhaltung belegt",
+    "– Nicht anwendbar\nRegel betrifft das Vorhaben nicht",
     "○ Lücken\nnicht beschrieben · kein Verstoß",
-    "FAIL-Prüfer\ngeprüft · 16 bestätigt · 7 herabgestuft · 0 nicht verfügbar",
+    "Verstoß-Prüfer\ngeprüft · 16 bestätigt · 7 herabgestuft · 0 nicht verfügbar",
 ]
 
 
@@ -83,11 +86,11 @@ def test_an_architecture_without_gaps_has_no_gap_tile_and_no_fail_judge() -> Non
     app.selectbox(key="gallery_preset").select(ARCH).run()
 
     assert [(m.label, m.value) for m in app.metric] == [
-        ("✕ FAIL", "36"), ("! WARN · Prüfbedarf", "1"), ("✓ PASS", "27"), ("– N/A", "111"),
-        ("FAIL-Prüfer", "entfällt")]
-    assert "! WARN · Prüfbedarf\nmit Beleg" in frames(app)  # no "davon 0 herabgestuft"
-    assert "– N/A\nRessourcentyp nicht in der Architektur" in frames(app)
-    assert "FAIL-Prüfer\nNur bei offener Welt: Spezifikation, Architektur als Freitext." \
+        ("✕ Verstoß belegt", "36"), ("! Prüfbedarf", "1"), ("✓ Einhaltung belegt", "27"),
+        ("– Nicht anwendbar", "111"), ("Verstoß-Prüfer", "entfällt")]
+    assert "! Prüfbedarf\nmit Beleg" in frames(app)  # no "davon 0 herabgestuft"
+    assert "– Nicht anwendbar\nAWS-Dienst der Regel kommt nicht vor" in frames(app)
+    assert "Verstoß-Prüfer\nNur bei offener Welt: Spezifikation, Architektur als Freitext." \
         in frames(app)  # the stored architecture is a template, a closed world (#46)
 
 
@@ -105,16 +108,17 @@ def test_free_text_architecture_without_fail_shows_zero_checked_not_omitted() ->
     app = AppTest.from_function(free_text_without_fail_script, default_timeout=30).run()
 
     assert not app.exception
-    assert ("FAIL-Prüfer", "0") in [(m.label, m.value) for m in app.metric]  # open world (#46)
+    assert ("Verstoß-Prüfer", "0") in [(m.label, m.value) for m in app.metric]  # open world (#46)
 
 
 def test_the_expected_result_is_one_strip_and_overall_status_is_no_button() -> None:
     app = page(gallery_script)
 
     strip = next(frame for frame in frames(app) if "Soll-Abgleich: wie erwartet" in frame)
-    assert strip.split("\n")[1:] == ["✓ Gesamtstatus Soll FAIL, Ist FAIL",
-                                     "DSGVO Art. 9: Soll FAIL, Ist FAIL",
-                                     "SDM Löschen M60.P01: Soll FAIL, Ist FAIL"]
+    assert strip.split("\n")[1:] == [
+        "✓ Gesamtstatus Soll Verstoß belegt, Ist Verstoß belegt",
+        "DSGVO Art. 9: Soll Verstoß belegt, Ist Verstoß belegt",
+        "SDM Löschen M60.P01: Soll Verstoß belegt, Ist Verstoß belegt"]
     assert [b.label for b in app.button if "Gesamtstatus" in b.label] == []
 
 
@@ -141,5 +145,6 @@ def test_a_deviation_is_a_strip_with_a_cross_and_a_help() -> None:
 
     assert not app.exception
     strip = next(frame for frame in frames(app) if "Soll-Abweichung" in frame)
-    assert strip.split("\n")[1:] == ["✕ Gesamtstatus Soll PASS, Ist FAIL"]
+    assert strip.split("\n")[1:] == [
+        "✕ Gesamtstatus Soll Einhaltung belegt, Ist Verstoß belegt"]
     assert {m.value: m.proto.help for m in app.markdown}["**Soll-Abweichung**"] == HELP["expected"]

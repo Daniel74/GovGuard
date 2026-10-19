@@ -1,7 +1,4 @@
-"""Pages and sidebar of the demo UI: brand above the page links, as in the design (#11, #41).
-
-The start page lives in app.py, so start_page can link to the other pages without a cycle.
-"""
+"""Pages and sidebar of the demo UI: brand above the page links, as in the design (#11, #41)."""
 
 import base64
 
@@ -17,8 +14,11 @@ SHIELD = ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBo
           '<path d="m8.5 12 2.5 2.5 4.5-5"/></svg>')
 # st.html drops an inline <svg>, an image keeps it
 LOGO = "data:image/svg+xml;base64," + base64.b64encode(SHIELD.encode()).decode()
+REPO_URL = "https://github.com/Daniel74/GovGuard"
+CONTACT_MAIL = "govguard@gmx.de"  # an own address for the project, not the private one
+FOOTER = f"[Quellcode auf GitHub]({REPO_URL})  \nKontakt: [{CONTACT_MAIL}](mailto:{CONTACT_MAIL})"
 BRAND = (f'<div class="gg-brand"><img src="{LOGO}" alt=""><div><b>GovGuard</b>'
-         '<span>Compliance Copilot</span></div></div>')
+         '<span>Prüfassistent</span></div></div>')
 
 
 def audits_page() -> StreamlitPage:
@@ -30,10 +30,12 @@ def create_audit_page() -> StreamlitPage:
 
 
 def sidebar(pages: list[StreamlitPage]) -> None:
-    """Brand, one link per page, demo note; replaces Streamlit's own navigation."""
+    """Brand, one link per page, demo note, source and contact; replaces Streamlit's own
+    navigation."""
     with st.sidebar:
         st.html(BRAND)
         for page in pages:
             st.page_link(page)
         st.space("small")  # air above the note, as in the design
         st.caption("Demo-Stand · nur fiktive Daten")
+        st.caption(FOOTER)

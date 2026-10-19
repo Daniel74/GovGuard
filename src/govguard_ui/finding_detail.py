@@ -7,7 +7,7 @@ import streamlit as st
 from govguard.models import Finding
 from govguard_ui.finding_list import lines_text
 from govguard_ui.review import category, document_window
-from govguard_ui.style import badge, paragraph, tag
+from govguard_ui.style import badge, paragraph, status_word, tag
 
 MARKDOWN_SIGNS = set("\\`*_{}[]()#+-.!|<>~$:")  # incl. Streamlit's :colour[...] and $formula$
 
@@ -22,11 +22,11 @@ def render_detail(finding: Finding) -> None:
     kind = category(finding)
     tags = []
     if finding.downgraded_from:
-        tags.append(f"↓ herabgestuft von {finding.downgraded_from}")
+        tags.append(f"↓ herabgestuft von {status_word(finding.downgraded_from)}")
     if kind == "GAP":
         tags.append("kein Verstoß")  # CONTEXT: Lücke, never "nicht entscheidbar"
     with st.container(border=True):
-        st.html(badge(kind, word=True) + "".join(tag(t) for t in tags))
+        st.html(badge(kind) + "".join(tag(t) for t in tags))
         st.markdown(f"#### {plain(finding.title)}")  # LLM text stays text
         evidence = "keine Zeilen" if finding.line_start is None else f"Zeilen {lines_text(finding)}"
         st.caption(f"{plain(finding.primary_anchor)} · {finding.rule_id} · Beleg: {evidence}")
@@ -51,7 +51,7 @@ def render_document(source_name: str, source_text: str, finding: Finding, key: s
         with st.container(horizontal=True, horizontal_alignment="distribute",
                           vertical_alignment="center", key=f"{key}_document_head"):
             st.markdown(f"**Geprüftes Dokument** · `{source_name}` · "
-                        f"{len(source_text.splitlines())} Zeilen", width="content")
+                        f"{len(source_text.splitlines())} Zeilen")  # wraps, the toggle stays
             full = st.toggle("Ganzes Dokument", key=f"{key}_full", width="content")
         window = document_window(source_text, finding, full)
         if finding.line_start is None:

@@ -5,8 +5,7 @@ selection in the session state, as a click does; tests/visual clicks the rows.
 """
 
 from streamlit.testing.v1 import AppTest
-from test_ui_pages import shown_text
-from ui_helpers import arch_key, arch_page
+from ui_helpers import arch_key, arch_page, shown_text
 
 SELECTED = arch_key("selected")
 S3_PUBLIC_ACCESS = "ARCH-CIS-3.1.4"  # template.json lines 120–125 of 485

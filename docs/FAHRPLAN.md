@@ -24,18 +24,18 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag        | Arbeit                                                                                                                                       |
-| ---------- | -------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.  | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                             |
-| Do 15.10.  | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                   |
-| Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                                 |
-| Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                                   |
-| So 18.10.  | Schritte 12i, 12j: #46, #47. Schritt 12l: Galerie, bekannte Grenzen. Danach sind `kb_build` und Audit eingefroren                            |
-| Mo 19.10.  | Schritt 12b: GovGuard-Spezifikation schreiben, Soll festlegen. Schritt 12m: #51 UI-Texte deutsch. Das Claude-Wochenlimit setzt zurück        |
-| Di 20.10.  | Schritt 12n: #52 KI-Verordnung (Abbruch nach 1 h ohne Formex-Datei)                                                                          |
-| Mi 21.10.  | Vormittag: 12n abschließen. Schritt 12b: Audit, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig. Abgabe                      |
-| 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                               |
-| Mo 26.10.  | Präsentation und Fachgespräch                                                                                                                |
+| Tag        | Arbeit                                                                                                                                |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.  | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                      |
+| Do 15.10.  | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)            |
+| Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                          |
+| Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                            |
+| So 18.10.  | Schritte 12i, 12j: #46, #47. Schritt 12l: Galerie, bekannte Grenzen. Danach sind `kb_build` und Audit eingefroren                     |
+| Mo 19.10.  | Schritt 12b: GovGuard-Spezifikation schreiben, Soll festlegen. Schritt 12m: #51 UI-Texte deutsch. Das Claude-Wochenlimit setzt zurück |
+| Di 20.10.  | Schritt 12n: #52 KI-Verordnung (Abbruch nach 1 h ohne Formex-Datei)                                                                   |
+| Mi 21.10.  | Vormittag: 12n abschließen. Schritt 12b: Audit, Galerie. Schritte 13–14: Doku #22 und #16. Damit ist A fertig. Abgabe                 |
+| 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                        |
+| Mo 26.10.  | Präsentation und Fachgespräch                                                                                                         |
 
 **Wer baut was:**
 
@@ -753,11 +753,11 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 **Voraussetzung:** Schritt 12b bis „Soll festlegen“. Muss vor „Erzeugen“ in 12b fertig sein, denn #51 ändert `docs/SPEC.md` (G2), und der Galerie-Report hängt an ihrer Prüfsumme. Kein LLM-Lauf.
 
 - [x] **Klären** 👤 offene Frage in #51 beantworten („Erfüllt“ oder „Einhaltung belegt“), dann Label `ready-for-agent`
-- [ ] **Bauen** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12m und Issue #51“ → Plan → Go
+- [x] **Bauen** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12m und Issue #51“ → Plan → Go
       Zuordnung nur in `style.LOOKS`. In `docs/SPEC.md` die Tabelle in G2 um die deutsche Bezeichnung ergänzen und nach `data/input/presets/spec-govguard/SPEC.md` kopieren; ein Test prüft, dass jede Bezeichnung aus `LOOKS` in `SPEC.md` steht. Zeilenangabe im Soll-Kommentar von #36 nachziehen.
-- [ ] **Ansehen** 👤 `uv run pytest -m visual`, Vergleichsbilder ansehen (die Design-Bilder zeigen noch die alten Kürzel), dann `--update-snapshots`
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #51`
-- [ ] **Abschließen** 👤 committet und pusht, schließt #51
+- [x] **Ansehen** 👤 `uv run pytest -m visual`, Vergleichsbilder ansehen (die Design-Bilder zeigen noch die alten Kürzel), dann `--update-snapshots`
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #51`
+- [x] **Abschließen** 👤 committet und pusht, schließt #51
 
 **Fertig, wenn:** Kein UI-Text „Preset“ enthält, die Status deutsch erscheinen, der JSON-Report unverändert ist und `pytest`, `pytest -m visual` und ruff grün sind.
 **Fürs Fachgespräch:** Anzeige und Datenwert sind getrennt: Die Oberfläche spricht die Sprache der Behörde, der JSON-Report bleibt maschinenlesbar und stabil.

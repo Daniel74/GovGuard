@@ -1,6 +1,7 @@
-"""Shared AppTest helpers of the demo UI tests: create page and gallery (#44)."""
+"""Shared AppTest helpers of the demo UI tests: pages, create page and gallery (#11, #44)."""
 
 import json
+import re
 
 import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse
@@ -8,13 +9,63 @@ from pydantic_ai.models.function import AgentInfo, FunctionModel
 from streamlit.testing.v1 import AppTest
 from streamlit.testing.v1.element_tree import Block
 from test_run_audit_progress import warn_for_every_rule
-from test_ui_pages import create_script, gallery_script, page
 
 from govguard_ui.gallery import GalleryEntry, load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
 
 ARCH = "arch-antragseingang-fehlerhaft"  # 29 FAIL, 28 PASS, 109 N/A, no WARN
 SPEC = "spec-meldeportal-gesundheit"  # first in the gallery; numbers in the design of #11
+DATA_WARNING = "Keine echten oder personenbezogenen Daten eingeben."
+
+
+def start_script() -> None:
+    from govguard_ui.start_page import render
+    render()
+
+
+def gallery_script() -> None:
+    from govguard_ui.gallery_page import render
+    render()
+
+
+def create_script() -> None:
+    from govguard_ui.create_page import render
+    render()
+
+
+def page(script, **secrets: str) -> AppTest:
+    app = AppTest.from_function(script, default_timeout=30)
+    for name, value in secrets.items():
+        app.secrets[name] = value
+    return app.run()
+
+
+def shown_text(app: AppTest) -> str:
+    """Headings, markdown, captions, alerts and raw HTML of the page in one string."""
+    parts = [*app.title, *app.header, *app.subheader, *app.markdown, *app.caption,
+             *app.warning, *app.error, *app.info, *app.success]
+    html = [node.proto.body for node in app.get("html")]
+    text = "\n".join([str(part.value) for part in parts] + html)
+    text = re.sub(r"\\(.)", r"\1", text)  # escaped LLM text reads without backslashes
+    return text.replace("**", "").replace("  \n", " ")  # as read, without markdown
+
+
+def frames(app: AppTest) -> list[str]:
+    """Text and widget labels of every bordered container, one string per container."""
+    def text(node) -> str:
+        return getattr(node.proto, "label", "") or getattr(node.proto, "body", "")
+
+    bordered = [node for node in app.main if node.type == "flex_container"
+                and node.proto.flex_container.border]
+    return ["\n".join(text(n) for n in frame if n is not frame) for frame in bordered]
+
+
+def list_items(app: AppTest, start: str) -> list[str]:
+    """One sentence per list item: the spacing of the steps on the start page (#51)."""
+    text = next(m.value for m in app.markdown if m.value.startswith(f"- {start}"))
+    items = text.split("\n")
+    assert all(item.startswith("- ") and item.endswith(".") for item in items)
+    return items
 
 
 def create_page() -> AppTest:
@@ -38,7 +89,7 @@ def preset_boxes(app: AppTest) -> list[str]:
     return [s.key for s in app.selectbox if s.key.startswith("create_preset_")]
 
 
-def start(app: AppTest, tab: str = "Preset laden") -> AppTest:
+def start(app: AppTest, tab: str = "Musterfall laden") -> AppTest:
     """Types the password and starts; the open tab is set again for this rerun too."""
     app.text_input(key="password").input("geheim")
     app.button(key="start").click()

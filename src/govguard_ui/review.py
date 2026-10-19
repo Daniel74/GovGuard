@@ -53,8 +53,7 @@ def visible_findings(
     findings: list[Finding], categories: set[Category], source: str | None
 ) -> list[Finding]:
     """The finding list: gaps stand below it as a checklist; FAIL first, then by line."""
-    shown = [f for f in findings if category(f) in categories - {"GAP"}
-             and source in (None, source_of(f))]
+    shown = [f for f in of_source(findings, source) if category(f) in categories - {"GAP"}]
     return sorted(shown, key=lambda f: (CATEGORIES.index(category(f)), f.line_start or 10**9))
 
 
@@ -63,13 +62,19 @@ def source_of(finding: Finding) -> str:
     return finding.rule_id.split("-")[1]
 
 
+def of_source(findings: list[Finding], source: str | None) -> list[Finding]:
+    """None: all sources."""
+    return [f for f in findings if source in (None, source_of(f))]
+
+
 ALL_SOURCES = "Alle"  # option of the source filter that keeps every source
 
 
 def source_counts(findings: list[Finding]) -> dict[str, int]:
-    """Every finding of a source counts, gaps and N/A included: "Alle" first, then by name."""
-    counted = Counter(source_of(finding) for finding in findings)
-    return {ALL_SOURCES: len(findings), **dict(sorted(counted.items()))}
+    """What the table can show, N/A included; gaps stand in their own list: "Alle" first."""
+    listed = [finding for finding in findings if category(finding) != "GAP"]
+    counted = Counter(source_of(finding) for finding in listed)
+    return {ALL_SOURCES: len(listed), **dict(sorted(counted.items()))}
 
 
 class DocumentLine(BaseModel):

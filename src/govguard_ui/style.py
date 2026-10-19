@@ -13,8 +13,8 @@ from govguard_ui.review import Category
 
 class Look(BaseModel):  # the one table per category: badge, counter, help and start page
     symbol: str
-    label: str
-    word: str  # short meaning, e.g. "Verstoß belegt"
+    label: str  # German word on screen, e.g. "Verstoß belegt" (#51)
+    code: str  # how the JSON report shows it (#51); a gap is a WARN without evidence lines
     css: str  # class suffix in CSS
     meaning: str  # what the category says about the finding
     todo: str  # what the reader should do
@@ -24,38 +24,47 @@ class Look(BaseModel):  # the one table per category: badge, counter, help and s
     border_style: str = "solid"
 
 
+JUDGE_NAME = "Verstoß-Prüfer"  # UI name of the FAIL judge (CONTEXT: judge_fails)
+
 LOOKS: dict[Category, Look] = {
     "FAIL": Look(
-        symbol="✕", label="FAIL", word="Verstoß belegt", css="fail",
-        meaning="Verstoß belegt: Die Belegzeilen legen etwas fest, das der Prüfregel widerspricht. "
-                "Fehlt nur eine Angabe, ist das kein FAIL, sondern eine Lücke.",
+        symbol="✕", label="Verstoß belegt", code="FAIL", css="fail",
+        meaning="Die Belegzeilen legen etwas fest, das der Prüfregel widerspricht. Fehlt nur "
+                "eine Angabe, ist das kein Verstoß, sondern eine Lücke.",
         todo="Beheben. Die Empfehlung im Befund nennt einen Weg.",
         text="#A3191B", background="#FCEBEB", border="#F0B9B9"),
     "WARN": Look(
-        symbol="!", label="WARN", word="Prüfbedarf", css="warn",
+        symbol="!", label="Prüfbedarf", code="WARN", css="warn",
         meaning="Prüfbedarf mit Beleg: Die Zeilen reichen für kein klares Urteil, oder der Code "
-                "hat ein PASS oder FAIL herabgestuft, das die KI nicht belegt oder der "
-                "FAIL-Prüfer nicht bestätigt hat.",
+                "hat eine Einhaltung oder einen Verstoß herabgestuft, den die KI nicht belegt "
+                f"oder der {JUDGE_NAME} nicht bestätigt hat.",
         todo="Fachlich nachprüfen.", text="#7A4A00", background="#FFF3D1", border="#EBCB7A"),
     "GAP": Look(
-        symbol="○", label="Lücke", word="nicht beschrieben", css="gap",
-        meaning="WARN ohne Belegzeilen: Die Eingabe beschreibt die Anforderung nicht. Eine "
+        symbol="○", label="Lücke", code="WARN ohne Belegzeilen", css="gap",
+        meaning="Prüfbedarf ohne Belegzeilen: Die Eingabe beschreibt die Anforderung nicht. Eine "
                 "Spezifikation ist eine offene Welt, deshalb ist das kein Verstoß, sondern eine "
                 "offene Frage.",
         todo="Als Checkliste unter der Befundliste nutzen: vor der Umsetzung klären oder bewusst "
              "ausschließen.",
         text="#4A5361", background="#FFFFFF", border="#A7AFBA", border_style="dashed"),
     "PASS": Look(
-        symbol="✓", label="PASS", word="Einhaltung belegt", css="pass",
-        meaning="Einhaltung belegt: Die Belegzeilen zeigen, dass die Anforderung erfüllt ist.",
+        symbol="✓", label="Einhaltung belegt", code="PASS", css="pass",
+        meaning="Die Belegzeilen zeigen, dass die Anforderung erfüllt ist.",
         todo="Nichts. Der Beleg dient als Nachweis.",
         text="#1B6236", background="#E6F3EA", border="#A8D3B5"),
     "N/A": Look(
-        symbol="–", label="N/A", word="nicht anwendbar", css="na",
-        meaning="Nicht anwendbar, z. B. weil der Ressourcentyp in der Architektur nicht vorkommt.",
+        symbol="–", label="Nicht anwendbar", code="N/A", css="na",
+        meaning="Die Prüfregel betrifft die Eingabe nicht, z. B. Mandantentrennung bei einem "
+                "System für nur eine Behörde oder ein AWS-Dienst, der in der Architektur nicht "
+                "vorkommt.",
         todo="Nichts. In der Liste standardmäßig ausgeblendet.",
         text="#4A5361", background="#EDEFF2", border="#C9CFD8"),
 }
+
+
+def status_word(status: str) -> str:
+    """German word of a status code; other words such as "fehlt" stay as they are."""
+    return LOOKS[status].label if status in LOOKS else status
 
 
 STATUS_FILTERS: tuple[Category, ...] = ("FAIL", "WARN", "PASS", "N/A")  # gaps: own list
@@ -108,6 +117,7 @@ CSS = """<style>
 [class*="_overall_"] p{text-align:center}
 [class*="_overall_"] [data-testid="stElementContainer"]:first-child p{font-size:13px;
   font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+[class*="_status"] [data-testid="stButtonGroup"]>div{flex-wrap:wrap}
 [class*="_tile_"]{gap:4px}
 [class*="_tile_"] [data-testid="stMetricLabel"]{align-items:flex-start}
 [class*="_tile_"] [data-testid="stMetricLabel"] *{white-space:normal;overflow:visible}
@@ -142,11 +152,9 @@ CSS = """<style>
 """ + _status_css() + "</style>"
 
 
-def badge(category: Category, word: bool = False) -> str:
-    """word: status and meaning as one mark, e.g. "✕ FAIL · Verstoß belegt" (#42)."""
+def badge(category: Category) -> str:
     look = LOOKS[category]
-    meaning = f" · {look.word}" if word else ""
-    return f'<span class="gg-badge gg-{look.css}">{look.symbol} {look.label}{meaning}</span>'
+    return f'<span class="gg-badge gg-{look.css}">{look.symbol} {look.label}</span>'
 
 
 def tag(text: str) -> str:

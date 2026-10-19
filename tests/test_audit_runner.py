@@ -59,7 +59,7 @@ def test_local_run_audits_with_trace_and_reports_progress(
     (Progress(phase="packages", packages_done=4, packages_total=16), 0.225,
      "Paket 4 von 16 geprüft"),
     (Progress(phase="packages"), 0.9, "Alle Prüfregeln vom Code entschieden"),
-    (Progress(phase="fail_judge"), 0.95, "FAIL-Prüfer prüft jedes FAIL nach …"),
+    (Progress(phase="fail_judge"), 0.95, "Verstoß-Prüfer prüft jeden Verstoß nach …"),
 ])
 def test_progress_becomes_bar_and_text(progress: Progress, fraction: float, text: str) -> None:
     assert progress_view(progress) == (pytest.approx(fraction), text)

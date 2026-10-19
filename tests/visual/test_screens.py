@@ -55,7 +55,7 @@ def check_snapshot(page: Page, name: str, update: bool) -> None:
 
 
 VIEWS = {  # name of the design artboard -> url path, gallery preset to pick, heading to wait for
-    "start": ("", None, "GovGuard – Compliance Copilot"),
+    "start": ("", None, "GovGuard – Prüfassistent"),
     "gallery-spec": ("audits", None, "Online-Anmeldung zur Schuleingangsuntersuchung"),
     "gallery-arch": ("audits", "Antragseingang mit Sicherheitsmängeln",
                      "Antragseingang mit Sicherheitsmängeln"),

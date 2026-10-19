@@ -8,6 +8,7 @@ from pydantic_ai.models import Model
 from govguard.audit_engine import InputTooLongError, OnProgress, check_input_length, run_audit
 from govguard.audit_setup import CATALOGS, make_trace
 from govguard.models import AuditReport, AuditType, Progress, RuleCatalog
+from govguard_ui.style import JUDGE_NAME
 
 
 def start_problem(text: str, password: str, secret: str | None) -> str | None:
@@ -15,7 +16,7 @@ def start_problem(text: str, password: str, secret: str | None) -> str | None:
     if not secret:  # fail closed: no configured password, no audit
         return "Audit erstellen ist nicht eingerichtet: Das Passwort fehlt in den Secrets."
     if not text.strip():
-        return "Die Eingabe ist leer. Bitte einen Text einfügen oder ein Preset wählen."
+        return "Die Eingabe ist leer. Bitte einen Text einfügen oder einen Musterfall wählen."
     try:
         check_input_length(text)
     except InputTooLongError as error:
@@ -50,7 +51,7 @@ def progress_view(progress: Progress) -> tuple[float, str]:
     if progress.phase == "inventory":
         return 0.0, "Ressourcen erkennen (KI-Vorlauf oder Template) …"
     if progress.phase == "fail_judge":
-        return 0.95, "FAIL-Prüfer prüft jedes FAIL nach …"
+        return 0.95, f"{JUDGE_NAME} prüft jeden Verstoß nach …"
     if not progress.packages_total:  # every rule N/A by code, nothing goes to the model
         return 0.9, "Alle Prüfregeln vom Code entschieden"
     done = progress.packages_done / progress.packages_total

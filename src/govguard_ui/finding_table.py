@@ -25,6 +25,7 @@ th{{position:sticky;top:0;z-index:1;background:#F5F6F8;color:#4A5361;font-weight
   text-align:left;padding:8px}}
 td{{padding:10px 8px;vertical-align:top;border-top:1px solid #E3E7EC;overflow-wrap:break-word}}
 th:first-child,td:first-child,th:last-child,td:last-child{{width:1%;white-space:nowrap}}
+td:first-child{{white-space:pre}}  /* the downgrade "↓ von …" goes on its own line */
 th:nth-child(3){{width:11em}}  /* fits "BSI GS++ KONF.12.1.10", longer ones wrap */
 tbody tr{{cursor:pointer}}
 tbody tr:hover{{background:#F2F5F9}}

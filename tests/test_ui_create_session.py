@@ -2,8 +2,7 @@
 
 import pytest
 from streamlit.testing.v1 import AppTest
-from test_ui_pages import shown_text
-from ui_helpers import create_page, fake_groq, start
+from ui_helpers import create_page, fake_groq, shown_text, start
 
 
 def finished_audit(monkeypatch: pytest.MonkeyPatch) -> AppTest:

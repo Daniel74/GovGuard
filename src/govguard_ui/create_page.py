@@ -14,11 +14,9 @@ from govguard_ui.audit_runner import backend_problem, progress_view, run_local, 
 from govguard_ui.gallery import load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
 from govguard_ui.report_view import render_report
-from govguard_ui.style import CSS
-from govguard_ui.texts import DATA_FLOW_US, DATA_RULE, TYPE_CHOICES
+from govguard_ui.style import CSS, status_word
+from govguard_ui.texts import DATA_RULE, TYPE_CHOICES
 
-DATA_FLOW = ("Datenfluss: Eingabe → Streamlit Community Cloud (USA) → Groq (USA). Nichts wird "
-             "gespeichert; der Report bleibt nur in dieser Sitzung.")
 FORMATS = {".md": "Markdown", ".yaml": "YAML", ".json": "JSON"}  # by file suffix of the preset
 
 
@@ -33,7 +31,7 @@ def secret(name: str) -> str | None:
 def render() -> None:
     st.html(CSS)
     st.title("Audit erstellen")
-    st.warning(f"**{DATA_RULE}** {DATA_FLOW_US}", icon=":material/warning:")
+    st.warning(f"**{DATA_RULE}**", icon=":material/warning:")
     if problem := backend_problem(secret("AUDIT_BACKEND")):
         st.error(problem)
         return
@@ -68,16 +66,14 @@ def _input_form() -> tuple[AuditType, str, tuple[str, str], Expected | None]:
         # display only, never read: Groq is the only model in the UI (ADR 0023)
         st.radio("Modell", [f"**Groq · {model_name()}** · ca. 2–3 Cent je Audit, 20–60 s"],
                  key="model", label_visibility="collapsed")
-        st.radio("Nicht verfügbar", ["Claude Haiku über AWS Bedrock (EU) · in der UI nicht "
-                                     "verfügbar, nur per CLI für echte Daten"],  # ADR 0001, 0023
+        st.radio("Nicht verfügbar", ["Claude Haiku über AWS Bedrock (EU)"],  # CLI only, ADR 0023
                  index=None, disabled=True, key="model_bedrock", label_visibility="collapsed")
-        st.caption(DATA_FLOW)
     return audit_type, title, source, expected
 
 
 def _source(audit_type: AuditType) -> tuple[str, tuple[str, str], Expected | None]:
     """Title, (file name, text) of the input and the preset's expected result."""
-    preset_tab, text_tab = st.tabs(["Preset laden", "Text einfügen"], key="input_mode",
+    preset_tab, text_tab = st.tabs(["Musterfall laden", "Text einfügen"], key="input_mode",
                                    on_change="rerun")  # only the open tab runs its input
     if preset_tab.open:
         with preset_tab:
@@ -94,14 +90,14 @@ def _source(audit_type: AuditType) -> tuple[str, tuple[str, str], Expected | Non
 def _preset(audit_type: AuditType) -> tuple[str, tuple[str, str], Expected | None]:
     presets = {e.preset_id: e for e in load_gallery(PRESETS, GALLERY)
                if e.preset.audit_type == audit_type}
-    chosen = presets[st.selectbox("Preset (fiktive Beispiel-Eingabe mit Soll-Ergebnis)",
+    chosen = presets[st.selectbox("Musterfall (fiktive Beispiel-Eingabe mit Soll-Ergebnis)",
                                   list(presets), format_func=lambda i: presets[i].preset.title,
                                   key=f"create_preset_{audit_type}",
                                   filter_mode=None)]  # a choice, no typing (#41)
     size = with_thousand_dots(len(chosen.source_text))
     file_format = FORMATS.get(Path(chosen.source_name).suffix, "Text")
     st.caption(f"{chosen.source_name} · {file_format} · {size} Zeichen · "
-               f"Soll: {chosen.preset.expected.overall_status}")
+               f"Soll: {status_word(chosen.preset.expected.overall_status)}")
     return chosen.preset.title, (chosen.source_name, chosen.source_text), chosen.preset.expected
 
 

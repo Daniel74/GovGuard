@@ -1,45 +1,18 @@
 """Smoke tests of the Streamlit pages, headless via AppTest (#11). Layout: tests/visual (#40)."""
 
-import re
-
 from streamlit.testing.v1 import AppTest
+from ui_helpers import (
+    DATA_WARNING,
+    create_script,
+    frames,
+    gallery_script,
+    list_items,
+    page,
+    shown_text,
+    start_script,
+)
 
 from govguard.audit_engine import MAX_INPUT_CHARS, with_thousand_dots
-
-DATA_WARNING = ("Keine echten oder personenbezogenen Daten eingeben. "
-                "Eingaben gehen zur Inferenz an Groq in die USA.")
-
-
-def start_script() -> None:
-    from govguard_ui.start_page import render
-    render()
-
-
-def gallery_script() -> None:
-    from govguard_ui.gallery_page import render
-    render()
-
-
-def create_script() -> None:
-    from govguard_ui.create_page import render
-    render()
-
-
-def page(script, **secrets: str) -> AppTest:
-    app = AppTest.from_function(script, default_timeout=30)
-    for name, value in secrets.items():
-        app.secrets[name] = value
-    return app.run()
-
-
-def shown_text(app: AppTest) -> str:
-    """Headings, markdown, captions, alerts and raw HTML of the page in one string."""
-    parts = [*app.title, *app.header, *app.subheader, *app.markdown, *app.caption,
-             *app.warning, *app.error, *app.info, *app.success]
-    html = [node.proto.body for node in app.get("html")]
-    text = "\n".join([str(part.value) for part in parts] + html)
-    text = re.sub(r"\\(.)", r"\1", text)  # escaped LLM text reads without backslashes
-    return text.replace("**", "").replace("  \n", " ")  # as read, without markdown
 
 
 def test_start_page_warns_about_data_and_explains_the_report() -> None:
@@ -49,15 +22,24 @@ def test_start_page_warns_about_data_and_explains_the_report() -> None:
     assert DATA_WARNING in shown_text(app)
     assert "So lesen Sie einen Audit-Report" in shown_text(app)
     assert f"höchstens {with_thousand_dots(MAX_INPUT_CHARS)} Zeichen" in shown_text(app)
+    assert "Inferenz an Groq" not in shown_text(app)  # no data flow note (decided 19.10., #51)
+
+
+def test_the_intro_is_a_framed_list_one_sentence_per_item() -> None:
+    app = page(start_script)
+
+    assert len(list_items(app, "GovGuard prüft")) == 5
+    assert any(frame.startswith("- GovGuard prüft") for frame in frames(app))
+
+
+def test_the_start_page_has_no_buttons_the_sidebar_leads_on() -> None:
+    assert page(start_script).button.len == 0
 
 
 def test_the_start_page_explains_the_gallery_one_sentence_per_line() -> None:
     app = page(start_script)
 
-    text = next(m.value for m in app.markdown if m.value.startswith("Die Galerie zeigt"))
-    lines = text.split("  \n")  # markdown line break
-    assert len(lines) == 4
-    assert all(line.endswith(".") for line in lines)
+    assert len(list_items(app, "Die Galerie zeigt")) == 4
 
 
 def test_gallery_shows_the_first_preset_with_its_source_and_expected_result() -> None:
@@ -76,7 +58,8 @@ def test_gallery_shows_the_deviation_of_the_arch_preset() -> None:
     app.selectbox(key="gallery_preset").select("arch-protokollarchiv").run()
 
     assert not app.exception
-    assert "BSI GS++ DET.3.1: Soll PASS, Ist WARN" in [b.label for b in app.button]
+    labels = [b.label for b in app.button]
+    assert "BSI GS++ DET.3.1: Soll Einhaltung belegt, Ist Prüfbedarf" in labels
 
 
 def test_the_app_opens_on_start_and_help() -> None:
@@ -101,9 +84,17 @@ def test_the_sidebar_shows_the_brand_above_the_navigation() -> None:
     app = AppTest.from_file("../streamlit_app.py", default_timeout=30).run()
 
     items = sidebar_items(app)
-    assert "Compliance Copilot" in items[0]
+    assert "Prüfassistent" in items[0]
     assert items[1:4] == ["Start & Hilfe", "Audits ansehen", "Audit erstellen"]
     assert "Demo-Stand" in items[4]
+
+
+def test_the_sidebar_ends_with_source_code_and_contact() -> None:
+    app = AppTest.from_file("../streamlit_app.py", default_timeout=30).run()
+
+    footer = sidebar_items(app)[-1]
+    assert "[Quellcode auf GitHub](https://github.com/Daniel74/GovGuard)" in footer
+    assert "Kontakt: [govguard@gmx.de](mailto:govguard@gmx.de)" in footer
 
 
 def test_every_category_has_one_look_and_the_start_page_explains_it() -> None:
@@ -117,7 +108,18 @@ def test_every_category_has_one_look_and_the_start_page_explains_it() -> None:
         assert look.meaning in shown_text(app) and look.todo in shown_text(app)
 
 
-AVOIDED = ("Normanker", "Audit-Typ", "Trace", "nicht entscheidbar")  # CONTEXT.md: Vermeiden
+def test_the_status_table_maps_each_german_word_to_its_json_code() -> None:
+    from govguard_ui.style import LOOKS
+
+    table = next(n.proto.body for n in page(start_script).get("html") if "gg-table" in n.proto.body)
+
+    assert "<th>Kürzel im JSON</th>" in table
+    for look in LOOKS.values():
+        assert f"{look.symbol} {look.label}</span></td><td>{look.code}</td>" in table
+
+
+AVOIDED = ("Normanker", "Audit-Typ", "Trace", "nicht entscheidbar",  # CONTEXT.md: Vermeiden
+           "Preset", "FAIL-Prüfer", "Copilot")  # never on screen (#51)
 
 
 def all_labels(app: AppTest) -> str:
@@ -153,4 +155,4 @@ def test_the_detail_shows_status_and_meaning_as_one_mark() -> None:
     app = page(gallery_script)
 
     detail = next(n.proto.body for n in app.get("html") if "gg-badge" in n.proto.body)
-    assert detail == '<span class="gg-badge gg-fail">✕ FAIL · Verstoß belegt</span>'
+    assert detail == '<span class="gg-badge gg-fail">✕ Verstoß belegt</span>'

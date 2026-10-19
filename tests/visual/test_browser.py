@@ -30,21 +30,6 @@ def test_on_a_wide_screen_the_content_is_at_most_1040_px_and_centred(page: Page,
     assert abs(left - right) <= 16  # a scrollbar may take a few pixels on one side
 
 
-@pytest.mark.parametrize(("button", "path", "heading"), [
-    ("Zu „Audit erstellen“", "/erstellen", "Audit erstellen"),
-    ("Zu „Audits ansehen“", "/audits", "Audits ansehen"),
-])
-def test_the_start_page_buttons_open_their_page(page: Page, app_url: str, button: str, path: str,
-                                                heading: str) -> None:
-    page.goto(app_url)
-    settled(page)
-
-    page.get_by_role("button", name=button).click()
-
-    page.get_by_role("heading", name=heading, level=1).wait_for()
-    assert re.search(f"{path}$", page.url)
-
-
 def rgb(colour: str) -> str:
     red, green, blue = bytes.fromhex(colour.removeprefix("#"))
     return f"rgb({red}, {green}, {blue})"
@@ -66,16 +51,23 @@ def test_tiles_overall_status_and_expected_strip_carry_the_status_colours(page: 
         assert colours == [rgb(look.background), rgb(look.border)], suffix
 
 
-def test_the_gallery_choice_stands_right_of_the_page_title(page: Page, app_url: str) -> None:
+@pytest.mark.parametrize("preset", ["spec-meldeportal-gesundheit", "spec-wohngeld-openapi"])
+def test_the_gallery_choice_stands_below_the_title_and_shows_the_whole_title(
+        page: Page, app_url: str, preset: str) -> None:
     page.goto(f"{app_url}/audits")
     settled(page)
+    choice = page.get_by_test_id("stSelectbox")
+    if preset != "spec-meldeportal-gesundheit":  # the first; Wohngeld: longest title
+        choice.click()
+        page.get_by_role("option", name=re.compile("Wohngeld")).click()
+        settled(page)
 
     title = page.get_by_role("heading", name="Audits ansehen", level=1).bounding_box()
-    choice = page.get_by_test_id("stSelectbox").bounding_box()
+    shown = choice.get_by_role("combobox")  # an input, the title is its value
 
-    assert choice["x"] > title["x"] + title["width"]
-    assert choice["y"] < title["y"] + title["height"]  # one row: the boxes overlap vertically
-    assert title["y"] < choice["y"] + choice["height"]
+    assert choice.bounding_box()["y"] >= title["y"] + title["height"]
+    assert shown.input_value().endswith("(Spezifikation)")
+    assert shown.evaluate("e => e.scrollWidth <= e.clientWidth")  # not cut off
 
 
 def test_the_help_icons_of_all_tiles_stand_at_one_height(page: Page, app_url: str) -> None:
@@ -89,7 +81,7 @@ def test_the_help_icons_of_all_tiles_stand_at_one_height(page: Page, app_url: st
 
 
 @pytest.mark.parametrize(("link", "path", "heading"), [
-    ("Start & Hilfe", "/", "GovGuard – Compliance Copilot für Behörden-IT"),
+    ("Start & Hilfe", "/", "GovGuard – Prüfassistent für Behörden-IT"),
     ("Audits ansehen", "/audits", "Audits ansehen"),
     ("Audit erstellen", "/erstellen", "Audit erstellen"),
 ])
