@@ -76,9 +76,17 @@ Weicht der Audit-Report vom Soll ab, zeigt die Galerie die Abweichung.
 Normanker, Status, Begründung, Beleg und Empfehlung. Die prüfende Person kann ihn als JSON-Datei
 herunterladen. Ein Normanker ist die Fundstelle im Regelwerk, etwa „DSGVO Art. 9“.
 
-**F5 Wissensbasis.** Der Projektbetreiber erzeugt die Prüfregeln von Hand angestoßen aus den
-öffentlichen Normtexten. Jede Prüfregel zitiert ihre Quelle wörtlich, und ein Programm prüft das.
-Normtexte lädt GovGuard nur vom Herausgeber und nur mit der hinterlegten Prüfsumme (G9).
+**F5 Wissensbasis bauen.** Der Projektbetreiber erzeugt die Prüfregeln aus den öffentlichen
+Normtexten. Die Wissensbasis ist die Gesamtheit dieser Prüfregeln, je Audit-Art ein Prüfkatalog.
+
+Der Bau läuft in vier Schritten (G10–G13):
+
+1. Normtexte vom Herausgeber laden, nur mit der hinterlegten Prüfsumme (G9).
+2. Je Anforderung urteilt ein Sprachmodell, ob sie an einer Spezifikation oder Architektur prüfbar ist.
+3. Das Programm wählt aus, und ein Sprachmodell formuliert aus jeder Anforderung eine Prüfregel.
+4. Programme prüfen das Ergebnis, der Projektbetreiber gibt es frei.
+
+Wie das technisch abläuft, beschreibt [ARCHITECTURE.md](ARCHITECTURE.md) Abschnitt 1.
 
 ## 5 Geschäftsregeln
 
@@ -153,6 +161,38 @@ speichert er nicht. Damit ist belegbar, welchen Text ein Audit-Report mit welche
 Ein Audit-Report der Galerie gilt nur für das Dokument mit genau seiner Prüfsumme. Ändert sich das
 Dokument, muss der Audit-Report neu entstehen. Ein automatischer Test prüft das für jeden Musterfall.
 
+### G10 Das Sprachmodell urteilt, das Programm wählt aus
+
+Beim Bau der Wissensbasis sagt das Sprachmodell je Anforderung nur „prüfbar ja oder nein“, mit
+Begründung. Ob eine Anforderung in den Prüfkatalog kommt, entscheidet das Programm.
+
+Jede Entscheidung steht mit Begründung im Auswahlprotokoll. Das Auswahlprotokoll ist eine Liste
+aller Anforderungen mit ihrem Ergebnis, aufgenommen oder verworfen.
+
+### G11 Prüfungen beim Bau
+
+Jede Prüfregel muss ihre Quelle wörtlich zitieren, und ihre Fundstelle muss im Regelwerk existieren.
+Ein zweiter Aufruf des Sprachmodells prüft, dass jedes Verstoßkriterium eine Festlegung beschreibt
+und kein bloßes Fehlen (G4).
+
+Jeder Pflichtanker muss im Prüfkatalog stehen. Ein Pflichtanker ist eine Fundstelle, deren Befund
+ein Musterfall in seinem Soll festlegt.
+
+Fällt eine dieser Prüfungen durch, bricht der Bau ab. Die bisherige Wissensbasis bleibt dann gültig.
+
+### G12 Freigabe durch einen Menschen
+
+Der Bau startet nur von Hand. Der Projektbetreiber liest das Auswahlprotokoll, bevor er die neue
+Wissensbasis freigibt.
+
+Gültig wird die neue Wissensbasis erst, wenn er sie in der Versionsverwaltung speichert. Dort ist
+jede Änderung mit Zeitpunkt und Autor nachvollziehbar.
+
+### G13 Eingefrorener Prüfkatalog
+
+Seit dem 18.10.2026 bleiben Prüfkatalog und Prüflogik unverändert. So bleiben die Audit-Reports der
+Galerie untereinander vergleichbar.
+
 ## 6 Daten und Datenschutz
 
 ### Datenflüsse
@@ -198,10 +238,15 @@ nicht.
 | Nachvollziehbarkeit | Jeder Audit-Report nennt Sprachmodell und Prüfsummen (G9). Jeder Eingriff des Programms in eine Antwort des Sprachmodells steht als Korrektur am Befund. |
 | Prüfbarkeit | Alle automatischen Tests laufen ohne AWS und ohne Groq. |
 
-## 8 Qualität der Audits
+## 8 Qualität und Restrisiken
 
 Ein Audit-Report ist ein Hinweis für Fachleute, kein Nachweis. Ein Sprachmodell kann irren, und
 GovGuard macht sichtbar, wo.
+
+**Qualitätsziel:** Jeder Musterfall erreicht sein Soll im Gesamtstatus und in seinen Pflichtbefunden.
+
+Die Zahlen in P1 bis P6 sind Messwerte aus Messläufen im Oktober 2026 und aus der Galerie. Sie
+zeigen den Ist-Stand, keine Anforderung.
 
 ### So wird die Qualität gesichert
 

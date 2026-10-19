@@ -1,6 +1,6 @@
-# GovGuard – Ausbau in neun Szenarien (Post-MVP)
+# GovGuard – Ausbau in zehn Szenarien (Post-MVP)
 
-Das GovGuard-MVP operiert bewusst mit definierten Limits: ein Prüfumfang aus Serverless-Diensten, RDS/Aurora und Fargate, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt neun Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
+Das GovGuard-MVP operiert bewusst mit definierten Limits: ein Prüfumfang aus Serverless-Diensten, RDS/Aurora und Fargate, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt zehn Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
 
 Drei fundamentale Prinzipien bleiben in jedem Ausbauszenario konstant:
 
@@ -118,6 +118,12 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 | **Plan-JSON + Zuordnungstabelle** | `terraform show -json` liefert ein maschinenlesbares Inventar; eine gepflegte Tabelle `aws_*` → `AWS::*` übersetzt die Typen. Zuerst ein Terraform-Preset, dann die Tabelle, beides getestet. | Code & Mensch |
 | **CloudFormation IaC Generator nach dem Deploy** | Der Generator scannt bereits angelegte Ressourcen einer Region im Konto und erzeugt daraus ein CloudFormation-Template (laut AWS-Doku nur Typen, die die Cloud Control API unterstützt; ein Template fasst bis zu 500 Ressourcen). Geprüft wird also der Ist-Zustand nach dem Deploy, nicht die Eingabe vor dem Deploy. Vorher klären: Kontozugriff und IAM-Rechte, Region, und ob der Beleg aus dem generierten Template noch „Eingabe“ ist. _(Stand der AWS-Doku am 2026-10-14, vor dem Bau erneut prüfen.)_ | Code |
 | **LLM übersetzt nach CloudFormation** | **Ausdrücklich verworfen (ADR 0015):** Der Beleg stünde nicht mehr in der Eingabe, der Existenz-Check wäre wertlos. | – |
+
+## Szenario 10: KI-Verordnung als Quelle im Spec-Audit (#52)
+
+- **Auslöser:** Behörden setzen KI-Systeme ein und haben dann eigene Pflichten nach der KI-Verordnung (Verordnung (EU) 2024/1689), z. B. als Betreiber (Art. 26) und als öffentliche Stelle mit Grundrechte-Folgenabschätzung (Art. 27). GovGuard ist selbst ein KI-System; das Selbst-Audit (`spec-govguard`) würde dann auch gegen die KI-Verordnung prüfen.
+- **Was bricht:** Die meisten Pflichten gelten nur für Hochrisiko-Systeme (Art. 6, Anhang III). Ob eine Spezifikation darunter fällt, muss vor allen anderen Regeln feststehen; sonst vergibt das Modell N/A je Regel einzeln, und das schwankt (SPEC P1). Der Katalog ist eingefroren (SPEC G13).
+- **Anpassung:** Neue Quelle über das Rezept (ARCHITECTURE, *Neue Quelle hinzufügen*). Der Text liegt wie die DSGVO im Formex-XML bei EUR-Lex; der DSGVO-Adapter ist vermutlich weitgehend wiederverwendbar. Dazu ein Musterfall mit KI-Einsatz und Soll, und für `spec-govguard` ein neues Soll. Vorher klären: Wer entscheidet die Hochrisiko-Einstufung (Code-Vorstufe oder Mensch), und welche Fristen gelten aktuell? _(Rechtsstand vor dem Bau prüfen.)_
 
 ## Weitere Typen im Prüfumfang (EFS, SSM-Klartext-Parameter)
 
