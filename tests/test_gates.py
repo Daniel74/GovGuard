@@ -7,14 +7,9 @@ from conftest import make_requirement
 
 from govguard.models import CrossReference, Rule, RuleCatalog
 from kb_build.extract.models import ExtractedSource
-from kb_build.gates import (
-    check_coverage,
-    check_pinned,
-    check_rules,
-    is_quoted,
-    requirements_by_anchor,
-)
 from kb_build.reference.scope import Scope
+from kb_build.rules.gates import check_rules, is_quoted, requirements_by_anchor
+from kb_build.select.gates import check_coverage, check_pinned
 from kb_build.select.models import SelectedRequirement, Selection
 
 SCOPE = Scope({"S3": ["AWS::S3::Bucket"], "KMS": ["AWS::KMS::Key"]})

@@ -4,8 +4,7 @@ from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 from test_decompose_parts import ANSWER, ART_6, LEAD_IN
 
-from kb_build.decompose.cache import DecompositionCache
-from kb_build.decompose.split import INSTRUCTIONS, Splitter, user_prompt
+from kb_build.decompose.split import INSTRUCTIONS, DecompositionCache, Splitter, user_prompt
 
 WRONG = {"groups": [{"marks": ["Abs. 9"], "kind": "alle_gelten", "rationale": "x"}]}
 

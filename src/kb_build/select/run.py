@@ -9,36 +9,19 @@ from pathlib import Path
 from pydantic import TypeAdapter
 from pydantic_ai.models import Model
 
-from govguard.models import AuditType, Preset, SourceName
-from kb_build.extract.models import ExtractedSource
-from kb_build.gates import pinned_anchors, usage_line
+from govguard.models import AuditType, Preset
+from kb_build.build_inputs import SELECTIONS, chosen, read_scope, read_sources
+from kb_build.llm_step import usage_line
 from kb_build.paths import BuildPaths
 from kb_build.reference.archetype_profiles import load_profiles
-from kb_build.reference.run import read_scope
 from kb_build.select.classify import Judge
 from kb_build.select.curation import CurationResult, curate
 from kb_build.select.frozen import merge, unjudged
+from kb_build.select.gates import pinned_anchors
 from kb_build.select.judgement_cache import JudgementCache
 from kb_build.select.models import Selection, Verdict
 
 logger = logging.getLogger("kb_build")
-
-# audit type -> extracted sources in catalog order
-SELECTIONS: dict[AuditType, list[SourceName]] = {
-    "architecture": ["BSI", "C5", "CIS", "FSBP"],
-    "spec": ["DSGVO", "SDM", "KI-VO"],  # DSGVO and KI-VO come decomposed (ADR 0026)
-}
-
-
-def chosen(only: AuditType | None) -> list[AuditType]:
-    """Every audit type, or just `only`."""
-    return [audit_type for audit_type in SELECTIONS if only in (None, audit_type)]
-
-
-def read_sources(paths: BuildPaths, names: list[SourceName]) -> list[ExtractedSource]:
-    """Legal acts come decomposed (#53), every other source as extracted."""
-    files = [paths.source_file(name) for name in names]
-    return [ExtractedSource.model_validate_json(f.read_text(encoding="utf-8")) for f in files]
 
 
 def _read_presets(presets: Path) -> list[Preset]:

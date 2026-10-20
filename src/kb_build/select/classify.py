@@ -12,60 +12,16 @@ from pydantic_ai.models import Model
 from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, SourceName
-from kb_build.build_log import INVALID_ANSWER, logged_retries, raise_if_no_answer
 from kb_build.extract.models import Requirement
-from kb_build.gates import GateCounts
+from kb_build.llm_step import LlmStep, prompt_version
 from kb_build.reference.cfn_types import load_cfn_types
 from kb_build.reference.scope import Scope
-from kb_build.select.judgement_cache import JudgementCache, cache_key, prompt_version
+from kb_build.select.judgement_cache import JudgementCache, cache_key
 from kb_build.select.models import Classification
+from kb_build.select.prompts import PROMPTS, SCOPE_PROMPT, USER_PROMPT
 
 logger = logging.getLogger("kb_build")
 
-PROMPTS: dict[AuditType, str] = {
-    "architecture": """\
-Du bewertest genau eine Anforderung aus einem Regelwerk für Behörden-IT.
-Frage: Lässt sich ein Verstoß oder die Einhaltung an der Konfiguration von Ressourcen in einem
-einzelnen CloudFormation-Template erkennen (z. B. IAM-Policies, Verschlüsselung, Logging,
-Netzwerk, Zugriffsrechte)? Auch allgemeine Prinzipien wie "geringste Berechtigungen" zählen,
-wenn sie sich an Ressourcen festmachen lassen. Nein gilt bei Verträgen und Prozessen.
-- "testable": ja oder nein. "rationale": ein deutscher Satz zur Begründung.
-- "scope_level": Wessen Pflicht ist das? "template" = das Workload selbst, am Template
-  erkennbar (Bucket, Rolle, Funktion). "account" = Konto oder Organisation (CloudTrail-Bucket,
-  Support-Rolle, Passwort-Richtlinie, Root-MFA). "people" = Personen und Prozesse
-  (MFA für Administratoren, Schulung, Verträge). "provider" = Cloud-Anbieter (Rechenzentrum,
-  Hypervisor).
-  Hängt die Pflicht nur an Konto, Personen oder Anbieter, wähle das, auch wenn eine Ressource
-  sie technisch umsetzen könnte, z. B. an einer bestimmten Konto-Ressource wie dem
-  CloudTrail-Bucket. Gilt sie zugleich für jede Ressource des Workloads (z. B. Block Public
-  Access an jedem Bucket), wähle "template", auch wenn es dafür eine Konto-Ressource wie
-  AWS::S3::AccountPublicAccessBlock gibt.
-- "cfn_resource_types": alle CloudFormation-Typen, an deren Konfiguration sich die Anforderung
-  zeigt (z. B. bei Verschlüsselung jeder Speicher- und Transportdienst wie AWS::S3::Bucket,
-  AWS::KinesisFirehose::DeliveryStream), der wichtigste zuerst. Nur Typen, die es in
-  CloudFormation gibt. Ist die Anforderung nicht prüfbar, bleibt die Liste leer.""",
-    "spec": """\
-Du bewertest genau eine Anforderung aus einem Regelwerk für Behörden-IT.
-Eine Spezifikation ist die fachliche Beschreibung eines Vorhabens, nicht nur die technische:
-Sie nennt z. B. Zwecke, Rechtsgrundlagen, Rollen, Abläufe und Auftragsverarbeiter.
-Frage: Kann eine Spezifikation (Freitext oder OpenAPI) Hinweise enthalten, ob die Anforderung
-erfüllt oder verletzt wird, oder sich dazu bewusst ausschweigen? Dann ist sie prüfbar; fehlende
-Angaben ergeben später eine Warnung. Beispiele: Rechtsgrundlagen, Zwecke, Löschfristen,
-Verschlüsselung, Zugriffsrechte, Auftragsverarbeiter, Übermittlung in Drittländer; bei
-KI-Systemen auch die Einstufung (z. B. Hochrisiko oder nicht), ausgeschlossene verbotene
-Praktiken und die KI-Kompetenz der Nutzenden.
-Nein gilt nur für Pflichten der Behörde, die keine Spezifikation berühren (z. B.
-Bußgeldverfahren, Befugnisse der Aufsicht, Zertifizierung).
-- "testable": ja oder nein. "rationale": ein deutscher Satz zur Begründung.
-- "scope_level" bleibt "template". "cfn_resource_types" bleibt leer.""",
-}
-
-SCOPE_PROMPT = """\
-Der Prüfumfang (Dienste, für die wir Prüfregeln führen) umfasst: {services}.
-Typen außerhalb des Prüfumfangs verwirft der Code; nenne sie nicht. Bleibt kein Typ übrig,
-gilt die Anforderung als nicht relevant."""
-
-USER_PROMPT = "Quelle: {source}\nID: {id}\nTitel: {title}\n<anforderung>\n{text}\n</anforderung>"
 TOOL_NAME = "classify_requirement"
 TOOL_DESCRIPTION = "Gib an, ob die Anforderung prüfbar ist."
 
@@ -77,15 +33,23 @@ class ClassifyDeps:
     audit_type: AuditType
     instructions: str
     scope: Scope | None = None  # architecture: types outside it are dropped (#19)
+    cfn_types: frozenset[str] = frozenset()  # the real types: the model must not invent any
 
 
-def build_deps(audit_type: AuditType, scope: Scope | None = None) -> ClassifyDeps:
-    """The scope belongs to the architecture prompt only (ADR 0011)."""
+def build_deps(
+    audit_type: AuditType, scope: Scope | None = None, cfn_types: frozenset[str] | None = None
+) -> ClassifyDeps:
+    """The scope belongs to the architecture prompt only (ADR 0011).
+
+    Without `cfn_types` the architecture audit reads the checked-in list; the spec needs none.
+    """
+    if cfn_types is None:
+        cfn_types = load_cfn_types() if audit_type == "architecture" else frozenset()
     text = PROMPTS[audit_type]
     if audit_type == "architecture" and scope is not None:
         text += "\n" + SCOPE_PROMPT.format(services=", ".join(scope.services))
-        return ClassifyDeps(audit_type, text, scope)
-    return ClassifyDeps(audit_type, text)
+        return ClassifyDeps(audit_type, text, scope, cfn_types)
+    return ClassifyDeps(audit_type, text, cfn_types=cfn_types)
 
 
 def request_version(deps: ClassifyDeps) -> str:
@@ -118,7 +82,7 @@ def _validate(ctx: RunContext[ClassifyDeps], answer: Classification) -> Classifi
         return answer.model_copy(update={"cfn_resource_types": [], "scope_level": "template"})
     if not answer.testable:
         return answer.model_copy(update={"cfn_resource_types": []})
-    known = load_cfn_types()
+    known = ctx.deps.cfn_types
     real = [t for t in answer.cfn_resource_types if t in known]
     invalid = [t for t in answer.cfn_resource_types if t not in known]
     if not real:
@@ -159,38 +123,21 @@ class Judge:
         self.audit_type, self.model_id = audit_type, model.model_name
         self._model, self._deps = model, build_deps(audit_type, scope)
         self._version = request_version(self._deps)
-        self._cache = cache if cache is not None else JudgementCache()
+        self._step = LlmStep(cache if cache is not None else JudgementCache())
         self._answers: dict[tuple[SourceName, str], Classification | None] = {}
-        self.usage = RunUsage()  # tokens of the calls the cache could not answer
-        self.counts = GateCounts()  # retries and llm_error of those calls (#27)
+        self.usage = self._step.usage  # tokens of the calls the cache could not answer
+        self.counts = self._step.counts  # retries and llm_error of those calls (#27)
 
     def __call__(self, source: SourceName, requirement: Requirement) -> Classification | None:
         key = (source, requirement.id)
         if key not in self._answers:
-            self._answers[key] = self._cached_or_ask(source, requirement)
+            cached = cache_key(requirement, self._version, self.model_id)
+            self._answers[key] = self._step.cached_or_ask(
+                cached, lambda: self._ask(source, requirement))
         return self._answers[key]
 
-    def _cached_or_ask(self, source: SourceName, requirement: Requirement) -> Classification | None:
-        key = cache_key(requirement, self._version, self.model_id)
-        known = self._cache.get(key)
-        if known is not None:
-            return known
-        answer = self._ask(source, requirement)
-        if answer is not None:
-            self._cache.put(key, answer)
-        return answer
-
     def _ask(self, source: SourceName, requirement: Requirement) -> Classification | None:
-        usage = RunUsage()  # one per call: Pydantic AI checks its request limit against it
-        try:
-            with logged_retries(f"{self.audit_type} {source} {requirement.id}"):  # (#30)
-                return classify_requirement(requirement, source, self._deps, self._model, usage)
-        except INVALID_ANSWER as error:
-            raise_if_no_answer(error)
-            logger.warning(
-                "%s %s: invalid answer after retries: %s", source, requirement.id, error)
-            self.counts.llm_errors += 1
-            return None
-        finally:
-            self.usage.incr(usage)  # failed retries cost tokens too
-            self.counts.retries += max(usage.requests - 1, 0)  # every request after the first
+        return self._step.ask(
+            f"{self.audit_type} {source} {requirement.id}",
+            lambda usage: classify_requirement(requirement, source, self._deps, self._model, usage),
+            "%s %s: invalid answer after retries: %s", source, requirement.id)

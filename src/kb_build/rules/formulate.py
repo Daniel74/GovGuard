@@ -13,10 +13,11 @@ from pydantic_ai.usage import RunUsage
 from govguard.models import AuditType, Rule, RuleDraft
 from kb_build.build_log import INVALID_ANSWER, logged_retries, raise_if_no_answer
 from kb_build.extract.models import Requirement
-from kb_build.gates import Anchors, GateCounts, invalid_cross_references, is_quoted, quote_deviation
+from kb_build.llm_step import GateCounts, paid_call
 from kb_build.reference.cfn_properties import PropertyIndex
 from kb_build.reference.scope import Scope
 from kb_build.rules.criteria import criteria_problems
+from kb_build.rules.gates import Anchors, invalid_cross_references, is_quoted, quote_deviation
 from kb_build.rules.prompts import KIND_LINES, PROMPTS, USER_PROMPT
 from kb_build.rules.violation_judge import judge_violation
 from kb_build.select.models import SelectedRequirement
@@ -146,17 +147,16 @@ def formulate_rule(deps: FormulateDeps, model: Model, usage: RunUsage | None = N
 
 def complete_rule(deps: FormulateDeps, model: Model, total: RunUsage) -> Rule:
     """The LLM writes the draft; identity and origin come from the selection, never the LLM."""
-    selected, requirement, usage = deps.selected, deps.requirement, RunUsage()
-    try:  # one usage per call: Pydantic AI checks its request limit against it
-        draft = formulate_rule(deps, model, usage)
+    selected, requirement = deps.selected, deps.requirement
+    try:
+        with paid_call(total) as usage:  # failed retries cost tokens too
+            draft = formulate_rule(deps, model, usage)
     except INVALID_ANSWER as error:  # fail closed: no rule is lost
         raise_if_no_answer(error)
         if not deps.judge_counts.llm_errors:  # a failed judge has counted already
             deps.counts.retries += FORMULATE_RETRIES - deps.judge_counts.retries  # all spent
             deps.counts.llm_errors += 1
         raise ValueError(f"{selected.source} {requirement.id}: no valid rule: {error}") from error
-    finally:
-        total.incr(usage)  # failed retries cost tokens too
     quote = code_quote(requirement) or draft.source_quote
     return Rule(
         **draft.model_dump() | {"source_quote": quote},

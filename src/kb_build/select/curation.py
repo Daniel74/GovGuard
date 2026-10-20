@@ -8,8 +8,8 @@ from dataclasses import dataclass
 
 from govguard.models import SourceName
 from kb_build.extract.models import ExtractedSource, Requirement
-from kb_build.gates import check_coverage, check_pinned
 from kb_build.select.classify import Judge
+from kb_build.select.gates import check_coverage, check_pinned
 from kb_build.select.models import (
     Classification,
     Outcome,

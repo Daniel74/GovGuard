@@ -265,6 +265,19 @@ def test_architecture_answer_with_only_types_outside_the_scope_ends_up_without_t
     assert result.cfn_resource_types == []  # curation then finds it not relevant
 
 
+def test_the_deps_decide_which_types_are_real() -> None:
+    # The validator reads the real types from ClassifyDeps (ADR 0027), not from a file
+    seen: list = []
+    deps = build_deps("architecture", cfn_types=frozenset({"AWS::S3::Bucket"}))
+    mixed = {"testable": True, "rationale": "x",
+             "cfn_resource_types": ["AWS::KMS::Key", "AWS::S3::Bucket"]}
+
+    result = classify_requirement(REQUIREMENT, "CIS", deps, answer_in_turns(mixed, seen=seen))
+
+    assert len(seen) == 1
+    assert result.cfn_resource_types == ["AWS::S3::Bucket"]
+
+
 def test_a_new_type_of_a_known_service_changes_the_prompt_version() -> None:
     # The prompt names only services, but the validator strips by type: a cached answer
     # would lack the new type, so every change to scope.json means a full run (#19)

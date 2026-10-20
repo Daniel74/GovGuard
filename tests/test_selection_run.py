@@ -16,10 +16,11 @@ from pydantic_ai.messages import (
 )
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
+from kb_build.build_inputs import chosen, read_sources
 from kb_build.extract.models import ExtractedSource
 from kb_build.paths import BuildPaths
 from kb_build.select.models import Selection, Verdict
-from kb_build.select.run import chosen, read_sources, select_all
+from kb_build.select.run import select_all
 
 REAL = BuildPaths()
 ARCHITECTURE_SOURCES = ("BSI", "CIS", "FSBP", "C5")

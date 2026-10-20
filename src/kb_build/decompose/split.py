@@ -4,22 +4,15 @@ The model names marks and the kind of each group, never a quote: the code quotes
 """
 
 import json
-import logging
 
 from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput
 from pydantic_ai.models import Model
-from pydantic_ai.usage import RunUsage
 
 from govguard.models import SourceName
-from kb_build.build_log import INVALID_ANSWER, logged_retries, raise_if_no_answer
-from kb_build.decompose.cache import DecompositionCache, cache_key
 from kb_build.decompose.models import Decomposition
 from kb_build.decompose.parts import decomposition_problems
 from kb_build.extract.models import Requirement
-from kb_build.gates import GateCounts
-from kb_build.select.judgement_cache import prompt_version
-
-logger = logging.getLogger("kb_build")
+from kb_build.llm_step import LlmCache, LlmStep, cache_key, prompt_version
 
 INSTRUCTIONS = """\
 Du zerlegst genau einen Artikel eines EU-Gesetzes in einzelne prüfbare Pflichten.
@@ -86,6 +79,10 @@ def request_version() -> str:
     return prompt_version(INSTRUCTIONS, USER_PROMPT, TOOL_NAME, TOOL_DESCRIPTION, schema)
 
 
+class DecompositionCache(LlmCache[Decomposition]):
+    answer_type = Decomposition
+
+
 class Splitter:
     """Asks the LLM once per article; a known answer comes from the cache.
 
@@ -95,32 +92,19 @@ class Splitter:
 
     def __init__(self, model: Model, cache: DecompositionCache | None = None) -> None:
         self.model_id, self._model = model.model_name, model
-        self._cache = cache if cache is not None else DecompositionCache()
+        self._step = LlmStep(cache if cache is not None else DecompositionCache())
         self._version = request_version()
-        self.usage = RunUsage()
-        self.counts = GateCounts()
+        self.usage = self._step.usage
+        self.counts = self._step.counts
 
     def __call__(self, source: SourceName, article: Requirement) -> Decomposition | None:
         prompt = user_prompt(source, article)
         key = cache_key(prompt, self._version, self.model_id)
-        known = self._cache.get(key)
-        if known is None:
-            known = self._ask(source, article, prompt)
-            if known is not None:
-                self._cache.put(key, known)
-        return known
+        return self._step.cached_or_ask(key, lambda: self._ask(source, article, prompt))
 
     def _ask(self, source: SourceName, article: Requirement, prompt: str) -> Decomposition | None:
-        usage = RunUsage()
-        try:
-            with logged_retries(f"decompose {source} {article.id}"):  # (#30)
-                return split_agent.run_sync(prompt, model=self._model, deps=article,
-                                            usage=usage).output
-        except INVALID_ANSWER as error:
-            raise_if_no_answer(error)
-            logger.warning("%s %s: stays whole, invalid answer: %s", source, article.id, error)
-            self.counts.llm_errors += 1
-            return None
-        finally:
-            self.usage.incr(usage)
-            self.counts.retries += max(usage.requests - 1, 0)
+        return self._step.ask(
+            f"decompose {source} {article.id}",
+            lambda usage: split_agent.run_sync(
+                prompt, model=self._model, deps=article, usage=usage).output,
+            "%s %s: stays whole, invalid answer: %s", source, article.id)

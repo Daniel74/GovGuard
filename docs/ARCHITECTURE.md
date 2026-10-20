@@ -257,11 +257,11 @@ flowchart TB
     U["govguard_ui/<br/>Streamlit-Demo, ohne AWS"]
     S["govguard/audit_setup.py<br/>Kataloge, Rückverfolgung,<br/>Fehlertext für CLI + UI"]
     M["kb_build/__main__.py<br/>Build"]
-    R["kb_build/*/run.py<br/>Dateien lesen + schreiben,<br/>Pfade aus paths.py"]
+    R["kb_build/*/run.py, build_inputs.py<br/>Dateien lesen + schreiben,<br/>Pfade aus paths.py"]
   end
   subgraph L["Logik – rein, ohne I/O"]
     AE["govguard/audit_engine.py, models.py, open_world.py, text.py<br/>+ calls/ (audit_packages, fail_judge, inventory)<br/>+ checks/ (audit_gates, corrections, evidence,<br/>repairs, token_budget)"]
-    KB["kb_build/extract, decompose, select, rules,<br/>reference (ohne run.py), gates.py, build_log.py"]
+    KB["kb_build/extract, decompose, select, rules,<br/>reference (ohne run.py), llm_step.py, build_log.py"]
     RV["govguard_ui/report/review.py<br/>Report lesen: Lücke, Soll-Abgleich"]
   end
   subgraph A["Adapter – einziger Ort für AWS, Groq, HTTP"]
@@ -299,11 +299,13 @@ src/govguard/         Laufzeit-Kern, wird zum Lambda-Paket (ADR 0027)
   checks/             rein: audit_gates, corrections, evidence, repairs, token_budget
   adapters/           aws_services (boto3, Bedrock), groq_services
 src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, nie umgekehrt)
-  __main__.py         Einstieg; gates.py, build_log.py (Retries im Build-Log), paths.py (alle Datenpfade), source_fetch.py
+  (Root)              __main__ (Einstieg), paths (alle Datenpfade), build_log (Retries im Build-Log), source_fetch,
+                      llm_step (Cache und „aus dem Cache oder fragen“ für select, decompose; rules nur paid_call, GateCounts, usage_line),
+                      build_inputs (SELECTIONS, chosen, read_sources, read_scope: Eingaben mehrerer Schritte)
   extract/            Adapter je Quelle (bsi, cis, c5, dsgvo, fsbp, sdm, prowler), formex.py, models.py, run.py
-  decompose/          parts, split, cache, models.py, run.py: Rechtsakte in Einzelpflichten (ADR 0026)
-  select/             classify, curation, judgement_cache, models.py, run.py
-  rules/              catalog, formulate, prompts, criteria, violation_judge, quality, run.py
+  decompose/          parts, split, models.py, run.py: Rechtsakte in Einzelpflichten (ADR 0026)
+  select/             classify, prompts, gates, curation, judgement_cache, models.py, run.py
+  rules/              catalog, formulate, prompts, gates, criteria, violation_judge, quality, run.py
   reference/          scope, cfn_types, cfn_properties, archetype_profiles, run.py (cfn-properties)
 infra/                CDK-App des GovGuard-Stacks
 src/govguard_ui/      Streamlit-Demo (ADR 0023): ruft run_audit im eigenen Prozess mit Groq auf;
@@ -325,7 +327,7 @@ tests/                pytest, flach
 .github/workflows/    build-kb.yml, deploy.yml
 ```
 
-- **Adapter für I/O:** Nur `adapters/aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `adapters/groq_services.py` baut das Groq-Modell für Laufzeit und Build (ADR 0014, 0023), nur `source_fetch.py` lädt Quellen aus dem Netz. Kein Modul startet Prozesse (ADR 0019). Die Demo-UI lädt weder `cli.py` noch `aws_services.py`, auch nicht über Umwege. `checks/` importiert nie `calls/` oder `adapters/`, `report/` nie `screens/`. Tests prüfen das.
+- **Adapter für I/O:** Nur `adapters/aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `adapters/groq_services.py` baut das Groq-Modell für Laufzeit und Build (ADR 0014, 0023), nur `source_fetch.py` lädt Quellen aus dem Netz. Kein Modul startet Prozesse (ADR 0019). Die Demo-UI lädt weder `cli.py` noch `aws_services.py`, auch nicht über Umwege. `checks/` importiert nie `calls/` oder `adapters/`, `report/` nie `screens/`, und kein `run.py` des Builds importiert ein anderes. Tests prüfen das.
 - **Keine Logik in Klebe-Code:** Einstiegsdateien und Workflow-YAML verbinden nur. Was CLI und UI teilen, liegt in `audit_setup.py`; kein Einstieg importiert einen anderen. Ein Workflow meldet sich an, ruft `python -m …` auf und öffnet den PR. Derselbe Befehl läuft lokal.
 - **src-Layout:** Der CDK-Stack packt mit `Code.from_asset("src/govguard")` genau den Laufzeit-Kern, ohne Build-Code, UI oder Daten.
 
@@ -333,7 +335,7 @@ tests/                pytest, flach
 
 1. `data/input/sources.json`: URL, Version (Commit oder Tag), SHA-256, Lizenz (ADR 0008).
 2. Adapter `src/kb_build/extract/<quelle>.py` mit `extract()` und `prefilter()`. Der Vorfilter gibt `None` zurück oder für jede verworfene Anforderung einen festen Begründungssatz (Auswahlprotokoll). Prowler-Quellen (CIS, FSBP, C5) beschreiben nur ihr `ProwlerFormat` (Anker, Titel, Text, Attribute, Vorfilter); gelesen wird im gemeinsamen Parser `prowler.py`.
-3. Je ein Eintrag in `ADAPTERS` (`extract/run.py`) und `SourceName` (`models.py`). In `SELECTIONS` (`select/run.py`) kommt die Quelle zu ihrer Audit-Art.
+3. Je ein Eintrag in `ADAPTERS` (`extract/run.py`) und `SourceName` (`models.py`). In `SELECTIONS` (`build_inputs.py`) kommt die Quelle zu ihrer Audit-Art.
 4. Lizenz: offen → Extrakt einchecken, Vermerk in `NOTICE`; sonst Extrakt in `.gitignore` (CIS, FSBP, C5).
 5. Test mit kleinem Fixture: Anzahl, Stichprobe, Vorfilter mit Begründung.
 6. Ist der Katalog eingefroren (SPEC G13), baut der Schalter „nur fehlende Regeln formulieren“: `select --only-missing` und `rules --only-missing`. Vorhandene Urteile und Regeln bleiben erhalten, das LLM bewertet nur die neuen Anforderungen (ADR 0025, nur Spec-Audit). Byte für Byte gilt das nur für Quellen ohne Zerlegung; zerlegte Regeln bekommen ihr Zitat vom Code (ADR 0026).

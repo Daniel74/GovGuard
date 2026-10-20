@@ -11,16 +11,15 @@ from pydantic import TypeAdapter
 from pydantic_ai.models import Model
 
 from govguard.models import AuditType, Rule, RuleCatalog
-from kb_build.gates import check_rules, requirements_by_anchor
+from kb_build.build_inputs import SELECTIONS, chosen, read_scope, read_sources
 from kb_build.paths import BuildPaths
 from kb_build.reference.cfn_properties import PropertyIndex
 from kb_build.reference.cfn_types import load_cfn_types
-from kb_build.reference.run import read_scope
 from kb_build.rules.catalog import RuleInputs, formulate_rules
 from kb_build.rules.frozen import merge, missing, quoted_by_code
+from kb_build.rules.gates import check_rules, requirements_by_anchor
 from kb_build.rules.quality import quality_report
 from kb_build.select.models import Selection
-from kb_build.select.run import SELECTIONS, chosen, read_sources
 
 logger = logging.getLogger("kb_build")
 

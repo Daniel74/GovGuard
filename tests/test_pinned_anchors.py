@@ -4,8 +4,8 @@ import pytest
 
 from govguard.models import AuditType, Preset
 from kb_build.extract.models import ExtractedSource
-from kb_build.gates import pinned_anchors
 from kb_build.paths import BuildPaths
+from kb_build.select.gates import pinned_anchors
 from kb_build.select.models import Selection
 
 PATHS = BuildPaths()

@@ -1,68 +1,13 @@
-"""Gates of the bounded catalog (ADR 0011): the build stops instead of shipping a gap. Pure code."""
+"""Gates of the rule catalog (ADR 0011): the build stops instead of shipping a gap. Pure code."""
 
 from collections import Counter
-from dataclasses import dataclass
 
-from pydantic_ai.usage import RunUsage
-
-from govguard.models import AuditType, Preset, Rule, RuleCatalog, RuleDraft, SourceName
+from govguard.models import Rule, RuleCatalog, RuleDraft, SourceName
 from govguard.text import contains_quote, normalize
 from kb_build.extract.models import ExtractedSource, Requirement
 from kb_build.reference.cfn_properties import TYPE_PATTERN
 from kb_build.reference.scope import Scope
-from kb_build.select.models import Outcome, SelectedRequirement, Selection
-
-
-@dataclass
-class GateCounts:
-    """What a build gate did with the model's answers: the quality report counts it (#27)."""
-
-    retries: int = 0  # answers the model had to redo
-    llm_errors: int = 0  # answers that stayed invalid (outcome `llm_error`)
-
-    def __add__(self, other: "GateCounts") -> "GateCounts":
-        return GateCounts(self.retries + other.retries, self.llm_errors + other.llm_errors)
-
-    def line(self, audit_type: AuditType, gate: str) -> str:
-        return f"{audit_type} quality {gate}: retries={self.retries} llm_error={self.llm_errors}"
-
-
-def usage_line(audit_type: AuditType, usage: RunUsage) -> str:
-    """What a build step paid for one audit type, failed retries included."""
-    return (f"{audit_type}: {usage.requests} requests, {usage.input_tokens} input tokens, "
-            f"{usage.output_tokens} output tokens")
-
-
-def pinned_anchors(presets: list[Preset], audit_type: AuditType) -> set[str]:
-    """Required findings of the presets must end up in the catalog."""
-    return {
-        finding.anchor
-        for preset in presets if preset.audit_type == audit_type
-        for finding in preset.expected.required_findings
-    }
-
-
-def check_pinned(pinned: set[str], outcomes: dict[str, Outcome]) -> None:
-    """`outcomes` holds the verdict per pinned anchor found in the sources."""
-    missing = sorted(pinned - outcomes.keys())
-    if missing:
-        raise ValueError(f"pinned anchors not found in the sources: {missing}")
-    rejected = [f"{a} ({o})" for a, o in sorted(outcomes.items()) if o != "selected"]
-    if rejected:
-        raise ValueError(f"pinned anchors are not selected: {rejected}")
-
-
-def check_coverage(components: frozenset[str], selected: list[SelectedRequirement]) -> None:
-    """Every component of the archetypes needs at least one rule.
-
-    A type counts at any position: at runtime a rule goes to the model as soon as one of
-    its types is in the template (ADR 0007), so it covers that component.
-    """
-    covered = {t for s in selected for t in s.cfn_resource_types}
-    uncovered = sorted(components - covered)
-    if uncovered:
-        raise ValueError(f"components without a selected requirement: {uncovered}")
-
+from kb_build.select.models import Selection
 
 Anchors = dict[str, tuple[SourceName, Requirement]]  # primary anchor -> (source, requirement)
 

@@ -4,8 +4,8 @@ Pure logic: the catalog on disk comes in, the merged catalog goes out; run.py do
 """
 
 from govguard.models import RuleCatalog
-from kb_build.gates import Anchors
 from kb_build.rules.formulate import code_quote, rule_id
+from kb_build.rules.gates import Anchors
 from kb_build.select.models import SelectedRequirement, Selection
 
 

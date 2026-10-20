@@ -12,10 +12,11 @@ from pydantic_ai.usage import RunUsage
 
 from govguard.models import AuditType, Rule, RuleCatalog
 from kb_build.extract.models import ExtractedSource
-from kb_build.gates import GateCounts, check_rules, requirements_by_anchor, usage_line
+from kb_build.llm_step import GateCounts, usage_line
 from kb_build.reference.cfn_properties import PropertyIndex
 from kb_build.reference.scope import Scope
 from kb_build.rules.formulate import FormulateDeps, complete_rule
+from kb_build.rules.gates import check_rules, requirements_by_anchor
 from kb_build.select.models import Selection
 
 logger = logging.getLogger("kb_build")

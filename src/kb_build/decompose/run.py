@@ -10,12 +10,11 @@ from pydantic import TypeAdapter
 from pydantic_ai.models import Model
 
 from govguard.models import SourceName
-from kb_build.decompose.cache import DecompositionCache
 from kb_build.decompose.models import ArticleDecomposition, Decomposition
 from kb_build.decompose.parts import Split, decompose_source
-from kb_build.decompose.split import Splitter
+from kb_build.decompose.split import DecompositionCache, Splitter
 from kb_build.extract.models import ExtractedSource, Requirement
-from kb_build.gates import usage_line
+from kb_build.llm_step import usage_line
 from kb_build.paths import DECOMPOSED, BuildPaths
 
 logger = logging.getLogger("kb_build")

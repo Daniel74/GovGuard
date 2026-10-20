@@ -3,13 +3,9 @@
 import json
 from pathlib import Path
 
+from kb_build.build_inputs import read_scope
 from kb_build.paths import BuildPaths
 from kb_build.reference.cfn_properties import build_snapshot
-from kb_build.reference.scope import Scope
-
-
-def read_scope(path: Path) -> Scope:
-    return Scope(json.loads(path.read_text(encoding="utf-8")))
 
 
 def write_snapshot(schema_dir: Path, types: frozenset[str], out_file: Path) -> None:

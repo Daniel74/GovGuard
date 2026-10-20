@@ -139,3 +139,14 @@ ROOTS = {  # ADR 0027: only entry points and contracts that others import
 def test_the_root_holds_only_entry_points_and_contracts(package: str) -> None:
     found = {p.stem for p in (SRC / package).glob("*.py")} - {"__init__"}
     assert found == ROOTS[package]
+
+
+@pytest.mark.parametrize("path", sorted((SRC / "kb_build").rglob("run.py")), ids=rel_id)
+def test_no_build_step_imports_the_run_of_another(path: Path) -> None:
+    """ADR 0027: what steps share lives in the root (build_inputs, llm_step), not in a run.py."""
+    runs = {m for m in imported_modules(path) if m.endswith(".run")}
+    assert runs - {_module_of(path)} == set()
+
+
+def _module_of(path: Path) -> str:
+    return rel_id(path).removesuffix(".py").replace("/", ".")

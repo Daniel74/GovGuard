@@ -4,10 +4,10 @@ import json
 
 import pytest
 
+from kb_build.build_inputs import read_scope
 from kb_build.paths import BuildPaths
 from kb_build.reference.archetype_profiles import load_profiles
 from kb_build.reference.cfn_types import load_cfn_types
-from kb_build.reference.run import read_scope
 from kb_build.reference.scope import Scope
 
 
