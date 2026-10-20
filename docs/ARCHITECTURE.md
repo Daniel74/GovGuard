@@ -260,7 +260,7 @@ flowchart TB
     R["kb_build/*/run.py, build_inputs.py<br/>Dateien lesen + schreiben,<br/>Pfade aus paths.py"]
   end
   subgraph L["Logik – rein, ohne I/O"]
-    AE["govguard/audit_engine.py, models.py, open_world.py, text.py<br/>+ calls/ (audit_packages, fail_judge, inventory)<br/>+ checks/ (audit_gates, corrections, evidence,<br/>repairs, token_budget)"]
+    AE["govguard/audit_engine.py, models.py, open_world.py, text.py<br/>+ calls/ (model_call, audit_packages, fail_judge, inventory)<br/>+ checks/ (audit_gates, corrections, evidence,<br/>repairs, token_budget)"]
     KB["kb_build/extract, decompose, select, rules,<br/>reference (ohne run.py), llm_step.py, build_log.py"]
     RV["govguard_ui/report/review.py<br/>Report lesen: Lücke, Soll-Abgleich"]
   end
@@ -295,7 +295,7 @@ Jeder Ordner auf oberster Ebene ist eine eigene Deployment-Einheit oder eine Dat
 ```
 src/govguard/         Laufzeit-Kern, wird zum Lambda-Paket (ADR 0027)
   (Root)              audit_engine, models, open_world, text, audit_setup, cli: Einstiege und Verträge
-  calls/              spricht mit dem Modell: audit_packages, fail_judge, inventory
+  calls/              spricht mit dem Modell: model_call (Agents je Provider, Retry-Buchung), audit_packages, fail_judge, inventory
   checks/             rein: audit_gates, corrections, evidence, repairs, token_budget
   adapters/           aws_services (boto3, Bedrock), groq_services
 src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, nie umgekehrt)

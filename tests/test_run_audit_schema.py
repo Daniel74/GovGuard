@@ -2,6 +2,7 @@
 
 import json
 
+from conftest import GroqFake
 from pydantic_ai.messages import ModelMessage, ModelResponse, TextPart, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
@@ -13,14 +14,6 @@ FINDINGS = [
     {"rule_id": "SPEC-DSGVO-Art.9", "status": "WARN", "line_start": None, "line_end": None,
      "rationale": "Unklar.", "recommendation": "Rechtsgrundlage nennen."},
 ]
-
-
-class GroqFake(FunctionModel):
-    """Fake LLM that reports the Groq provider, like `GroqModel`."""
-
-    @property
-    def system(self) -> str:
-        return "groq"
 
 
 def test_bedrock_gets_a_strict_submit_audit_tool(spec_catalog, spec_input, trace) -> None:

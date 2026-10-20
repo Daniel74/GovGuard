@@ -2,10 +2,19 @@ import json
 import shutil
 
 import pytest
+from pydantic_ai.models.function import FunctionModel
 
 from govguard.models import CrossReference, Rule, RuleCatalog, Trace
 from kb_build.extract.models import Requirement
 from kb_build.paths import DECOMPOSED, BuildPaths
+
+
+class GroqFake(FunctionModel):
+    """Fake LLM that reports the Groq provider, like `GroqModel`."""
+
+    @property
+    def system(self) -> str:
+        return "groq"
 
 
 def pytest_addoption(parser: pytest.Parser) -> None:

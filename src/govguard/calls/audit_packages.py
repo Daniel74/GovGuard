@@ -8,10 +8,10 @@ import json
 from collections.abc import Coroutine
 from typing import Any
 
-from pydantic import BaseModel
-from pydantic_ai import Agent, ModelRetry, NativeOutput, RunContext, ToolOutput
+from pydantic_ai import RunContext
 from pydantic_ai.models import Model
 
+from govguard.calls.model_call import Answer, CallDeps, agents_for, ask, count_retry, send_back
 from govguard.checks.audit_gates import answer_problems
 from govguard.checks.corrections import Corrections, downgrades_of
 from govguard.checks.evidence import MAX_SPAN, NUMBERED_LINES, numbered, without_unproven_verdict
@@ -41,25 +41,14 @@ PACKAGE_SIZE = 10  # rules per model call; 166 architecture rules -> 17 parallel
 GROQ_MAX_PARALLEL = 2  # ~110,000 tokens/min per slot measured (#26), Groq tier allows 250,000
 
 
-class AuditDeps(BaseModel):  # deps_type of the audit agent, input for the code checks
+class AuditDeps(CallDeps):  # deps_type of the audit agent, input for the code checks
     rules: list[Rule]
     input_text: str
     na_forbidden: str | None  # prompt hint; set when N/A was already decided by code (ADR 0011)
     world: OpenWorld | None  # None: closed world, a template (ADR 0020, #46)
-    corrections: Corrections  # shared by all packages; the validator reports into it (#27)
-    reason_sent: bool = False  # the code sent the package back with reasons (#27)
 
 
-_OUTPUT = {"name": "submit_audit", "description": "Gib genau einen Befund je Prüfregel ab.",
-           "strict": True}  # static schema, every field required (ADR 0017)
 _SETTINGS = {"temperature": 0, "max_tokens": 8000}  # same status; a loop ends in ~25 s (#28)
-# Bedrock: forced tool (ADR 0005); Groq: json_schema with constrained decoding (ADR 0016)
-_AGENTS: dict[Provider, Agent] = {
-    system: Agent(output_type=output_type, instructions=SYSTEM_PROMPT, deps_type=AuditDeps,
-                  model_settings=_SETTINGS, retries=1)  # one retry: within the 180 s (ADR 0018)
-    for system, output_type in [("bedrock", ToolOutput(AuditResponse, **_OUTPUT)),
-                                ("groq", NativeOutput(AuditResponse, **_OUTPUT))]
-}
 # Bedrock: no limit, all packages at once
 _MAX_PARALLEL: dict[Provider, int] = {"groq": GROQ_MAX_PARALLEL}
 
@@ -72,8 +61,7 @@ def _budget_for(provider: Provider) -> TokenBudget | None:
 def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditResponse:
     """Repair and downgrade first, then check: what the code can fix needs no retry (ADR 0017)."""
     text, last, rules = ctx.deps.input_text, ctx.last_attempt, ctx.deps.rules
-    if ctx.retry:  # once per package: one retry at most
-        ctx.deps.corrections.record_retry(ctx.deps.reason_sent)
+    count_retry(ctx)  # once per package: one retry at most
     kept, contradictions = worst_of_duplicates(response.findings)
     checked = [without_unproven_verdict(f, text, last) for f in kept]
     filled, filled_in = with_rule_recommendations(checked, rules)
@@ -83,8 +71,7 @@ def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditRespo
     ctx.deps.corrections.record_attempt(
         sorted(expected), downgrades_of(kept, checked), problems, last)
     if problems:
-        ctx.deps.reason_sent = True
-        raise ModelRetry("\n".join(p.text for p in problems))
+        send_back(ctx, "\n".join(p.text for p in problems))
     return AuditResponse(findings=filled)
 
 
@@ -93,9 +80,11 @@ def _status_rule(ctx: RunContext[AuditDeps]) -> str:
     return OPEN_WORLD_FAIL_RULE.format(subject=world.subject) if world else ""
 
 
-for _agent in _AGENTS.values():  # the same gates for both models (ADR 0016)
-    _agent.output_validator(_validate)
-    _agent.instructions(_status_rule)
+_AGENTS = agents_for(
+    Answer(AuditResponse, "submit_audit", "Gib genau einen Befund je Prüfregel ab.",
+           strict=True),  # static schema, every field required (ADR 0017)
+    deps_type=AuditDeps, instructions=[SYSTEM_PROMPT, _status_rule], validator=_validate,
+    settings=_SETTINGS)
 
 
 def package_requests(
@@ -122,9 +111,8 @@ def package_requests(
 
 
 async def _ask_model(deps: AuditDeps, model: Model) -> list[FindingDraft]:
-    agent = _AGENTS[provider_of(model)]
-    result = await agent.run(_user_prompt(deps), model=model, deps=deps)
-    return result.output.findings
+    answer = await ask(_AGENTS, model, _user_prompt(deps), deps)
+    return answer.findings
 
 
 def _user_prompt(deps: AuditDeps) -> str:

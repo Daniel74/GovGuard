@@ -6,10 +6,10 @@ Rules without a type from the inventory never reach the audit model (ADR 0007, 0
 import json
 from dataclasses import dataclass
 
-from pydantic import BaseModel
-from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput
+from pydantic_ai import RunContext
 from pydantic_ai.models import Model
 
+from govguard.calls.model_call import Answer, CallDeps, agents_for, ask, count_retry, send_back
 from govguard.checks.corrections import Corrections, Problem
 from govguard.checks.evidence import NUMBERED_LINES, numbered, range_problem
 from govguard.models import InventoryResponse, RecognizedType, Rule
@@ -45,35 +45,29 @@ class Inventory:
         return any(t in self.types or t.startswith(self.always) for t in rule.cfn_resource_types)
 
 
-class InventoryDeps(BaseModel):  # deps_type of the pre-run agent, input for the code checks
-    candidate_types: list[str]
+class InventoryDeps(CallDeps):  # deps_type of the pre-run agent, input for the code checks;
+    candidate_types: list[str]  # its corrections are those of the audit, like a package (#27)
     input_text: str
-    corrections: Corrections  # the pre-run reports into it like a package (#27)
-    reason_sent: bool = False  # the code sent the answer back with reasons (#27)
 
 
-inventory_agent = Agent(
-    output_type=ToolOutput(InventoryResponse, name="submit_inventory",
-                           description="Gib die erkannten Ressourcentypen mit Beleg ab."),
-    instructions=INVENTORY_PROMPT,
-    deps_type=InventoryDeps,
-    model_settings={"temperature": 0},  # a missed service flips its rules to N/A (#28)
-    retries=1,  # exactly one retry, like the audit
-)
-
-
-@inventory_agent.output_validator
 def _validate(ctx: RunContext[InventoryDeps], response: InventoryResponse) -> InventoryResponse:
     """The code checks type and evidence of every recognized service (ADR 0011)."""
     problems = [Problem("", p) for seen in response.resource_types  # names no rule
                 if (p := _problem(seen, ctx.deps))]
-    if ctx.retry:
-        ctx.deps.corrections.record_retry(ctx.deps.reason_sent)
+    count_retry(ctx)
     ctx.deps.corrections.record_attempt([], {}, problems, ctx.last_attempt)
     if problems:
-        ctx.deps.reason_sent = True
-        raise ModelRetry("\n".join(p.text for p in problems))
+        send_back(ctx, "\n".join(p.text for p in problems))
     return response
+
+
+# groq_native=False: the inventory keeps ToolOutput on Groq, against ADR 0016 (NativeOutput).
+# Switching it needs a measurement before and after, see issue #58.
+_AGENTS = agents_for(
+    Answer(InventoryResponse, "submit_inventory", "Gib die erkannten Ressourcentypen mit Beleg ab.",
+           groq_native=False),
+    deps_type=InventoryDeps, instructions=INVENTORY_PROMPT, validator=_validate,
+    settings={"temperature": 0})  # a missed service flips its rules to N/A (#28)
 
 
 def _problem(seen: RecognizedType, deps: InventoryDeps) -> str | None:
@@ -94,8 +88,8 @@ async def resource_inventory(
     candidates = sorted({t for rule in rules for t in rule.cfn_resource_types})
     deps = InventoryDeps(candidate_types=candidates, input_text=input_text,
                          corrections=corrections)
-    result = await inventory_agent.run(_user_prompt(deps), model=model, deps=deps)
-    seen = {item.resource_type for item in result.output.resource_types}
+    answer = await ask(_AGENTS, model, _user_prompt(deps), deps)
+    seen = {item.resource_type for item in answer.resource_types}
     return Inventory(seen, NA_NOT_RECOGNIZED, NA_FORBIDDEN_FREE_TEXT, ALWAYS_APPLICABLE)
 
 

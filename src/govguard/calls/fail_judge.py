@@ -7,13 +7,22 @@ One request for all FAILs, with only criterion and evidence lines. Pure logic: m
 import json
 
 from pydantic import BaseModel
-from pydantic_ai import Agent, ModelRetry, NativeOutput, RunContext, ToolOutput
+from pydantic_ai import RunContext
 from pydantic_ai.exceptions import ModelAPIError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
+from govguard.calls.model_call import (
+    Answer,
+    CallDeps,
+    agents_for,
+    ask,
+    count_invalid_answer,
+    count_retry,
+    send_back,
+)
 from govguard.checks.corrections import Corrections, service_down
 from govguard.checks.evidence import evidence_of
-from govguard.models import FindingDraft, Provider, Rule, provider_of
+from govguard.models import FindingDraft, Rule
 from govguard.open_world import AuditInput, OpenWorld
 
 _DOWN = "KI-Dienst nicht erreichbar oder überlastet"  # never the library's error text
@@ -43,34 +52,21 @@ class FailVerdicts(BaseModel):  # schema of tool submit_fail_verdicts
     verdicts: list[FailVerdict]
 
 
-class JudgeDeps(BaseModel):  # deps_type of the judge
+class JudgeDeps(CallDeps):  # deps_type of the judge; its retry counts like a package retry (#27)
     world: OpenWorld  # subject and example pair of the prompt (#46)
     fail_ids: list[str]  # rule_ids of the FAILs, each needs a verdict
-    corrections: Corrections  # the judge's retry counts like a package retry (#27)
-    reason_sent: bool = False  # the code asked for missing verdicts
 
 
-_OUTPUT = {"name": "submit_fail_verdicts", "strict": True,
-           "description": "Gib je FAIL-Befund genau ein Urteil ab."}
 _SETTINGS = {"temperature": 0, "max_tokens": 8000}  # like the audit (#28)
-# Bedrock: forced tool (ADR 0005); Groq: json_schema with constrained decoding (ADR 0016)
-_JUDGES: dict[Provider, Agent] = {
-    provider: Agent(output_type=output_type, deps_type=JudgeDeps, model_settings=_SETTINGS,
-                    retries=1)  # one retry, for a schema slip or missing verdicts
-    for provider, output_type in [("bedrock", ToolOutput(FailVerdicts, **_OUTPUT)),
-                                  ("groq", NativeOutput(FailVerdicts, **_OUTPUT))]
-}
 
 
 def _all_judged(ctx: RunContext[JudgeDeps], output: FailVerdicts) -> FailVerdicts:
     """One retry for missing verdicts (5 of 27 measured, #31); after it the FAIL stays."""
-    if ctx.retry:
-        ctx.deps.corrections.record_retry(ctx.deps.reason_sent)
+    count_retry(ctx)
     judged = {verdict.rule_id for verdict in output.verdicts}
     if (no_verdict := [rule_id for rule_id in ctx.deps.fail_ids if rule_id not in judged]) \
             and not ctx.last_attempt:
-        ctx.deps.reason_sent = True
-        raise ModelRetry(f"Urteil fehlt für: {', '.join(no_verdict)}")
+        send_back(ctx, f"Urteil fehlt für: {', '.join(no_verdict)}")
     return output
 
 
@@ -81,9 +77,10 @@ def _prompt(ctx: RunContext[JudgeDeps]) -> str:
         confirmed=world.confirmed, rejected=world.rejected)
 
 
-for _judge in _JUDGES.values():
-    _judge.output_validator(_all_judged)
-    _judge.instructions(_prompt)
+_JUDGES = agents_for(  # one retry, for a schema slip or missing verdicts
+    Answer(FailVerdicts, "submit_fail_verdicts", "Gib je FAIL-Befund genau ein Urteil ab.",
+           strict=True),
+    deps_type=JudgeDeps, instructions=_prompt, validator=_all_judged, settings=_SETTINGS)
 
 
 async def judge_fails(
@@ -117,15 +114,15 @@ async def _verdicts(
 ) -> tuple[dict[str, FailVerdict], str]:
     """rule_id -> first verdict, and the reason for a FAIL without one."""
     try:
-        result = await _JUDGES[provider_of(model)].run(
-            _user_prompt(rules, fails, input_text), model=model, deps=deps)
+        answer = await ask(
+            _JUDGES, model, _user_prompt(rules, fails, input_text), deps)
     except UnexpectedModelBehavior:  # invalid after the retry; the validator never saw it
-        deps.corrections.record_retry(deps.reason_sent)
+        count_invalid_answer(deps)
         return {}, _INVALID
     except ModelAPIError as error:  # Groq rejects a broken answer with HTTP 400, no retry
         return {}, _DOWN if service_down(error) else _INVALID
     verdicts: dict[str, FailVerdict] = {}
-    for verdict in result.output.verdicts:
+    for verdict in answer.verdicts:
         verdicts.setdefault(verdict.rule_id, verdict)
     return verdicts, "kein Urteil zu diesem Befund"
 

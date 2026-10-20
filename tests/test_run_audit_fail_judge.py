@@ -4,11 +4,11 @@ Free-text architecture: test_run_audit_open_world.py (#46)."""
 
 import json
 
+from conftest import GroqFake
 from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelMessage, ModelResponse, TextPart, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 from test_run_audit import PASS_32, WARN_9
-from test_run_audit_schema import GroqFake
 
 from govguard.audit_engine import run_audit
 from govguard.checks.corrections import SCHEMA_PROBLEM

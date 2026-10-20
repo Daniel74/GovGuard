@@ -4,7 +4,7 @@ import asyncio
 import json
 
 import pytest
-from conftest import make_rule
+from conftest import GroqFake, make_rule
 from pydantic_ai.exceptions import ModelHTTPError
 from pydantic_ai.messages import ModelMessage, ModelResponse, TextPart, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
@@ -63,12 +63,6 @@ class GroqRecorder(Recorder):
     async def respond(self, messages: list[ModelMessage], info: AgentInfo) -> ModelResponse:
         response = await super().respond(messages, info)
         return ModelResponse(parts=[TextPart(json.dumps(response.parts[0].args))])
-
-
-class GroqFake(FunctionModel):
-    @property
-    def system(self) -> str:
-        return "groq"
 
 
 def test_groq_packages_wait_for_the_token_budget_bedrock_does_not(trace, monkeypatch) -> None:
