@@ -929,18 +929,56 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 
 ### Schritt 12o – #54 Messkampagne: Stabilität des Spec-Audits
 
-**Ziel:** Belastbare Zahlen für die Präsentation: Soll-Treffer, stabile Prüfregeln und Wechsel nach Art, je 3 Läufe für die 3 Spec-Presets auf dem Katalog nach #59. Die Reports liegen als Rohdaten im Repo.
-**Voraussetzung:** Schritt 12v (#61 geschlossen), damit die Messung den neuen Katalog und den Bedingungs-Vorlauf misst. Kein AWS nötig. Groq, ca. 1 $. `src/` bleibt eingefroren, das Auswerteskript liegt beim Skill `audit-messen`.
+**Ziel:** Belastbare Zahlen für die Präsentation: Soll-Treffer, stabile Prüfregeln und Wechsel nach Art, je 3 Läufe für die 3 Spec-Presets auf dem Katalog nach #59. Dazu Tokens, Laufzeit und Kosten je Lauf für alle 6 Presets (Grundlage für #64). Reports und Messwerte liegen als Rohdaten im Repo.
+**Voraussetzung:** Schritt 12v (#61 geschlossen), damit die Messung den neuen Katalog und den Bedingungs-Vorlauf misst. Kein AWS nötig. Groq, ca. 1,30 $. `src/` bleibt eingefroren, das Auswerteskript liegt beim Skill `audit-messen`.
 
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12o und Issue #54“ → Plan → Go
-- [ ] **Bauen** 🤖 _Sonnet_ (gleiche Session) · Auswerteskript mit Test an kleinen Fixtures, Ablage `data/measurements/`
-- [ ] **Messen** 👤 `/audit-messen spec-govguard, spec-meldeportal-gesundheit und spec-wohngeld-openapi je 3× mit Groq, Reports nach data/measurements/` → 🤖 wertet aus und notiert das Ergebnis in #54
+- [ ] **Bauen** 🤖 _Sonnet_ (gleiche Session) · `measure.py` schreibt `<preset>-<n>.stats.json` (Tokens, Zeit, Retries, Kosten); Auswerteskript mit Test an kleinen Fixtures (Median, Min, Max), Ablage `data/measurements/`
+- [ ] **Messen** 👤 `/audit-messen spec-govguard, spec-meldeportal-gesundheit und spec-wohngeld-openapi je 3× mit Groq, dazu die 3 Architektur-Presets je 3×, Reports und Messwerte nach data/measurements/` → 🤖 wertet aus und notiert das Ergebnis in #54
 - [ ] **Nachziehen** 🤖 _Sonnet_ · SPEC P1 mit den neuen Zahlen, Kopie ins Preset → 👤 `/audit-messen spec-govguard mit Groq`, Report nach `data/gallery/` (G9) → 🤖 notiert Soll-Abweichungen in #36
 - [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #54`
 - [ ] **Abschließen** 👤 committet und pusht, schließt #54
 
-**Fertig, wenn:** Die 9 Reports im Repo liegen, das Skript die Kennzahlen je Preset ausgibt, SPEC P1 sie nennt und `pytest` und ruff grün sind.
+**Fertig, wenn:** Die 18 Reports mit Messwerten im Repo liegen, das Skript die Kennzahlen je Preset ausgibt, SPEC P1 sie nennt und `pytest` und ruff grün sind.
 **Fürs Fachgespräch:** `temperature: 0` macht ein LLM nicht deterministisch. Stabilität programmiert man nicht, man misst sie: Entscheidend ist nicht, wie viele Befunde kippen, sondern welche. Kippen nur Lücken und N/A, während FAIL und Pflichtbefunde stehen, ist das Audit für die Fachleute brauchbar.
+
+---
+
+### Schritt 13 – Doku nach Methodik (#63–#67), unbeaufsichtigt über Nacht
+
+**Ziel:** ARCHITECTURE und DESIGN zeigen das System nach arc42, C4, UML, DFD/STRIDE und Qualitätsszenarien in 15 Diagrammen mit Beschreibung, ARCHITECTURE beginnt mit den Architektur- und Designprinzipien (das *Warum*). METHODIK wird zum Rezept, drei Nachbar-Dokumente entfallen, das README überzeugt Recruiter.
+**Voraussetzung:** Ist #54 noch offen, arbeitet die Session zuerst Schritt 12o ab (Freigabe unten), denn Qualität, Kosten und README brauchen die Messwerte. Kein AWS. `.env` mit `GROQ_API_KEY` liegt bereit.
+
+**Freigaben für diese Session** (gelten nur für Schritt 13, CLAUDE.md „sage es explizit“):
+
+- **Unbeaufsichtigt:** Keine Rückfragen. Wo sonst ein Halt oder eine Weiche wäre, entscheidet Claude selbst, schreibt die Begründung als Kommentar ins Issue und macht weiter. Alles bleibt per Commit und Tag umkehrbar.
+- Claude committet nach jedem Ticket auf `main`, **ohne Push**. Gepusht wird erst morgens nach Halt 3.
+- **Kosten:** nur für Schritt 12o, Groq bis 2 $ ohne Go. Kein Bedrock.
+- **Löschen in #66** ist freigegeben. Regel: im Zweifel übernehmen statt verwerfen.
+- Schnitt der Agenten wie in 12t–12v: _Sonnet_ baut je Ticket, ein frischer _Opus_-Agent prüft je Ticket.
+
+**Regeln für jeden Agenten:** Lies FAHRPLAN Schritt 13 und das Issue. Code und ADRs sind die Wahrheit, Veraltetes fliegt raus, Entworfenes steht gestrichelt als Zielbild. Jedes Diagramm: Kernaussage → Diagramm → Legende → Beschreibung. **Code-Namen nie allein im Satz:** Alltagswort zuerst, Code-Name in Klammern; Tabellen mit Spalte „im Code“. Antwort höchstens 15 Zeilen.
+
+**Anhalten nur bei:** einem Test, der nach zwei Anläufen rot bleibt, oder einem unerreichbaren Akzeptanzkriterium. Dann: Änderungen des Tickets verwerfen, Stand im Issue kommentieren, Morgenbericht schreiben und enden, denn die Tickets bauen aufeinander auf.
+
+**Ablauf:**
+
+- [ ] **Starten** 🆕 _Opus_, Auto-Modus (sonst blockieren Freigabe-Dialoge die Nacht) · 👤 „Lies docs/FAHRPLAN.md Schritt 13 und arbeite ihn ab.“
+- [ ] **Vorbereiten** 🤖 · Arbeitsbaum prüfen, `git tag vor-doku`; #54 offen → Schritt 12o ohne Halte abarbeiten (👤-Schritte übernimmt Claude, Messung per `/audit-messen`), Commit
+- [ ] **#63 Konventionen** 🤖 _Sonnet_-Agent · Konventionen, D11 Module und D12 Typen Build in DESIGN.md
+- [ ] **Konventionen abnehmen** 🤖 frischer _Opus_-Agent · Lesbarkeit für IT-Juniors, Farben, Legende, Code-Namen-Regel → Korrektur, bevor der Rest darauf aufbaut
+- [ ] **#63 fertig bauen und prüfen** 🤖 _Sonnet_ baut D13–D15, Tabellen, Drift-Test · _Opus_ `/code-review gegen Issue #63` → Commit
+- [ ] **#64 bauen und prüfen** 🤖 _Sonnet_ · Kapitel 0 Prinzipien, Lesehilfe für Behörden-IT, ARCHITECTURE nach arc42, D1–D10, Build-Kosten aus `git log` der Build-Logs · _Opus_ Review → Commit
+- [ ] **#65 bauen und prüfen** 🤖 _Sonnet_ · METHODIK als Rezept, CLAUDE.md · _Opus_ Review → Commit
+- [ ] **#66 ernten und löschen** 🤖 _Sonnet_ · Ernteliste als Kommentar in #66, übernehmen, löschen, Links prüfen · _Opus_ Review → Commit
+- [ ] **#67 bauen und prüfen** 🤖 _Sonnet_ · README und `docs/ENTWICKLUNG.md` · _Opus_ Review → Commit
+- [ ] **Prüfer-Lesetest** 🤖 frischer _Opus_-Agent ohne Vorwissen liest nur README, ARCHITECTURE und DESIGN, einmal als IHK-Prüfer und einmal als IT-Sicherheitsbeauftragter einer Behörde, und beantwortet die Fragen aus METHODIK 8.4; Lücken → nachbessern → Commit
+- [ ] **Morgenbericht** 🤖 letzte Nachricht der Session: je Ticket Commit und offene Punkte, alle Entscheidungen, die sonst ein Halt gewesen wären, Kosten von 12o
+- [ ] **Halt 3: morgens** 👤 Morgenbericht lesen, Diagramme in der Vorschau ansehen, Ernteliste in #66 prüfen → „pushen“ → 🤖 pusht, schließt #54 und #63–#67, hakt hier ab
+
+**Fertig, wenn:** #63–#67 geschlossen sind, der Lesetest keine Lücke mehr findet und `pytest` und ruff grün sind. Zurück: `git checkout vor-doku`.
+**Danach:** 👤 `/verstehen 64 Architektur nach arc42`
+**Fürs Fachgespräch:** Für LLM-Systeme gibt es keine eigene Standardmethodik. Ich wende arc42, C4, UML und STRIDE an und modelliere das LLM darin als unvertrauenswürdigen externen Partner.
 
 ---
 
