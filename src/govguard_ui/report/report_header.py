@@ -5,8 +5,8 @@ import html
 import streamlit as st
 
 from govguard.models import AuditReport, Expected
-from govguard_ui.finding_list import select
-from govguard_ui.review import Category, category_counts, expected_checks
+from govguard_ui.report.findings_view import select
+from govguard_ui.report.review import Category, category_counts, expected_checks
 from govguard_ui.style import JUDGE_NAME, LOOKS, status_word
 from govguard_ui.texts import HELP, OPEN_WORLD_ONLY, TYPE_LABELS
 

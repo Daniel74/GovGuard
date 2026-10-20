@@ -19,17 +19,17 @@ DATA_WARNING = "Keine echten oder personenbezogenen Daten eingeben."
 
 
 def start_script() -> None:
-    from govguard_ui.start_page import render
+    from govguard_ui.screens.start_page import render
     render()
 
 
 def gallery_script() -> None:
-    from govguard_ui.gallery_page import render
+    from govguard_ui.screens.gallery_page import render
     render()
 
 
 def create_script() -> None:
-    from govguard_ui.create_page import render
+    from govguard_ui.screens.create_page import render
     render()
 
 
@@ -103,7 +103,7 @@ def fake_groq(monkeypatch: pytest.MonkeyPatch, seen: list[str]) -> None:
         seen.append(str(messages[0]))
         return warn_for_every_rule(messages, info)
 
-    monkeypatch.setattr("govguard_ui.create_page.groq_model",
+    monkeypatch.setattr("govguard_ui.screens.create_page.groq_model",
                         lambda: FunctionModel(answer, model_name="fake-groq"))
 
 
@@ -144,7 +144,7 @@ def arch_key(suffix: str) -> str:
 def report_script(entry_json: str) -> None:
     """Renders one gallery entry with a changed report, e.g. poisoned LLM text."""
     from govguard_ui.gallery import GalleryEntry
-    from govguard_ui.report_view import render_report
+    from govguard_ui.report.report_view import render_report
 
     entry = GalleryEntry.model_validate_json(entry_json)
     render_report(entry.report, entry.preset.title, (entry.source_name, entry.source_text),

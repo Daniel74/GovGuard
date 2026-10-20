@@ -3,7 +3,7 @@
 import streamlit as st
 
 from govguard.audit_engine import MAX_INPUT_CHARS, with_thousand_dots
-from govguard_ui.review import CATEGORIES, Category
+from govguard_ui.report.review import CATEGORIES, Category
 from govguard_ui.style import CSS, JUDGE_NAME, LOOKS, badge
 from govguard_ui.texts import DATA_RULE
 

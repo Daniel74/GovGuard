@@ -10,8 +10,8 @@ from pydantic import BaseModel
 from pydantic_ai import Agent, ModelRetry, RunContext, ToolOutput
 from pydantic_ai.models import Model
 
-from govguard.corrections import Corrections, Problem
-from govguard.evidence import NUMBERED_LINES, numbered, range_problem
+from govguard.checks.corrections import Corrections, Problem
+from govguard.checks.evidence import NUMBERED_LINES, numbered, range_problem
 from govguard.models import InventoryResponse, RecognizedType, Rule
 from govguard.text import template_resource_types
 

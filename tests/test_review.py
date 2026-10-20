@@ -3,7 +3,7 @@
 from govguard.models import Expected, RequiredFinding
 from govguard_ui.gallery import load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
-from govguard_ui.review import (
+from govguard_ui.report.review import (
     category,
     category_counts,
     document_window,

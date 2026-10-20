@@ -1,8 +1,8 @@
 """Rows of the finding table: the component gets plain values, its cells show them as text (#45)."""
 
-from govguard_ui.finding_list import table_rows
 from govguard_ui.gallery import load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
+from govguard_ui.report.findings_view import table_rows
 
 ART9 = next(f for e in load_gallery(PRESETS, GALLERY) if e.report
             for f in e.report.findings if f.rule_id == "SPEC-DSGVO-Art.9Abs.2")  # FAIL, 46–49

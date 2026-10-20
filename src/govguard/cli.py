@@ -7,6 +7,8 @@ from typing import get_args
 
 from pydantic_ai.models import Model
 
+from govguard.adapters.aws_services import bedrock_model
+from govguard.adapters.groq_services import MissingApiKeyError, groq_model
 from govguard.audit_engine import (
     AuditValidationError,
     InputTooLongError,
@@ -14,8 +16,6 @@ from govguard.audit_engine import (
     run_audit,
 )
 from govguard.audit_setup import ARCH_CATALOG, SPEC_CATALOG, failure_text, make_trace
-from govguard.aws_services import bedrock_model
-from govguard.groq_services import MissingApiKeyError, groq_model
 from govguard.models import Provider, RuleCatalog
 
 

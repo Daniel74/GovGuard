@@ -1,6 +1,6 @@
 """Evidence by line reference (ADR 0017): the model points to lines, the code cuts the quote."""
 
-from govguard.corrections import Problem
+from govguard.checks.corrections import Problem
 from govguard.models import FindingDraft
 from govguard.text import MIN_QUOTE_LENGTH, too_short_to_prove
 

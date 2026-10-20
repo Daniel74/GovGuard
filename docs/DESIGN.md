@@ -258,7 +258,7 @@ class AuditReport(BaseModel):
 
 ### 2.2 run_audit() und select_archetype()
 
-Die Prüflogik kennt Bedrock nicht. Sie bekommt ein Pydantic-AI-Modell übergeben (Dependency Injection, ADR 0005). `aws_services.bedrock_model()` baut es mit dem Profil `eu.`, Tests übergeben `TestModel` oder `FunctionModel` von Pydantic AI mit festen Antworten.
+Die Prüflogik kennt Bedrock nicht. Sie bekommt ein Pydantic-AI-Modell übergeben (Dependency Injection, ADR 0005). `adapters/aws_services.bedrock_model()` baut es mit dem Profil `eu.`, Tests übergeben `TestModel` oder `FunctionModel` von Pydantic AI mit festen Antworten.
 
 ```python
 # src/govguard/audit_engine.py – rein, ohne boto3
@@ -272,7 +272,7 @@ class AuditDeps(BaseModel):              # deps_type des Audit-Agenten, je Paket
     input_text: str
     na_forbidden: str | None             # Prompt-Hinweis, wenn der Code N/A schon entschieden hat
 
-# src/govguard/inventory.py – rein, ohne boto3
+# src/govguard/calls/inventory.py – rein, ohne boto3
 async def resource_inventory(rules: list[Rule], input_text: str,
                              model: Model) -> Inventory
 
@@ -304,11 +304,11 @@ Die übrigen Prüfregeln gehen in Paketen à 10 gleichzeitig ans Modell (`asynci
 `run_audit()` validiert die LLM-Antwort in dieser Reihenfolge:
 1. Pydantic-Schema (`AuditResponse`), durch Pydantic AI.
 2. Jede an das Modell gesendete `rule_id` kommt genau einmal vor, und es gibt keine unbekannten IDs. Im Architektur-Audit ist N/A vom Modell verboten, denn der Ressourcentyp kommt vor oder wird immer geprüft; der Prompt sagt das dem Modell vorab.
-3. Zeilenbereich vorhanden bei PASS; der Bereich liegt in der Eingabe, umfasst höchstens 200 Zeilen (`MAX_SPAN`), und der Ausschnitt hat mindestens 15 Zeichen (`evidence.py`, ADR 0017). Empfehlung vorhanden bei WARN und FAIL.
+3. Zeilenbereich vorhanden bei PASS; der Bereich liegt in der Eingabe, umfasst höchstens 200 Zeilen (`MAX_SPAN`), und der Ausschnitt hat mindestens 15 Zeichen (`checks/evidence.py`, ADR 0017). Empfehlung vorhanden bei WARN und FAIL.
 
-Vor Schritt 2 bereinigt der Code die Antwort ohne Retry: Bei WARN, FAIL und N/A zählt ein unbrauchbarer Bereich (ungültig, umgedreht, zu groß, zu kurz) als „kein Bereich“, und ein FAIL ohne Zeilenbereich wird WARN (ADR 0017). Nur PASS bekommt für den Bereich einen Retry; bleibt er im letzten Versuch unbelegt, wird er WARN mit fester Empfehlung (`ctx.last_attempt`). Bei mehreren Befunden zur selben Prüfregel gilt der schwerste Status, bei Gleichstand der erste mit Zeilenbereich; widersprechen sie sich, steht das in der Korrekturzeile. Fehlt bei WARN oder FAIL die Empfehlung, setzt der Code die der Prüfregel ein (`repairs.py`, Nachtrag #32 in ADR 0017). Den Beleg schneidet der Code aus den Zeilen, das Modell schreibt ihn nicht ab.
+Vor Schritt 2 bereinigt der Code die Antwort ohne Retry: Bei WARN, FAIL und N/A zählt ein unbrauchbarer Bereich (ungültig, umgedreht, zu groß, zu kurz) als „kein Bereich“, und ein FAIL ohne Zeilenbereich wird WARN (ADR 0017). Nur PASS bekommt für den Bereich einen Retry; bleibt er im letzten Versuch unbelegt, wird er WARN mit fester Empfehlung (`ctx.last_attempt`). Bei mehreren Befunden zur selben Prüfregel gilt der schwerste Status, bei Gleichstand der erste mit Zeilenbereich; widersprechen sie sich, steht das in der Korrekturzeile. Fehlt bei WARN oder FAIL die Empfehlung, setzt der Code die der Prüfregel ein (`checks/repairs.py`, Nachtrag #32 in ADR 0017). Den Beleg schneidet der Code aus den Zeilen, das Modell schreibt ihn nicht ab.
 
-Die Schritte 2 und 3 laufen im `@agent.output_validator` (Prüfungen in `audit_gates.py`) und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch oder die Modell-API (z. B. Drosselung, `ModelAPIError`), wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. Die Meldung nennt die Probleme des letzten Versuchs. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
+Die Schritte 2 und 3 laufen im `@agent.output_validator` (Prüfungen in `checks/audit_gates.py`) und lösen bei Fehlern `ModelRetry` aus. Pydantic AI schickt die Fehlermeldung dann **einmal** zurück ans Modell (`retries=1`). Scheitert auch der zweite Versuch oder die Modell-API (z. B. Drosselung, `ModelAPIError`), wirft die Funktion `AuditValidationError`, und der Handler antwortet mit HTTP 502. Die Meldung nennt die Probleme des letzten Versuchs. `select_archetype()` wirft `ValueError`, wenn der Report ein FAIL enthält.
 
 ### 2.3 API-JSON
 

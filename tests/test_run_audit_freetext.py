@@ -6,7 +6,7 @@ from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from govguard.audit_engine import AuditValidationError, run_audit
-from govguard.inventory import NA_FORBIDDEN_FREE_TEXT, NA_NOT_RECOGNIZED
+from govguard.calls.inventory import NA_FORBIDDEN_FREE_TEXT, NA_NOT_RECOGNIZED
 from govguard.models import RuleCatalog
 
 FREE_TEXT = (

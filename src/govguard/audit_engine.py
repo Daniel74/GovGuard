@@ -6,12 +6,12 @@ from collections.abc import Callable, Iterable
 from pydantic_ai.exceptions import ModelAPIError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
-from govguard.audit_gates import completeness_problems
-from govguard.audit_packages import PackageRequest, package_requests
-from govguard.corrections import AuditValidationError, Corrections
-from govguard.evidence import evidence_of
-from govguard.fail_judge import judge_fails
-from govguard.inventory import resource_inventory
+from govguard.calls.audit_packages import PackageRequest, package_requests
+from govguard.calls.fail_judge import judge_fails
+from govguard.calls.inventory import resource_inventory
+from govguard.checks.audit_gates import completeness_problems
+from govguard.checks.corrections import AuditValidationError, Corrections
+from govguard.checks.evidence import evidence_of
 from govguard.models import (
     SEVERITY,
     AuditReport,

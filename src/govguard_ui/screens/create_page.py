@@ -6,14 +6,19 @@ from pathlib import Path
 
 import streamlit as st
 
+from govguard.adapters.groq_services import MissingApiKeyError, groq_model, model_name
 from govguard.audit_engine import MAX_INPUT_CHARS, AuditValidationError, with_thousand_dots
 from govguard.audit_setup import failure_text
-from govguard.groq_services import MissingApiKeyError, groq_model, model_name
 from govguard.models import AuditType, Expected
-from govguard_ui.audit_runner import backend_problem, progress_view, run_local, start_problem
 from govguard_ui.gallery import load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
-from govguard_ui.report_view import render_report
+from govguard_ui.report.report_view import render_report
+from govguard_ui.screens.audit_runner import (
+    backend_problem,
+    progress_view,
+    run_local,
+    start_problem,
+)
 from govguard_ui.style import CSS, status_word
 from govguard_ui.texts import DATA_RULE, TYPE_CHOICES
 

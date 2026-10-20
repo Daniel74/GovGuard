@@ -8,7 +8,12 @@ from pydantic_ai.models.function import FunctionModel
 from test_run_audit_progress import warn_for_every_rule
 
 from govguard.models import Progress, RuleCatalog
-from govguard_ui.audit_runner import backend_problem, progress_view, run_local, start_problem
+from govguard_ui.screens.audit_runner import (
+    backend_problem,
+    progress_view,
+    run_local,
+    start_problem,
+)
 
 SECRET = "korrekt-pferd"
 

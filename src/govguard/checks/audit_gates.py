@@ -2,8 +2,8 @@
 
 from collections import Counter
 
-from govguard.corrections import Problem
-from govguard.evidence import evidence_problem
+from govguard.checks.corrections import Problem
+from govguard.checks.evidence import evidence_problem
 from govguard.models import FindingDraft
 
 

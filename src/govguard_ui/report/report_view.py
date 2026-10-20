@@ -3,9 +3,9 @@
 import streamlit as st
 
 from govguard.models import AuditReport, Expected
-from govguard_ui.finding_detail import render_detail, render_document
-from govguard_ui.findings_view import render_findings
-from govguard_ui.report_header import render_expected, render_header
+from govguard_ui.report.finding_detail import render_detail, render_document
+from govguard_ui.report.findings_view import render_findings
+from govguard_ui.report.report_header import render_expected, render_header
 
 
 def render_report(

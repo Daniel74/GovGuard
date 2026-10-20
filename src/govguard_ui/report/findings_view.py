@@ -1,22 +1,25 @@
 """Finding table with status and source filter, the gap checklist and the selected finding;
-the same for spec and architecture audits (#11, #43, #45)."""
+the same for spec and architecture audits. The selection (<key>_selected) is read and written
+only here (#11, #43, #45)."""
 
 from collections import defaultdict
+from functools import partial
 
 import streamlit as st
 
 from govguard.models import AuditReport, Finding
-from govguard_ui.finding_detail import plain
-from govguard_ui.finding_list import render_rows
-from govguard_ui.review import (
+from govguard_ui.report.finding_detail import plain
+from govguard_ui.report.finding_table import render_table
+from govguard_ui.report.review import (
     ALL_SOURCES,
     category,
     category_counts,
+    lines_text,
     of_source,
     source_counts,
     visible_findings,
 )
-from govguard_ui.style import LOOKS, STATUS_FILTERS
+from govguard_ui.style import LOOKS, STATUS_FILTERS, status_word
 
 DEFAULT_FILTERS = ["FAIL", "WARN", "PASS"]  # N/A hidden by default (design artefact)
 GAPS_HEIGHT = 360  # a long gap list scrolls
@@ -58,8 +61,37 @@ def _source_filter(findings: list[Finding], key: str) -> str | None:
 
 def _selected(findings: list[Finding], shown: list[Finding], key: str) -> Finding:
     by_rule = {f.rule_id: f for f in findings}
-    selected = by_rule.get(st.session_state.get(f"{key}_selected"))
+    selected = by_rule.get(st.session_state.get(_selection_key(key)))
     return selected or (shown or findings)[0]
+
+
+def _selection_key(key: str) -> str:
+    return f"{key}_selected"
+
+
+def select(key: str, rule_id: str | None) -> None:
+    """Writes the selection; also the callback of an expected check in the header."""
+    st.session_state[_selection_key(key)] = rule_id
+
+
+def render_rows(findings: list[Finding], key: str, selected: Finding) -> None:
+    render_table(table_rows(findings), selected.rule_id, f"{key}_table",
+                 on_select=partial(select, key))
+
+
+def table_rows(findings: list[Finding]) -> list[dict[str, str]]:
+    """Plain values for the finding table; LLM text stays raw, the cell sets it as textContent."""
+    return [{"id": f.rule_id, "look": LOOKS[category(f)].css, "status": status_text(f),
+             "title": f.title, "primary_anchor": f.primary_anchor, "lines": lines_text(f)}
+            for f in findings]
+
+
+def status_text(finding: Finding) -> str:
+    look = LOOKS[category(finding)]
+    status = f"{look.symbol} {look.label}"
+    if finding.downgraded_from:  # a downgrade stays visible in the list (ADR 0017)
+        status += f"\n↓ von {status_word(finding.downgraded_from)}"  # own line: narrow column
+    return status
 
 
 def _gap_checklist(findings: list[Finding], source: str | None, key: str) -> None:

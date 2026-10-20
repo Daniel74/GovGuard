@@ -5,7 +5,7 @@ from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from govguard.audit_engine import AuditValidationError, run_audit
-from govguard.inventory import NA_FORBIDDEN
+from govguard.calls.inventory import NA_FORBIDDEN
 
 S3_PASS = {"rule_id": "ARCH-CIS-3.1.4", "status": "PASS", "line_start": 7, "line_end": 7,
            "rationale": "Gesetzt.", "recommendation": None}  # line 7: "BlockPublicAcls": true

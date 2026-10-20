@@ -11,8 +11,8 @@ from pydantic_ai import Agent, ModelRetry, NativeOutput, RunContext, ToolOutput
 from pydantic_ai.exceptions import ModelAPIError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
-from govguard.corrections import Corrections, service_down
-from govguard.evidence import evidence_of
+from govguard.checks.corrections import Corrections, service_down
+from govguard.checks.evidence import evidence_of
 from govguard.models import FindingDraft, Provider, Rule, provider_of
 from govguard.open_world import AuditInput, OpenWorld
 

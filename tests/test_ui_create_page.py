@@ -104,7 +104,7 @@ def test_create_page_refuses_a_backend_other_than_local() -> None:
 def test_with_the_password_the_audit_runs_and_stays_only_in_the_session(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    monkeypatch.setattr("govguard_ui.create_page.groq_model",
+    monkeypatch.setattr("govguard_ui.screens.create_page.groq_model",
                         lambda: FunctionModel(warn_for_every_rule, model_name="fake-groq"))
     app = page(create_script, APP_PASSWORD="geheim", AUDIT_BACKEND="local")
 

@@ -98,7 +98,7 @@ def free_text_without_fail_script() -> None:
     from govguard.models import FailJudgeCount
     from govguard_ui.gallery import load_gallery
     from govguard_ui.paths import GALLERY, PRESETS
-    from govguard_ui.report_header import render_header
+    from govguard_ui.report.report_header import render_header
 
     entry = next(e for e in load_gallery(PRESETS, GALLERY) if e.preset_id == "arch-protokollarchiv")
     render_header(entry.report.model_copy(update={"fail_judge": FailJudgeCount()}), "t", "ft")
@@ -134,7 +134,7 @@ def deviating_script() -> None:
     from govguard.models import Expected
     from govguard_ui.gallery import load_gallery
     from govguard_ui.paths import GALLERY, PRESETS
-    from govguard_ui.report_header import render_expected
+    from govguard_ui.report.report_header import render_expected
 
     entry = load_gallery(PRESETS, GALLERY)[0]
     render_expected(entry.report, Expected(overall_status="PASS", required_findings=[]), "dev")

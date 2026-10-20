@@ -10,10 +10,10 @@ from pydantic_ai.messages import ModelMessage, ModelResponse, TextPart, ToolCall
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 from test_token_budget import FakeTime
 
-from govguard import audit_packages
 from govguard.audit_engine import AuditValidationError, run_audit
+from govguard.calls import audit_packages
+from govguard.checks.token_budget import TokenBudget
 from govguard.models import RuleCatalog
-from govguard.token_budget import TokenBudget
 
 INPUT = "Alle Zugriffe erfolgen ausschließlich über TLS 1.3."
 

@@ -5,8 +5,7 @@ import html
 import streamlit as st
 
 from govguard.models import Finding
-from govguard_ui.finding_list import lines_text
-from govguard_ui.review import category, document_window
+from govguard_ui.report.review import category, document_window, lines_text
 from govguard_ui.style import badge, paragraph, status_word, tag
 
 MARKDOWN_SIGNS = set("\\`*_{}[]()#+-.!|<>~$:")  # incl. Streamlit's :colour[...] and $formula$

@@ -3,8 +3,8 @@ from botocore.client import BaseClient
 from botocore.stub import Stubber
 from pydantic_ai.models.bedrock import BedrockConverseModel
 
+from govguard.adapters.aws_services import bedrock_model
 from govguard.audit_engine import run_audit
-from govguard.aws_services import bedrock_model
 from govguard.models import RuleCatalog, Trace
 
 

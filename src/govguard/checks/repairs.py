@@ -3,7 +3,7 @@
 Like a downgrade (ADR 0017): no retry, but a correction line in the finding.
 """
 
-from govguard.corrections import Correction
+from govguard.checks.corrections import Correction
 from govguard.models import SEVERITY, FindingDraft, Rule
 
 _RECOMMENDATION_PREFIX = {"WARN": "Falls nicht erfüllt: ", "FAIL": ""}  # WARN: maybe fine

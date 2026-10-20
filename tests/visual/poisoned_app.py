@@ -6,7 +6,7 @@ The gallery holds no such report, and src/ has no test hook: the poisoned_url fi
 
 from govguard_ui.gallery import load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
-from govguard_ui.report_view import render_report
+from govguard_ui.report.report_view import render_report
 
 POISON = '<a href="https://evil.example">link</a> <img src="x.png"> <b>tag</b>'
 SPEC = "spec-meldeportal-gesundheit"

@@ -1,6 +1,6 @@
 """Evidence by line reference (ADR 0017): range checks shared by audit and free-text pre-run."""
 
-from govguard.evidence import range_problem
+from govguard.checks.evidence import range_problem
 from govguard.text import contains_quote
 
 TEXT = "**S3-Bucket** ist\nDer Archiv-Bucket blockiert öffentlichen Zugriff."

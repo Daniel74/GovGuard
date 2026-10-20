@@ -183,10 +183,10 @@ Die Bedrock Converse API erlaubt, dem Modell „Tools“ anzubieten. Jedes Tool 
 Den Aufruf baut Pydantic AI (ADR 0005): Aus dem Draft-Modell entsteht das Tool-Schema, und weil es nur dieses eine Ausgabe-Tool gibt, sendet das Framework `toolChoice: any`, also „ein Tool ist Pflicht“.
 
 ```python
-# aws_services.py – einziger Ort mit boto3
+# adapters/aws_services.py – einziger Ort mit boto3
 model = BedrockConverseModel("eu.anthropic.claude-haiku-4-5-20251001-v1:0")   # EU-Profil, ADR 0001
 
-# audit_packages.py – rein, bekommt das Modell übergeben
+# calls/audit_packages.py – rein, bekommt das Modell übergeben
 audit_agent = Agent(
     output_type=ToolOutput(AuditResponse, name="submit_audit",       # Groq: NativeOutput (ADR 0016)
                            description="Gib genau einen Befund je Prüfregel ab.",
@@ -260,13 +260,13 @@ flowchart TB
     R["kb_build/*/run.py<br/>Dateien lesen + schreiben,<br/>Pfade aus paths.py"]
   end
   subgraph L["Logik – rein, ohne I/O"]
-    AE["govguard/audit_engine.py<br/>+ audit_packages.py, audit_gates.py, corrections.py,<br/>evidence.py, fail_judge.py, inventory.py, models.py,<br/>open_world.py, repairs.py, text.py"]
+    AE["govguard/audit_engine.py, models.py, open_world.py, text.py<br/>+ calls/ (audit_packages, fail_judge, inventory)<br/>+ checks/ (audit_gates, corrections, evidence,<br/>repairs, token_budget)"]
     KB["kb_build/extract, decompose, select, rules,<br/>reference (ohne run.py), gates.py, build_log.py"]
-    RV["govguard_ui/review.py<br/>Report lesen: Lücke, Soll-Abgleich"]
+    RV["govguard_ui/report/review.py<br/>Report lesen: Lücke, Soll-Abgleich"]
   end
   subgraph A["Adapter – einziger Ort für AWS, Groq, HTTP"]
-    AWS["govguard/aws_services.py<br/>boto3, Bedrock-Modell"]
-    GQ["govguard/groq_services.py<br/>Groq-Modell, Laufzeit + Build"]
+    AWS["govguard/adapters/aws_services.py<br/>boto3, Bedrock-Modell"]
+    GQ["govguard/adapters/groq_services.py<br/>Groq-Modell, Laufzeit + Build"]
     FE["kb_build/source_fetch.py<br/>HTTP + SHA-256"]
   end
   subgraph X["Extern"]
@@ -293,7 +293,11 @@ Von der Logik führt **kein Pfeil** zu den Adaptern, und von der Demo-UI keiner 
 Jeder Ordner auf oberster Ebene ist eine eigene Deployment-Einheit oder eine Datenart. `src/kb_build/` hat je Build-Kommando einen Unterordner, `data/` ist nach Herkunft getrennt:
 
 ```
-src/govguard/         Laufzeit-Kern, wird zum Lambda-Paket
+src/govguard/         Laufzeit-Kern, wird zum Lambda-Paket (ADR 0027)
+  (Root)              audit_engine, models, open_world, text, audit_setup, cli: Einstiege und Verträge
+  calls/              spricht mit dem Modell: audit_packages, fail_judge, inventory
+  checks/             rein: audit_gates, corrections, evidence, repairs, token_budget
+  adapters/           aws_services (boto3, Bedrock), groq_services
 src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, nie umgekehrt)
   __main__.py         Einstieg; gates.py, build_log.py (Retries im Build-Log), paths.py (alle Datenpfade), source_fetch.py
   extract/            Adapter je Quelle (bsi, cis, c5, dsgvo, fsbp, sdm, prowler), formex.py, models.py, run.py
@@ -304,6 +308,10 @@ src/kb_build/         Build-Werkzeug: python -m kb_build (importiert govguard, n
 infra/                CDK-App des GovGuard-Stacks
 src/govguard_ui/      Streamlit-Demo (ADR 0023): ruft run_audit im eigenen Prozess mit Groq auf;
                       Start über streamlit_app.py im Root
+  (Root)              app, navigation (alle drei Seiten), gallery, paths, style, texts
+  screens/            drei Seiten (start_page, gallery_page, create_page), audit_runner
+  report/             eine Report-Ansicht, Interface render_report (report_view, report_header,
+                      findings_view mit Auswahl, finding_detail, finding_table, review)
 data/input/           von Hand gepflegt: sources.json (URL, Version, SHA-256, Lizenz; ADR 0008),
                       scope.json (Prüfumfang, ADR 0011), archetype_profiles.json,
                       cfn_resource_types.json, cfn_properties.json, presets/ (6 Presets mit Soll-Ergebnis)
@@ -317,7 +325,7 @@ tests/                pytest, flach
 .github/workflows/    build-kb.yml, deploy.yml
 ```
 
-- **Adapter für I/O:** Nur `aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `groq_services.py` baut das Groq-Modell für Laufzeit und Build (ADR 0014, 0023), nur `source_fetch.py` lädt Quellen aus dem Netz. Kein Modul startet Prozesse (ADR 0019). Die Demo-UI lädt weder `cli.py` noch `aws_services.py`, auch nicht über Umwege. Tests prüfen das.
+- **Adapter für I/O:** Nur `adapters/aws_services.py` importiert boto3 und baut das Bedrock-Modell für Pydantic AI, nur `adapters/groq_services.py` baut das Groq-Modell für Laufzeit und Build (ADR 0014, 0023), nur `source_fetch.py` lädt Quellen aus dem Netz. Kein Modul startet Prozesse (ADR 0019). Die Demo-UI lädt weder `cli.py` noch `aws_services.py`, auch nicht über Umwege. `checks/` importiert nie `calls/` oder `adapters/`, `report/` nie `screens/`. Tests prüfen das.
 - **Keine Logik in Klebe-Code:** Einstiegsdateien und Workflow-YAML verbinden nur. Was CLI und UI teilen, liegt in `audit_setup.py`; kein Einstieg importiert einen anderen. Ein Workflow meldet sich an, ruft `python -m …` auf und öffnet den PR. Derselbe Befehl läuft lokal.
 - **src-Layout:** Der CDK-Stack packt mit `Code.from_asset("src/govguard")` genau den Laufzeit-Kern, ohne Build-Code, UI oder Daten.
 

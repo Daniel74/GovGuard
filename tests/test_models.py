@@ -4,7 +4,7 @@ import pytest
 from pydantic import ValidationError
 from pydantic_ai.models.function import FunctionModel
 
-from govguard.groq_services import groq_model
+from govguard.adapters.groq_services import groq_model
 from govguard.models import (
     AuditEvent,
     Preset,

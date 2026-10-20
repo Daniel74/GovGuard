@@ -12,13 +12,13 @@ from pydantic import BaseModel
 from pydantic_ai import Agent, ModelRetry, NativeOutput, RunContext, ToolOutput
 from pydantic_ai.models import Model
 
-from govguard.audit_gates import answer_problems
-from govguard.corrections import Corrections, downgrades_of
-from govguard.evidence import MAX_SPAN, NUMBERED_LINES, numbered, without_unproven_verdict
+from govguard.checks.audit_gates import answer_problems
+from govguard.checks.corrections import Corrections, downgrades_of
+from govguard.checks.evidence import MAX_SPAN, NUMBERED_LINES, numbered, without_unproven_verdict
+from govguard.checks.repairs import with_rule_recommendations, worst_of_duplicates
+from govguard.checks.token_budget import GROQ_TOKENS_PER_MINUTE, TokenBudget, estimated_tokens
 from govguard.models import AuditResponse, FindingDraft, Provider, Rule, provider_of
 from govguard.open_world import AuditInput, OpenWorld
-from govguard.repairs import with_rule_recommendations, worst_of_duplicates
-from govguard.token_budget import GROQ_TOKENS_PER_MINUTE, TokenBudget, estimated_tokens
 
 SYSTEM_PROMPT = f"""\
 Du bist ein Compliance-Prüfer für Behörden-IT. Bewerte die Eingabe gegen jede Prüfregel.

@@ -8,7 +8,7 @@ import html
 
 from pydantic import BaseModel
 
-from govguard_ui.review import Category
+from govguard_ui.report.review import Category
 
 
 class Look(BaseModel):  # the one table per category: badge, counter, help and start page

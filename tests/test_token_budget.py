@@ -2,7 +2,7 @@
 
 import asyncio
 
-from govguard.token_budget import TokenBudget, estimated_tokens
+from govguard.checks.token_budget import TokenBudget, estimated_tokens
 
 
 class FakeTime:

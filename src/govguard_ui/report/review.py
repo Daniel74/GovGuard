@@ -102,3 +102,11 @@ def document_window(text: str, finding: Finding, full: bool) -> DocumentWindow:
     ]
     return DocumentWindow(lines=lines, hidden_above=first - 1)
 
+
+def lines_text(finding: Finding) -> str:
+    """Evidence lines for a table cell or caption: "–", "46" or "46–49"."""
+    if finding.line_start is None:
+        return "–"
+    if finding.line_start == finding.line_end:
+        return str(finding.line_start)
+    return f"{finding.line_start}–{finding.line_end}"

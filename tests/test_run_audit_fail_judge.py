@@ -11,7 +11,7 @@ from test_run_audit import PASS_32, WARN_9
 from test_run_audit_schema import GroqFake
 
 from govguard.audit_engine import run_audit
-from govguard.corrections import SCHEMA_PROBLEM
+from govguard.checks.corrections import SCHEMA_PROBLEM
 from govguard.models import FailJudgeCount
 
 JUDGE_TOOL = "submit_fail_verdicts"

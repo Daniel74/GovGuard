@@ -3,7 +3,7 @@
 import pytest
 from pydantic_ai.models.groq import GroqModel
 
-from govguard.groq_services import DEFAULT_MODEL, groq_model, model_name
+from govguard.adapters.groq_services import DEFAULT_MODEL, groq_model, model_name
 
 
 def test_groq_model_uses_the_default_model(monkeypatch: pytest.MonkeyPatch) -> None:

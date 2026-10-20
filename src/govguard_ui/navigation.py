@@ -5,7 +5,7 @@ import base64
 import streamlit as st
 from streamlit.navigation.page import StreamlitPage
 
-from govguard_ui import create_page, gallery_page
+from govguard_ui.screens import create_page, gallery_page, start_page
 
 SHIELD = ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" '
           'fill="none" stroke="#0B4F8A" stroke-width="2" stroke-linecap="round" '
@@ -21,6 +21,15 @@ BRAND = (f'<div class="gg-brand"><img src="{LOGO}" alt=""><div><b>GovGuard</b>'
          '<span>Prüfassistent</span></div></div>')
 
 
+def pages() -> list[StreamlitPage]:
+    """All three pages, in the order of the sidebar."""
+    return [home_page(), audits_page(), create_audit_page()]
+
+
+def home_page() -> StreamlitPage:
+    return st.Page(start_page.render, title="Start & Hilfe", default=True)  # served at /
+
+
 def audits_page() -> StreamlitPage:
     return st.Page(gallery_page.render, title="Audits ansehen", url_path="audits")
 
@@ -29,12 +38,12 @@ def create_audit_page() -> StreamlitPage:
     return st.Page(create_page.render, title="Audit erstellen", url_path="erstellen")
 
 
-def sidebar(pages: list[StreamlitPage]) -> None:
+def sidebar(entries: list[StreamlitPage]) -> None:
     """Brand, one link per page, demo note, source and contact; replaces Streamlit's own
     navigation."""
     with st.sidebar:
         st.html(BRAND)
-        for page in pages:
+        for page in entries:
             st.page_link(page)
         st.space("small")  # air above the note, as in the design
         st.caption("Demo-Stand · nur fiktive Daten")

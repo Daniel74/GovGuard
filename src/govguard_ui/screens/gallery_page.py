@@ -4,7 +4,7 @@ import streamlit as st
 
 from govguard_ui.gallery import GalleryEntry, load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
-from govguard_ui.report_view import render_report
+from govguard_ui.report.report_view import render_report
 from govguard_ui.style import CSS
 from govguard_ui.texts import TYPE_LABELS
 

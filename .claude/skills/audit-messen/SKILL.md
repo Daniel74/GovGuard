@@ -5,7 +5,7 @@ description: CLI-Audit gegen echtes Bedrock oder Groq laufen lassen und Laufzeit
 
 Jeder Lauf kostet echtes Geld (Kosten-Weiche, CLAUDE.md). Die CLI kennt `spec` und `arch` (Architektur, Katalog `rules_arch.json`).
 
-1. **Kosten schätzen, Go holen.** Pakete = ⌈Prüfregeln / 10⌉ (`PACKAGE_SIZE` in `audit_packages.py`). Jedes Paket schickt die ganze Eingabe mit Zeilennummern mit: ca. 2,2 Zeichen je Token (Nummern kosten ca. 17 % mehr). Kosten Bedrock ≈ Pakete × (Eingabe-Tokens × 1,10 $ + 2.500 × 5,50 $) / 1 Mio.; Groq ≈ Pakete × (Eingabe-Tokens × 0,15 $ + 2.500 × 0,60 $) / 1 Mio. Nenne die Schätzung und warte auf das Go. Für eine billige Diagnose reicht ein Katalog mit 10 Regeln (ein Paket, ca. 0,05 $): `rules[:10]` aus `data/knowledge_base/rules_spec.json` in eine Scratchpad-Datei schreiben und mit `--catalog` übergeben.
+1. **Kosten schätzen, Go holen.** Pakete = ⌈Prüfregeln / 10⌉ (`PACKAGE_SIZE` in `calls/audit_packages.py`). Jedes Paket schickt die ganze Eingabe mit Zeilennummern mit: ca. 2,2 Zeichen je Token (Nummern kosten ca. 17 % mehr). Kosten Bedrock ≈ Pakete × (Eingabe-Tokens × 1,10 $ + 2.500 × 5,50 $) / 1 Mio.; Groq ≈ Pakete × (Eingabe-Tokens × 0,15 $ + 2.500 × 0,60 $) / 1 Mio. Nenne die Schätzung und warte auf das Go. Für eine billige Diagnose reicht ein Katalog mit 10 Regeln (ein Paket, ca. 0,05 $): `rules[:10]` aus `data/knowledge_base/rules_spec.json` in eine Scratchpad-Datei schreiben und mit `--catalog` übergeben.
 2. **Anmeldung prüfen.** `aws sts get-caller-identity --profile Student-919519434628`. Bei „Token has expired“ den Nutzer bitten, `aws sso login --profile Student-919519434628` selbst auszuführen (Browser), und warten.
 3. **Messen.** Ausgaben in den Scratchpad:
 
@@ -26,10 +26,10 @@ Jeder Lauf kostet echtes Geld (Kosten-Weiche, CLAUDE.md). Die CLI kennt `spec` u
 
 ## Fallstricke
 
-- Groq: `MEASURE_MODEL=groq` nimmt `groq_model()` aus `govguard/groq_services.py` (Key per `set -a; source .env`). Groq ist zur Laufzeit eine ausdrückliche Option, nur mit fiktiven Presets (ADR 0016). Tokens meldet Groq inkl. Denk-Tokens. Limit 250.000 Tokens/min: Gemessen sind ca. 110.000 Tokens/min je gleichzeitigem Paket, deshalb laufen höchstens 2 Pakete gleichzeitig (`GROQ_MAX_PARALLEL`); der volle Katalog dauert damit mindestens ca. 2,3 min. Kommt trotzdem HTTP 429, ist ein Token-Budget je Minute die nächste Stellschraube.
+- Groq: `MEASURE_MODEL=groq` nimmt `groq_model()` aus `govguard/adapters/groq_services.py` (Key per `set -a; source .env`). Groq ist zur Laufzeit eine ausdrückliche Option, nur mit fiktiven Presets (ADR 0016). Tokens meldet Groq inkl. Denk-Tokens. Limit 250.000 Tokens/min: Gemessen sind ca. 110.000 Tokens/min je gleichzeitigem Paket, deshalb laufen höchstens 2 Pakete gleichzeitig (`GROQ_MAX_PARALLEL`); der volle Katalog dauert damit mindestens ca. 2,3 min. Kommt trotzdem HTTP 429, ist ein Token-Budget je Minute die nächste Stellschraube.
 - Belege per Zeilenverweis (ADR 0017): Bei WARN, FAIL und N/A verwirft der Code einen unbrauchbaren Bereich (ungültig, umgedreht, zu groß, zu kurz), ein FAIL ohne Bereich wird still WARN, beides ohne Retry. Ein PASS ohne brauchbaren Bereich bekommt einen Retry und wird danach still WARN. Die Abbruchmeldung nennt den Status, z. B. `Art.12 (PASS): …`. Im Report ist das noch nicht sichtbar (#27).
 - Bei Exit 2 stehen die Probleme des letzten Versuchs in `stats.txt` nach „Audit fehlgeschlagen“. Die Retry-Prompts zeigen nur die Probleme des ersten Versuchs.
 
 - Scheitert ein Paket endgültig, bricht `asyncio.run` die übrigen ab. `calls` zählt dann nur fertige Aufrufe; Bedrock berechnet abgebrochene trotzdem. Die Zahl der Retry-Prompts zeigt, wie viele Pakete wirklich Probleme hatten.
-- Preise: Haiku 4.5 kostet 1 $ / 5 $ je Mio. Tokens, das `eu.`-Profil 10 % mehr (Anthropic-Preisdoku). Ändert sich `MODEL_ID` in `aws_services.py`, die Preiszeile in `measure.py` anpassen.
+- Preise: Haiku 4.5 kostet 1 $ / 5 $ je Mio. Tokens, das `eu.`-Profil 10 % mehr (Anthropic-Preisdoku). Ändert sich `MODEL_ID` in `adapters/aws_services.py`, die Preiszeile in `measure.py` anpassen.
 - Basislinie 14.10.2026, `spec-wohngeld-openapi` (84 KB, 151 Regeln, 16 Pakete), noch mit wörtlichen Zitaten: ca. 39 s, 32 Tsd. Input-Tokens und ca. 3.000 Output-Tokens je Aufruf, langsamster Aufruf 37 s, ca. 0,90 $, fail closed wegen zusammengesetzter Belege.

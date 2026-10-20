@@ -3,8 +3,8 @@ from pydantic_ai.messages import ModelMessage, ModelResponse, RetryPromptPart, T
 from pydantic_ai.models.function import AgentInfo, FunctionModel
 
 from govguard.audit_engine import AuditValidationError, run_audit
-from govguard.evidence import UNPROVEN_PASS
-from govguard.inventory import NA_FORBIDDEN
+from govguard.calls.inventory import NA_FORBIDDEN
+from govguard.checks.evidence import UNPROVEN_PASS
 
 SPEC_RULE_BEFORE_46 = (
     "Spezifikation (offene Welt): Was die Eingabe nicht erwähnt, kann anderswo geregelt sein. "

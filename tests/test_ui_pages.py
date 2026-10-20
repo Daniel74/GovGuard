@@ -98,7 +98,7 @@ def test_the_sidebar_ends_with_source_code_and_contact() -> None:
 
 
 def test_every_category_has_one_look_and_the_start_page_explains_it() -> None:
-    from govguard_ui.review import CATEGORIES
+    from govguard_ui.report.review import CATEGORIES
     from govguard_ui.style import LOOKS
 
     app = page(start_script)
@@ -144,7 +144,7 @@ def first_gap_rule() -> str:
     """Rule id of the first gap in the stored spec report, to show a gap in the detail."""
     from govguard_ui.gallery import load_gallery
     from govguard_ui.paths import GALLERY, PRESETS
-    from govguard_ui.review import category
+    from govguard_ui.report.review import category
 
     entries = {e.preset_id: e for e in load_gallery(PRESETS, GALLERY)}
     report = entries["spec-meldeportal-gesundheit"].report
