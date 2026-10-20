@@ -9,6 +9,8 @@ from typing import Literal
 from pydantic import AliasChoices, BaseModel, Field, model_validator
 from pydantic_ai.models import Model
 
+from govguard.condition_models import ConditionResult, ConditionValue
+
 Status = Literal["PASS", "WARN", "FAIL", "N/A"]
 # Worst status wins; N/A only if every finding is N/A (DESIGN 2.1)
 SEVERITY: dict[Status, int] = {"N/A": 0, "PASS": 1, "WARN": 2, "FAIL": 3}
@@ -102,7 +104,7 @@ class FailJudgeCount(BaseModel):  # verdicts of the FAIL judge in one open-world
 
 
 class Progress(BaseModel):  # reported while an audit runs, for UI and audit job (ADR 0023)
-    phase: Literal["inventory", "packages", "fail_judge"]
+    phase: Literal["conditions", "inventory", "packages", "fail_judge"]
     packages_done: int = 0
     packages_total: int = 0  # counts belong to phase "packages" only, known after the inventory
 
@@ -117,6 +119,7 @@ class AuditReport(BaseModel):
     retries: int = 0  # packages and the FAIL judge sent back once; no per-package view (#27)
     fail_judge: FailJudgeCount = FailJudgeCount()
     closed_world: bool = False  # a template the code parsed: no FAIL judge (ADR 0020, #46)
+    conditions: dict[str, ConditionResult] = {}  # spec audit: condition id -> value (#60)
 
 
 class AuditEvent(BaseModel):  # one JSON line in CloudWatch Logs, no evidence (DSGVO Art. 5(1)(c))
@@ -142,6 +145,7 @@ class Expected(BaseModel):
     overall_status: Status
     required_findings: list[RequiredFinding]
     archetype: ArchetypeId | None = None
+    conditions: dict[str, ConditionValue] = {}  # spec: value per condition id (#60)
 
 
 class Preset(BaseModel):  # file data/input/presets/<id>/preset.json

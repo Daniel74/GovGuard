@@ -910,11 +910,11 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 - [x] **Vorbereiten** 🤖 · Arbeitsbaum prüfen, FAHRPLAN committen, `git tag vor-bedingungen`
 - [x] **#59 bauen** 🤖 _Sonnet_-Agent · Vorfilter in `kb_build/extract/dsgvo.py` per TDD, Spec-Katalog neu bauen (ohne neue LLM-Aufrufe, sonst Halt), ADR 0028 (Teil Vorfilter), Tabelle Prüfgrundlagen in SPEC.md. Gegenprobe: `git diff --stat data/knowledge_base/` zeigt nur die Regeln der vier Artikel.
 - [x] **#59 prüfen** 🤖 _Opus_-Agent · `/code-review gegen Issue #59` → Befunde beheben → Commit „#59 …“
-- [ ] **#60 Prompt** 🤖 Hauptsession entwirft den Prompt-Text. Ein frischer _Opus_-Agent nimmt ihn gegen ADR 0020 und #60 ab: Nur eine ausdrückliche Verneinung für das ganze Vorhaben ist `no` (Meldeportal Zeile 47 verneint die Einwilligung nur für die Auswertung), Schweigen ist `unstated`, Belegzeilen für Verneinen und Belegen getrennt. Ergebnis als Kommentar in #60.
-- [ ] **#60 bauen** 🤖 _Sonnet_-Agent · `conditions.json`, Vorlauf in `calls/`, Gates in `checks/`, N/A vor den Paketen, `AuditReport.conditions`, Soll je Bedingung in `preset.json`, ADR 0028, CONTEXT.md, SPEC B6
-- [ ] **#60 messen** 🤖 `/audit-messen spec-govguard, spec-meldeportal-gesundheit und spec-wohngeld-openapi je 1× mit Groq` → Tabelle in #60: Bedingungen gegen Soll, Lücken vorher und nachher, Pflichtbefunde
-- [ ] **Halt 1: Messung** 👤 Tabelle in #60 lesen → „weiter“ oder Korrektur
-- [ ] **#60 prüfen** 🤖 _Opus_-Agent · `/code-review gegen Issue #60` → Befunde beheben → Commit „#60 …“
+- [x] **#60 Prompt** 🤖 Hauptsession entwirft den Prompt-Text. Ein frischer _Opus_-Agent nimmt ihn gegen ADR 0020 und #60 ab: Nur eine ausdrückliche Verneinung für das ganze Vorhaben ist `no` (Meldeportal Zeile 47 verneint die Einwilligung nur für die Auswertung), Schweigen ist `unstated`, Belegzeilen für Verneinen und Belegen getrennt. Ergebnis als Kommentar in #60.
+- [x] **#60 bauen** 🤖 _Sonnet_-Agent · `conditions.json`, Vorlauf in `calls/`, Gates in `checks/`, N/A vor den Paketen, `AuditReport.conditions`, Soll je Bedingung in `preset.json`, ADR 0028, CONTEXT.md, SPEC B6
+- [x] **#60 messen** 🤖 `/audit-messen spec-govguard, spec-meldeportal-gesundheit und spec-wohngeld-openapi je 1× mit Groq` → Tabelle in #60: Bedingungen gegen Soll, Lücken vorher und nachher, Pflichtbefunde
+- [x] **Halt 1: Messung** 👤 Tabelle in #60 lesen → „weiter“ oder Korrektur
+- [x] **#60 prüfen** 🤖 _Opus_-Agent · `/code-review gegen Issue #60` → Befunde beheben → Commit „#60 …“
 - [ ] **#61 bauen** 🤖 _Sonnet_-Agent · nach dem Prototyp-Kommentar in #61 neu schreiben, nicht kopieren: Rahmen mit Pills und Popover, Abschnitt „Lücken“, N/A-Detail mit Beleg, Tests mit `AppTest`, Design-Artefakt nachziehen
 - [ ] **#61 Galerie und Bilder** 🤖 `/audit-messen` der 3 Spec-Musterfälle mit Groq, Reports nach `data/gallery/`; `uv run pytest -m visual` → neue Bilder in einen Ordner zum Ansehen legen, noch nicht übernehmen
 - [ ] **Halt 2: Referenzbilder und Galerie** 👤 Bilder und Soll-Abweichungen ansehen, `/run` → „übernehmen“ oder Korrektur

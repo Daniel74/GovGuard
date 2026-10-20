@@ -6,7 +6,7 @@ from pathlib import Path
 from pydantic_ai.models import Model
 
 from govguard.audit_engine import InputTooLongError, OnProgress, check_input_length, run_audit
-from govguard.audit_setup import CATALOGS, make_trace
+from govguard.audit_setup import CATALOGS, conditions_for, make_trace
 from govguard.models import AuditReport, AuditType, Progress, RuleCatalog
 from govguard_ui.style import JUDGE_NAME
 
@@ -43,11 +43,14 @@ def run_local(
     catalog_file = catalog_file or CATALOGS[audit_type]
     catalog_bytes = catalog_file.read_bytes()
     return run_audit(RuleCatalog.model_validate_json(catalog_bytes), text, model,
-                     make_trace(text, catalog_bytes), on_progress=on_progress)
+                     make_trace(text, catalog_bytes), on_progress=on_progress,
+                     conditions=conditions_for(audit_type))
 
 
 def progress_view(progress: Progress) -> tuple[float, str]:
     """Bar fraction and label; the packages fill 90 %, the FAIL judge the rest."""
+    if progress.phase == "conditions":
+        return 0.0, "Bedingungen der Spezifikation feststellen …"
     if progress.phase == "inventory":
         return 0.0, "Ressourcen erkennen (KI-Vorlauf oder Template) …"
     if progress.phase == "fail_judge":

@@ -59,6 +59,7 @@ def test_local_run_audits_with_trace_and_reports_progress(
 
 
 @pytest.mark.parametrize(("progress", "fraction", "text"), [
+    (Progress(phase="conditions"), 0.0, "Bedingungen der Spezifikation feststellen …"),
     (Progress(phase="inventory"), 0.0, "Ressourcen erkennen (KI-Vorlauf oder Template) …"),
     (Progress(phase="packages", packages_total=16), 0.0, "Paket 0 von 16 geprüft"),
     (Progress(phase="packages", packages_done=4, packages_total=16), 0.225,

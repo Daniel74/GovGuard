@@ -1,0 +1,113 @@
+[
+  {
+    "id": "ki_system",
+    "name": "KI-System",
+    "only_if": "ein KI-System im Einsatz ist",
+    "meaning": "Software, die aus Eingaben selbst Ergebnisse wie Empfehlungen, Bewertungen oder Texte ableitet (Art. 3 Nr. 1 KI-VO), z. B. ein Sprachmodell. Ein Programm mit fest programmierten Regeln ist kein KI-System.",
+    "yes": "Die Eingabe beschreibt, dass das Vorhaben ein KI-System einsetzt.",
+    "no": "Die Eingabe schließt ein KI-System ausdrücklich aus.",
+    "anchors": [
+      "KI-VO Art. 4",
+      "KI-VO Art. 5",
+      "KI-VO Art. 6",
+      "KI-VO Art. 50"
+    ],
+    "rule_ids": []
+  },
+  {
+    "id": "high_risk_ai",
+    "name": "Hochrisiko-KI",
+    "only_if": "ein Hochrisiko-KI-System im Einsatz ist",
+    "meaning": "Ein KI-System in einem Bereich, den die KI-VO als hohes Risiko einstuft (Art. 6 und Anhang III), z. B. Zugang zu Sozialleistungen, Bildung, Beschäftigung oder Strafverfolgung.",
+    "yes": "Die Eingabe beschreibt ein KI-System, das in einem Bereich nach Anhang III KI-VO eingesetzt wird oder das sie als Hochrisiko-System einstuft.",
+    "no": "Die Eingabe schließt ein Hochrisiko-System ausdrücklich aus.",
+    "anchors": [
+      "KI-VO Art. 13",
+      "KI-VO Art. 14",
+      "KI-VO Art. 26",
+      "KI-VO Art. 27"
+    ],
+    "rule_ids": []
+  },
+  {
+    "id": "third_country",
+    "name": "Drittlandübermittlung",
+    "only_if": "personenbezogene Daten in ein Drittland übermittelt werden",
+    "meaning": "Personenbezogene Daten gehen an einen Empfänger außerhalb der EU und des EWR, z. B. an einen US-Dienstleister (Kapitel V DSGVO).",
+    "yes": "Die Eingabe nennt eine Übermittlung personenbezogener Daten in ein Drittland.",
+    "no": "Die Eingabe sagt ausdrücklich, dass alle Daten in der EU bzw. im EWR bleiben.",
+    "anchors": [
+      "DSGVO Art. 44",
+      "DSGVO Art. 45",
+      "DSGVO Art. 46",
+      "DSGVO Art. 48",
+      "DSGVO Art. 49"
+    ],
+    "rule_ids": []
+  },
+  {
+    "id": "processor",
+    "name": "Auftragsverarbeiter",
+    "only_if": "ein externer Dienstleister personenbezogene Daten im Auftrag verarbeitet",
+    "meaning": "Ein Dienstleister verarbeitet personenbezogene Daten im Auftrag der Behörde, z. B. ein Cloud- oder Analyseanbieter (Art. 28 DSGVO).",
+    "yes": "Die Eingabe nennt einen externen Dienstleister oder Cloud-Anbieter, der personenbezogene Daten im Auftrag verarbeitet oder speichert.",
+    "no": "Die Eingabe sagt ausdrücklich, dass kein Dienstleister Daten verarbeitet.",
+    "anchors": [
+      "DSGVO Art. 28",
+      "DSGVO Art. 29"
+    ],
+    "rule_ids": []
+  },
+  {
+    "id": "consent",
+    "name": "Einwilligung",
+    "only_if": "eine Verarbeitung auf einer Einwilligung beruht",
+    "meaning": "Eine Verarbeitung stützt sich auf die Einwilligung der betroffenen Person (Art. 6 Abs. 1 lit. a DSGVO). Bei Online-Diensten für Kinder gilt zusätzlich Art. 8.",
+    "yes": "Die Eingabe nennt eine Einwilligung als Rechtsgrundlage für mindestens eine Verarbeitung.",
+    "no": "Die Eingabe sagt ausdrücklich, dass keine Verarbeitung auf einer Einwilligung beruht.",
+    "anchors": [
+      "DSGVO Art. 7",
+      "DSGVO Art. 8"
+    ],
+    "rule_ids": []
+  },
+  {
+    "id": "multi_tenant",
+    "name": "Mandantenfähigkeit",
+    "only_if": "das System mehrere Mandanten bedient",
+    "meaning": "Ein System dient mehreren Stellen (Mandanten), deren Daten getrennt bleiben müssen, z. B. eine Fachanwendung für mehrere Landkreise. Viele Nutzer derselben Stelle sind keine Mandanten.",
+    "yes": "Die Eingabe beschreibt ein System, das mehrere Behörden oder Organisationen mit getrennten Daten nutzen; viele Nutzer derselben Stelle sind keine Mandanten.",
+    "no": "Die Eingabe sagt ausdrücklich, dass das System nur einer Stelle dient.",
+    "anchors": [],
+    "rule_ids": [
+      "SPEC-SDM-M50.S02",
+      "SPEC-SDM-M50.S03",
+      "SPEC-SDM-M50.S04",
+      "SPEC-SDM-M50.S07",
+      "SPEC-SDM-M50.S08",
+      "SPEC-SDM-M50.S11",
+      "SPEC-SDM-M50.S12",
+      "SPEC-SDM-M50.S13",
+      "SPEC-SDM-M50.S14",
+      "SPEC-SDM-M50.S16",
+      "SPEC-SDM-M50.S17",
+      "SPEC-SDM-M50.P02",
+      "SPEC-SDM-M50.P04",
+      "SPEC-SDM-M50.P08",
+      "SPEC-SDM-M50.P13",
+      "SPEC-SDM-M50.P17"
+    ]
+  },
+  {
+    "id": "automated_decision",
+    "name": "automatisierte Entscheidung",
+    "only_if": "eine Entscheidung ausschließlich automatisiert mit rechtlicher Wirkung fällt",
+    "meaning": "Eine Entscheidung mit rechtlicher Wirkung für eine Person fällt ausschließlich automatisiert, ohne dass ein Mensch sie prüft (Art. 22 DSGVO).",
+    "yes": "Die Eingabe beschreibt eine ausschließlich automatisierte Entscheidung mit rechtlicher Wirkung (Art. 22 DSGVO).",
+    "no": "Die Eingabe sagt ausdrücklich, dass Menschen jede solche Entscheidung treffen.",
+    "anchors": [
+      "DSGVO Art. 22"
+    ],
+    "rule_ids": []
+  }
+]

@@ -17,6 +17,15 @@
         "anchor": "KI-VO Art. 50 Abs. 2",
         "status": "PASS"
       }
-    ]
+    ],
+    "conditions": {
+      "ki_system": "yes",
+      "high_risk_ai": "no",
+      "third_country": "yes",
+      "processor": "yes",
+      "consent": "unstated",
+      "multi_tenant": "unstated",
+      "automated_decision": "no"
+    }
   }
 }

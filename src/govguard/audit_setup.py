@@ -4,16 +4,27 @@ No AWS here: the demo UI imports this module and must not load the Bedrock adapt
 """
 
 import hashlib
+import json
 import os
 import uuid
 from pathlib import Path
 
 from govguard.audit_engine import AuditValidationError
+from govguard.condition_models import ConditionDef
 from govguard.models import AuditType, Trace
 
 SPEC_CATALOG = Path("data/knowledge_base/rules_spec.json")
 ARCH_CATALOG = Path("data/knowledge_base/rules_arch.json")
 CATALOGS: dict[AuditType, Path] = {"spec": SPEC_CATALOG, "architecture": ARCH_CATALOG}
+CONDITIONS = Path("data/input/conditions.json")  # maintained by hand (ADR 0028)
+
+
+def conditions_for(audit_type: AuditType) -> list[ConditionDef]:
+    """The conditions of the spec audit; the architecture audit has none (#60)."""
+    if audit_type != "spec":
+        return []
+    return [ConditionDef.model_validate(item)
+            for item in json.loads(CONDITIONS.read_text(encoding="utf-8"))]
 
 
 def make_trace(input_text: str, catalog_bytes: bytes) -> Trace:

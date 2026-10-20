@@ -13,6 +13,15 @@
         "anchor": "SDM Löschen M60.P01",
         "status": "FAIL"
       }
-    ]
+    ],
+    "conditions": {
+      "ki_system": "unstated",
+      "high_risk_ai": "unstated",
+      "third_country": "yes",
+      "processor": "yes",
+      "consent": "no",
+      "multi_tenant": "unstated",
+      "automated_decision": "unstated"
+    }
   }
 }

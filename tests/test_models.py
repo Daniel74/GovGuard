@@ -1,4 +1,5 @@
 from datetime import UTC, datetime
+from pathlib import Path
 
 import pytest
 from pydantic import ValidationError
@@ -7,7 +8,10 @@ from pydantic_ai.models.function import FunctionModel
 from govguard.adapters.groq_services import groq_model
 from govguard.models import (
     AuditEvent,
+    AuditReport,
+    Expected,
     Preset,
+    Progress,
     RequiredFinding,
     RuleCatalog,
     Trace,
@@ -67,3 +71,24 @@ def test_provider_of_tells_groq_from_bedrock(monkeypatch: pytest.MonkeyPatch) ->
 
     assert provider_of(groq_model()) == "groq"
     assert provider_of(FunctionModel(lambda *_: None)) == "bedrock"  # test models like Bedrock
+
+
+def test_old_gallery_reports_without_conditions_still_load() -> None:
+    gallery = sorted(Path("data/gallery").glob("*.json"))
+    assert gallery
+    for file in gallery:
+        report = AuditReport.model_validate_json(file.read_text(encoding="utf-8"))
+        assert report.conditions == {}
+
+
+def test_a_preset_may_expect_a_value_per_condition() -> None:
+    expected = Expected(overall_status="WARN", required_findings=[],
+                        conditions={"consent": "unstated", "processor": "yes"})
+    assert expected.conditions["processor"] == "yes"
+    assert Expected(overall_status="WARN", required_findings=[]).conditions == {}
+    with pytest.raises(ValidationError):
+        Expected(overall_status="WARN", required_findings=[], conditions={"consent": "maybe"})
+
+
+def test_progress_has_a_conditions_phase() -> None:
+    assert Progress(phase="conditions").packages_total == 0

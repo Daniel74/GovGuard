@@ -15,7 +15,13 @@ from govguard.audit_engine import (
     check_input_length,
     run_audit,
 )
-from govguard.audit_setup import ARCH_CATALOG, SPEC_CATALOG, failure_text, make_trace
+from govguard.audit_setup import (
+    ARCH_CATALOG,
+    SPEC_CATALOG,
+    conditions_for,
+    failure_text,
+    make_trace,
+)
 from govguard.models import Provider, RuleCatalog
 
 
@@ -32,7 +38,9 @@ def main(argv: list[str] | None = None, model: Model | None = None) -> int:
     try:
         check_input_length(input_text)  # before the model: no key needed to learn it's too long
         model = model or model_for(args.provider)
-        report = run_audit(RuleCatalog.model_validate_json(catalog_bytes), input_text, model, trace)
+        catalog = RuleCatalog.model_validate_json(catalog_bytes)
+        report = run_audit(catalog, input_text, model, trace,
+                           conditions=conditions_for(catalog.audit_type))
     except InputTooLongError as error:  # rejected before the first LLM call
         print(error, file=sys.stderr)
         return 1

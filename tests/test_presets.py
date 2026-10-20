@@ -79,3 +79,23 @@ def test_foreign_preset_carries_its_required_findings_as_properties() -> None:
     topic, state_machine = template["FristTopic"], template["Fristenwecker"]
     assert "KmsMasterKeyId" not in topic["Properties"]  # FSBP SNS.1 = FAIL
     assert state_machine["Properties"]["LoggingConfiguration"]["Level"] == "ALL"  # StepFunctions.1
+
+
+IDS = ["ki_system", "high_risk_ai", "third_country", "processor", "consent", "multi_tenant",
+       "automated_decision"]
+SOLL = {  # #60: the value per condition, set by a human (comment "Prompt des Bedingungs-Vorlaufs")
+    "spec-govguard": "yes no yes yes unstated unstated no",
+    "spec-meldeportal-gesundheit": "unstated unstated yes yes no unstated unstated",
+    "spec-wohngeld-openapi": "unstated unstated no yes yes unstated no",
+}
+
+
+@pytest.mark.parametrize(("name", "values"), SOLL.items())
+def test_spec_presets_expect_a_value_per_condition(name: str, values: str) -> None:
+    assert load(PRESETS / name).expected.conditions == dict(zip(IDS, values.split(), strict=True))
+
+
+@pytest.mark.parametrize("preset_dir", [d for d in PRESET_DIRS if d.name.startswith("arch-")],
+                         ids=lambda path: path.name)
+def test_architecture_presets_expect_no_conditions(preset_dir: Path) -> None:
+    assert load(preset_dir).expected.conditions == {}

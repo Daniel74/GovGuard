@@ -5,6 +5,15 @@
   "expected": {
     "overall_status": "WARN",
     "required_findings": [],
-    "archetype": "ARCH-02"
+    "archetype": "ARCH-02",
+    "conditions": {
+      "ki_system": "unstated",
+      "high_risk_ai": "unstated",
+      "third_country": "no",
+      "processor": "yes",
+      "consent": "yes",
+      "multi_tenant": "unstated",
+      "automated_decision": "no"
+    }
   }
 }

@@ -130,7 +130,8 @@ def test_the_report_view_imports_no_screen(path: Path) -> None:
 
 
 ROOTS = {  # ADR 0027: only entry points and contracts that others import
-    "govguard": {"audit_engine", "models", "open_world", "text", "audit_setup", "cli"},
+    "govguard": {"audit_engine", "models", "condition_models", "open_world", "text", "audit_setup",
+                 "cli"},
     "govguard_ui": {"app", "navigation", "gallery", "paths", "style", "texts"},
 }
 

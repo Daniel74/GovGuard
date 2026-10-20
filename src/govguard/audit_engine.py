@@ -2,16 +2,20 @@
 
 import asyncio
 from collections.abc import Callable, Iterable
+from dataclasses import dataclass
 
 from pydantic_ai.exceptions import ModelAPIError, UnexpectedModelBehavior
 from pydantic_ai.models import Model
 
 from govguard.calls.audit_packages import PackageRequest, package_requests
+from govguard.calls.conditions import find_conditions
 from govguard.calls.fail_judge import judge_fails
 from govguard.calls.inventory import resource_inventory
 from govguard.checks.audit_gates import completeness_problems
+from govguard.checks.conditions import na_drafts
 from govguard.checks.corrections import AuditValidationError, Corrections
 from govguard.checks.evidence import evidence_of
+from govguard.condition_models import ConditionDef, ConditionResult
 from govguard.models import (
     SEVERITY,
     AuditReport,
@@ -54,17 +58,20 @@ def overall_status(statuses: Iterable[Status]) -> Status:
     return max(statuses, key=SEVERITY.__getitem__)
 
 
-def run_audit(
+def run_audit(  # noqa: PLR0913 conditions come in like the catalog, loaded by the caller (#60)
     catalog: RuleCatalog, input_text: str, model: Model, trace: Trace,
-    on_progress: OnProgress | None = None,
+    on_progress: OnProgress | None = None, conditions: list[ConditionDef] | None = None,
 ) -> AuditReport:
-    """on_progress gets each phase and finished package; the audit logic stays pure (ADR 0023)."""
+    """on_progress gets each phase and finished package; the audit logic stays pure (ADR 0023).
+
+    conditions: of the spec audit (audit_setup.conditions_for); none, no pre-run (#60).
+    """
     check_input_length(input_text)
     corrections = Corrections()
     given = audit_input(catalog.audit_type, input_text)  # the code decides the world (#46)
+    run = _Run(model, corrections, on_progress or (lambda _: None), conditions or [])
     try:
-        drafts = asyncio.run(_drafts(catalog, given, model, corrections,
-                                     on_progress or (lambda _: None)))
+        drafts, found = asyncio.run(_drafts(catalog, given, run))
     except (ModelAPIError, UnexpectedModelBehavior) as error:
         raise corrections.fail_closed(error) from error
     if problems := completeness_problems({rule.id for rule in catalog.rules}, drafts):
@@ -80,38 +87,61 @@ def run_audit(
         retries=corrections.retries,
         fail_judge=corrections.fail_judge,
         closed_world=given.world is None,
+        conditions=found,
     )
 
 
+@dataclass(frozen=True)
+class _Run:  # what every step of one audit shares
+    model: Model
+    corrections: Corrections
+    on_progress: OnProgress
+    conditions: list[ConditionDef]  # spec audit only; none: no pre-run (#60)
+
+
 async def _drafts(
-    catalog: RuleCatalog, given: AuditInput, model: Model, corrections: Corrections,
-    on_progress: OnProgress,
-) -> list[FindingDraft]:
-    """In an open world every FAIL goes to the judge (#31, #46)."""
+    catalog: RuleCatalog, given: AuditInput, run: _Run
+) -> tuple[list[FindingDraft], dict[str, ConditionResult]]:
+    """Drafts of all rules and the conditions found; in an open world every FAIL goes to the
+    judge (#31, #46)."""
+    found: dict[str, ConditionResult] = {}
     if catalog.audit_type == "architecture":
-        drafts = await _architecture_drafts(catalog, given, model, corrections, on_progress)
+        drafts = await _architecture_drafts(catalog, given, run)
     else:
-        drafts = await _counted(
-            package_requests(catalog.rules, given, None, model, corrections), on_progress)
+        drafts, found = await _spec_drafts(catalog, given, run)
     if given.world is None:  # closed world: a missing setting is the default, the FAIL stays
-        return drafts
+        return drafts, found
     if any(draft.status == "FAIL" for draft in drafts):  # the judge only runs on a FAIL
-        on_progress(Progress(phase="fail_judge"))
-    return await judge_fails(catalog.rules, drafts, given, model, corrections)
+        run.on_progress(Progress(phase="fail_judge"))
+    return await judge_fails(catalog.rules, drafts, given, run.model, run.corrections), found
+
+
+async def _spec_drafts(
+    catalog: RuleCatalog, given: AuditInput, run: _Run
+) -> tuple[list[FindingDraft], dict[str, ConditionResult]]:
+    """N/A by code for the rules of a denied condition, the rest goes to the model (#60)."""
+    results: dict[str, ConditionResult] = {}
+    if run.conditions:
+        run.on_progress(Progress(phase="conditions"))
+        results = await find_conditions(run.conditions, given.text, run.model, run.corrections)
+    na = na_drafts(run.conditions, results, catalog.rules) if results else []
+    decided = {draft.rule_id for draft in na}
+    to_model = [rule for rule in catalog.rules if rule.id not in decided]
+    requests = package_requests(to_model, given, None, run.model, run.corrections)
+    return na + await _counted(requests, run.on_progress), results
 
 
 async def _architecture_drafts(
-    catalog: RuleCatalog, given: AuditInput, model: Model, corrections: Corrections,
-    on_progress: OnProgress,
+    catalog: RuleCatalog, given: AuditInput, run: _Run
 ) -> list[FindingDraft]:
     """N/A by code via the resource inventory, the rest goes to the model."""
-    on_progress(Progress(phase="inventory"))
-    inventory = await resource_inventory(catalog.rules, given.text, model, corrections)
+    run.on_progress(Progress(phase="inventory"))
+    inventory = await resource_inventory(catalog.rules, given.text, run.model, run.corrections)
     to_model = [rule for rule in catalog.rules if inventory.applies(rule)]
     drafts = [_na_by_code(rule, inventory.na_rationale)
               for rule in catalog.rules if not inventory.applies(rule)]
     return drafts + await _counted(package_requests(
-        to_model, given, inventory.na_forbidden, model, corrections), on_progress)
+        to_model, given, inventory.na_forbidden, run.model, run.corrections), run.on_progress)
 
 
 async def _counted(

@@ -71,6 +71,7 @@ class Corrections(BaseModel):
     failed: list[Problem] = []  # problems of a last attempt: the audit fails closed (HTTP 502)
     verdicts: list[Correction] = []  # verdicts of the FAIL judge that keep the FAIL (#31)
     fail_judge: FailJudgeCount = FailJudgeCount()
+    notes: list[str] = []  # corrections that name no rule, e.g. of the condition pre-run (#60)
 
     def record_verdict(self, rule_id: str, confirmed: bool, text: str) -> None:
         """A rejected FAIL becomes WARN like an unproven one (ADR 0017), without a retry."""
@@ -122,7 +123,7 @@ class Corrections(BaseModel):
 
     def unassigned(self, rule_ids: set[str]) -> list[str]:
         """Reasons that name no rule of the catalog, e.g. an invented rule_id."""
-        return [p.text for p in self.retry_problems if p.rule_id not in rule_ids]
+        return [p.text for p in self.retry_problems if p.rule_id not in rule_ids] + self.notes
 
     def for_rule(self, rule_id: str) -> dict:
         """The fields `downgraded_from` and `corrections` of the finding of this rule."""
