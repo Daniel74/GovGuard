@@ -10,6 +10,10 @@ from streamlit.testing.v1 import AppTest
 from streamlit.testing.v1.element_tree import Block
 from test_run_audit_progress import warn_for_every_rule
 
+from govguard.audit_setup import CATALOGS, conditions_for
+from govguard.checks.conditions import condition_results, na_drafts
+from govguard.condition_models import ConditionDraft, LineRange
+from govguard.models import RuleCatalog
 from govguard_ui.gallery import GalleryEntry, load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
 
@@ -154,3 +158,48 @@ def report_script(entry_json: str) -> None:
 def report_page(entry: GalleryEntry) -> AppTest:
     return AppTest.from_function(report_script, args=(entry.model_dump_json(),),
                                  default_timeout=30).run()
+
+
+def lines(start: int, end: int | None = None) -> list[LineRange]:
+    return [LineRange(line_start=start, line_end=end or start)]
+
+
+# What the pre-run found in the portal example (lines of its input.md): a contradiction for the
+# processor, a denial of an AI system (which also denies high-risk), a denied consent.
+DRAFTS = [
+    ConditionDraft(condition_id="ki_system", affirming=[], denying=lines(10)),
+    ConditionDraft(condition_id="third_country", affirming=lines(53, 55), denying=[]),
+    ConditionDraft(condition_id="processor", affirming=lines(53, 55), denying=lines(20)),
+    ConditionDraft(condition_id="consent", affirming=[], denying=lines(47)),
+]
+
+
+def with_conditions(entry: GalleryEntry) -> GalleryEntry:
+    """The stored report as if the pre-run had found DRAFTS: the code decides the values and
+    makes the denied rules N/A, exactly as the audit does (checks/conditions)."""
+    defs = conditions_for("spec")
+    results = condition_results(defs, DRAFTS)
+    catalog = RuleCatalog.model_validate_json(CATALOGS["spec"].read_text(encoding="utf-8"))
+    na = {d.rule_id: d for d in na_drafts(defs, results, catalog.rules)}
+
+    def apply(finding):
+        if (draft := na.get(finding.rule_id)) is None:
+            return finding
+        return finding.model_copy(update={
+            "status": "N/A", "line_start": draft.line_start, "line_end": draft.line_end,
+            "rationale": draft.rationale, "recommendation": None, "downgraded_from": None,
+            "corrections": []})
+
+    report = entry.report.model_copy(update={
+        "findings": [apply(f) for f in entry.report.findings], "conditions": results})
+    return entry.model_copy(update={"report": report})
+
+
+def without_conditions(entry: GalleryEntry) -> GalleryEntry:
+    """A report as stored before the pre-run (#60): no conditions."""
+    return entry.model_copy(update={
+        "report": entry.report.model_copy(update={"conditions": {}})})
+
+
+def conditions_page() -> AppTest:
+    return report_page(with_conditions(gallery_entry(SPEC)))

@@ -15,8 +15,8 @@ from govguard_ui.style import LOOKS, STATUS_FILTERS
 
 pytestmark = pytest.mark.visual
 
-FIRST = 'tr[data-id="SPEC-DSGVO-Art.5Abs.1lit.c"]'  # "Datenminimierung prüfen", first row
-THIRD = 'tr[data-id="SPEC-SDM-M50.D01"]'  # "Dokumentation von Zweckbeschreibung ...", third
+FIRST = 'tr[data-id="SPEC-SDM-M50.S15"]'  # "Definition von Revisionsaktivitäten", first row
+FIFTH = 'tr[data-id="SPEC-SDM-M50.D01"]'  # "Dokumentation von Zweckbeschreibung ...", fifth
 ART9 = 'tr[data-id="SPEC-DSGVO-Art.9Abs.2"]'  # the locator pierces the shadow root
 
 
@@ -39,7 +39,7 @@ def table_of(row: Locator) -> Locator:
 
 def test_the_spec_table_has_a_head_lines_between_rows_wraps_long_titles_and_scrolls(
         page: Page, app_url: str) -> None:
-    row = spec(page, app_url).locator(THIRD)  # long title: wraps
+    row = spec(page, app_url).locator(FIFTH)  # long title: wraps
     title = row.locator("td").nth(1)
 
     expect(table_of(row).locator("th")).to_have_text(["Status", "Prüfregel", "Normanker",
@@ -83,11 +83,11 @@ def test_arrows_move_the_focus_enter_selects_and_the_focus_stays_after_the_rerun
         page: Page, app_url: str) -> None:
     spec(page, app_url).locator(FIRST).focus()
 
-    page.keyboard.press("ArrowDown")
-    page.keyboard.press("ArrowDown")
-    expect(page.locator(THIRD)).to_be_focused()
+    for _ in range(4):
+        page.keyboard.press("ArrowDown")
+    expect(page.locator(FIFTH)).to_be_focused()
     expect(page.locator('tr[tabindex="0"]')).to_have_count(1)  # roving tabindex: the one Tab
-    expect(page.locator(THIRD)).to_have_attribute("tabindex", "0")  # stop moves with the focus
+    expect(page.locator(FIFTH)).to_have_attribute("tabindex", "0")  # stop moves with the focus
     page.keyboard.press("Enter")
 
     heading = page.get_by_role("heading", name="Dokumentation von Zweckbeschreibung und -bindung")
@@ -95,9 +95,9 @@ def test_arrows_move_the_focus_enter_selects_and_the_focus_stays_after_the_rerun
     settled(page)
     grid = page.get_by_role("grid", name="Befunde")  # aria-selected is valid on a grid row
     expect(grid.get_by_role("row", selected=True)).to_have_attribute("data-id", "SPEC-SDM-M50.D01")
-    expect(page.locator(THIRD)).to_be_focused()
+    expect(page.locator(FIFTH)).to_be_focused()
     page.keyboard.press("ArrowUp")
-    expect(page.locator(f"{THIRD} >> xpath=preceding-sibling::tr[1]")).to_be_focused()
+    expect(page.locator(f"{FIFTH} >> xpath=preceding-sibling::tr[1]")).to_be_focused()
 
 
 def test_llm_text_stands_in_the_cells_as_text_never_as_link_image_or_tag(
@@ -139,17 +139,19 @@ def test_each_source_is_its_own_button_with_a_gap_and_the_active_one_is_dark_blu
 
 def test_the_gap_list_stays_open_when_the_source_changes_and_scrolls(page: Page,
                                                                     app_url: str) -> None:
-    gaps = spec(page, app_url).get_by_test_id("stExpander").filter(has_text="nicht beschreibt")
-    gaps.locator("summary").click()
-    expect(gaps.locator("details")).to_have_attribute("open", "")
+    summary = spec(page, app_url).locator("summary").filter(has_text="Für jedes Vorhaben zu klären")
+    details = summary.locator("xpath=..")
+    summary.click()
+    expect(details).to_have_attribute("open", "")
 
     source(page, "DSGVO").click()
-    expect(gaps.locator("summary")).to_contain_text("116 Lücken")
+    expect(summary).to_contain_text(re.compile(r"· \d+ Lücken"))
+    dsgvo = summary.inner_text()
 
-    expect(gaps.locator("details")).to_have_attribute("open", "")
+    expect(details).to_have_attribute("open", "")
     source(page, "Alle").click()
-    expect(gaps.locator("summary")).to_contain_text("268 Lücken")
-    scroller = gaps.locator('[data-testid="stVerticalBlock"][height]').last
+    expect(summary).not_to_have_text(dsgvo)  # the count follows the source
+    scroller = details.locator('[data-testid="stVerticalBlock"][height]').last
     assert scroller.evaluate("e => e.scrollHeight > e.clientHeight")
 
 
@@ -192,3 +194,15 @@ def test_the_german_status_pills_wrap_instead_of_being_cut_off(page: Page, app_u
     for index in range(pills.count()):
         box = pills.nth(index).bounding_box()
         assert box["x"] + box["width"] <= column["x"] + column["width"], index
+
+
+def test_the_popover_of_a_condition_closes_when_the_jump_into_the_document_is_clicked(
+        page: Page, app_url: str) -> None:
+    spec(page, app_url).get_by_role("button", name=re.compile("Einwilligung: nein")).click()
+    jump = page.get_by_role("button", name=re.compile("Zeile 47 im Dokument"))
+    expect(jump).to_be_visible()
+
+    jump.click()
+
+    expect(page.get_by_text("Bedingung: Einwilligung")).to_be_visible()  # the card, in the detail
+    expect(jump).to_be_hidden()  # the popover no longer covers the page

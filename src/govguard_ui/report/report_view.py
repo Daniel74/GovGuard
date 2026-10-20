@@ -3,8 +3,11 @@
 import streamlit as st
 
 from govguard.models import AuditReport, Expected
+from govguard_ui.report.condition_focus import active_focus, render_focus
+from govguard_ui.report.condition_review import condition_rows
+from govguard_ui.report.conditions_view import render_conditions
 from govguard_ui.report.finding_detail import render_detail, render_document
-from govguard_ui.report.findings_view import render_findings
+from govguard_ui.report.findings_view import current_source, render_findings
 from govguard_ui.report.report_header import render_expected, render_header
 
 
@@ -14,11 +17,16 @@ def render_report(
 ) -> None:
     """source: file name and text of the audited input; key separates widget state."""
     render_header(report, title, key)
+    render_conditions(report, source[1], current_source(key), key)
     if expected:
         render_expected(report, expected, key)
     findings, detail = st.columns([3, 2])  # table without side scroll at 1280 px too (#51)
     with findings:
         selected = render_findings(report, key)
     with detail:
-        render_detail(selected)
-        render_document(*source, selected, key)
+        focus = active_focus(condition_rows(report), key)
+        if focus:
+            render_focus(focus, key)
+        else:
+            render_detail(selected)
+        render_document(*source, selected, key, focus.evidence.ranges if focus else None)

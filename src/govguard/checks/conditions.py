@@ -13,15 +13,15 @@ from govguard.condition_models import (
 from govguard.models import FindingDraft, Rule
 
 
-def _hits(condition: ConditionDef, rule: Rule) -> bool:
+def affects(condition: ConditionDef, rule_id: str, primary_anchor: str) -> bool:
     """An anchor ends at the article: "DSGVO Art. 4" hits "... Art. 4 Abs. 2", not "... Art. 44"."""
-    anchored = any(rule.primary_anchor == a or rule.primary_anchor.startswith(f"{a} ")
+    anchored = any(primary_anchor == a or primary_anchor.startswith(f"{a} ")
                    for a in condition.anchors)
-    return anchored or rule.id in condition.rule_ids
+    return anchored or rule_id in condition.rule_ids
 
 
 def rules_of(condition: ConditionDef, rules: list[Rule]) -> list[Rule]:
-    return [rule for rule in rules if _hits(condition, rule)]
+    return [rule for rule in rules if affects(condition, rule.id, rule.primary_anchor)]
 
 
 CONTRADICTION = ("Widerspruch: Die Spezifikation belegt und verneint die Bedingung, "

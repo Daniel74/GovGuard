@@ -43,7 +43,7 @@ def test_tiles_overall_status_and_expected_strip_carry_the_status_colours(page: 
     settled(page)
 
     for suffix, category in (("_tile_fail", "FAIL"), ("_tile_pass", "PASS"),
-                             ("_overall_fail", "FAIL"), ("_expected_pass", "PASS")):
+                             ("_overall_fail", "FAIL"), ("_expected_fail", "FAIL")):
         box = page.locator(f'[class*="{suffix}"]').first
         colours = box.evaluate("e => [getComputedStyle(e).backgroundColor, "
                                "getComputedStyle(e).borderTopColor]")

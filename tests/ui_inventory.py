@@ -22,6 +22,16 @@ INVENTORY: dict[str, str] = {
                              "test_a_click_on_a_required_finding_shows_it_in_the_detail",
     "expander:{}_gaps": "tests/visual/test_browser_findings.py::"
                         "test_the_gap_list_stays_open_when_the_source_changes_and_scrolls",
+    "popover:{}": "tests/test_ui_conditions.py::"
+                  "test_the_popover_closes_when_the_jump_button_is_clicked",
+    "button:{}_condition_go_{}_{}": "tests/test_ui_conditions.py::"
+                                    "test_the_jump_button_marks_the_evidence_lines_in_the_document",
+    "button:{}_condition_close": "tests/test_ui_conditions.py::"
+                                "test_back_to_the_finding_shows_the_finding_again",
+    "expander:{}_gaps_common": "tests/test_ui_gaps.py::"
+                               "test_common_gaps_come_first_then_one_expander_per_open_condition",
+    "expander:{}_gaps_{}": "tests/test_ui_gaps.py::"
+                           "test_every_gap_stands_exactly_once_in_the_sections",
     "toggle:{}_full": "tests/test_ui_gallery_selection.py::"
                       "test_whole_document_shows_every_line_and_marks_the_evidence_still",
     "download_button:{}_download": "tests/test_ui_report_header.py::"

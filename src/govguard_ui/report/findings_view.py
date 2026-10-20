@@ -2,14 +2,13 @@
 the same for spec and architecture audits. The selection (<key>_selected) is read and written
 only here (#11, #43, #45)."""
 
-from collections import defaultdict
 from functools import partial
 
 import streamlit as st
 
 from govguard.models import AuditReport, Finding
-from govguard_ui.report.finding_detail import plain
 from govguard_ui.report.finding_table import render_table
+from govguard_ui.report.gaps_view import render_gaps
 from govguard_ui.report.review import (
     ALL_SOURCES,
     category,
@@ -22,7 +21,6 @@ from govguard_ui.report.review import (
 from govguard_ui.style import LOOKS, STATUS_FILTERS, status_word
 
 DEFAULT_FILTERS = ["FAIL", "WARN", "PASS"]  # N/A hidden by default (design artefact)
-GAPS_HEIGHT = 360  # a long gap list scrolls
 
 
 def render_findings(report: AuditReport, key: str) -> Finding:
@@ -39,7 +37,7 @@ def render_findings(report: AuditReport, key: str) -> Finding:
     st.caption(f"{len(shown)} von {listed} Befunden angezeigt")
     selected = _selected(report.findings, shown, key)
     render_rows(shown, key, selected)
-    _gap_checklist(report.findings, source, key)
+    render_gaps(report, source, key)
     return selected
 
 
@@ -69,9 +67,31 @@ def _selection_key(key: str) -> str:
     return f"{key}_selected"
 
 
+def current_selection(key: str) -> str | None:
+    """Rule id the reader chose; None until the first click (the first row stands in)."""
+    return st.session_state.get(_selection_key(key))
+
+
 def select(key: str, rule_id: str | None) -> None:
-    """Writes the selection; also the callback of an expected check in the header."""
+    """Writes the selection; also the callback of an expected check in the header. Every call
+    counts, a click on the finding that is already chosen too (see condition_focus)."""
     st.session_state[_selection_key(key)] = rule_id
+    st.session_state[_clicks_key(key)] = selections(key) + 1
+
+
+def _clicks_key(key: str) -> str:
+    return f"{key}_selections"
+
+
+def selections(key: str) -> int:
+    """How often the reader chose a finding (table row or expected check)."""
+    return st.session_state.get(_clicks_key(key), 0)
+
+
+def current_source(key: str) -> str | None:
+    """The source chosen in the filter; None for all (also before the filter is drawn)."""
+    source = st.session_state.get(f"{key}_source")
+    return None if source in (None, ALL_SOURCES) else source
 
 
 def render_rows(findings: list[Finding], key: str, selected: Finding) -> None:
@@ -92,29 +112,3 @@ def status_text(finding: Finding) -> str:
     if finding.downgraded_from:  # a downgrade stays visible in the list (ADR 0017)
         status += f"\n↓ von {status_word(finding.downgraded_from)}"  # own line: narrow column
     return status
-
-
-def _gap_checklist(findings: list[Finding], source: str | None, key: str) -> None:
-    """The key keeps the list open while its label counts the gaps of another source."""
-    groups: dict[str, list[Finding]] = defaultdict(list)
-    for finding in of_source(findings, source):
-        if category(finding) == "GAP":
-            groups[_gap_group(finding.primary_anchor)].append(finding)
-    total = sum(len(items) for items in groups.values())
-    if not total:
-        return
-    with st.expander(f"Was die Eingabe nicht beschreibt · {total} Lücken", key=f"{key}_gaps"):
-        st.caption("Kein Verstoß. Zu diesen Prüfregeln sagt die Eingabe nichts; vor der "
-                   "Umsetzung klären oder bewusst ausschließen. Im JSON-Report haben sie den "
-                   f"Status {LOOKS['GAP'].code}.")
-        with st.container(height=GAPS_HEIGHT, border=False):
-            for name, items in groups.items():
-                st.markdown(f"**{plain(name)}** · {len(items)}")
-                st.markdown("\n".join(f"- {plain(f.title)} · {plain(f.primary_anchor)}"
-                                      for f in items))
-
-
-def _gap_group(anchor: str) -> str:
-    """SDM keeps its module (SDM Löschen), other sources group by name (DSGVO)."""
-    parts = anchor.split(" ")
-    return " ".join(parts[:-1]) if parts[0] == "SDM" else parts[0]

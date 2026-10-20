@@ -5,6 +5,7 @@ from typing import Literal, get_args
 
 from pydantic import BaseModel
 
+from govguard.condition_models import LineRange
 from govguard.models import AuditReport, Expected, Finding, SourceName, Status
 
 # GAP: WARN without evidence lines, the input does not describe the rule (CONTEXT: Lücke)
@@ -91,13 +92,19 @@ class DocumentWindow(BaseModel):
     hidden_above: int  # lines skipped before the window
 
 
-def document_window(text: str, finding: Finding, full: bool) -> DocumentWindow:
-    """Jump to the evidence: start a few lines above it, or show everything."""
-    start, end = finding.line_start, finding.line_end
-    first = 1 if full or start is None else max(1, start - CONTEXT_LINES)
+def document_window(
+    text: str, finding: Finding, full: bool, marks: list[LineRange] | None = None
+) -> DocumentWindow:
+    """Jump to the evidence: start a few lines above it, or show everything.
+    marks replace the finding's lines, e.g. the evidence of a condition (#61)."""
+    if marks is None:
+        start = finding.line_start
+        marks = [] if start is None else [
+            LineRange(line_start=start, line_end=finding.line_end or start)]
+    first = 1 if full or not marks else max(1, min(m.line_start for m in marks) - CONTEXT_LINES)
     lines = [
         DocumentLine(number=number, text=line,
-                     marked=start is not None and start <= number <= (end or start))
+                     marked=any(m.line_start <= number <= m.line_end for m in marks))
         for number, line in enumerate(text.splitlines(), 1) if number >= first
     ]
     return DocumentWindow(lines=lines, hidden_above=first - 1)

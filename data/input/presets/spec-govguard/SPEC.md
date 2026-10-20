@@ -78,9 +78,14 @@ Jede Entscheidung steht mit Begründung im Auswahlprotokoll. Die Zahlen unten st
 
 | Regelwerk | Fassung | Verwendeter Teil | Anforderungen | nach Vorfilter | Prüfregeln |
 |---|---|---|---|---|---|
-| DSGVO | Verordnung (EU) 2016/679, Text von EUR-Lex | Kapitel II–V (Art. 5–49); je Einzelpflicht eine Anforderung | 383 | 278 | 193 |
+| DSGVO | Verordnung (EU) 2016/679, Text von EUR-Lex | Kapitel II–V (Art. 5–49); je Einzelpflicht eine Anforderung; ohne Art. 20, 27, 41 und 47 | 350 | 247 | 169 |
 | KI-VO | Verordnung (EU) 2024/1689, konsolidierte Fassung vom 27.07.2026, Text von EUR-Lex | Art. 4, 5, 6, 13, 14, 26, 27 und 50; je Einzelpflicht eine Anforderung | 197 | 74 | 65 |
 | SDM | Bausteine der Datenschutzkonferenz, V1.0 bzw. V1.0a | Löschen und Vernichten (M60), Trennen (M50), Zugriffe regeln (M51); alle Maßnahmen | 147 | 147 | 116 |
+
+Der Vorfilter Behörde verwirft vier Artikel, die für eine deutsche Behörde nie gelten: Art. 20
+(Datenübertragbarkeit, Abs. 3), Art. 27 (Vertreter nur für Verantwortliche außerhalb der EU),
+Art. 41 (Überwachung von Verhaltensregeln, Abs. 6) und Art. 47 (BCR nur für Unternehmensgruppen).
+Jeder Artikel steht mit festem Begründungssatz im Auswahlprotokoll (ADR 0028).
 
 Nicht verwendet werden bei der DSGVO Kapitel I, VI bis VIII, X und XI. Sie regeln Begriffe,
 Aufsicht, Rechtsbehelfe, Sanktionen und Schlussbestimmungen, also nichts, was eine Spezifikation
@@ -133,7 +138,7 @@ Personen oder das ganze Konto, nicht ein einzelnes Template (B5).
 ### F1 Audit einer Spezifikation
 
 Die prüfende Person gibt eine Spezifikation als Text, Markdown oder
-OpenAPI ein. GovGuard bewertet sie gegen alle 374 Prüfregeln aus DSGVO, KI-VO und SDM.
+OpenAPI ein. GovGuard bewertet sie gegen alle 350 Prüfregeln aus DSGVO, KI-VO und SDM.
 
 ### F2 Audit einer Architektur
 
@@ -478,16 +483,19 @@ Protokollierung prüft GovGuard nicht an der Spezifikation (SDM M43), sondern an
 Kontoweite AWS-Pflichten wie die Mehr-Faktor-Anmeldung des Hauptkontos fehlen bewusst. Terraform und
 CloudFormation-Vorlagen in YAML prüft GovGuard nur als Freitext.
 
-### B6 Hochrisiko-Einstufung ohne eigene Vorstufe
+### B6 Bedingungen: die Vorstufe liest nur, sie stuft nicht ein
 
-Ob eine Spezifikation ein Hochrisiko-System beschreibt, entscheidet das Sprachmodell im Audit
-anhand der Prüfregeln zu Art. 6 KI-VO. Eine Vorstufe, die erst einstuft und dann nur die passenden
-Pflichten prüft, gibt es nicht.
+Vor den Prüfpaketen stellt ein Aufruf des Sprachmodells fest, was die Spezifikation zu sieben
+Bedingungen sagt: KI-System, Hochrisiko-KI, Drittlandübermittlung, Auftragsverarbeiter, Einwilligung,
+Mandantenfähigkeit und automatisierte Entscheidung. Nur eine ausdrückliche Verneinung für das ganze
+Vorhaben macht die Prüfregeln der Bedingung zu „Nicht anwendbar“, mit der Verneinungszeile als Beleg.
 
-Die Prüfregeln zu Art. 13, 14, 26 und 27 stehen deshalb in jedem Audit-Report. Bei einem System
-ohne hohes Risiko muss das Sprachmodell sie selbst als nicht anwendbar erkennen.
+Schweigt die Spezifikation, steht die Bedingung auf „nicht festgelegt“ und ihre Prüfregeln bleiben
+im Audit. Die Vorstufe stuft also nicht selbst ein: Ein Hochrisiko-System erkennt GovGuard nur, wenn
+die Spezifikation es ausdrücklich beschreibt oder ausschließt. Eine verschwiegene Einstufung fällt
+deshalb weiter nicht auf; die Prüfregeln zu Art. 4, 5, 6 und 50 KI-VO (KI-System) sowie zu Art. 13,
+14, 26 und 27 (Hochrisiko-KI) bewertet dann das Sprachmodell. Kein KI-System heißt auch kein
+Hochrisiko-System.
 
-Ob überhaupt ein KI-System vorliegt, erkennt GovGuard nur, wenn die Spezifikation es ausdrücklich
-einstuft. Ein Versuch am 19.10.2026 mit dieser Systembeschreibung ohne Abschnitt 8 ergab für alle 65
-Prüfregeln der KI-VO nur Lücken und kein FAIL, obwohl Abschnitt 2 das Sprachmodell nennt. Eine
-verschwiegene Einstufung fällt deshalb nicht auf.
+Fällt die Vorstufe aus, bleiben alle Bedingungen „nicht festgelegt“ und jede Prüfregel geht ans
+Modell. Das Audit schlägt deshalb nie wegen der Vorstufe fehl (ADR 0028).

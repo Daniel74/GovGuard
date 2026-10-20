@@ -44,7 +44,7 @@ def test_overall_status_and_expected_strip_carry_a_help() -> None:
 
     helps = {m.value: m.proto.help for m in app.markdown}
     assert helps["Gesamtstatus"] == HELP["overall"]
-    assert helps["**Soll-Abgleich: wie erwartet**"] == HELP["expected"]
+    assert helps["**Soll-Abweichung**"] == HELP["expected"]  # the stored run misses M60.P01 (#61)
 
 
 def head_frame(app) -> str:
@@ -68,16 +68,16 @@ def test_each_tile_is_a_frame_with_its_explanation_inside() -> None:
 
     tiles = [frame for frame in frames(app) if frame in SPEC_TILES]
     assert tiles == SPEC_TILES
-    assert [m.value for m in app.metric] == ["28", "42", "28", "8", "268", "60"]
+    assert [m.value for m in app.metric] == ["33", "17", "28", "38", "234", "49"]
 
 
 SPEC_TILES = [  # label and explanation of the stored spec report, as in the design artefact
     "✕ Verstoß belegt",  # "belegt" says it all, no caption (#51)
-    "! Prüfbedarf\nmit Beleg · davon 32 herabgestuft",
+    "! Prüfbedarf\nmit Beleg · davon 16 herabgestuft",
     "✓ Einhaltung belegt",
     "– Nicht anwendbar\nRegel betrifft das Vorhaben nicht",
     "○ Lücken\nnicht beschrieben · kein Verstoß",
-    "Verstoß-Prüfer\ngeprüft · 28 bestätigt · 32 herabgestuft · 0 nicht verfügbar",
+    "Verstoß-Prüfer\ngeprüft · 33 bestätigt · 16 herabgestuft · 0 nicht verfügbar",
 ]
 
 
@@ -114,11 +114,11 @@ def test_free_text_architecture_without_fail_shows_zero_checked_not_omitted() ->
 def test_the_expected_result_is_one_strip_and_overall_status_is_no_button() -> None:
     app = page(gallery_script)
 
-    strip = next(frame for frame in frames(app) if "Soll-Abgleich: wie erwartet" in frame)
-    assert strip.split("\n")[1:] == [
+    strip = next(frame for frame in frames(app) if "Soll-Abweichung" in frame)
+    assert strip.split("\n")[1:] == [  # stored run of #61: M60.P01 swung to WARN, shown (ADR 0023)
         "✓ Gesamtstatus Soll Verstoß belegt, Ist Verstoß belegt",
         "DSGVO Art. 9 Abs. 2: Soll Verstoß belegt, Ist Verstoß belegt",
-        "SDM Löschen M60.P01: Soll Verstoß belegt, Ist Verstoß belegt"]
+        "SDM Löschen M60.P01: Soll Verstoß belegt, Ist Prüfbedarf"]
     assert [b.label for b in app.button if "Gesamtstatus" in b.label] == []
 
 

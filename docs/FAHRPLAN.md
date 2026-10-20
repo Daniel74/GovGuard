@@ -915,10 +915,10 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 - [x] **#60 messen** 🤖 `/audit-messen spec-govguard, spec-meldeportal-gesundheit und spec-wohngeld-openapi je 1× mit Groq` → Tabelle in #60: Bedingungen gegen Soll, Lücken vorher und nachher, Pflichtbefunde
 - [x] **Halt 1: Messung** 👤 Tabelle in #60 lesen → „weiter“ oder Korrektur
 - [x] **#60 prüfen** 🤖 _Opus_-Agent · `/code-review gegen Issue #60` → Befunde beheben → Commit „#60 …“
-- [ ] **#61 bauen** 🤖 _Sonnet_-Agent · nach dem Prototyp-Kommentar in #61 neu schreiben, nicht kopieren: Rahmen mit Pills und Popover, Abschnitt „Lücken“, N/A-Detail mit Beleg, Tests mit `AppTest`, Design-Artefakt nachziehen
-- [ ] **#61 Galerie und Bilder** 🤖 `/audit-messen` der 3 Spec-Musterfälle mit Groq, Reports nach `data/gallery/`; `uv run pytest -m visual` → neue Bilder in einen Ordner zum Ansehen legen, noch nicht übernehmen
-- [ ] **Halt 2: Referenzbilder und Galerie** 👤 Bilder und Soll-Abweichungen ansehen, `/run` → „übernehmen“ oder Korrektur
-- [ ] **#61 prüfen** 🤖 _Opus_-Agent · `/code-review gegen Issue #61` → Befunde beheben → Commit „#61 …“
+- [x] **#61 bauen** 🤖 _Sonnet_-Agent · nach dem Prototyp-Kommentar in #61 neu schreiben, nicht kopieren: Rahmen mit Pills und Popover, Abschnitt „Lücken“, N/A-Detail mit Beleg, Tests mit `AppTest`, Design-Artefakt nachziehen
+- [x] **#61 Galerie und Bilder** 🤖 `/audit-messen` der 3 Spec-Musterfälle mit Groq, Reports nach `data/gallery/`; `uv run pytest -m visual` → neue Bilder in einen Ordner zum Ansehen legen, noch nicht übernehmen
+- [x] **Halt 2: Referenzbilder und Galerie** 👤 Bilder und Soll-Abweichungen ansehen, `/run` → „übernehmen“ oder Korrektur
+- [x] **#61 prüfen** 🤖 _Opus_-Agent · `/code-review gegen Issue #61` → Befunde beheben → Commit „#61 …“
 - [ ] **Halt 3: Push** 👤 „pushen“ → 🤖 pusht, kommentiert das Ergebnis in #59–#61 und schließt sie, hakt hier ab
 
 **Fertig, wenn:** #59–#61 geschlossen sind, die Galerie neu ist und `pytest`, `pytest -m visual` und ruff grün sind. Zurück zur Demo von vorher: `git checkout vor-bedingungen`.

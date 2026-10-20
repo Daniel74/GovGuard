@@ -48,7 +48,7 @@ def test_gallery_shows_the_first_preset_with_its_source_and_expected_result() ->
     assert not app.exception
     text = shown_text(app)
     assert "Online-Anmeldung zur Schuleingangsuntersuchung" in text
-    assert "Soll-Abgleich: wie erwartet" in text
+    assert "Soll-Abweichung" in text  # the stored run misses SDM M60.P01 (#61), shown not rerolled
     assert "input.md" in text
 
 
