@@ -24,18 +24,18 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Zeitplan bis zur Präsentation:**
 
-| Tag        | Arbeit                                                                                                                                                                        |
-| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Mi 14.10.  | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                              |
-| Do 15.10.  | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                                                    |
-| Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                                                                  |
-| Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                                                                    |
-| So 18.10.  | Schritte 12i, 12j: #46, #47. Schritt 12l: Galerie, bekannte Grenzen. Danach sind `kb_build` und Audit eingefroren                                                             |
-| Mo 19.10.  | Schritt 12b: GovGuard-Spezifikation schreiben, Soll festlegen. Schritt 12m: #51 UI-Texte deutsch. Das Claude-Wochenlimit setzt zurück                                         |
-| Di 20.10.  | Schritt 12n: Teil 1 Zwischenstand committen, Teil 2 Stufe „Zerlegen“ bauen (#53)                                                                                              |
+| Tag        | Arbeit                                                                                                                                                                                                      |
+| ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Mi 14.10.  | Schritt 10: #14 abschließen. Schritt 10a vorgezogen: TDD-Umbau Beleg per Zeilenverweis, Nachschärfen, Messungen.                                                                                            |
+| Do 15.10.  | Schritt 10e: #30 Build-Log. Schritt 10f: #31 klären, Diagnose, Prüfer bauen. Schritt 15: #24 Pflichtanker (komplett, Groq)                                                                                  |
+| Fr 16.10.  | Schritt 10g: #32 (bis ☁). Schritt 10i: UI und Hosting klären, Tickets neu schneiden, Design-Artefakt anlegen                                                                                                |
+| Sa 17.10.  | Schritt 11: Groq-Adapter, `provider`, Fortschritt. Schritt 12: UI beginnen                                                                                                                                  |
+| So 18.10.  | Schritte 12i, 12j: #46, #47. Schritt 12l: Galerie, bekannte Grenzen. Danach sind `kb_build` und Audit eingefroren                                                                                           |
+| Mo 19.10.  | Schritt 12b: GovGuard-Spezifikation schreiben, Soll festlegen. Schritt 12m: #51 UI-Texte deutsch. Das Claude-Wochenlimit setzt zurück                                                                       |
+| Di 20.10.  | Schritt 12n: Teil 1 Zwischenstand committen, Teil 2 Stufe „Zerlegen“ bauen (#53)                                                                                                                            |
 | Mi 21.10.  | 12n: Teil 2 Wissensbasis, Spec-Galerie neu; Teil 3 SPEC und Soll. 12b: Audit, Galerie. 12p–12s: Ordner #55–#58. 12t–12v: Bedingungen #59–#61. 12o: Messkampagne #54. 13–14: Doku #22, #16. A fertig. Abgabe |
-| 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                |
-| Mo 26.10.  | Präsentation und Fachgespräch                                                                                                                                                 |
+| 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                                                                                              |
+| Mo 26.10.  | Präsentation und Fachgespräch                                                                                                                                                                               |
 
 **Wer baut was:**
 
@@ -919,7 +919,7 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 - [x] **#61 Galerie und Bilder** 🤖 `/audit-messen` der 3 Spec-Musterfälle mit Groq, Reports nach `data/gallery/`; `uv run pytest -m visual` → neue Bilder in einen Ordner zum Ansehen legen, noch nicht übernehmen
 - [x] **Halt 2: Referenzbilder und Galerie** 👤 Bilder und Soll-Abweichungen ansehen, `/run` → „übernehmen“ oder Korrektur
 - [x] **#61 prüfen** 🤖 _Opus_-Agent · `/code-review gegen Issue #61` → Befunde beheben → Commit „#61 …“
-- [ ] **Halt 3: Push** 👤 „pushen“ → 🤖 pusht, kommentiert das Ergebnis in #59–#61 und schließt sie, hakt hier ab
+- [x] **Halt 3: Push** 👤 „pushen“ → 🤖 pusht, kommentiert das Ergebnis in #59–#61 und schließt sie, hakt hier ab
 
 **Fertig, wenn:** #59–#61 geschlossen sind, die Galerie neu ist und `pytest`, `pytest -m visual` und ruff grün sind. Zurück zur Demo von vorher: `git checkout vor-bedingungen`.
 **Danach:** 👤 `/verstehen 60 offene Welt und Bedingungen`
