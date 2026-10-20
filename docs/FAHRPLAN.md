@@ -17,8 +17,8 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 
 **Priorität:** Nur noch Audits. Was nicht in Priorität A steht, ist aus dem Fahrplan gestrichen.
 
-- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft die Spezifikation seines Demo-Stands). Offene Schritte in dieser Reihenfolge: Rest von 12b, 12o (#54), zuletzt die Doku 13–14. Mit #36 ist der Prototyp fertig.
-- **Eingefroren ab Schritt 12l:** `kb_build` und Audit-Engine werden nicht mehr geändert, Katalog und Prompts bleiben. Ausnahme ist 12n (#52, #53): Die KI-VO kommt als Quelle dazu, DSGVO und KI-VO werden in Einzelpflichten zerlegt. Das bricht G13 für den Spec-Katalog bewusst: Spec-Regeln, Spec-Galerie und Spec-Soll entstehen neu, der Architektur-Katalog bleibt. Bekannte Grenzen stehen im README; #48 (YAML), #49 (Build-Abbrüche) und #50 (Allow/Deny, Platzhalter) sind Ausbau.
+- **A – Audits (Pflicht):** Spec-Audit und Architektur-Audit laufen Ende-zu-Ende, mit vollständigem Katalog (ADR 0011), Demo-UI und Selbst-Audit (GovGuard prüft die Spezifikation seines Demo-Stands). Offene Schritte in dieser Reihenfolge: Rest von 12b, 12p–12s (#55–#58, Ordner nach ADR 0027), 12o (#54), zuletzt die Doku 13–14. Mit #36 ist der Prototyp fertig.
+- **Eingefroren ab Schritt 12l:** `kb_build` und Audit-Engine werden nicht mehr geändert, Katalog und Prompts bleiben. Ausnahme ist 12n (#52, #53): Die KI-VO kommt als Quelle dazu, DSGVO und KI-VO werden in Einzelpflichten zerlegt. Das bricht G13 für den Spec-Katalog bewusst: Spec-Regeln, Spec-Galerie und Spec-Soll entstehen neu, der Architektur-Katalog bleibt. Zweite Ausnahme ist ADR 0027 (#55–#57): umstrukturieren ohne neues Verhalten, Prompts, Cache-Keys und `data/` bleiben. #58 ändert nur das LLM-Inventar des Architektur-Audits und wird gemessen. Bekannte Grenzen stehen im README; #48 (YAML), #49 (Build-Abbrüche) und #50 (Allow/Deny, Platzhalter) sind Ausbau.
 - **Gestrichen:** Preset-Gate und Build-Workflow (#8; der Build läuft lokal per `python -m kb_build`), Golden Archetypes (#7, #10, ADR 0019). Im Fachgespräch Ausbau: Steckbriefe, ADR 0003 und 0009 liegen vor.
 - **Stand 19.10.:** Kaum Budget. Die Demo-Architektur bleibt (Streamlit und Groq), kein AWS-Deploy, kein CDK. Außerhalb des Umfangs (Label `ausbau`): Haiku/Bedrock, CDK-Stack #9, Audit-Jobs #34, Pipeline #37, Recruiter-Stand #38.
 
@@ -33,7 +33,7 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | So 18.10.  | Schritte 12i, 12j: #46, #47. Schritt 12l: Galerie, bekannte Grenzen. Danach sind `kb_build` und Audit eingefroren                     |
 | Mo 19.10.  | Schritt 12b: GovGuard-Spezifikation schreiben, Soll festlegen. Schritt 12m: #51 UI-Texte deutsch. Das Claude-Wochenlimit setzt zurück |
 | Di 20.10.  | Schritt 12n: Teil 1 Zwischenstand committen, Teil 2 Stufe „Zerlegen“ bauen (#53)                                                      |
-| Mi 21.10.  | 12n: Teil 2 Wissensbasis, Spec-Galerie neu; Teil 3 SPEC und Soll. 12b: Audit, Galerie. 12o: Messkampagne #54. 13–14: Doku #22, #16. A fertig. Abgabe |
+| Mi 21.10.  | 12n: Teil 2 Wissensbasis, Spec-Galerie neu; Teil 3 SPEC und Soll. 12b: Audit, Galerie. 12p–12s: Ordner #55–#58. 12o: Messkampagne #54. 13–14: Doku #22, #16. A fertig. Abgabe |
 | 22.–25.10. | Verstehen: `/verstehen` für #14, #26, #24, #32, #9, #11, Schritt 19 Lehrbuch #23, Generalprobe                                        |
 | Mo 26.10.  | Präsentation und Fachgespräch                                                                                                         |
 
@@ -83,6 +83,10 @@ Ein Eintrag je Ticket, in Bearbeitungsreihenfolge. Jeder Eintrag steht für sich
 | 12m     | A    | #51 UI-Texte deutsch              | 🤖 Sonnet                        | 👤 Vergleichsbild + 🤖 Opus |
 | 12n     | A    | #52 KI-VO, #53 Zerlegen           | 🤖 Opus                          | 🤖 Opus                     |
 | 12b     | A    | #36 Selbst-Audit Spec, Galerie    | 👤 + 🤖 Opus                     | 👤                          |
+| 12p     | A    | #55 Ordner govguard + UI          | 🤖 Sonnet                        | 🤖 Opus                     |
+| 12q     | A    | #57 kb_build LLM-Schritt, Gates   | 🤖 Sonnet                        | 👤 Gegenprobe + 🤖 Opus     |
+| 12r     | A    | #56 Modellaufrufe Laufzeit        | 🤖 Sonnet                        | 🤖 Opus                     |
+| 12s     | A    | #58 Inventar NativeOutput         | 👤 Messung + 🤖 Sonnet           | 👤                          |
 | 12o     | A    | #54 Messkampagne Stabilität       | 👤 Messung + 🤖 Sonnet           | 🤖 Opus                     |
 | 10h     | A    | #33 Gegenprobe (Groq, erledigt)   | 👤 Messung                       | 👤                          |
 | 13      | A    | #22 Doku zu kb_build nachziehen   | 🤖 Sonnet                        | 👤                          |
@@ -815,6 +819,69 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 
 **Fertig, wenn:** `pytest` und ruff grün sind, die Galerie `spec-govguard` mit Report und Dokument zeigt und die Abweichungen vom Soll in #36 stehen.
 **Fürs Fachgespräch:** Dogfooding: Ein Prüfwerkzeug muss seine eigenen Befunde aushalten, auch die Drittlandübermittlung der eigenen Demo. Das Soll steht vor dem ersten Lauf fest, sonst wäre es kein Testorakel, sondern eine Kopie des Ergebnisses.
+
+---
+
+### Schritt 12p – #55 Ordner für govguard und UI, Report-Ansicht als ein Modul
+
+**Ziel:** `govguard/` bekommt `calls/`, `checks/` und `adapters/`, `govguard_ui/` bekommt `screens/` und `report/` (ADR 0027). Kein neues Verhalten, die Befehle bleiben gleich.
+**Voraussetzung:** ADR 0027 committet. Kein AWS, kein LLM-Aufruf.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12p, Issue #55 und ADR 0027“ → Plan → Go
+- [ ] **Bauen** 🤖 _Sonnet_ (gleiche Session) · Dateien verschieben, `finding_list` in `findings_view`, Richtungsregeln in `tests/test_architecture.py`, Pfade in CLAUDE.md, ARCHITECTURE, DESIGN und Skill `audit-messen` nachziehen
+- [ ] **Ausprobieren** 👤 `uv run pytest -m visual` und `/run` → Galerie und „Audit erstellen“ öffnen
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #55`
+- [ ] **Verstehen** 👤 `/verstehen 55 Kohäsion und Import-Richtung`
+- [ ] **Abschließen** 👤 committet und pusht, schließt #55
+
+**Fertig, wenn:** Im Root liegen nur Einstiege und Verträge, der Architekturtest prüft die Richtung, und `pytest`, `pytest -m visual` und ruff sind grün.
+**Fürs Fachgespräch:** Ein Ordner ist eine Aufgabe, im Root steht die Schnittstelle. Die Laufzeit gliedert nach „spricht mit dem Modell“ oder „prüft rein“, weil die Prüfung in jedem Modellaufruf läuft, nicht danach.
+
+---
+
+### Schritt 12q – #57 kb_build: LLM-Schritt, Gates beim Schritt, geteilte Eingaben
+
+**Ziel:** `llm_step.py` bündelt Cache, Zählung und „aus dem Cache oder fragen“, die Gates ziehen zu ihrem Schritt, `build_inputs.py` bündelt geteilte Eingaben (ADR 0027).
+**Voraussetzung:** Keine, unabhängig von #55. Läuft nach 12p, damit zwei Umbauten nicht gleichzeitig offen sind. Kein LLM-Aufruf.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12q, Issue #57 und ADR 0027“ → Plan → Go
+- [ ] **Bauen** 🤖 _Sonnet_ (gleiche Session) · generischer Cache, `gates.py` aufteilen, `classify` mit CFN-Typen per Deps, `select/prompts.py`, `build_inputs.py`, Test „kein `run.py` importiert ein anderes“. Prompts und Cache-Keys nicht anfassen.
+- [ ] **Gegenprobe** 👤 `git status data/` → keine Änderung an Katalog, Caches oder Protokollen
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #57`
+- [ ] **Abschließen** 👤 committet und pusht, schließt #57
+
+**Fertig, wenn:** `decompose/cache.py` und `kb_build/gates.py` entfallen sind, `data/` unverändert ist und `pytest` und ruff grün sind.
+**Fürs Fachgespräch:** Jeder Schritt liest und schreibt nur selbst, geteilte Eingaben liegen an einer Stelle. Ein Refactoring beweist sich über unveränderte Tests und unveränderte Daten, nicht über einen neuen Lauf.
+
+---
+
+### Schritt 12r – #56 Ein Modul für Modellaufrufe zur Laufzeit
+
+**Ziel:** Paket, Inventar und Verstoß-Prüfer teilen `calls/model_call.py`: Agents je Provider (ADR 0005, 0016) und Retry-Buchung an einer Stelle.
+**Voraussetzung:** Schritt 12p (#55 geschlossen). Kein LLM-Aufruf.
+
+- [ ] **Starten** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12r, Issue #56 und ADR 0027“ → Plan → Go
+- [ ] **Bauen** 🤖 _Sonnet_ (gleiche Session) · `model_call` per TDD, dann die drei Aufrufer umstellen; das Inventar behält `ToolOutput` per Parameter (Verweis auf #58)
+- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #56`
+- [ ] **Abschließen** 👤 committet und pusht, schließt #56
+
+**Fertig, wenn:** `ToolOutput`/`NativeOutput` und die Retry-Buchung nur noch in `model_call` stehen, alle `test_run_audit_*` ohne geänderte Erwartung grün sind und ruff grün ist.
+**Fürs Fachgespräch:** Eine Regel, die an drei Stellen steht, driftet: Das Inventar nutzte auf Groq noch `ToolOutput`. Ein deep module hält die Provider-Regel an einer Stelle, die Aufrufer behalten nur Prompt und Prüfung.
+
+---
+
+### Schritt 12s – #58 Inventar auf Groq mit NativeOutput (ADR 0016)
+
+**Ziel:** Das Inventar folgt ADR 0016. Eine Messung vorher und nachher entscheidet, ob die Umstellung bleibt.
+**Voraussetzung:** Schritt 12r (#56 geschlossen). Groq, 6 Architektur-Audits, wenige Cent.
+
+- [ ] **Messen vorher** 👤 `/audit-messen arch-protokollarchiv 3× mit Groq` → 🤖 notiert erkannte Typen, N/A „Dienst nicht erkannt“ und Retries in #58
+- [ ] **Bauen** 🆕 _Sonnet_ · 👤 „Lies FAHRPLAN Schritt 12s und Issue #58“ → Plan → Go · Inventar auf `NativeOutput`, Parameter aus #56 entfernen
+- [ ] **Messen nachher** 👤 `/audit-messen arch-protokollarchiv 3× mit Groq` → 🤖 vergleicht in #58; schlechter → zurück auf `ToolOutput`, Nachtrag in ADR 0016
+- [ ] **Abschließen** 👤 committet und pusht, schließt #58
+
+**Fertig, wenn:** Der Vergleich in #58 steht, das Inventar der Entscheidung folgt und `pytest` und ruff grün sind.
+**Fürs Fachgespräch:** Eine Änderung am Modellaufruf ist eine Verhaltensänderung, auch wenn der Code kleiner wird. Deshalb trennt das Ticket sie vom Refactoring und misst sie.
 
 ---
 
