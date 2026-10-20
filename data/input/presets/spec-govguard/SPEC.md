@@ -156,7 +156,8 @@ Weicht der Audit-Report vom Soll ab, zeigt die Galerie die Abweichung.
 
 Der Audit-Report nennt den Gesamtstatus und je Prüfregel genau einen Befund mit
 Normanker, Status, Begründung, Beleg und Empfehlung. Die prüfende Person kann ihn als JSON-Datei
-herunterladen. Ein Normanker ist die Fundstelle im Regelwerk, etwa „DSGVO Art. 9“.
+herunterladen. Ein Normanker ist die Fundstelle im Regelwerk, etwa „DSGVO Art. 9“. Bei einer
+Spezifikation nennt er außerdem je Bedingung den Wert mit Belegzeilen (B6).
 
 ### F5 Wissensbasis bauen
 
@@ -199,7 +200,7 @@ Kürzel, die Oberfläche zeigt deutsche Bezeichnungen.
 | PASS   | Einhaltung belegt | Die Eingabe belegt, dass die Prüfregel eingehalten ist.                                                                              |
 | WARN   | Prüfbedarf        | Aus der Eingabe ist es nicht entscheidbar, es besteht Prüfbedarf.                                                                    |
 | FAIL   | Verstoß belegt    | Die Eingabe belegt einen Verstoß.                                                                                                    |
-| N/A    | Nicht anwendbar   | Die Prüfregel ist auf die Eingabe nicht anwendbar. Bei einer Architektur entscheidet das Programm das über die vorkommenden Dienste. |
+| N/A    | Nicht anwendbar   | Die Prüfregel ist auf die Eingabe nicht anwendbar. Bei einer Architektur entscheidet das Programm das über die vorkommenden Dienste, bei einer Spezifikation über eine ausdrücklich verneinte Bedingung (B6). |
 
 Ein Befund mit WARN ohne Belegzeilen heißt in der Oberfläche „Lücke“: Die Eingabe beschreibt die
 Prüfregel nicht.
@@ -419,11 +420,12 @@ existieren und lang genug sind, bis zu einem Abschnitt von 200 Zeilen.
 
 ### P4 Viele Lücken
 
-In der offenen Welt sind die meisten Befunde WARN, bei den Musterfällen 101 bis 120 von 151
-(Katalog von 151 Prüfregeln).
-Meist beschreibt die Eingabe die Anforderung einfach nicht.
+In der offenen Welt sind die meisten Befunde Lücken, bei den drei Spec-Musterfällen 206 bis 294
+von 350 (Galerie vom 20.10.2026). Meist beschreibt die Eingabe die Anforderung einfach nicht.
 
 - **Gegenmaßnahme:** Die Oberfläche trennt Lücken (nicht beschrieben) vom Prüfbedarf (Beleg unklar).
+  Lücken unter einer Bedingung, zu der die Spezifikation schweigt, stehen getrennt unter „Nur wenn …“.
+  Für jedes Vorhaben bleiben so 145 bis 254 Lücken.
 - **Was bleibt:** Der Audit-Report ist lang. Die Aussagekraft liegt in FAIL und Prüfbedarf.
 
 ### P5 Schwächen im Prüfkatalog
@@ -483,19 +485,19 @@ Protokollierung prüft GovGuard nicht an der Spezifikation (SDM M43), sondern an
 Kontoweite AWS-Pflichten wie die Mehr-Faktor-Anmeldung des Hauptkontos fehlen bewusst. Terraform und
 CloudFormation-Vorlagen in YAML prüft GovGuard nur als Freitext.
 
-### B6 Bedingungen: die Vorstufe liest nur, sie stuft nicht ein
+### B6 Bedingungen: der Vorlauf liest nur, er stuft nicht ein
 
 Vor den Prüfpaketen stellt ein Aufruf des Sprachmodells fest, was die Spezifikation zu sieben
 Bedingungen sagt: KI-System, Hochrisiko-KI, Drittlandübermittlung, Auftragsverarbeiter, Einwilligung,
 Mandantenfähigkeit und automatisierte Entscheidung. Nur eine ausdrückliche Verneinung für das ganze
 Vorhaben macht die Prüfregeln der Bedingung zu „Nicht anwendbar“, mit der Verneinungszeile als Beleg.
 
-Schweigt die Spezifikation, steht die Bedingung auf „nicht festgelegt“ und ihre Prüfregeln bleiben
-im Audit. Die Vorstufe stuft also nicht selbst ein: Ein Hochrisiko-System erkennt GovGuard nur, wenn
+Schweigt die Spezifikation, steht die Bedingung auf „nicht genannt“ und ihre Prüfregeln bleiben
+im Audit. Der Bedingungs-Vorlauf stuft also nicht selbst ein: Ein Hochrisiko-System erkennt GovGuard nur, wenn
 die Spezifikation es ausdrücklich beschreibt oder ausschließt. Eine verschwiegene Einstufung fällt
 deshalb weiter nicht auf; die Prüfregeln zu Art. 4, 5, 6 und 50 KI-VO (KI-System) sowie zu Art. 13,
 14, 26 und 27 (Hochrisiko-KI) bewertet dann das Sprachmodell. Kein KI-System heißt auch kein
 Hochrisiko-System.
 
-Fällt die Vorstufe aus, bleiben alle Bedingungen „nicht festgelegt“ und jede Prüfregel geht ans
-Modell. Das Audit schlägt deshalb nie wegen der Vorstufe fehl (ADR 0028).
+Fällt der Bedingungs-Vorlauf aus, bleiben alle Bedingungen „nicht genannt“ und jede Prüfregel geht
+ans Modell. Das Audit schlägt deshalb nie wegen des Vorlaufs fehl (ADR 0028).
