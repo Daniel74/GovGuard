@@ -745,42 +745,10 @@
   },
   {
     "source": "DSGVO",
-    "requirement_id": "Art. 20 Abs. 1 lit. a",
-    "title": "Recht auf Datenübertragbarkeit",
-    "outcome": "selected",
-    "rationale": "Die Anforderung lässt sich anhand von Angaben in einer Spezifikation prüfen, z. B. ob ein Export in einem strukturierten, gängigen, maschinenlesbaren Format angeboten wird und die rechtlichen Grundlagen angegeben sind.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 20 Abs. 1 lit. b",
-    "title": "Recht auf Datenübertragbarkeit",
-    "outcome": "selected",
-    "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation festgelegt werden kann, in welchem strukturierten, gängigen und maschinenlesbaren Format Daten bereitgestellt und ohne Behinderung an einen anderen Verantwortlichen übermittelt werden müssen.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 20 Abs. 2",
-    "title": "Recht auf Datenübertragbarkeit",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf die Möglichkeit der direkten Datenübermittlung, die in einer Spezifikation durch Angaben zu unterstützten Übertragungsmechanismen, technischen Voraussetzungen und Prozessen beschrieben werden kann, sodass sie prüfbar ist.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 20 Abs. 3",
+    "requirement_id": "Art. 20",
     "title": "Recht auf Datenübertragbarkeit",
     "outcome": "prefiltered",
-    "rationale": "Keine Pflicht laut Zerlegung: Enthält eine Ausnahme, die das Recht einschränkt, aber keine eigenständige Pflicht darstellt.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 20 Abs. 4",
-    "title": "Recht auf Datenübertragbarkeit",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf die in der Spezifikation zu dokumentierenden Einschränkungen beim Datenexport, sodass geprüft werden kann, ob nur die Daten der betroffenen Person übertragen werden und keine Rechte Dritter verletzt werden.",
+    "rationale": "Art. 20 Abs. 3: Das Recht auf Datenübertragbarkeit gilt nicht für Verarbeitungen in Wahrnehmung einer öffentlichen Aufgabe, also nicht für eine Behörde.",
     "cfn_resource_types": []
   },
   {
@@ -1081,42 +1049,10 @@
   },
   {
     "source": "DSGVO",
-    "requirement_id": "Art. 27 Abs. 1",
-    "title": "Vertreter von nicht in der Union niedergelassenen Verantwortlichen oder Auftragsverarbeitern",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf die Benennung eines Vertreters, die in einer Spezifikation angegeben werden kann und damit prüfbar ist.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 27 Abs. 2",
-    "title": "Vertreter von nicht in der Union niedergelassenen Verantwortlichen oder Auftragsverarbeitern",
-    "outcome": "selected",
-    "rationale": "Die Anforderung verlangt Angaben zu Art, Umfang, Datenkategorien und Risikobewertung der Verarbeitung, die in einer fachlichen Spezifikation beschrieben werden können, sodass geprüft werden kann, ob die Ausnahmekriterien erfüllt sind.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 27 Abs. 3",
-    "title": "Vertreter von nicht in der Union niedergelassenen Verantwortlichen oder Auftragsverarbeitern",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf die Angabe des Sitzes des Vertreters, die in einer Spezifikation als Attribut erfasst werden kann, sodass geprüft werden kann, ob er in einem geeigneten Mitgliedstaat niedergelassen ist.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 27 Abs. 4",
-    "title": "Vertreter von nicht in der Union niedergelassenen Verantwortlichen oder Auftragsverarbeitern",
-    "outcome": "selected",
-    "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation Angaben zum benannten Vertreter, dessen Kontaktdaten und Aufgaben enthalten kann, wodurch geprüft werden kann, ob ein Vertreter bestellt ist.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 27 Abs. 5",
+    "requirement_id": "Art. 27",
     "title": "Vertreter von nicht in der Union niedergelassenen Verantwortlichen oder Auftragsverarbeitern",
     "outcome": "prefiltered",
-    "rationale": "Keine Pflicht laut Zerlegung: Abs. 5 enthält lediglich einen Hinweis, dass die Benennung eines Vertreters keine Auswirkung auf etwaige Rechtsverfahren gegen den Verantwortlichen oder Auftragsverarbeiter hat; keine eigenständige Pflicht.",
+    "rationale": "Art. 27 Abs. 1: Einen Vertreter benennen nur Verantwortliche ohne Niederlassung in der Union, nicht eine deutsche Behörde.",
     "cfn_resource_types": []
   },
   {
@@ -2057,74 +1993,10 @@
   },
   {
     "source": "DSGVO",
-    "requirement_id": "Art. 41 Abs. 1",
+    "requirement_id": "Art. 41",
     "title": "Überwachung der genehmigten Verhaltensregeln",
     "outcome": "prefiltered",
-    "rationale": "Keine Pflicht laut Zerlegung: Beschreibt lediglich die Qualifikationsvoraussetzungen für die Stelle, keine zu erfüllende Pflicht.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 41 Abs. 2 lit. a",
-    "title": "Überwachung der genehmigten Verhaltensregeln",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Akkreditierung einer Aufsichts‑Stelle und enthält keine Angaben, die in einer Fachspezifikation geprüft werden könnten.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 41 Abs. 2 lit. b",
-    "title": "Überwachung der genehmigten Verhaltensregeln",
-    "outcome": "selected",
-    "rationale": "Die Anforderung verlangt festgelegte Verfahren zur Bewertung und Überwachung der Einhaltung von Verhaltensregeln, die in einer Spezifikation beschrieben werden können, sodass die Erfüllung prüfbar ist.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 41 Abs. 2 lit. c",
-    "title": "Überwachung der genehmigten Verhaltensregeln",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf festgelegte Verfahren und Strukturen, die in einer Spezifikation beschrieben werden können, sodass geprüft werden kann, ob sie vorhanden und transparent sind.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 41 Abs. 2 lit. d",
-    "title": "Überwachung der genehmigten Verhaltensregeln",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die interne Prüfung eines Interessenkonflikts einer akkreditierten Stelle und berührt keine zu spezifizierende IT‑Lösung, daher kann sie nicht durch eine Spezifikation geprüft werden.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 41 Abs. 3",
-    "title": "Überwachung der genehmigten Verhaltensregeln",
-    "outcome": "prefiltered",
-    "rationale": "Keine Pflicht laut Zerlegung: Regelt eine Aufgabe der Aufsichtsbehörde, nicht eine Verpflichtung für die akkreditierte Stelle.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 41 Abs. 4",
-    "title": "Überwachung der genehmigten Verhaltensregeln",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung betrifft ausschließlich Pflichten der Aufsichtsbehörde (Maßnahmen bei Verstößen), die nicht durch eine Fachspezifikation geprüft werden können.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 41 Abs. 5",
-    "title": "Überwachung der genehmigten Verhaltensregeln",
-    "outcome": "prefiltered",
-    "rationale": "Keine Pflicht laut Zerlegung: Verpflichtet die Aufsichtsbehörde zum Widerruf der Akkreditierung, keine Pflicht für die Stelle.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 41 Abs. 6",
-    "title": "Überwachung der genehmigten Verhaltensregeln",
-    "outcome": "prefiltered",
-    "rationale": "Keine Pflicht laut Zerlegung: Stellt eine Ausnahme dar – der Artikel gilt nicht für Behörden oder öffentliche Stellen.",
+    "rationale": "Art. 41 Abs. 6: Die Überwachung genehmigter Verhaltensregeln gilt nicht für Behörden und öffentliche Stellen.",
     "cfn_resource_types": []
   },
   {
@@ -2433,146 +2305,10 @@
   },
   {
     "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 1 lit. a",
+    "requirement_id": "Art. 47",
     "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Genehmigung interner Datenschutzvorschriften durch die Aufsichtsbehörde und berührt keine technische Spezifikation, daher ist sie nicht prüfbar.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 1 lit. b",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf interne Datenschutzvorschriften, die als Spezifikation vorliegen können und damit prüfbar sind, ob sie die ausdrücklich durchsetzbaren Rechte der betroffenen Personen enthalten.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 1 lit. c",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Genehmigung durch die Aufsichtsbehörde und enthält keine Angaben zu Zwecken, Rechtsgrundlagen, Rollen oder technischen Maßnahmen, sodass sie nicht prüfbar ist.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. a",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung ist prüfbar, weil geprüft werden kann, ob die internen Datenschutzvorschriften die geforderte Angabe von Struktur und Kontaktdaten der Unternehmensgruppe enthalten.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. b",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation die geforderten Angaben zu Datenübermittlungen, Datenarten, Zweck, betroffenen Personen und Drittland enthalten kann.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. c",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf den Inhalt von internen Datenschutzvorschriften, welcher in einer Spezifikation angegeben werden kann und damit prüfbar ist.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. d",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung ist prüfbar, weil eine Spezifikation die geforderten Angaben (Zwecke, Rechtsgrundlage, Speicherfristen, Sicherheitsmaßnahmen etc.) enthalten kann und damit überprüft werden kann, ob sie erfüllt ist.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. e",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung verlangt, dass die internen Datenschutzvorschriften bestimmte Angaben enthalten, die in einer Spezifikation (z. B. Freitext) nachgewiesen und geprüft werden können.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. f",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung verlangt, dass die internen Datenschutzvorschriften einen konkreten Hinweis zur übernommenen Haftung enthalten, was durch Prüfung der Dokumentation nachweisbar ist.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. g",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf Angaben, die in einer Spezifikation (z. B. als Freitext) enthalten sein können, sodass geprüft werden kann, ob die beschriebenen Informationswege und Inhalte vorhanden sind.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. h",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung ist prüfbar, weil in einer Spezifikation (z. B. internen Datenschutzvorschriften) die genannten Angaben enthalten sein müssen und damit überprüft werden kann, ob sie vorhanden sind.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. i",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung lässt sich prüfen, indem geprüft wird, ob die internen Datenschutzvorschriften das Beschwerdeverfahren enthalten.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. j",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung verlangt nach dokumentierten Verfahren zur Überprüfung und Meldung, die in einer Spezifikation angegeben werden können, sodass ihre Erfüllung überprüfbar ist.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. k",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf Angaben, die in einer fachlichen Spezifikation enthalten sein können, sodass geprüft werden kann, ob die genannten Verfahren zur Meldung und Erfassung von Änderungen beschrieben sind.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. l",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf interne Verfahrensvorschriften und nicht auf eine technische Spezifikation, sodass sie nicht prüfbar ist.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. m",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung bezieht sich auf Angaben, die in einer Spezifikation (z. B. Beschreibung von Meldeverfahren) enthalten sein können und somit prüfbar sind.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 2 lit. n",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "selected",
-    "rationale": "Die Anforderung ist prüfbar, weil die Spezifikation angeben kann, ob die internen Datenschutzvorschriften das geforderte Training für das Personal enthalten.",
-    "cfn_resource_types": []
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47 Abs. 3",
-    "title": "Verbindliche interne Datenschutzvorschriften",
-    "outcome": "not_testable",
-    "rationale": "Die Anforderung bezieht sich auf die Festlegung von Formaten und Verfahren durch die Kommission und berührt keine prüfbare Spezifikation.",
+    "outcome": "prefiltered",
+    "rationale": "Art. 47: Verbindliche interne Datenschutzvorschriften gibt es nur für Unternehmensgruppen, nicht für eine einzelne Behörde.",
     "cfn_resource_types": []
   },
   {

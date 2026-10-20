@@ -1088,8 +1088,8 @@
         "chapter": 3,
         "fine_tier": 4
       },
-      "prefilter_passed": true,
-      "prefilter_reason": null,
+      "prefilter_passed": false,
+      "prefilter_reason": "Art. 20 Abs. 3: Das Recht auf Datenübertragbarkeit gilt nicht für Verarbeitungen in Wahrnehmung einer öffentlichen Aufgabe, also nicht für eine Behörde.",
       "sections": [
         {
           "mark": "Art. 20 Abs. 1 lit. a",
@@ -1406,8 +1406,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true,
-      "prefilter_reason": null,
+      "prefilter_passed": false,
+      "prefilter_reason": "Art. 27 Abs. 1: Einen Vertreter benennen nur Verantwortliche ohne Niederlassung in der Union, nicht eine deutsche Behörde.",
       "sections": [
         {
           "mark": "Art. 27 Abs. 1",
@@ -2247,8 +2247,8 @@
         "chapter": 4,
         "fine_tier": 2
       },
-      "prefilter_passed": true,
-      "prefilter_reason": null,
+      "prefilter_passed": false,
+      "prefilter_reason": "Art. 41 Abs. 6: Die Überwachung genehmigter Verhaltensregeln gilt nicht für Behörden und öffentliche Stellen.",
       "sections": [
         {
           "mark": "Art. 41 Abs. 1",
@@ -2601,8 +2601,8 @@
         "chapter": 5,
         "fine_tier": 4
       },
-      "prefilter_passed": true,
-      "prefilter_reason": null,
+      "prefilter_passed": false,
+      "prefilter_reason": "Art. 47: Verbindliche interne Datenschutzvorschriften gibt es nur für Unternehmensgruppen, nicht für eine einzelne Behörde.",
       "sections": [
         {
           "mark": "Art. 47 Abs. 1 lit. a",

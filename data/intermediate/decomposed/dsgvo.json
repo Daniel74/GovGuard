@@ -1387,79 +1387,16 @@
       "prefilter_reason": null
     },
     {
-      "id": "Art. 20 Abs. 1 lit. a",
+      "id": "Art. 20",
       "title": "Recht auf Datenübertragbarkeit",
-      "text": "Die betroffene Person hat das Recht, die sie betreffenden personenbezogenen Daten, die sie einem Verantwortlichen bereitgestellt hat, in einem strukturierten, gängigen und maschinenlesbaren Format zu erhalten, und sie hat das Recht, diese Daten einem anderen Verantwortlichen ohne Behinderung durch den Verantwortlichen, dem die personenbezogenen Daten bereitgestellt wurden, zu übermitteln, sofern a) die Verarbeitung auf einer Einwilligung gemäß Artikel 6 Absatz 1 Buchstabe a oder Artikel 9 Absatz 2 Buchstabe a oder auf einem Vertrag gemäß Artikel 6 Absatz 1 Buchstabe b beruht und",
-      "primary_anchor": "DSGVO Art. 20 Abs. 1 lit. a",
+      "text": "(1) Die betroffene Person hat das Recht, die sie betreffenden personenbezogenen Daten, die sie einem Verantwortlichen bereitgestellt hat, in einem strukturierten, gängigen und maschinenlesbaren Format zu erhalten, und sie hat das Recht, diese Daten einem anderen Verantwortlichen ohne Behinderung durch den Verantwortlichen, dem die personenbezogenen Daten bereitgestellt wurden, zu übermitteln, sofern a) die Verarbeitung auf einer Einwilligung gemäß Artikel 6 Absatz 1 Buchstabe a oder Artikel 9 Absatz 2 Buchstabe a oder auf einem Vertrag gemäß Artikel 6 Absatz 1 Buchstabe b beruht und b) die Verarbeitung mithilfe automatisierter Verfahren erfolgt. (2) Bei der Ausübung ihres Rechts auf Datenübertragbarkeit gemäß Absatz 1 hat die betroffene Person das Recht, zu erwirken, dass die personenbezogenen Daten direkt von einem Verantwortlichen einem anderen Verantwortlichen übermittelt werden, soweit dies technisch machbar ist. (3) Die Ausübung des Rechts nach Absatz 1 des vorliegenden Artikels lässt Artikel 17 unberührt. Dieses Recht gilt nicht für eine Verarbeitung, die für die Wahrnehmung einer Aufgabe erforderlich ist, die im öffentlichen Interesse liegt oder in Ausübung öffentlicher Gewalt erfolgt, die dem Verantwortlichen übertragen wurde. (4) Das Recht gemäß Absatz 1 darf die Rechte und Freiheiten anderer Personen nicht beeinträchtigen.",
+      "primary_anchor": "DSGVO Art. 20",
       "attributes": {
         "chapter": 3,
-        "fine_tier": 4,
-        "article": "Art. 20",
-        "kind": "alle_gelten",
-        "quote": "a) die Verarbeitung auf einer Einwilligung gemäß Artikel 6 Absatz 1 Buchstabe a oder Artikel 9 Absatz 2 Buchstabe a oder auf einem Vertrag gemäß Artikel 6 Absatz 1 Buchstabe b beruht und"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 20 Abs. 1 lit. b",
-      "title": "Recht auf Datenübertragbarkeit",
-      "text": "Die betroffene Person hat das Recht, die sie betreffenden personenbezogenen Daten, die sie einem Verantwortlichen bereitgestellt hat, in einem strukturierten, gängigen und maschinenlesbaren Format zu erhalten, und sie hat das Recht, diese Daten einem anderen Verantwortlichen ohne Behinderung durch den Verantwortlichen, dem die personenbezogenen Daten bereitgestellt wurden, zu übermitteln, sofern b) die Verarbeitung mithilfe automatisierter Verfahren erfolgt.",
-      "primary_anchor": "DSGVO Art. 20 Abs. 1 lit. b",
-      "attributes": {
-        "chapter": 3,
-        "fine_tier": 4,
-        "article": "Art. 20",
-        "kind": "alle_gelten",
-        "quote": "b) die Verarbeitung mithilfe automatisierter Verfahren erfolgt."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 20 Abs. 2",
-      "title": "Recht auf Datenübertragbarkeit",
-      "text": "Bei der Ausübung ihres Rechts auf Datenübertragbarkeit gemäß Absatz 1 hat die betroffene Person das Recht, zu erwirken, dass die personenbezogenen Daten direkt von einem Verantwortlichen einem anderen Verantwortlichen übermittelt werden, soweit dies technisch machbar ist.",
-      "primary_anchor": "DSGVO Art. 20 Abs. 2",
-      "attributes": {
-        "chapter": 3,
-        "fine_tier": 4,
-        "article": "Art. 20",
-        "kind": "alle_gelten",
-        "quote": "Bei der Ausübung ihres Rechts auf Datenübertragbarkeit gemäß Absatz 1 hat die betroffene Person das Recht, zu erwirken, dass die personenbezogenen Daten direkt von einem Verantwortlichen einem anderen Verantwortlichen übermittelt werden, soweit dies technisch machbar ist."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 20 Abs. 3",
-      "title": "Recht auf Datenübertragbarkeit",
-      "text": "Die Ausübung des Rechts nach Absatz 1 des vorliegenden Artikels lässt Artikel 17 unberührt. Dieses Recht gilt nicht für eine Verarbeitung, die für die Wahrnehmung einer Aufgabe erforderlich ist, die im öffentlichen Interesse liegt oder in Ausübung öffentlicher Gewalt erfolgt, die dem Verantwortlichen übertragen wurde.",
-      "primary_anchor": "DSGVO Art. 20 Abs. 3",
-      "attributes": {
-        "chapter": 3,
-        "fine_tier": 4,
-        "article": "Art. 20",
-        "kind": "keine_pflicht",
-        "quote": "Die Ausübung des Rechts nach Absatz 1 des vorliegenden Artikels lässt Artikel 17 unberührt. Dieses Recht gilt nicht für eine Verarbeitung, die für die Wahrnehmung einer Aufgabe erforderlich ist, die im öffentlichen Interesse liegt oder in Ausübung öffentlicher Gewalt erfolgt, die dem Verantwortlichen übertragen wurde."
+        "fine_tier": 4
       },
       "prefilter_passed": false,
-      "prefilter_reason": "Keine Pflicht laut Zerlegung: Enthält eine Ausnahme, die das Recht einschränkt, aber keine eigenständige Pflicht darstellt."
-    },
-    {
-      "id": "Art. 20 Abs. 4",
-      "title": "Recht auf Datenübertragbarkeit",
-      "text": "Das Recht gemäß Absatz 1 darf die Rechte und Freiheiten anderer Personen nicht beeinträchtigen.",
-      "primary_anchor": "DSGVO Art. 20 Abs. 4",
-      "attributes": {
-        "chapter": 3,
-        "fine_tier": 4,
-        "article": "Art. 20",
-        "kind": "alle_gelten",
-        "quote": "Das Recht gemäß Absatz 1 darf die Rechte und Freiheiten anderer Personen nicht beeinträchtigen."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
+      "prefilter_reason": "Art. 20 Abs. 3: Das Recht auf Datenübertragbarkeit gilt nicht für Verarbeitungen in Wahrnehmung einer öffentlichen Aufgabe, also nicht für eine Behörde."
     },
     {
       "id": "Art. 21 Abs. 1",
@@ -2017,79 +1954,16 @@
       "prefilter_reason": null
     },
     {
-      "id": "Art. 27 Abs. 1",
+      "id": "Art. 27",
       "title": "Vertreter von nicht in der Union niedergelassenen Verantwortlichen oder Auftragsverarbeitern",
-      "text": "In den Fällen gemäß Artikel 3 Absatz 2 benennt der Verantwortliche oder der Auftragsverarbeiter schriftlich einen Vertreter in der Union.",
-      "primary_anchor": "DSGVO Art. 27 Abs. 1",
+      "text": "(1) In den Fällen gemäß Artikel 3 Absatz 2 benennt der Verantwortliche oder der Auftragsverarbeiter schriftlich einen Vertreter in der Union. (2) Die Pflicht gemäß Absatz 1 des vorliegenden Artikels gilt nicht für a) eine Verarbeitung, die gelegentlich erfolgt, nicht die umfangreiche Verarbeitung besonderer Datenkategorien im Sinne des Artikels 9 Absatz 1 oder die umfangreiche Verarbeitung von personenbezogenen Daten über strafrechtliche Verurteilungen und Straftaten im Sinne des Artikels 10 einschließt und unter Berücksichtigung der Art, der Umstände, des Umfangs und der Zwecke der Verarbeitung voraussichtlich nicht zu einem Risiko für die Rechte und Freiheiten natürlicher Personen führt, oder b) Behörden oder öffentliche Stellen. (3) Der Vertreter muss in einem der Mitgliedstaaten niedergelassen sein, in denen die betroffenen Personen, deren personenbezogene Daten im Zusammenhang mit den ihnen angebotenen Waren oder Dienstleistungen verarbeitet werden oder deren Verhalten beobachtet wird, sich befinden. (4) Der Vertreter wird durch den Verantwortlichen oder den Auftragsverarbeiter beauftragt, zusätzlich zu diesem oder an seiner Stelle insbesondere für Aufsichtsbehörden und betroffene Personen bei sämtlichen Fragen im Zusammenhang mit der Verarbeitung zur Gewährleistung der Einhaltung dieser Verordnung als Anlaufstelle zu dienen. (5) Die Benennung eines Vertreters durch den Verantwortlichen oder den Auftragsverarbeiter erfolgt unbeschadet etwaiger rechtlicher Schritte gegen den Verantwortlichen oder den Auftragsverarbeiter selbst.",
+      "primary_anchor": "DSGVO Art. 27",
       "attributes": {
         "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 27",
-        "kind": "alle_gelten",
-        "quote": "In den Fällen gemäß Artikel 3 Absatz 2 benennt der Verantwortliche oder der Auftragsverarbeiter schriftlich einen Vertreter in der Union."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 27 Abs. 2",
-      "title": "Vertreter von nicht in der Union niedergelassenen Verantwortlichen oder Auftragsverarbeitern",
-      "text": "Die Pflicht gemäß Absatz 1 des vorliegenden Artikels gilt nicht für a) eine Verarbeitung, die gelegentlich erfolgt, nicht die umfangreiche Verarbeitung besonderer Datenkategorien im Sinne des Artikels 9 Absatz 1 oder die umfangreiche Verarbeitung von personenbezogenen Daten über strafrechtliche Verurteilungen und Straftaten im Sinne des Artikels 10 einschließt und unter Berücksichtigung der Art, der Umstände, des Umfangs und der Zwecke der Verarbeitung voraussichtlich nicht zu einem Risiko für die Rechte und Freiheiten natürlicher Personen führt, oder b) Behörden oder öffentliche Stellen.",
-      "primary_anchor": "DSGVO Art. 27 Abs. 2",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 27",
-        "kind": "eine_genuegt",
-        "quote": "a) eine Verarbeitung, die gelegentlich erfolgt, nicht die umfangreiche Verarbeitung besonderer Datenkategorien im Sinne des Artikels 9 Absatz 1 oder die umfangreiche Verarbeitung von personenbezogenen Daten über strafrechtliche Verurteilungen und Straftaten im Sinne des Artikels 10 einschließt und unter Berücksichtigung der Art, der Umstände, des Umfangs und der Zwecke der Verarbeitung voraussichtlich nicht zu einem Risiko für die Rechte und Freiheiten natürlicher Personen führt, oder b) Behörden oder öffentliche Stellen."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 27 Abs. 3",
-      "title": "Vertreter von nicht in der Union niedergelassenen Verantwortlichen oder Auftragsverarbeitern",
-      "text": "Der Vertreter muss in einem der Mitgliedstaaten niedergelassen sein, in denen die betroffenen Personen, deren personenbezogene Daten im Zusammenhang mit den ihnen angebotenen Waren oder Dienstleistungen verarbeitet werden oder deren Verhalten beobachtet wird, sich befinden.",
-      "primary_anchor": "DSGVO Art. 27 Abs. 3",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 27",
-        "kind": "alle_gelten",
-        "quote": "Der Vertreter muss in einem der Mitgliedstaaten niedergelassen sein, in denen die betroffenen Personen, deren personenbezogene Daten im Zusammenhang mit den ihnen angebotenen Waren oder Dienstleistungen verarbeitet werden oder deren Verhalten beobachtet wird, sich befinden."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 27 Abs. 4",
-      "title": "Vertreter von nicht in der Union niedergelassenen Verantwortlichen oder Auftragsverarbeitern",
-      "text": "Der Vertreter wird durch den Verantwortlichen oder den Auftragsverarbeiter beauftragt, zusätzlich zu diesem oder an seiner Stelle insbesondere für Aufsichtsbehörden und betroffene Personen bei sämtlichen Fragen im Zusammenhang mit der Verarbeitung zur Gewährleistung der Einhaltung dieser Verordnung als Anlaufstelle zu dienen.",
-      "primary_anchor": "DSGVO Art. 27 Abs. 4",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 27",
-        "kind": "alle_gelten",
-        "quote": "Der Vertreter wird durch den Verantwortlichen oder den Auftragsverarbeiter beauftragt, zusätzlich zu diesem oder an seiner Stelle insbesondere für Aufsichtsbehörden und betroffene Personen bei sämtlichen Fragen im Zusammenhang mit der Verarbeitung zur Gewährleistung der Einhaltung dieser Verordnung als Anlaufstelle zu dienen."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 27 Abs. 5",
-      "title": "Vertreter von nicht in der Union niedergelassenen Verantwortlichen oder Auftragsverarbeitern",
-      "text": "Die Benennung eines Vertreters durch den Verantwortlichen oder den Auftragsverarbeiter erfolgt unbeschadet etwaiger rechtlicher Schritte gegen den Verantwortlichen oder den Auftragsverarbeiter selbst.",
-      "primary_anchor": "DSGVO Art. 27 Abs. 5",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 27",
-        "kind": "keine_pflicht",
-        "quote": "Die Benennung eines Vertreters durch den Verantwortlichen oder den Auftragsverarbeiter erfolgt unbeschadet etwaiger rechtlicher Schritte gegen den Verantwortlichen oder den Auftragsverarbeiter selbst."
+        "fine_tier": 2
       },
       "prefilter_passed": false,
-      "prefilter_reason": "Keine Pflicht laut Zerlegung: Abs. 5 enthält lediglich einen Hinweis, dass die Benennung eines Vertreters keine Auswirkung auf etwaige Rechtsverfahren gegen den Verantwortlichen oder Auftragsverarbeiter hat; keine eigenständige Pflicht."
+      "prefilter_reason": "Art. 27 Abs. 1: Einen Vertreter benennen nur Verantwortliche ohne Niederlassung in der Union, nicht eine deutsche Behörde."
     },
     {
       "id": "Art. 28 Abs. 1",
@@ -3847,139 +3721,16 @@
       "prefilter_reason": null
     },
     {
-      "id": "Art. 41 Abs. 1",
+      "id": "Art. 41",
       "title": "Überwachung der genehmigten Verhaltensregeln",
-      "text": "Unbeschadet der Aufgaben und Befugnisse der zuständigen Aufsichtsbehörde gemäß den Artikeln 57 und 58 kann die Überwachung der Einhaltung von Verhaltensregeln gemäß Artikel 40 von einer Stelle durchgeführt werden, die über das geeignete Fachwissen hinsichtlich des Gegenstands der Verhaltensregeln verfügt und die von der zuständigen Aufsichtsbehörde zu diesem Zweck akkreditiert wurde.",
-      "primary_anchor": "DSGVO Art. 41 Abs. 1",
+      "text": "(1) Unbeschadet der Aufgaben und Befugnisse der zuständigen Aufsichtsbehörde gemäß den Artikeln 57 und 58 kann die Überwachung der Einhaltung von Verhaltensregeln gemäß Artikel 40 von einer Stelle durchgeführt werden, die über das geeignete Fachwissen hinsichtlich des Gegenstands der Verhaltensregeln verfügt und die von der zuständigen Aufsichtsbehörde zu diesem Zweck akkreditiert wurde. (2) Eine Stelle gemäß Absatz 1 kann zum Zwecke der Überwachung der Einhaltung von Verhaltensregeln akkreditiert werden, wenn sie a) ihre Unabhängigkeit und ihr Fachwissen hinsichtlich des Gegenstands der Verhaltensregeln zur Zufriedenheit der zuständigen Aufsichtsbehörde nachgewiesen hat; b) Verfahren festgelegt hat, die es ihr ermöglichen, zu bewerten, ob Verantwortliche und Auftragsverarbeiter die Verhaltensregeln anwenden können, die Einhaltung der Verhaltensregeln durch die Verantwortlichen und Auftragsverarbeiter zu überwachen und die Anwendung der Verhaltensregeln regelmäßig zu überprüfen; c) Verfahren und Strukturen festgelegt hat, mit denen sie Beschwerden über Verletzungen der Verhaltensregeln oder über die Art und Weise, in der die Verhaltensregeln von dem Verantwortlichen oder dem Auftragsverarbeiter angewendet werden oder wurden, nachgeht und diese Verfahren und Strukturen für betroffene Personen und die Öffentlichkeit transparent macht, und d) zur Zufriedenheit der zuständigen Aufsichtsbehörde nachgewiesen hat, dass ihre Aufgaben und Pflichten nicht zu einem Interessenkonflikt führen. (3) Die zuständige Aufsichtsbehörde übermittelt den Entwurf der Anforderungen an die Akkreditierung einer Stelle nach Absatz 1 gemäß dem Kohärenzverfahren nach Artikel 63 an den Ausschuss. (4) Unbeschadet der Aufgaben und Befugnisse der zuständigen Aufsichtsbehörde und der Bestimmungen des Kapitels VIII ergreift eine Stelle gemäß Absatz 1 vorbehaltlich geeigneter Garantien im Falle einer Verletzung der Verhaltensregeln durch einen Verantwortlichen oder einen Auftragsverarbeiter geeignete Maßnahmen, einschließlich eines vorläufigen oder endgültigen Ausschlusses des Verantwortlichen oder Auftragsverarbeiters von den Verhaltensregeln. Sie unterrichtet die zuständige Aufsichtsbehörde über solche Maßnahmen und deren Begründung. (5) Die zuständige Aufsichtsbehörde widerruft die Akkreditierung einer Stelle gemäß Absatz 1, wenn die Anforderungen an ihre Akkreditierung nicht oder nicht mehr erfüllt sind oder wenn die Stelle Maßnahmen ergreift, die nicht mit dieser Verordnung vereinbar sind. (6) Dieser Artikel gilt nicht für die Verarbeitung durch Behörden oder öffentliche Stellen.",
+      "primary_anchor": "DSGVO Art. 41",
       "attributes": {
         "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 41",
-        "kind": "keine_pflicht",
-        "quote": "Unbeschadet der Aufgaben und Befugnisse der zuständigen Aufsichtsbehörde gemäß den Artikeln 57 und 58 kann die Überwachung der Einhaltung von Verhaltensregeln gemäß Artikel 40 von einer Stelle durchgeführt werden, die über das geeignete Fachwissen hinsichtlich des Gegenstands der Verhaltensregeln verfügt und die von der zuständigen Aufsichtsbehörde zu diesem Zweck akkreditiert wurde."
+        "fine_tier": 2
       },
       "prefilter_passed": false,
-      "prefilter_reason": "Keine Pflicht laut Zerlegung: Beschreibt lediglich die Qualifikationsvoraussetzungen für die Stelle, keine zu erfüllende Pflicht."
-    },
-    {
-      "id": "Art. 41 Abs. 2 lit. a",
-      "title": "Überwachung der genehmigten Verhaltensregeln",
-      "text": "Eine Stelle gemäß Absatz 1 kann zum Zwecke der Überwachung der Einhaltung von Verhaltensregeln akkreditiert werden, wenn sie a) ihre Unabhängigkeit und ihr Fachwissen hinsichtlich des Gegenstands der Verhaltensregeln zur Zufriedenheit der zuständigen Aufsichtsbehörde nachgewiesen hat;",
-      "primary_anchor": "DSGVO Art. 41 Abs. 2 lit. a",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 41",
-        "kind": "alle_gelten",
-        "quote": "a) ihre Unabhängigkeit und ihr Fachwissen hinsichtlich des Gegenstands der Verhaltensregeln zur Zufriedenheit der zuständigen Aufsichtsbehörde nachgewiesen hat;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 41 Abs. 2 lit. b",
-      "title": "Überwachung der genehmigten Verhaltensregeln",
-      "text": "Eine Stelle gemäß Absatz 1 kann zum Zwecke der Überwachung der Einhaltung von Verhaltensregeln akkreditiert werden, wenn sie b) Verfahren festgelegt hat, die es ihr ermöglichen, zu bewerten, ob Verantwortliche und Auftragsverarbeiter die Verhaltensregeln anwenden können, die Einhaltung der Verhaltensregeln durch die Verantwortlichen und Auftragsverarbeiter zu überwachen und die Anwendung der Verhaltensregeln regelmäßig zu überprüfen;",
-      "primary_anchor": "DSGVO Art. 41 Abs. 2 lit. b",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 41",
-        "kind": "alle_gelten",
-        "quote": "b) Verfahren festgelegt hat, die es ihr ermöglichen, zu bewerten, ob Verantwortliche und Auftragsverarbeiter die Verhaltensregeln anwenden können, die Einhaltung der Verhaltensregeln durch die Verantwortlichen und Auftragsverarbeiter zu überwachen und die Anwendung der Verhaltensregeln regelmäßig zu überprüfen;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 41 Abs. 2 lit. c",
-      "title": "Überwachung der genehmigten Verhaltensregeln",
-      "text": "Eine Stelle gemäß Absatz 1 kann zum Zwecke der Überwachung der Einhaltung von Verhaltensregeln akkreditiert werden, wenn sie c) Verfahren und Strukturen festgelegt hat, mit denen sie Beschwerden über Verletzungen der Verhaltensregeln oder über die Art und Weise, in der die Verhaltensregeln von dem Verantwortlichen oder dem Auftragsverarbeiter angewendet werden oder wurden, nachgeht und diese Verfahren und Strukturen für betroffene Personen und die Öffentlichkeit transparent macht, und",
-      "primary_anchor": "DSGVO Art. 41 Abs. 2 lit. c",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 41",
-        "kind": "alle_gelten",
-        "quote": "c) Verfahren und Strukturen festgelegt hat, mit denen sie Beschwerden über Verletzungen der Verhaltensregeln oder über die Art und Weise, in der die Verhaltensregeln von dem Verantwortlichen oder dem Auftragsverarbeiter angewendet werden oder wurden, nachgeht und diese Verfahren und Strukturen für betroffene Personen und die Öffentlichkeit transparent macht, und"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 41 Abs. 2 lit. d",
-      "title": "Überwachung der genehmigten Verhaltensregeln",
-      "text": "Eine Stelle gemäß Absatz 1 kann zum Zwecke der Überwachung der Einhaltung von Verhaltensregeln akkreditiert werden, wenn sie d) zur Zufriedenheit der zuständigen Aufsichtsbehörde nachgewiesen hat, dass ihre Aufgaben und Pflichten nicht zu einem Interessenkonflikt führen.",
-      "primary_anchor": "DSGVO Art. 41 Abs. 2 lit. d",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 41",
-        "kind": "alle_gelten",
-        "quote": "d) zur Zufriedenheit der zuständigen Aufsichtsbehörde nachgewiesen hat, dass ihre Aufgaben und Pflichten nicht zu einem Interessenkonflikt führen."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 41 Abs. 3",
-      "title": "Überwachung der genehmigten Verhaltensregeln",
-      "text": "Die zuständige Aufsichtsbehörde übermittelt den Entwurf der Anforderungen an die Akkreditierung einer Stelle nach Absatz 1 gemäß dem Kohärenzverfahren nach Artikel 63 an den Ausschuss.",
-      "primary_anchor": "DSGVO Art. 41 Abs. 3",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 41",
-        "kind": "keine_pflicht",
-        "quote": "Die zuständige Aufsichtsbehörde übermittelt den Entwurf der Anforderungen an die Akkreditierung einer Stelle nach Absatz 1 gemäß dem Kohärenzverfahren nach Artikel 63 an den Ausschuss."
-      },
-      "prefilter_passed": false,
-      "prefilter_reason": "Keine Pflicht laut Zerlegung: Regelt eine Aufgabe der Aufsichtsbehörde, nicht eine Verpflichtung für die akkreditierte Stelle."
-    },
-    {
-      "id": "Art. 41 Abs. 4",
-      "title": "Überwachung der genehmigten Verhaltensregeln",
-      "text": "Unbeschadet der Aufgaben und Befugnisse der zuständigen Aufsichtsbehörde und der Bestimmungen des Kapitels VIII ergreift eine Stelle gemäß Absatz 1 vorbehaltlich geeigneter Garantien im Falle einer Verletzung der Verhaltensregeln durch einen Verantwortlichen oder einen Auftragsverarbeiter geeignete Maßnahmen, einschließlich eines vorläufigen oder endgültigen Ausschlusses des Verantwortlichen oder Auftragsverarbeiters von den Verhaltensregeln. Sie unterrichtet die zuständige Aufsichtsbehörde über solche Maßnahmen und deren Begründung.",
-      "primary_anchor": "DSGVO Art. 41 Abs. 4",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 41",
-        "kind": "alle_gelten",
-        "quote": "Unbeschadet der Aufgaben und Befugnisse der zuständigen Aufsichtsbehörde und der Bestimmungen des Kapitels VIII ergreift eine Stelle gemäß Absatz 1 vorbehaltlich geeigneter Garantien im Falle einer Verletzung der Verhaltensregeln durch einen Verantwortlichen oder einen Auftragsverarbeiter geeignete Maßnahmen, einschließlich eines vorläufigen oder endgültigen Ausschlusses des Verantwortlichen oder Auftragsverarbeiters von den Verhaltensregeln. Sie unterrichtet die zuständige Aufsichtsbehörde über solche Maßnahmen und deren Begründung."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 41 Abs. 5",
-      "title": "Überwachung der genehmigten Verhaltensregeln",
-      "text": "Die zuständige Aufsichtsbehörde widerruft die Akkreditierung einer Stelle gemäß Absatz 1, wenn die Anforderungen an ihre Akkreditierung nicht oder nicht mehr erfüllt sind oder wenn die Stelle Maßnahmen ergreift, die nicht mit dieser Verordnung vereinbar sind.",
-      "primary_anchor": "DSGVO Art. 41 Abs. 5",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 41",
-        "kind": "keine_pflicht",
-        "quote": "Die zuständige Aufsichtsbehörde widerruft die Akkreditierung einer Stelle gemäß Absatz 1, wenn die Anforderungen an ihre Akkreditierung nicht oder nicht mehr erfüllt sind oder wenn die Stelle Maßnahmen ergreift, die nicht mit dieser Verordnung vereinbar sind."
-      },
-      "prefilter_passed": false,
-      "prefilter_reason": "Keine Pflicht laut Zerlegung: Verpflichtet die Aufsichtsbehörde zum Widerruf der Akkreditierung, keine Pflicht für die Stelle."
-    },
-    {
-      "id": "Art. 41 Abs. 6",
-      "title": "Überwachung der genehmigten Verhaltensregeln",
-      "text": "Dieser Artikel gilt nicht für die Verarbeitung durch Behörden oder öffentliche Stellen.",
-      "primary_anchor": "DSGVO Art. 41 Abs. 6",
-      "attributes": {
-        "chapter": 4,
-        "fine_tier": 2,
-        "article": "Art. 41",
-        "kind": "keine_pflicht",
-        "quote": "Dieser Artikel gilt nicht für die Verarbeitung durch Behörden oder öffentliche Stellen."
-      },
-      "prefilter_passed": false,
-      "prefilter_reason": "Keine Pflicht laut Zerlegung: Stellt eine Ausnahme dar – der Artikel gilt nicht für Behörden oder öffentliche Stellen."
+      "prefilter_reason": "Art. 41 Abs. 6: Die Überwachung genehmigter Verhaltensregeln gilt nicht für Behörden und öffentliche Stellen."
     },
     {
       "id": "Art. 42 Abs. 1",
@@ -4552,274 +4303,16 @@
       "prefilter_reason": "Keine Pflicht laut Zerlegung: Hier werden Bestimmungen über das Fortbestehen von Genehmigungen anderer Stellen beschrieben, keine eigene Pflicht."
     },
     {
-      "id": "Art. 47 Abs. 1 lit. a",
+      "id": "Art. 47",
       "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die zuständige Aufsichtsbehörde genehmigt gemäß dem Kohärenzverfahren nach Artikel 63 verbindliche interne Datenschutzvorschriften, sofern diese a) rechtlich bindend sind, für alle betreffenden Mitglieder der Unternehmensgruppe oder einer Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, gelten und von diesen Mitgliedern durchgesetzt werden, und dies auch für ihre Beschäftigten gilt,",
-      "primary_anchor": "DSGVO Art. 47 Abs. 1 lit. a",
+      "text": "(1) Die zuständige Aufsichtsbehörde genehmigt gemäß dem Kohärenzverfahren nach Artikel 63 verbindliche interne Datenschutzvorschriften, sofern diese a) rechtlich bindend sind, für alle betreffenden Mitglieder der Unternehmensgruppe oder einer Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, gelten und von diesen Mitgliedern durchgesetzt werden, und dies auch für ihre Beschäftigten gilt, b) den betroffenen Personen ausdrücklich durchsetzbare Rechte in Bezug auf die Verarbeitung ihrer personenbezogenen Daten übertragen und c) die in Absatz 2 festgelegten Anforderungen erfüllen. (2) Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: a) Struktur und Kontaktdaten der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, und jedes ihrer Mitglieder; b) die betreffenden Datenübermittlungen oder Reihen von Datenübermittlungen einschließlich der betreffenden Arten personenbezogener Daten, Art und Zweck der Datenverarbeitung, Art der betroffenen Personen und das betreffende Drittland beziehungsweise die betreffenden Drittländer; c) interne und externe Rechtsverbindlichkeit der betreffenden internen Datenschutzvorschriften; d) die Anwendung der allgemeinen Datenschutzgrundsätze, insbesondere Zweckbindung, Datenminimierung, begrenzte Speicherfristen, Datenqualität, Datenschutz durch Technikgestaltung und durch datenschutzfreundliche Voreinstellungen, Rechtsgrundlage für die Verarbeitung, Verarbeitung besonderer Kategorien von personenbezogenen Daten, Maßnahmen zur Sicherstellung der Datensicherheit und Anforderungen für die Weiterübermittlung an nicht an diese internen Datenschutzvorschriften gebundene Stellen; e) die Rechte der betroffenen Personen in Bezug auf die Verarbeitung und die diesen offenstehenden Mittel zur Wahrnehmung dieser Rechte einschließlich des Rechts, nicht einer ausschließlich auf einer automatisierten Verarbeitung - einschließlich Profiling - beruhenden Entscheidung nach Artikel 22 unterworfen zu werden sowie des in Artikel 79 niedergelegten Rechts auf Beschwerde bei der zuständigen Aufsichtsbehörde beziehungsweise auf Einlegung eines Rechtsbehelfs bei den zuständigen Gerichten der Mitgliedstaaten und im Falle einer Verletzung der verbindlichen internen Datenschutzvorschriften Wiedergutmachung und gegebenenfalls Schadenersatz zu erhalten; f) die von dem in einem Mitgliedstaat niedergelassenen Verantwortlichen oder Auftragsverarbeiter übernommene Haftung für etwaige Verstöße eines nicht in der Union niedergelassenen betreffenden Mitglieds der Unternehmensgruppe gegen die verbindlichen internen Datenschutzvorschriften; der Verantwortliche oder der Auftragsverarbeiter ist nur dann teilweise oder vollständig von dieser Haftung befreit, wenn er nachweist, dass der Umstand, durch den der Schaden eingetreten ist, dem betreffenden Mitglied nicht zur Last gelegt werden kann; g) die Art und Weise, wie die betroffenen Personen über die Bestimmungen der Artikel 13 und 14 hinaus über die verbindlichen internen Datenschutzvorschriften und insbesondere über die unter den Buchstaben d, e und f dieses Absatzes genannten Aspekte informiert werden; h) die Aufgaben jedes gemäß Artikel 37 benannten Datenschutzbeauftragten oder jeder anderen Person oder Einrichtung, die mit der Überwachung der Einhaltung der verbindlichen internen Datenschutzvorschriften in der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, sowie mit der Überwachung der Schulungsmaßnahmen und dem Umgang mit Beschwerden befasst ist; i) die Beschwerdeverfahren; j) die innerhalb der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, bestehenden Verfahren zur Überprüfung der Einhaltung der verbindlichen internen Datenschutzvorschriften. Derartige Verfahren beinhalten Datenschutzüberprüfungen und Verfahren zur Gewährleistung von Abhilfemaßnahmen zum Schutz der Rechte der betroffenen Person. Die Ergebnisse derartiger Überprüfungen sollten der in Buchstabe h genannten Person oder Einrichtung sowie dem Verwaltungsrat des herrschenden Unternehmens einer Unternehmensgruppe oder der Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, mitgeteilt werden und sollten der zuständigen Aufsichtsbehörde auf Anfrage zur Verfügung gestellt werden; k) die Verfahren für die Meldung und Erfassung von Änderungen der Vorschriften und ihre Meldung an die Aufsichtsbehörde; l) die Verfahren für die Zusammenarbeit mit der Aufsichtsbehörde, die die Befolgung der Vorschriften durch sämtliche Mitglieder der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, gewährleisten, insbesondere durch Offenlegung der Ergebnisse von Überprüfungen der unter Buchstabe j genannten Maßnahmen gegenüber der Aufsichtsbehörde; m) die Meldeverfahren zur Unterrichtung der zuständigen Aufsichtsbehörde über jegliche für ein Mitglied der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, in einem Drittland geltenden rechtlichen Bestimmungen, die sich nachteilig auf die Garantien auswirken könnten, die die verbindlichen internen Datenschutzvorschriften bieten, und n) geeignete Datenschutzschulungen für Personal mit ständigem oder regelmäßigem Zugang zu personenbezogenen Daten. (3) Die Kommission kann das Format und die Verfahren für den Informationsaustausch über verbindliche interne Datenschutzvorschriften im Sinne des vorliegenden Artikels zwischen Verantwortlichen, Auftragsverarbeitern und Aufsichtsbehörden festlegen. Diese Durchführungsrechtsakte werden gemäß dem Prüfverfahren nach Artikel 93 Absatz 2 erlassen.",
+      "primary_anchor": "DSGVO Art. 47",
       "attributes": {
         "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "a) rechtlich bindend sind, für alle betreffenden Mitglieder der Unternehmensgruppe oder einer Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, gelten und von diesen Mitgliedern durchgesetzt werden, und dies auch für ihre Beschäftigten gilt,"
+        "fine_tier": 4
       },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 1 lit. b",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die zuständige Aufsichtsbehörde genehmigt gemäß dem Kohärenzverfahren nach Artikel 63 verbindliche interne Datenschutzvorschriften, sofern diese b) den betroffenen Personen ausdrücklich durchsetzbare Rechte in Bezug auf die Verarbeitung ihrer personenbezogenen Daten übertragen und",
-      "primary_anchor": "DSGVO Art. 47 Abs. 1 lit. b",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "b) den betroffenen Personen ausdrücklich durchsetzbare Rechte in Bezug auf die Verarbeitung ihrer personenbezogenen Daten übertragen und"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 1 lit. c",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die zuständige Aufsichtsbehörde genehmigt gemäß dem Kohärenzverfahren nach Artikel 63 verbindliche interne Datenschutzvorschriften, sofern diese c) die in Absatz 2 festgelegten Anforderungen erfüllen.",
-      "primary_anchor": "DSGVO Art. 47 Abs. 1 lit. c",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "c) die in Absatz 2 festgelegten Anforderungen erfüllen."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. a",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: a) Struktur und Kontaktdaten der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, und jedes ihrer Mitglieder;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. a",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "a) Struktur und Kontaktdaten der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, und jedes ihrer Mitglieder;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. b",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: b) die betreffenden Datenübermittlungen oder Reihen von Datenübermittlungen einschließlich der betreffenden Arten personenbezogener Daten, Art und Zweck der Datenverarbeitung, Art der betroffenen Personen und das betreffende Drittland beziehungsweise die betreffenden Drittländer;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. b",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "b) die betreffenden Datenübermittlungen oder Reihen von Datenübermittlungen einschließlich der betreffenden Arten personenbezogener Daten, Art und Zweck der Datenverarbeitung, Art der betroffenen Personen und das betreffende Drittland beziehungsweise die betreffenden Drittländer;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. c",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: c) interne und externe Rechtsverbindlichkeit der betreffenden internen Datenschutzvorschriften;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. c",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "c) interne und externe Rechtsverbindlichkeit der betreffenden internen Datenschutzvorschriften;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. d",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: d) die Anwendung der allgemeinen Datenschutzgrundsätze, insbesondere Zweckbindung, Datenminimierung, begrenzte Speicherfristen, Datenqualität, Datenschutz durch Technikgestaltung und durch datenschutzfreundliche Voreinstellungen, Rechtsgrundlage für die Verarbeitung, Verarbeitung besonderer Kategorien von personenbezogenen Daten, Maßnahmen zur Sicherstellung der Datensicherheit und Anforderungen für die Weiterübermittlung an nicht an diese internen Datenschutzvorschriften gebundene Stellen;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. d",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "d) die Anwendung der allgemeinen Datenschutzgrundsätze, insbesondere Zweckbindung, Datenminimierung, begrenzte Speicherfristen, Datenqualität, Datenschutz durch Technikgestaltung und durch datenschutzfreundliche Voreinstellungen, Rechtsgrundlage für die Verarbeitung, Verarbeitung besonderer Kategorien von personenbezogenen Daten, Maßnahmen zur Sicherstellung der Datensicherheit und Anforderungen für die Weiterübermittlung an nicht an diese internen Datenschutzvorschriften gebundene Stellen;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. e",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: e) die Rechte der betroffenen Personen in Bezug auf die Verarbeitung und die diesen offenstehenden Mittel zur Wahrnehmung dieser Rechte einschließlich des Rechts, nicht einer ausschließlich auf einer automatisierten Verarbeitung - einschließlich Profiling - beruhenden Entscheidung nach Artikel 22 unterworfen zu werden sowie des in Artikel 79 niedergelegten Rechts auf Beschwerde bei der zuständigen Aufsichtsbehörde beziehungsweise auf Einlegung eines Rechtsbehelfs bei den zuständigen Gerichten der Mitgliedstaaten und im Falle einer Verletzung der verbindlichen internen Datenschutzvorschriften Wiedergutmachung und gegebenenfalls Schadenersatz zu erhalten;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. e",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "e) die Rechte der betroffenen Personen in Bezug auf die Verarbeitung und die diesen offenstehenden Mittel zur Wahrnehmung dieser Rechte einschließlich des Rechts, nicht einer ausschließlich auf einer automatisierten Verarbeitung - einschließlich Profiling - beruhenden Entscheidung nach Artikel 22 unterworfen zu werden sowie des in Artikel 79 niedergelegten Rechts auf Beschwerde bei der zuständigen Aufsichtsbehörde beziehungsweise auf Einlegung eines Rechtsbehelfs bei den zuständigen Gerichten der Mitgliedstaaten und im Falle einer Verletzung der verbindlichen internen Datenschutzvorschriften Wiedergutmachung und gegebenenfalls Schadenersatz zu erhalten;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. f",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: f) die von dem in einem Mitgliedstaat niedergelassenen Verantwortlichen oder Auftragsverarbeiter übernommene Haftung für etwaige Verstöße eines nicht in der Union niedergelassenen betreffenden Mitglieds der Unternehmensgruppe gegen die verbindlichen internen Datenschutzvorschriften; der Verantwortliche oder der Auftragsverarbeiter ist nur dann teilweise oder vollständig von dieser Haftung befreit, wenn er nachweist, dass der Umstand, durch den der Schaden eingetreten ist, dem betreffenden Mitglied nicht zur Last gelegt werden kann;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. f",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "f) die von dem in einem Mitgliedstaat niedergelassenen Verantwortlichen oder Auftragsverarbeiter übernommene Haftung für etwaige Verstöße eines nicht in der Union niedergelassenen betreffenden Mitglieds der Unternehmensgruppe gegen die verbindlichen internen Datenschutzvorschriften; der Verantwortliche oder der Auftragsverarbeiter ist nur dann teilweise oder vollständig von dieser Haftung befreit, wenn er nachweist, dass der Umstand, durch den der Schaden eingetreten ist, dem betreffenden Mitglied nicht zur Last gelegt werden kann;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. g",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: g) die Art und Weise, wie die betroffenen Personen über die Bestimmungen der Artikel 13 und 14 hinaus über die verbindlichen internen Datenschutzvorschriften und insbesondere über die unter den Buchstaben d, e und f dieses Absatzes genannten Aspekte informiert werden;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. g",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "g) die Art und Weise, wie die betroffenen Personen über die Bestimmungen der Artikel 13 und 14 hinaus über die verbindlichen internen Datenschutzvorschriften und insbesondere über die unter den Buchstaben d, e und f dieses Absatzes genannten Aspekte informiert werden;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. h",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: h) die Aufgaben jedes gemäß Artikel 37 benannten Datenschutzbeauftragten oder jeder anderen Person oder Einrichtung, die mit der Überwachung der Einhaltung der verbindlichen internen Datenschutzvorschriften in der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, sowie mit der Überwachung der Schulungsmaßnahmen und dem Umgang mit Beschwerden befasst ist;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. h",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "h) die Aufgaben jedes gemäß Artikel 37 benannten Datenschutzbeauftragten oder jeder anderen Person oder Einrichtung, die mit der Überwachung der Einhaltung der verbindlichen internen Datenschutzvorschriften in der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, sowie mit der Überwachung der Schulungsmaßnahmen und dem Umgang mit Beschwerden befasst ist;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. i",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: i) die Beschwerdeverfahren;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. i",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "i) die Beschwerdeverfahren;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. j",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: j) die innerhalb der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, bestehenden Verfahren zur Überprüfung der Einhaltung der verbindlichen internen Datenschutzvorschriften. Derartige Verfahren beinhalten Datenschutzüberprüfungen und Verfahren zur Gewährleistung von Abhilfemaßnahmen zum Schutz der Rechte der betroffenen Person. Die Ergebnisse derartiger Überprüfungen sollten der in Buchstabe h genannten Person oder Einrichtung sowie dem Verwaltungsrat des herrschenden Unternehmens einer Unternehmensgruppe oder der Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, mitgeteilt werden und sollten der zuständigen Aufsichtsbehörde auf Anfrage zur Verfügung gestellt werden;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. j",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "j) die innerhalb der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, bestehenden Verfahren zur Überprüfung der Einhaltung der verbindlichen internen Datenschutzvorschriften. Derartige Verfahren beinhalten Datenschutzüberprüfungen und Verfahren zur Gewährleistung von Abhilfemaßnahmen zum Schutz der Rechte der betroffenen Person. Die Ergebnisse derartiger Überprüfungen sollten der in Buchstabe h genannten Person oder Einrichtung sowie dem Verwaltungsrat des herrschenden Unternehmens einer Unternehmensgruppe oder der Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, mitgeteilt werden und sollten der zuständigen Aufsichtsbehörde auf Anfrage zur Verfügung gestellt werden;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. k",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: k) die Verfahren für die Meldung und Erfassung von Änderungen der Vorschriften und ihre Meldung an die Aufsichtsbehörde;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. k",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "k) die Verfahren für die Meldung und Erfassung von Änderungen der Vorschriften und ihre Meldung an die Aufsichtsbehörde;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. l",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: l) die Verfahren für die Zusammenarbeit mit der Aufsichtsbehörde, die die Befolgung der Vorschriften durch sämtliche Mitglieder der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, gewährleisten, insbesondere durch Offenlegung der Ergebnisse von Überprüfungen der unter Buchstabe j genannten Maßnahmen gegenüber der Aufsichtsbehörde;",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. l",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "l) die Verfahren für die Zusammenarbeit mit der Aufsichtsbehörde, die die Befolgung der Vorschriften durch sämtliche Mitglieder der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, gewährleisten, insbesondere durch Offenlegung der Ergebnisse von Überprüfungen der unter Buchstabe j genannten Maßnahmen gegenüber der Aufsichtsbehörde;"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. m",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: m) die Meldeverfahren zur Unterrichtung der zuständigen Aufsichtsbehörde über jegliche für ein Mitglied der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, in einem Drittland geltenden rechtlichen Bestimmungen, die sich nachteilig auf die Garantien auswirken könnten, die die verbindlichen internen Datenschutzvorschriften bieten, und",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. m",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "m) die Meldeverfahren zur Unterrichtung der zuständigen Aufsichtsbehörde über jegliche für ein Mitglied der Unternehmensgruppe oder Gruppe von Unternehmen, die eine gemeinsame Wirtschaftstätigkeit ausüben, in einem Drittland geltenden rechtlichen Bestimmungen, die sich nachteilig auf die Garantien auswirken könnten, die die verbindlichen internen Datenschutzvorschriften bieten, und"
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 2 lit. n",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die verbindlichen internen Datenschutzvorschriften nach Absatz 1 enthalten mindestens folgende Angaben: n) geeignete Datenschutzschulungen für Personal mit ständigem oder regelmäßigem Zugang zu personenbezogenen Daten.",
-      "primary_anchor": "DSGVO Art. 47 Abs. 2 lit. n",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "n) geeignete Datenschutzschulungen für Personal mit ständigem oder regelmäßigem Zugang zu personenbezogenen Daten."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
-    },
-    {
-      "id": "Art. 47 Abs. 3",
-      "title": "Verbindliche interne Datenschutzvorschriften",
-      "text": "Die Kommission kann das Format und die Verfahren für den Informationsaustausch über verbindliche interne Datenschutzvorschriften im Sinne des vorliegenden Artikels zwischen Verantwortlichen, Auftragsverarbeitern und Aufsichtsbehörden festlegen. Diese Durchführungsrechtsakte werden gemäß dem Prüfverfahren nach Artikel 93 Absatz 2 erlassen.",
-      "primary_anchor": "DSGVO Art. 47 Abs. 3",
-      "attributes": {
-        "chapter": 5,
-        "fine_tier": 4,
-        "article": "Art. 47",
-        "kind": "alle_gelten",
-        "quote": "Die Kommission kann das Format und die Verfahren für den Informationsaustausch über verbindliche interne Datenschutzvorschriften im Sinne des vorliegenden Artikels zwischen Verantwortlichen, Auftragsverarbeitern und Aufsichtsbehörden festlegen. Diese Durchführungsrechtsakte werden gemäß dem Prüfverfahren nach Artikel 93 Absatz 2 erlassen."
-      },
-      "prefilter_passed": true,
-      "prefilter_reason": null
+      "prefilter_passed": false,
+      "prefilter_reason": "Art. 47: Verbindliche interne Datenschutzvorschriften gibt es nur für Unternehmensgruppen, nicht für eine einzelne Behörde."
     },
     {
       "id": "Art. 48",

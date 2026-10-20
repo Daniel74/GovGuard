@@ -70,3 +70,22 @@ def test_requirement_carries_the_sections_of_its_article() -> None:
     [section] = extract_by_id()["Art. 32"].sections
     assert section.mark == "Art. 32 Abs. 1 lit. a"
     assert section.lead_in == "Diese Maßnahmen schließen ein:"
+
+
+@pytest.mark.parametrize("article", [20, 27, 41, 47])
+def test_prefilter_rejects_articles_that_never_apply_to_an_authority(article: int) -> None:
+    # DSGVO Art. 20(3), Art. 27 (controllers outside the EU), Art. 41(6), Art. 47 (#59)
+    xml = FORMEX.replace(b'"032"', f'"{article:03d}"'.encode())
+    req = {r.id: r for r in extract("memory://dsgvo.xml", xml, "000.003").requirements}[
+        f"Art. {article}"]
+    assert not req.prefilter_passed
+    assert req.prefilter_reason
+    assert f"Art. {article}" in req.prefilter_reason
+    assert "Kapitel" not in req.prefilter_reason
+
+
+@pytest.mark.parametrize("article", [19, 21, 26, 28, 40, 42, 46, 48])
+def test_prefilter_keeps_neighbours_of_the_rejected_articles(article: int) -> None:
+    xml = FORMEX.replace(b'"032"', f'"{article:03d}"'.encode())
+    reqs = {r.id: r for r in extract("memory://dsgvo.xml", xml, "000.003").requirements}
+    assert reqs[f"Art. {article}"].prefilter_passed is True

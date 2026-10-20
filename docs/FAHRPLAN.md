@@ -906,10 +906,10 @@ Am 19.10. aus dem Umfang genommen (Budget). #34 ist mit Label `ausbau` geschloss
 
 **Ablauf:**
 
-- [ ] **Starten** 🆕 _Opus_ · 👤 „Lies docs/FAHRPLAN.md Schritt 12t–12v und arbeite ihn ab.“
-- [ ] **Vorbereiten** 🤖 · Arbeitsbaum prüfen, FAHRPLAN committen, `git tag vor-bedingungen`
-- [ ] **#59 bauen** 🤖 _Sonnet_-Agent · Vorfilter in `kb_build/extract/dsgvo.py` per TDD, Spec-Katalog neu bauen (ohne neue LLM-Aufrufe, sonst Halt), ADR 0028 (Teil Vorfilter), Tabelle Prüfgrundlagen in SPEC.md. Gegenprobe: `git diff --stat data/knowledge_base/` zeigt nur die Regeln der vier Artikel.
-- [ ] **#59 prüfen** 🤖 _Opus_-Agent · `/code-review gegen Issue #59` → Befunde beheben → Commit „#59 …“
+- [x] **Starten** 🆕 _Opus_ · 👤 „Lies docs/FAHRPLAN.md Schritt 12t–12v und arbeite ihn ab.“
+- [x] **Vorbereiten** 🤖 · Arbeitsbaum prüfen, FAHRPLAN committen, `git tag vor-bedingungen`
+- [x] **#59 bauen** 🤖 _Sonnet_-Agent · Vorfilter in `kb_build/extract/dsgvo.py` per TDD, Spec-Katalog neu bauen (ohne neue LLM-Aufrufe, sonst Halt), ADR 0028 (Teil Vorfilter), Tabelle Prüfgrundlagen in SPEC.md. Gegenprobe: `git diff --stat data/knowledge_base/` zeigt nur die Regeln der vier Artikel.
+- [x] **#59 prüfen** 🤖 _Opus_-Agent · `/code-review gegen Issue #59` → Befunde beheben → Commit „#59 …“
 - [ ] **#60 Prompt** 🤖 Hauptsession entwirft den Prompt-Text. Ein frischer _Opus_-Agent nimmt ihn gegen ADR 0020 und #60 ab: Nur eine ausdrückliche Verneinung für das ganze Vorhaben ist `no` (Meldeportal Zeile 47 verneint die Einwilligung nur für die Auswertung), Schweigen ist `unstated`, Belegzeilen für Verneinen und Belegen getrennt. Ergebnis als Kommentar in #60.
 - [ ] **#60 bauen** 🤖 _Sonnet_-Agent · `conditions.json`, Vorlauf in `calls/`, Gates in `checks/`, N/A vor den Paketen, `AuditReport.conditions`, Soll je Bedingung in `preset.json`, ADR 0028, CONTEXT.md, SPEC B6
 - [ ] **#60 messen** 🤖 `/audit-messen spec-govguard, spec-meldeportal-gesundheit und spec-wohngeld-openapi je 1× mit Groq` → Tabelle in #60: Bedingungen gegen Soll, Lücken vorher und nachher, Pflichtbefunde

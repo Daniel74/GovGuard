@@ -10,6 +10,19 @@ FINE_TIER_4 = frozenset({5, 6, 7, 9, *range(12, 23), *range(44, 50), 58})  # Art
 FINE_TIER_2 = frozenset({8, 11, *range(25, 40), 41, 42, 43})  # Art. 83 Abs. 4
 
 
+# Never apply to a German authority (#59, ADR 0028); fixed sentence for the selection protocol
+NOT_FOR_AUTHORITIES = {
+    "Art. 20": "Art. 20 Abs. 3: Das Recht auf Datenübertragbarkeit gilt nicht für Verarbeitungen "
+               "in Wahrnehmung einer öffentlichen Aufgabe, also nicht für eine Behörde.",
+    "Art. 27": "Art. 27 Abs. 1: Einen Vertreter benennen nur Verantwortliche ohne "
+               "Niederlassung in der Union, nicht eine deutsche Behörde.",
+    "Art. 41": "Art. 41 Abs. 6: Die Überwachung genehmigter Verhaltensregeln gilt nicht "
+               "für Behörden und öffentliche Stellen.",
+    "Art. 47": "Art. 47: Verbindliche interne Datenschutzvorschriften gibt es nur für "
+               "Unternehmensgruppen, nicht für eine einzelne Behörde.",
+}
+
+
 def _fine_tier(article: int) -> int:
     if article in FINE_TIER_4:
         return 4
@@ -29,10 +42,10 @@ def _requirement(article: Article) -> Requirement:
 
 
 def prefilter(requirement: Requirement) -> str | None:
-    """Keeps chapters II-V, Art. 5-49 (ARCHITECTURE 1.1)."""
-    if requirement.attributes.get("chapter") in CHAPTERS:
-        return None
-    return "Kapitel gehört nicht zu II–V (Art. 5–49)."
+    """Keeps chapters II-V, Art. 5-49 (ARCHITECTURE 1.1), minus four articles for authorities."""
+    if requirement.attributes.get("chapter") not in CHAPTERS:
+        return "Kapitel gehört nicht zu II–V (Art. 5–49)."
+    return NOT_FOR_AUTHORITIES.get(requirement.id)
 
 
 def extract(origin: str, xml: bytes, version: str) -> ExtractedSource:

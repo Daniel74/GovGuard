@@ -693,55 +693,6 @@
   },
   {
     "source": "DSGVO",
-    "requirement_id": "Art. 20",
-    "outcome": "decomposed",
-    "groups": [
-      {
-        "marks": [
-          "Art. 20 Abs. 1 lit. a",
-          "Art. 20 Abs. 1 lit. b"
-        ],
-        "kind": "alle_gelten",
-        "rationale": "Beide Bedingungen müssen gleichzeitig erfüllt sein, damit das Recht auf Datenübertragbarkeit greift.",
-        "anchors": [
-          "DSGVO Art. 20 Abs. 1 lit. a",
-          "DSGVO Art. 20 Abs. 1 lit. b"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 20 Abs. 2"
-        ],
-        "kind": "alle_gelten",
-        "rationale": "Eigenständiges Recht, das unabhängig von anderen Bestimmungen gilt.",
-        "anchors": [
-          "DSGVO Art. 20 Abs. 2"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 20 Abs. 3"
-        ],
-        "kind": "keine_pflicht",
-        "rationale": "Enthält eine Ausnahme, die das Recht einschränkt, aber keine eigenständige Pflicht darstellt.",
-        "anchors": [
-          "DSGVO Art. 20 Abs. 3"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 20 Abs. 4"
-        ],
-        "kind": "alle_gelten",
-        "rationale": "Stellt eine Bedingung dar, die bei Ausübung des Rechts stets zu beachten ist.",
-        "anchors": [
-          "DSGVO Art. 20 Abs. 4"
-        ]
-      }
-    ]
-  },
-  {
-    "source": "DSGVO",
     "requirement_id": "Art. 21",
     "outcome": "decomposed",
     "groups": [
@@ -958,64 +909,6 @@
           "DSGVO Art. 26 Abs. 1",
           "DSGVO Art. 26 Abs. 2",
           "DSGVO Art. 26 Abs. 3"
-        ]
-      }
-    ]
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 27",
-    "outcome": "decomposed",
-    "groups": [
-      {
-        "marks": [
-          "Art. 27 Abs. 1"
-        ],
-        "kind": "alle_gelten",
-        "rationale": "Abs. 1 stellt die generelle Pflicht zur Benennung eines Vertreters in der Union für nicht in der Union niedergelassene Verantwortliche bzw. Auftragsverarbeiter.",
-        "anchors": [
-          "DSGVO Art. 27 Abs. 1"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 27 Abs. 2 lit. a",
-          "Art. 27 Abs. 2 lit. b"
-        ],
-        "kind": "eine_genuegt",
-        "rationale": "Abs. 2 lit. a und lit. b bilden die Ausnahmen zur Pflicht aus Abs. 1; reicht, wenn eine der Bedingungen erfüllt ist, gilt die Pflicht nicht.",
-        "anchors": [
-          "DSGVO Art. 27 Abs. 2"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 27 Abs. 3"
-        ],
-        "kind": "alle_gelten",
-        "rationale": "Abs. 3 legt die Bedingung fest, dass der Vertreter in einem Mitgliedstaat niedergelassen sein muss, in dem die betroffenen Personen sich befinden.",
-        "anchors": [
-          "DSGVO Art. 27 Abs. 3"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 27 Abs. 4"
-        ],
-        "kind": "alle_gelten",
-        "rationale": "Abs. 4 definiert die Aufgabe des Vertreters, als Anlaufstelle für Aufsichtsbehörden und betroffene Personen zu dienen.",
-        "anchors": [
-          "DSGVO Art. 27 Abs. 4"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 27 Abs. 5"
-        ],
-        "kind": "keine_pflicht",
-        "rationale": "Abs. 5 enthält lediglich einen Hinweis, dass die Benennung eines Vertreters keine Auswirkung auf etwaige Rechtsverfahren gegen den Verantwortlichen oder Auftragsverarbeiter hat; keine eigenständige Pflicht.",
-        "anchors": [
-          "DSGVO Art. 27 Abs. 5"
         ]
       }
     ]
@@ -1857,79 +1750,6 @@
   },
   {
     "source": "DSGVO",
-    "requirement_id": "Art. 41",
-    "outcome": "decomposed",
-    "groups": [
-      {
-        "marks": [
-          "Art. 41 Abs. 2 lit. a",
-          "Art. 41 Abs. 2 lit. b",
-          "Art. 41 Abs. 2 lit. c",
-          "Art. 41 Abs. 2 lit. d"
-        ],
-        "kind": "alle_gelten",
-        "rationale": "Alle genannten Bedingungen müssen gleichzeitig erfüllt sein, damit eine Stelle akkreditiert werden kann.",
-        "anchors": [
-          "DSGVO Art. 41 Abs. 2 lit. a",
-          "DSGVO Art. 41 Abs. 2 lit. b",
-          "DSGVO Art. 41 Abs. 2 lit. c",
-          "DSGVO Art. 41 Abs. 2 lit. d"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 41 Abs. 1"
-        ],
-        "kind": "keine_pflicht",
-        "rationale": "Beschreibt lediglich die Qualifikationsvoraussetzungen für die Stelle, keine zu erfüllende Pflicht.",
-        "anchors": [
-          "DSGVO Art. 41 Abs. 1"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 41 Abs. 3"
-        ],
-        "kind": "keine_pflicht",
-        "rationale": "Regelt eine Aufgabe der Aufsichtsbehörde, nicht eine Verpflichtung für die akkreditierte Stelle.",
-        "anchors": [
-          "DSGVO Art. 41 Abs. 3"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 41 Abs. 4"
-        ],
-        "kind": "alle_gelten",
-        "rationale": "Die akkreditierte Stelle muss bei Verstößen geeignete Maßnahmen ergreifen und die Aufsichtsbehörde informieren.",
-        "anchors": [
-          "DSGVO Art. 41 Abs. 4"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 41 Abs. 5"
-        ],
-        "kind": "keine_pflicht",
-        "rationale": "Verpflichtet die Aufsichtsbehörde zum Widerruf der Akkreditierung, keine Pflicht für die Stelle.",
-        "anchors": [
-          "DSGVO Art. 41 Abs. 5"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 41 Abs. 6"
-        ],
-        "kind": "keine_pflicht",
-        "rationale": "Stellt eine Ausnahme dar – der Artikel gilt nicht für Behörden oder öffentliche Stellen.",
-        "anchors": [
-          "DSGVO Art. 41 Abs. 6"
-        ]
-      }
-    ]
-  },
-  {
-    "source": "DSGVO",
     "requirement_id": "Art. 42",
     "outcome": "decomposed",
     "groups": [
@@ -2298,73 +2118,6 @@
         "rationale": "Hier werden Bestimmungen über das Fortbestehen von Genehmigungen anderer Stellen beschrieben, keine eigene Pflicht.",
         "anchors": [
           "DSGVO Art. 46 Abs. 5"
-        ]
-      }
-    ]
-  },
-  {
-    "source": "DSGVO",
-    "requirement_id": "Art. 47",
-    "outcome": "decomposed",
-    "groups": [
-      {
-        "marks": [
-          "Art. 47 Abs. 1 lit. a",
-          "Art. 47 Abs. 1 lit. b",
-          "Art. 47 Abs. 1 lit. c"
-        ],
-        "kind": "alle_gelten",
-        "rationale": "Alle drei Bedingungen müssen gleichzeitig erfüllt sein, damit die Aufsichtsbehörde die internen Datenschutzvorschriften genehmigt.",
-        "anchors": [
-          "DSGVO Art. 47 Abs. 1 lit. a",
-          "DSGVO Art. 47 Abs. 1 lit. b",
-          "DSGVO Art. 47 Abs. 1 lit. c"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 47 Abs. 2 lit. a",
-          "Art. 47 Abs. 2 lit. b",
-          "Art. 47 Abs. 2 lit. c",
-          "Art. 47 Abs. 2 lit. d",
-          "Art. 47 Abs. 2 lit. e",
-          "Art. 47 Abs. 2 lit. f",
-          "Art. 47 Abs. 2 lit. g",
-          "Art. 47 Abs. 2 lit. h",
-          "Art. 47 Abs. 2 lit. i",
-          "Art. 47 Abs. 2 lit. j",
-          "Art. 47 Abs. 2 lit. k",
-          "Art. 47 Abs. 2 lit. l",
-          "Art. 47 Abs. 2 lit. m",
-          "Art. 47 Abs. 2 lit. n"
-        ],
-        "kind": "alle_gelten",
-        "rationale": "Die Aufzählung definiert die Mindestangaben, die in den verbindlichen internen Datenschutzvorschriften enthalten sein müssen; alle Punkte gelten gleichzeitig.",
-        "anchors": [
-          "DSGVO Art. 47 Abs. 2 lit. a",
-          "DSGVO Art. 47 Abs. 2 lit. b",
-          "DSGVO Art. 47 Abs. 2 lit. c",
-          "DSGVO Art. 47 Abs. 2 lit. d",
-          "DSGVO Art. 47 Abs. 2 lit. e",
-          "DSGVO Art. 47 Abs. 2 lit. f",
-          "DSGVO Art. 47 Abs. 2 lit. g",
-          "DSGVO Art. 47 Abs. 2 lit. h",
-          "DSGVO Art. 47 Abs. 2 lit. i",
-          "DSGVO Art. 47 Abs. 2 lit. j",
-          "DSGVO Art. 47 Abs. 2 lit. k",
-          "DSGVO Art. 47 Abs. 2 lit. l",
-          "DSGVO Art. 47 Abs. 2 lit. m",
-          "DSGVO Art. 47 Abs. 2 lit. n"
-        ]
-      },
-      {
-        "marks": [
-          "Art. 47 Abs. 3"
-        ],
-        "kind": "alle_gelten",
-        "rationale": "Die Kommission hat die Möglichkeit, das Format und Verfahren festzulegen; dies ist eine einzelne, eigenständige Verpflichtung.",
-        "anchors": [
-          "DSGVO Art. 47 Abs. 3"
         ]
       }
     ]

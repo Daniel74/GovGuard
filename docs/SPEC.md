@@ -78,9 +78,14 @@ Jede Entscheidung steht mit Begründung im Auswahlprotokoll. Die Zahlen unten st
 
 | Regelwerk | Fassung | Verwendeter Teil | Anforderungen | nach Vorfilter | Prüfregeln |
 |---|---|---|---|---|---|
-| DSGVO | Verordnung (EU) 2016/679, Text von EUR-Lex | Kapitel II–V (Art. 5–49); je Einzelpflicht eine Anforderung | 383 | 278 | 193 |
+| DSGVO | Verordnung (EU) 2016/679, Text von EUR-Lex | Kapitel II–V (Art. 5–49); je Einzelpflicht eine Anforderung; ohne Art. 20, 27, 41 und 47 | 350 | 247 | 169 |
 | KI-VO | Verordnung (EU) 2024/1689, konsolidierte Fassung vom 27.07.2026, Text von EUR-Lex | Art. 4, 5, 6, 13, 14, 26, 27 und 50; je Einzelpflicht eine Anforderung | 197 | 74 | 65 |
 | SDM | Bausteine der Datenschutzkonferenz, V1.0 bzw. V1.0a | Löschen und Vernichten (M60), Trennen (M50), Zugriffe regeln (M51); alle Maßnahmen | 147 | 147 | 116 |
+
+Der Vorfilter Behörde verwirft vier Artikel, die für eine deutsche Behörde nie gelten: Art. 20
+(Datenübertragbarkeit, Abs. 3), Art. 27 (Vertreter nur für Verantwortliche außerhalb der EU),
+Art. 41 (Überwachung von Verhaltensregeln, Abs. 6) und Art. 47 (BCR nur für Unternehmensgruppen).
+Jeder Artikel steht mit festem Begründungssatz im Auswahlprotokoll (ADR 0028).
 
 Nicht verwendet werden bei der DSGVO Kapitel I, VI bis VIII, X und XI. Sie regeln Begriffe,
 Aufsicht, Rechtsbehelfe, Sanktionen und Schlussbestimmungen, also nichts, was eine Spezifikation
@@ -133,7 +138,7 @@ Personen oder das ganze Konto, nicht ein einzelnes Template (B5).
 ### F1 Audit einer Spezifikation
 
 Die prüfende Person gibt eine Spezifikation als Text, Markdown oder
-OpenAPI ein. GovGuard bewertet sie gegen alle 374 Prüfregeln aus DSGVO, KI-VO und SDM.
+OpenAPI ein. GovGuard bewertet sie gegen alle 350 Prüfregeln aus DSGVO, KI-VO und SDM.
 
 ### F2 Audit einer Architektur
 

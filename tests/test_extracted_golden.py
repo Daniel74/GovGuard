@@ -53,11 +53,12 @@ def test_c5_all_610_criteria_and_300_candidates() -> None:
     assert reqs["CRY-03.01B"].prefilter_passed
 
 
-def test_dsgvo_exactly_99_articles_and_chapters_2_to_5_as_candidates() -> None:
+def test_dsgvo_exactly_99_articles_and_chapters_2_to_5_minus_authority_articles() -> None:
     reqs = {r.id: r for r in extract_cached("dsgvo.json").requirements}
     assert len(reqs) == 99
     assert [rid for rid, r in reqs.items() if r.prefilter_passed] == [
         f"Art. {n}" for n in range(5, 51)  # chapter V ends with Art. 50
+        if n not in (20, 27, 41, 47)  # never for an authority (#59)
     ]
     assert reqs["Art. 32"].title == "Sicherheit der Verarbeitung"
     assert reqs["Art. 32"].text.startswith("(1) Unter Berücksichtigung des Stands der Technik")
