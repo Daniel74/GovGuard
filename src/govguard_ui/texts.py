@@ -6,9 +6,16 @@ DATA_RULE = "Keine echten oder personenbezogenen Daten eingeben."  # ADR 0004, 0
 
 OPEN_WORLD_ONLY = "Nur bei offener Welt: Spezifikation, Architektur als Freitext."  # ADR 0020
 HELP = {  # help on the report head; status help lives in style.LOOKS
-    "judge": "Ein zweiter Modellaufruf sieht je Verstoß nur das Verstoßkriterium und die "
-             f"Belegzeilen. Bestätigt er nicht, stuft der Code auf {LOOKS['WARN'].label} herab. "
-             "„Nicht verfügbar“: Der Verstoß bleibt ungeprüft stehen. " + OPEN_WORLD_ONLY,
+    "judge": f"Ein Verstoß ist ein schwerer Vorwurf. Deshalb prüft ein zweiter Modellaufruf jeden "
+             f"Befund „{LOOKS['FAIL'].label}“ nach. Er sieht nur das Verstoßkriterium der "
+             "Prüfregel und die Belegzeilen, nicht die erste Begründung. Die Zahl nennt die "
+             "geprüften Verstöße.\n\n"
+             f"- **bestätigt:** Der Befund bleibt „{LOOKS['FAIL'].label}“.\n"
+             f"- **herabgestuft:** Der Code setzt ihn auf „{LOOKS['WARN'].label}“, der Befund "
+             f"zeigt „↓ herabgestuft von {LOOKS['FAIL'].label}“.\n"
+             "- **nicht verfügbar:** Der Aufruf ist ausgefallen, der Verstoß bleibt ungeprüft "
+             "stehen.\n\n" + OPEN_WORLD_ONLY + " Bei CloudFormation-JSON entfällt er: Dort ist "
+             "ein fehlender Wert der Standardwert und darf ein Verstoß sein.",
     "expected": "Jeder Musterfall hat ein festgelegtes Soll: Gesamtstatus und Pflichtbefunde. "
                 "Weicht ein Report ab, zeigt GovGuard das offen, statt neu zu würfeln. Ein Klick "
                 "auf einen Pflichtbefund springt zu ihm.",
@@ -18,7 +25,9 @@ HELP = {  # help on the report head; status help lives in style.LOOKS
                   "an jeder Bedingung zeigt Erklärung und Beleg.",
     "gaps": "Eine Lücke ist eine Prüfregel, zu der die Eingabe nichts sagt. Das ist kein Verstoß, "
             "sondern eine offene Frage: vor der Umsetzung klären oder bewusst ausschließen. Im "
-            f"JSON-Report: {LOOKS['GAP'].code}. Die Lücken stehen nicht in der Befundtabelle oben.",
+            f"JSON-Report: {LOOKS['GAP'].code}. Die Lücken stehen nicht in der Befundtabelle oben. "
+            "Lücken unter einer Bedingung, zu der die Eingabe schweigt, stehen getrennt unter "
+            "„Nur wenn …“: Trifft die Bedingung nicht zu, entfallen sie.",
     "overall": "Der strengste Status aller Befunde: "
                + " vor ".join(LOOKS[name].label for name in STATUS_FILTERS) + ".",
 }

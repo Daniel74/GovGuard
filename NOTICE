@@ -1,5 +1,8 @@
 GovGuard – Quellenvermerke
 
+Der Code steht unter der MIT-Lizenz (LICENSE). Für die Wissensbasis gelten die
+Lizenzen der Quellen unten.
+
 Die Wissensbasis enthält Auszüge aus folgenden Quellen. Die Quelldateien selbst
 liegen nicht im Repo, der Build lädt sie vom Herausgeber (ADR 0008).
 
@@ -33,3 +36,8 @@ CIS Amazon Web Services Foundations Benchmark v7.0.0
   © Center for Internet Security, Inc. Volltexte sind nicht im Repo enthalten.
   Die Prüfregeln zitieren einzelne Sätze als Quellenbeleg. Strukturdaten stammen aus
   Prowler (https://github.com/prowler-cloud/prowler, Apache-2.0).
+
+BSI C5:2025 und AWS Foundational Security Best Practices (FSBP)
+  Texte von BSI bzw. Amazon Web Services; Lizenz ungeklärt, deshalb wie CIS behandelt
+  (ADR 0008): Volltexte sind nicht im Repo, die Prüfregeln zitieren einzelne Sätze.
+  Strukturdaten stammen aus Prowler (https://github.com/prowler-cloud/prowler, Apache-2.0).

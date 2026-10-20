@@ -16,7 +16,27 @@ SHIELD = ('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBo
 LOGO = "data:image/svg+xml;base64," + base64.b64encode(SHIELD.encode()).decode()
 REPO_URL = "https://github.com/Daniel74/GovGuard"
 CONTACT_MAIL = "govguard@gmx.de"  # an own address for the project, not the private one
-FOOTER = f"[Quellcode auf GitHub]({REPO_URL})  \nKontakt: [{CONTACT_MAIL}](mailto:{CONTACT_MAIL})"
+FOOTER = (f"[Quellcode auf GitHub]({REPO_URL})  \nLizenz: [MIT]({REPO_URL}/blob/main/LICENSE)  \n"
+          f"Kontakt: [{CONTACT_MAIL}](mailto:{CONTACT_MAIL})")
+# Attribution the licenses ask for where the rules are shown (CC BY-SA 4.0, dl-de/by-2-0)
+CREDITS = f"""**Quellen der Prüfregeln**
+- BSI IT-Grundschutz++: © BSI, [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/),
+  verändert
+- Standard-Datenschutzmodell (SDM): Datenschutzkonferenz,
+  [Datenlizenz Deutschland – Namensnennung 2.0](https://www.govdata.de/dl-de/by-2-0), verändert
+- DSGVO und KI-Verordnung: © Europäische Union, [EUR-Lex](https://eur-lex.europa.eu)
+- CIS AWS Foundations Benchmark v7.0.0: © Center for Internet Security, Inc.
+- BSI C5:2025 und AWS FSBP: Texte von BSI und Amazon Web Services
+- Strukturdaten zu CIS, C5 und FSBP: [Prowler](https://github.com/prowler-cloud/prowler),
+  Apache-2.0
+
+Verändert heißt: Anforderungen extrahiert, gefiltert und zu Prüfregeln umformuliert. Alle
+Vermerke stehen in [NOTICE]({REPO_URL}/blob/main/NOTICE).
+
+**Werkzeuge**
+- [Streamlit](https://streamlit.io), Apache-2.0
+- [Pydantic](https://docs.pydantic.dev) und [Pydantic AI](https://ai.pydantic.dev), MIT
+- Sprachmodelle über [Groq](https://groq.com); jeder Report nennt sein Modell"""
 BRAND = (f'<div class="gg-brand"><img src="{LOGO}" alt=""><div><b>GovGuard</b>'
          '<span>Prüfassistent</span></div></div>')
 
@@ -39,12 +59,14 @@ def create_audit_page() -> StreamlitPage:
 
 
 def sidebar(entries: list[StreamlitPage]) -> None:
-    """Brand, one link per page, demo note, source and contact; replaces Streamlit's own
-    navigation."""
+    """Brand, one link per page, demo note, credits, then source, license and contact;
+    replaces Streamlit's own navigation."""
     with st.sidebar:
         st.html(BRAND)
         for page in entries:
             st.page_link(page)
         st.space("small")  # air above the note, as in the design
         st.caption("Demo-Stand · nur fiktive Daten")
+        with st.popover("Credits", type="tertiary", icon=":material/info:"):
+            st.markdown(CREDITS)
         st.caption(FOOTER)

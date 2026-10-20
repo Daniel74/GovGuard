@@ -35,3 +35,8 @@ Build-Werkzeug, läuft lokal: `uv run python -m kb_build <befehl>`. Hintergrund:
 - **YAML:** CloudFormation-YAML gilt als Freitext und damit als offene Welt; ein fehlender Baustein wird dort nur WARN, kein FAIL (#48).
 - **Build mit Groq:** `kb_build` bricht mit Groq oft an einer einzelnen Regel ab; Wiederholen hilft (#49).
 - **Prüfregeln:** S3.5, DLS.2.2, IAM-09.01AC und BER.5.9 werten Deny bei `false` als Verstoß, 12 Regeln enthalten Platzhalter, nur `<Mindestfrist>` in DET.3.1 verfälscht das Ergebnis (WARN statt PASS, #50).
+
+## Lizenz
+
+- **Code:** MIT, siehe [LICENSE](LICENSE).
+- **Wissensbasis:** Sie bleibt unter den Lizenzen ihrer Quellen, siehe [NOTICE](NOTICE). Dateien mit BSI-Anker stehen unter CC BY-SA 4.0. Die Demo-UI nennt Quellen und Werkzeuge unter „Credits“ in der Seitenleiste.

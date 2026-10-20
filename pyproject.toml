@@ -2,6 +2,8 @@
 name = "govguard"
 version = "0.1.0"
 description = "GovCloud Compliance Copilot"
+license = "MIT"  # code only; data keeps the licenses of its sources (NOTICE)
+license-files = ["LICENSE", "NOTICE"]
 requires-python = ">=3.13"
 dependencies = [
     "pydantic-ai-slim[bedrock,groq]==2.54.0",  # pinned, ADR 0005; Groq at runtime (ADR 0023)

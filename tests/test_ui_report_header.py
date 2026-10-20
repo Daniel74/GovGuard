@@ -76,7 +76,7 @@ SPEC_TILES = [  # label and explanation of the stored spec report, as in the des
     "! Prüfbedarf\nmit Beleg · davon 16 herabgestuft",
     "✓ Einhaltung belegt",
     "– Nicht anwendbar\nRegel betrifft das Vorhaben nicht",
-    "○ Lücken\nnicht beschrieben · kein Verstoß",
+    "○ Lücken\nnicht beschrieben · davon 55 nur unter Bedingung",  # #62: see "Nur wenn …"
     "Verstoß-Prüfer\ngeprüft · 33 bestätigt · 16 herabgestuft · 0 nicht verfügbar",
 ]
 
@@ -92,6 +92,13 @@ def test_an_architecture_without_gaps_has_no_gap_tile_and_no_fail_judge() -> Non
     assert "– Nicht anwendbar\nAWS-Dienst der Regel kommt nicht vor" in frames(app)
     assert "Verstoß-Prüfer\nNur bei offener Welt: Spezifikation, Architektur als Freitext." \
         in frames(app)  # the stored architecture is a template, a closed world (#46)
+
+
+def test_gaps_without_conditions_are_only_not_described() -> None:
+    app = page(gallery_script)
+    app.selectbox(key="gallery_preset").select("arch-protokollarchiv").run()
+
+    assert "○ Lücken\nnicht beschrieben" in frames(app)  # an architecture has no conditions
 
 
 def free_text_without_fail_script() -> None:
@@ -148,3 +155,17 @@ def test_a_deviation_is_a_strip_with_a_cross_and_a_help() -> None:
     assert strip.split("\n")[1:] == [
         "✕ Gesamtstatus Soll Einhaltung belegt, Ist Verstoß belegt"]
     assert {m.value: m.proto.help for m in app.markdown}["**Soll-Abweichung**"] == HELP["expected"]
+
+
+def test_the_judge_help_explains_why_and_every_value_of_the_tile() -> None:
+    app = page(gallery_script)
+
+    judge = next(m.proto.help for m in app.metric if m.label == "Verstoß-Prüfer")
+    assert judge == HELP["judge"]
+    assert "schwerer Vorwurf" in judge  # why a second call (#62)
+    for value in ("bestätigt", "herabgestuft", "nicht verfügbar"):  # the words of the caption
+        assert f"- **{value}:**" in judge
+
+
+def test_the_gaps_help_names_the_split_by_condition() -> None:
+    assert "„Nur wenn …“" in HELP["gaps"]

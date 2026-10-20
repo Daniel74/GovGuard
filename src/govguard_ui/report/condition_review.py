@@ -111,6 +111,14 @@ def condition_rows(report: AuditReport) -> list[tuple[ConditionDef, ConditionRes
     return [(c, report.conditions[c.id]) for c in _spec_definitions() if c.id in report.conditions]
 
 
+def conditional_gaps(report: AuditReport) -> int:
+    """Gaps of all sources that stand under "Nur wenn …"; 0 without conditions."""
+    rows = condition_rows(report)
+    gaps = [f for f in report.findings if category(f) == "GAP"]
+    groups = group_gaps(gaps, [c for c, _ in rows], {c.id: result for c, result in rows})
+    return sum(len(items) for items in groups.by_condition.values())
+
+
 def rule_counts(
     defs: list[ConditionDef], findings: list[Finding], source: str | None = None
 ) -> dict[str, tuple[int, int]]:

@@ -42,6 +42,17 @@ def test_the_start_page_explains_the_gallery_one_sentence_per_line() -> None:
     assert len(list_items(app, "Die Galerie zeigt")) == 4
 
 
+def test_the_start_page_explains_conditions_open_world_and_the_split_gaps() -> None:
+    from govguard_ui.screens.start_page import TERMS
+
+    cards = frames(page(start_script))
+
+    assert {"Bedingung", "Offene Welt"} <= set(TERMS)  # #62, after #60/#61
+    assert "„Nur wenn …“" in TERMS["Warum so viele Lücken?"]
+    for term, text in TERMS.items():  # one framed card per term
+        assert f"**{term}**  \n{text}" in cards
+
+
 def test_gallery_shows_the_first_preset_with_its_source_and_expected_result() -> None:
     app = page(gallery_script)
 
@@ -95,6 +106,24 @@ def test_the_sidebar_ends_with_source_code_and_contact() -> None:
     footer = sidebar_items(app)[-1]
     assert "[Quellcode auf GitHub](https://github.com/Daniel74/GovGuard)" in footer
     assert "Kontakt: [govguard@gmx.de](mailto:govguard@gmx.de)" in footer
+    assert "Lizenz: [MIT](https://github.com/Daniel74/GovGuard/blob/main/LICENSE)" in footer
+
+
+def test_the_credits_popover_names_every_source_and_the_tools() -> None:
+    app = AppTest.from_function(sidebar_script, default_timeout=30).run()
+
+    credits = next(node for node in app.sidebar if node.type == "popover")
+    text = "\n".join(m.value for m in credits.markdown)
+    assert credits.proto.popover.label == "Credits"
+    for name in ("BSI IT-Grundschutz++", "CC BY-SA 4.0", "Datenschutzkonferenz",  # NOTICE
+                 "Datenlizenz Deutschland", "Europäische Union", "Center for Internet Security",
+                 "BSI C5", "AWS FSBP", "Prowler", "Streamlit", "Pydantic AI", "Groq"):
+        assert name in text, name
+
+
+def sidebar_script() -> None:
+    from govguard_ui import navigation
+    navigation.sidebar(navigation.pages())
 
 
 def test_every_category_has_one_look_and_the_start_page_explains_it() -> None:

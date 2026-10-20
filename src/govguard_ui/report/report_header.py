@@ -5,6 +5,7 @@ import html
 import streamlit as st
 
 from govguard.models import AuditReport, Expected
+from govguard_ui.report.condition_review import conditional_gaps
 from govguard_ui.report.findings_view import select
 from govguard_ui.report.review import Category, category_counts, expected_checks
 from govguard_ui.style import JUDGE_NAME, LOOKS, status_word
@@ -45,7 +46,9 @@ def _counters(report: AuditReport, key: str) -> None:
     downgraded = sum(1 for f in report.findings if f.downgraded_from)
     words = {  # FAIL and PASS: "belegt" says it all (#51)
         "WARN": f"mit Beleg · davon {downgraded} herabgestuft" if downgraded else "mit Beleg",
-        "N/A": "Regel betrifft das Vorhaben nicht", "GAP": "nicht beschrieben · kein Verstoß"}
+        "N/A": "Regel betrifft das Vorhaben nicht", "GAP": "nicht beschrieben"}
+    if conditional := conditional_gaps(report):  # split below in "Nur wenn …" (#61, #62)
+        words["GAP"] += f" · davon {conditional} nur unter Bedingung"
     if report.audit_type == "architecture":
         words["N/A"] = "AWS-Dienst der Regel kommt nicht vor"
     shown = [name for name in TILES if name != "GAP" or counts["GAP"]]  # design: no empty gaps

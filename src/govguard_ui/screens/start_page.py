@@ -31,20 +31,27 @@ GALLERY = "\n".join(f"- {sentence}" for sentence in [  # one per item (#41, #51)
     "Zeilen darüber und markiert sie blau.",
     "„Ganzes Dokument“ zeigt alle Zeilen.",
 ])
-TERMS = {
+TERMS = {  # two rows of four cards
     "Beleg": "Die Zeilen der Eingabe, auf die sich der Befund stützt, z. B. „Zeilen 46–49“. Im "
              "Dokument sind sie blau markiert.",
+    "Primäranker": "Die Norm, aus der die Prüfregel stammt, z. B. „DSGVO Art. 9“ oder "
+                   "„BSI GS++ BER.4.1“.",
+    "Offene Welt": "Was die Eingabe nicht erwähnt, kann anderswo geregelt sein. Fehlen ist deshalb "
+                   "eine Lücke, nie ein Verstoß. Ausnahme ist CloudFormation-JSON: Dort ist ein "
+                   "fehlender Wert der Standardwert.",
+    "Warum so viele Lücken?": "GovGuard prüft jede Prüfregel des Katalogs. Was die Spezifikation "
+                              "nicht erwähnt, ist eine Lücke. Lücken unter einer offenen "
+                              "Bedingung stehen getrennt unter „Nur wenn …“.",
+    "Bedingung": "Eine Tatsache über das Vorhaben, von der Prüfregeln abhängen, z. B. "
+                 "„KI-System“. Vor dem Audit prüft die KI, was die Spezifikation dazu sagt: ja, "
+                 "nein oder nicht genannt. Nur ein **nein** mit Beleg macht Prüfregeln nicht "
+                 "anwendbar.",
     f"↓ herabgestuft von {LOOKS['FAIL'].label}": f"Der {JUDGE_NAME}, ein zweiter "
                                                  "Modellaufruf, hat den Verstoß nicht "
                                                  "bestätigt. Der Befund steht deshalb auf "
                                                  f"{LOOKS['WARN'].label}.",
-    "Warum so viele Lücken?": "GovGuard prüft jede Prüfregel des Katalogs. Eine Spezifikation "
-                              "ist eine offene Welt: Was sie nicht erwähnt, ist kein Verstoß, "
-                              "sondern eine Lücke.",
     "Korrektur": "Lesbarer Grund, warum der Code in die KI-Antwort eingegriffen hat: Retry, "
                  f"Herabstufung, Reparatur aus der Prüfregel oder Urteil durch den {JUDGE_NAME}.",
-    "Primäranker": "Die Norm, aus der die Prüfregel stammt, z. B. „DSGVO Art. 9“ oder "
-                 "„BSI GS++ BER.4.1“.",
     "Soll-Abweichung": "Nur bei Musterfällen: Gesamtstatus oder ein Pflichtbefund weicht vom "
                        "festgelegten Soll ab. GovGuard zeigt das offen, statt neu zu würfeln.",
 }
@@ -67,8 +74,8 @@ def render() -> None:
     st.header("So lesen Sie einen Audit-Report")
     st.html(_status_table())
     terms = list(TERMS.items())
-    for row in (terms[:3], terms[3:]):  # two rows, so cards of one row are equally high
-        for column, (term, text) in zip(st.columns(3), row, strict=True):
+    for row in (terms[:4], terms[4:]):  # two rows, so cards of one row are equally high
+        for column, (term, text) in zip(st.columns(4), row, strict=True):
             with column.container(border=True, height="stretch"):
                 st.markdown(f"**{term}**  \n{text}")
 
