@@ -127,7 +127,7 @@ _Schlanke Variante umgesetzt (#52, #53): 8 Artikel in Einzelpflichten, ohne Vors
 - **Was bricht:** Die meisten Pflichten gelten nur für Hochrisiko-Systeme (Art. 6, Anhang III). Ob eine Spezifikation darunter fällt, muss vor allen anderen Regeln feststehen; sonst vergibt das Modell N/A je Regel einzeln, und das schwankt (SPEC P1).
 - **Anpassung:** Neue Quelle über das Rezept (ARCHITECTURE, *Neue Quelle hinzufügen*). Der Text liegt wie die DSGVO im Formex-XML bei EUR-Lex; der DSGVO-Adapter ist vermutlich weitgehend wiederverwendbar. Dazu ein Musterfall mit KI-Einsatz und Soll, und für `spec-govguard` ein neues Soll. Vorher klären: Wer entscheidet die Hochrisiko-Einstufung (Code-Vorstufe oder Mensch), und welche Fristen gelten aktuell? _(Rechtsstand vor dem Bau prüfen.)_
 - **Vorstufe Systemprofil (offen):** Ein Aufruf vor dem Audit legt fest, was für ein System die Spezifikation beschreibt: KI-System, Hochrisiko-Bereich nach Anhang III, besondere Kategorien von Daten, Drittland. Jede Angabe braucht Belegzeilen; ohne Beleg gilt „unbekannt“.
-  - **Befund (#36, 19.10.2026):** Ohne Abschnitt 8 ergab `spec-govguard` für alle 65 KI-VO-Regeln nur Lücken, obwohl die SPEC das Sprachmodell nennt. Die N/A der Hochrisiko-Pflichten schwankten zwischen zwei Läufen von 0 auf 25.
+  - **Befund (#36, 19.10.2026):** Ohne Abschnitt 10 ergab `spec-govguard` für alle 65 KI-VO-Regeln nur Lücken, obwohl die SPEC das Sprachmodell nennt. Die N/A der Hochrisiko-Pflichten schwankten zwischen zwei Läufen von 0 auf 25.
   - **N/A per Code:** Ist das System belegt nicht hochriskant, setzt der Code Art. 13, 14, 26 und 27 auf N/A, wie heute die Dienste im Architektur-Audit. Das nimmt die größte Schwankung heraus.
   - **Pflicht-Lücke statt FAIL:** Was das Profil verlangt, aber fehlt, bleibt WARN (offene Welt, ADR 0020) und erscheint oben im Report, z. B. „KI-System erkannt, Einstufung fehlt“ (Art. 6 Abs. 4 KI-VO verlangt die Dokumentation). Ein FAIL aus bloßem Fehlen würde G4 brechen.
   - **Risiko:** Ein falsches Profil verdeckt Pflichten per N/A. Deshalb steht das Profil mit Belegen im Report, und ohne Beleg setzt der Code kein N/A. Neue Weichen: Prompt-Design und Statusmodell; ein Musterfall mit verschwiegener KI-Nutzung als Soll.
@@ -135,7 +135,7 @@ _Schlanke Variante umgesetzt (#52, #53): 8 Artikel in Einzelpflichten, ohne Vors
 ## Szenario 11: Prompt-Fassung und Betrieb beobachtbar machen
 
 - **Auslöser:** Prompts werden weiterentwickelt und sollen schrittweise eingeführt werden: eine neue Fassung erst für einen Teil der Audits, dann messbar mit der alten verglichen.
-- **Was bricht:** Der Audit-Report nennt `model_id` und `catalog_sha256`, aber keine Prompt-Fassung. `kb_commit` steht im Demo-Stand auf `local`. Ein Betriebsprotokoll gibt es nicht: `AuditEvent` existiert nur als Modell (ADR 0006). Prompts liegen als Python-Texte im Code; ihre Änderungen zeigt nur der Git-Verlauf (SPEC, Abschnitt 12).
+- **Was bricht:** Der Audit-Report nennt `model_id` und `catalog_sha256`, aber keine Prompt-Fassung. `kb_commit` steht im Demo-Stand auf `local`. Ein Betriebsprotokoll gibt es nicht: `AuditEvent` existiert nur als Modell (ADR 0006). Prompts liegen als Python-Texte im Code; ihre Änderungen zeigt nur der Git-Verlauf (SPEC, Abschnitt 14).
 
 | Anpassung | Ausführende Schicht |
 |---|---|

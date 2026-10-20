@@ -133,7 +133,118 @@ Personen oder das ganze Konto, nicht ein einzelnes Template (B5).
 | Streamlit Community Cloud                | Dienstleister für den Betrieb der Web-Anwendung                                                                                                             |
 | GitHub                                   | Dienstleister für die Versionsverwaltung: Programmcode, Wissensbasis, Musterfälle und Galerie liegen dort öffentlich; Streamlit lädt die Anwendung von dort |
 
-## 5 Fachliche Anforderungen
+## 5 Kernbegriffe
+
+Fünf Begriffe tragen den Audit-Report und die Oberfläche. Alle weiteren stehen im Glossar
+[CONTEXT.md](../CONTEXT.md).
+
+### Prüfregel
+
+Eine Prüfregel ist eine einzelne, prüfbare Regel aus genau einer Anforderung eines Regelwerks. Sie
+nennt, woran man eine Einhaltung und woran man einen Verstoß erkennt. Beispiel: „Einwilligung als
+Ausnahme“ zu DSGVO Art. 9 Abs. 2.
+
+### Befund
+
+Ein Befund ist das Ergebnis genau einer Prüfregel in einem Audit. Jede Prüfregel des Prüfkatalogs
+erhält in jedem Audit genau einen Befund (G1).
+
+| Teil        | Inhalt                                                                        |
+| ----------- | ----------------------------------------------------------------------------- |
+| Normanker   | Fundstelle im Regelwerk, z. B. „DSGVO Art. 9 Abs. 2“                          |
+| Status      | PASS, WARN, FAIL oder N/A (G2)                                                |
+| Begründung  | warum das Sprachmodell so urteilt                                             |
+| Beleg       | Zeilen der Eingabe, auf die sich der Befund stützt                            |
+| Empfehlung  | was vor der Umsetzung zu tun ist                                              |
+| Korrekturen | wo das Programm in die Antwort des Sprachmodells eingegriffen hat (G5, G6)    |
+
+Bestätigt das Programm ein PASS oder FAIL nicht, setzt es den Befund auf WARN. Das heißt
+Herabstufung. Der ursprüngliche Status bleibt am Befund sichtbar.
+
+### Beleg
+
+Ein Beleg ist ein wörtlicher Ausschnitt der Eingabe. Das Sprachmodell nennt nur die Zeilennummern,
+den Text schneidet das Programm selbst aus (G5). So steht kein erfundenes Zitat im Audit-Report.
+
+### Lücke
+
+Eine Lücke ist ein Befund, zu dem die Eingabe nichts sagt. Er hat den Status WARN und keine
+Belegzeilen. Eine Lücke ist kein Verstoß, sondern eine offene Frage: vor der Umsetzung klären oder
+bewusst ausschließen.
+
+Lücken gibt es nur in der offenen Welt (G4). In einer CloudFormation-Vorlage gilt Fehlendes als
+Standardwert und wird bewertet.
+
+WARN hat damit zwei Formen. Die Oberfläche zeigt sie getrennt, im Audit-Report heißen beide WARN.
+
+|                      | Lücke                            | Prüfbedarf                                      |
+| -------------------- | -------------------------------- | ----------------------------------------------- |
+| Was die Eingabe sagt | nichts                           | etwas, aber nicht eindeutig                     |
+| Belegzeilen          | keine                            | vorhanden, oder der Befund wurde herabgestuft   |
+| In der Oberfläche    | eigene Liste unter den Befunden  | in der Befundtabelle                            |
+
+### Bedingung
+
+Eine Bedingung ist eine Tatsache über das Vorhaben, von der Prüfregeln abhängen. Beispiel: Die
+Prüfregeln der KI-VO gelten nur, wenn das Vorhaben ein KI-System einsetzt.
+
+GovGuard kennt sieben Bedingungen, nur für Spezifikationen: KI-System, Hochrisiko-KI,
+Drittlandübermittlung, Auftragsverarbeiter, Einwilligung, Mandantenfähigkeit und automatisierte
+Entscheidung.
+
+Vor dem Audit liest ein Aufruf des Sprachmodells, was die Spezifikation zu jeder Bedingung sagt.
+Dieser Aufruf heißt Bedingungs-Vorlauf. Er nennt nur Belegzeilen, den Wert setzt das Programm:
+
+| Wert          | Die Spezifikation …                                  | Folge für die Prüfregeln der Bedingung                     |
+| ------------- | ---------------------------------------------------- | ---------------------------------------------------------- |
+| ja            | bejaht die Bedingung mit Belegzeilen                 | werden normal bewertet                                     |
+| nein          | verneint sie ausdrücklich für das ganze Vorhaben     | stehen auf N/A, die Verneinungszeile ist der Beleg         |
+| nicht genannt | schweigt                                             | werden normal bewertet, ihre Lücken stehen unter „Nur wenn …“ |
+
+Bejaht und verneint die Spezifikation dieselbe Bedingung, gilt „ja“, der strengere Wert. Kein
+KI-System heißt auch kein Hochrisiko-System. Was der Vorlauf nicht kann, steht in B6.
+
+## 6 Oberfläche
+
+Die Web-Anwendung hat drei Seiten, erreichbar über die Seitenleiste:
+
+| Seite           | Für wen                       | Inhalt                                                                              |
+| --------------- | ----------------------------- | ----------------------------------------------------------------------------------- |
+| Start & Hilfe   | alle                          | erklärt GovGuard, wie ein Befund entsteht und wie Korrekturen zu lesen sind (Abschnitt 10) |
+| Audits ansehen  | alle                          | die Galerie: gespeicherte Audit-Reports der Musterfälle neben dem geprüften Dokument |
+| Audit erstellen | prüfende Person mit Passwort  | Audit-Art wählen, Eingabe einfügen oder hochladen, Audit starten                    |
+
+Ein Audit-Report sieht auf beiden Seiten gleich aus. Die Oberfläche zeigt statt der Kürzel die
+deutschen Bezeichnungen aus G2. Die Bilder stammen aus den automatischen Oberflächentests und zeigen
+den aktuellen Stand.
+
+### Audit-Report einer Spezifikation
+
+![Audit-Report einer Spezifikation in der Galerie](../tests/visual/gallery-spec.png)
+
+Von oben nach unten:
+
+1. **Kopf:** Titel, Audit-Art, Sprachmodell, Zahl der Wiederholungen und Download als JSON; rechts
+   der Gesamtstatus (G3).
+2. **Kacheln:** Zahl der Befunde je Status, dazu die Lücken und das Ergebnis der Zweitprüfung (G6).
+3. **Bedingungen:** je Bedingung der Wert; ein Klick zeigt Erklärung und Beleg.
+4. **Soll-Abgleich:** nur in der Galerie; grün, wenn der Musterfall sein Soll erreicht, sonst rot (G8).
+5. **Befunde:** Tabelle ohne Lücken, filterbar nach Quelle und Status. Rechts der gewählte Befund
+   mit Begründung, Empfehlung und Korrekturen, darunter das Dokument mit markierten Belegzeilen.
+6. **Lücken:** zuerst „Für jedes Vorhaben zu klären“, dann je Bedingung mit „nicht genannt“ eine
+   Gruppe „Nur wenn …“. Trifft die Bedingung nicht zu, entfallen diese Lücken.
+
+### Audit-Report einer Architektur
+
+![Audit-Report einer Architektur in der Galerie](../tests/visual/gallery-arch.png)
+
+Der Aufbau ist gleich, mit zwei Unterschieden:
+
+- **Keine Bedingungen:** Ob eine Prüfregel anwendbar ist, entscheidet das Programm über die
+  vorkommenden AWS-Dienste. N/A heißt hier: Der Dienst der Prüfregel kommt nicht vor.
+- **Geschlossene Welt:** Bei einer CloudFormation-Vorlage entfallen Lücken und Zweitprüfung (G4).
+
+## 7 Fachliche Anforderungen
 
 ### F1 Audit einer Spezifikation
 
@@ -155,9 +266,9 @@ Weicht der Audit-Report vom Soll ab, zeigt die Galerie die Abweichung.
 ### F4 Audit-Report
 
 Der Audit-Report nennt den Gesamtstatus und je Prüfregel genau einen Befund mit
-Normanker, Status, Begründung, Beleg und Empfehlung. Die prüfende Person kann ihn als JSON-Datei
-herunterladen. Ein Normanker ist die Fundstelle im Regelwerk, etwa „DSGVO Art. 9“. Bei einer
-Spezifikation nennt er außerdem je Bedingung den Wert mit Belegzeilen (B6).
+Normanker, Status, Begründung, Beleg und Empfehlung (Abschnitt 5). Die prüfende Person kann ihn
+als JSON-Datei herunterladen. Bei einer Spezifikation nennt er außerdem je Bedingung den Wert mit
+Belegzeilen.
 
 ### F5 Wissensbasis bauen
 
@@ -183,7 +294,7 @@ Eine neue Quelle braucht drei Dinge: einen Herausgeber mit festem Dokument und P
 mindestens einen Musterfall mit Soll und eine schriftliche Entscheidung mit Begründung.
 Das technische Vorgehen beschreibt [ARCHITECTURE.md](ARCHITECTURE.md) unter „Neue Quelle hinzufügen“.
 
-## 6 Geschäftsregeln
+## 8 Geschäftsregeln
 
 ### G1 Fester Prüfkatalog
 
@@ -200,10 +311,9 @@ Kürzel, die Oberfläche zeigt deutsche Bezeichnungen.
 | PASS   | Einhaltung belegt | Die Eingabe belegt, dass die Prüfregel eingehalten ist.                                                                              |
 | WARN   | Prüfbedarf        | Aus der Eingabe ist es nicht entscheidbar, es besteht Prüfbedarf.                                                                    |
 | FAIL   | Verstoß belegt    | Die Eingabe belegt einen Verstoß.                                                                                                    |
-| N/A    | Nicht anwendbar   | Die Prüfregel ist auf die Eingabe nicht anwendbar. Bei einer Architektur entscheidet das Programm das über die vorkommenden Dienste, bei einer Spezifikation über eine ausdrücklich verneinte Bedingung (B6). |
+| N/A    | Nicht anwendbar   | Die Prüfregel ist auf die Eingabe nicht anwendbar. Bei einer Architektur entscheidet das Programm das über die vorkommenden Dienste, bei einer Spezifikation über eine ausdrücklich verneinte Bedingung (Abschnitt 5). |
 
-Ein Befund mit WARN ohne Belegzeilen heißt in der Oberfläche „Lücke“: Die Eingabe beschreibt die
-Prüfregel nicht.
+Ein WARN ohne Belegzeilen ist eine Lücke (Abschnitt 5).
 
 ### G3 Gesamtstatus
 
@@ -298,7 +408,7 @@ müssen alle Audit-Reports der Galerie neu entstehen und alle Soll-Ergebnisse er
 Diese Ausnahme gilt bewusst für die Zerlegung von DSGVO und KI-VO in Einzelpflichten (#53,
 [ADR 0026](adr/0026-rechtsartikel-zerlegen.md)): Die Spec-Galerie ist danach neu entstanden.
 
-## 7 Daten und Datenschutz
+## 9 Daten und Datenschutz
 
 ### Datenflüsse
 
@@ -331,7 +441,7 @@ Was Groq und Streamlit selbst speichern und wann sie es löschen, regeln deren N
 GovGuard legt dafür keine eigene Löschfrist fest. Ein eigenes Audit-Protokoll führt der Demo-Stand
 nicht.
 
-## 8 Einstufung nach KI-Verordnung
+## 10 Einstufung nach KI-Verordnung
 
 GovGuard ist ein KI-System nach Art. 3 Nr. 1 KI-VO, denn ein Sprachmodell leitet die Befunde aus
 der Eingabe ab.
@@ -348,7 +458,7 @@ Für GovGuard gelten deshalb nur die allgemeinen Pflichten der KI-VO:
 | Hinweis auf das KI-System (Art. 50 Abs. 1)  | Die Seite „Start & Hilfe“ nennt das Sprachmodell als Quelle der Befunde.                                                                         |
 | Kennzeichnung der Ausgaben (Art. 50 Abs. 2) | Jeder Audit-Report nennt im Feld `model_id` maschinenlesbar das Sprachmodell, das ihn erzeugt hat.                                               |
 
-## 9 Nicht-funktionale Anforderungen
+## 11 Nicht-funktionale Anforderungen
 
 | Merkmal             | Anforderung                                                                                                                                                                           |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -356,10 +466,10 @@ Für GovGuard gelten deshalb nur die allgemeinen Pflichten der KI-VO:
 | Kosten              | Ein Audit kostet mit Groq 2 bis 3 Cent. Das Passwort verhindert, dass Fremde Kosten auslösen.                                                                                         |
 | Leerlaufkosten      | 0 €. Leerlaufkosten sind Kosten, die ohne Nutzung allein durch Zeit entstehen.                                                                                                        |
 | Sicherheit          | Passwort und Zugangsschlüssel für das Sprachmodell liegen nur in den geschützten Einstellungen von Streamlit, nicht im Programmcode. Ohne eingerichtetes Passwort startet kein Audit. |
-| Nachvollziehbarkeit | Jedes Audit und jeder Bau der Wissensbasis hinterlässt prüfbare Spuren (Abschnitt 10).                                                                                                |
+| Nachvollziehbarkeit | Jedes Audit und jeder Bau der Wissensbasis hinterlässt prüfbare Spuren (Abschnitt 12).                                                                                                |
 | Prüfbarkeit         | Alle automatischen Tests laufen ohne AWS und ohne Groq.                                                                                                                               |
 
-## 10 Beobachtbarkeit
+## 12 Beobachtbarkeit
 
 Beobachtbarkeit heißt: Man kann im Nachhinein erkennen, was das System getan hat und warum.
 GovGuard hält das auf drei Ebenen fest, ohne Eingabetexte zu speichern.
@@ -371,9 +481,9 @@ GovGuard hält das auf drei Ebenen fest, ohne Eingabetexte zu speichern.
 | Je Messlauf             | Laufzeit, Tokens, Kosten, Gründe für Wiederholungen und Abweichungen vom Soll                                                                                                                          | im zugehörigen Ticket                             | Projektbetreiber                      |
 
 Messläufe startet der Projektbetreiber von Hand, etwa vor und nach einer Änderung an der
-Wissensbasis. Was der Demo-Stand nicht festhält, steht in Abschnitt 12.
+Wissensbasis. Was der Demo-Stand nicht festhält, steht in Abschnitt 14.
 
-## 11 Qualität und Restrisiken
+## 13 Qualität und Restrisiken
 
 Ein Audit-Report ist ein Hinweis für Fachleute, kein Nachweis. Ein Sprachmodell kann irren, und
 GovGuard macht sichtbar, wo.
@@ -423,9 +533,8 @@ existieren und lang genug sind, bis zu einem Abschnitt von 200 Zeilen.
 In der offenen Welt sind die meisten Befunde Lücken, bei den drei Spec-Musterfällen 206 bis 294
 von 350 (Galerie vom 20.10.2026). Meist beschreibt die Eingabe die Anforderung einfach nicht.
 
-- **Gegenmaßnahme:** Die Oberfläche trennt Lücken (nicht beschrieben) vom Prüfbedarf (Beleg unklar).
-  Lücken unter einer Bedingung, zu der die Spezifikation schweigt, stehen getrennt unter „Nur wenn …“.
-  Für jedes Vorhaben bleiben so 145 bis 254 Lücken.
+- **Gegenmaßnahme:** Die Oberfläche trennt Lücken vom Prüfbedarf und gruppiert sie nach Bedingung
+  (Abschnitt 6). Für jedes Vorhaben bleiben so 145 bis 254 Lücken.
 - **Was bleibt:** Der Audit-Report ist lang. Die Aussagekraft liegt in FAIL und Prüfbedarf.
 
 ### P5 Schwächen im Prüfkatalog
@@ -447,11 +556,11 @@ Bei einer Architektur als Freitext erkennt das Sprachmodell die verwendeten Dien
 - **Was bleibt:** Die Prüfregeln eines übersehenen Dienstes stehen auf N/A, mit dem Hinweis
   „Dienst in der Eingabe nicht erkannt“. Bewertet werden sie nicht.
 
-## 12 Bekannte Grenzen
+## 14 Bekannte Grenzen
 
 ### B1 Keine echten Daten
 
-Der Demo-Stand ist für echte Daten nicht geeignet (Abschnitt 7). Vorgesehen
+Der Demo-Stand ist für echte Daten nicht geeignet (Abschnitt 9). Vorgesehen
 ist dafür das Sprachmodell über AWS Bedrock in der EU (Region Frankfurt), mit einem Protokoll ohne
 Eingabetext. Dieser Weg besteht nur über die Kommandozeile. Betrieb auf AWS und Protokoll sind
 entworfen, aber nicht gebaut.
@@ -487,17 +596,12 @@ CloudFormation-Vorlagen in YAML prüft GovGuard nur als Freitext.
 
 ### B6 Bedingungen: der Vorlauf liest nur, er stuft nicht ein
 
-Vor den Prüfpaketen stellt ein Aufruf des Sprachmodells fest, was die Spezifikation zu sieben
-Bedingungen sagt: KI-System, Hochrisiko-KI, Drittlandübermittlung, Auftragsverarbeiter, Einwilligung,
-Mandantenfähigkeit und automatisierte Entscheidung. Nur eine ausdrückliche Verneinung für das ganze
-Vorhaben macht die Prüfregeln der Bedingung zu „Nicht anwendbar“, mit der Verneinungszeile als Beleg.
+Der Bedingungs-Vorlauf (Abschnitt 5) liest nur, was die Spezifikation ausdrücklich sagt. Er stuft
+nicht selbst ein: Ein Hochrisiko-System erkennt GovGuard nur, wenn die Spezifikation es ausdrücklich
+beschreibt oder ausschließt.
 
-Schweigt die Spezifikation, steht die Bedingung auf „nicht genannt“ und ihre Prüfregeln bleiben
-im Audit. Der Bedingungs-Vorlauf stuft also nicht selbst ein: Ein Hochrisiko-System erkennt GovGuard nur, wenn
-die Spezifikation es ausdrücklich beschreibt oder ausschließt. Eine verschwiegene Einstufung fällt
-deshalb weiter nicht auf; die Prüfregeln zu Art. 4, 5, 6 und 50 KI-VO (KI-System) sowie zu Art. 13,
-14, 26 und 27 (Hochrisiko-KI) bewertet dann das Sprachmodell. Kein KI-System heißt auch kein
-Hochrisiko-System.
+Eine verschwiegene Einstufung fällt deshalb nicht auf. Die Prüfregeln zu Art. 4, 5, 6 und 50 KI-VO
+(KI-System) sowie zu Art. 13, 14, 26 und 27 (Hochrisiko-KI) bewertet dann das Sprachmodell.
 
 Fällt der Bedingungs-Vorlauf aus, bleiben alle Bedingungen „nicht genannt“ und jede Prüfregel geht
 ans Modell. Das Audit schlägt deshalb nie wegen des Vorlaufs fehl (ADR 0028).
