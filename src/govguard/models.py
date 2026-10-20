@@ -67,7 +67,8 @@ class AuditResponse(BaseModel):  # schema of tool submit_audit
 
 
 class RecognizedType(BaseModel):  # written by the LLM, one item of tool submit_inventory
-    # must be a type of the catalog; Groq often writes "type" (#39)
+    # must be a type of the catalog; with strict/NativeOutput Groq writes only resource_type,
+    # the "type" alias stays for Bedrock (tool without strict, #39)
     resource_type: str = Field(validation_alias=AliasChoices("resource_type", "type"))
     line_start: int  # evidence by line reference (ADR 0017): the lines that name the service
     line_end: int

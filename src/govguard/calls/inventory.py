@@ -61,11 +61,9 @@ def _validate(ctx: RunContext[InventoryDeps], response: InventoryResponse) -> In
     return response
 
 
-# groq_native=False: the inventory keeps ToolOutput on Groq, against ADR 0016 (NativeOutput).
-# Switching it needs a measurement before and after, see issue #58.
 _AGENTS = agents_for(
-    Answer(InventoryResponse, "submit_inventory", "Gib die erkannten Ressourcentypen mit Beleg ab.",
-           groq_native=False),
+    Answer(InventoryResponse, "submit_inventory",
+           "Gib die erkannten Ressourcentypen mit Beleg ab."),
     deps_type=InventoryDeps, instructions=INVENTORY_PROMPT, validator=_validate,
     settings={"temperature": 0})  # a missed service flips its rules to N/A (#28)
 

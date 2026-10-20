@@ -30,8 +30,7 @@ class Answer[T: BaseModel]:  # what the model must hand in: the schema and how i
     schema: type[T]
     name: str  # tool name under ToolOutput, schema name under NativeOutput
     description: str
-    strict: bool | None = None
-    groq_native: bool = True  # False: Groq keeps the tool, only the inventory (#58)
+    strict: bool | None = None  # of the Bedrock tool; Groq NativeOutput is always strict
 
 
 def agents_for[T: BaseModel](
@@ -42,11 +41,10 @@ def agents_for[T: BaseModel](
 
     Bedrock: forced tool, `ToolOutput` (ADR 0005). Groq: json_schema with constrained decoding,
     `NativeOutput` (ADR 0016): Groq has no forced tool with `strict`, so NativeOutput.
-    `groq_native=False` keeps the tool (inventory, #58).
     """
     spec = {"name": answer.name, "description": answer.description, "strict": answer.strict}
     outputs = {"bedrock": ToolOutput(answer.schema, **spec),
-               "groq": (NativeOutput if answer.groq_native else ToolOutput)(answer.schema, **spec)}
+               "groq": NativeOutput(answer.schema, **{**spec, "strict": True})}  # ADR 0017
     agents: Agents[T] = {}
     for provider, output in outputs.items():
         agent = Agent(output_type=output, instructions=instructions, deps_type=deps_type,

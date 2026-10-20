@@ -24,14 +24,14 @@ def validate(ctx: RunContext[CallDeps], answer: Verdict) -> Verdict:
     return answer
 
 
-def agents(**options):
-    return agents_for(Answer(Verdict, "submit_answer", "Answer.", **options), deps_type=CallDeps,
+def agents():
+    return agents_for(Answer(Verdict, "submit_answer", "Answer."), deps_type=CallDeps,
                       instructions="Be brief.", validator=validate, settings={})
 
 
-def run(model: FunctionModel, **options) -> Corrections:
+def run(model: FunctionModel) -> Corrections:
     deps = CallDeps(corrections=Corrections())
-    asyncio.run(ask(agents(**options), model, "prompt", deps))
+    asyncio.run(ask(agents(), model, "prompt", deps))
     return deps.corrections
 
 
@@ -52,14 +52,6 @@ def test_ask_picks_the_agent_of_the_provider(model_class, mode) -> None:
     run(answering([{"ok": True}], seen, model_class))
 
     assert seen[0].model_request_parameters.output_mode == mode
-
-
-def test_groq_can_keep_the_tool_when_native_is_switched_off() -> None:
-    seen: list[AgentInfo] = []
-
-    run(answering([{"ok": True}], seen, GroqFake), groq_native=False)
-
-    assert seen[0].model_request_parameters.output_mode == "tool"
 
 
 def test_a_good_first_answer_books_no_retry() -> None:

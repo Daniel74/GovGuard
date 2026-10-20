@@ -1,7 +1,8 @@
-"""Characterization of the model calls at runtime, written before #56 and unchanged after it.
+"""Characterization of the model calls at runtime, written before #56 and unchanged by it.
+The one change since: #58 switched the inventory on Groq to native.
 
-What it freezes: the output type per caller and provider (ADR 0005, 0016; the inventory is
-ToolOutput on Groq too, #58) and the retry booking (#27). No real model: fake LLMs only.
+What it freezes: the output type per caller and provider (ADR 0005, 0016; Groq is
+NativeOutput for every caller, #58) and the retry booking (#27). No real model: fake LLMs only.
 """
 
 import asyncio
@@ -70,10 +71,10 @@ CALLERS: dict[str, tuple[Caller, dict, dict, str]] = {
                   "submit_inventory"),
     "judge": (ask_judge, {"verdicts": [VERDICT]}, {"verdicts": BROKEN}, "submit_fail_verdicts"),
 }
-# Groq: NativeOutput (ADR 0016); the inventory is the exception and keeps ToolOutput (#58)
+# Groq: NativeOutput (ADR 0016) for every caller, the inventory too (#58)
 OUTPUT_MODE = {("package", "bedrock"): "tool", ("package", "groq"): "native",
                ("judge", "bedrock"): "tool", ("judge", "groq"): "native",
-               ("inventory", "bedrock"): "tool", ("inventory", "groq"): "tool"}
+               ("inventory", "bedrock"): "tool", ("inventory", "groq"): "native"}
 # strict of the tool: the inventory sets none (ADR 0017: package and judge are strict)
 TOOL_STRICT = {"package": True, "inventory": None, "judge": True}
 
