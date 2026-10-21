@@ -6,7 +6,7 @@ Vier fiktive Eingaben (OpenAPI, Freitext, CloudFormation) mit einem Soll, das ei
 
 ## Wo im Code
 - [models.py](../../src/govguard/models.py): `Preset`, `Expected`, `RequiredFinding` (nur PASS/FAIL; Archetyp nur bei Spec ohne FAIL).
-- [data/presets/](../../data/presets/): je Ordner eine Eingabe + `preset.json`.
+- [data/input/presets/](../../data/input/presets/): je Ordner eine Eingabe + `preset.json`.
 - [test_presets.py](../../tests/test_presets.py): ≤ 100.000 Zeichen, höchstens 4 gesetzte Plätze je Audit-Art.
 
 ## Entscheidung und Warum

@@ -5,7 +5,7 @@
 `Datei + Katalog → Trace (SHA-256) → bedrock_model() → run_audit() → AuditReport als JSON`
 
 ## Wo im Code
-- [aws_services.py](../../src/govguard/aws_services.py): einziger Ort mit boto3 und Bedrock-Modell; keine Prüflogik.
+- [aws_services.py](../../src/govguard/adapters/aws_services.py): einziger Ort mit boto3 und Bedrock-Modell; keine Prüflogik.
 - [cli.py](../../src/govguard/cli.py): Einstieg, der Datei, Modell und `run_audit()` nur verbindet.
 - [test_aws_services.py](../../tests/test_aws_services.py): Stubber-Test belegt, dass der Request `toolChoice` enthält.
 

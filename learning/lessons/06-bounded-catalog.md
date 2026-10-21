@@ -3,9 +3,9 @@
 Jede Anforderung aller Quellen bekommt genau ein Urteil im Auswahlprotokoll. Alles, was prüfbar ist und einen Dienst im Prüfumfang betrifft, kommt in den Bounded Catalog, ohne Obergrenze. Das LLM beantwortet nur „prüfbar?“ und „welche Ressourcentypen?“, der Code entscheidet über die Aufnahme.
 `extracted/*.json → Vorfilter (Code) → LLM-Urteil (Cache) → Relevanz (Code) → verdicts_*.json + selection_*.json → Gates`
 ## Wo im Code
-- [curation.py](../../src/kb_build/curation.py): ein Urteil je Anforderung, Gate Pflichtanker, Gate Abdeckung
-- [classify.py](../../src/kb_build/classify.py): Prompt mit Prüfumfang, Judge mit Cache
-- [scope.json](../../data/scope.json): der Prüfumfang, Dienst → CloudFormation-Typen
+- [curation.py](../../src/kb_build/select/curation.py): ein Urteil je Anforderung, Gate Pflichtanker, Gate Abdeckung
+- [classify.py](../../src/kb_build/select/classify.py): Prompt mit Prüfumfang, Judge mit Cache
+- [scope.json](../../data/input/scope.json): der Prüfumfang, Dienst → CloudFormation-Typen
 ## Entscheidung und Warum
 - **Vollständig statt Top-K:** Relevant ist, wessen erster Ressourcentyp im Prüfumfang liegt. Eine Obergrenze ließ Art. 32 und alle Serverless-Dienste herausfallen; so bekommt jede Regel einen Befund (BSI: Nachvollziehbarkeit).
 - **Das LLM urteilt, der Code wählt aus:** Das LLM kann weder Regeln erfinden noch aussortieren, und jede Code-Entscheidung hat einen festen Begründungssatz. Das Ergebnis ist prüfbar und reproduzierbar (temperature 0, Cache).

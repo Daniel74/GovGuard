@@ -5,8 +5,8 @@ Der „Fristenwecker im Bauamt“ ist ein fiktives CloudFormation-Template: Step
 `template.json → Ressourceninventar → Lambda-/S3-/API-Regeln N/A → SNS.1 FAIL, StepFunctions.1 PASS → Gesamtstatus FAIL`
 
 ## Wo im Code
-- [template.json](../../data/presets/arch-fristenwecker/template.json): Topic ohne `KmsMasterKeyId`, StateMachine mit `LoggingConfiguration` und Rolle mit `sns:Publish` nur auf das Topic.
-- [preset.json](../../data/presets/arch-fristenwecker/preset.json): das Soll, von Hand gesetzt.
+- [template.json](../../data/input/presets/arch-fristenwecker/template.json): Topic ohne `KmsMasterKeyId`, StateMachine mit `LoggingConfiguration` und Rolle mit `sns:Publish` nur auf das Topic.
+- [preset.json](../../data/input/presets/arch-fristenwecker/preset.json): das Soll, von Hand gesetzt.
 - [test_pinned_anchors.py](../../tests/test_pinned_anchors.py): Jeder Pflichtanker steht im eingecheckten Katalog. Das prüft das Gate aus #6 ohne `kb_build`-Lauf und ohne lokale Quellen.
 
 ## Entscheidung und Warum

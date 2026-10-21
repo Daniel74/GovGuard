@@ -5,9 +5,9 @@ Ein Schnappschuss aus `aws cloudformation describe-type` hält je Typ des Prüfu
 `describe-type-Schemas → cfn_properties.json → PropertyIndex → Kandidaten im Kriterium → unbekannt? ModelRetry : Regel → Qualitätsbericht`
 
 ## Wo im Code
-- [cfn_properties.py](../../src/kb_build/cfn_properties.py): Schnappschuss bauen, Kandidaten finden, `unknown_properties`/`unjudged_types` (rein).
-- [formulate.py](../../src/kb_build/formulate.py): Validator schickt erfundene Namen mit Alternativen zurück (`retries=3`, nur im Build).
-- [quality.py](../../src/kb_build/quality.py): zählt je Quelle `unknown_properties` und `unjudged_properties`.
+- [cfn_properties.py](../../src/kb_build/reference/cfn_properties.py): Schnappschuss bauen, Kandidaten finden, `unknown_properties`/`unjudged_types` (rein).
+- [formulate.py](../../src/kb_build/rules/formulate.py): Validator schickt erfundene Namen mit Alternativen zurück (`retries=3`, nur im Build).
+- [quality.py](../../src/kb_build/rules/quality.py): zählt je Quelle `unknown_properties` und `unjudged_properties`.
 
 ## Entscheidung und Warum
 - **Abgleich gegen eine Referenz statt strengerer Prompt:** Ein Prompt *bittet* das LLM um echte Namen, der Schema-Abgleich *beweist* es deterministisch. Eine Prüfregel mit erfundener Eigenschaft würde jedes Template falsch bewerten (BSI: Nachweisbarkeit, wie Zitat- und Typprüfung aus #12).

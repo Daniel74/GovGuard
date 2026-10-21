@@ -5,9 +5,9 @@
 `sources.json → source_fetch (SHA-256) → read_cached → extract() → prefilter() → merge_sources → dsgvo.json, sdm.json`
 
 ## Wo im Code
-- [dsgvo.py](../../src/kb_build/sources/dsgvo.py): Kapitel aus `DIVISION`, Titel aus `STI.ART`, `fine_tier` als Konstante nach Art. 83.
-- [sdm.py](../../src/kb_build/sources/sdm.py): liest nur die Maßnahmentabelle; eine Zeile endet an der Spalte PDCA/Gültigkeit.
-- [extracted_models.py](../../src/kb_build/extracted_models.py): `merge_sources` macht aus drei PDFs eine `sdm.json`.
+- [dsgvo.py](../../src/kb_build/extract/dsgvo.py): Kapitel aus `DIVISION`, Titel aus `STI.ART`, `fine_tier` als Konstante nach Art. 83.
+- [sdm.py](../../src/kb_build/extract/sdm.py): liest nur die Maßnahmentabelle; eine Zeile endet an der Spalte PDCA/Gültigkeit.
+- [extract/models.py](../../src/kb_build/extract/models.py): `merge_sources` macht aus drei PDFs eine `sdm.json`.
 
 ## Entscheidung und Warum
 - **Tabelle statt Fließtext:** Im Fließtext steht `(M60.D01)` nur als Verweis hinter einem Satz. Nur die Tabelle verbindet ID und Maßnahme eindeutig. Das ist wichtig, weil das Gate jedes `source_quote` wörtlich gegen diesen Text prüft (DSGVO-Rechenschaftspflicht: Zitat statt Behauptung).

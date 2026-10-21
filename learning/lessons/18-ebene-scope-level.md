@@ -5,9 +5,9 @@ Das LLM sagt in Stufe ② zusätzlich, **wessen** Pflicht eine Anforderung ist: 
 `Anforderung → LLM: prüfbar? + scope_level + Ressourcentypen → Code: Ebene ≠ template → not_relevant → Gates → selection_arch.json`
 
 ## Wo im Code
-- [selection_models.py](../../src/kb_build/selection_models.py): Feld `scope_level` in `Classification`, Default `template`.
-- [classify.py](../../src/kb_build/classify.py): Prompt erklärt die vier Ebenen; bei Spec erzwingt der Code `template`.
-- [curation.py](../../src/kb_build/curation.py): `_not_relevant_reason` setzt den festen Satz aus `LEVEL_SENTENCES`.
+- [select/models.py](../../src/kb_build/select/models.py): Feld `scope_level` in `Classification`, Default `template`.
+- [classify.py](../../src/kb_build/select/classify.py): Prompt erklärt die vier Ebenen; bei Spec erzwingt der Code `template`.
+- [curation.py](../../src/kb_build/select/curation.py): `_not_relevant_reason` setzt den festen Satz aus `LEVEL_SENTENCES`.
 
 ## Entscheidung und Warum
 - **Das LLM urteilt, der Code wählt aus:** Das LLM liefert nur die Ebene, die Konsequenz zieht deterministischer Code. Damit ist die Auswahl nachvollziehbar und jede Code-Entscheidung hat einen festen Begründungssatz (BSI: Nachweisbarkeit, ADR 0011).

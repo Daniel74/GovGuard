@@ -23,10 +23,10 @@ Beim Ausformulieren **nicht** aus diesen Stellen übernehmen:
 
 FAHRPLAN, Issue-Status und `CLAUDE.md` sind auf dem Stand des Codes. Die folgenden Stellen sind veraltet; das Ticket #22 (Schritt 9f im Fahrplan) zieht sie nach, und #16 übernimmt README und die Erklär-Dokumente.
 
-- `docs/ARCHITECTURE.md` 1.1: „Relevanz: erster `cfn_resource_type` im Prüfumfang“ gilt seit ADR 0013 nicht mehr; heute genügt ein nach dem Streichen übrig gebliebener Typ im Prüfumfang plus Ebene `template`. 1.3: „zwei Wiederholungen“ beim Formulieren; heute bis zu 6 (`FORMULATE_RETRIES`, ADR 0014).
+- `docs/ARCHITECTURE.md` (Fassung vor #64) 1.1: „Relevanz: erster `cfn_resource_type` im Prüfumfang“ gilt seit ADR 0013 nicht mehr; heute genügt ein nach dem Streichen übrig gebliebener Typ im Prüfumfang plus Ebene `template`. 1.3: „zwei Wiederholungen“ beim Formulieren; heute bis zu 6 (`FORMULATE_RETRIES`, ADR 0014). Mit #64 neu geschrieben; die Details stehen heute in DESIGN 1.2 und 2.6.
 - `docs/adr/0002`, `0007` (Ranking, gesetzte Plätze, Obergrenzen), `0010`: überholt durch ADR 0011 bzw. 0014; der Kopf der Datei nennt jeweils den Nachfolger.
-- `learning/lessons/*.md`: Dateipfade in den Lernkarten (z. B. `src/kb_build/curation.py`, `classify.py`, `sources/bsi.py`, `data/scope.json`) stammen aus der Zeit vor der Ordnerstruktur-Änderung (#20). Heute: `select/curation.py`, `select/classify.py`, `extract/bsi.py`, `data/input/scope.json`. Karte #17 nennt `retries=3`; heute 6. Karte #6 nennt als Relevanzregel „erster Ressourcentyp“; seit ADR 0013 gilt die neue Regel.
-- `docs/SPEC.md` (Zeile zur Relevanz), `docs/METHODIK.md` (Ranking, gesetzte Plätze, Obergrenzen) und `README.md`, `docs/DATA_MODEL_EXPLAINED.md`, die Einführungs-Dokumente (Ranking, Obergrenze): noch vor ADR 0011 formuliert.
+- `learning/lessons/*.md`: Die Links der Lernkarten zeigen seit #66 auf die Ordnerstruktur aus #20 (z. B. `select/curation.py`, `extract/bsi.py`, `data/input/scope.json`). Karte #17 nennt `retries=3`; heute 6. Karte #6 nennt als Relevanzregel „erster Ressourcentyp“; seit ADR 0013 gilt die neue Regel.
+- `docs/SPEC.md` (Zeile zur Relevanz) und `README.md` (Ranking, gesetzte Plätze): noch vor ADR 0011 formuliert; `docs/METHODIK.md` ist seit #65 nachgezogen. Die drei früheren Erklär-Dokumente (Datenmodell, Einführung, KI-Agenten) sind seit #66 gelöscht; ihr gültiger Inhalt steht in [DESIGN](../../docs/DESIGN.md), [ARCHITECTURE](../../docs/ARCHITECTURE.md) und [METHODIK](../../docs/METHODIK.md).
 
 ## Wenn das Lehrbuch später erweitert wird
 

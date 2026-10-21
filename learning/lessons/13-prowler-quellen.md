@@ -5,9 +5,9 @@ CIS, AWS FSBP und BSI C5 kommen alle als Prowler-JSON vom selben Tag `5.44.0`. E
 `sources.json (Tag + SHA-256) → source_fetch → prowler.extract(FORMAT) → prefilter() → None | Begründungssatz → cis/fsbp/c5.json (nur lokal)`
 
 ## Wo im Code
-- [prowler.py](../../src/kb_build/sources/prowler.py): ein Parser für alle drei; `ProwlerFormat` sagt, woher Anker, Titel, Text und Attribute kommen.
-- [fsbp.py](../../src/kb_build/sources/fsbp.py): Vorfilter über `Attributes.Service`; `EC2` und `ELB` laufen ganz durch, die Relevanz in #6 sortiert Instanzen und Classic LB aus.
-- [c5.py](../../src/kb_build/sources/c5.py): Vorfilter über den Bereich vor dem Bindestrich (OPS, IAM, CRY, COS, PSS).
+- [prowler.py](../../src/kb_build/extract/prowler.py): ein Parser für alle drei; `ProwlerFormat` sagt, woher Anker, Titel, Text und Attribute kommen.
+- [fsbp.py](../../src/kb_build/extract/fsbp.py): Vorfilter über `Attributes.Service`; `EC2` und `ELB` laufen ganz durch, die Relevanz in #6 sortiert Instanzen und Classic LB aus.
+- [c5.py](../../src/kb_build/extract/c5.py): Vorfilter über den Bereich vor dem Bindestrich (OPS, IAM, CRY, COS, PSS).
 
 ## Entscheidung und Warum
 - **Nur die Texte, nicht Prowlers Check-Zuordnung:** Prowler-Checks prüfen ein laufendes AWS-Konto über die API; GovGuard prüft eine Architektur vor dem Deploy. Außerdem ist die Zuordnung Prowlers Auslegung, kein Normtext. Primäranker und Zitat müssen aus der Anforderung selbst stammen (BSI C5, Nachweis statt Behauptung).

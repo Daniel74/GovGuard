@@ -5,9 +5,9 @@ Für jede Anforderung der Auswahlliste schreibt das LLM genau eine Prüfregel: Z
 `selection_*.json + Extrakte → formulate_rule (Tool-Choice) → Validator, max. 2 Retries → Code ergänzt Identität → Gate → rules_spec.json / rules_arch.json`
 
 ## Wo im Code
-- [formulate.py](../../src/kb_build/formulate.py): Prompt, Agent mit Tool `formulate_rule`, Validator, Regel vervollständigen.
-- [gates.py](../../src/kb_build/gates.py): `check_rules()` prüft Anker, Zitat, Querverweise und „genau eine Regel je Anforderung“.
-- [rules_run.py](../../src/kb_build/rules_run.py): liest die Auswahllisten, schreibt die Kataloge, protokolliert den Qualitätsbericht.
+- [formulate.py](../../src/kb_build/rules/formulate.py): Prompt, Agent mit Tool `formulate_rule`, Validator, Regel vervollständigen.
+- [gates.py](../../src/kb_build/rules/gates.py): `check_rules()` prüft Anker, Zitat, Querverweise und „genau eine Regel je Anforderung“.
+- [rules/run.py](../../src/kb_build/rules/run.py): liest die Auswahllisten, schreibt die Kataloge, protokolliert den Qualitätsbericht.
 
 ## Entscheidung und Warum
 - **Zitat statt Behauptung, sonst Abbruch:** Jede Regel trägt ein wörtliches Zitat aus genau ihrer Anforderung. Fehlt es, bricht der Build ab (fail closed). So ist jede Regel auf den Normtext rückführbar. Das entspricht der Rechenschaftspflicht (DSGVO Art. 5 Abs. 2) und der Nachvollziehbarkeit, die ein BSI-Audit verlangt.
