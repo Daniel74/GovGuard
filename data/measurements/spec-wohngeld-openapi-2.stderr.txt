@@ -1,0 +1,59 @@
+model=openai/gpt-oss-120b
+exit=0 wall=193.3s calls=39 input_tokens=325158 output_tokens=85592 cost_usd=0.10
+  call   2.7s in=11004 out=966 RETRY
+  call   3.6s in=8365 out=1382
+  call   3.7s in=8322 out=1441
+  call   3.9s in=11423 out=1432 RETRY
+  call   4.0s in=8122 out=1500
+  call   4.0s in=11621 out=1001 RETRY
+  call   4.2s in=8079 out=1427
+  call   4.4s in=2526 out=1915 JUDGE
+  call   4.5s in=8410 out=1808
+  call   4.5s in=8166 out=1666
+  call   4.6s in=7949 out=1573
+  call   4.9s in=8224 out=1597
+  call   5.0s in=8455 out=1984
+  call   5.0s in=8230 out=1986
+  call   5.0s in=8140 out=1852
+  call   5.0s in=8363 out=1996
+  call   5.1s in=8308 out=1910
+  call   5.2s in=8158 out=2122
+  call   5.5s in=8275 out=2374
+  call   5.6s in=8207 out=2354
+  call   5.8s in=8341 out=2613
+  call   5.9s in=8154 out=2243
+  call   6.2s in=8217 out=2291
+  call   6.3s in=8308 out=2658
+  call   6.3s in=8359 out=2599
+  call   6.3s in=8251 out=2545
+  call   6.4s in=8110 out=2689
+  call   6.5s in=8336 out=2699
+  call   6.5s in=8263 out=2435
+  call   6.7s in=8150 out=2633
+  call   6.8s in=8282 out=2846
+  call   6.8s in=8160 out=2710
+  call   6.9s in=8299 out=2832
+  call   7.0s in=8262 out=2882
+  call   7.1s in=8329 out=3224
+  call   7.3s in=8188 out=2569
+  call   7.6s in=8352 out=2339
+  call   9.0s in=8160 out=3216
+  call   9.0s in=8290 out=3283
+retry prompts sent: 3 (schema: 0) output_tokens_per_call=2195
+retries (packages + judge): 3 downgrades: 6 (PASS->WARN: 0, FAIL->WARN: 6) unassigned corrections: 0
+fail judge: checked 10 confirmed 4 downgraded 6 unavailable 0
+--- retry prompt ---
+Validation feedback:
+SPEC-DSGVO-Art.7Abs.1 (PASS): Zeilenbereich 90-399 zu groß (höchstens 200 Zeilen)
+
+Fix the errors and try again.
+--- retry prompt ---
+Validation feedback:
+SPEC-DSGVO-Art.13Abs.2lit.c (PASS): Zeilenbereich 90-390 zu groß (höchstens 200 Zeilen)
+
+Fix the errors and try again.
+--- retry prompt ---
+Validation feedback:
+SPEC-DSGVO-Art.30Abs.1lit.d (PASS): Zeilenbereich 38-440 zu groß (höchstens 200 Zeilen)
+
+Fix the errors and try again.

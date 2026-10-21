@@ -1,0 +1,14 @@
+{
+  "preset": "spec-meldeportal-gesundheit",
+  "input": "data/input/presets/spec-meldeportal-gesundheit/input.md",
+  "model": "openai/gpt-oss-120b",
+  "exit": 0,
+  "wall_s": 142.1,
+  "calls": 37,
+  "input_tokens": 112361,
+  "output_tokens": 83913,
+  "slowest_call_s": 15.1,
+  "retries": 0,
+  "schema_retries": 0,
+  "cost_usd": 0.0672
+}

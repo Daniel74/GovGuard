@@ -1,0 +1,14 @@
+{
+  "preset": "arch-antragseingang-fehlerhaft",
+  "input": "data/input/presets/arch-antragseingang-fehlerhaft/template.json",
+  "model": "openai/gpt-oss-120b",
+  "exit": 0,
+  "wall_s": 22.8,
+  "calls": 9,
+  "input_tokens": 58868,
+  "output_tokens": 18253,
+  "slowest_call_s": 7.4,
+  "retries": 2,
+  "schema_retries": 0,
+  "cost_usd": 0.0198
+}

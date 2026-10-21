@@ -1,0 +1,59 @@
+model=openai/gpt-oss-120b
+exit=0 wall=191.1s calls=39 input_tokens=321953 output_tokens=85095 cost_usd=0.10
+  call   2.5s in=9949 out=831 RETRY
+  call   2.7s in=7598 out=917
+  call   2.7s in=11621 out=1007 RETRY
+  call   3.1s in=1337 out=1234 JUDGE
+  call   3.8s in=8470 out=1448
+  call   3.8s in=8123 out=1505
+  call   4.0s in=8163 out=1525
+  call   4.1s in=8123 out=1633
+  call   4.5s in=8283 out=1762
+  call   4.8s in=8292 out=1923
+  call   4.8s in=8169 out=1980
+  call   4.9s in=10944 out=1798 RETRY
+  call   5.0s in=8163 out=1972
+  call   5.0s in=8242 out=1997
+  call   5.1s in=8348 out=2199
+  call   5.1s in=8314 out=1913
+  call   5.1s in=8175 out=2063
+  call   5.2s in=8251 out=2172
+  call   5.2s in=7949 out=1664
+  call   5.3s in=8485 out=1900
+  call   5.3s in=8339 out=2061
+  call   5.5s in=8214 out=2406
+  call   5.9s in=8147 out=2386
+  call   6.0s in=8134 out=2428
+  call   6.0s in=8341 out=2541
+  call   6.2s in=8352 out=2595
+  call   6.4s in=8262 out=2616
+  call   6.4s in=8135 out=2704
+  call   6.4s in=8282 out=2761
+  call   6.5s in=8268 out=2806
+  call   6.6s in=8195 out=2768
+  call   6.8s in=8267 out=2625
+  call   6.9s in=8159 out=2939
+  call   6.9s in=8215 out=2698
+  call   7.1s in=8256 out=3060
+  call   7.7s in=8329 out=2670
+  call   7.8s in=8433 out=3478
+  call   8.4s in=8290 out=3283
+  call  11.1s in=8336 out=2827
+retry prompts sent: 3 (schema: 0) output_tokens_per_call=2182
+retries (packages + judge): 3 downgrades: 3 (PASS->WARN: 0, FAIL->WARN: 3) unassigned corrections: 0
+fail judge: checked 4 confirmed 1 downgraded 3 unavailable 0
+--- retry prompt ---
+Validation feedback:
+SPEC-DSGVO-Art.7Abs.1 (PASS): Zeilenbereich 90-399 zu groß (höchstens 200 Zeilen)
+
+Fix the errors and try again.
+--- retry prompt ---
+Validation feedback:
+Befund fehlt für: SPEC-DSGVO-Art.36Abs.3lit.d
+
+Fix the errors and try again.
+--- retry prompt ---
+Validation feedback:
+Befund fehlt für: SPEC-KI-VO-Art.14Abs.4lit.c
+
+Fix the errors and try again.

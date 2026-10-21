@@ -1,0 +1,21 @@
+model=openai/gpt-oss-120b
+exit=0 wall=23.0s calls=8 input_tokens=51079 output_tokens=16970 cost_usd=0.02
+  call   3.0s in=4858 out=1085
+  call   3.4s in=9264 out=1180 RETRY
+  call   4.8s in=5764 out=1952
+  call   5.1s in=5968 out=2075
+  call   5.1s in=5865 out=2180
+  call   6.7s in=6296 out=2832
+  call   7.3s in=6489 out=3161
+  call   8.3s in=6575 out=2505
+retry prompts sent: 1 (schema: 0) output_tokens_per_call=2121
+retries (packages + judge): 1 downgrades: 0 (PASS->WARN: 0, FAIL->WARN: 0) unassigned corrections: 0
+fail judge: checked 0 confirmed 0 downgraded 0 unavailable 0
+--- retry prompt ---
+Validation feedback:
+ARCH-BSI-BER.4.1.1 (PASS): Zeilenbereich 4-485 zu groß (höchstens 200 Zeilen)
+ARCH-BSI-BER.5.10 (PASS): Zeilenbereich 1-485 zu groß (höchstens 200 Zeilen)
+ARCH-BSI-BER.5.11 (PASS): Zeilenbereich 1-485 zu groß (höchstens 200 Zeilen)
+ARCH-BSI-KONF.2.2 (PASS): Zeilenbereich 1-485 zu groß (höchstens 200 Zeilen)
+
+Fix the errors and try again.

@@ -1,0 +1,14 @@
+{
+  "preset": "arch-protokollarchiv",
+  "input": "data/input/presets/arch-protokollarchiv/input.md",
+  "model": "openai/gpt-oss-120b",
+  "exit": 0,
+  "wall_s": 28.8,
+  "calls": 10,
+  "input_tokens": 28270,
+  "output_tokens": 18050,
+  "slowest_call_s": 7.2,
+  "retries": 1,
+  "schema_retries": 0,
+  "cost_usd": 0.0151
+}

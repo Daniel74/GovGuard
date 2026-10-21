@@ -1,0 +1,14 @@
+{
+  "preset": "spec-wohngeld-openapi",
+  "input": "data/input/presets/spec-wohngeld-openapi/openapi.yaml",
+  "model": "openai/gpt-oss-120b",
+  "exit": 0,
+  "wall_s": 195.9,
+  "calls": 38,
+  "input_tokens": 305929,
+  "output_tokens": 82567,
+  "slowest_call_s": 7.6,
+  "retries": 2,
+  "schema_retries": 0,
+  "cost_usd": 0.0954
+}

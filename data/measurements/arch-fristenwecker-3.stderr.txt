@@ -1,0 +1,9 @@
+model=openai/gpt-oss-120b
+exit=0 wall=11.4s calls=4 input_tokens=13205 output_tokens=7936 cost_usd=0.01
+  call   2.3s in=1877 out=461
+  call   4.5s in=3266 out=1794
+  call   6.9s in=3716 out=2645
+  call   8.2s in=4346 out=3036
+retry prompts sent: 0 (schema: 0) output_tokens_per_call=1984
+retries (packages + judge): 0 downgrades: 0 (PASS->WARN: 0, FAIL->WARN: 0) unassigned corrections: 0
+fail judge: checked 0 confirmed 0 downgraded 0 unavailable 0

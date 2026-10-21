@@ -1,0 +1,39 @@
+model=openai/gpt-oss-120b
+exit=0 wall=213.2s calls=34 input_tokens=374119 output_tokens=65705 cost_usd=0.10
+  call   3.7s in=1441 out=1475 JUDGE
+  call   3.8s in=10954 out=1318
+  call   3.9s in=11357 out=1500
+  call   4.2s in=11159 out=1647
+  call   4.4s in=11234 out=1476
+  call   4.6s in=11177 out=1798
+  call   4.7s in=12563 out=2133
+  call   4.7s in=11185 out=1718
+  call   4.8s in=11238 out=1348
+  call   5.0s in=10970 out=1590
+  call   5.0s in=11228 out=1679
+  call   5.0s in=11428 out=1898
+  call   5.2s in=11362 out=1970
+  call   5.2s in=11128 out=1998
+  call   5.2s in=11303 out=2055
+  call   5.3s in=11272 out=1707
+  call   5.4s in=11311 out=1990
+  call   5.4s in=11320 out=2000
+  call   5.6s in=11151 out=1754
+  call   5.6s in=11198 out=2015
+  call   5.7s in=11296 out=1854
+  call   5.7s in=11165 out=2190
+  call   5.8s in=11228 out=1488
+  call   6.1s in=11373 out=2313
+  call   6.1s in=11350 out=2494
+  call   6.1s in=11284 out=2186
+  call   6.3s in=11137 out=2491
+  call   6.4s in=11359 out=2601
+  call   6.6s in=11361 out=2488
+  call   6.7s in=11181 out=1869
+  call   6.8s in=11380 out=2071
+  call   7.0s in=11395 out=2903
+  call   7.9s in=11329 out=1986
+  call  10.9s in=11302 out=1702
+retry prompts sent: 0 (schema: 0) output_tokens_per_call=1932
+retries (packages + judge): 0 downgrades: 1 (PASS->WARN: 0, FAIL->WARN: 1) unassigned corrections: 0
+fail judge: checked 7 confirmed 6 downgraded 1 unavailable 0

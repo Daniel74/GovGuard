@@ -24,6 +24,24 @@ Jeder Lauf kostet echtes Geld (Kosten-Weiche, CLAUDE.md). Die CLI kennt `spec` u
      <scratchpad>/report1.json <scratchpad>/report2.json
    ```
 
+## Messkampagne (#54)
+
+1. **Lauf mit Messwerten.** `--stats` schreibt die Kennzahlen als JSON; Report und Messwerte liegen nebeneinander in `data/measurements/<preset>-<n>.json` und `<preset>-<n>.stats.json` (`n` = 1, 2, 3):
+
+   ```bash
+   set -a; source .env; set +a
+   MEASURE_MODEL=groq uv run python .claude/skills/audit-messen/measure.py spec data/input/presets/<preset>/<eingabe> \
+     --stats data/measurements/<preset>-<n>.stats.json > data/measurements/<preset>-<n>.json
+   ```
+
+2. **Auswerten.** Ein Markdown-Block je Musterfall für den Issue-Kommentar: Soll-Ergebnis erfüllt in x von n, Anteil stabiler Prüfregeln, Wechsel nach Art (Kategorie aus der Review-Ansicht, also auch Lücke ↔ WARN mit Beleg), Median/Min/Max der Kennzahlen:
+
+   ```bash
+   uv run python .claude/skills/audit-messen/evaluate.py data/measurements
+   ```
+
+3. **Fail closed.** Bei Exit 2 bleibt der Report leer, die Stats-Datei steht trotzdem. Der Lauf zählt als „Soll nicht erfüllt“, fließt aber nicht in Median/Min/Max ein; die Auswertung nennt ihn getrennt.
+
 ## Fallstricke
 
 - Groq: `MEASURE_MODEL=groq` nimmt `groq_model()` aus `govguard/adapters/groq_services.py` (Key per `set -a; source .env`). Groq ist zur Laufzeit eine ausdrückliche Option, nur mit fiktiven Presets (ADR 0016). Tokens meldet Groq inkl. Denk-Tokens. Limit 250.000 Tokens/min: Gemessen sind ca. 110.000 Tokens/min je gleichzeitigem Paket, deshalb laufen höchstens 2 Pakete gleichzeitig (`GROQ_MAX_PARALLEL`); der volle Katalog dauert damit mindestens ca. 2,3 min. Kommt trotzdem HTTP 429, ist ein Token-Budget je Minute die nächste Stellschraube.

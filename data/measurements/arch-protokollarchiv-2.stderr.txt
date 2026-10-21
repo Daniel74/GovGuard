@@ -1,0 +1,20 @@
+model=openai/gpt-oss-120b
+exit=0 wall=28.8s calls=10 input_tokens=28270 output_tokens=18050 cost_usd=0.02
+  call   1.7s in=1539 out=522
+  call   2.0s in=3742 out=564 JUDGE RETRY
+  call   3.0s in=1747 out=1007
+  call   3.2s in=2472 out=1240 JUDGE
+  call   3.8s in=3144 out=1619
+  call   4.3s in=2756 out=1767
+  call   6.5s in=2561 out=2282
+  call   6.9s in=3558 out=2928
+  call   7.1s in=3279 out=3006
+  call   7.2s in=3472 out=3115
+retry prompts sent: 1 (schema: 0) output_tokens_per_call=1805
+retries (packages + judge): 1 downgrades: 8 (PASS->WARN: 0, FAIL->WARN: 8) unassigned corrections: 0
+fail judge: checked 8 confirmed 0 downgraded 8 unavailable 0
+--- retry prompt ---
+Validation feedback:
+Urteil fehlt für: ARCH-BSI-KONF.12.1.10
+
+Fix the errors and try again.

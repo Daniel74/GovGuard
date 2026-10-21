@@ -1,0 +1,14 @@
+{
+  "preset": "arch-fristenwecker",
+  "input": "data/input/presets/arch-fristenwecker/template.json",
+  "model": "openai/gpt-oss-120b",
+  "exit": 0,
+  "wall_s": 12.2,
+  "calls": 4,
+  "input_tokens": 13205,
+  "output_tokens": 8011,
+  "slowest_call_s": 6.3,
+  "retries": 0,
+  "schema_retries": 0,
+  "cost_usd": 0.0068
+}

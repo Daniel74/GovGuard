@@ -1,0 +1,53 @@
+model=openai/gpt-oss-120b
+exit=0 wall=195.9s calls=38 input_tokens=305929 output_tokens=82567 cost_usd=0.10
+  call   2.6s in=4191 out=819 JUDGE RETRY
+  call   2.8s in=11133 out=1147 RETRY
+  call   3.7s in=8123 out=1435
+  call   3.7s in=8163 out=1394
+  call   4.0s in=2503 out=1659 JUDGE
+  call   4.0s in=7598 out=1002
+  call   4.3s in=8470 out=1804
+  call   4.5s in=8292 out=1901
+  call   4.5s in=8485 out=1771
+  call   4.9s in=8314 out=2019
+  call   5.0s in=8147 out=1908
+  call   5.2s in=7949 out=1722
+  call   5.2s in=8339 out=2061
+  call   5.5s in=8283 out=2085
+  call   5.5s in=8169 out=2365
+  call   5.5s in=8352 out=2339
+  call   5.5s in=8348 out=2348
+  call   5.7s in=8267 out=2416
+  call   5.8s in=8134 out=1595
+  call   6.0s in=8433 out=2668
+  call   6.0s in=8242 out=1597
+  call   6.1s in=8214 out=2148
+  call   6.1s in=8175 out=2132
+  call   6.1s in=8123 out=2276
+  call   6.3s in=8135 out=2351
+  call   6.4s in=8251 out=2830
+  call   6.5s in=8329 out=2475
+  call   6.6s in=8262 out=2882
+  call   6.7s in=8290 out=2785
+  call   6.7s in=8256 out=2708
+  call   6.9s in=8159 out=2939
+  call   7.0s in=8195 out=2715
+  call   7.0s in=8268 out=2678
+  call   7.2s in=8163 out=2435
+  call   7.3s in=8336 out=2979
+  call   7.4s in=8341 out=3168
+  call   7.4s in=8215 out=2634
+  call   7.6s in=8282 out=2377
+retry prompts sent: 2 (schema: 0) output_tokens_per_call=2173
+retries (packages + judge): 2 downgrades: 10 (PASS->WARN: 0, FAIL->WARN: 10) unassigned corrections: 0
+fail judge: checked 9 confirmed 1 downgraded 8 unavailable 0
+--- retry prompt ---
+Validation feedback:
+Befund fehlt für: SPEC-KI-VO-Art.6Abs.1b
+
+Fix the errors and try again.
+--- retry prompt ---
+Validation feedback:
+Urteil fehlt für: SPEC-KI-VO-Art.14Abs.5
+
+Fix the errors and try again.

@@ -1,0 +1,14 @@
+{
+  "preset": "spec-govguard",
+  "input": "data/input/presets/spec-govguard/SPEC.md",
+  "model": "openai/gpt-oss-120b",
+  "exit": 0,
+  "wall_s": 215.3,
+  "calls": 34,
+  "input_tokens": 372926,
+  "output_tokens": 61988,
+  "slowest_call_s": 7.8,
+  "retries": 0,
+  "schema_retries": 0,
+  "cost_usd": 0.0931
+}

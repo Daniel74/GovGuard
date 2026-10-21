@@ -1,0 +1,6 @@
+Audit fehlgeschlagen: Die Antwort der KI war auch nach einer Korrektur nicht verwertbar. Gründe je Prüfregel:
+  - Die Antwort der KI entsprach nicht dem vorgegebenen Schema.
+model=openai/gpt-oss-120b
+exit=2 wall=10.4s calls=1 input_tokens=10970 output_tokens=1661 cost_usd=0.00
+  call   5.0s in=10970 out=1661
+retry prompts sent: 0 (schema: 0) output_tokens_per_call=1661
