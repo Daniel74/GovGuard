@@ -30,7 +30,7 @@ _Ergänzt [ADR 0005](0005-pydantic-ai.md) und [ADR 0016](0016-groq-zur-laufzeit-
 - **Kontext:** Mit Bedrock brach `arch-antragseingang-fehlerhaft` 3× fail closed ab: Der Retry „N/A ist verboten“ führte zu WARN oder FAIL ohne Empfehlung. `spec-meldeportal-gesundheit` scheiterte an wechselnden Gründen, z. B. widersprüchlichen Doppelbefunden oder einer fehlenden Empfehlung (#28, #29). Das Modell korrigiert im Retry das genannte Feld und verletzt ein anderes.
 - **Entscheidung:** Was der Code aus der Wissensbasis reparieren kann, braucht keinen Retry (`repairs.py`):
   - Fehlt die Empfehlung bei WARN oder FAIL, setzt der Code die `recommendation` der Prüfregel ein, bei WARN mit „Falls nicht erfüllt: “.
-  - Widersprechen sich Doppelbefunde, gilt der schwerste Status ([ARCHITECTURE](../ARCHITECTURE.md#25-lebenslauf-eines-befunds) 2.5). Bei Gleichstand gewinnt der Befund mit Bereich, sonst würde ein unbelegtes FAIL den belegten verdrängen und zu WARN.
+  - Widersprechen sich Doppelbefunde, gilt der schwerste Status ([ARCHITECTURE](../ARCHITECTURE.md#35-lebenslauf-eines-befunds) 3.5). Bei Gleichstand gewinnt der Befund mit Bereich, sonst würde ein unbelegtes FAIL den belegten verdrängen und zu WARN.
   - Beide Fälle bekommen eine Korrekturzeile. Wie eine Herabstufung zählt eine Reparatur nur aus dem letzten Versuch.
 - **Konsequenzen:** Fail closed bleibt das Sicherheitsnetz, z. B. wenn auch die Prüfregel keine Empfehlung hat. `downgrades` zählt weiter nur Statusänderungen auf WARN, für Reparaturen gibt es keinen Zähler. `max_tokens` und der Retry des ganzen Pakets bleiben. Die Bedrock-Messung zeigt, ob ein abgeschnittener Retry dasselbe Muster ist.
 

@@ -10,7 +10,7 @@ ARCHITECTURE = (ROOT / "docs" / "ARCHITECTURE.md").read_text(encoding="utf-8")
 MERMAID = re.compile(r"```mermaid\n(.*?)```", re.DOTALL)
 FILE_OR_DIR = re.compile(r"(?<![\w/.-])(?:[\w-]+/)*\w+\.py|(?<![\w/.-])(?:\w+/)+(?![\w])")
 SNAKE_OR_CAMEL = re.compile(r"(?<![\w/])(?:[a-z]+(?:_[a-z]+)+|[A-Z][a-z]+(?:[A-Z][a-z]+)+)\b(?!\.)")
-NOT_CODE = {"CloudWatch", "GitHub", "GovGuard"}  # product names in labels, not code names
+NOT_CODE = {"CloudFormation", "CloudWatch", "GitHub", "GovGuard"}  # product names, not code names
 
 
 def diagram_labels() -> list[str]:
@@ -159,8 +159,8 @@ def test_the_code_structure_tree_names_real_folders() -> None:
 
 
 def test_every_rule_in_the_rules_table_points_at_real_code_and_tests() -> None:
-    """Section 3.6: each backticked name exists in src/, each `tests/...` file in tests/."""
-    table = section("### 3.6 Regeln in Klartext: wo erzwingt der Code sie?")
+    """Section 4.6: each backticked name exists in src/, each `tests/...` file in tests/."""
+    table = section("### 4.6 Regeln in Klartext: wo erzwingt der Code sie?")
     rows = [r for r in table.splitlines() if r.startswith("| ") and "`" in r]
     assert len(rows) >= 12, "too few rules found: the table format changed"
     known = identifiers_in_src() | EXTERNAL

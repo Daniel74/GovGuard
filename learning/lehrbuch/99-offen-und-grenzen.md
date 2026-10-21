@@ -23,10 +23,10 @@ Beim Ausformulieren **nicht** aus diesen Stellen übernehmen:
 
 FAHRPLAN, Issue-Status und `CLAUDE.md` sind auf dem Stand des Codes. Die folgenden Stellen sind veraltet; das Ticket #22 (Schritt 9f im Fahrplan) zieht sie nach, und #16 übernimmt README und die Erklär-Dokumente.
 
-- `docs/ARCHITECTURE.md` (Fassung vor #64) 1.1: „Relevanz: erster `cfn_resource_type` im Prüfumfang“ gilt seit ADR 0013 nicht mehr; heute genügt ein nach dem Streichen übrig gebliebener Typ im Prüfumfang plus Ebene `template`. 1.3: „zwei Wiederholungen“ beim Formulieren; heute bis zu 6 (`FORMULATE_RETRIES`, ADR 0014). Mit #64 und #72 neu geschrieben; die Details stehen heute in [ARCHITECTURE](../../docs/ARCHITECTURE.md#27-die-acht-modellaufrufe) 2.7 und im Code.
+- `docs/ARCHITECTURE.md` (Fassung vor #64) 1.1: „Relevanz: erster `cfn_resource_type` im Prüfumfang“ gilt seit ADR 0013 nicht mehr; heute genügt ein nach dem Streichen übrig gebliebener Typ im Prüfumfang plus Ebene `template`. 1.3: „zwei Wiederholungen“ beim Formulieren; heute bis zu 6 (`FORMULATE_RETRIES`, ADR 0014). Mit #64 und #72 neu geschrieben; die Details stehen heute in [ARCHITECTURE](../../docs/ARCHITECTURE.md#37-die-acht-modellaufrufe) 3.7 und im Code.
 - `docs/adr/0002`, `0007` (Ranking, gesetzte Plätze, Obergrenzen), `0010`: überholt durch ADR 0011 bzw. 0014; der Kopf der Datei nennt jeweils den Nachfolger.
 - `learning/lessons/*.md`: Die Links der Lernkarten zeigen seit #66 auf die Ordnerstruktur aus #20 (z. B. `select/curation.py`, `extract/bsi.py`, `data/input/scope.json`). Karte #17 nennt `retries=3`; heute 6. Karte #6 nennt als Relevanzregel „erster Ressourcentyp“; seit ADR 0013 gilt die neue Regel.
-- `docs/SPEC.md` (Zeile zur Relevanz) und `README.md` (Ranking, gesetzte Plätze): noch vor ADR 0011 formuliert; `docs/METHODIK.md` ist seit #65 nachgezogen. Die drei früheren Erklär-Dokumente (Datenmodell, Einführung, KI-Agenten) sind seit #66 gelöscht; ihr gültiger Inhalt steht in [ARCHITECTURE](../../docs/ARCHITECTURE.md) und [METHODIK](../../docs/METHODIK.md).
+- `docs/SPEC.md` (Zeile zur Relevanz) und `README.md` (Ranking, gesetzte Plätze): noch vor ADR 0011 formuliert; `docs/research/METHODIK.md` ist seit #65 nachgezogen, seit #73 nicht mehr. Die drei früheren Erklär-Dokumente (Datenmodell, Einführung, KI-Agenten) sind seit #66 gelöscht; ihr gültiger Inhalt steht in [ARCHITECTURE](../../docs/ARCHITECTURE.md) und [METHODIK](../../docs/research/METHODIK.md).
 
 ## Wenn das Lehrbuch später erweitert wird
 
