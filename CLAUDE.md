@@ -34,11 +34,12 @@ Ich arbeite allein und sequentiell direkt auf `main`. Commits mache ich selbst o
 - Deutsch, einfach und klar, Niveau pragmatischer Senior Engineer.
 - Fachwort beim ersten Auftreten in einem eigenen ganzen Satz erklären, nicht in einem Halbsatz.
 - **Rule of 3**: maximal 3 Bulletpoints, Fließtext maximal 3 Zeilen. Code-Erklärungen: Was macht es? Warum so (Bezug BSI/AWS)? Welcher Begriff ist fürs Fachgespräch wichtig?
+- **Code-Namen nie allein im Satz:** Alltagswort zuerst, Code-Name in Klammern; Tabellen mit Spalte „im Code“.
 - **Projektsprache:** Code, Bezeichner, JSON-Felder und Kommentare englisch (Normbezug als Kürzel, z. B. `# Enforces BSI OPS.1.1.2.A3`). LLM-Prompts, Doku, UI und Inhalte der Audit-Reports deutsch. Englische Code-Namen der Fachbegriffe stehen in `CONTEXT.md` (*Code*).
 
 ## Doku: lean
 
-Jedes Dokument muss ich in 2 Minuten lesen und verstehen können. Diese Regeln haben Vorrang vor den Templates der Skills (`/to-spec`, `/to-tickets`, `/domain-modeling`):
+Jeden Abschnitt muss ich in 2 Minuten lesen und verstehen können. Diese Regeln haben Vorrang vor den Templates der Skills (`/to-spec`, `/to-tickets`, `/domain-modeling`):
 
 - **Issue / Spec**: maximal ca. 15 Zeilen. Abschnitte: *Ziel* (1–2 Sätze), *Akzeptanzkriterien* (3–5 prüfbare Punkte), *Offene Fragen*. Höchstens 5 User Stories.
 - **ADR** (`docs/adr/NNNN-slug.md`): eine Seite. *Kontext*, *Entscheidung*, *Konsequenzen*, *Fachgespräch-Satz* (1 Satz zur Verteidigung).
