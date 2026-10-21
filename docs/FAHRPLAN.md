@@ -1017,18 +1017,40 @@ git grep -nIE "$P" -- data/input/presets/spec-govguard
 
 **Ablauf:**
 
-- [ ] **Starten** 🆕 _Opus_, Auto-Modus · 👤 „Lies docs/FAHRPLAN.md Schritt 13b und arbeite ihn ab.“
-- [ ] **Vorbereiten** 🤖 · Arbeitsbaum prüfen, `git tag vor-4plus1`
-- [ ] **#70 bauen und prüfen** 🤖 _Sonnet_-Agent · Concern-Modul, Zeile im Katalog `concerns/README.md`, Default-Liste in `SKILL.md` Schritt 4 · frischer _Opus_-Agent `/code-review gegen Issue #70` → Commit
-- [ ] **#71 bauen und prüfen** 🤖 _Sonnet_ · Startliste abarbeiten, `docs/SPEC.md` korrigieren und ins Preset kopieren, `/audit-messen spec-govguard mit Groq`, Report nach `data/gallery/spec-govguard.json` · _Opus_ `/code-review gegen Issue #71` → Commit
-- [ ] **#72 bauen und prüfen** 🤖 _Sonnet_ · neue ARCHITECTURE.md, Ausbau nach AUSBAU.md, DESIGN.md löschen, Links und Drift-Tests nachziehen · _Opus_ `/code-review gegen Issue #72` und Skill-Schritt 7 (`validate-views.py` auf die in den Scratchpad geschnittenen Sichten) → Commit
-- [ ] **Lesetest** 🤖 frischer _Opus_-Agent ohne Vorwissen liest nur README und ARCHITECTURE, einmal als Hiring Manager und einmal als IT-Sicherheitsbeauftragter einer Behörde: Wo antwortet das Modell unsicher, was fängt der Code ab, was ist gemessen? Lücken → nachbessern → Commit
-- [ ] **Bericht** 🤖 letzte Nachricht der Session: je Ticket Commit und offene Punkte, alle Entscheidungen, die sonst ein Halt gewesen wären, Groq-Kosten
-- [ ] **Halt: morgens** 👤 Bericht lesen, ARCHITECTURE.md in der Vorschau ansehen → „pushen“ → 🤖 pusht, schließt #70–#72, hakt hier ab
+- [x] **Starten** 🆕 _Opus_, Auto-Modus · 👤 „Lies docs/FAHRPLAN.md Schritt 13b und arbeite ihn ab.“
+- [x] **Vorbereiten** 🤖 · Arbeitsbaum prüfen, `git tag vor-4plus1`
+- [x] **#70 bauen und prüfen** 🤖 _Sonnet_-Agent · Concern-Modul, Zeile im Katalog `concerns/README.md`, Default-Liste in `SKILL.md` Schritt 4 · frischer _Opus_-Agent `/code-review gegen Issue #70` → Commit
+- [x] **#71 bauen und prüfen** 🤖 _Sonnet_ · Startliste abarbeiten, `docs/SPEC.md` korrigieren und ins Preset kopieren, `/audit-messen spec-govguard mit Groq`, Report nach `data/gallery/spec-govguard.json` · _Opus_ `/code-review gegen Issue #71` → Commit
+- [x] **#72 bauen und prüfen** 🤖 _Sonnet_ · neue ARCHITECTURE.md, Ausbau nach AUSBAU.md, DESIGN.md löschen, Links und Drift-Tests nachziehen · _Opus_ `/code-review gegen Issue #72` und Skill-Schritt 7 (`validate-views.py` auf die in den Scratchpad geschnittenen Sichten) → Commit
+- [x] **Lesetest** 🤖 frischer _Opus_-Agent ohne Vorwissen liest nur README und ARCHITECTURE, einmal als Hiring Manager und einmal als IT-Sicherheitsbeauftragter einer Behörde: Wo antwortet das Modell unsicher, was fängt der Code ab, was ist gemessen? Lücken → nachbessern → Commit
+- [x] **Bericht** 🤖 letzte Nachricht der Session: je Ticket Commit und offene Punkte, alle Entscheidungen, die sonst ein Halt gewesen wären, Groq-Kosten
+- [x] **Halt: morgens** 👤 Bericht lesen, ARCHITECTURE.md in der Vorschau ansehen → „pushen“ → 🤖 pusht, schließt #70–#72, hakt hier ab
 
 **Fertig, wenn:** #70–#72 geschlossen sind, die Startliste aus #71 außerhalb der Ausnahmen nichts mehr findet, der Lesetest keine Lücke mehr findet und `pytest` und ruff grün sind. Zurück: `git checkout vor-4plus1`.
 **Danach:** 👤 `/verstehen 72 4+1-Doku mit LLM-Unsicherheit`
 **Fürs Fachgespräch:** Das Modell ist ein probabilistischer Kern. Die Architektur legt eine deterministische Schale darum, und die Szenarien messen, wie viel Unsicherheit trotzdem durchkommt.
+
+---
+
+### Schritt 13c – ARCHITECTURE.md als 4+1 nach Kruchten (#73)
+
+**Ziel:** Eine technische Referenz-Doku nach Kruchten ersetzt die dünne Fassung aus #72: Klassendiagramme je Pipeline, Nebenläufigkeit in der Prozess-Sicht, Sequenzdiagramme in den Szenarien, Kapitel 6 mit rotem Faden für Leser aus der deterministischen Programmierung.
+**Voraussetzung:** Schritt 13b (#70–#72 geschlossen), CLAUDE.md mit Ausnahme für ARCHITECTURE.md (fea6e33). Kein AWS, kein Groq.
+
+**Vorgaben:** Entscheidungen, Kruchten-Checkliste und roter Faden für Kapitel 6 stehen im ersten Kommentar von #73. Opus schreibt selbst, ohne Unteragenten für den Text.
+
+**Ablauf:**
+
+- [ ] **Starten** 🆕 _Opus_ · 👤 „Lies docs/FAHRPLAN.md Schritt 13c und Issue #73 mit Kommentaren“ → Plan → Go
+- [ ] **Gerüst** 🤖 _Opus_ · alle Überschriften mit Leitfrage und ≤ 3 Zeilen Zusammenfassung, alle Diagramme (Mermaid), Typdiagramme aus `git show d3ff19d:docs/DESIGN.md` am Code geprüft
+- [ ] **Halt: Gerüst** 👤 in der Vorschau ansehen → Korrekturen oder Go
+- [ ] **Fließtext** 🤖 _Opus_ · Sichten, Szenarien, Kapitel 6–8; `validate-views.py` auf die in den Scratchpad geschnittenen Sichten, Drift-Tests nachziehen, pytest und ruff
+- [ ] **Prüfen** 🤖 frischer _Opus_-Agent `/code-review gegen Issue #73` mit Kruchten-Checkliste · zwei frische Leser: Senior Engineer (nur deterministische Programmierung) für Kapitel 6, IT-Sicherheitsbeauftragter für 6.5 → nachbessern → Commit
+- [ ] **Abschließen** 👤 committet und pusht, schließt #73
+
+**Fertig, wenn:** #73 geschlossen ist, jede Sicht die Checkliste erfüllt, beide Leser keine Lücke finden und `pytest` und ruff grün sind.
+**Danach:** 👤 `/verstehen 73 4+1 nach Kruchten`
+**Fürs Fachgespräch:** Kruchten trennt, was ein System *ist* (logisch), wie es *läuft* (Prozess), wie es *gebaut* ist (Entwicklung) und wo es *steht* (physisch); die Szenarien beweisen, dass die vier Sichten zusammenpassen.
 
 ---
 
