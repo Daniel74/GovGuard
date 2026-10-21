@@ -48,6 +48,7 @@ Begriffe stehen in [CONTEXT.md](../CONTEXT.md), Entscheidungen in [adr/](adr/), 
 | Offene Welt | Offene Welt heißt: Was die Eingabe nicht erwähnt, kann anderswo geregelt sein; Fehlen ist dann nur WARN. |
 | Halluzination | Eine Halluzination ist eine Aussage des Modells, die sich gut liest, aber erfunden ist. |
 | Prompt Injection | Prompt Injection ist eine Anweisung im Eingabetext, die das Modell statt der eigentlichen Aufgabe befolgt. |
+| Token | Ein Token ist ein Wortstück; danach rechnet der Anbieter ab und setzt seine Limits je Minute. |
 | SHA-256 | SHA-256 ist eine Prüfsumme (Hash), die sich ändert, sobald sich ein Zeichen der Datei ändert. |
 | AIC4 | AIC4 ist der Kriterienkatalog des BSI für KI-Cloud-Dienste; er richtet sich an Anbieter, die Modelle trainieren, und wird hier sinngemäß angewandt (Kürzel wie PF-09 nennen ein Kriterium). |
 | BSI R und M | Im BSI-Papier „Generative KI-Modelle“ steht R mit Nummer für ein Risiko (R26: direkte Manipulation im Prompt) und M für eine Maßnahme. |
@@ -486,7 +487,7 @@ Die OWASP Top 10 for LLM Applications sind die Liste der zehn wichtigsten Sicher
 | LLM06 | Excessive Agency | Das „Tool“ ist ein Formular; feste Reihenfolge | umgesetzt |
 | LLM04, 07, 08 | Poisoning, System Prompt Leakage, Vector Weaknesses | Quellen gepinnt und Auswahl im Git-Diff prüfbar; Prompts und Katalog sind öffentlich (kein Geheimnis im Kontext); keine Vektor-Datenbank | umgesetzt oder entfällt |
 | LLM09 | Misinformation | Kernrisiko: Beleg per Zeilenverweis, Gates, Verstoß-Prüfer, Lücke statt Raten | teilweise: Trefferquote nicht erhoben, falsches PASS größtes Restrisiko (6.3), QS-4 |
-| LLM10 | Unbounded Consumption | 100.000 Zeichen, 1 Retry, Passwort, Token-Budget, Pakete begrenzt | umgesetzt |
+| LLM10 | Unbounded Consumption | 100.000 Zeichen, 1 Retry, Passwort, Token-Budget, Pakete begrenzt | teilweise: je Audit begrenzt, die Zahl der Audits nicht (T1) |
 
 ### 4.4 Betrieb und Kosten
 

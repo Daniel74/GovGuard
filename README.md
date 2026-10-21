@@ -39,7 +39,7 @@ flowchart LR
 **Beschreibung:**
 
 - **Gate:** Ein Gate ist eine Prüfung im Code, die eine Antwort nur durchlässt, wenn sie eine feste Regel erfüllt (Schema, gültige Belegzeilen, ein Befund je Prüfregel).
-- **Retry und fail closed:** Ein Retry stellt dem Modell die Frage noch einmal, mit dem gefundenen Problem. Fail closed heißt: Ist die Antwort auch dann ungültig, bricht das Audit ab, statt einen ungeprüften Report zu liefern. Ein unbelegtes PASS oder FAIL wird stattdessen zu WARN, nie zu PASS ([ARCHITECTURE](docs/ARCHITECTURE.md#23-lebenslauf-eines-befunds) 2.3).
+- **Retry und fail closed:** Ein Retry stellt dem Modell die Frage noch einmal, mit dem gefundenen Problem. Fail closed heißt: Ist die Antwort auch dann ungültig, bricht das Audit ab, statt einen ungeprüften Report zu liefern. Ein unbelegtes PASS oder FAIL wird stattdessen zu WARN, nie zu PASS ([ARCHITECTURE](docs/ARCHITECTURE.md#23-lebenslauf-eines-befunds) 2.3). Der Code prüft, dass die Belegzeilen existieren, nicht, dass sie das Urteil tragen. Ein falsches PASS ist deshalb das größte Restrisiko ([ARCHITECTURE](docs/ARCHITECTURE.md#63-restrisiken-und-grenzen) 6.3).
 - **Mehr:** [ARCHITECTURE](docs/ARCHITECTURE.md#11-entwurfsprinzipien) 1.1 und [2.1](docs/ARCHITECTURE.md#21-audit-von-der-eingabe-zum-report).
 
 ## Kennzahlen
@@ -52,6 +52,7 @@ Ein **Musterfall** ist eine fiktive Beispiel-Eingabe mit von Hand festgelegtem S
 | Tests | 965 automatische Tests, dazu 24 Browser-Tests der Oberfläche (`uv run pytest -q`, `uv run pytest -m visual`) |
 | Kosten je Audit | Spec 0,07 bis 0,10 $, Architektur 0,007 bis 0,018 $ (Median je Musterfall) |
 | Dauer je Audit | Spec 143 bis 214,5 s, Architektur 12 bis 26,5 s (Median je Musterfall) |
+| Soll erreicht | 10 von 19 Läufen; 3 von 6 Musterfällen in jedem Lauf ([QS-4](docs/ARCHITECTURE.md#61-qualitätsszenarien-qs-1-bis-qs-9)) |
 
 Kosten und Dauer: Messkampagne (Issue #54), 19 Läufe über 6 Musterfälle, Groq `openai/gpt-oss-120b`, Preis 0,15 $ / 0,60 $ je Million Tokens. Die Einzelwerte stehen in [ARCHITECTURE](docs/ARCHITECTURE.md#44-betrieb-und-kosten) 4.4. Der Median gilt je Musterfall über die erfolgreichen Läufe (3; ein vierter Lauf beim Selbstaudit brach nach einem HTTP 400 von Groq ab, siehe [ARCHITECTURE](docs/ARCHITECTURE.md#61-qualitätsszenarien-qs-1-bis-qs-9) QS-2). Das Modell schwankt: Je Musterfall behalten 70 bis 99 % der Prüfregeln in allen Läufen denselben Status (Issue #54). **Nicht gemessen:** wie viele der Befunde eine Fachperson bestätigen würde (Trefferquote), und was die Handprüfung kostet. Gemessen sind nur Stabilität, Gesamtstatus und wenige Pflichtbefunde je Musterfall (ein Pflichtbefund ist ein Befund, dessen Status das Soll festlegt; [ARCHITECTURE](docs/ARCHITECTURE.md#63-restrisiken-und-grenzen) 6.1 und 6.3).
 
