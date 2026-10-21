@@ -33,6 +33,15 @@ Begriffe stehen in [CONTEXT.md](../CONTEXT.md), Entscheidungen in [adr/](adr/), 
 | Gate | Ein Gate ist eine Prüfung im Code, die ein Ergebnis nur durchlässt, wenn es eine feste Regel erfüllt. |
 | Retry | Ein Retry ist die erneute Frage ans Modell, nachdem der Code die Antwort mit Grund abgelehnt hat. |
 | Fail closed | Fail closed heißt: Im Zweifel gibt es kein Ergebnis statt eines falschen. |
+| Prüfregel | Eine Prüfregel ist eine einzelne, prüfbare Regel aus genau einer Anforderung einer Norm, mit Kriterien für „konform“ und „Verstoß“. |
+| Befund | Ein Befund ist das Ergebnis genau einer Prüfregel in einem Audit, mit Status, Beleg und Empfehlung. |
+| Anker | Ein Anker ist die Fundstelle einer Prüfregel in der Norm, etwa „DSGVO Art. 32“; der Code setzt ihn, nie das Modell. |
+| Musterfall | Ein Musterfall ist eine fiktive Beispiel-Eingabe mit einem von Hand festgelegten Soll-Ergebnis. |
+| Pflichtbefund | Ein Pflichtbefund ist ein Befund, dessen Anker und Status das Soll eines Musterfalls festlegt. |
+| Herabstufung | Eine Herabstufung ist der Wechsel von PASS oder FAIL auf WARN durch den Code; der alte Status bleibt am Befund sichtbar. |
+| Lücke | Eine Lücke ist ein WARN ohne Zeilen: Die Eingabe beschreibt die Anforderung nicht. |
+| Prowler | Prowler ist ein Open-Source-Prüfwerkzeug für AWS, dessen Regelwerke CIS, C5 und FSBP GovGuard als JSON liest. |
+| DSK | Die DSK ist die Konferenz der deutschen Datenschutzbehörden und Herausgeberin des SDM. |
 | Beleg | Ein Beleg ist der wörtliche Ausschnitt der Eingabe, auf den sich ein Befund stützt. |
 | Offene Welt | Offene Welt heißt: Was die Eingabe nicht erwähnt, kann anderswo geregelt sein; Fehlen ist dann nur WARN. |
 | Halluzination | Eine Halluzination ist eine Aussage des Modells, die sich gut liest, aber erfunden ist. |
@@ -103,13 +112,13 @@ Das Diagramm ist eine vereinfachte Container-Sicht nach C4 (Zoomstufe: die einze
 
 ### 1.1 Entwurfsprinzipien
 
-Ein Prinzip ist eine Regel, die viele Einzelentscheidungen erklärt. Diese acht tragen GovGuard; jedes steht im Code, nicht nur im Text.
+Ein Prinzip ist eine Regel, die viele Einzelentscheidungen erklärt. Diese acht tragen GovGuard. Sechs sind im Code erzwungen oder getestet; Prinzip 7 ist sichtbar (jeder Report nennt sein Modell), aber nicht erzwungen, Prinzip 8 ist eine Betriebsentscheidung.
 
 | # | Prinzip | Warum ([ADR](adr/)) | im Code |
 |---|---|---|---|
 | 1 | *Das Modell entwirft, der Code entscheidet.* Was der Code schon weiß, fragt man das Modell nicht. | Der Teil, der halluzinieren kann, bleibt klein ([0005](adr/0005-pydantic-ai.md)). | `FindingDraft`, `RuleDraft`, `checks/` |
 | 2 | *Fester Katalog statt Suche.* Jede Prüfregel bekommt genau einen Befund. | Ein Audit mit Lücke ist wertlos ([0011](adr/0011-vollstaendiger-katalog.md)). | `RuleCatalog`, `completeness_problems` |
-| 3 | *Fail closed.* Nach einem Retry bricht das Audit ab (Exit 2). | Ein falscher Report ist schlimmer als keiner ([0017](adr/0017-beleg-per-zeilenverweis.md)). | `AuditValidationError`, `fail_closed` |
+| 3 | *Fail closed.* Nach einem Retry bricht das Audit ab (Exit 2); nur ein unbelegtes PASS wird zu WARN. | Ein falscher Report ist schlimmer als keiner ([0017](adr/0017-beleg-per-zeilenverweis.md)). | `AuditValidationError`, `fail_closed` |
 | 4 | *Beleg statt Behauptung.* Das Modell nennt Zeilen, der Code schneidet das Zitat aus; FAIL nur bei Festlegung. | Ein Befund muss nachprüfbar sein ([0017](adr/0017-beleg-per-zeilenverweis.md), [0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md)). | `evidence_of`, `judge_fails` |
 | 5 | *Workflow statt Agent.* Die Reihenfolge steht im Code. | Kein Modell wählt den nächsten Schritt ([0021](adr/0021-kein-orchestrierungs-framework.md)). | `run_audit` |
 | 6 | *Anschlüsse (Adapter) als einziger Weg nach außen.* | Die Prüflogik bleibt ohne Netz testbar ([0027](adr/0027-ordner-nach-aufgabe.md)). | `adapters/`, `source_fetch.py` |
@@ -202,7 +211,7 @@ Durchgezogener Pfeil = Ablauf in einer Bahn oder Übergabe, gestrichelt = Nachri
 
 **Variante Architektur-Audit:** Bei CloudFormation-JSON liest der Code die Ressourcentypen selbst (Ressourceninventar) und setzt nicht anwendbare Prüfregeln auf N/A; die Welt ist geschlossen, eine fehlende Einstellung kann FAIL sein. Bei Freitext, YAML und Terraform nennt das Modell die Typen mit Zeilenverweis, die Welt bleibt offen ([0015](adr/0015-cloudformation-einziges-inventarformat.md)).
 
-> **Concern (LLM-Unsicherheit):** *Unsicher:* Jede Antwort kann ungültig, unvollständig oder zu lang sein. *Schale:* Pro Paket läuft eine feste Kette aus Schema-, Vollständigkeits- und Zeilenprüfung (AIC4 DQ-02); ein Fehler geht mit Grund einmal zurück (`RETRIES = 1`), danach bricht das Audit ab. 100.000 Zeichen, 1 Retry und höchstens 8.000 Ausgabe-Tokens begrenzen die Kosten (LLM10). *Gemessen:* In 19 Läufen gab es einen Abbruch, und der war ein HTTP 400 von Groq ohne Retry, kein ausgeschöpfter Retry (QS-2). Ein Mensch prüft im Ablauf nicht; die Oberfläche zeigt aber jede Herabstufung (AIC4 RE-04).
+> **Concern (LLM-Unsicherheit):** *Unsicher:* Jede Antwort kann ungültig, unvollständig oder zu lang sein. *Schale:* Pro Paket läuft eine feste Kette aus Schema-, Vollständigkeits- und Zeilenprüfung (AIC4 DQ-02); ein Fehler geht mit Grund einmal zurück (`RETRIES = 1`), danach bricht das Audit ab; nur ein PASS ohne Beleg wird stattdessen zu WARN. 100.000 Zeichen, 1 Retry und höchstens 8.000 Ausgabe-Tokens begrenzen die Kosten (LLM10). *Gemessen:* In 19 Läufen gab es einen Abbruch, und der war ein HTTP 400 von Groq ohne Retry, kein ausgeschöpfter Retry (QS-2). Ein Mensch prüft im Ablauf nicht; die Oberfläche zeigt aber jede Herabstufung (AIC4 RE-04).
 
 ### 2.2 Ein Modellaufruf und die acht Aufrufe
 
@@ -210,21 +219,19 @@ Jeder Aufruf hat dieselbe Form: Der Code baut den Auftrag mit nummerierter Einga
 
 | Laufzeit-Aufruf | Prüfung durch Code | Retry und Rückfall | Prompt (im Code) |
 |---|---|---|---|
-| Paket der Prüfregeln | ein Befund je Regel, gültiger Zeilenbereich, PASS braucht Beleg | 1 Retry, dann fail closed | `SYSTEM_PROMPT` in `calls/audit_packages.py` |
+| Paket der Prüfregeln | ein Befund je Regel, gültiger Zeilenbereich, PASS braucht Beleg | 1 Retry; danach wird ein PASS ohne Beleg zu WARN, jedes andere Problem bricht ab (fail closed) | `SYSTEM_PROMPT` in `calls/audit_packages.py` |
 | Verstoß-Prüfer | jedes FAIL hat ein Urteil | 1 Retry, dann bleibt das FAIL | `FAIL_JUDGE_PROMPT` in `calls/fail_judge.py` |
 | Ressourceninventar (Freitext) | Typ steht in der Liste, Zeilen gültig | 1 Retry, dann fail closed | `INVENTORY_PROMPT` in `calls/inventory.py` |
 | Bedingungs-Vorlauf (Spec) | jede Bedingung einmal, bekannte IDs, Zeilen gültig | 1 Retry, dann alle `unstated` | `CONDITIONS_PROMPT` in `calls/conditions.py` |
 
 | Build-Aufruf | Prüfung durch Code | Retry und Rückfall |
 |---|---|---|
-| Zerlegung eines Rechtsartikels | jede Marke genau einer Gruppe | 4 Retries, dann bleibt der Artikel ganz (`llm_error`) |
+| Zerlegung eines Rechtsartikels | jeder Abschnitt genau einer Gruppe | 4 Retries, dann bleibt der Artikel ganz (`llm_error`) |
 | Einstufung „prüfbar“ | Typen gibt es wirklich, außerhalb des Prüfumfangs gestrichen | 2 Retries, dann `llm_error` |
 | Prüfregel formulieren | Zitat wörtlich, Querverweise echt, Typen im Prüfumfang | 6 Retries, dann bricht der Build ab |
 | Verstoß-Prüfer des Builds | Verstoßkriterium beschreibt eine Festlegung, kein Fehlen | 2 Retries, dann bricht der Build ab |
 
 ### 2.3 Lebenslauf eines Befunds
-
-Ein Befund durchläuft feste Zustände; der Code entscheidet jeden Übergang außer dem ersten Entwurf (🤖) und der zweiten Meinung des Verstoß-Prüfers (🤖).
 
 | Zustand | Wer | Übergang |
 |---|---|---|
@@ -234,9 +241,9 @@ Ein Befund durchläuft feste Zustände; der Code entscheidet jeden Übergang au�
 | Gate | ⚙️ Code | Problem im ersten Versuch → zurück ans Modell mit Grund; im zweiten → Abbruch fail closed; kein Problem → Status gilt |
 | Zweite Meinung | 🤖 Modell | nur FAIL in offener Welt: bestätigt oder kein Urteil → FAIL, nicht bestätigt → WARN |
 
-Eine Herabstufung ist der Wechsel von FAIL oder PASS auf WARN durch den Code; der alte Status bleibt am Befund sichtbar (`downgraded_from`). Ein PASS ohne gültigen Beleg wird nach dem Retry zu WARN, ein FAIL ohne Zeilenbereich sofort (`without_unproven_verdict`). Ein WARN ohne Zeilen heißt Lücke: Die Eingabe beschreibt die Anforderung nicht.
+Der alte Status einer Herabstufung bleibt am Befund sichtbar (`downgraded_from`). Ein PASS ohne gültigen Beleg wird nach dem Retry zu WARN, ein FAIL ohne Zeilenbereich sofort (`without_unproven_verdict`).
 
-> **Concern (LLM-Unsicherheit):** *Unsicher:* Der Verstoß-Prüfer ist selbst ein Modell und nicht reproduzierbar ([0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md)). *Schale:* Er senkt nur und hebt nie; fällt er aus, bleibt das FAIL. Alle drei Rückfälle (Vorlauf, unbelegtes PASS, Prüfer) gehen zum vorsichtigeren Status und können kein falsches PASS erzeugen. *Gemessen:* 9 von 14 FAILs beim Wohngeld-Musterfall herabgestuft (QS-5).
+> **Concern (LLM-Unsicherheit):** *Unsicher:* Der Verstoß-Prüfer ist selbst ein Modell und nicht reproduzierbar ([0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md)). *Schale:* Er senkt nur und hebt nie; fällt er aus, bleibt das FAIL. Alle drei Rückfälle (Vorlauf, unbelegtes PASS, Prüfer) gehen zum vorsichtigeren Status und können kein falsches PASS erzeugen. *Gemessen:* beim Wohngeld-Musterfall stufte er in 3 Läufen 3 von 4, 6 von 10 und 8 von 9 FAILs auf WARN herab (QS-5, #54).
 
 ### 2.4 Build: aus Normtexten wird die Wissensbasis
 
@@ -370,9 +377,9 @@ Jede Regel ist ein Vertrag nach Design by Contract. Bricht die Vorbedingung (Ein
 | Ein FAIL in offener Welt braucht den Verstoß-Prüfer; lehnt er ab, wird es WARN; fehlt sein Urteil, bleibt das FAIL. | `judge_fails` | `tests/test_run_audit_fail_judge.py` |
 | Nur eine ausdrückliche Verneinung setzt Prüfregeln auf N/A; Schweigen oder Ausfall bleibt `unstated`. | `condition_results`, `na_drafts` (`checks/conditions.py`) | `tests/test_conditions_checks.py` |
 | Eine Eingabe über 100.000 Zeichen kostet keinen Modellaufruf. | `check_input_length` | `tests/test_run_audit_input_limit.py` |
-| Eine ungültige Antwort geht einmal zurück, danach bricht das Audit ab. | `send_back` (`calls/model_call.py`), `fail_closed` | `tests/test_run_audit_corrections.py` |
+| Eine ungültige Antwort geht einmal zurück, danach bricht das Audit ab (Ausnahme: ein unbelegtes PASS wird WARN). Lehnt Groq den Aufruf selbst mit HTTP 400 ab, gibt es keine Antwort zum Zurückschicken, und das Audit bricht sofort ab. | `send_back` (`calls/model_call.py`), `fail_closed` | `tests/test_run_audit_corrections.py` |
 | Im Build steht das Zitat wörtlich im Text genau der verankerten Anforderung; Querverweise gibt es wirklich. | `is_quoted`, `invalid_cross_references` (`kb_build/rules/gates.py`) | `tests/test_gates.py` |
-| Jeder Pflichtanker steht im Katalog, jeder Pflicht-Ressourcentyp eines Steckbriefs hat eine Prüfregel. | `check_pinned`, `check_coverage` (`kb_build/select/gates.py`) | `tests/test_gates.py` |
+| Jeder Pflichtanker steht im Katalog, jeder Pflicht-Ressourcentyp der Referenzarchitekturen hat eine Prüfregel. | `check_pinned`, `check_coverage` (`kb_build/select/gates.py`) | `tests/test_gates.py` |
 | Die Rückverfolgung enthält nur Hashes, nie die Eingabe. | `make_trace` (`govguard/audit_setup.py`) | `tests/test_cli.py`, `tests/test_models.py` |
 
 ### 3.3 Wartung
@@ -433,7 +440,7 @@ GovGuard speichert die Eingabe nicht; sie lebt nur in der Sitzung. Der Report en
 
 | Ort | Was liegt dort | Hinweis |
 |---|---|---|
-| Streamlit Community Cloud, USA | Oberfläche, Audit im Prozess, Geheimnisse | Drittland; fiktive Daten und Hinweis in der Oberfläche ([0004](adr/0004-streamlit-community-cloud.md)) |
+| Streamlit Community Cloud, USA | Oberfläche, Audit im Prozess, Geheimnisse | Drittland; fiktive Daten und Hinweis in der Oberfläche ([0004](adr/0004-streamlit-community-cloud.md)). Welche Zugriffs- oder App-Logs Streamlit führt und wie lange, nennt die Trust-and-Security-Doku des Dienstes nicht; nicht geprüft, Restrisiko |
 | Groq, USA | Prompt mit Eingabe, Antwort | laut Doku des Anbieters bis zu 30 Tage Protokoll zur Fehlersuche; „Zero Data Retention“ ist einschaltbar, im Konto nicht geprüft |
 | GitHub | Wissensbasis, Galerie, Code | Galerie nur mit fiktiven Eingaben |
 
@@ -445,7 +452,7 @@ Ein Auftragsverarbeitungsvertrag mit Hosting und Groq ist nicht geprüft; für f
 
 ### 4.2 Bedrohungen
 
-STRIDE ist ein Merkwort für sechs Bedrohungsarten (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege). Status: *umgesetzt*, *teilweise*, *erkennbar* (nicht verhindert), *akzeptiert* (bewusst getragen) oder *offen*.
+STRIDE ist ein Merkwort für sechs Bedrohungsarten (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege). Die Auswahl zeigt die für den Demo-Stand wichtigsten Bedrohungen; die IDs stammen unverändert aus dem Bedrohungskatalog der Vorfassung (T1 bis T15), darum fehlen einzelne Nummern. Status: *umgesetzt*, *teilweise*, *erkennbar* (nicht verhindert), *akzeptiert* (bewusst getragen) oder *offen*.
 
 | ID | STRIDE | Bedrohung | Maßnahme im Demo-Stand | Status |
 |---|---|---|---|---|
@@ -472,7 +479,7 @@ Die OWASP Top 10 for LLM Applications sind die Liste der zehn wichtigsten Sicher
 |---|---|---|---|
 | LLM01 | Prompt Injection | Formular, feste Werte, Belegpflicht; kein Abwehrsatz im Prompt (T4, T14) | teilweise |
 | LLM02 | Sensitive Information Disclosure | nichts gespeichert, Hinweis in der Oberfläche; Belegausschnitte im Report | akzeptiert |
-| LLM03 | Supply Chain | `uv.lock`, gepinnte Quellen; Modell kommt vom Anbieter | umgesetzt |
+| LLM03 | Supply Chain | `uv.lock`, gepinnte Quellen; kein SBOM, kein Schwachstellen-Scan; das Modell kommt vom Anbieter | teilweise |
 | LLM05 | Improper Output Handling | Pydantic, Gates, `html.escape`; nichts wird ausgeführt | umgesetzt |
 | LLM06 | Excessive Agency | Das „Tool“ ist ein Formular; feste Reihenfolge | umgesetzt |
 | LLM04, 07, 08 | Poisoning, System Prompt Leakage, Vector Weaknesses | Quellen gepinnt und Auswahl im Git-Diff prüfbar; Prompts und Katalog sind öffentlich (kein Geheimnis im Kontext); keine Vektor-Datenbank | umgesetzt oder entfällt |
@@ -506,7 +513,7 @@ Akteure sind die prüfende Person (gibt Eingabe ein, liest den Report), der Proj
 
 | Szenario | Ablauf | Ergebnis | Sichten (Beispiele) |
 |---|---|---|---|
-| S1 Spezifikation prüfen (Normalfall) | Meldeportal-Musterfall eingeben; Passwort und Länge prüfen; Bedingungs-Vorlauf; 35 Pakete à 10 Prüfregeln; Verstoß-Prüfer; Report | Gesamtstatus, 350 Befunde mit Beleg, Lücken als Checkliste | 1 Oberfläche, 2.1, 3.2 `check_input_length`, 4 Groq |
+| S1 Spezifikation prüfen (Normalfall) | Meldeportal-Musterfall eingeben; Passwort und Länge prüfen; Bedingungs-Vorlauf; bis zu 35 Pakete à 10 Prüfregeln (vorab auf N/A gesetzte Regeln gehen nicht ans Modell); Verstoß-Prüfer; Report | Gesamtstatus, 350 Befunde (jedes PASS und FAIL mit Beleg), Lücken als Checkliste | 1 Oberfläche, 2.1, 3.2 `check_input_length`, 4 Groq |
 | S2 Architektur als Template prüfen | CloudFormation-JSON eingeben; der Code liest das Inventar und setzt nicht anwendbare Prüfregeln auf N/A; Pakete; kein Verstoß-Prüfer (geschlossene Welt) | 175 Befunde, FAIL bei unsicherem Standardwert möglich | 1 Wissensbasis, 2.1, 3.2 `audit_input`, 4 Groq |
 | S3 Modell irrt: Antwort ungültig | Das Modell lässt eine Prüfregel aus oder nennt einen unbekannten Zeilenbereich; das Gate lehnt ab; ein Retry mit Grund; bleibt der Fehler, endet das Audit mit Exit 2 | kein Report statt eines falschen; in 19 Läufen kein Abbruch nach ausgeschöpftem Retry (der eine Abbruch war ein HTTP 400 von Groq ohne Retry, QS-2) | 1 Modellaufrufe, 2.3, 3.2 `answer_problems`, `send_back`, 4 Groq |
 | S4 Modell schwankt | Dieselbe Eingabe wird dreimal geprüft; der Code vergleicht die Status je Prüfregel | gleicher Status: Spec 70 bis 94 %, Architektur 96 bis 99 % (QS-3) | 1 Kommandozeile, 2.2, 3.1 Musterfälle, 4 Groq, 6.1 |
@@ -536,18 +543,18 @@ Zum Nachvollziehen eines Urteils: Report → Katalog-Hash → Commit der Wissens
 
 ## 6 Qualität
 
-Ein Qualitätsszenario beschreibt eine Situation, ein Ziel und einen Messwert. Stand: *erreicht* = Ziel erreicht und belegt, *teilweise* = gemessen, Ziel nur teilweise erreicht, *offen* = Ziel noch nicht festgelegt oder nicht erreicht. Alle Werte sind Messwerte der Messkampagne (#54) oder Tests.
+Ein Qualitätsszenario beschreibt eine Situation, ein Ziel und einen Messwert. Stand: *erreicht* = Ziel erreicht und belegt, *teilweise* = gemessen, Ziel nur teilweise erreicht, *offen* = Ziel noch nicht festgelegt oder nicht erreicht. Die Werte stammen aus der Messkampagne (#54), aus früheren Messungen (Issue-Nummer am Wert) oder aus Tests.
 
 ### 6.1 Qualitätsszenarien QS-1 bis QS-9
 
 | ID | Stand | Merkmal | Szenario | Ziel | Messwert (Quelle) |
 |---|---|---|---|---|---|
 | QS-1 | erreicht | Korrektheit | Das Modell liefert einen Beleg, der nicht in der Eingabe steht | 0 unwörtliche Belege | per Konstruktion: der Code schneidet den Beleg aus; 0 umformulierte Belege in 4 Messläufen ([0017](adr/0017-beleg-per-zeilenverweis.md), #26) |
-| QS-2 | erreicht | Vollständigkeit | Eine Prüfregel bekommt keinen oder zwei Befunde | nie ein unvollständiger Report | 0 unvollständige Reports in 18 Läufen mit Report; 1 fail closed in 10 Spec-Läufen: Groq beantwortete den Aufruf mit HTTP 400, der Code wertete das als schemawidrige Antwort und brach ohne Retry ab (1 Aufruf, 0 Retries); ein Abbruch nach ausgeschöpftem Retry kam in 19 Läufen nicht vor (#54) |
-| QS-3 | teilweise | Zuverlässigkeit | Dieselbe Eingabe wird dreimal geprüft | offen (Schwankung messen, nicht erzwingen) | gleicher Status: Spec 70 bis 94 %, Architektur 96 bis 99 %; es kippen meist Lücke, PASS und N/A, aber auch 0 bis 13 Prüfregeln zwischen FAIL und WARN (#54). Früher, mit 151 Regeln vor KI-VO und Zerlegung: zwischen zwei Läufen kippten bei Groq 42, bei Bedrock Haiku 19 Prüfregeln (#29) |
+| QS-2 | erreicht | Vollständigkeit | Eine Prüfregel bekommt keinen oder zwei Befunde | nie ein unvollständiger Report | 0 unvollständige Reports in 18 Läufen mit Report; 1 Abbruch in 19 Läufen: HTTP 400 von Groq, sofort und ohne Retry (1 Aufruf; Ausnahme zur Retry-Regel in 3.2), nie nach ausgeschöpftem Retry (#54) |
+| QS-3 | teilweise | Zuverlässigkeit | Dieselbe Eingabe wird dreimal geprüft | offen (Schwankung messen, nicht erzwingen) | gleicher Status: Spec 70 bis 94 %, Architektur 96 bis 99 %; es kippen meist Lücke, PASS und N/A, 0 bis 13 Prüfregeln auch zwischen FAIL und WARN (#54). Mit dem früheren Katalog (151 Regeln) kippten bei Groq 42, bei Bedrock Haiku 19 Prüfregeln (#29) |
 | QS-4 | teilweise | Zuverlässigkeit | Ein Musterfall soll sein festgelegtes Soll erreichen | jeder Musterfall | 10 von 19 Läufen: Meldeportal 3/3, Fristenwecker 3/3, Antragseingang 3/3, GovGuard 1/4, Wohngeld 0/3, Protokollarchiv 0/3 (#54) |
-| QS-5 | teilweise | Korrektheit | Fehlender Text wird als Verstoß gewertet | 0 FAIL wegen bloßen Fehlens | 0 und 0 in 2 Läufen nach dem Prüfer ([0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md), #46); Wohngeld: 9 von 14 FAILs herabgestuft, 5 bleiben (#31). Ob die 5 berechtigt sind, hat keine Fachperson bewertet; eine Stichprobe fand einen bestätigten Fehlalarm („Daten verlassen die Region nicht“ als Verstoß gegen Art. 30) |
-| QS-6 | teilweise | Leistung | Ein Audit mit vollem Katalog | Spec höchstens 300 s | Median Spec 143 bis 214,5 s, Architektur 12 bis 27 s (#54) |
+| QS-5 | teilweise | Korrektheit | Fehlender Text wird als Verstoß gewertet | 0 FAIL wegen bloßen Fehlens | 0 und 0 in 2 Läufen nach dem Prüfer ([0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md), #46). Der Prüfer stufte beim Wohngeld 3 von 4, 6 von 10 und 8 von 9 FAILs herab, beim Meldeportal 12 bis 18 von 44 bis 46 (#54); ob die bestätigten FAILs berechtigt sind, hat keine Fachperson bewertet |
+| QS-6 | erreicht | Leistung | Ein Audit mit vollem Katalog | Spec höchstens 300 s | Median Spec 143 bis 214,5 s, längster Lauf 215,3 s; Architektur 12 bis 26,5 s (#54) |
 | QS-7 | offen | Kosten | Ein Audit kostet Geld | offen | Median Spec 0,067 bis 0,099 $, Architektur 0,007 bis 0,018 $ (#54) |
 | QS-8 | erreicht | Sicherheit | Die Rückverfolgung eines Reports soll keinen Eingabetext enthalten | 0 Eingabetexte in der Rückverfolgung | `Trace` enthält nur Hashes (Tests `test_cli.py`, `test_models.py`); Belege im Report sind Eingabeausschnitte (4.1) |
 | QS-9 | teilweise | Nachvollziehbarkeit | Welche Wissensbasis hat dieses Urteil erzeugt? | Report → Katalog-Hash → Commit → Quellenstand | Katalog-Hash und Quellenstand im Report; `kb_commit` ist im Demo-Stand nur `local` |
@@ -575,8 +582,6 @@ Die Norm ISO/IEC 25012 beschreibt die Qualität von Daten mit 15 Merkmalen; die 
 | Konformität | Datenort der Eingabe | Demo nur mit fiktiven Daten und Hinweis, jeder Report nennt sein Modell | `DATA_RULE`, `model_id` |
 | Verfügbarkeit | Audit-Ergebnis | kein zweites Modell, bewusst offen (T11) | – |
 
-Restrisiken: Die Glaubwürdigkeit der Kriterien hängt am Review durch Menschen, und die Verfügbarkeit ist nicht abgesichert. Beides ist benannt, nicht verschwiegen.
-
 ### 6.3 Restrisiken und Grenzen
 
 | Risiko oder Grenze | Wirkung | Was bleibt |
@@ -591,5 +596,5 @@ Restrisiken: Die Glaubwürdigkeit der Kriterien hängt am Review durch Menschen,
 | Quellen aus zweiter Hand | CIS, C5 und FSBP kommen als Prowler-JSON (Prowler ist ein Open-Source-Prüfwerkzeug für AWS); bei CIS prüft eine Stichprobe gegen das PDF ([0008](adr/0008-quellformate.md)) | kein Direktbezug beim Herausgeber |
 | Nicht geprüft | SDM-Baustein Protokollieren (M43: eigenes ID-Schema); kontoweite Pflichten wie Root-MFA oder ein kontoweiter CloudTrail (an keinem Template entscheidbar, [0007](adr/0007-relevanz-und-ausnahmen.md)) | Protokollierung prüft das Architektur-Audit; Prowler oder AWS Security Hub leisten das Kontoweite |
 | Einordnung | Das Spec-Audit prüft das Lastenheft (die Spezifikation) gegen Pflichtinhalte späterer Dokumente: VVT (Art. 30 DSGVO), DSFA (Art. 35 DSGVO), Grundrechte-Folgenabschätzung (Art. 27 KI-VO); Pflichtenheft und Systemarchitektur prüft es nicht | – |
-| Übersehene Dienste im Freitext (P6) | Nennt das Modell einen Dienst nicht, bleiben seine Prüfregeln N/A | Beleg je erkanntem Dienst; „nicht erkannt“ im Befund |
+| Übersehene Dienste im Freitext | Nennt das Modell einen Dienst nicht, bleiben seine Prüfregeln N/A | Beleg je erkanntem Dienst; „nicht erkannt“ im Befund |
 | Prüfumfang | feste Liste von AWS-Diensten (Serverless, RDS/Aurora, Fargate); Eingaben bis 100.000 Zeichen ([0011](adr/0011-vollstaendiger-katalog.md)) | Wachstum: [AUSBAU.md](AUSBAU.md) |
