@@ -52,7 +52,7 @@ def test_prefilter_keeps_only_the_slim_selection_with_a_fixed_reason() -> None:
     )
 
 
-def test_kept_articles_are_pinned_to_issue_52() -> None:
+def test_kept_articles_are_fixed_by_issue_52() -> None:
     # Changing this set changes the catalog: update SPEC.md and ADR 0025 first.
     assert KEPT == {"4", "5", "6", "13", "14", "26", "27", "50"}
 

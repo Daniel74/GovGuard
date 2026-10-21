@@ -6,7 +6,7 @@
 
 ## Wo im Code
 - [source_fetch.py](../../src/kb_build/source_fetch.py): der einzige Ort für HTTP; bricht bei falscher Prüfsumme ab, auch bei manipuliertem Cache.
-- [bsi.py](../../src/kb_build/extract/bsi.py) / [cis.py](../../src/kb_build/extract/cis.py): reine Adapter ohne I/O; die Kriterien stehen als Konstanten nach DESIGN 1.1.
+- [bsi.py](../../src/kb_build/extract/bsi.py) / [cis.py](../../src/kb_build/extract/cis.py): reine Adapter ohne I/O; die Kriterien stehen als Konstanten im Modul.
 - [__main__.py](../../src/kb_build/__main__.py): verbindet nur (lesen, Adapter aufrufen, schreiben).
 
 ## Entscheidung und Warum

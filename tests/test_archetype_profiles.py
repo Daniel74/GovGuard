@@ -1,4 +1,4 @@
-"""Archetype profiles (ARCHITECTURE 5.4): the only fixed input to the relevance filter."""
+"""Archetype profiles: the only fixed input to the relevance filter."""
 
 from kb_build.reference.archetype_profiles import load_profiles, relevant_resource_types
 

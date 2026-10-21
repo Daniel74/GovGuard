@@ -53,7 +53,7 @@ Warum Validator **und** Gate? Der Validator gibt dem Modell eine zweite Chance (
 
 ## Der Qualitätsbericht (`rules/quality.py`)
 
-Nach jedem Lauf zählt `quality_report()` je Quelle: `rules`, `vague`, `account_level` (Regex auf CloudTrail, AWS Organizations, Root-Konto, Passwortrichtlinie, nachdem `AWS::…`-Typnamen entfernt sind), `unknown_properties` und `unjudged_properties` (Typ außerhalb des Schnappschusses, den niemand prüft). Ziel: überall 0. **Eine 0 bei `unknown_properties` allein genügt nicht**, wenn `unjudged_properties` hoch ist: Dann ist die Lücke nur unsichtbar. Genau das war der Befund nach Issue #17 (16 ungeprüfte Regeln), den ADR 0013 schloss. Stand des Laufs vom 13.10.2026 (Issue #19): alle Werte 0.
+Nach jedem Lauf zählt `quality_report()` je Quelle: `rules`, `vague`, `account_level` (Regex auf CloudTrail, AWS Organizations, Root-Konto, Passwortrichtlinie, nachdem `AWS::…`-Typnamen entfernt sind), `unknown_properties` und `unjudged_properties` (Typ außerhalb des Schnappschusses, den niemand prüft). Ziel: überall 0. **Eine 0 bei `unknown_properties` allein genügt nicht**, wenn `unjudged_properties` hoch ist: Dann ist die Lücke nur unsichtbar. Genau das war der Befund nach Issue #17 (16 ungeprüfte Regeln), den ADR 0013 schloss. Stand des Laufs aus Issue #19: alle Werte 0.
 
 ## Beispiele (echte Daten)
 

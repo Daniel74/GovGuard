@@ -283,7 +283,7 @@ Der Bau läuft in vier Schritten (G10–G13):
 3. Das Programm wählt aus, und ein Sprachmodell formuliert aus jeder Anforderung eine Prüfregel.
 4. Programme prüfen das Ergebnis, der Projektbetreiber gibt es frei.
 
-Wie das technisch abläuft, beschreibt [ARCHITECTURE.md](ARCHITECTURE.md) Abschnitt 1.
+Wie das technisch abläuft, beschreibt [ARCHITECTURE.md](ARCHITECTURE.md) Abschnitt 2.4.
 
 ### F6 Wissensbasis erweitern
 
@@ -292,7 +292,7 @@ aufnehmen, etwa das Bundesdatenschutzgesetz. Er stößt die Erweiterung an und g
 
 Eine neue Quelle braucht drei Dinge: einen Herausgeber mit festem Dokument und Prüfsumme (G9),
 mindestens einen Musterfall mit Soll und eine schriftliche Entscheidung mit Begründung.
-Das technische Vorgehen beschreibt [ARCHITECTURE.md](ARCHITECTURE.md) unter „Neue Quelle hinzufügen“.
+Das technische Vorgehen beschreibt [ENTWICKLUNG.md](ENTWICKLUNG.md) unter „Neue Quelle hinzufügen“.
 
 ## 8 Geschäftsregeln
 

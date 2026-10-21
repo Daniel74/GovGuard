@@ -25,7 +25,7 @@ def test_each_id_exactly_once() -> None:
 
 
 def test_attributes_reject_missing_values() -> None:
-    # DESIGN 1.1: attributes are facts (str | int | bool); unknown facts are left out, not None.
+    # Attributes are facts (str | int | bool); unknown facts are left out, not None.
     with pytest.raises(ValidationError):
         requirement("3.1.4", level=None)
 

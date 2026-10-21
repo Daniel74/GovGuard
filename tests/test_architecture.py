@@ -155,5 +155,5 @@ def _module_of(path: Path) -> str:
 
 @pytest.mark.parametrize("path", modules_in("govguard") + modules_in("govguard_ui"), ids=rel_id)
 def test_the_runtime_never_imports_the_build(path: Path) -> None:
-    """The build imports govguard, never the other way round (DESIGN D11)."""
+    """The build imports govguard, never the other way round."""
     assert not imports(path, "kb_build")

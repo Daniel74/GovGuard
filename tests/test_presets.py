@@ -1,4 +1,4 @@
-"""Presets in data/input/presets/ (DESIGN 1.4, issue #3). The expected result comes from a human."""
+"""Presets in data/input/presets/ (issue #3). The expected result comes from a human."""
 
 import json
 from pathlib import Path

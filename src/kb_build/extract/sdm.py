@@ -13,7 +13,7 @@ from pypdf import PdfReader
 from govguard.text import normalize
 from kb_build.extract.models import ExtractedSource, Requirement, mark_prefilter
 
-# Modules in data/input/sources.json; Protokollieren (M43) is left out on purpose (DESIGN 1.1)
+# Modules in data/input/sources.json; Protokollieren (M43) is left out on purpose
 MODULE_NAMES = {"M60": "Löschen", "M50": "Trennen", "M51": "Zugriffe regeln"}
 
 TABLE_HEADER = "Nr. Maßnahme"
@@ -58,12 +58,12 @@ def _requirement(rid: str, measure: str) -> Requirement:
 
 
 def prefilter(requirement: Requirement) -> None:
-    """Keeps every measure: all layers count, Löschfristen sit on layer P (DESIGN 1.1)."""
+    """Keeps every measure: all layers count, Löschfristen sit on layer P."""
     return None
 
 
 def extract_from_text(origin: str, text: str, version: str) -> ExtractedSource:
-    """All measures of all layers D, S and P (DESIGN 1.1)."""
+    """All measures of all layers D, S and P."""
     requirements = [_requirement(rid, measure) for rid, measure in _rows(text)]
     return ExtractedSource(
         source="SDM", version=version, origin=origin,

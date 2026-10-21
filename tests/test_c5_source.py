@@ -60,6 +60,6 @@ def test_duplicate_ids_are_rejected() -> None:
         extract_by_id("CRY-03.01B", "CRY-03.01B")
 
 
-def test_areas_are_pinned_to_architecture_1_1() -> None:
-    # Changing this set changes the rule, not just the code: update DESIGN 1.1 first.
+def test_areas_are_fixed() -> None:
+    # Changing this set changes the rule, not just the code: review it as a rule change.
     assert AREAS == {"OPS", "IAM", "CRY", "COS", "PSS"}

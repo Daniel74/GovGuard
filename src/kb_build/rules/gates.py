@@ -26,7 +26,7 @@ def requirements_by_anchor(sources: list[ExtractedSource]) -> Anchors:
 
 
 def is_quoted(requirement: Requirement, quote: str) -> bool:
-    """Verbatim in the text of exactly this requirement (DESIGN 1.2).
+    """Verbatim in the text of exactly this requirement.
 
     A text shorter than MIN_QUOTE_LENGTH may be quoted whole, e.g. SDM M60.P03 "Löschkonzept".
     """
@@ -89,7 +89,7 @@ def check_rules(
     scope: Scope,
 ) -> None:
     """Gate before the catalog is written: schema, anchor, quote, cross references, resource
-    types in the scope (ARCHITECTURE 5.1).
+    types in the scope.
 
     Field types are already checked by Pydantic when `Rule` is built.
     """

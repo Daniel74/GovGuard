@@ -1,4 +1,4 @@
-"""Build contract of the selection lists (DESIGN 1.2): the checkpoint before rules are written."""
+"""Build contract of the selection lists: the checkpoint before rules are written."""
 
 from typing import Literal
 

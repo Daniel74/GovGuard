@@ -1,4 +1,4 @@
-"""Knowledge base build utilities (DESIGN 3).
+"""Knowledge base build utilities.
 
 This package is intentionally separate from the runtime audit engine.
 """

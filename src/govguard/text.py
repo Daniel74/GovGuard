@@ -21,7 +21,7 @@ MIN_QUOTE_LENGTH = 15  # shorter quotes such as "S3" prove nothing
 
 
 def normalize(text: str) -> str:
-    """Apply the five steps from DESIGN 3 in fixed order; case is preserved."""
+    """Apply the five steps in fixed order; case is preserved."""
     text = unicodedata.normalize("NFKC", text)
     text = _EURLEX_MARKER.sub("", text)
     text = text.replace(_SOFT_HYPHEN, "")

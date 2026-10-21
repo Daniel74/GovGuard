@@ -12,7 +12,7 @@ _RECOMMENDATION_PREFIX = {"WARN": "Falls nicht erfüllt: ", "FAIL": ""}  # WARN:
 def worst_of_duplicates(
     drafts: list[FindingDraft],
 ) -> tuple[list[FindingDraft], list[Correction]]:
-    """One finding per rule: the worst status (DESIGN 2.1), on a tie the one with a line range,
+    """One finding per rule: the worst status, on a tie the one with a line range,
     else the first; equal statuses silently."""
     by_rule: dict[str, list[FindingDraft]] = {}
     for draft in drafts:

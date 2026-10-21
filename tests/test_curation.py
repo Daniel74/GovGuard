@@ -1,4 +1,4 @@
-"""curate(): the LLM judges, the code selects (DESIGN 1.2, ADR 0011)."""
+"""curate(): the LLM judges, the code selects (ADR 0011)."""
 
 import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart, UserPromptPart

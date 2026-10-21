@@ -1,4 +1,4 @@
-"""formulate_rules(): the LLM writes the rule, the code adds what it knows (DESIGN 1.2)."""
+"""formulate_rules(): the LLM writes the rule, the code adds what it knows."""
 
 import re
 

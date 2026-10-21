@@ -45,8 +45,8 @@ def test_chapter_comes_from_division_and_drives_prefilter() -> None:
     assert reqs["Art. 32"].prefilter_passed
 
 
-def test_chapters_are_pinned_to_architecture_1_1() -> None:
-    # Changing this set changes the rule, not just the code: update DESIGN 1.1 first.
+def test_chapters_are_fixed() -> None:
+    # Changing this set changes the rule, not just the code: review it as a rule change.
     assert CHAPTERS == {2, 3, 4, 5}
 
 

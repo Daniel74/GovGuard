@@ -1,4 +1,4 @@
-"""Pinned anchors come from the human-made presets (ADR 0011, DESIGN 1.4)."""
+"""Pinned anchors come from the human-made presets (ADR 0011)."""
 
 import pytest
 

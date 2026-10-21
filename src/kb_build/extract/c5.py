@@ -6,11 +6,11 @@ from kb_build.extract import prowler
 from kb_build.extract.models import ExtractedSource, Requirement
 from kb_build.extract.prowler import ProwlerFormat, strip_markdown
 
-AREAS = frozenset({"OPS", "IAM", "CRY", "COS", "PSS"})  # DESIGN 1.1
+AREAS = frozenset({"OPS", "IAM", "CRY", "COS", "PSS"})
 
 
 def prefilter(requirement: Requirement) -> str | None:
-    """Keeps the areas OPS, IAM, CRY, COS and PSS (DESIGN 1.1)."""
+    """Keeps the areas OPS, IAM, CRY, COS and PSS."""
     if requirement.attributes.get("area") in AREAS:
         return None
     return f"Bereich gehört nicht zu {', '.join(sorted(AREAS))}."

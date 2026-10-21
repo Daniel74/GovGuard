@@ -1,4 +1,4 @@
-"""Pydantic contracts of the audit (DESIGN 1.2, 1.4, 2.1, 2.4). Names follow CONTEXT.md.
+"""Pydantic contracts of the audit. Names follow CONTEXT.md.
 
 Draft pattern: the LLM fills only *Draft models; the code adds what it already knows.
 """
@@ -12,7 +12,7 @@ from pydantic_ai.models import Model
 from govguard.condition_models import ConditionResult, ConditionValue
 
 Status = Literal["PASS", "WARN", "FAIL", "N/A"]
-# Worst status wins; N/A only if every finding is N/A (DESIGN 2.1)
+# Worst status wins; N/A only if every finding is N/A
 SEVERITY: dict[Status, int] = {"N/A": 0, "PASS": 1, "WARN": 2, "FAIL": 3}
 AuditType = Literal["spec", "architecture"]
 SourceName = Literal["BSI", "C5", "CIS", "DSGVO", "FSBP", "KI-VO", "SDM"]

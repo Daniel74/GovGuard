@@ -60,8 +60,8 @@ def test_prefilter_rejects_kann_erhoeht_and_foreign_practice(rejected: dict) -> 
     assert not extract_by_id(rejected)[rejected["id"]].prefilter_passed
 
 
-def test_practices_are_pinned_to_architecture_1_1() -> None:
-    # Changing this set changes the rule, not just the code: update DESIGN 1.1 first.
+def test_practices_are_fixed() -> None:
+    # Changing this set changes the rule, not just the code: review it as a rule change.
     assert PRACTICES == {"DLS", "BER", "DET", "KONF", "BES", "ARCH"}
 
 

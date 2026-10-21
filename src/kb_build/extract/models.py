@@ -1,4 +1,4 @@
-"""Build contract for extracted sources (DESIGN 1.1): the evidence base for later gates."""
+"""Build contract for extracted sources: the evidence base for later gates."""
 
 from collections import Counter
 from collections.abc import Callable
@@ -42,7 +42,7 @@ class ExtractedSource(BaseModel):
         return self
 
 
-# None keeps the requirement, a fixed sentence rejects it (DESIGN 1.1)
+# None keeps the requirement, a fixed sentence rejects it
 Prefilter = Callable[[Requirement], str | None]
 
 

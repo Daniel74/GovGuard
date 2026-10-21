@@ -6,7 +6,7 @@ from kb_build.extract import prowler
 from kb_build.extract.models import ExtractedSource, Requirement
 from kb_build.extract.prowler import ProwlerFormat, strip_markdown
 
-# Networking holds the security groups for Aurora (DESIGN 1.1)
+# Networking holds the security groups for Aurora
 CHAPTERS = {2: "IAM", 3: "Storage", 4: "Logging", 6: "Networking"}
 LEVELS = {"Level 1": 1, "Level 2": 2}
 ASSESSMENT = {"Automated": True, "Manual": False}
@@ -23,7 +23,7 @@ def _attributes(entry: dict[str, Any]) -> dict[str, int | bool]:
 
 
 def prefilter(requirement: Requirement) -> str | None:
-    """Keeps chapters 2 IAM, 3 Storage, 4 Logging and 6 Networking (DESIGN 1.1)."""
+    """Keeps chapters 2 IAM, 3 Storage, 4 Logging and 6 Networking."""
     if requirement.attributes.get("chapter") in CHAPTERS:
         return None
     chapters = ", ".join(f"{number} {name}" for number, name in CHAPTERS.items())

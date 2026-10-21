@@ -7,7 +7,7 @@ from typing import Any
 from govguard.text import normalize
 from kb_build.extract.models import ExtractedSource, Requirement, mark_prefilter
 
-PRACTICES = frozenset({"DLS", "BER", "DET", "KONF", "BES", "ARCH"})  # DESIGN 1.1
+PRACTICES = frozenset({"DLS", "BER", "DET", "KONF", "BES", "ARCH"})
 MODAL_VERBS = frozenset({"MUSS", "SOLLTE"})  # ADR 0007, KANN stays out
 CIA = ("confidentiality", "integrity", "availability")
 _PLACEHOLDER = re.compile(r"\{\{ insert: param, ([^ }]+) \}\}")
@@ -63,7 +63,7 @@ def _requirement(control: dict[str, Any]) -> Requirement:
 
 
 def prefilter(requirement: Requirement) -> str | None:
-    """Keeps MUSS/SOLLTE at normal-SdT in architecture practices (DESIGN 1.1)."""
+    """Keeps MUSS/SOLLTE at normal-SdT in architecture practices."""
     facts = requirement.attributes
     if facts.get("modal_verb") not in MODAL_VERBS:
         return "Modalverb ist weder MUSS noch SOLLTE."
@@ -75,7 +75,7 @@ def prefilter(requirement: Requirement) -> str | None:
 
 
 def extract(origin: str, catalog: dict[str, Any], version: str) -> ExtractedSource:
-    """All requirements of the catalog; `version` is the catalog commit SHA (DESIGN 1.1)."""
+    """All requirements of the catalog; `version` is the catalog commit SHA."""
     requirements = [_requirement(c) for c in _controls(catalog["catalog"])]
     return ExtractedSource(
         source="BSI", version=version, origin=origin,

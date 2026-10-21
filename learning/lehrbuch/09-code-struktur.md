@@ -58,7 +58,7 @@ Warum `data/` nach **Herkunft** getrennt ist (Lernkarte #20): Was von Hand kommt
 - **Golden-Tests** gegen echte Extrakte (`test_extracted_golden.py`) mit fester Sollzahl.
 - **Das Soll kommt vom Menschen:** Presets mit handgesetztem Soll verhindern zirkuläre Tests.
 
-## Neue Quelle hinzufügen (Rezept, ARCHITECTURE 8.4)
+## Neue Quelle hinzufügen (Rezept, ENTWICKLUNG.md Abschnitt 5)
 
 1. `data/input/sources.json`: URL, Version (Commit oder Tag), SHA-256, Lizenz.
 2. Adapter `extract/<quelle>.py` mit `extract()` und `prefilter()` (bei Prowler-Quellen nur ein `ProwlerFormat`).

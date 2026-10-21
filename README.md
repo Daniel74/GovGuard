@@ -12,7 +12,7 @@ GovGuard is a compliance copilot for public-sector cloud projects in Germany. It
 
 - **Das Modell als unzuverlässiger Partner:** Es urteilt nur im Formular; Code bereitet vor und kontrolliert (Schema, Belegzeilen, Vollständigkeit). Das ist ein fester Ablauf, kein Agent ([ADR 0021](docs/adr/0021-kein-orchestrierungs-framework.md)).
 - **Reproduzierbare Wissensbasis:** 525 Prüfregeln aus gepinnten Quellen (SHA-256), ohne Vektor-Datenbank, mit Prüfungen im Code (Gates) gegen erfundene Zitate ([ADR 0011](docs/adr/0011-vollstaendiger-katalog.md)).
-- **Gemessen und dokumentiert:** 19 Messläufe mit Kosten und Dauer, Doku nach arc42, C4 (Ebenen 1 und 3, Ebene 2 als Verteilungssicht) und STRIDE, 0 € Leerlaufkosten.
+- **Gemessen und dokumentiert:** 19 Messläufe mit Kosten und Dauer, Doku in fünf Sichten (4+1) mit C4-Diagrammen, STRIDE und OWASP, 0 € Leerlaufkosten.
 
 ## Lösungsstrategie
 
@@ -40,18 +40,18 @@ flowchart LR
 
 - **Gate:** Ein Gate ist eine Prüfung im Code, die eine Antwort nur durchlässt, wenn sie eine feste Regel erfüllt (Schema, gültige Belegzeilen, ein Befund je Prüfregel).
 - **Retry und fail closed:** Ein Retry stellt dem Modell die Frage noch einmal, mit dem gefundenen Problem. Fail closed heißt: Ist die Antwort auch dann ungültig, bricht das Audit ab, statt einen ungeprüften Report zu liefern.
-- **Mehr:** [ARCHITECTURE](docs/ARCHITECTURE.md) Kapitel 3 (D2).
+- **Mehr:** [ARCHITECTURE](docs/ARCHITECTURE.md#11-entwurfsprinzipien) 1.1 und [2.1](docs/ARCHITECTURE.md#21-audit-von-der-eingabe-zum-report).
 
 ## Kennzahlen
 
 | Kennzahl | Wert |
 |---|---|
 | Prüfregeln | 350 im Spec-Katalog (DSGVO 169, SDM 116, KI-VO 65), 175 im Architektur-Katalog (AWS FSBP 105, BSI 39, CIS 20, C5 11) |
-| Tests | 964 automatische Tests, dazu 24 Browser-Tests der Oberfläche (`uv run pytest -q`, `uv run pytest -m visual`) |
+| Tests | 965 automatische Tests, dazu 24 Browser-Tests der Oberfläche (`uv run pytest -q`, `uv run pytest -m visual`) |
 | Kosten je Audit | Spec 0,07 bis 0,10 $, Architektur 0,007 bis 0,018 $ (Median je Musterfall) |
 | Dauer je Audit | Spec 143 bis 214,5 s, Architektur 12 bis 27 s (Median je Musterfall) |
 
-Kosten und Dauer: Messkampagne #54, 19 Läufe über 6 Musterfälle, Groq `openai/gpt-oss-120b`, Preis 0,15 $ / 0,60 $ je Million Tokens. Die Einzelwerte stehen in [ARCHITECTURE](docs/ARCHITECTURE.md) 8.2. Der Median gilt je Musterfall über die erfolgreichen Läufe (3; ein vierter Lauf bei GovGuard brach ab, siehe ARCHITECTURE QS-2). Das Modell schwankt: Je Musterfall behalten 70 bis 99 % der Prüfregeln in allen Läufen denselben Status (#54). **Nicht gemessen:** wie viele der Befunde eine Fachperson bestätigen würde (Trefferquote), und was die Handprüfung kostet. Gemessen sind nur Stabilität, Gesamtstatus und wenige Pflichtbefunde je Musterfall (ARCHITECTURE 7 und 10).
+Kosten und Dauer: Messkampagne #54, 19 Läufe über 6 Musterfälle, Groq `openai/gpt-oss-120b`, Preis 0,15 $ / 0,60 $ je Million Tokens. Die Einzelwerte stehen in [ARCHITECTURE](docs/ARCHITECTURE.md#44-betrieb-und-kosten) 4.4. Der Median gilt je Musterfall über die erfolgreichen Läufe (3; ein vierter Lauf bei GovGuard brach ab, siehe [ARCHITECTURE](docs/ARCHITECTURE.md#61-qualitätsszenarien-qs-1-bis-qs-9) QS-2). Das Modell schwankt: Je Musterfall behalten 70 bis 99 % der Prüfregeln in allen Läufen denselben Status (#54). **Nicht gemessen:** wie viele der Befunde eine Fachperson bestätigen würde (Trefferquote), und was die Handprüfung kostet. Gemessen sind nur Stabilität, Gesamtstatus und wenige Pflichtbefunde je Musterfall ([ARCHITECTURE](docs/ARCHITECTURE.md#63-restrisiken-und-grenzen) 6.1 und 6.3).
 
 ## Quickstart
 
@@ -70,8 +70,7 @@ Tests: `uv run pytest -q`. Eigene Audits, Wissensbasis-Build und Screenshot-Regr
 | Dokument | Frage |
 |---|---|
 | [SPEC](docs/SPEC.md) | Was leistet GovGuard fachlich? (GovGuard prüft sie in der Galerie selbst.) |
-| [ARCHITECTURE](docs/ARCHITECTURE.md) | Warum ist es so gebaut? (arc42, Diagramme, Risiken, Kosten) |
-| [DESIGN](docs/DESIGN.md) | Wie sieht der Code aus? (Module, Typen, Modellaufrufe) |
+| [ARCHITECTURE](docs/ARCHITECTURE.md) | Wie ist es gebaut, und wo irrt das Modell? (fünf Sichten nach 4+1, Qualität, Risiken, Kosten) |
 | [METHODIK](docs/METHODIK.md) | Nach welcher Methode ist es entstanden? |
 | [ENTWICKLUNG](docs/ENTWICKLUNG.md) | Wie baue, teste und erweitere ich es? |
 | [ADRs](docs/adr/) und [CONTEXT](CONTEXT.md) | Welche Entscheidungen gelten, und was heißt ein Begriff? |

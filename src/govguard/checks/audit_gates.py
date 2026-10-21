@@ -1,4 +1,4 @@
-"""Gates on the audit answer: pure checks, every problem becomes a retry prompt (DESIGN 2.2)."""
+"""Gates on the audit answer: pure checks, every problem becomes a retry prompt."""
 
 from collections import Counter
 
@@ -8,7 +8,7 @@ from govguard.models import FindingDraft
 
 
 def completeness_problems(expected: set[str], drafts: list[FindingDraft]) -> list[Problem]:
-    """Exactly one finding per expected rule, no unknown rule IDs (DESIGN 2.2 step 2)."""
+    """Exactly one finding per expected rule, no unknown rule IDs."""
     counts = Counter(f.rule_id for f in drafts)
     return [
         Problem(rule_id, f"{label}: {rule_id}")
@@ -25,7 +25,7 @@ def completeness_problems(expected: set[str], drafts: list[FindingDraft]) -> lis
 def answer_problems(
     expected: set[str], drafts: list[FindingDraft], text: str, na_forbidden: str | None
 ) -> list[Problem]:
-    """All gates on one answer; each problem is a line of the retry prompt (DESIGN 2.2)."""
+    """All gates on one answer; each problem is a line of the retry prompt."""
     problems = completeness_problems(expected, drafts)
     problems += [p for f in drafts if (p := field_problem(f, text))]
     if na_forbidden:

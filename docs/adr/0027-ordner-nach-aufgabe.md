@@ -32,7 +32,7 @@ _Anlass: Architektur-Review vom 20.10.2026. In `govguard/` und `govguard_ui/` li
 
 - **Kein neues Verhalten:** Die bestehenden Tests sind der Beweis. Prompts und Cache-Keys bleiben Byte für Byte gleich, also bleibt der eingefrorene Katalog unberührt (ADR 0025).
 - **Inventar:** Es behält auf Groq vorerst `ToolOutput`, eine Abweichung von ADR 0016. Die Umstellung auf `NativeOutput` bekommt ein eigenes Ticket mit Messlauf. Erledigt mit #58 (Messung gleich oder besser): Das Inventar nutzt auf Groq `NativeOutput`.
-- **Pfade ziehen mit:** `CLAUDE.md`, `docs/ARCHITECTURE.md` → *Code-Struktur*, `docs/DESIGN.md` und `.claude/skills/audit-messen`.
+- **Pfade ziehen mit:** `CLAUDE.md`, `docs/ARCHITECTURE.md` → *Code-Struktur* und `.claude/skills/audit-messen`.
 
 ## Fachgespräch-Satz
 

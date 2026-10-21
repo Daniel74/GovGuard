@@ -1,4 +1,4 @@
-"""N/A by code for CloudFormation JSON (DESIGN 2.2, ADR 0007)."""
+"""N/A by code for CloudFormation JSON (ADR 0007)."""
 
 import pytest
 from pydantic_ai.messages import ModelMessage, ModelResponse, ToolCallPart
