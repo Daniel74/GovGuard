@@ -1,4 +1,4 @@
-"""Stage ② of the selection (ARCHITECTURE 1.1): one LLM verdict per requirement."""
+"""Stage ② of the selection (DESIGN 1.2): one LLM verdict per requirement."""
 
 import pytest
 from conftest import retry_lines

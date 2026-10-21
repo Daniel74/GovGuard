@@ -21,7 +21,7 @@ def _attributes(entry: dict[str, Any]) -> dict[str, str]:
 
 
 def prefilter(requirement: Requirement) -> str | None:
-    """Keeps controls of the services in the scope (ARCHITECTURE 1.1)."""
+    """Keeps controls of the services in the scope (DESIGN 1.1)."""
     if requirement.attributes.get("service") in SERVICES:
         return None
     return "Dienst gehört nicht zum Prüfumfang."

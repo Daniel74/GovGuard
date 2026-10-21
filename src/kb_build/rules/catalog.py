@@ -1,4 +1,4 @@
-"""Stage 5 over the whole selection (ARCHITECTURE 1): one rule each, then the gate.
+"""Stage 5 over the whole selection (ARCHITECTURE 5.1): one rule each, then the gate.
 
 Pure logic: gets the Pydantic AI model injected, no boto3. One rule is formulate.py's task.
 """
@@ -43,7 +43,7 @@ def formulate_rules(
     model: Model, selection: Selection, inputs: RuleInputs,
     on_rule: Callable[[Rule], None] | None = None,
 ) -> RuleCatalog:
-    """One rule per selected requirement, in selection order; then the gate (ARCHITECTURE 1).
+    """One rule per selected requirement, in selection order; then the gate (ARCHITECTURE 5.1).
 
     A rule that stays invalid does not stop the others: the build aborts at the end and names
     every failed rule (#53). `on_rule` gets each valid rule at once, e.g. for a checkpoint.

@@ -42,7 +42,7 @@ class BuildPaths:
 
     @property
     def cfn_properties(self) -> Path:
-        return self.input / "cfn_properties.json"  # snapshot of describe-type, see README
+        return self.input / "cfn_properties.json"  # describe-type snapshot, docs/ENTWICKLUNG.md
 
     @property
     def presets(self) -> Path:

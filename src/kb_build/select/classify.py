@@ -1,4 +1,4 @@
-"""Stage ② of the selection (ARCHITECTURE 1.1): one LLM verdict per requirement (ADR 0007).
+"""Stage ② of the selection (DESIGN 1.2): one LLM verdict per requirement (ADR 0007).
 
 Pure logic: gets the Pydantic AI model injected (ADR 0005), no boto3.
 """
@@ -67,7 +67,7 @@ classify_agent = Agent(
     output_type=ToolOutput(Classification, name=TOOL_NAME, description=TOOL_DESCRIPTION),
     deps_type=ClassifyDeps,
     retries=2,  # build only, no 29 s timeout (ADR 0005 limits the runtime agents to one retry)
-    model_settings={"temperature": 0},  # same input, same selection (ARCHITECTURE 1.1)
+    model_settings={"temperature": 0},  # same input, same selection (DESIGN 1.2)
 )
 
 

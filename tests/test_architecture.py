@@ -151,3 +151,9 @@ def test_no_build_step_imports_the_run_of_another(path: Path) -> None:
 
 def _module_of(path: Path) -> str:
     return rel_id(path).removesuffix(".py").replace("/", ".")
+
+
+@pytest.mark.parametrize("path", modules_in("govguard") + modules_in("govguard_ui"), ids=rel_id)
+def test_the_runtime_never_imports_the_build(path: Path) -> None:
+    """The build imports govguard, never the other way round (DESIGN D11)."""
+    assert not imports(path, "kb_build")

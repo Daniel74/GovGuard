@@ -100,7 +100,7 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 
 - **Auslöser:** Behörden wollen wissen, ob eine Architektur ohne Last Geld kostet (provisioniertes RDS, NAT-Gateway, WAF).
 - **Was bricht:** Jede Prüfregel braucht einen Primäranker. Keine Quelle im MVP hat Kostenregeln; ein Hinweis ohne Normanker wäre eine GovGuard-Meinung, kein Befund.
-- **Anpassung:** Eine neue Quelle, z. B. die *Cost Optimization*-Säule des AWS Well-Architected Framework (nicht recherchiert), über das Rezept für neue Quellen (ARCHITECTURE, *Code-Struktur*).
+- **Anpassung:** Eine neue Quelle, z. B. die *Cost Optimization*-Säule des AWS Well-Architected Framework (nicht recherchiert), über das Rezept für neue Quellen (ARCHITECTURE 8.4, *Neue Quelle hinzufügen*).
 
 ## Szenario 8: Container-Archetyp (Fargate)
 
@@ -125,7 +125,7 @@ _Schlanke Variante umgesetzt (#52, #53): 8 Artikel in Einzelpflichten, ohne Vors
 
 - **Auslöser:** Behörden setzen KI-Systeme ein und haben dann eigene Pflichten nach der KI-Verordnung (Verordnung (EU) 2024/1689), z. B. als Betreiber (Art. 26) und als öffentliche Stelle mit Grundrechte-Folgenabschätzung (Art. 27). GovGuard ist selbst ein KI-System; das Selbst-Audit (`spec-govguard`) würde dann auch gegen die KI-Verordnung prüfen.
 - **Was bricht:** Die meisten Pflichten gelten nur für Hochrisiko-Systeme (Art. 6, Anhang III). Ob eine Spezifikation darunter fällt, muss vor allen anderen Regeln feststehen; sonst vergibt das Modell N/A je Regel einzeln, und das schwankt (SPEC P1).
-- **Anpassung:** Neue Quelle über das Rezept (ARCHITECTURE, *Neue Quelle hinzufügen*). Der Text liegt wie die DSGVO im Formex-XML bei EUR-Lex; der DSGVO-Adapter ist vermutlich weitgehend wiederverwendbar. Dazu ein Musterfall mit KI-Einsatz und Soll, und für `spec-govguard` ein neues Soll. Vorher klären: Wer entscheidet die Hochrisiko-Einstufung (Code-Vorstufe oder Mensch), und welche Fristen gelten aktuell? _(Rechtsstand vor dem Bau prüfen.)_
+- **Anpassung:** Neue Quelle über das Rezept (ARCHITECTURE 8.4, *Neue Quelle hinzufügen*). Der Text liegt wie die DSGVO im Formex-XML bei EUR-Lex; der DSGVO-Adapter ist vermutlich weitgehend wiederverwendbar. Dazu ein Musterfall mit KI-Einsatz und Soll, und für `spec-govguard` ein neues Soll. Vorher klären: Wer entscheidet die Hochrisiko-Einstufung (Code-Vorstufe oder Mensch), und welche Fristen gelten aktuell? _(Rechtsstand vor dem Bau prüfen.)_
 - **Vorstufe Systemprofil (offen):** Ein Aufruf vor dem Audit legt fest, was für ein System die Spezifikation beschreibt: KI-System, Hochrisiko-Bereich nach Anhang III, besondere Kategorien von Daten, Drittland. Jede Angabe braucht Belegzeilen; ohne Beleg gilt „unbekannt“.
   - **Befund (#36, 19.10.2026):** Ohne Abschnitt 10 ergab `spec-govguard` für alle 65 KI-VO-Regeln nur Lücken, obwohl die SPEC das Sprachmodell nennt. Die N/A der Hochrisiko-Pflichten schwankten zwischen zwei Läufen von 0 auf 25.
   - **N/A per Code:** Ist das System belegt nicht hochriskant, setzt der Code Art. 13, 14, 26 und 27 auf N/A, wie heute die Dienste im Architektur-Audit. Das nimmt die größte Schwankung heraus.

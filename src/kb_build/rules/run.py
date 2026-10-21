@@ -1,4 +1,4 @@
-"""Writes the rule catalogs from the selection lists (ARCHITECTURE 1). Gets the model injected.
+"""Writes the rule catalogs from the selection lists (ARCHITECTURE 5.1). Gets the model injected.
 
 The file I/O of stage 5 lives here: selection lists and sources in, rules_*.json out.
 """

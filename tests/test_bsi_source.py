@@ -61,7 +61,7 @@ def test_prefilter_rejects_kann_erhoeht_and_foreign_practice(rejected: dict) -> 
 
 
 def test_practices_are_pinned_to_architecture_1_1() -> None:
-    # Changing this set changes the rule, not just the code: update ARCHITECTURE 1.1 first.
+    # Changing this set changes the rule, not just the code: update DESIGN 1.1 first.
     assert PRACTICES == {"DLS", "BER", "DET", "KONF", "BES", "ARCH"}
 
 

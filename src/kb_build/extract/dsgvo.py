@@ -3,7 +3,7 @@
 from kb_build.extract.formex import Article, articles
 from kb_build.extract.models import ExtractedSource, Requirement, mark_prefilter
 
-CHAPTERS = frozenset({2, 3, 4, 5})  # Kapitel II-V = Art. 5-49 (ARCHITECTURE 1.1)
+CHAPTERS = frozenset({2, 3, 4, 5})  # Kapitel II-V = Art. 5-49 (DESIGN 1.1)
 
 # Source: DSGVO Art. 83 (constant on purpose, Art. 83 itself is not parsed)
 FINE_TIER_4 = frozenset({5, 6, 7, 9, *range(12, 23), *range(44, 50), 58})  # Art. 83 Abs. 5
@@ -42,7 +42,7 @@ def _requirement(article: Article) -> Requirement:
 
 
 def prefilter(requirement: Requirement) -> str | None:
-    """Keeps chapters II-V, Art. 5-49 (ARCHITECTURE 1.1), minus four articles for authorities."""
+    """Keeps chapters II-V, Art. 5-49 (DESIGN 1.1), minus four articles for authorities."""
     if requirement.attributes.get("chapter") not in CHAPTERS:
         return "Kapitel gehört nicht zu II–V (Art. 5–49)."
     return NOT_FOR_AUTHORITIES.get(requirement.id)

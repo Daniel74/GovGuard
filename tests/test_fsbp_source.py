@@ -60,7 +60,7 @@ def test_prefilter_rejects_services_outside_the_scope_with_a_reason(service: str
 
 
 def test_services_are_pinned_to_architecture_1_1() -> None:
-    # Changing this set changes the rule, not just the code: update ARCHITECTURE 1.1 first.
+    # Changing this set changes the rule, not just the code: update DESIGN 1.1 first.
     # EC2 holds the VPC controls, ELB also ALB/NLB; relevance (#6) drops instances and Classic LB.
     assert {"ECS", "ECR", "ELB", "RDS", "EC2"} <= SERVICES
     assert not {"EKS", "CloudTrail", "CloudFront"} & SERVICES

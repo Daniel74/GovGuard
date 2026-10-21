@@ -1,4 +1,4 @@
-"""Writes data/input/cfn_properties.json from a folder of `describe-type` schemas (see README)."""
+"""Writes data/input/cfn_properties.json from `describe-type` schemas (docs/ENTWICKLUNG.md)."""
 
 import json
 from pathlib import Path

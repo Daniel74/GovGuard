@@ -1,4 +1,4 @@
-"""Stage 5 of the build (ARCHITECTURE 1): the rule of one selected requirement (ADR 0005).
+"""Stage 5 of the build (ARCHITECTURE 5.1): the rule of one selected requirement (ADR 0005).
 
 Pure logic: gets the Pydantic AI model injected, no boto3. The code adds identity and origin.
 The run over the whole selection is catalog.py's task.

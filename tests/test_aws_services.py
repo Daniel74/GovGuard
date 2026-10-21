@@ -51,5 +51,5 @@ def test_audit_request_forces_the_submit_audit_tool(
     report = run_audit(spec_catalog, spec_input, bedrock_model(client), trace)
 
     assert report.overall_status == "WARN"
-    # No silent fallback to toolChoice "auto" (ARCHITECTURE 2.1)
+    # No silent fallback to toolChoice "auto" (DESIGN 2.5)
     assert requests[0]["toolConfig"]["toolChoice"] == {"any": {}}

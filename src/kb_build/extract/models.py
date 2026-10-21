@@ -42,7 +42,7 @@ class ExtractedSource(BaseModel):
         return self
 
 
-# None keeps the requirement, a fixed sentence rejects it (ARCHITECTURE 1.1)
+# None keeps the requirement, a fixed sentence rejects it (DESIGN 1.1)
 Prefilter = Callable[[Requirement], str | None]
 
 

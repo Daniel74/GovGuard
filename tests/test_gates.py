@@ -50,7 +50,7 @@ def test_a_component_without_a_rule_aborts_and_is_named() -> None:
                        [selected("AWS::S3::Bucket")])
 
 
-# --- Gate: every rule is schema-valid, anchored and quoted verbatim (ARCHITECTURE 1) -----------
+# --- Gate: every rule is schema-valid, anchored and quoted verbatim (DESIGN 1.2) -----------
 
 CIS_TEXT = "Amazon S3 provides Block public access (bucket settings) for every bucket."
 

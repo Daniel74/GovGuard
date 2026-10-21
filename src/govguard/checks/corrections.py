@@ -51,9 +51,9 @@ def service_down(error: Exception) -> bool:
 
 
 class AuditValidationError(Exception):
-    """LLM answer still invalid after the retry, or the model API failed; fail closed (HTTP 502).
+    """LLM answer still invalid after the retry, or the model API failed; fail closed.
 
-    `problems` are the reasons of the last attempt, the same list later in the 502 body.
+    `problems` are the reasons of the last attempt, the same list later in `failure_text`.
     """
 
     def __init__(self, problems: list[Problem], *, api_error: bool = False) -> None:
@@ -68,7 +68,7 @@ class Corrections(BaseModel):
     repairs: list[Correction] = []  # what the code filled in or chose itself, no retry (#32)
     retry_problems: list[Problem] = []  # every problem that sent a package back to the model
     retries: int = 0  # packages (and the pre-run and the FAIL judge) with a retry
-    failed: list[Problem] = []  # problems of a last attempt: the audit fails closed (HTTP 502)
+    failed: list[Problem] = []  # problems of a last attempt: the audit fails closed
     verdicts: list[Correction] = []  # verdicts of the FAIL judge that keep the FAIL (#31)
     fail_judge: FailJudgeCount = FailJudgeCount()
     notes: list[str] = []  # corrections that name no rule, e.g. of the condition pre-run (#60)

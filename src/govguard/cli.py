@@ -47,7 +47,7 @@ def main(argv: list[str] | None = None, model: Model | None = None) -> int:
     except MissingApiKeyError as error:  # no silent switch to Bedrock (ADR 0016)
         print(error, file=sys.stderr)
         return 3
-    except AuditValidationError as error:  # fail closed, like HTTP 502
+    except AuditValidationError as error:  # fail closed (ADR 0017)
         print(failure_text(error), file=sys.stderr)
         return 2
     print(report.model_dump_json(indent=2))

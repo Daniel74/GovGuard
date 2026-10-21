@@ -1,4 +1,4 @@
-"""Archetype profiles (ARCHITECTURE 1.4): hand-maintained input of the relevance filter."""
+"""Archetype profiles (ARCHITECTURE 5.4): hand-maintained input of the relevance filter."""
 
 from pathlib import Path
 

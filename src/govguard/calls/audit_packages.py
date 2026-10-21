@@ -91,7 +91,7 @@ def package_requests(
     rules: list[Rule], given: AuditInput, na_forbidden: str | None, model: Model,
     corrections: Corrections,
 ) -> list[PackageRequest]:
-    """One request per package, run in parallel within the 180 s (ADR 0018); Groq throttled by
+    """One request per package, run in parallel within the 300 s (ADR 0023); Groq throttled by
     parallel slots and a token budget per minute (#53).
     """
     packages = [rules[i:i + PACKAGE_SIZE] for i in range(0, len(rules), PACKAGE_SIZE)]

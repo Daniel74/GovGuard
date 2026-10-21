@@ -46,7 +46,7 @@ def test_chapter_comes_from_division_and_drives_prefilter() -> None:
 
 
 def test_chapters_are_pinned_to_architecture_1_1() -> None:
-    # Changing this set changes the rule, not just the code: update ARCHITECTURE 1.1 first.
+    # Changing this set changes the rule, not just the code: update DESIGN 1.1 first.
     assert CHAPTERS == {2, 3, 4, 5}
 
 

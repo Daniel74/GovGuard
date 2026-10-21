@@ -15,7 +15,7 @@ from pydantic_ai.models import Model
 from govguard.checks.corrections import Corrections
 from govguard.models import Provider, provider_of
 
-RETRIES = 1  # one retry: within the 180 s (ADR 0018)
+RETRIES = 1  # one retry: within the 300 s job timeout (ADR 0023)
 
 type Agents[T] = dict[Provider, Agent[Any, T]]
 
