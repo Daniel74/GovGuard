@@ -2,7 +2,7 @@
 
 Kontext: Python-Streamlit-App (Demo, fiktive Daten) ruft ein LLM über Groq
 (openai/gpt-oss-120b) auf. Ein Audit braucht bis ca. 460.000 Tokens und 1–3 Minuten.
-Ziel: 0 € Fixkosten, Kosten je Audit minimal. Stand: Oktober 2026. Bitte nur Primärquellen
+Ziel: 0 € Fixkosten, Kosten je Audit minimal. Bitte nur Primärquellen
 (Hersteller-Doku, Preisseiten) und je Aussage Link + Datum.
 
 1. **Groq**: aktuelle Rate Limits (RPM, TPM, TPD) für openai/gpt-oss-120b im Free- und im

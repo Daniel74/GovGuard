@@ -1,11 +1,11 @@
-# Lehrbuch kb-build – Faktenbasis (Stand 13.10.2026)
+# Lehrbuch kb-build – Faktenbasis (Stand Commit `28b62e7`)
 
 Diese Dateien sind die **Faktenbasis** für ein Lehrbuch über die Wissensbasis-Pipeline `kb_build` von GovGuard. Sie sind aus dem Code, den ADRs, den Issues #1–#21 und den Daten im Repo abgeleitet (Commit `28b62e7`, Arbeitsbaum sauber). Jede Aussage nennt ihren Beleg als `Datei:Funktion` oder ADR-Nummer.
 
 ## Zielgruppe und Zweck
 
-- Leser: Daniel (Cloud Business Expert, IHK-Fachgespräch Modul 4) und Menschen, die GovGuard verstehen wollen. Später Lernmaterial in NotebookLM.
-- Ziel: Verhalten und Eigenschaften der Pipeline verstehen und im Fachgespräch verteidigen können, nicht nur nachlesen.
+- Leser: Daniel und Menschen, die GovGuard verstehen wollen. Später Lernmaterial in NotebookLM.
+- Ziel: Verhalten und Eigenschaften der Pipeline verstehen und fachlich verteidigen können, nicht nur nachlesen.
 
 ## Kapitel
 

@@ -13,7 +13,7 @@ CIS, AWS FSBP und BSI C5 kommen alle als Prowler-JSON vom selben Tag `5.44.0`. E
 - **Nur die Texte, nicht Prowlers Check-Zuordnung:** Prowler-Checks prüfen ein laufendes AWS-Konto über die API; GovGuard prüft eine Architektur vor dem Deploy. Außerdem ist die Zuordnung Prowlers Auslegung, kein Normtext. Primäranker und Zitat müssen aus der Anforderung selbst stammen (BSI C5, Nachweis statt Behauptung).
 - **Fester Begründungssatz je Verwurf:** Der Vorfilter gibt `None` oder einen Satz aus den Konstanten zurück. So steht im Auswahlprotokoll für jede Anforderung, warum sie fehlt, auch wenn das LLM sie nie gesehen hat (DSGVO Art. 5 Abs. 2, Rechenschaftspflicht).
 
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Abgeleitete Quelle**: Prowler gibt fremde Normtexte weiter; wir pinnen Commit und Hash und checken die Texte wegen ungeklärter Lizenz nicht ein.
 - **Gemeinsamer Parser**: ein Lesecode für drei Formate; eine neue Prowler-Quelle braucht nur ein neues `ProwlerFormat`.
 - **Vorfilter vs. Relevanz**: Der Vorfilter sortiert grob nach Metadaten (Dienst, Bereich, Kapitel), die Relevanz später genau nach Ressourcentyp im Prüfumfang.

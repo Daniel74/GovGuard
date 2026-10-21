@@ -2,7 +2,7 @@
 
 > **Lern-Handbuch.** Dieses Dokument erklärt die Standardmethoden, mit denen GovGuard beschrieben, geprüft und begründet wird: was sie sind, warum sie passen, wie man vorgeht und woran man scheitert. Die **Ergebnisse** stehen nur in [ARCHITECTURE.md](ARCHITECTURE.md) und [DESIGN.md](DESIGN.md); hier steht je Methode ein Link darauf. Verbindlich sind außerdem die [ADRs](adr/) und [CONTEXT.md](../CONTEXT.md).
 
-**Zielgruppe:** IT-Juniors, die die Methoden zum ersten Mal anwenden, und IHK-Prüfer. Jeder Abschnitt ist in 2 Minuten gelesen.
+**Zielgruppe:** IT-Juniors, die die Methoden zum ersten Mal anwenden, und Fachleute, die ein Projekt prüfen. Jeder Abschnitt ist in 2 Minuten gelesen.
 
 ---
 
@@ -73,13 +73,13 @@ Jede Stufe nach oben bringt Flexibilität und kostet Vorhersagbarkeit. Die Empfe
 |---|---|---|
 | Prompt Chaining | Aufgabe in Schritte zerlegen, der Code prüft dazwischen (Gates) | Fließband mit Kontrolle nach jeder Station |
 | Routing | Eingabe klassifizieren und weiterleiten | Poststelle sortiert Briefe |
-| Parallelization | Teilaufgaben gleichzeitig bearbeiten | mehrere Prüfer lesen je ein Kapitel |
+| Parallelization | Teilaufgaben gleichzeitig bearbeiten | mehrere Reviewer lesen je ein Kapitel |
 | Orchestrator-Workers | ein LLM zerlegt und verteilt die Aufgabe selbst | Projektleiter verteilt Arbeitspakete |
 | Evaluator-Optimizer | einer erzeugt, ein anderer bewertet, dann wird nachgebessert | Autor und Lektor |
 
 ### 1.2 Warum für GovGuard?
 
-Die erste Frage eines Prüfers zu einem KI-System lautet fast immer: **Was darf die KI selbst entscheiden?** Die Antwort bestimmt die Angriffsfläche, den Testaufwand und welche Risikokataloge überhaupt gelten.
+Die erste Frage eines Reviewers zu einem KI-System lautet fast immer: **Was darf die KI selbst entscheiden?** Die Antwort bestimmt die Angriffsfläche, den Testaufwand und welche Risikokataloge überhaupt gelten.
 
 ### 1.3 Vorgehen
 
@@ -151,7 +151,7 @@ Das **C4-Modell** von Simon Brown ist eine Regel für Diagramme mit vier Zoomstu
 
 ### 2.2 Warum für GovGuard?
 
-Ein Prüfer, der arc42 kennt, sucht die „Kontextabgrenzung“ unter diesem Namen. Eine feste Gliederung macht die Doku navigierbar und deckt Lücken auf, ohne dass man alles umschreibt.
+Ein Reviewer, der arc42 kennt, sucht die „Kontextabgrenzung“ unter diesem Namen. Eine feste Gliederung macht die Doku navigierbar und deckt Lücken auf, ohne dass man alles umschreibt.
 
 ### 2.3 Vorgehen
 
@@ -264,7 +264,7 @@ Ein Diagramm kann nicht sagen: „Bei PASS muss ein Beleg da sein.“ Dafür gib
 
 Die Pydantic-Modelle und Gates *sind* schon Verträge, aber viele Regeln stehen verteilt im Fließtext („Pflicht bei PASS“, „höchstens 200 Zeilen“). Wer eine Regel eindeutig aufschreiben muss, merkt, wenn sie es nicht ist. Und die Vertragsklauseln erklären, *wer schuld ist*, wenn etwas bricht.
 
-GovGuard schreibt die Regeln als **Klartext-Tabelle** statt in OCL, mit Fundstelle im Code und Test. Das liest jeder Prüfer ohne Zusatzwissen; OCL bleibt hier eine Methode zum Verstehen, kein Werkzeug.
+GovGuard schreibt die Regeln als **Klartext-Tabelle** statt in OCL, mit Fundstelle im Code und Test. Das liest jeder Reviewer ohne Zusatzwissen; OCL bleibt hier eine Methode zum Verstehen, kein Werkzeug.
 
 ### 4.3 Vorgehen
 
@@ -311,7 +311,7 @@ STRIDE-per-Element spart Arbeit: Nicht jede Bedrohung passt zu jedem Elementtyp 
 
 ### 5.2 Warum für GovGuard?
 
-GovGuard ist selbst ein Sicherheitswerkzeug, und ein Prüfer fragt, ob es seine eigenen Maßstäbe erfüllt. Ein Infrastruktur-Scanner prüft nur die Infrastruktur; ein Threat Model prüft auch das Design, inklusive der Modellanteile.
+GovGuard ist selbst ein Sicherheitswerkzeug, und ein Reviewer fragt, ob es seine eigenen Maßstäbe erfüllt. Ein Infrastruktur-Scanner prüft nur die Infrastruktur; ein Threat Model prüft auch das Design, inklusive der Modellanteile.
 
 ### 5.3 Vorgehen
 
@@ -500,26 +500,26 @@ Diese Namen stammen aus dem Projekt, nicht aus der Literatur. Sag sie nur zusamm
 
 Was als Nächstes lohnt, steht nach Nutzen und Aufwand in [ARCHITECTURE §9.2 (D10)](ARCHITECTURE.md#92-verbesserungspotenziale-d10), darunter die offenen Prinzipien 3, 5 und 6 aus 6.4 (V10 bis V12). Ob eine Prompt-Änderung wirkt, zeigt eine Messung wie in 6.5.
 
-### 8.4 Fragen für den Prüfer-Lesetest
+### 8.4 Fragen für den Lesetest
 
-Ein unbefangener Leser kennt nur [README](../README.md), [ARCHITECTURE](ARCHITECTURE.md) und [DESIGN](DESIGN.md). Er liest einmal als **IHK-Prüfer** und einmal als **IT-Sicherheitsbeauftragter einer Behörde** und beantwortet die Fragen, ohne nachzufragen. Fehlt eine Antwort an der genannten Stelle, ist das eine Lücke in der Doku, nicht beim Leser.
+Ein unbefangener Leser kennt nur [README](../README.md), [ARCHITECTURE](ARCHITECTURE.md) und [DESIGN](DESIGN.md). Er liest einmal als **Hiring Manager** und einmal als **IT-Sicherheitsbeauftragter einer Behörde** und beantwortet die Fragen, ohne nachzufragen. Fehlt eine Antwort an der genannten Stelle, ist das eine Lücke in der Doku, nicht beim Leser.
 
 | # | Rolle | Frage | Antwort steht in |
 |---|---|---|---|
-| 1 | Prüfer | Was entscheidet das Sprachmodell, was der Code, und warum ist GovGuard kein Agent? | [ARCHITECTURE §0](ARCHITECTURE.md#0-architektur--und-designprinzipien) (Prinzip 1 und 7), [§3](ARCHITECTURE.md#3-lösungsstrategie-d2-arc42-4) |
-| 2 | Prüfer | Wie gehen Sie mit erfundenen Antworten (Halluzinationen) um? | [ARCHITECTURE §7](ARCHITECTURE.md#7-qualität-d9-arc42-10) (QS-1, Datenqualität), [DESIGN D14](DESIGN.md#d14-zustände-eines-befunds) |
-| 3 | Prüfer | Ist das Ergebnis reproduzierbar, und was haben Sie gemessen? | [ARCHITECTURE §7](ARCHITECTURE.md#7-qualität-d9-arc42-10) (QS-3, QS-4) |
-| 4 | Prüfer | Was kostet ein Audit, der Leerlauf, der Build? | [ARCHITECTURE §8.2](ARCHITECTURE.md#82-kosten) |
-| 5 | Prüfer | Welche Schwächen kennen Sie, und was kommt als Nächstes? | [ARCHITECTURE §9.1](ARCHITECTURE.md#91-risiken), [§9.2](ARCHITECTURE.md#92-verbesserungspotenziale-d10), [§10](ARCHITECTURE.md#10-einordnung-und-grenzen) |
-| 6 | Prüfer | Nach welchem Standard ist die Doku gegliedert, und wo finde ich Module und Datentypen? | [ARCHITECTURE (Kopf)](ARCHITECTURE.md#govguard--architektur), [DESIGN D11 bis D13](DESIGN.md#d11-module-c4-ebene-3) |
-| 7 | Prüfer | Wie wurden die Prompts entwickelt und getestet? | [DESIGN 2.5 und 2.6](DESIGN.md#26-die-8-modellaufrufe) (Weg des Audit-Prompts), [ARCHITECTURE §9.1](ARCHITECTURE.md#91-risiken) (kein Entwicklungsset) |
+| 1 | Hiring Manager | Was entscheidet das Sprachmodell, was der Code, und warum ist GovGuard kein Agent? | [ARCHITECTURE §0](ARCHITECTURE.md#0-architektur--und-designprinzipien) (Prinzip 1 und 7), [§3](ARCHITECTURE.md#3-lösungsstrategie-d2-arc42-4) |
+| 2 | Hiring Manager | Wie gehen Sie mit erfundenen Antworten (Halluzinationen) um? | [ARCHITECTURE §7](ARCHITECTURE.md#7-qualität-d9-arc42-10) (QS-1, Datenqualität), [DESIGN D14](DESIGN.md#d14-zustände-eines-befunds) |
+| 3 | Hiring Manager | Ist das Ergebnis reproduzierbar, und was haben Sie gemessen? | [ARCHITECTURE §7](ARCHITECTURE.md#7-qualität-d9-arc42-10) (QS-3, QS-4) |
+| 4 | Hiring Manager | Was kostet ein Audit, der Leerlauf, der Build? | [ARCHITECTURE §8.2](ARCHITECTURE.md#82-kosten) |
+| 5 | Hiring Manager | Welche Schwächen kennen Sie, und was kommt als Nächstes? | [ARCHITECTURE §9.1](ARCHITECTURE.md#91-risiken), [§9.2](ARCHITECTURE.md#92-verbesserungspotenziale-d10), [§10](ARCHITECTURE.md#10-einordnung-und-grenzen) |
+| 6 | Hiring Manager | Nach welchem Standard ist die Doku gegliedert, und wo finde ich Module und Datentypen? | [ARCHITECTURE (Kopf)](ARCHITECTURE.md#govguard--architektur), [DESIGN D11 bis D13](DESIGN.md#d11-module-c4-ebene-3) |
+| 7 | Hiring Manager | Wie wurden die Prompts entwickelt und getestet? | [DESIGN 2.5 und 2.6](DESIGN.md#26-die-8-modellaufrufe) (Weg des Audit-Prompts), [ARCHITECTURE §9.1](ARCHITECTURE.md#91-risiken) (kein Entwicklungsset) |
 | 8 | Sicherheit | Wohin gehen welche Daten, und wer verarbeitet sie? | [ARCHITECTURE §4.1](ARCHITECTURE.md#41-demo-stand-heute-d3), [§6.1](ARCHITECTURE.md#61-dfd-des-demo-stands-d8), [§6.2](ARCHITECTURE.md#62-stride-tabelle) (T3, T10) |
 | 9 | Sicherheit | Welche Bedrohungen sind betrachtet, welche bleiben offen? | [ARCHITECTURE §6.2](ARCHITECTURE.md#62-stride-tabelle), [§6.3](ARCHITECTURE.md#63-owasp-top-10-for-llm-applications-2026) |
 | 10 | Sicherheit | Was ist nach BSI IT-Grundschutz nachgewiesen, was nicht? | [ARCHITECTURE „Lesehilfe“](ARCHITECTURE.md#lesehilfe-für-die-behörden-it), [§10](ARCHITECTURE.md#10-einordnung-und-grenzen) |
 | 11 | Sicherheit | Wer darf Audits starten, wo liegen die Geheimnisse? | [ARCHITECTURE §6.2](ARCHITECTURE.md#62-stride-tabelle) (T1, T8), [§8.1](ARCHITECTURE.md#81-ausrollen) |
 | 12 | Sicherheit | Kann man später belegen, was geprüft wurde, und was ändert sich für echte Daten? | [DESIGN 2.4](DESIGN.md#24-rückverfolgung-und-audit-ereignis-trace-auditevent), [ARCHITECTURE §4.2](ARCHITECTURE.md#42-zielbild-aws-d4) |
-| 13 | Prüfer | Welche Alternativen haben Sie verworfen (Vektor-Datenbank, Agent-Framework, Bedrock im Demo-Stand), und warum? | [ARCHITECTURE §0](ARCHITECTURE.md#0-architektur--und-designprinzipien) (Prinzip 2, 6, 7), [§9.3](ARCHITECTURE.md#93-adr-index-nach-thema) |
-| 14 | Prüfer | Wie testen Sie, ohne das Modell oder AWS aufzurufen? | [ARCHITECTURE §0](ARCHITECTURE.md#0-architektur--und-designprinzipien) (Prinzip 8), [DESIGN 2.2](DESIGN.md#22-ablauf-von-run_audit), [DESIGN §4](DESIGN.md#4-regeln-in-klartext-wo-erzwingt-der-code-sie) |
+| 13 | Hiring Manager | Welche Alternativen haben Sie verworfen (Vektor-Datenbank, Agent-Framework, Bedrock im Demo-Stand), und warum? | [ARCHITECTURE §0](ARCHITECTURE.md#0-architektur--und-designprinzipien) (Prinzip 2, 6, 7), [§9.3](ARCHITECTURE.md#93-adr-index-nach-thema) |
+| 14 | Hiring Manager | Wie testen Sie, ohne das Modell oder AWS aufzurufen? | [ARCHITECTURE §0](ARCHITECTURE.md#0-architektur--und-designprinzipien) (Prinzip 8), [DESIGN 2.2](DESIGN.md#22-ablauf-von-run_audit), [DESIGN §4](DESIGN.md#4-regeln-in-klartext-wo-erzwingt-der-code-sie) |
 | 15 | Sicherheit | Was passiert, wenn die Eingabe Anweisungen an das Modell enthält (Prompt Injection)? | [ARCHITECTURE §6.2](ARCHITECTURE.md#62-stride-tabelle) (T4), [§6.3](ARCHITECTURE.md#63-owasp-top-10-for-llm-applications-2026) (LLM01), [§9.2](ARCHITECTURE.md#92-verbesserungspotenziale-d10) (V1, V12) |
 
 ### 8.5 Glossar der Methodenbegriffe

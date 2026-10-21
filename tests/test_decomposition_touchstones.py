@@ -50,7 +50,7 @@ def test_alternatives_become_one_requirement_of_their_paragraph(source: str, par
 
 
 def test_a_prohibition_with_its_own_exceptions_is_carried_by_the_exceptions() -> None:
-    # Wohngeld names Art. 9 Abs. 2 lit. b, yet the rule of Abs. 1 alone said FAIL (19.10.2026)
+    # Wohngeld names Art. 9 Abs. 2 lit. b, yet the rule of Abs. 1 alone said FAIL
     assert group_of("DSGVO", "Art. 9 Abs. 1").kind == "keine_pflicht"
 
 

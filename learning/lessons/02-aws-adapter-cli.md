@@ -13,7 +13,7 @@
 - **EU-Profil `eu.` statt `global.`:** Daten liegen in eu-central-1, die Inferenz verlässt die EU nie. Damit gibt es keinen Drittlandtransfer (DSGVO Art. 44, ADR 0001).
 - **Tool-Choice per Test festnageln:** Ob Pydantic AI `any` oder `auto` sendet, hängt am Modellprofil (`bedrock_supports_tool_choice`). Ändert ein Update oder eine neue Modell-ID das Profil, fällt es still auf `auto` zurück. Der Stubber-Test prüft deshalb den Wert `{"any": {}}`, sonst käme unbemerkt Freitext statt strukturierter Befunde.
 
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Adapter**: Die dünne Schicht, in der alle I/O liegt (boto3); die Prüflogik bleibt rein und ohne AWS testbar.
 - **Tool-Choice (`toolChoice: any`)**: Das Modell muss das Formular-Tool aufrufen und kann nur schema-konformes JSON liefern.
 - **Cross-Region-Inferenzprofil**: Ein Profil-Präfix (`eu.`) wählt aus, in welchen Regionen Bedrock rechnen darf.

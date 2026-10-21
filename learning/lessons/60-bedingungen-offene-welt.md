@@ -13,7 +13,7 @@ Manche Prüfregeln gelten nur unter einer Bedingung, z. B. die KI-VO nur für ei
 - **Nur ein ausdrückliches Nein macht N/A.** Schweigt die Spezifikation, bleibt die Bedingung `unstated` und ihre Prüfregeln gehen ans Modell. Eine Spezifikation ist eine offene Welt (ADR 0020): Was sie nicht erwähnt, kann trotzdem zutreffen. Eine Prüfregel fällt also nur mit Beleg weg, sonst verschwände ein DSGVO-Befund unbemerkt.
 - **Im Zweifel der strengere Wert.** Belegen und verneinen verschiedene Zeilen dieselbe Bedingung, gilt `yes` mit dem Hinweis „Widerspruch“. Fällt der Vorlauf aus, sind alle Bedingungen `unstated`, ohne fail closed. Der Vorlauf kann nur Regeln wegnehmen, nie ein FAIL erzeugen. FinOps: Verneinte Regeln gehen nicht ans Modell und sparen Tokens.
 
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Offene Welt**: Was die Eingabe nicht sagt, ist offen, nicht verneint; Schweigen ergibt eine Lücke, kein N/A.
 - **Bedingungs-Vorlauf**: Ein LLM-Aufruf liefert nur Belegzeilen, und der Code entscheidet daraus den Wert (Trennung von Urteil und Regel).
 - **Strengerer Wert**: Bei Widerspruch gilt der Wert, der mehr prüft, denn ein verborgener Befund ist teurer als eine Lücke zu viel.

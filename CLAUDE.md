@@ -1,6 +1,6 @@
 # GovGuard – GovCloud Compliance Copilot
 
-Portfolio- und IHK-Praxisprojekt (Cloud Business Expert, Modul 4). Der Copilot prüft Spezifikationen (DSGVO/SDM) und Architekturen (BSI IT-Grundschutz/CIS) und liefert einen Audit-Report mit PASS/WARN/FAIL. Golden Archetypes sind entworfen, aber bewusst nicht gebaut (ADR 0019).
+Portfolio-Projekt. Der Copilot prüft Spezifikationen (DSGVO/SDM) und Architekturen (BSI IT-Grundschutz/CIS) und liefert einen Audit-Report mit PASS/WARN/FAIL. Golden Archetypes sind entworfen, aber bewusst nicht gebaut (ADR 0019).
 
 Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollständig verteidigen kann, als eine große, die ich nur halb verstehe.
 
@@ -8,13 +8,13 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 
 - AWS: Daten nur in `eu-central-1`. Inferenz für Nutzereingaben im Prototyp über Groq (ADR 0016, 0023), Bedrock `eu.` nur noch per CLI; für echte Daten nur in der EU (ADR 0001).
 - Ausnahme Build der Wissensbasis: Er schickt nur öffentliche Normtexte raus, standardmäßig an Groq (ADR 0014), nur auf ausdrücklichen Wunsch an Bedrock `global.` (ADR 0012).
-- 100 % serverless, 0 € Leerlaufkosten (FinOps, siehe `CONTEXT.md`): Der Prototyp läuft als Demo-Stand ohne AWS auf Streamlit Community Cloud mit Groq. AWS-Stack, KMS und Audit-Jobs sind Ausbau (ADR 0023, Nachtrag 19.10.).
+- 100 % serverless, 0 € Leerlaufkosten (FinOps, siehe `CONTEXT.md`): Der Prototyp läuft als Demo-Stand ohne AWS auf Streamlit Community Cloud mit Groq. AWS-Stack, KMS und Audit-Jobs sind Ausbau (ADR 0023, Nachtrag).
 - Python, Pydantic, Pydantic AI auf der Bedrock Converse API mit Tool-Choice (ADR 0005), Streamlit-UI.
 - Wissensbasis als JSON in S3 bzw. im Repo, Bounded Catalog ohne Suche und ohne Obergrenze, keine Vektor-DB (ADR 0011).
 - Code modular nach `docs/ARCHITECTURE.md` → *Code-Struktur*: boto3 und das Bedrock-Modell für Pydantic AI nur in `adapters/aws_services.py`, kein subprocess in `src/` (ADR 0019; Tests dürfen Server starten), HTTP-Downloads nur in `src/kb_build/source_fetch.py`, Prüflogik rein, nie vermischt. Ordner nach Aufgabe (ADR 0027): `govguard/` hat `calls/` (spricht mit dem Modell), `checks/` (rein) und `adapters/`, `govguard_ui/` hat `screens/` und `report/`; `checks/` importiert nie `calls/` oder `adapters/`, `report/` nie `screens/`. Workflow-YAML enthält keine Logik, nur `python -m …`.
 - Kleine Einheiten: ein Modul = eine Aufgabe, ca. 200 Zeilen; eine Funktion ca. 30 Zeilen. Wird es größer, teile auf. Die Grenzen prüfen ruff (`pyproject.toml`) und ein pytest-Test.
 
-`docs/Modul4_Praxisprojekt_Emails.md` ist **Rohmaterial**, voller älterer und widersprüchlicher Ideen. Verbindlich sind `CONTEXT.md` (Glossar) und `docs/adr/`. Fehlen sie, gilt das Gespräch mit mir.
+Verbindlich sind `CONTEXT.md` (Glossar) und `docs/adr/`. Fehlen sie, gilt das Gespräch mit mir.
 
 ## Arbeitsweise: ein Go pro Ticket
 

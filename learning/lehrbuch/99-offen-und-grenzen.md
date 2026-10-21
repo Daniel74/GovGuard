@@ -3,7 +3,7 @@
 ## Was noch nicht gebaut ist (nicht als Gebautes beschreiben)
 
 - **Preset-Gate und `build-kb.yml` (#8, Fahrplan Schritt 11):** Der Build läuft heute lokal, Befehl für Befehl. Geplant: ein Befehl `python -m kb_build` für alles, das Preset-Gate (Gesamtstatus, Pflicht-Befunde, Hash-Check) und ein manueller GitHub-Actions-Workflow, der nur bei Grün einen Pull Request öffnet. Anmeldung per OIDC statt langlebigem Schlüssel; `GROQ_API_KEY` als Secret; die Rolle braucht Bedrock `eu.` nur für das Preset-Gate (ADR 0014).
-- **Golden Archetypes (#7, Priorität B, `cdk_runner.py`):** Schleife aus CDK-Generierung, `cdk synth`, Audit und cdk-nag, höchstens 3 Runden. Nur wenn nach Abschluss der Priorität A mindestens 3 Arbeitstage bleiben (Stichtag 16.10.2026).
+- **Golden Archetypes (#7, Priorität B, `cdk_runner.py`):** Schleife aus CDK-Generierung, `cdk synth`, Audit und cdk-nag, höchstens 3 Runden. Nur wenn nach Abschluss der Priorität A noch Zeit bleibt.
 - **Audit-Engine mit Ressourceninventar (#14), Stack und Endpunkte (#9), Deploy und UI (#11):** gehören zur Laufzeit, nicht zu `kb_build`.
 
 ## Bekannte Grenzen der Pipeline

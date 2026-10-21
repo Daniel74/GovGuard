@@ -36,7 +36,7 @@ Ein Gate stoppt den Build mit `ValueError`, statt eine Lücke auszuliefern.
 ## Vom ersten Entwurf zum Heute (Lehrstück)
 
 - **ADR 0002 (überholt):** feste Obergrenze, z. B. 12 BSI + 12 CIS; Ranking reihum je Gruppe; gesetzte Plätze für Preset-Anker (ADR 0007).
-- **Befund 09.10./11.10.2026:** Der erste Lauf füllte nur 20 von 24 Plätzen im Architektur-Katalog und deckte kein API Gateway, Lambda, DynamoDB, SQS oder Firehose ab. Im Spec-Katalog lagen Art. 32, 17, 30, 33, 35 über der Grenze, Art. 27 und 47 dagegen drin, weil innerhalb eines Kapitels die ID entschied.
+- **Befund (erste Läufe):** Der erste Lauf füllte nur 20 von 24 Plätzen im Architektur-Katalog und deckte kein API Gateway, Lambda, DynamoDB, SQS oder Firehose ab. Im Spec-Katalog lagen Art. 32, 17, 30, 33, 35 über der Grenze, Art. 27 und 47 dagegen drin, weil innerhalb eines Kapitels die ID entschied.
 - **ADR 0011 (heute):** keine Obergrenze, kein Ranking, kein gesetzter Platz. Das Ziel: GovGuard soll auch Spezifikationen und Architekturen prüfen, die keinem Archetyp ähneln. Die Gates ersetzen die künstliche Begrenzung.
 
 ## Eigenschaften und Garantien
@@ -54,7 +54,7 @@ Ein Gate stoppt den Build mit `ValueError`, statt eine Lücke auszuliefern.
 
 `not_testable`: BSI `BES.1.1` „Verfahren und Regelungen“ (Beschaffungsprozesse). `prefiltered`: BSI `GC.1.1`. `llm_error`: BSI `BER.6.4`.
 
-## Zahlen (Stand 13.10.2026)
+## Zahlen
 
 | Katalog | Anforderungen im Protokoll | aufgenommen |
 |---|---|---|

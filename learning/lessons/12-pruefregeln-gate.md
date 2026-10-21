@@ -14,7 +14,7 @@ Für jede Anforderung der Auswahlliste schreibt das LLM genau eine Prüfregel: Z
 - **Vergleich ohne Leerzeichen:** pypdf zerteilt im SDM-PDF Wörter („Protokollie rung“). `contains_quote()` vergleicht daher ohne Leerzeichen, im Build und zur Laufzeit gleich.
 - **`global.` nur im Build (ADR 0012):** Hatte `eu.` keine Kapazität, darf der Build ausdrücklich das globale Profil nutzen. Dort gehen nur öffentliche Normtexte raus, Nutzereingaben bleiben in der EU, es gibt also keinen Drittlandtransfer personenbezogener Daten (DSGVO Art. 44).
 
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Fail closed**: Im Zweifel bricht der Build ab, statt eine fehlerhafte oder fehlende Regel still durchzulassen.
 - **Output-Validator**: Er prüft die Antwort des LLM sofort und schickt Fehler per `ModelRetry` zurück; das Modell bekommt eine zweite Chance, bevor das Gate hart abbricht.
 - **Primäranker**: die eine Anforderung, aus der eine Regel stammt; der Code setzt ihn aus der Auswahlliste, damit das LLM keine Herkunft erfinden kann.

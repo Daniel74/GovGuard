@@ -64,7 +64,7 @@ Eintrag im Cache (Auszug, `judgement_cache.json`):
   "scope_level": "people", "cfn_resource_types": [] }
 ```
 
-Der Cache hat 4.363 Einträge (Stand 13.10.2026), weil er auch Antworten älterer Prompt-Versionen behält.
+Der Cache hat 4.363 Einträge, weil er auch Antworten älterer Prompt-Versionen behält.
 
 ## Warum so
 
@@ -80,7 +80,7 @@ Der Cache hat 4.363 Einträge (Stand 13.10.2026), weil er auch Antworten ältere
 
 ## Grenzen
 
-- **Das LLM urteilt nicht stabil.** Trotz Temperatur 0 kippten im zweiten Lauf (11.10.2026) 41 von 1.077 Urteilen (ADR 0011). Bei Groq tauscht ein Neulauf rund 10 % der Auswahl aus (ADR 0014, Issue #19). Der Cache friert die Urteile ein; Sicherheit geben die Gates, nicht das Modell.
+- **Das LLM urteilt nicht stabil.** Trotz Temperatur 0 kippten im zweiten Lauf 41 von 1.077 Urteilen (ADR 0011). Bei Groq tauscht ein Neulauf rund 10 % der Auswahl aus (ADR 0014, Issue #19). Der Cache friert die Urteile ein; Sicherheit geben die Gates, nicht das Modell.
 - **Spec-Grenze Vorhaben/Betrieb:** Das LLM trennt SDM-Ebene P (Prozesse) nicht stabil; ein Prompt-Versuch verwarf auch Art. 35. Im Zweifel nimmt der Build auf (ein unnötiger WARN ist sichtbar, eine verlorene Anforderung nicht).
 - **Uneinheitliches Protokoll:** Viele Konto- und Personenpflichten landen als `not_testable` mit LLM-Begründung statt als `not_relevant` mit festem Satz. Draußen sind sie in beiden Fällen (Issue #18).
 - **Einzelne Fehlurteile**, z. B. C5 CRY-07.01B (Schlüsselrotation) als „nicht prüfbar“.

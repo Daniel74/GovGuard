@@ -22,7 +22,7 @@ Ein Schwerpunkt prägt die Abschnitte *Entscheidung* und die erste Abruffrage.
    <höchstens 3 Links [datei](../../pfad), je eine Zeile: welche Aufgabe>
    ## Entscheidung und Warum
    <1–2 Entscheidungen, je mit Bezug zu BSI, DSGVO oder FinOps>
-   ## Prüfungsbegriffe
+   ## Fachbegriffe
    <3 Begriffe **fett**, je Halbsatz Erklärung in eigenen Worten>
    ## Merksatz
    <1 Satz, den ich im Fachgespräch sagen kann>
@@ -30,14 +30,14 @@ Ein Schwerpunkt prägt die Abschnitte *Entscheidung* und die erste Abruffrage.
    <3 Fragen; die Antwort steht wörtlich oder sinngemäß oben in der Karte>
    ```
 
-3. **Abfragen.** Nenne den Pfad der Karte, ohne ihren Inhalt zu wiederholen. Ich lese sie selbst. Stelle dann die Abruffragen einzeln. Bewerte jede Antwort in 1–2 Sätzen und nenne den exakten Prüfungsbegriff **fett**. Sage ich „stop“, endet die Runde.
+3. **Abfragen.** Nenne den Pfad der Karte, ohne ihren Inhalt zu wiederholen. Ich lese sie selbst. Stelle dann die Abruffragen einzeln. Bewerte jede Antwort in 1–2 Sätzen und nenne den exakten Fachbegriff **fett**. Sage ich „stop“, endet die Runde.
 4. **Lücke festhalten.** Saß eine Antwort nicht, schreibe einen Learning Record nach `learning/learning-records/NNNN-slug.md` (2 Sätze, nächste freie Nummer).
 
 Fertig ist der Lauf, wenn die Karte liegt und alle Abruffragen bewertet sind.
 
 ## Generalprobe (Argument: `probe`)
 
-Prüfe wie ein fairer IHK-Prüfer, aber nur mit Stoff aus `learning/lessons/` und `learning/learning-records/`. Learning Records haben Vorrang (Spacing).
+Frage wie ein fairer Fachgesprächspartner, aber nur mit Stoff aus `learning/lessons/` und `learning/learning-records/`. Learning Records haben Vorrang (Spacing).
 
-1. Stelle 3 Fragen einzeln, aufeinander aufbauend: *Was* → *Warum* (BSI, DSGVO, FinOps) → *Was wäre, wenn* (Gegenargument eines Prüfers). Bewerte jede Antwort in 1–2 Sätzen.
-2. Gib danach eine Schulnote (1–6) mit Begründung und je Frage eine Musterantwort (höchstens 3 Sätze, Prüfungsbegriffe **fett**). Nenne die eine Lücke, die ich bis zum nächsten Mal schließen sollte, und halte sie als Learning Record fest.
+1. Stelle 3 Fragen einzeln, aufeinander aufbauend: *Was* → *Warum* (BSI, DSGVO, FinOps) → *Was wäre, wenn* (Gegenargument eines Skeptikers). Bewerte jede Antwort in 1–2 Sätzen.
+2. Gib danach eine Schulnote (1–6) mit Begründung und je Frage eine Musterantwort (höchstens 3 Sätze, Fachbegriffe **fett**). Nenne die eine Lücke, die ich bis zum nächsten Mal schließen sollte, und halte sie als Learning Record fest.

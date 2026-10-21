@@ -13,7 +13,7 @@ Ein Schnappschuss aus `aws cloudformation describe-type` hält je Typ des Prüfu
 - **Abgleich gegen eine Referenz statt strengerer Prompt:** Ein Prompt *bittet* das LLM um echte Namen, der Schema-Abgleich *beweist* es deterministisch. Eine Prüfregel mit erfundener Eigenschaft würde jedes Template falsch bewerten (BSI: Nachweisbarkeit, wie Zitat- und Typprüfung aus #12).
 - **Lücken sichtbar statt still:** Eine Regel mit Typ außerhalb des Schnappschusses ist ungeprüft und wird gezählt (16 Regeln, Folgeticket #19). Der Schnappschuss ist ein Handbefehl ohne boto3, kostet nichts und läuft nur bei Bedarf (FinOps).
 
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Schnappschuss** (Snapshot): eingefrorene Kopie einer externen Referenz im Repo, damit Build und Tests reproduzierbar ohne AWS laufen.
 - **Deterministische Gegenprobe**: Code prüft die LLM-Ausgabe gegen eine feste Quelle; gleiche Eingabe, gleiches Urteil.
 - **Fail closed** vs. **stille Lücke**: Was nicht geprüft werden kann, darf nicht als bestanden zählen, sondern muss sichtbar werden.

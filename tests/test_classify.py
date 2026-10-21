@@ -177,7 +177,7 @@ def test_spec_prompt_does_not_mention_the_scope() -> None:
 
 
 def test_spec_prompt_defines_a_spec_as_a_functional_description() -> None:
-    # Run 2026-10-11: 44 of 72 "not testable" spec verdicts argued "no technical specification"
+    # Early run: 44 of 72 "not testable" spec verdicts argued "no technical specification"
     seen: list = []
 
     classify_requirement(REQUIREMENT, "DSGVO", SPEC, answer_in_turns(BUCKET, seen=seen))

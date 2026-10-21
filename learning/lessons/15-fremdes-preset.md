@@ -13,7 +13,7 @@ Der „Fristenwecker im Bauamt“ ist ein fiktives CloudFormation-Template: Step
 - **Ein PASS neben dem FAIL:** Nur FAIL-Anker würden nicht zeigen, ob der Copilot unterscheidet oder bei Unbekanntem pauschal „FAIL“ sagt. `StepFunctions.1` = PASS beweist, dass der fremde Dienst wirklich bewertet wird (Nachweis statt Behauptung, wie im BSI-Audit).
 - **Wildcard nur, wo AWS sie erzwingt:** Die Log-Delivery-Aktionen von Step Functions gehen nur auf `"Resource": "*"`. Statt das zu verstecken, steht im Template der Sid `LogDeliveryRequiresWildcard`, also eine begründete Abweichung vom Prinzip der geringsten Berechtigungen (BSI BER.4.1).
 
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Anwendbar**: Eine Prüfregel läuft nur, wenn einer ihrer Ressourcentypen im Template vorkommt; sonst setzt der Code N/A, nicht das LLM.
 - **Pflichtanker**: der Primäranker eines Pflicht-Befunds im Preset; er muss im Bounded Catalog stehen, sonst bricht der Build ab.
 - **Mutationsprobe**: Man baut absichtlich einen Fehler ein (falscher Anker) und schaut, ob der Test rot wird; nur dann beweist ein grüner Test etwas.

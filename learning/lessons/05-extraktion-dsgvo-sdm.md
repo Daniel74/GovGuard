@@ -11,9 +11,9 @@
 
 ## Entscheidung und Warum
 - **Tabelle statt Fließtext:** Im Fließtext steht `(M60.D01)` nur als Verweis hinter einem Satz. Nur die Tabelle verbindet ID und Maßnahme eindeutig. Das ist wichtig, weil das Gate jedes `source_quote` wörtlich gegen diesen Text prüft (DSGVO-Rechenschaftspflicht: Zitat statt Behauptung).
-- **Protokollieren (M43) fehlt bewusst:** Der Baustein hat ein eigenes ID-Schema (`M43.21.04`), keine Ebenen D/S und durchgestrichene ungültige Maßnahmen. Er bräuchte einen eigenen Parser (FinOps: Aufwand im Zeitbudget). Protokollierung prüft trotzdem das Architektur-Audit über BSI DET und CIS Kapitel 4.
+- **Protokollieren (M43) fehlt bewusst:** Der Baustein hat ein eigenes ID-Schema (`M43.21.04`), keine Ebenen D/S und durchgestrichene ungültige Maßnahmen. Er bräuchte einen eigenen Parser (FinOps: Aufwand gegen Nutzen). Protokollierung prüft trotzdem das Architektur-Audit über BSI DET und CIS Kapitel 4.
 
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Ebene D/S/P**: SDM-Einteilung in Daten, Systeme und Prozesse. P ist organisatorisch (z. B. Löschkonzept) und fällt im Vorfilter heraus.
 - **Beweisgrundlage**: Das Extrakt ist der Originaltext der Quelle. Kein LLM korrigiert ihn, sonst beweist ein Zitat nichts mehr.
 - **Golden-Test mit Beispieltext**: Er prüft feste Zahlen (147/55) **und** einen erwarteten Text. Nur Zahlen hätten Junies falschen Parser nicht erkannt.

@@ -29,7 +29,7 @@ Aus den sechs Rohformaten entsteht ein einheitliches Modell: eine Liste von **An
 | DSGVO | Artikel | `DSGVO Art. 32` | Kapitel II–V (Art. 5–49) | 99 → 46 |
 | SDM | Maßnahme | `SDM Löschen M60.D01` | keiner, alle Ebenen D, S, P bleiben | 147 → 147 |
 
-Die Zahlen stammen aus `data/intermediate/extracted/*.json` (Stand 13.10.2026).
+Die Zahlen stammen aus `data/intermediate/extracted/*.json`.
 
 ## Besonderheiten je Adapter
 

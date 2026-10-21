@@ -60,5 +60,5 @@ _Code_ nennt den englischen Bezeichner im Quellcode. _Vermeiden_ gilt für Doku 
 ## Betrieb
 
 - **Leerlaufkosten**: Kosten, die ohne Anfragen allein durch Zeit entstehen; Speicher für gehaltene Daten und Fixkosten für Sicherheit (KMS-Schlüssel, Secret) zählen nicht dazu. GovGuard und jeder Golden Archetype haben 0 € Leerlaufkosten. _Code_: –. _Vermeiden_: Idle-Kosten, Grundgebühr
-- **Demo-Stand**: Hosting zur Präsentation: Streamlit führt das Audit selbst aus, ohne AWS-Infrastruktur (ADR 0023). _Code_: `AUDIT_BACKEND=local`. _Vermeiden_: Prod, Staging
-- **Recruiter-Stand**: Hosting nach der Präsentation: Streamlit startet Audit-Jobs auf der Lambda in `eu-central-1`; Ausbau, nicht gebaut (ADR 0023). _Code_: `AUDIT_BACKEND=lambda`. _Vermeiden_: Prod, Staging
+- **Demo-Stand**: Hosting der Demo: Streamlit führt das Audit selbst aus, ohne AWS-Infrastruktur (ADR 0023). _Code_: `AUDIT_BACKEND=local`. _Vermeiden_: Prod, Staging
+- **Recruiter-Stand**: Hosting für Recruiter: Streamlit startet Audit-Jobs auf der Lambda in `eu-central-1`; Ausbau, nicht gebaut (ADR 0023). _Code_: `AUDIT_BACKEND=lambda`. _Vermeiden_: Prod, Staging

@@ -2,7 +2,7 @@
 
 Groq's tier allows 250,000 tokens per minute (header x-ratelimit-limit-tokens) and counts the
 prompt plus the whole max_tokens of the answer. Two parallel packages of an 84 KB input broke
-it (spec-wohngeld-openapi, 367 rules, 19.10.2026): the audit failed after 136 s.
+it (spec-wohngeld-openapi, 367 rules): the audit failed after 136 s.
 """
 
 import asyncio

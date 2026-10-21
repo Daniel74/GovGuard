@@ -29,7 +29,7 @@ Ein unbekannter Name wirft `ValueError`. Fehlt `GROQ_API_KEY`, bricht der Build 
 - **Ein Modell im ganzen Katalog:** `select` lief zuerst mit Groq, `rules` mit Haiku. Zwei Modelle in einem Build sind schwerer zu erklären; seit #21 stammt der ganze Katalog von `openai/gpt-oss-120b`.
 - **Qualität unabhängig vom Modell:** Die Gates fangen Erfundenes per Code ab, egal welches Modell schreibt (ADR 0014).
 
-Geschichte der Entscheidung: ADR 0010 (Groq als befristeter Fallback, weil dem Kurskonto die Marketplace-Rechte fehlten) → ADR 0012 (Bedrock `global.`, weil `eu.` am 12.10.2026 dreimal HTTP 503 lieferte) → ADR 0014 (Groq dauerhaft Standard). Die Ausnahme von „Inferenz nur in der EU“ ist dadurch dauerhaft, aber auf den Build mit öffentlichen Texten begrenzt.
+Geschichte der Entscheidung: ADR 0010 (Groq als befristeter Fallback, weil dem Konto die Marketplace-Rechte fehlten) → ADR 0012 (Bedrock `global.`, weil `eu.` bei einem Lauf dreimal HTTP 503 lieferte) → ADR 0014 (Groq dauerhaft Standard). Die Ausnahme von „Inferenz nur in der EU“ ist dadurch dauerhaft, aber auf den Build mit öffentlichen Texten begrenzt.
 
 ## Eigenschaften und Garantien
 

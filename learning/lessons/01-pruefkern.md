@@ -13,7 +13,7 @@
 - **Das LLM bewertet, der Code prüft.** Jeder Beleg muss wörtlich in der Eingabe stehen. Sonst gibt es genau einen Retry, danach bricht das Audit ab (HTTP 502). So bleibt jeder Befund nachweisbar (DSGVO Art. 5 Abs. 2, Rechenschaftspflicht).
 - **N/A durch Code:** Kommt der Ressourcentyp einer Regel im Template nicht vor, setzt der Code N/A ohne LLM-Aufruf. Das ist deterministisch und spart Tokens (FinOps).
 
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Grounding**: Eine Aussage zählt nur, wenn sie an der Quelle verankert ist; hier per wörtlichem Zitat.
 - **Fail-closed**: Im Zweifel gibt es kein Ergebnis statt eines falschen Ergebnisses.
 - **Dependency Injection**: `run_audit()` bekommt das Modell als Parameter; Tests reichen ein `FunctionModel` hinein, ohne AWS.

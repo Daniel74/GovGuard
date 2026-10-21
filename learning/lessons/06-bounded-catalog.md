@@ -9,7 +9,7 @@ Jede Anforderung aller Quellen bekommt genau ein Urteil im Auswahlprotokoll. All
 ## Entscheidung und Warum
 - **Vollständig statt Top-K:** Relevant ist, wessen erster Ressourcentyp im Prüfumfang liegt. Eine Obergrenze ließ Art. 32 und alle Serverless-Dienste herausfallen; so bekommt jede Regel einen Befund (BSI: Nachvollziehbarkeit).
 - **Das LLM urteilt, der Code wählt aus:** Das LLM kann weder Regeln erfinden noch aussortieren, und jede Code-Entscheidung hat einen festen Begründungssatz. Das Ergebnis ist prüfbar und reproduzierbar (temperature 0, Cache).
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Bounded Catalog:** feste Menge aller prüfbaren und relevanten Prüfregeln, die in jedem Audit vollständig bewertet wird
 - **Auswahlprotokoll:** je Anforderung Ergebnis (selected, prefiltered, not_relevant, not_testable, llm_error) mit Begründung
 - **Abdeckungs-Gate:** jede Komponente der Archetypen braucht mindestens eine Prüfregel, sonst bricht der Build ab

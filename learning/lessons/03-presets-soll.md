@@ -14,7 +14,7 @@ Vier fiktive Eingaben (OpenAPI, Freitext, CloudFormation) mit einem Soll, das ei
 - **Pflicht-Befunde nie WARN:** WARN ist Ermessen und würde das Gate flackern lassen; PASS und FAIL sind mit einem wörtlichen Zitat belegbar.
 - **Archetypen als End-to-End-Kette ohne Portal (ADR 0009):** CloudFront hat keine Preisklasse nur für die EU, TLS endet womöglich im Drittland (DSGVO Kap. V).
 
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Testorakel**: die unabhängige Quelle, die sagt, was richtig ist – hier das Soll des Menschen.
 - **Zirkulärer Test**: ein Test, dessen Erwartung aus dem geprüften System selbst stammt; er beweist nichts.
 - **Gesetzter Platz**: ein Pflichtanker steht immer im Bounded Catalog, höchstens 4 je Audit-Art.

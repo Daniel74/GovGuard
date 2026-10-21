@@ -10,7 +10,7 @@ disable-model-invocation: true
    ```md
    ## YYYY-MM-DD
    - **Gebaut:** <1 Satz, konkretes Ergebnis>
-   - **Gelernt:** <1 Satz, Konzept oder Prüfungsbegriff>
+   - **Gelernt:** <1 Satz, Konzept oder Fachbegriff>
    - **Nächster Schritt:** <1 Satz>
    ```
 

@@ -530,7 +530,7 @@ def test_an_aborted_rule_logs_every_retry_once_and_why_the_last_answer_was_rejec
 
 
 def test_a_failed_rule_does_not_stop_the_others_and_the_build_names_it() -> None:
-    # #53: the run of 19.10.2026 lost 50 paid rules to one invalid rule
+    # #53: one run lost 50 paid rules to one invalid rule
     sources = [ExtractedSource(source="CIS", version="v7.0.0", origin="o", requirements=[
         make_requirement("3.1.4", "CIS AWS v7.0.0 3.1.4"),
         make_requirement("3.1.5", "CIS AWS v7.0.0 3.1.5")])]

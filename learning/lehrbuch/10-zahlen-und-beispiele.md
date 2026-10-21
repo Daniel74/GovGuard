@@ -1,6 +1,6 @@
 # 10 – Zahlen und Beispiele auf einen Blick
 
-Stand: 13.10.2026, Commit `28b62e7`. Alle Zahlen aus den Dateien in `data/` und den Issue-Kommentaren; Zahlen aus Läufen sind Momentaufnahmen und ändern sich bei jedem Neulauf.
+Stand: Commit `28b62e7`. Alle Zahlen aus den Dateien in `data/` und den Issue-Kommentaren; Zahlen aus Läufen sind Momentaufnahmen und ändern sich bei jedem Neulauf.
 
 ## Trichter der Architektur-Auswahl (1.966 Anforderungen)
 
@@ -46,7 +46,7 @@ BSI 1000 → 380 · C5 610 → 300 · CIS 70 → 54 · FSBP 286 → 150 · DSGVO
 | Auswahlwechsel bei Neulauf mit Groq | rund 10 % | ADR 0014 |
 | Auswahl nach #18 | 172 statt 189 Anforderungen | Issue #18 |
 | Lauf #19: Regeln, die Typen verloren | 32 (15 Typen in 11 Regeln außerhalb des Prüfumfangs) | Issue #19 |
-| Bedrock `eu.` Kapazität am 12.10.2026 | dreimal HTTP 503 trotz 4 Wiederholungen | ADR 0012 |
+| Bedrock `eu.` Kapazität bei einem Lauf | dreimal HTTP 503 trotz 4 Wiederholungen | ADR 0012 |
 
 ## Echte Beispiele
 

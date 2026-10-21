@@ -22,7 +22,7 @@ def test_start_page_warns_about_data_and_explains_the_report() -> None:
     assert DATA_WARNING in shown_text(app)
     assert "So lesen Sie einen Audit-Report" in shown_text(app)
     assert f"höchstens {with_thousand_dots(MAX_INPUT_CHARS)} Zeichen" in shown_text(app)
-    assert "Inferenz an Groq" not in shown_text(app)  # no data flow note (decided 19.10., #51)
+    assert "Inferenz an Groq" not in shown_text(app)  # no data flow note (decided in #51)
 
 
 def test_the_intro_is_a_framed_list_one_sentence_per_item() -> None:

@@ -52,7 +52,7 @@ def test_merge_keeps_old_rules_unchanged_in_selection_order() -> None:
     assert merged.model_id == "old"  # the frozen part names the catalog's origin
 
 
-# Catalog of 18.10.2026 (step 12l): 116 SDM rules. DSGVO is decomposed anew (#53, ADR 0026);
+# Frozen catalog (step 12l): 116 SDM rules. DSGVO is decomposed anew (#53, ADR 0026);
 # the SDM rules stay byte for byte, and with them their cross references to whole articles
 FROZEN_RULES = 116
 FROZEN_SHA256 = "47e0186e60590f63894a26a456537315e9647f55af8562f8ef2b344eb65c0bc3"

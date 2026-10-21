@@ -1,6 +1,6 @@
 # Belege ohne Abschreiben – Citations und Strict Tool Use
 
-Recherche für #26, Stand 14.10.2026. Lokal geprüft: `pydantic-ai-slim` 2.54.0, `botocore` 1.43.110, `groq` 1.7.0 (`.venv`). Quellen in eckigen Klammern, Liste am Ende.
+Recherche für #26. Lokal geprüft: `pydantic-ai-slim` 2.54.0, `botocore` 1.43.110, `groq` 1.7.0 (`.venv`). Quellen in eckigen Klammern, Liste am Ende.
 
 ## Kurzantwort
 

@@ -13,7 +13,7 @@ Das LLM sagt in Stufe ② zusätzlich, **wessen** Pflicht eine Anforderung ist: 
 - **Das LLM urteilt, der Code wählt aus:** Das LLM liefert nur die Ebene, die Konsequenz zieht deterministischer Code. Damit ist die Auswahl nachvollziehbar und jede Code-Entscheidung hat einen festen Begründungssatz (BSI: Nachweisbarkeit, ADR 0011).
 - **Nur Pflichten des Workloads ins Architektur-Audit:** Konto-Pflichten wie Root-MFA oder kontoweiter CloudTrail sind an keinem Template entscheidbar; dafür gibt es Prowler oder Security Hub. Weniger falsche Befunde heißt auch weniger LLM-Aufrufe im Audit (FinOps: 172 statt 189 Anforderungen).
 
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Shared Responsibility Model**: AWS teilt Sicherheitspflichten auf Anbieter, Konto und Workload auf; GovGuard prüft nur die Workload-Schicht.
 - **Ebene** (`scope_level`): wessen Pflicht eine Anforderung ist; nur `template` ist „relevant“ für das Architektur-Audit.
 - **Abdeckungs-Gate**: Build-Abbruch, wenn eine Komponente eines Archetyps keine ausgewählte Anforderung mehr hat; deshalb nennt der Prompt jetzt alle betroffenen Ressourcentypen.

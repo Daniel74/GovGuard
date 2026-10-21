@@ -13,7 +13,7 @@
 - **Wo die Dateien entstehen:** Es gibt nur einen Befehl, `python -m kb_build`. Heute läuft er lokal, ab #8 auch im manuellen Workflow `build-kb.yml` auf GitHub Actions. Dort ist er Stufe 1 der Kette. Der Workflow-Runner ist eine Wegwerf-Maschine: `cis.json` entsteht dort und wird danach gelöscht. Ins Repo und in den PR kommen nur Prüfregeln mit kurzem Zitat, denn die CIS-Lizenz verbietet die Weitergabe (ADR 0008). `bsi.json` steht unter CC BY-SA und ist eingecheckt. Weil die Quelle gepinnt ist, liefert jeder Lauf dieselbe Datei.
 - **Vorfilter nach Metadaten statt Textsuche:** Er liest `modal_verb` aus dem Statement-Part, `sec_level` = normal-SdT und die Praktik. MUSS und SOLLTE kommen beide durch, weil das BSI alle technischen Anforderungen wie DET.3.1 als SOLLTE führt (ADR 0007).
 
-## Prüfungsbegriffe
+## Fachbegriffe
 - **Reproduzierbarer Build**: Quelle auf Commit und Prüfsumme gepinnt, also gleiche Eingabe und gleiches Ergebnis.
 - **Golden-Test**: ein Test gegen echte Daten mit fester Sollzahl (1000/380, 70/45). Er schützt die Regel davor, auf die Zahl hingebogen zu werden.
 - **Reine Funktion**: kein I/O, gleiche Eingabe ergibt immer dieselbe Ausgabe. Deshalb sind die Adapter mit kleinen Fakes testbar.

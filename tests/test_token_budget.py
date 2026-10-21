@@ -51,5 +51,5 @@ def test_a_request_bigger_than_the_budget_goes_alone() -> None:
 
 
 def test_the_estimate_counts_the_prompt_and_reserves_the_whole_answer() -> None:
-    # Groq counts max_tokens against the minute (x-ratelimit-remaining-tokens, 19.10.2026)
+    # Groq counts max_tokens against the minute (x-ratelimit-remaining-tokens)
     assert estimated_tokens("x" * 30_000, 8_000) == 10_000 + 8_000

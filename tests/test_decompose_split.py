@@ -60,16 +60,16 @@ def test_the_second_run_asks_the_llm_nothing() -> None:
 
 
 def test_rights_and_classification_rules_are_no_keine_pflicht() -> None:
-    # Run of 19.10.2026: KI-VO Art. 6 Abs. 2 (Annex III) and DSGVO Art. 22 Abs. 1 were dropped
+    # Early run: KI-VO Art. 6 Abs. 2 (Annex III) and DSGVO Art. 22 Abs. 1 were dropped
     assert "Rechte der betroffenen Person und Regeln zur Einstufung" in INSTRUCTIONS
 
 
 def test_a_prohibition_with_listed_exceptions_is_named() -> None:
-    # Wohngeld 19.10.2026: DSGVO Art. 9 Abs. 1 alone was FAIL despite Abs. 2 lit. b
+    # Wohngeld run: DSGVO Art. 9 Abs. 1 alone was FAIL despite Abs. 2 lit. b
     assert "Ein Verbot, dessen Ausnahmen der Artikel in einem eigenen Absatz aufzählt" in (
         INSTRUCTIONS)
 
 
 def test_measures_listed_with_gegebenenfalls_are_no_alternatives() -> None:
-    # Run of 19.10.2026: DSGVO Art. 32 Abs. 1 lit. a-d flipped to eine_genuegt
+    # Early run: DSGVO Art. 32 Abs. 1 lit. a-d flipped to eine_genuegt
     assert 'mit\n  "gegebenenfalls" oder "unter anderem" ist "je_nach_risiko"' in INSTRUCTIONS

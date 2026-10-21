@@ -1,6 +1,6 @@
 # Fachkonzept (Kurzfassung): GovGuard im Demo-Stand
 
-_Stand 19.10.2026. Diese Systembeschreibung ist zugleich ein Musterfall: GovGuard prüft sie selbst,
+_Diese Systembeschreibung ist zugleich ein Musterfall: GovGuard prüft sie selbst,
 das Ergebnis steht in der Galerie._
 
 _Begriffe: [CONTEXT.md](../CONTEXT.md) · Entscheidungen: [adr/](adr/) · Technik: [ARCHITECTURE.md](ARCHITECTURE.md)_
@@ -34,7 +34,7 @@ GovGuard ersetzt die Fachleute nicht. Er zeigt ihnen in Minuten, wo sie genauer 
 
 ## 2 Geltungsbereich und Abgrenzung
 
-Diese Beschreibung gilt für den Demo-Stand, der zur Präsentation am 26.10.2026 läuft.
+Diese Beschreibung gilt für den Demo-Stand.
 
 Der Demo-Stand ist eine Web-Anwendung auf Streamlit Community Cloud. Das ist ein kostenloser Dienst
 zum Betrieb von Python-Anwendungen.
@@ -399,7 +399,7 @@ jede Änderung mit Zeitpunkt und Autor nachvollziehbar.
 
 ### G13 Bestehende Prüfregeln bleiben unverändert
 
-Seit dem 18.10.2026 bleiben die bestehenden Prüfregeln und die Prüflogik unverändert. So bleiben die
+Der Prüfkatalog ist eingefroren: Die bestehenden Prüfregeln und die Prüflogik bleiben unverändert. So bleiben die
 Audit-Reports der Galerie untereinander vergleichbar.
 
 Eine neue Quelle darf nur Prüfregeln hinzufügen. Ändert eine Erweiterung bestehende Prüfregeln,
@@ -462,7 +462,7 @@ Für GovGuard gelten deshalb nur die allgemeinen Pflichten der KI-VO:
 
 | Merkmal             | Anforderung                                                                                                                                                                           |
 | ------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Leistung            | Eine Eingabe hat höchstens 100.000 Zeichen; das prüft das Programm vor jedem Aufruf des Sprachmodells. Ein Audit dauert mit Groq ca. 20 bis 55 Sekunden (Messung 16.10.2026).         |
+| Leistung            | Eine Eingabe hat höchstens 100.000 Zeichen; das prüft das Programm vor jedem Aufruf des Sprachmodells. Ein Audit dauert mit Groq ca. 20 bis 55 Sekunden (gemessen).         |
 | Kosten              | Ein Audit kostet mit Groq 2 bis 3 Cent. Das Passwort verhindert, dass Fremde Kosten auslösen.                                                                                         |
 | Leerlaufkosten      | 0 €. Leerlaufkosten sind Kosten, die ohne Nutzung allein durch Zeit entstehen.                                                                                                        |
 | Sicherheit          | Passwort und Zugangsschlüssel für das Sprachmodell liegen nur in den geschützten Einstellungen von Streamlit, nicht im Programmcode. Ohne eingerichtetes Passwort startet kein Audit. |
@@ -490,7 +490,7 @@ GovGuard macht sichtbar, wo.
 
 **Qualitätsziel:** Jeder Musterfall erreicht sein Soll im Gesamtstatus und in seinen Pflichtbefunden.
 
-Die Zahlen in P1 bis P6 sind Messwerte aus Messläufen im Oktober 2026 und aus der Galerie. Sie
+Die Zahlen in P1 bis P6 sind Messwerte aus Messläufen und aus der Galerie. Sie
 zeigen den Ist-Stand, keine Anforderung.
 
 ### So wird die Qualität gesichert
@@ -526,12 +526,12 @@ existieren und lang genug sind, bis zu einem Abschnitt von 200 Zeilen.
 
 - **Gegenmaßnahme:** Ohne gültige Zeilen wird PASS zu WARN (G5). Musterfälle legen PASS-Befunde fest.
 - **Was bleibt:** Für PASS gibt es keine Zweitprüfung. Das ist das größte Restrisiko. Beispiel:
-  Am 16.10.2026 ergab eine Messung beim Musterfall Antragseingang BSI BER.4.1 als PASS statt FAIL.
+  In einer Messung bewertete GovGuard im Musterfall Antragseingang BSI BER.4.1 als PASS statt FAIL.
 
 ### P4 Viele Lücken
 
 In der offenen Welt sind die meisten Befunde Lücken, bei den drei Spec-Musterfällen 206 bis 294
-von 350 (Galerie vom 20.10.2026). Meist beschreibt die Eingabe die Anforderung einfach nicht.
+von 350 (Galerie). Meist beschreibt die Eingabe die Anforderung einfach nicht.
 
 - **Gegenmaßnahme:** Die Oberfläche trennt Lücken vom Prüfbedarf und gruppiert sie nach Bedingung
   (Abschnitt 6). Für jedes Vorhaben bleiben so 145 bis 254 Lücken.

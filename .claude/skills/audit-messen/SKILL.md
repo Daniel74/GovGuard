@@ -50,4 +50,4 @@ Jeder Lauf kostet echtes Geld (Kosten-Weiche, CLAUDE.md). Die CLI kennt `spec` u
 
 - Scheitert ein Paket endgültig, bricht `asyncio.run` die übrigen ab. `calls` zählt dann nur fertige Aufrufe; Bedrock berechnet abgebrochene trotzdem. Die Zahl der Retry-Prompts zeigt, wie viele Pakete wirklich Probleme hatten.
 - Preise: Haiku 4.5 kostet 1 $ / 5 $ je Mio. Tokens, das `eu.`-Profil 10 % mehr (Anthropic-Preisdoku). Ändert sich `MODEL_ID` in `adapters/aws_services.py`, die Preiszeile in `measure.py` anpassen.
-- Basislinie 14.10.2026, `spec-wohngeld-openapi` (84 KB, 151 Regeln, 16 Pakete), noch mit wörtlichen Zitaten: ca. 39 s, 32 Tsd. Input-Tokens und ca. 3.000 Output-Tokens je Aufruf, langsamster Aufruf 37 s, ca. 0,90 $, fail closed wegen zusammengesetzter Belege.
+- Basislinie (frühe Messung), `spec-wohngeld-openapi` (84 KB, 151 Regeln, 16 Pakete), noch mit wörtlichen Zitaten: ca. 39 s, 32 Tsd. Input-Tokens und ca. 3.000 Output-Tokens je Aufruf, langsamster Aufruf 37 s, ca. 0,90 $, fail closed wegen zusammengesetzter Belege.

@@ -3,7 +3,7 @@
 ## Produkt
 GovGuard prüft fiktive Behörden-Spezifikationen (DSGVO/SDM) und AWS-Architekturen
 (BSI IT-Grundschutz, CIS, AWS FSBP) und liefert einen Audit-Report mit PASS/WARN/FAIL/N/A
-je Prüfregel. Nutzer: Prüfungsausschuss in einer 15-min-Präsentation (26.10.) und danach Recruiter.
+je Prüfregel. Nutzer: Fachleute und Recruiter, in einer 15-min-Vorführung und danach beim Selbststudium.
 UI-Sprache Deutsch, sachlich, Behörden-Look (ruhig, viel Weißraum, keine Spielerei).
 
 ## Harte Grenze: Umsetzung in Streamlit
@@ -35,7 +35,7 @@ rationale, recommendation, cross_references[], downgraded_from, corrections[].
 Report: audit_type, overall_status, model_id, retries, fail_judge{checked, confirmed,
 downgraded, unavailable}, unassigned_corrections[], findings[] (30–150 Stück).
 
-## Anhänge (echte Reports, Groq, 16.10.2026)
+## Anhänge (echte Reports, Groq)
 - `beispiel-reports/report-spec-meldeportal.json` + `data/input/presets/spec-meldeportal-gesundheit/input.md`
   (Markdown, 4 KB): 151 Befunde = 16 FAIL, 7 PASS, 120 WARN, 8 N/A; FAIL-Prüfer: 23 geprüft,
   16 bestätigt, 7 herabgestuft.

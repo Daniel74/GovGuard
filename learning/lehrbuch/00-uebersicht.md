@@ -48,7 +48,7 @@ Leitsatz aus ADR 0011: **„Das LLM urteilt, der Code wählt aus.“**
 - **Spec-Audit:** prüft eine fachliche Spezifikation (Freitext oder OpenAPI) gegen DSGVO und SDM (Standard-Datenschutzmodell). Quellen: `DSGVO`, `SDM`.
 - **Architektur-Audit:** prüft ein CloudFormation- oder Terraform-Template gegen BSI Grundschutz++, BSI C5, CIS AWS v7 und AWS FSBP (Foundational Security Best Practices). Quellen: `BSI`, `C5`, `CIS`, `FSBP`. Festgelegt in `select/run.py:SELECTIONS`.
 
-## Stand der Pipeline (13.10.2026)
+## Stand der Pipeline
 
 | Schritt | Ticket | Stand |
 |---|---|---|
