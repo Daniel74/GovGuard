@@ -237,10 +237,19 @@ def test_unusable_range_outside_pass_counts_as_no_range_without_retry(
                        answer_in_turns([PASS_32, pointing], seen=seen), trace)
 
     assert len(seen) == 1  # only PASS needs a usable range; elsewhere it is like no range
+    finding = report.findings[1]
     downgraded = "WARN" if status == "FAIL" else status
-    assert (report.findings[1].status, report.findings[1].evidence) == (downgraded, None)
-    # only FAIL -> WARN is a downgrade; a WARN loses its lines silently and becomes a gap
-    assert report.findings[1].downgraded_from == ("FAIL" if status == "FAIL" else None)
+    assert (finding.status, finding.evidence) == (downgraded, None)
+    assert finding.downgraded_from == ("FAIL" if status == "FAIL" else None)  # only FAIL -> WARN
+    assert finding.range_dropped  # the dropped range stays visible (#74)
+    assert any(f"Zeilenbereich {line_start}-{line_end}" in c and "gestrichen" in c
+               for c in finding.corrections)
+
+
+def test_a_usable_range_is_never_marked_as_dropped(spec_catalog, trace) -> None:
+    report = run_audit(spec_catalog, LONG_INPUT, answer_with(PASS_32, WARN_9), trace)
+
+    assert [f.range_dropped for f in report.findings] == [False, False]
 
 
 def test_a_whole_section_of_200_lines_is_valid_evidence(spec_catalog, trace) -> None:

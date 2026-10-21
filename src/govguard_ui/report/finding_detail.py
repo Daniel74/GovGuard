@@ -6,7 +6,7 @@ import streamlit as st
 
 from govguard.condition_models import LineRange
 from govguard.models import Finding
-from govguard_ui.report.review import category, document_window, lines_text
+from govguard_ui.report.review import category, document_window, lines_text, no_evidence_note
 from govguard_ui.style import badge, paragraph, status_word, tag
 
 MARKDOWN_SIGNS = set("\\`*_{}[]()#+-.!|<>~$:")  # incl. Streamlit's :colour[...] and $formula$
@@ -23,6 +23,8 @@ def render_detail(finding: Finding) -> None:
     tags = []
     if finding.downgraded_from:
         tags.append(f"↓ herabgestuft von {status_word(finding.downgraded_from)}")
+    if finding.range_dropped:
+        tags.append("✂ Zeilenbereich gestrichen")  # like a downgrade, the reason is below (#74)
     if kind == "GAP":
         tags.append("kein Verstoß")  # CONTEXT: Lücke, never "nicht entscheidbar"
     with st.container(border=True):
@@ -57,7 +59,7 @@ def render_document(source_name: str, source_text: str, finding: Finding, key: s
             full = st.toggle("Ganzes Dokument", key=f"{key}_full", width="content")
         window = document_window(source_text, finding, full, marks)
         if finding.line_start is None and not marks:
-            st.info("Kein Beleg: Zu dieser Prüfregel nennt der Befund keine Stelle im Dokument.")
+            st.info(no_evidence_note(finding))
         if window.hidden_above:
             st.caption(f"▲ Zeilen 1–{window.hidden_above} ausgeblendet (Belegzeilen stehen oben)")
         lines = "".join(

@@ -1,6 +1,6 @@
 """Evidence by line reference (ADR 0017): the model points to lines, the code cuts the quote."""
 
-from govguard.checks.corrections import Problem
+from govguard.checks.corrections import Correction, Problem
 from govguard.models import FindingDraft
 from govguard.text import MIN_QUOTE_LENGTH, too_short_to_prove
 
@@ -40,6 +40,19 @@ def without_unproven_verdict(draft: FindingDraft, text: str, last_attempt: bool)
         return draft.model_copy(update={"status": "WARN", "line_start": None, "line_end": None,
                                         "recommendation": UNPROVEN_PASS})
     return draft
+
+
+def dropped_ranges(
+    before: list[FindingDraft], after: list[FindingDraft], text: str
+) -> list[Correction]:
+    """A range dropped at WARN, FAIL or N/A stays visible as a correction (#74); an unproven
+    PASS already shows its retry reason and its downgrade."""
+    return [
+        Correction(old.rule_id,
+                   f"{old.rule_id}: {range_problem(text, *lines)}, vom Code gestrichen")
+        for old, new in zip(before, after, strict=True)
+        if old.status != "PASS" and (lines := _lines(old)) and _lines(new) is None
+    ]
 
 
 def evidence_of(draft: FindingDraft, text: str) -> str | None:

@@ -40,9 +40,32 @@ def expected_checks(report: AuditReport, expected: Expected) -> list[ExpectedChe
 
 
 def category(finding: Finding) -> Category:
-    """A downgrade always needs review, even without lines: it is never a gap (ADR 0017)."""
-    is_gap = finding.line_start is None and finding.downgraded_from is None
+    """A downgrade or a dropped range always needs review, even without lines: it is never a gap
+    (ADR 0017, #74)."""
+    untouched = finding.downgraded_from is None and not finding.range_dropped
+    is_gap = finding.line_start is None and untouched
     return "GAP" if finding.status == "WARN" and is_gap else finding.status
+
+
+def warn_caption(findings: list[Finding]) -> str:
+    """Caption of the Prüfbedarf tile: how many WARN the code made or touched (#51, #74)."""
+    downgraded = sum(1 for f in findings if f.downgraded_from)
+    dropped = sum(1 for f in findings  # a downgrade counts once, as a downgrade
+                  if f.range_dropped and not f.downgraded_from and category(f) == "WARN")
+    parts = []
+    if downgraded:
+        parts.append(f"{downgraded} herabgestuft")
+    if dropped:
+        parts.append(f"{dropped} mit gestrichenem Bereich")
+    return "mit Beleg · davon " + ", ".join(parts) if parts else "mit Beleg"
+
+
+def no_evidence_note(finding: Finding) -> str:
+    """Why the detail shows no lines: none given, or the code dropped an unusable range (#74)."""
+    if finding.range_dropped:
+        return ("Kein Beleg: Die KI nannte einen ungültigen Zeilenbereich, der Code hat ihn "
+                "gestrichen (siehe Korrekturen).")
+    return "Kein Beleg: Zu dieser Prüfregel nennt der Befund keine Stelle im Dokument."
 
 
 def category_counts(findings: list[Finding]) -> dict[Category, int]:

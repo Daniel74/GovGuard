@@ -47,7 +47,7 @@ Eine Prüfregel ist eine prüfbare Pflicht aus genau einer Anforderung einer Nor
 | PASS | Die Eingabe belegt die Einhaltung. | Pflicht | – | 🤖; ⚙️ prüft den Beleg |
 | FAIL | Die Eingabe belegt einen Verstoß. | Pflicht | Pflicht | 🤖; ⚙️ prüft den Beleg, in offener Welt zusätzlich 🤖 der Verstoß-Prüfer |
 | WARN | Aus der Eingabe nicht entscheidbar („Prüfbedarf“). | möglich | Pflicht | 🤖, oder ⚙️ durch Herabstufung |
-| Lücke | ein WARN ohne Belegzeilen, das der Code nicht herabgestuft hat: Die Eingabe beschreibt die Anforderung nicht. Ein herabgestuftes WARN ist nie eine Lücke, denn es verlangt einen Blick auf den alten Status. Nennt das Modell ein WARN mit ungültigen Zeilen, streicht der Code die Zeilen, und das WARN wird ohne Vermerk zur Lücke. | keine | Pflicht | 🤖 |
+| Lücke | ein WARN ohne Belegzeilen, das der Code weder herabgestuft noch um ungültige Zeilen gekürzt hat: Die Eingabe beschreibt die Anforderung nicht. Beide Eingriffe verlangen einen Blick auf den Befund: Ein herabgestuftes WARN hat einen alten Status, und bei gestrichenen Zeilen hatte das Modell eine Stelle gesehen, nur die Nummern stimmten nicht (Marke `range_dropped`). | keine | Pflicht | 🤖 |
 | N/A | Die Prüfregel ist auf die Eingabe nicht anwendbar. | bei einer verneinten Bedingung die verneinende Zeile | – | ⚙️ vorab; 🤖 nur im Spec-Audit |
 
 Der Gesamtstatus eines Reports ist der schlechteste Status aller Befunde in der Reihenfolge FAIL, WARN, PASS, N/A; nur wenn alle Befunde N/A sind, ist er N/A (`overall_status`).
@@ -204,7 +204,7 @@ Dazu kommt eine Ableitung: Verneint die Spezifikation ein KI-System, ist auch di
 | Paket | Der Auftrag enthält eine Regel für die offene Welt: FAIL nur, wenn die Belegzeilen etwas festlegen, das der Prüfregel widerspricht (`OPEN_WORLD_FAIL_RULE`). | 🤖 |
 | nach den Paketen | Der Verstoß-Prüfer prüft jedes FAIL noch einmal. | 🤖 ⚙️ |
 
-*Antwort prüfen.* ⚙️ Der Code prüft jede Antwort, bevor sie zählt: genau ein Befund je Prüfregel, PASS mit gültigem Beleg, Empfehlung bei WARN und FAIL. Was er selbst reparieren kann, repariert er ohne Retry: Bei Doppelbefunden gilt der schwerste Status, eine fehlende Empfehlung kommt aus der Prüfregel, ungültige Zeilen bei WARN, FAIL und N/A streicht er, und ein FAIL ohne Zeilen wird WARN. Ein PASS mit ungültigem Beleg geht einmal mit Grund zurück und wird danach WARN, ohne Abbruch. Alles andere geht einmal mit Grund zurück ans Modell; bleibt es ungültig, endet das Audit ohne Report. Die vollständige Liste der Regeln steht in [ARCHITECTURE 4.6](ARCHITECTURE.md#46-regeln-in-klartext-wo-erzwingt-der-code-sie), die Ausnahmen in [7.2](ARCHITECTURE.md#72-die-deterministische-schale) (Muster 5).
+*Antwort prüfen.* ⚙️ Der Code prüft jede Antwort, bevor sie zählt: genau ein Befund je Prüfregel, PASS mit gültigem Beleg, Empfehlung bei WARN und FAIL. Was er selbst reparieren kann, repariert er ohne Retry: Bei Doppelbefunden gilt der schwerste Status, eine fehlende Empfehlung kommt aus der Prüfregel, ungültige Zeilen bei WARN, FAIL und N/A streicht er mit einer Korrektur, und ein FAIL ohne Zeilen wird WARN. Ein PASS mit ungültigem Beleg geht einmal mit Grund zurück und wird danach WARN, ohne Abbruch. Alles andere geht einmal mit Grund zurück ans Modell; bleibt es ungültig, endet das Audit ohne Report. Die vollständige Liste der Regeln steht in [ARCHITECTURE 4.6](ARCHITECTURE.md#46-regeln-in-klartext-wo-erzwingt-der-code-sie), die Ausnahmen in [7.2](ARCHITECTURE.md#72-die-deterministische-schale) (Muster 5).
 
 *Verstoß-Prüfer.* Ob Belegzeilen einen Verstoß festlegen oder nur zum Thema schweigen, ist eine Frage der Bedeutung, die kein Code entscheidet. 🤖 Ein zweiter Modellaufruf bekommt darum alle FAILs zusammen, aber je FAIL nur Titel, Verstoßkriterium und die nummerierten Belegzeilen, nicht die Begründung des Pakets (`judge_fails`). Er bestätigt jedes FAIL oder nicht, mit einem Satz Grund. ⚙️ Ein nicht bestätigtes FAIL wird WARN, und der alte Status bleibt am Befund sichtbar. Ohne Urteil bleibt das FAIL. Der Prüfer kann nur senken, nie heben. Im gespeicherten Report des Meldeportals prüfte er 49 FAILs, bestätigte 33 und stufte 16 herab.
 
@@ -270,7 +270,7 @@ Der Inventar-Vorlauf prüft jede Antwort in zwei Schritten: Erst muss jeder gena
 
 ## 5 Report, Soll und Galerie
 
-Ein Report zeigt jeden Befund mit Beleg im Dokument und macht die Eingriffe des Codes sichtbar; nur gestrichene ungültige Zeilen bei WARN, FAIL und N/A vermerkt er nicht (Kapitel 1). Musterfälle sind fiktive Eingaben mit einem Soll von Hand; die Galerie zeigt ihre gespeicherten Reports. Weicht ein Report vom Soll ab, zeigt GovGuard das, statt neu zu würfeln.
+Ein Report zeigt jeden Befund mit Beleg im Dokument und macht jeden Eingriff des Codes sichtbar; nur Reports von vor #74 vermerken gestrichene Zeilen noch nicht (*Galerie*). Musterfälle sind fiktive Eingaben mit einem Soll von Hand; die Galerie zeigt ihre gespeicherten Reports. Weicht ein Report vom Soll ab, zeigt GovGuard das, statt neu zu würfeln.
 
 *Der Report.* Der Report ist ein JSON-Dokument (`AuditReport`); die Oberfläche zeigt ihn neben der geprüften Eingabe und bietet ihn als JSON zum Herunterladen an. Wo welche Teile im Code liegen, zeigt [ARCHITECTURE 4.4](ARCHITECTURE.md#44-paket-govguard_ui-die-oberfläche).
 
@@ -296,7 +296,7 @@ Ein Report zeigt jeden Befund mit Beleg im Dokument und macht die Eingriffe des 
 
 Das Soll eines Musterfalls kann auch eine Referenzarchitektur nennen (`archetype`); das Feld ist ein Rest des nicht gebauten Archetyp-Pfads, und kein Code wertet es aus (ADR [0019](adr/0019-nur-audits.md)). Ein Validator lässt es nur bei einem Spec-Audit ohne Soll-FAIL zu (`archetype_only_for_spec_without_fail`).
 
-*Galerie.* Die Galerie zeigt für jeden Musterfall den gespeicherten Report neben der Eingabe (`GalleryEntry`). Die Reports entstehen mit der Kommandozeile, liegen als JSON in `data/gallery/` und ändern sich nur per Commit; die Galerie ruft kein Modell auf und kostet nichts. Das Selbstaudit prüft die eigene Spezifikation; darum muss der Musterfall Byte für Byte gleich `docs/SPEC.md` sein.
+*Galerie.* Die Galerie zeigt für jeden Musterfall den gespeicherten Report neben der Eingabe (`GalleryEntry`). Die Reports entstehen mit der Kommandozeile, liegen als JSON in `data/gallery/` und ändern sich nur per Commit; die Galerie ruft kein Modell auf und kostet nichts. Reports von vor #74 kennen die Marke für gestrichene Zeilenbereiche nicht; ein WARN, dessen Zeilen der Code gestrichen hat, erscheint dort noch als Lücke. Das Selbstaudit prüft die eigene Spezifikation; darum muss der Musterfall Byte für Byte gleich `docs/SPEC.md` sein.
 
 ## 6 Was ein Nachbau braucht
 

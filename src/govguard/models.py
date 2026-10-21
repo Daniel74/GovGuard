@@ -86,6 +86,7 @@ class Finding(FindingDraft):  # completed by the code from the input and the cat
     primary_anchor: str
     cross_references: list[CrossReference]
     downgraded_from: Status | None = None  # original status if the code downgraded it (ADR 0017)
+    range_dropped: bool = False  # the code dropped an unusable line range: never a gap (#74)
     corrections: list[str] = []  # readable reasons for retry and downgrade, same text as the retry
 
 

@@ -113,7 +113,7 @@ Die Begriffe, wie sie hier gebraucht werden; das vollständige Glossar steht in 
 | Befund | Ein Befund ist das Ergebnis genau einer Prüfregel in einem Audit, mit Status, Beleg und Empfehlung. |
 | Status | PASS heißt Einhaltung belegt, FAIL Verstoß belegt, N/A nicht anwendbar. WARN heißt nicht entscheidbar; die Oberfläche nennt es „Prüfbedarf“. |
 | Beleg | Ein Beleg ist der wörtliche Ausschnitt der Eingabe, auf den sich ein Befund stützt. |
-| Lücke | Eine Lücke ist ein WARN ohne Belegzeilen, das der Code nicht herabgestuft hat: Die Eingabe beschreibt die Anforderung nicht. |
+| Lücke | Eine Lücke ist ein WARN ohne Belegzeilen, das der Code nicht herabgestuft und dessen Zeilen er nicht gestrichen hat: Die Eingabe beschreibt die Anforderung nicht. |
 | Herabstufung | Eine Herabstufung ist der Wechsel von PASS oder FAIL auf WARN durch den Code; der alte Status bleibt am Befund sichtbar. |
 | Anker | Ein Anker ist die Fundstelle einer Prüfregel in der Norm, etwa „DSGVO Art. 32“; der Code setzt ihn, nie das Modell. |
 | Entwurf | Ein Entwurf (Draft) ist das Formular, das das Modell ausfüllt; der Code macht daraus den fertigen Typ. |
@@ -557,12 +557,14 @@ classDiagram
     title
     primary_anchor
     downgraded_from
+    range_dropped
     corrections
   }
   class Corrections {
     <<⚙️ Code>>
     downgrades
     repairs
+    dropped
     retry_problems
     failed
     retries
@@ -650,19 +652,19 @@ classDiagram
 |---|---|---|---|
 | Katalog, Prüfregel | Ergebnis des Builds, zur Laufzeit nur gelesen | ⚙️ | `RuleCatalog`, `Rule` |
 | Antwort und Entwurf je Prüfregel | Status, Zeilenbereich, Begründung, Empfehlung | 🤖 | `AuditResponse`, `FindingDraft` |
-| Befund | der Entwurf plus Beleg, Titel, Anker, Querverweise, Herabstufung und Korrekturen | ⚙️ | `Finding` |
-| Korrekturen | Sammler aller Eingriffe des Codes in einem Audit: Herabstufungen, Reparaturen, Retry-Gründe, Urteile des Verstoß-Prüfers | ⚙️ | `Corrections` |
+| Befund | der Entwurf plus Beleg, Titel, Anker, Querverweise, Herabstufung, Marke für gestrichene Zeilen und Korrekturen | ⚙️ | `Finding` |
+| Korrekturen | Sammler aller Eingriffe des Codes in einem Audit: Herabstufungen, Reparaturen, gestrichene Zeilenbereiche, Retry-Gründe, Urteile des Verstoß-Prüfers | ⚙️ | `Corrections` |
 | Report, Rückverfolgung, Zähler | Gesamtstatus, ein Befund je Prüfregel, Modell, Hashes von Eingabe und Katalog, Zähler des Verstoß-Prüfers | ⚙️ | `AuditReport`, `Trace`, `FailJudgeCount` |
 | Fortschritt | Phase und fertige Pakete, für den Fortschrittsbalken | ⚙️ | `Progress` |
 | Musterfall, Soll, Pflichtbefund | fiktive Eingabe mit Gesamtstatus und wenigen Pflichtbefunden, nie aus einem Lauf übernommen | 👤 | `Preset`, `Expected`, `RequiredFinding` |
 
-*Elemente.* Die Tabelle oben nennt jede Klasse. Im Befund (`Finding`) tragen die geerbten Felder ein 🤖: Status, Zeilenbereich, Begründung und Empfehlung kommen aus dem Entwurf des Modells, auch wenn der Code den Status herabstufen kann. Zwei Ausnahmen: Setzt der Code eine Prüfregel vorab auf N/A (verneinte Bedingung, Typ nicht im Inventar), schreibt er alle diese Felder selbst; beim Fristenwecker gilt das für 144 von 175 Befunden. Und eine fehlende Empfehlung ergänzt der Code aus der Prüfregel. In der Prüfregel stammen Titel, Kriterien, Empfehlung und Ressourcentypen aus dem Build, also ebenfalls von 🤖, aber geprüft und eingefroren. Der Fortschritt (`Progress`) hat keine Beziehung: Er wird während des Laufs gemeldet und nicht gespeichert.
+*Elemente.* Die Tabelle oben nennt jede Klasse. Im Befund (`Finding`) tragen die geerbten Felder ein 🤖: Status, Zeilenbereich, Begründung und Empfehlung kommen aus dem Entwurf des Modells, auch wenn der Code den Status herabstufen oder einen ungültigen Zeilenbereich streichen kann. Zwei Ausnahmen: Setzt der Code eine Prüfregel vorab auf N/A (verneinte Bedingung, Typ nicht im Inventar), schreibt er alle diese Felder selbst; beim Fristenwecker gilt das für 144 von 175 Befunden. Und eine fehlende Empfehlung ergänzt der Code aus der Prüfregel. In der Prüfregel stammen Titel, Kriterien, Empfehlung und Ressourcentypen aus dem Build, also ebenfalls von 🤖, aber geprüft und eingefroren. Der Fortschritt (`Progress`) hat keine Beziehung: Er wird während des Laufs gemeldet und nicht gespeichert.
 
 *Beziehungen.*
 
 - Ein Katalog enthält eine oder mehrere Prüfregeln.
 - Eine Antwort des Modells enthält null oder mehr Entwürfe; jeder Entwurf verweist per Kennung (`rule_id`) auf eine Prüfregel. Eine unbekannte Kennung lässt das Gate nicht durch.
-- Ein Befund erbt vom Entwurf. Der Sammler der Korrekturen liefert jedem Befund seine Korrekturen und den alten Status nach einer Herabstufung.
+- Ein Befund erbt vom Entwurf. Der Sammler der Korrekturen liefert jedem Befund seine Korrekturen, den alten Status nach einer Herabstufung und die Marke für gestrichene Zeilen (`range_dropped`); was sie für die Lücke bedeutet, erklärt [FUNKTIONSWEISE](FUNKTIONSWEISE.md#1-prüfregel-katalog-und-befund) Kapitel 1.
 - Ein Report enthält genau einen Befund je Prüfregel, genau eine Rückverfolgung und genau einen Zähler des Verstoß-Prüfers.
 - Ein Musterfall enthält genau ein Soll; das Soll enthält null oder mehr Pflichtbefunde. Das Soll verweist auf einen Report, wenn die Oberfläche beide abgleicht.
 
@@ -1058,7 +1060,7 @@ stateDiagram-v2
 |---|---|---|---|
 | Start → N/A | ⚙️ | Bedingung verneint oder Ressourcentyp nicht im Inventar; nie ans Modell | `na_drafts`, `Inventory.applies` |
 | Start → Entwurf | 🤖 | Paket geht ans Modell, Antwort als Formular | `package_requests` |
-| Entwurf → bereinigt | ⚙️ | Doppelte auf den schwersten Status, fehlende Empfehlung aus der Prüfregel, unbrauchbarer Zeilenbereich gestrichen, FAIL ohne Zeilen wird WARN | `worst_of_duplicates`, `with_rule_recommendations`, `without_unproven_verdict` |
+| Entwurf → bereinigt | ⚙️ | Doppelte auf den schwersten Status, fehlende Empfehlung aus der Prüfregel, unbrauchbarer Zeilenbereich gestrichen und vermerkt, FAIL ohne Zeilen wird WARN | `worst_of_duplicates`, `with_rule_recommendations`, `without_unproven_verdict`, `dropped_ranges` |
 | Gate → zurück ans Modell | ⚙️ | Problem im ersten Versuch: Grund geht als Retry ans Modell | `answer_problems`, `send_back` |
 | Gate → Abbruch | ⚙️ | Problem im letzten Versuch (Ausnahme: PASS ohne Beleg wird WARN) | `fail_closed` |
 | Gate → geprüft | ⚙️ | kein Problem | – |
@@ -1332,7 +1334,7 @@ Jede Regel, die ein Befund oder eine Prüfregel erfüllen muss, steht hier mit d
 | Ein Report hat genau einen Befund je Prüfregel. | `completeness_problems` (`checks/audit_gates.py`) | `tests/test_run_audit.py` |
 | Ein PASS braucht einen Zeilenbereich in der Eingabe: höchstens 200 Zeilen, mindestens 15 Zeichen. | `evidence_problem`, `range_problem` (`checks/evidence.py`) | `tests/test_evidence.py` |
 | Ein FAIL ohne Zeilenbereich wird WARN; ein PASS ohne Beleg nach dem Retry ebenfalls. | `without_unproven_verdict` | `tests/test_run_audit_corrections.py` |
-| Einen ungültigen Zeilenbereich bei WARN, FAIL und N/A streicht der Code ohne Retry; ein WARN wird dadurch ohne Vermerk zur Lücke, denn als Herabstufung zählt nur PASS oder FAIL nach WARN. | `without_unproven_verdict` (`checks/evidence.py`), `downgrades_of` (`checks/corrections.py`) | `tests/test_run_audit.py` |
+| Einen ungültigen Zeilenbereich bei WARN, FAIL und N/A streicht der Code ohne Retry, mit einer Korrektur am Befund; ein solches WARN ist nie eine Lücke. | `dropped_ranges` (`checks/evidence.py`), `category` (`report/review.py`) | `tests/test_run_audit.py`, `tests/test_review.py` |
 | Der Beleg ist wörtlich, weil der Code ihn aus der Eingabe schneidet. | `evidence_of` | `tests/test_run_audit.py` |
 | Bei Doppelbefunden gilt der schwerste Status; fehlt die Empfehlung, nimmt der Code die der Prüfregel. | `worst_of_duplicates`, `with_rule_recommendations` | `tests/test_run_audit_repairs.py` |
 | Bei anwendbaren Prüfregeln darf das Modell kein N/A vergeben. | `answer_problems` (`na_forbidden`) | `tests/test_run_audit_template.py` |
@@ -1984,7 +1986,7 @@ Die Schale besteht aus sechs Mustern; die Kürzel M1 bis M6 im Bild verweisen au
 
 | 🤖 Entwurf | ⚙️ fertiger Typ | Was der Code ergänzt |
 |---|---|---|
-| `FindingDraft` | `Finding` (erbt) | Beleg aus den Zeilen, Titel, Primäranker, Querverweise, Herabstufung, Korrekturen |
+| `FindingDraft` | `Finding` (erbt) | Beleg aus den Zeilen, Titel, Primäranker, Querverweise, Herabstufung, Marke für gestrichene Zeilen, Korrekturen |
 | `RuleDraft` | `Rule` (erbt) | Kennung, Audit-Art, Quelle, Primäranker, Auswahlgrund, Ressourcentypen; bei zerlegten Rechtsakten das Zitat |
 | `ConditionDraft` | `ConditionResult` | den Wert `yes`, `no` oder `unstated`, Widerspruch, Ableitung aus einer anderen Bedingung |
 

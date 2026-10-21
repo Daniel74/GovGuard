@@ -14,7 +14,13 @@ from pydantic_ai.models import Model
 from govguard.calls.model_call import Answer, CallDeps, agents_for, ask, count_retry, send_back
 from govguard.checks.audit_gates import answer_problems
 from govguard.checks.corrections import Corrections, downgrades_of
-from govguard.checks.evidence import MAX_SPAN, NUMBERED_LINES, numbered, without_unproven_verdict
+from govguard.checks.evidence import (
+    MAX_SPAN,
+    NUMBERED_LINES,
+    dropped_ranges,
+    numbered,
+    without_unproven_verdict,
+)
 from govguard.checks.repairs import with_rule_recommendations, worst_of_duplicates
 from govguard.checks.token_budget import GROQ_TOKENS_PER_MINUTE, TokenBudget, estimated_tokens
 from govguard.models import AuditResponse, FindingDraft, Provider, Rule, provider_of
@@ -67,7 +73,8 @@ def _validate(ctx: RunContext[AuditDeps], response: AuditResponse) -> AuditRespo
     filled, filled_in = with_rule_recommendations(checked, rules)
     expected = {rule.id for rule in rules}
     problems = answer_problems(expected, filled, text, ctx.deps.na_forbidden)
-    ctx.deps.corrections.record_repairs(expected, contradictions + filled_in)
+    ctx.deps.corrections.record_without_retry(
+        expected, contradictions + filled_in, dropped_ranges(kept, checked, text))
     ctx.deps.corrections.record_attempt(
         sorted(expected), downgrades_of(kept, checked), problems, last)
     if problems:

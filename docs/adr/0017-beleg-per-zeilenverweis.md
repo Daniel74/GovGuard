@@ -40,6 +40,12 @@ _Ergänzt [ADR 0005](0005-pydantic-ai.md) und [ADR 0016](0016-groq-zur-laufzeit-
 - **Entscheidung:** `RecognizedType` nennt `line_start` und `line_end` in der nummerierten Eingabe. Der Code prüft den Bereich mit `range_problem()` wie bei einem Befund, ein Retry, dann fail closed.
 - **Konsequenzen:** Belege im Vorlauf sind per Konstruktion wörtlich. `contains_quote` nutzt nur noch der Build. Ein falscher Zeilenverweis bleibt möglich, so wie vorher ein passendes Zitat zum falschen Dienst. Das Schema nimmt statt `resource_type` auch `type` an, denn Groq schrieb es fast immer und brauchte dafür einen Retry. Die Lockerung betrifft nur den Feldnamen; der Wert muss weiter im Katalog stehen.
 
+## Nachtrag (#74): Gestrichener Zeilenbereich wird sichtbar
+
+- **Kontext:** Bei WARN, FAIL und N/A strich der Code einen unbrauchbaren Bereich ohne Vermerk. Ein WARN wurde so zur Lücke, obwohl die KI eine Stelle gesehen hatte.
+- **Entscheidung:** Der Code vermerkt jeden gestrichenen Bereich als Korrektur mit altem Bereich und Grund (`dropped_ranges`) und markiert den Befund (`range_dropped`). Ein solches WARN ist Prüfbedarf, nie Lücke. Weiterhin kein Retry: Er schickte das ganze Paket neu und würfelte alle Befunde darin neu (Nachtrag #32).
+- **Konsequenzen:** Der Report zeigt Eingriffe des Codes jetzt in drei Feldern je Befund: alter Status (`downgraded_from`), Marke für gestrichene Zeilen (`range_dropped`) und Gründe (`corrections`). Gespeicherte Reports von vor #74 haben das Feld nicht und zeigen ein gestrichenes WARN weiter als Lücke. Wie oft der Fall vorkommt, zeigt erst ein Messlauf.
+
 ## Fachgespräch-Satz
 
 „Das Modell zeigt nur noch auf Zeilen, den Beleg schneidet mein Code aus. So ist jedes Zitat per Konstruktion wörtlich, und was das Modell nicht belegen kann, wird höchstens WARN, nie PASS oder FAIL.“

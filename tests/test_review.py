@@ -8,10 +8,12 @@ from govguard_ui.report.review import (
     category_counts,
     document_window,
     expected_checks,
+    no_evidence_note,
     of_source,
     source_counts,
     source_of,
     visible_findings,
+    warn_caption,
 )
 
 ENTRIES = {entry.preset_id: entry for entry in load_gallery(PRESETS, GALLERY)}
@@ -87,6 +89,41 @@ def test_a_downgraded_finding_without_lines_needs_review_and_is_no_gap() -> None
     gap = downgraded.model_copy(update={"downgraded_from": None})
 
     assert (category(downgraded), category(gap)) == ("WARN", "GAP")
+
+
+def test_a_warn_whose_lines_the_code_dropped_needs_review_and_is_no_gap() -> None:
+    """The model pointed somewhere, only the range was unusable: no gap (#74)."""
+    finding = ENTRIES["spec-meldeportal-gesundheit"].report.findings[0]
+    dropped = finding.model_copy(update={
+        "status": "WARN", "line_start": None, "line_end": None, "range_dropped": True})
+
+    assert category(dropped) == "WARN"
+
+
+def test_stored_reports_from_before_74_load_without_dropped_ranges() -> None:
+    """The field has a default: old gallery reports stay readable (#74)."""
+    findings = [f for entry in ENTRIES.values() for f in entry.report.findings]
+    assert findings and not any(f.range_dropped for f in findings)
+
+
+def test_the_warn_tile_counts_downgrades_and_dropped_ranges_once_each() -> None:
+    findings = ENTRIES["spec-meldeportal-gesundheit"].report.findings
+    warn = findings[0].model_copy(update={"status": "WARN", "line_start": None,
+                                          "line_end": None, "downgraded_from": None})
+    dropped = warn.model_copy(update={"range_dropped": True})
+    both = dropped.model_copy(update={"downgraded_from": "FAIL"})  # counts as downgrade only
+
+    assert warn_caption([warn]) == "mit Beleg"
+    assert warn_caption([dropped, both]) == (
+        "mit Beleg · davon 1 herabgestuft, 1 mit gestrichenem Bereich")
+
+
+def test_a_dropped_range_explains_the_missing_evidence() -> None:
+    finding = ENTRIES["spec-meldeportal-gesundheit"].report.findings[0]
+    plain = finding.model_copy(update={"line_start": None, "line_end": None})
+
+    assert "keine Stelle" in no_evidence_note(plain)
+    assert "gestrichen" in no_evidence_note(plain.model_copy(update={"range_dropped": True}))
 
 
 def test_source_filter_names_come_from_the_rule_id() -> None:

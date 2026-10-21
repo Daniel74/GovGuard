@@ -66,6 +66,7 @@ class Corrections(BaseModel):
 
     downgrades: Downgrades = {}  # rule_id -> (original status, reason)
     repairs: list[Correction] = []  # what the code filled in or chose itself, no retry (#32)
+    dropped: list[Correction] = []  # unusable line ranges the code dropped, no retry (#74)
     retry_problems: list[Problem] = []  # every problem that sent a package back to the model
     retries: int = 0  # packages (and the pre-run and the FAIL judge) with a retry
     failed: list[Problem] = []  # problems of a last attempt: the audit fails closed
@@ -111,9 +112,12 @@ class Corrections(BaseModel):
         if last_attempt:
             self.failed += problems
 
-    def record_repairs(self, rule_ids: set[str], repairs: list[Correction]) -> None:
-        """Like a downgrade, a repair counts only from the last attempt."""
-        self.repairs = [c for c in self.repairs if c.rule_id not in rule_ids] + repairs
+    def record_without_retry(
+        self, rule_ids: set[str], repairs: list[Correction], dropped: list[Correction]
+    ) -> None:
+        """Like a downgrade, a repair or a dropped range counts only from the last attempt."""
+        self.repairs = _replaced(self.repairs, rule_ids, repairs)
+        self.dropped = _replaced(self.dropped, rule_ids, dropped)
 
     def fail_closed(self, error: Exception) -> AuditValidationError:
         """Throttled or down: own sentence. Invalid after the retry: its reasons."""
@@ -126,8 +130,15 @@ class Corrections(BaseModel):
         return [p.text for p in self.retry_problems if p.rule_id not in rule_ids] + self.notes
 
     def for_rule(self, rule_id: str) -> dict:
-        """The fields `downgraded_from` and `corrections` of the finding of this rule."""
+        """The fields `downgraded_from`, `range_dropped` and `corrections` of its finding."""
         original, reason = self.downgrades.get(rule_id, (None, None))
-        reasons = [r.text for r in [*self.retry_problems, *self.repairs, *self.verdicts]
-                   if r.rule_id == rule_id]
-        return {"downgraded_from": original, "corrections": reasons + ([reason] if reason else [])}
+        reasons = [r.text for r in [*self.retry_problems, *self.repairs, *self.dropped,
+                                    *self.verdicts] if r.rule_id == rule_id]
+        return {"downgraded_from": original,
+                "range_dropped": any(c.rule_id == rule_id for c in self.dropped),
+                "corrections": reasons + ([reason] if reason else [])}
+
+
+def _replaced(old: list[Correction], rule_ids: set[str], new: list[Correction]) -> list[Correction]:
+    """The corrections of these rules from the newest attempt, the others kept."""
+    return [c for c in old if c.rule_id not in rule_ids] + new

@@ -7,7 +7,7 @@ import streamlit as st
 from govguard.models import AuditReport, Expected
 from govguard_ui.report.condition_review import conditional_gaps
 from govguard_ui.report.findings_view import select
-from govguard_ui.report.review import Category, category_counts, expected_checks
+from govguard_ui.report.review import Category, category_counts, expected_checks, warn_caption
 from govguard_ui.style import JUDGE_NAME, LOOKS, status_word
 from govguard_ui.texts import HELP, OPEN_WORLD_ONLY, TYPE_LABELS
 
@@ -43,9 +43,8 @@ def _meta_table(report: AuditReport) -> str:
 def _counters(report: AuditReport, key: str) -> None:
     """One frame per tile, the explanation inside; the key lets CSS colour it (#42)."""
     counts = category_counts(report.findings)
-    downgraded = sum(1 for f in report.findings if f.downgraded_from)
     words = {  # FAIL and PASS: "belegt" says it all (#51)
-        "WARN": f"mit Beleg · davon {downgraded} herabgestuft" if downgraded else "mit Beleg",
+        "WARN": warn_caption(report.findings),
         "N/A": "Regel betrifft das Vorhaben nicht", "GAP": "nicht beschrieben"}
     if conditional := conditional_gaps(report):  # split below in "Nur wenn …" (#61, #62)
         words["GAP"] += f" · davon {conditional} nur unter Bedingung"
