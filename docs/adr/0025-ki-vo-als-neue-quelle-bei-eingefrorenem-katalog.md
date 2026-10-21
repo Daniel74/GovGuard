@@ -33,3 +33,7 @@ _Ergänzt [ADR 0008](0008-quellformate.md) (Quellformate) und [ADR 0011](0011-vo
 - ADR 0026 zerlegt DSGVO- und KI-VO-Artikel in Einzelpflichten. Deren Regeln entstehen neu, mit Absatz-Ankern wie `KI-VO Art. 50 Abs. 2`. Der Spec-Katalog hat jetzt 374 Prüfregeln, die beiden Spec-Galerie-Reports sind neu erzeugt.
 - Eingefroren bleiben nur die 116 SDM-Regeln; der Hash-Test pinnt nur noch sie. Alte Regeln bekommen ihr `source_quote` vom Code (`quoted_by_code`), Kriterien und Empfehlung bleiben.
 - `--only-missing` bleibt der Weg für neue Quellen, beide Befehle nur fürs Spec-Audit. Der Fachgespräch-Satz gilt seither für SDM.
+
+## Nachtrag: Bedingungen ersetzen die fehlende Vorstufe (#59, #60)
+
+- Die Konsequenz „Hochrisiko-Einstufung ohne eigene Vorstufe im Code“ gilt nicht mehr: Seit [ADR 0028](0028-bedingungen-im-spec-audit.md) setzt der Code die Prüfregeln zu KI-System und Hochrisiko-KI auf N/A, wenn die Spezifikation sie mit Beleg verneint.

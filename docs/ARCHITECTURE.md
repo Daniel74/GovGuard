@@ -1332,6 +1332,7 @@ Jede Regel, die ein Befund oder eine Prüfregel erfüllen muss, steht hier mit d
 | Ein Report hat genau einen Befund je Prüfregel. | `completeness_problems` (`checks/audit_gates.py`) | `tests/test_run_audit.py` |
 | Ein PASS braucht einen Zeilenbereich in der Eingabe: höchstens 200 Zeilen, mindestens 15 Zeichen. | `evidence_problem`, `range_problem` (`checks/evidence.py`) | `tests/test_evidence.py` |
 | Ein FAIL ohne Zeilenbereich wird WARN; ein PASS ohne Beleg nach dem Retry ebenfalls. | `without_unproven_verdict` | `tests/test_run_audit_corrections.py` |
+| Einen ungültigen Zeilenbereich bei WARN, FAIL und N/A streicht der Code ohne Retry; ein WARN wird dadurch ohne Vermerk zur Lücke, denn als Herabstufung zählt nur PASS oder FAIL nach WARN. | `without_unproven_verdict` (`checks/evidence.py`), `downgrades_of` (`checks/corrections.py`) | `tests/test_run_audit.py` |
 | Der Beleg ist wörtlich, weil der Code ihn aus der Eingabe schneidet. | `evidence_of` | `tests/test_run_audit.py` |
 | Bei Doppelbefunden gilt der schwerste Status; fehlt die Empfehlung, nimmt der Code die der Prüfregel. | `worst_of_duplicates`, `with_rule_recommendations` | `tests/test_run_audit_repairs.py` |
 | Bei anwendbaren Prüfregeln darf das Modell kein N/A vergeben. | `answer_problems` (`na_forbidden`) | `tests/test_run_audit_template.py` |

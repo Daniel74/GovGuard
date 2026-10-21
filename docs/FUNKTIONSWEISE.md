@@ -23,7 +23,7 @@ Die Anwendungsfälle, also wer GovGuard wofür nutzt, stehen in [ARCHITECTURE 1.
 
 Eine Prüfregel ist eine prüfbare Pflicht aus genau einer Anforderung einer Norm. Alle Prüfregeln einer Audit-Art bilden den Katalog, und jedes Audit liefert für jede Prüfregel genau einen Befund. Diese drei Begriffe tragen alles Weitere.
 
-*Die Prüfregel.* Eine Prüfregel sagt in zwei Sätzen, woran man Einhaltung und Verstoß erkennt. Der Build hat sie vorher aus der Norm formuliert; zur Laufzeit wird sie nur gelesen. Die Tabelle zeigt ihre Felder an der Prüfregel, die beim Fristenwecker ein FAIL ergibt.
+*Die Prüfregel.* Eine Prüfregel sagt in zwei Sätzen, woran man Einhaltung und Verstoß erkennt. Der Build hat sie vorher aus der Norm formuliert; zur Laufzeit wird sie nur gelesen. Die Tabelle zeigt ihre Felder an der Prüfregel, die beim Fristenwecker ein FAIL ergibt. Ein Gate ist eine Prüfung im Code, die ein Ergebnis nur durchlässt, wenn eine feste Regel erfüllt ist.
 
 | Feld | Bedeutung | Beispiel | wer schreibt | im Code |
 |---|---|---|---|---|
@@ -38,7 +38,7 @@ Eine Prüfregel ist eine prüfbare Pflicht aus genau einer Anforderung einer Nor
 | Auswahlgrund | warum die Anforderung prüfbar ist | „anhand des Parameters KmsMasterKeyId des Typs AWS::SNS::Topic prüfbar“ | 🤖 | `selection_rationale` |
 | Querverweise | Bezüge auf andere Quellen, als Vorschlag markiert, ohne Einfluss auf den Status | – | 🤖 vorgeschlagen, ⚙️ geprüft | `cross_references` |
 
-*Der Katalog.* Ein Katalog ist eine JSON-Datei je Audit-Art (`RuleCatalog`): 350 Prüfregeln für das Spec-Audit, 175 für das Architektur-Audit. Er nennt dazu den Stand jeder Quelle (`source_versions`) und das Modell, das ihn formuliert hat. Der Katalog ist fest und vollständig: Ein Audit fragt jede Prüfregel, nicht nur die, die zur Eingabe zu passen scheinen. Eine Ähnlichkeitssuche würde eine unpassend wirkende Prüfregel unbemerkt weglassen; warum GovGuard darum auf RAG verzichtet, zeigt [ARCHITECTURE 7.2](ARCHITECTURE.md#72-die-deterministische-schale) (Muster 3).
+*Der Katalog.* Ein Katalog ist eine JSON-Datei je Audit-Art (`RuleCatalog`): 350 Prüfregeln für das Spec-Audit, 175 für das Architektur-Audit. Er nennt dazu den Stand jeder Quelle (`source_versions`) und das Modell, das ihn formuliert hat. Der Katalog ist fest und vollständig: Ein Audit fragt jede Prüfregel, nicht nur die, die zur Eingabe zu passen scheinen. Eine Ähnlichkeitssuche würde eine unpassend wirkende Prüfregel unbemerkt weglassen. RAG (Retrieval-Augmented Generation) ist so ein Verfahren: Es sucht per Ähnlichkeit die passenden Texte heraus und gibt nur diese dem Modell. Warum GovGuard darum auf RAG verzichtet, zeigt [ARCHITECTURE 7.2](ARCHITECTURE.md#72-die-deterministische-schale) (Muster 3).
 
 *Der Befund.* Ein Befund ist die Antwort auf eine Prüfregel in einem Audit. Er hat einen von vier Status. Die Oberfläche zeigt eine fünfte Kategorie, die Lücke, weil sie eine andere Handlung verlangt als ein WARN mit Beleg.
 
@@ -47,7 +47,7 @@ Eine Prüfregel ist eine prüfbare Pflicht aus genau einer Anforderung einer Nor
 | PASS | Die Eingabe belegt die Einhaltung. | Pflicht | – | 🤖; ⚙️ prüft den Beleg |
 | FAIL | Die Eingabe belegt einen Verstoß. | Pflicht | Pflicht | 🤖; ⚙️ prüft den Beleg, in offener Welt zusätzlich 🤖 der Verstoß-Prüfer |
 | WARN | Aus der Eingabe nicht entscheidbar („Prüfbedarf“). | möglich | Pflicht | 🤖, oder ⚙️ durch Herabstufung |
-| Lücke | ein WARN ohne Belegzeilen, das der Code nicht herabgestuft hat: Die Eingabe beschreibt die Anforderung nicht. Ein herabgestuftes WARN ist nie eine Lücke, denn es verlangt einen Blick auf den alten Status. | keine | Pflicht | 🤖 |
+| Lücke | ein WARN ohne Belegzeilen, das der Code nicht herabgestuft hat: Die Eingabe beschreibt die Anforderung nicht. Ein herabgestuftes WARN ist nie eine Lücke, denn es verlangt einen Blick auf den alten Status. Nennt das Modell ein WARN mit ungültigen Zeilen, streicht der Code die Zeilen, und das WARN wird ohne Vermerk zur Lücke. | keine | Pflicht | 🤖 |
 | N/A | Die Prüfregel ist auf die Eingabe nicht anwendbar. | bei einer verneinten Bedingung die verneinende Zeile | – | ⚙️ vorab; 🤖 nur im Spec-Audit |
 
 Der Gesamtstatus eines Reports ist der schlechteste Status aller Befunde in der Reihenfolge FAIL, WARN, PASS, N/A; nur wenn alle Befunde N/A sind, ist er N/A (`overall_status`).
@@ -91,11 +91,13 @@ flowchart LR
   classDef ext fill:#ffffff,stroke:#495057,color:#1f1f1f,stroke-width:2px
 ```
 
-*Elemente.* Die vier Kästen in der Mitte sind die Schritte des Builds; jeder ist ein Befehl von `python -m kb_build`. Nur das Extrahieren kommt ohne Modell aus. Die anderen drei sind blau mit orangem Rand, weil ⚙️ Code den Schritt führt und 🤖 das Modell darin je Artikel oder Anforderung einmal fragt. Zylinder sind Dateien: grau die von Hand gepflegten Eingaben, blau die vom Code erzeugten. Der Kasten rechts ist der einzige menschliche Schritt.
+*Elemente.* Die vier Kästen in der Mitte sind die Schritte des Builds; jeder ist ein Befehl von `python -m kb_build`. Nur das Extrahieren kommt ohne Modell aus. Die anderen drei sind blau mit orangem Rand, weil ⚙️ Code den Schritt führt und 🤖 das Modell darin je Artikel oder Anforderung einmal fragt. Zylinder sind Dateien: grau die von Hand gepflegten Eingaben, blau die vom Code oder per AWS-Befehl erzeugten. Der Kasten rechts ist der einzige menschliche Schritt.
 
 *Verbindungen.* Ein Pfeil zeigt, welche Daten ein Schritt vom vorigen oder aus einer Datei bekommt. Das Extrahieren lädt den Normtext von der Adresse in der Quellenliste und macht daraus Anforderungen. Das Zerlegen gibt die Anforderungen weiter, Rechtsartikel aufgeteilt in einzelne Pflichten. Das Auswählen liest dazu den Prüfumfang, die Steckbriefe der Referenzarchitekturen, die Pflichtanker der Musterfälle und die echten CloudFormation-Typen. Das Formulieren bekommt die Auswahl, liest den Prüfumfang und prüft Typen und Eigenschaften gegen die echten CloudFormation-Typen. Am Ende steht der Katalog, und erst ein Commit macht ihn für die Audits gültig.
 
-*Schritt 1: Extrahieren.* Jede Quelle hat ein eigenes Format, und je Format gibt es einen Leser im Code. Ein Vorfilter mit festem Satz entscheidet ohne Modell, welche Anforderungen überhaupt in Frage kommen (`prefilter_reason`). Vor dem Lesen prüft der Code die Prüfsumme (SHA-256) der Datei gegen den Wert in der Quellenliste. Liegt die Datei schon im lokalen Cache, prüft er die gespeicherte Datei; nur ohne Cache lädt er sie neu vom Herausgeber. Eine geänderte Fassung beim Herausgeber fällt darum erst auf, wenn der Cache leer ist, etwa auf einem neuen Rechner; dann bricht der Build ab ([ARCHITECTURE 6.4](ARCHITECTURE.md#64-fehlerfälle), F1).
+*Die echten CloudFormation-Typen.* Der blaue Zylinder „CloudFormation-Typen und Eigenschaften“ steht für zwei Dateien, die von AWS kommen, nicht aus einer Norm. Die Liste aller Typen (`data/input/cfn_resource_types.json`) liefert der AWS-Befehl `aws cloudformation list-types`. Die Eigenschaften je Typ des Prüfumfangs (`data/input/cfn_properties.json`) erzeugt ein fünfter Befehl des Builds (`python -m kb_build cfn-properties`) aus den Schemas, die `aws cloudformation describe-type` je Typ liefert. Beide Befehle mit allen Optionen stehen in [ENTWICKLUNG.md](ENTWICKLUNG.md#2-wissensbasis-bauen).
+
+*Schritt 1: Extrahieren.* Jede Quelle hat ein eigenes Format, und je Format gibt es einen Leser im Code. Ein Vorfilter mit festem Satz entscheidet ohne Modell, welche Anforderungen überhaupt in Frage kommen (`prefilter_reason`). Vor dem Lesen prüft der Code die Prüfsumme (SHA-256) der Datei gegen den Wert in der Quellenliste. Ein Cache ist ein lokaler Zwischenspeicher für schon geladene Dateien oder schon bezahlte Antworten des Modells. Liegt die Datei schon im lokalen Cache, prüft er die gespeicherte Datei; nur ohne Cache lädt er sie neu vom Herausgeber. Eine geänderte Fassung beim Herausgeber fällt darum erst auf, wenn der Cache leer ist, etwa auf einem neuen Rechner; dann bricht der Build ab ([ARCHITECTURE 6.4](ARCHITECTURE.md#64-fehlerfälle), F1).
 
 | Quelle | Herausgeber und Format | eine Anforderung ist | Vorfilter behält | Prüfregeln |
 |---|---|---|---|---|
@@ -104,7 +106,7 @@ flowchart LR
 | SDM | Datenschutzkonferenz, ein PDF je Baustein: Löschen (M60), Trennen (M50), Zugriffe regeln (M51) | eine Maßnahme | alle | 116 |
 | BSI Grundschutz++ | BSI auf GitHub, OSCAL-JSON | eine Anforderung | Modalverb MUSS oder SOLLTE, Niveau „normal-SdT“, Praktiken DLS, BER, DET, KONF, BES und ARCH | 39 |
 | CIS AWS | Prowler-JSON | eine Empfehlung | Kapitel 2 IAM, 3 Storage, 4 Logging, 6 Networking | 20 |
-| AWS FSBP | Prowler-JSON | ein Control | Dienste im Prüfumfang | 105 |
+| AWS FSBP | Prowler-JSON | ein Control | eine feste Liste von 19 Prowler-Diensten (`SERVICES` in `kb_build/extract/fsbp.py`), angelehnt an den Prüfumfang; EC2 ist dabei wegen der VPC-Controls, EC2-Instanzen streicht erst das Auswählen | 105 |
 | BSI C5 | Prowler-JSON | ein Kriterium | Bereiche OPS, IAM, CRY, COS und PSS | 11 |
 
 OSCAL ist das maschinenlesbare Format des NIST für Sicherheitskataloge, Formex das XML-Format des Amtsblatts der EU. Prowler ist ein Open-Source-Prüfwerkzeug, dessen Regelwerke GovGuard als JSON liest.
@@ -114,13 +116,15 @@ OSCAL ist das maschinenlesbare Format des NIST für Sicherheitskataloge, Formex 
 | Art der Gruppe | Bedeutung | wird zu | Beispiel |
 |---|---|---|---|
 | alle gelten | jeder Abschnitt eine eigene Pflicht | einer Anforderung je Abschnitt | Grundsätze in Art. 5 Abs. 1 lit. a bis f |
-| eine genügt | Alternativen, eine reicht | einer Anforderung für den ganzen Absatz | Rechtsgrundlagen in Art. 6 Abs. 1 |
-| je nach Risiko | Maßnahmen, soweit das Risiko sie erfordert | einer Anforderung je Abschnitt, mit Hinweis im Prompt | Maßnahmen in Art. 32 Abs. 1 |
+| eine genügt | Alternativen, eine reicht | bei mehreren Abschnitten einer Anforderung für den ganzen Absatz, sonst einer für den einen Abschnitt; mit Hinweis im Prompt des Formulierens | Rechtsgrundlagen in Art. 6 Abs. 1 |
+| je nach Risiko | Maßnahmen, soweit das Risiko sie erfordert | einer Anforderung je Abschnitt, mit Hinweis im Prompt des Formulierens | Maßnahmen in Art. 32 Abs. 1 |
 | keine Pflicht | Befugnisse anderer Stellen, Hinweise, Ausnahmen | einer Anforderung je Abschnitt, die als vorgefiltert gilt, mit dem Grund „Keine Pflicht laut Zerlegung“; sie geht nie ans Modell | Aufgaben der Aufsicht |
 
-Bleibt die Antwort nach vier Retries ungültig, bleibt der Artikel ganz und wird als eine Anforderung weitergegeben (`llm_error` im Zerlegungsprotokoll).
+Den Hinweis je Art (`KIND_LINES`) hängt der Build an den Auftrag zum Formulieren: Bei „eine genügt“ ist die Pflicht erfüllt, wenn eine Alternative festgelegt ist; bei „je nach Risiko“ auch dann, wenn die Spezifikation begründet, warum das Risiko die Maßnahme nicht erfordert.
 
-*Schritt 3: Auswählen.* 🤖 Das Modell beantwortet je Anforderung drei Fragen: Ist sie an der Eingabe prüfbar? Wessen Pflicht ist sie? An welchen CloudFormation-Typen zeigt sie sich? Die zweite und dritte Frage gibt es nur im Architektur-Audit. Für die Ebene der Pflicht (`scope_level`) gibt es vier Antworten: die Workload selbst (`template`), das Konto oder die Organisation, Personen und Prozesse oder der Cloud-Anbieter. ⚙️ Der Code entscheidet dann fest:
+Ein Retry ist eine Wiederholung des Modellaufrufs, bei der der Code dem Modell sagt, was an der vorigen Antwort falsch war. Bleibt die Antwort nach vier Retries ungültig, bleibt der Artikel ganz und wird als eine Anforderung weitergegeben (`llm_error` im Zerlegungsprotokoll).
+
+*Schritt 3: Auswählen.* 🤖 Das Modell beantwortet je Anforderung drei Fragen: Ist sie an der Eingabe prüfbar? Wessen Pflicht ist sie? An welchen CloudFormation-Typen zeigt sie sich? Die zweite und dritte Frage gibt es nur im Architektur-Audit. Die Workload ist das, was eine Architektur beschreibt: die Ressourcen der Anwendung selbst, ohne das AWS-Konto, in dem sie laufen. Für die Ebene der Pflicht (`scope_level`) gibt es vier Antworten: die Workload selbst (`template`), das Konto oder die Organisation, Personen und Prozesse oder der Cloud-Anbieter. ⚙️ Der Code entscheidet dann fest:
 
 | Ergebnis | Regel des Codes | Begründung im Protokoll |
 |---|---|---|
@@ -144,7 +148,7 @@ Zwei Gates halten die Auswahl fest. Das erste läuft zuerst, bevor der Build fü
 
 Den fertigen Typ (`Rule`) ergänzt der Code um Kennung, Audit-Art, Quelle, Primäranker, Auswahlgrund und Ressourcentypen; das Modell kann darum keinen Anker erfinden. Scheitert eine Prüfregel, formuliert der Build die übrigen weiter und bricht erst am Ende ab.
 
-*Eingefrorener Katalog.* Ein neuer Build würde dieselbe Anforderung anders formulieren, denn das Modell schwankt. Damit die Musterfälle und ihr Soll vergleichbar bleiben, ergänzt der Modus „nur fehlende formulieren“ (`--only-missing`) nur neue Prüfregeln und lässt die vorhandenen Byte für Byte stehen (ADR [0025](adr/0025-ki-vo-als-neue-quelle-bei-eingefrorenem-katalog.md)). Diesen Modus gibt es nur für das Spec-Audit; für das Architektur-Audit bricht der Befehl mit einem Fehler ab.
+*Eingefrorener Katalog.* Ein neuer Build würde dieselbe Anforderung anders formulieren, denn das Modell schwankt. Damit die Musterfälle und ihr Soll vergleichbar bleiben, gibt es für das Auswählen und das Formulieren einen Modus „nur fehlende“ (`--only-missing`). Beim Auswählen behält er die eingecheckten Urteile und stuft nur Anforderungen ohne Urteil ein; beim Formulieren ergänzt er nur neue Prüfregeln und lässt die vorhandenen Byte für Byte stehen (ADR [0025](adr/0025-ki-vo-als-neue-quelle-bei-eingefrorenem-katalog.md)). Diesen Modus gibt es nur für das Spec-Audit, also nur mit `--audit-type spec`, etwa `python -m kb_build rules --audit-type spec --only-missing`; ohne diese Angabe oder für das Architektur-Audit bricht der Befehl mit einem Fehler ab.
 
 ## 3 Wie ein Spec-Audit urteilt
 
@@ -152,7 +156,7 @@ Ein Spec-Audit stellt zuerst fest, was die Spezifikation zu sieben Bedingungen s
 
 Den Ablauf als Aktivitätsdiagramm zeigt [ARCHITECTURE 3.3](ARCHITECTURE.md#33-aktivität-spec-audit), die Sequenz der Aufrufe [6.2](ARCHITECTURE.md#62-s2-spezifikation-prüfen). Hier stehen die Konzepte, die diesen Ablauf bestimmen, in der Reihenfolge, in der sie wirken.
 
-*Nummerierte Eingabe.* Der Code stellt jeder Zeile der Eingabe ihre Nummer voran, etwa „12| “, und schickt die ganze nummerierte Eingabe mit jedem Aufruf. 🤖 Das Modell nennt einen Beleg nur als Anfang und Ende eines Zeilenbereichs; ⚙️ der Code schneidet den Text aus. So ist jeder Beleg wörtlich (ADR [0017](adr/0017-beleg-per-zeilenverweis.md)).
+*Nummerierte Eingabe.* Der Code stellt jeder Zeile der Eingabe ihre Nummer voran, etwa „12| “, und schickt die ganze nummerierte Eingabe mit jedem Aufruf; nur der Verstoß-Prüfer bekommt allein die Belegzeilen. 🤖 Das Modell nennt einen Beleg nur als Anfang und Ende eines Zeilenbereichs; ⚙️ der Code schneidet den Text aus. So ist jeder Beleg wörtlich (ADR [0017](adr/0017-beleg-per-zeilenverweis.md)).
 
 *Bedingungen.* Manche Pflichten gelten nur unter einer Bedingung: Die KI-VO gilt nur, wenn ein KI-System eingesetzt wird. Ohne Bedingungen bekäme eine Spezifikation ohne KI-System bis zu 65 Lücken zur KI-VO, die nichts aussagen. Eine Bedingung ist darum eine Tatsache über das Vorhaben, von der eine feste Menge von Prüfregeln abhängt. Die sieben Bedingungen stehen von Hand gepflegt in `data/input/conditions.json` (`ConditionDef`), mit diesen Feldern (ADR [0028](adr/0028-bedingungen-im-spec-audit.md)):
 
@@ -200,7 +204,7 @@ Dazu kommt eine Ableitung: Verneint die Spezifikation ein KI-System, ist auch di
 | Paket | Der Auftrag enthält eine Regel für die offene Welt: FAIL nur, wenn die Belegzeilen etwas festlegen, das der Prüfregel widerspricht (`OPEN_WORLD_FAIL_RULE`). | 🤖 |
 | nach den Paketen | Der Verstoß-Prüfer prüft jedes FAIL noch einmal. | 🤖 ⚙️ |
 
-*Antwort prüfen.* ⚙️ Der Code prüft jede Antwort, bevor sie zählt: genau ein Befund je Prüfregel, Zeilenbereich gültig, PASS mit Beleg, Empfehlung bei WARN und FAIL. Was er selbst reparieren kann, repariert er ohne Retry: Bei Doppelbefunden gilt der schwerste Status, eine fehlende Empfehlung kommt aus der Prüfregel, und ein FAIL ohne Zeilen wird WARN. Alles andere geht einmal mit Grund zurück ans Modell; bleibt es ungültig, endet das Audit ohne Report. Die vollständige Liste der Regeln steht in [ARCHITECTURE 4.6](ARCHITECTURE.md#46-regeln-in-klartext-wo-erzwingt-der-code-sie), die Ausnahmen in [7.2](ARCHITECTURE.md#72-die-deterministische-schale) (Muster 5).
+*Antwort prüfen.* ⚙️ Der Code prüft jede Antwort, bevor sie zählt: genau ein Befund je Prüfregel, PASS mit gültigem Beleg, Empfehlung bei WARN und FAIL. Was er selbst reparieren kann, repariert er ohne Retry: Bei Doppelbefunden gilt der schwerste Status, eine fehlende Empfehlung kommt aus der Prüfregel, ungültige Zeilen bei WARN, FAIL und N/A streicht er, und ein FAIL ohne Zeilen wird WARN. Ein PASS mit ungültigem Beleg geht einmal mit Grund zurück und wird danach WARN, ohne Abbruch. Alles andere geht einmal mit Grund zurück ans Modell; bleibt es ungültig, endet das Audit ohne Report. Die vollständige Liste der Regeln steht in [ARCHITECTURE 4.6](ARCHITECTURE.md#46-regeln-in-klartext-wo-erzwingt-der-code-sie), die Ausnahmen in [7.2](ARCHITECTURE.md#72-die-deterministische-schale) (Muster 5).
 
 *Verstoß-Prüfer.* Ob Belegzeilen einen Verstoß festlegen oder nur zum Thema schweigen, ist eine Frage der Bedeutung, die kein Code entscheidet. 🤖 Ein zweiter Modellaufruf bekommt darum alle FAILs zusammen, aber je FAIL nur Titel, Verstoßkriterium und die nummerierten Belegzeilen, nicht die Begründung des Pakets (`judge_fails`). Er bestätigt jedes FAIL oder nicht, mit einem Satz Grund. ⚙️ Ein nicht bestätigtes FAIL wird WARN, und der alte Status bleibt am Befund sichtbar. Ohne Urteil bleibt das FAIL. Der Prüfer kann nur senken, nie heben. Im gespeicherten Report des Meldeportals prüfte er 49 FAILs, bestätigte 33 und stufte 16 herab.
 
@@ -254,7 +258,7 @@ flowchart TB
 
 Für die geschlossene Welt gibt es keinen eigenen Satz im Auftrag. Sie wirkt über zwei Dinge: Der Satz für die offene Welt (`OPEN_WORLD_FAIL_RULE`) fehlt, und die Kriterien der Architektur-Prüfregeln nennen das Fehlen einer Einstellung selbst als Verstoß, etwa „AWS::SNS::Topic ohne KmsMasterKeyId“. Das hat der Build so erzwungen (Kapitel 2, Schritt 4).
 
-*Der Katalog der Ressourcentypen.* Das Architektur-Audit kennt nur Dienste, für die es Prüfregeln gibt. Drei Listen legen das fest. Der Prüfumfang (`data/input/scope.json`) nennt 23 Dienste von API Gateway bis Application Auto Scaling mit ihren CloudFormation-Typen; er ist von Hand gepflegt. Jede Prüfregel nennt die Typen, an denen sie sich zeigt (`cfn_resource_types`); die Vereinigung dieser Typen ist die Liste, aus der der Inventar-Vorlauf wählen darf. Die Liste aller echten CloudFormation-Typen (`data/input/cfn_resource_types.json`) und ihrer Eigenschaften (`data/input/cfn_properties.json`) braucht nur der Build: Er streicht damit erfundene Typen und Eigenschaften. Ein Dienst außerhalb des Prüfumfangs, etwa EC2, ergibt in keinem Audit einen Befund.
+*Der Katalog der Ressourcentypen.* Das Architektur-Audit kennt nur Dienste, für die es Prüfregeln gibt. Drei Listen legen das fest. Der Prüfumfang (`data/input/scope.json`) nennt 23 Dienste von API Gateway bis Application Auto Scaling mit ihren CloudFormation-Typen; er ist von Hand gepflegt. Jede Prüfregel nennt die Typen, an denen sie sich zeigt (`cfn_resource_types`); die Vereinigung dieser Typen ist die Liste, aus der der Inventar-Vorlauf wählen darf. Die Liste aller echten CloudFormation-Typen (`data/input/cfn_resource_types.json`) und ihrer Eigenschaften (`data/input/cfn_properties.json`) braucht nur der Build: Er streicht damit erfundene Typen und Eigenschaften. Ein Dienst außerhalb des Prüfumfangs, etwa EC2-Instanzen, ergibt in keinem Audit einen Befund; die VPC-Typen (`AWS::EC2::VPC` und andere) liegen dagegen im Prüfumfang.
 
 *Inventar und Anwendbarkeit.* Das Ressourceninventar ist die Menge der Typen, die in der Eingabe vorkommen (`Inventory`). Eine Prüfregel ist anwendbar, wenn mindestens einer ihrer Typen darin steht (`Inventory.applies`). In offener Welt gelten Typen von IAM, KMS und CloudWatch Logs immer als vorhanden, weil jede Workload sie braucht, auch wenn der Text sie nicht nennt. Nicht anwendbare Prüfregeln werden ohne Modell N/A, mit dem Grund „Ressourcentyp nicht im Template“ oder „Dienst in der Eingabe nicht erkannt“. Für alle anderen sagt der Auftrag dem Modell, dass N/A verboten ist, und das Gate prüft es.
 
@@ -266,7 +270,7 @@ Der Inventar-Vorlauf prüft jede Antwort in zwei Schritten: Erst muss jeder gena
 
 ## 5 Report, Soll und Galerie
 
-Ein Report zeigt jeden Befund mit Beleg im Dokument und macht jeden Eingriff des Codes sichtbar. Musterfälle sind fiktive Eingaben mit einem Soll von Hand; die Galerie zeigt ihre gespeicherten Reports. Weicht ein Report vom Soll ab, zeigt GovGuard das, statt neu zu würfeln.
+Ein Report zeigt jeden Befund mit Beleg im Dokument und macht die Eingriffe des Codes sichtbar; nur gestrichene ungültige Zeilen bei WARN, FAIL und N/A vermerkt er nicht (Kapitel 1). Musterfälle sind fiktive Eingaben mit einem Soll von Hand; die Galerie zeigt ihre gespeicherten Reports. Weicht ein Report vom Soll ab, zeigt GovGuard das, statt neu zu würfeln.
 
 *Der Report.* Der Report ist ein JSON-Dokument (`AuditReport`); die Oberfläche zeigt ihn neben der geprüften Eingabe und bietet ihn als JSON zum Herunterladen an. Wo welche Teile im Code liegen, zeigt [ARCHITECTURE 4.4](ARCHITECTURE.md#44-paket-govguard_ui-die-oberfläche).
 
@@ -275,11 +279,11 @@ Ein Report zeigt jeden Befund mit Beleg im Dokument und macht jeden Eingriff des
 | Kopf | Audit-Art, Modell, Zahl der Retries, Gesamtstatus, Zähler je Kategorie mit Lücken, Zähler des Verstoß-Prüfers (geprüft, bestätigt, herabgestuft, nicht verfügbar) |
 | Soll-Abgleich | nur bei Musterfällen: Gesamtstatus und jeder Pflichtbefund gegen das Soll, Abweichungen markiert (`expected_checks`) |
 | Bedingungen | nur Spec-Audit: Wert jeder Bedingung mit Kriterium, Belegzeilen und Wirkung |
-| Befundtabelle | alle Befunde außer Lücken, filterbar nach Status und Quelle; im Architektur-Audit nach Ressourcentyp sortiert, damit Doppelungen über Quellen nebeneinander stehen |
+| Befundtabelle | alle Befunde außer Lücken, filterbar nach Status und Quelle; FAIL zuerst, dann WARN, PASS und N/A, innerhalb eines Status nach der ersten Belegzeile (`visible_findings`). Im JSON-Report stehen die Befunde des Architektur-Audits dagegen nach erstem Ressourcentyp sortiert, damit Doppelungen über Quellen nebeneinander stehen |
 | Detail eines Befunds | Begründung, Empfehlung, Korrekturen des Codes, Querverweise; der Beleg markiert im Dokument |
 | Lücken | als Checkliste nach Quelle; im Spec-Audit getrennt nach Bedingungen, zu denen die Eingabe schweigt, unter „Nur wenn …“ |
 
-*Musterfälle und Soll.* Ein Musterfall ist eine fiktive Eingabe mit einem Soll, das ein Mensch festlegt, nie ein früherer Lauf (`Preset`, `Expected`). Das Soll nennt den Gesamtstatus, wenige Pflichtbefunde als Anker mit PASS oder FAIL und beim Spec-Audit den Wert jeder Bedingung. Ein Pflichtbefund ist nie WARN, weil ein Urteil zwischen PASS und WARN schwankt. Jeder Anker eines Pflichtbefunds muss im Katalog stehen, sonst bricht der Build ab (Kapitel 2, Schritt 3).
+*Musterfälle und Soll.* Ein Musterfall ist eine fiktive Eingabe mit einem Soll, das ein Mensch festlegt, nie ein früherer Lauf (`Preset`, `Expected`). Das Soll nennt den Gesamtstatus, wenige Pflichtbefunde als Anker mit PASS oder FAIL und beim Spec-Audit den Wert jeder Bedingung. Ein Pflichtbefund ist nie WARN, weil ein Urteil zwischen PASS und WARN schwankt. Der Soll-Abgleich im Report vergleicht nur Gesamtstatus und Pflichtbefunde; das Soll der Bedingungen vergleicht allein das Mess-Skript des Skills `/audit-messen` (`.claude/skills/audit-messen/evaluate.py`). Jeder Anker eines Pflichtbefunds muss im Katalog stehen, sonst bricht der Build ab (Kapitel 2, Schritt 3).
 
 | Musterfall | Audit | Eingabe | Soll | Pflichtbefunde |
 |---|---|---|---|---|
@@ -290,7 +294,7 @@ Ein Report zeigt jeden Befund mit Beleg im Dokument und macht jeden Eingriff des
 | Fristenwecker | Architektur | CloudFormation-JSON | FAIL | AWS FSBP SNS.1 FAIL; StepFunctions.1 PASS |
 | Protokollarchiv | Architektur | Freitext in Markdown | WARN | CIS 3.1.4 und BSI GS++ DET.3.1 PASS |
 
-Das Soll eines Musterfalls kann auch eine Referenzarchitektur nennen (`archetype`); das Feld ist ein Rest des nicht gebauten Archetyp-Pfads, und kein Code wertet es aus (ADR [0019](adr/0019-nur-audits.md)).
+Das Soll eines Musterfalls kann auch eine Referenzarchitektur nennen (`archetype`); das Feld ist ein Rest des nicht gebauten Archetyp-Pfads, und kein Code wertet es aus (ADR [0019](adr/0019-nur-audits.md)). Ein Validator lässt es nur bei einem Spec-Audit ohne Soll-FAIL zu (`archetype_only_for_spec_without_fail`).
 
 *Galerie.* Die Galerie zeigt für jeden Musterfall den gespeicherten Report neben der Eingabe (`GalleryEntry`). Die Reports entstehen mit der Kommandozeile, liegen als JSON in `data/gallery/` und ändern sich nur per Commit; die Galerie ruft kein Modell auf und kostet nichts. Das Selbstaudit prüft die eigene Spezifikation; darum muss der Musterfall Byte für Byte gleich `docs/SPEC.md` sein.
 
@@ -300,14 +304,15 @@ Wer GovGuard nachbauen will, braucht drei Dinge, die dieses Dokument nicht absch
 
 | Was | festgelegt in | Hinweis |
 |---|---|---|
-| Auftrag der Pakete und Regel für die offene Welt | `SYSTEM_PROMPT`, `OPEN_WORLD_FAIL_RULE` in `calls/audit_packages.py` | Schema der Antwort: `AuditResponse` |
-| Auftrag des Bedingungs-Vorlaufs | `CONDITIONS_PROMPT` in `calls/conditions.py` | Kriterien aus `data/input/conditions.json` |
-| Auftrag des Inventar-Vorlaufs | `INVENTORY_PROMPT` in `calls/inventory.py` | Kandidaten sind die Typen der Prüfregeln |
-| Auftrag des Verstoß-Prüfers | `FAIL_JUDGE_PROMPT` in `calls/fail_judge.py` | Beispielpaar je Welt in `open_world.py` |
-| Aufträge des Builds | `INSTRUCTIONS` in `decompose/split.py`; `PROMPTS` in `select/prompts.py` und `rules/prompts.py`; `JUDGE_PROMPT` in `rules/violation_judge.py` | je Audit-Art ein eigener Auftrag |
+| Auftrag der Pakete und Regel für die offene Welt | `SYSTEM_PROMPT`, `OPEN_WORLD_FAIL_RULE` in `src/govguard/calls/audit_packages.py` | Schema der Antwort: `AuditResponse` |
+| Auftrag des Bedingungs-Vorlaufs | `CONDITIONS_PROMPT` in `src/govguard/calls/conditions.py` | Kriterien aus `data/input/conditions.json` |
+| Auftrag des Inventar-Vorlaufs | `INVENTORY_PROMPT` in `src/govguard/calls/inventory.py` | Kandidaten sind die Typen der Prüfregeln |
+| Auftrag des Verstoß-Prüfers | `FAIL_JUDGE_PROMPT` in `src/govguard/calls/fail_judge.py` | Beispielpaar je Welt in `src/govguard/open_world.py` |
+| Aufträge des Builds | in `src/kb_build/`: `INSTRUCTIONS` in `decompose/split.py`; `PROMPTS` und `SCOPE_PROMPT` (Dienste des Prüfumfangs, nur Architektur) in `select/prompts.py`; `PROMPTS` und `KIND_LINES` (Hinweis je Art der Gruppe) in `rules/prompts.py`; `JUDGE_PROMPT` in `rules/violation_judge.py` | je Audit-Art ein eigener Auftrag |
 | Datenformate | `models.py`, `condition_models.py` im Laufzeit-Kern; `models.py` je Build-Schritt | Klassendiagramme in [ARCHITECTURE 2.3 bis 2.5](ARCHITECTURE.md#23-typen-des-builds) |
-| Formular für Groq | jedes Feld eines Entwurfs ist Pflicht und hat keinen Standardwert; wo ein Wert fehlen darf, ist er `null` | Groq prüft das Schema beim Erzeugen streng (`NativeOutput`) und verwirft sonst die Antwort mit HTTP 400 |
+| Formular für Groq zur Laufzeit | jedes Feld eines Entwurfs ist Pflicht und hat keinen Standardwert; wo ein Wert fehlen darf, ist er `null` | Groq prüft das Schema beim Erzeugen streng (`NativeOutput`) und verwirft sonst die Antwort mit HTTP 400. Der Build nutzt auch bei Groq ein Werkzeug (`ToolOutput`) ohne diese Strenge; dort darf ein Feld einen Standardwert haben, etwa die Querverweise eines Entwurfs |
 | Eingaben von Hand | `data/input/sources.json`, `data/input/scope.json`, `data/input/archetype_profiles.json`, `data/input/conditions.json`, `data/input/presets/` | Quellen mit URL, Version und SHA-256 |
+| Eingaben von AWS | `data/input/cfn_resource_types.json`, `data/input/cfn_properties.json` | neu zu ziehen mit der AWS-Kommandozeile, siehe Kapitel 2 und [ENTWICKLUNG.md](ENTWICKLUNG.md#2-wissensbasis-bauen) |
 | Grenzwerte | Konstanten wie `PACKAGE_SIZE`, `MAX_SPAN`, `RETRIES`, `GROQ_TOKENS_PER_MINUTE` | vollständig in [ARCHITECTURE 3.6](ARCHITECTURE.md#36-grenzwerte) |
 | Modell | `openai/gpt-oss-120b` bei Groq, Temperatur 0; umschaltbar über die Umgebungsvariable `GROQ_MODEL` | ein Modellwechsel ändert Ergebnisse und gilt als Änderung mit Messlauf ([ARCHITECTURE 7.4](ARCHITECTURE.md#74-wo-die-schale-endet)) |
 | Regeln, die der Code erzwingt | Gates in `checks/` und `kb_build/rules/gates.py` | Klartext mit Test in [ARCHITECTURE 4.6](ARCHITECTURE.md#46-regeln-in-klartext-wo-erzwingt-der-code-sie) |

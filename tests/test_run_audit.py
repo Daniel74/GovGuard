@@ -239,6 +239,8 @@ def test_unusable_range_outside_pass_counts_as_no_range_without_retry(
     assert len(seen) == 1  # only PASS needs a usable range; elsewhere it is like no range
     downgraded = "WARN" if status == "FAIL" else status
     assert (report.findings[1].status, report.findings[1].evidence) == (downgraded, None)
+    # only FAIL -> WARN is a downgrade; a WARN loses its lines silently and becomes a gap
+    assert report.findings[1].downgraded_from == ("FAIL" if status == "FAIL" else None)
 
 
 def test_a_whole_section_of_200_lines_is_valid_evidence(spec_catalog, trace) -> None:

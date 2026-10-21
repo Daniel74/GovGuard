@@ -1,6 +1,6 @@
 # GovGuard – Ausbau in achtzehn Szenarien (Post-MVP)
 
-Das GovGuard-MVP operiert bewusst mit definierten Limits: ein Prüfumfang aus Serverless-Diensten, RDS/Aurora und Fargate, ein Eingabelimit von 100.000 Zeichen und ein Katalog aus 3 Golden Archetypes. Dieses Dokument beschreibt achtzehn Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert.
+Das GovGuard-MVP operiert bewusst mit definierten Limits: ein Prüfumfang aus Serverless-Diensten, RDS/Aurora und Fargate, ein Eingabelimit von 100.000 Zeichen, ein Demo-Stand auf Streamlit Community Cloud mit Groq und nur Audits; die 3 Golden Archetypes sind entworfen, aber nicht gebaut (ADR 0019, Szenario 13). Dieses Dokument beschreibt achtzehn Ausbaustufen und definiert, was an den aktuellen Architekturgrenzen bricht und wie das System in Produktion darauf skaliert. Wie GovGuard heute arbeitet, steht in [FUNKTIONSWEISE](FUNKTIONSWEISE.md).
 
 Drei fundamentale Prinzipien bleiben in jedem Ausbauszenario konstant:
 
@@ -8,30 +8,30 @@ Drei fundamentale Prinzipien bleiben in jedem Ausbauszenario konstant:
 
 - Jeder Beleg ist ein wörtliches Zitat, dessen Existenz vom Code verifiziert wird.
 
-- Das LLM urteilt ausschließlich, während der Code die Vorbereitung (Filtern, Clustern) und die Endkontrolle übernimmt.
+- Das LLM urteilt ausschließlich, während der Code die Vorbereitung (Filtern, Pakete bilden, N/A setzen) und die Endkontrolle übernimmt. Die Belege für ein N/A findet bei Bedingungen und bei Freitext ein Vorlauf des Modells; entscheiden tut der Code.
 
-## Szenario 1: Skalierung der Regelbasis (z. B. auf 80 Regeln oder BSI C5)
+## Szenario 1: Skalierung der Regelbasis (z. B. BSI C5 vollständig)
 
-_Seit ADR 0011 im MVP: Quellen-Adapter, Cache, Pruning per Ressourceninventar und parallele Pakete. Offen bleibt der Umbau auf Asynchronität (unten)._
+_Im MVP umgesetzt (ADR 0011): Der Katalog hat 350 Prüfregeln im Spec-Audit und 175 im Architektur-Audit. Offen bleibt der Umbau auf Asynchronität (unten)._
 
-- **Auslöser:** Die Wissensbasis überschreitet ca. 50 Regeln oder die API-Antwortzeit nähert sich dem 29-Sekunden-Timeout des API Gateways.
+- **Auslöser:** Weitere Quellen oder ganze Kataloge statt Ausschnitten, etwa BSI C5 vollständig statt fünf Bereiche, vergrößern den Katalog, und ein Audit dauert länger, als ein Aufruf warten kann.
 
 - **Was bricht:** Das Modell muss zu viel auf einmal bewerten. Die Inferenzzeit steigt massiv an, und die Qualität der Antworten sinkt durch das "Lost in the Middle"-Syndrom.
 
-**Architektur-Anpassungen (Lösungen):**
+**Architektur-Anpassungen (Lösungen), alle vier gebaut:**
 
 | Phase | Anpassung | Ausführende Schicht |
 |---|---|---|
-| **Build** | **Quellen-Adapter:** Neue Kataloge (wie BSI C5) erhalten standardisierte Schnittstellen zum Auslesen und Vorfiltern. | Code |
-| **Build** | **Inkrementeller Build:** Bereits klassifizierte Anforderungen werden gecacht. Das LLM bewertet nur noch Delta-Änderungen (geänderte/neue Regeln). | Code & LLM |
-| **Laufzeit** | **Deterministisches Pruning:** Fehlt eine Ressource im IaC-Template (z.B. kein S3-Bucket), setzt der Code alle S3-Prüfregeln sofort auf `N/A`, ohne diese an das LLM zu senden. Im MVP für CloudFormation-JSON umgesetzt (ADR 0007); Terraform: Szenario 9. | Code |
-| **Laufzeit** | **Map-Reduce-Evaluierung:** Der Katalog wird in thematische Pakete à 20 Regeln zerlegt. Eigene LLM-Aufrufe evaluieren diese Pakete parallel; der Code führt die Befunde final zusammen. | Code & LLM |
+| **Build** | **Quellen-Adapter:** Jede Quelle hat einen eigenen Adapter zum Auslesen; eine neue Quelle folgt dem Rezept in [ENTWICKLUNG.md](ENTWICKLUNG.md) Abschnitt 5. | Code |
+| **Build** | **Inkrementeller Build:** Zerlegen und Auswählen haben je einen Cache, dessen Schlüssel Text, Prompt-Fassung und Modell enthält; das LLM bewertet nur, was neu ist oder sich geändert hat. Das Formulieren hat keinen Cache, nur den Modus „nur fehlende“ (`--only-missing`). | Code & LLM |
+| **Laufzeit** | **Deterministisches Pruning:** Fehlt eine Ressource im IaC-Template (z.B. kein S3-Bucket), setzt der Code alle S3-Prüfregeln sofort auf `N/A`, ohne diese an das LLM zu senden. Umgesetzt für CloudFormation-JSON (ADR 0007, 0015); Terraform: Szenario 9. Im Spec-Audit setzt der Code N/A über Bedingungen (ADR 0028). | Code |
+| **Laufzeit** | **Map-Reduce-Evaluierung:** Der Code teilt den Katalog in Pakete à 10 Prüfregeln. Eigene LLM-Aufrufe evaluieren diese Pakete parallel, bei Groq höchstens zwei zugleich; der Code führt die Befunde final zusammen. | Code & LLM |
 
 ## Szenario 2: Verarbeitung massiver Dokumente (> 100.000 Zeichen)
 
 - **Auslöser:** Upload von 300-seitigen Architekturkonzepten oder 3.000 Zeilen großen Terraform-Projekten.
 
-- **Was bricht:** Der HTTP-Request überschreitet das Payload-Limit (Lambda akzeptiert maximal 6 MB). Das LLM übersieht in riesigen Textmengen kritische DSGVO-Verstöße.
+- **Was bricht:** Heute lehnt der Code Eingaben über 100.000 Zeichen ab. Im AWS-Zielbild (Szenario 12) überschreitet der HTTP-Request zudem das Payload-Limit (Lambda akzeptiert maximal 6 MB). Das LLM übersieht in riesigen Textmengen kritische DSGVO-Verstöße.
 
 **Architektur-Anpassungen (Lösungen):**
 
@@ -48,7 +48,7 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 
 - **Auslöser:** Ein Fachverfahren erfordert eine Kombination aus Backend, Frontend und Audit-Log (mehrere Archetypen gleichzeitig).
 
-- **Was bricht:** Die aktuelle Auswahllogik erzwingt genau _einen_ Golden Archetype. Eine dynamische Generierung zur Laufzeit bricht mit der Prämisse der vorab freigegebenen Templates (ADR 0003).
+- **Was bricht:** Setzt Szenario 13 voraus. Der Entwurf sieht genau _einen_ Golden Archetype je Vorhaben vor. Eine dynamische Generierung zur Laufzeit bricht mit der Prämisse der vorab freigegebenen Templates (ADR 0003).
 
 **Architektur-Anpassungen in Eskalationsstufen:**
 
@@ -62,7 +62,7 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 
 - **Auslöser:** Der Baukasten wächst um spezialisierte Muster wie ARCH-06 (Analytics) oder ARCH-07 (Mobile).
 
-- **Was bricht:** Bei vielen ähnlichen Archetypen sinkt die Auswahlpräzision des LLMs; es kommt zu Fehlentscheidungen.
+- **Was bricht:** Setzt Szenario 13 voraus. Bei vielen ähnlichen Archetypen sinkt die Auswahlpräzision des LLMs; es kommt zu Fehlentscheidungen.
 
 **Architektur-Anpassungen (Lösungen):**
 
@@ -75,7 +75,7 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 
 - **Auslöser:** Eine Behörde verlangt Betrieb unter EU-Kontrolle, oder ein Vorhaben braucht ein Portal als Teil des Archetyps.
 
-- **Was bricht:** Ein statisches Portal braucht CloudFront. CloudFront hat keine Preisklasse nur für die EU; TLS endet an der Edge, möglicherweise in einem Drittland. Deshalb enden die Archetypen im MVP beim API Gateway (ADR 0009). Die **AWS European Sovereign Cloud** (ESC, GA seit 15.01.2026, Brandenburg) ist eine eigene Partition, getrennt vom globalen AWS. CloudFront ist dort erst für Ende 2026 angekündigt, und Bedrock bietet dort kein Claude, nur Amazon Nova und Open-Weight-Modelle.
+- **Was bricht:** Ein statisches Portal braucht CloudFront. CloudFront hat keine Preisklasse nur für die EU; TLS endet an der Edge, möglicherweise in einem Drittland. Deshalb enden die entworfenen Archetypen beim API Gateway (ADR 0009). Die **AWS European Sovereign Cloud** (ESC, GA seit 15.01.2026, Brandenburg) ist eine eigene Partition, getrennt vom globalen AWS. CloudFront ist dort erst für Ende 2026 angekündigt, und Bedrock bietet dort kein Claude, nur Amazon Nova und Open-Weight-Modelle.
 
 **Architektur-Anpassungen (Lösungen):**
 
@@ -83,7 +83,7 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 |---|---|---|
 | **CloudFront ohne Drittlandtransfer** (z. B. in der ESC, Edge-Standorte nur in der EU) | **Portal-Archetyp:** `aws-cloudfront-s3` vor einer bestehenden Kette, z. B. ARCH-02. Bürger melden sich per Cognito an, die Ausnahme COG4 entfällt dann für diese API. Freigabe wie bisher (ADR 0003). Vorher prüfen: Wo terminiert TLS, wo liegen Logs und Cache? | Mensch & Code |
 | **Umzug in die ESC** | **Region und Partition** als Konfiguration statt fest `eu-central-1`; ARNs über `Aws.PARTITION`. Alle Gates laufen in der ESC neu. | Code |
-| **Kein Claude in der ESC** | **Modellwechsel** (ADR 0001 ersetzen): Nova Pro oder ein Open-Weight-Modell. Das Preset-Gate misst Qualität, Laufzeit (< 29 s) und Kosten neu, bevor gewechselt wird. | Code & LLM |
+| **Kein Claude in der ESC** | **Modellwechsel** (ADR 0001 ersetzen): Nova Pro oder ein Open-Weight-Modell. Das Preset-Gate (Szenario 18) misst Qualität, Laufzeit (unter dem Timeout des Audit-Jobs von 300 s, Szenario 12) und Kosten neu, bevor gewechselt wird. | Code & LLM |
 
 ## Szenario 6: Relationale Datenbank (Aurora Serverless v2)
 
@@ -92,7 +92,7 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 
 | Hürde | Anpassung | Ausführende Schicht |
 |---|---|---|
-| **Aufwachen aus der Pause** (0 ACU: bis 15 s, nach über 24 h Pause 30 s oder mehr, laut AWS-Doku) | Der erste Aufruf kann das 29-s-Timeout reißen. Mindestkapazität > 0 kostet Leerlaufkosten, sonst Wiederholung im Client. | Mensch |
+| **Aufwachen aus der Pause** (0 ACU: bis 15 s, nach über 24 h Pause 30 s oder mehr, laut AWS-Doku) | Der erste Aufruf kann das 29-s-Timeout des API Gateways im Archetyp reißen. Mindestkapazität > 0 kostet Leerlaufkosten, sonst Wiederholung im Client. | Mensch |
 | **VPC ist Pflicht** | VPC ohne NAT-Gateway; Lambda greift über die RDS Data API zu, nicht aus der VPC. | Code |
 | **FSBP `Lambda.3`** (Lambda in VPC) | Ausnahme mit Begründung „Data API, keine Lambda in der VPC“ (ADR 0011). | Mensch |
 
@@ -121,16 +121,14 @@ _Hinweis:_ Um blinde Flecken durch die Faktenextraktion transparent zu machen, v
 
 ## Szenario 10: KI-Verordnung als Quelle im Spec-Audit (#52)
 
-_Schlanke Variante umgesetzt (#52, #53): 8 Artikel in Einzelpflichten, ohne Vorstufe für die Einstufung (SPEC B6). Offen bleiben die Vorstufe (unten) und der volle Umfang._
+_Umgesetzt (#52, #53, ADR 0025, 0028): 8 Artikel mit 65 Prüfregeln. Die Vorstufe gibt es als Bedingungen: Verneint die Spezifikation mit Beleg ein KI-System oder eine Hochrisiko-KI, setzt der Code die betroffenen Prüfregeln auf N/A ([FUNKTIONSWEISE 3](FUNKTIONSWEISE.md#3-wie-ein-spec-audit-urteilt)). Offen bleiben der volle Umfang und die Punkte unten._
 
-- **Auslöser:** Behörden setzen KI-Systeme ein und haben dann eigene Pflichten nach der KI-Verordnung (Verordnung (EU) 2024/1689), z. B. als Betreiber (Art. 26) und als öffentliche Stelle mit Grundrechte-Folgenabschätzung (Art. 27). GovGuard ist selbst ein KI-System; das Selbst-Audit (`spec-govguard`) würde dann auch gegen die KI-Verordnung prüfen.
-- **Was bricht:** Die meisten Pflichten gelten nur für Hochrisiko-Systeme (Art. 6, Anhang III). Ob eine Spezifikation darunter fällt, muss vor allen anderen Regeln feststehen; sonst vergibt das Modell N/A je Regel einzeln, und das schwankt (SPEC P1).
-- **Anpassung:** Neue Quelle über das Rezept ([ENTWICKLUNG.md](ENTWICKLUNG.md) Abschnitt 5, *Neue Quelle hinzufügen*). Der Text liegt wie die DSGVO im Formex-XML bei EUR-Lex; der DSGVO-Adapter ist vermutlich weitgehend wiederverwendbar. Dazu ein Musterfall mit KI-Einsatz und Soll, und für `spec-govguard` ein neues Soll. Vorher klären: Wer entscheidet die Hochrisiko-Einstufung (Code-Vorstufe oder Mensch), und welche Fristen gelten aktuell? _(Rechtsstand vor dem Bau prüfen.)_
-- **Vorstufe Systemprofil (offen):** Ein Aufruf vor dem Audit legt fest, was für ein System die Spezifikation beschreibt: KI-System, Hochrisiko-Bereich nach Anhang III, besondere Kategorien von Daten, Drittland. Jede Angabe braucht Belegzeilen; ohne Beleg gilt „unbekannt“.
-  - **Befund (#36):** Ohne Abschnitt 10 ergab `spec-govguard` für alle 65 KI-VO-Regeln nur Lücken, obwohl die SPEC das Sprachmodell nennt. Die N/A der Hochrisiko-Pflichten schwankten zwischen zwei Läufen von 0 auf 25.
-  - **N/A per Code:** Ist das System belegt nicht hochriskant, setzt der Code Art. 13, 14, 26 und 27 auf N/A, wie heute die Dienste im Architektur-Audit. Das nimmt die größte Schwankung heraus.
-  - **Pflicht-Lücke statt FAIL:** Was das Profil verlangt, aber fehlt, bleibt WARN (offene Welt, ADR 0020) und erscheint oben im Report, z. B. „KI-System erkannt, Einstufung fehlt“ (Art. 6 Abs. 4 KI-VO verlangt die Dokumentation). Ein FAIL aus bloßem Fehlen würde G4 brechen.
-  - **Risiko:** Ein falsches Profil verdeckt Pflichten per N/A. Deshalb steht das Profil mit Belegen im Report, und ohne Beleg setzt der Code kein N/A. Neue Weichen: Prompt-Design und Statusmodell; ein Musterfall mit verschwiegener KI-Nutzung als Soll.
+- **Auslöser:** Behörden setzen KI-Systeme ein und haben dann eigene Pflichten nach der KI-Verordnung (Verordnung (EU) 2024/1689), z. B. als Betreiber (Art. 26) und als öffentliche Stelle mit Grundrechte-Folgenabschätzung (Art. 27). GovGuard ist selbst ein KI-System; das Selbst-Audit (`spec-govguard`) prüft auch gegen die KI-Verordnung.
+- **Was gebrochen war (#36):** Ohne Vorstufe vergab das Modell N/A je Prüfregel einzeln, und das schwankte: Die N/A der Hochrisiko-Pflichten lagen in zwei Läufen von `spec-govguard` bei 0 und bei 25. Die Bedingungen nehmen diese Schwankung heraus, wenn die Spezifikation verneint; ohne verneinende Zeile setzt der Code kein N/A, und das Modell darf im Spec-Audit weiter selbst N/A vergeben.
+- **Voller Umfang:** Der Vorfilter ist eine feste Liste von 8 Artikeln; ein weiterer Artikel kommt über eine Änderung dieser Liste mit Test dazu, bei eingefrorenem Katalog über den Modus „nur fehlende“ (`--only-missing`, ADR 0025). Die 8 Artikel selbst sind in Einzelpflichten zerlegt (ADR 0026), Art. 6 etwa in 10 Prüfregeln bis Anhang III. _(Rechtsstand und Fristen vor dem Ausbau prüfen.)_
+- **Einstufung als eigener Hinweis (offen):** Ist ein KI-System bejaht, die Hochrisiko-KI aber nicht genannt, stehen ihre Lücken heute nur unter „Nur wenn …“. Ein Hinweis oben im Report, z. B. „KI-System erkannt, Einstufung fehlt“ (Art. 6 Abs. 4 KI-VO verlangt die Dokumentation), bliebe WARN; ein FAIL aus bloßem Fehlen bräche die offene Welt (ADR 0020).
+- **Weitere Angaben im Profil (offen):** besondere Kategorien von Daten (Art. 9 DSGVO) als Bedingung; jede neue Bedingung braucht Belege und einen Musterfall mit Soll.
+- **Risiko:** Eine falsch verneinte Bedingung verdeckt Pflichten per N/A. Deshalb steht jede Bedingung mit Beleg im Report. Offen ist ein Musterfall mit verschwiegener KI-Nutzung als Soll.
 
 ## Szenario 11: Prompt-Fassung und Betrieb beobachtbar machen
 
@@ -196,7 +194,7 @@ _Entworfen, bewusst nicht gebaut ([ADR 0019](adr/0019-nur-audits.md), [0003](adr
 ## Szenario 15: Modellvergleich und mehrere Nutzer
 
 - **Auslöser:** Groq `gpt-oss-120b` wurde wegen der Kosten gewählt, nicht gegen Alternativen gemessen; zwei Spec-Audits zugleich liegen nahe am Groq-Limit von 250.000 Tokens je Minute.
-- **Was bricht:** Bei HTTP 429 endet ein Audit fail closed; eine Warteschlange gibt es nicht, Grenzen der Streamlit Community Cloud sind nicht geprüft.
+- **Was bricht:** Bei HTTP 429 (Drosselung) wiederholt das Groq-SDK den Aufruf bis zu sechsmal mit Wartezeit, danach endet das Audit fail closed; eine Warteschlange gibt es nicht, Grenzen der Streamlit Community Cloud sind nicht geprüft.
 - **Anpassung:** Ein Modell- und Anbietervergleich, auch mit EU-gehosteten Modellen, über dieselben Musterfälle und das Preset-Gate (Szenario 18). Für mehrere Nutzer eine Warteschlange vor `run_audit` oder ein zweiter Schlüssel; erst messen, dann bauen.
 - **Auch hier:** Antwortet Groq auf einen Aufruf mit HTTP 400 (beschädigter Tool-Aufruf), bricht das Audit ohne Retry ab; das war der einzige Abbruch der Messkampagne (#54). Ein Retry für diesen Fall wäre billig, braucht aber einen Messlauf.
 
@@ -237,13 +235,13 @@ _Entworfen, bewusst nicht gebaut ([ADR 0019](adr/0019-nur-audits.md), [0003](adr
 ## Weitere Typen im Prüfumfang (EFS, SSM-Klartext-Parameter)
 
 - **Auslöser:** Prüfregeln nennen `AWS::EFS::FileSystem` (Verschlüsselung, Backup) und `AWS::SSM::Parameter` (Klartext statt SecureString). Beide liegen außerhalb des Prüfumfangs (ADR 0013), die Regeln fallen deshalb aus dem Katalog.
-- **Anpassung:** Typ in `scope.json`, Snapshot neu ziehen (README), Stufe ② voll neu laufen lassen. Bei SSM-Parametern zuerst klären, wie ein Klartext-Parameter am Template erkennbar ist (`Type: String` gegen `SecureString`).
+- **Anpassung:** Typ in den Prüfumfang (`scope.json`), Eigenschaften neu ziehen ([ENTWICKLUNG.md](ENTWICKLUNG.md) Abschnitt 2), Auswählen und Formulieren für das Architektur-Audit voll neu laufen lassen (ADR 0013). Bei SSM-Parametern zuerst klären, wie ein Klartext-Parameter am Template erkennbar ist (`Type: String` gegen `SecureString`).
 
 ## Systemweite Auswirkungen: Der Weg zu Asynchronität
 
-Sobald Map-Reduce für große Regelkataloge (Szenario 1) oder lange Dokumente (Szenario 2) greift, ändert sich die Systemarchitektur fundamental:
+Heute läuft ein Audit synchron im Prozess der Oberfläche; die Pakete laufen darin parallel, und der Report entsteht erst am Ende. Sobald GovGuard auf AWS läuft (Szenario 12) oder lange Dokumente aufteilt (Szenario 2), ändert sich die Systemarchitektur fundamental:
 
-- **REST API:** Antwortet nicht mehr mit dem finalen Report, sondern asynchron mit einer Job-ID (HTTP 202 Accepted).
+- **Schnittstelle:** Eine Function URL ist eine feste HTTPS-Adresse, über die man eine Lambda-Funktion direkt aufruft, ohne API Gateway. Sie antwortet nicht mit dem finalen Report, sondern asynchron mit einer Job-ID (HTTP 202 Accepted, ADR 0023).
 
 - **Orchestrierung:** **AWS Step Functions** steuern die parallelen Lambda-Aufrufe (Scatter-Gather-Pattern), wobei Kosten nur pro Ausführung anfallen.
 

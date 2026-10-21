@@ -37,7 +37,7 @@ Beschreibt "violation_if" ein Fehlen, belegt fehlender Text nur "nicht beschrieb
 nur, wenn die Belegzeilen etwas festlegen, das der Prüfregel widerspricht; "rationale" nennt es."""
 
 type PackageRequest = Coroutine[Any, Any, list[FindingDraft]]  # one model call, not yet awaited
-PACKAGE_SIZE = 10  # rules per model call; 166 architecture rules -> 17 parallel calls
+PACKAGE_SIZE = 10  # rules per model call; 175 architecture rules -> up to 18 packages
 GROQ_MAX_PARALLEL = 2  # ~110,000 tokens/min per slot measured (#26), Groq tier allows 250,000
 
 
