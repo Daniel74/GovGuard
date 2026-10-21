@@ -183,7 +183,7 @@ _Entworfen, bewusst nicht gebaut ([ADR 0019](adr/0019-nur-audits.md), [0003](adr
 
 ## Szenario 14: Zweitprüfer für PASS und härtere Prompts
 
-- **Auslöser:** Das größte Restrisiko ist ein falsches PASS, und eine Anweisung in der Eingabe oder in Belegzeilen ist nicht gemessen (T4, T14 in [ARCHITECTURE](ARCHITECTURE.md#42-bedrohungen)).
+- **Auslöser:** Das größte Restrisiko ist ein falsches PASS, und eine Anweisung in der Eingabe oder in Belegzeilen ist nicht gemessen (T4, T14 in [ARCHITECTURE](ARCHITECTURE.md#72-bedrohungen-an-den-grenzen)).
 - **Was bricht:** Der Beleg-Check sieht nur, dass eine Zeile existiert, nicht, ob sie etwas beweist. Der Verstoß-Prüfer senkt nur FAIL, ein PASS prüft niemand.
 
 | Anpassung | Ausführende Schicht |

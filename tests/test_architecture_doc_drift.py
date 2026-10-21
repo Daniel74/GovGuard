@@ -57,7 +57,7 @@ def test_every_path_in_the_diagrams_exists() -> None:
 def test_every_code_name_in_the_diagrams_exists() -> None:
     tokens = {t for label in diagram_labels() for t in SNAKE_OR_CAMEL.findall(label)} - NOT_CODE
     assert tokens, "no code names found: the regex no longer matches the diagrams"
-    assert sorted(tokens - code_names()) == []
+    assert sorted(tokens - identifiers_in_src()) == []  # fields count: class diagrams name them
 
 
 def test_every_path_in_the_text_exists() -> None:
@@ -159,8 +159,8 @@ def test_the_code_structure_tree_names_real_folders() -> None:
 
 
 def test_every_rule_in_the_rules_table_points_at_real_code_and_tests() -> None:
-    """Section 3.2: each backticked name exists in src/, each `tests/...` file in tests/."""
-    table = section("### 3.2 Regeln in Klartext: wo erzwingt der Code sie?")
+    """Section 3.6: each backticked name exists in src/, each `tests/...` file in tests/."""
+    table = section("### 3.6 Regeln in Klartext: wo erzwingt der Code sie?")
     rows = [r for r in table.splitlines() if r.startswith("| ") and "`" in r]
     assert len(rows) >= 12, "too few rules found: the table format changed"
     known = identifiers_in_src() | EXTERNAL

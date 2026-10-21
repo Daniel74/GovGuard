@@ -95,7 +95,7 @@ Die erste Frage eines Reviewers zu einem KI-System lautet fast immer: **Was darf
 | Ist die Antwortmenge offen (Freitext, Code) oder geschlossen (feste Werte)? | Eine geschlossene Menge lässt sich vollständig prüfen. |
 | Wie oft darf das Modell es wiederholen, und wer begrenzt das? | Ohne Grenze entstehen Schleifen und Kosten. |
 
-**Ergebnis:** [ARCHITECTURE 1.1 „Entwurfsprinzipien“](ARCHITECTURE.md#11-entwurfsprinzipien) und [1.3 „Fester Katalog statt Suche“](ARCHITECTURE.md#13-fester-katalog-statt-suche); die acht Aufrufe zeigt [2.2](ARCHITECTURE.md#22-ein-modellaufruf-und-die-acht-aufrufe).
+**Ergebnis:** [ARCHITECTURE 0.4 „Drei Leitprinzipien“](ARCHITECTURE.md#04-drei-leitprinzipien) und [6.2 „Die deterministische Schale“](ARCHITECTURE.md#62-die-deterministische-schale), Muster 3; die acht Aufrufe zeigt [2.7](ARCHITECTURE.md#27-die-acht-modellaufrufe).
 
 ### 1.4 Zehn Fragen vor dem ersten Modellaufruf
 
@@ -160,7 +160,7 @@ Ein Reviewer, der arc42 kennt, sucht die „Kontextabgrenzung“ unter diesem Na
 3. **Diagramme einer C4-Ebene zuordnen.** Mischt ein Diagramm mehrere Ebenen, teile es auf.
 4. **Jedes Diagramm bekommt eine Legende** und genau eine Kernaussage.
 
-**Ergebnis:** [ARCHITECTURE](ARCHITECTURE.md) gliedert sich nach den fünf Sichten des 4+1-Modells von Kruchten statt nach arc42; die Bausteine zeigt [1 Logische Sicht](ARCHITECTURE.md#1-logische-sicht) als vereinfachte C4-Container-Sicht, die Komponenten [Code-Struktur](ARCHITECTURE.md#code-struktur), die Verteilung [4 Physische Sicht](ARCHITECTURE.md#4-physische-sicht). Die Diagramm-Konventionen stehen im Kopf des Dokuments.
+**Ergebnis:** [ARCHITECTURE](ARCHITECTURE.md) gliedert sich nach den fünf Sichten des 4+1-Modells von Kruchten statt nach arc42; die Bausteine zeigt [1 Logische Sicht](ARCHITECTURE.md#1-logische-sicht) als Schichtenbild, die Komponenten [Code-Struktur](ARCHITECTURE.md#code-struktur), die Verteilung [4 Physische Sicht](ARCHITECTURE.md#4-physische-sicht). Die Diagramm-Konventionen stehen in [0.3](ARCHITECTURE.md#03-modell-oder-code-die-konvention).
 
 ### 2.4 Typische Fehler
 
@@ -219,7 +219,7 @@ Normen nennen nur Merkmale. Messbar werden sie durch **Qualitätsszenarien** (Ba
 | Vertraulichkeit | Steht etwas darin, das nicht jeder sehen darf? |
 | Wiederherstellbarkeit | Was bleibt, wenn ein Schritt scheitert? |
 
-**Ergebnis:** [ARCHITECTURE 6 „Qualität“](ARCHITECTURE.md#6-qualität) mit neun Szenarien samt Stand je Szenario sowie der Zuordnung [„Datenqualität nach ISO/IEC 25012“](ARCHITECTURE.md#62-datenqualität-nach-isoiec-25012).
+**Ergebnis:** [ARCHITECTURE 6.3](ARCHITECTURE.md#63-was-die-schale-nachweislich-leistet) und [7.4](ARCHITECTURE.md#74-nachvollziehbarkeit) mit neun Szenarien samt Stand, geordnet nach den Arten, wie ein Modell versagt, sowie der Zuordnung [„Datenqualität nach ISO/IEC 25012“](ARCHITECTURE.md#83-datenqualität-nach-isoiec-25012).
 
 ### 3.4 Typische Fehler
 
@@ -274,7 +274,7 @@ GovGuard schreibt die Regeln als **Klartext-Tabelle** statt in OCL, mit Fundstel
 4. **Durchsetzungsort festlegen:** Typ, Validator, Gate oder Test, dazu der Test, der die Regel hält.
 5. **Lebenszyklen zeichnen:** Zustandsdiagramm für Objekte mit Zuständen, Aktivitätsdiagramm für Abläufe.
 
-**Ergebnis:** Typen: [1.2](ARCHITECTURE.md#12-datentypen-eines-reports). Zustände eines Befunds: [2.3](ARCHITECTURE.md#23-lebenslauf-eines-befunds). Regeln mit Fundstelle und Test sowie die Zuordnung von Vor- und Nachbedingung zu den Exit-Codes: [3.2](ARCHITECTURE.md#32-regeln-in-klartext-wo-erzwingt-der-code-sie).
+**Ergebnis:** Typen: [1.4](ARCHITECTURE.md#14-typen-des-audits-kern). Zustände eines Befunds: [2.5](ARCHITECTURE.md#25-lebenslauf-eines-befunds). Regeln mit Fundstelle und Test sowie die Zuordnung von Vor- und Nachbedingung zu den Exit-Codes: [3.6](ARCHITECTURE.md#36-regeln-in-klartext-wo-erzwingt-der-code-sie).
 
 ### 4.4 Typische Fehler
 
@@ -321,7 +321,7 @@ GovGuard ist selbst ein Sicherheitswerkzeug, und ein Reviewer fragt, ob es seine
 4. **Je Bedrohung einen Status festhalten:** umgesetzt, teilweise, erkennbar, akzeptiert (bewusst getragen, mit Begründung), offen oder entfällt.
 5. **Nachweisen:** Für jede Maßnahme ein Test, ein Musterfall oder ein Log. „Akzeptiert“ braucht eine Begründung im ADR.
 
-**Ergebnis:** [ARCHITECTURE 4 „Physische Sicht“](ARCHITECTURE.md#4-physische-sicht) mit Vertrauensgrenzen im Verteilungsbild, [STRIDE-Tabelle](ARCHITECTURE.md#42-bedrohungen) und [OWASP-Zuordnung](ARCHITECTURE.md#43-owasp-top-10-für-llm-anwendungen). Die Grenzen zum BSI-Vorgehen stehen in [6.3](ARCHITECTURE.md#63-restrisiken-und-grenzen).
+**Ergebnis:** [ARCHITECTURE 7 „Sicherheit“](ARCHITECTURE.md#7-sicherheit) mit Vertrauensgrenzen im Datenflussdiagramm, [STRIDE-Tabelle](ARCHITECTURE.md#72-bedrohungen-an-den-grenzen) und [OWASP-Zuordnung](ARCHITECTURE.md#81-owasp-top-10-für-llm-anwendungen-2025). Die Grenzen zum BSI-Vorgehen stehen in [0.1](ARCHITECTURE.md#01-zweck-und-abgrenzung).
 
 ### 5.4 Typische Fehler
 
@@ -356,7 +356,7 @@ Ein guter Prompt hat einen erkennbaren Aufbau wie ein gutes Ticket: **Rolle, Auf
 
 ### 6.2 Warum für GovGuard?
 
-Drei Qualitätsziele lassen sich nur über Prompts verbessern. Stabile Urteile (Szenario QS-3 in [ARCHITECTURE 6.1](ARCHITECTURE.md#61-qualitätsszenarien-qs-1-bis-qs-9)) kann man nicht programmieren; klare Kriterien im Prompt sind der wichtigste Hebel. Die Abwehr von Prompt Injection (Bedrohung T4 in [ARCHITECTURE 4.2](ARCHITECTURE.md#42-bedrohungen)) braucht eine Abgrenzung der Daten. Und die Qualität der Prüfkriterien hängt am Prompt, der die Prüfregeln formuliert.
+Drei Qualitätsziele lassen sich nur über Prompts verbessern. Stabile Urteile (Szenario QS-3 in [ARCHITECTURE 6.3](ARCHITECTURE.md#63-was-die-schale-nachweislich-leistet)) kann man nicht programmieren; klare Kriterien im Prompt sind der wichtigste Hebel. Die Abwehr von Prompt Injection (Bedrohung T4 in [ARCHITECTURE 7.2](ARCHITECTURE.md#72-bedrohungen-an-den-grenzen)) braucht eine Abgrenzung der Daten. Und die Qualität der Prüfkriterien hängt am Prompt, der die Prüfregeln formuliert.
 
 ### 6.3 Vorgehen
 
@@ -377,13 +377,13 @@ flowchart LR
 5. **Genau eine Änderung je Runde,** dann erneut messen.
 6. **Versionieren:** Prompts liegen als Text im Repo und gehen wie Code durch den Pull Request.
 
-Ein **Entwicklungsset** ist eine Sammlung von Testfällen, an denen man den Prompt verbessert, getrennt von den Fällen, die am Ende das Ergebnis abnehmen. Das ist die saubere Lösung, denn wer an den Abnahmefällen optimiert, misst danach nur noch, ob der Prompt diese Fälle kennt. GovGuard hat sechs Musterfälle und kein getrenntes Entwicklungsset; das Risiko steht in [ARCHITECTURE 6.3](ARCHITECTURE.md#63-restrisiken-und-grenzen).
+Ein **Entwicklungsset** ist eine Sammlung von Testfällen, an denen man den Prompt verbessert, getrennt von den Fällen, die am Ende das Ergebnis abnehmen. Das ist die saubere Lösung, denn wer an den Abnahmefällen optimiert, misst danach nur noch, ob der Prompt diese Fälle kennt. GovGuard hat sechs Musterfälle und kein getrenntes Entwicklungsset; das Risiko steht in [ARCHITECTURE 6.4](ARCHITECTURE.md#64-wo-die-schale-endet).
 
 ### 6.4 Neun Prinzipien
 
 Jedes Prinzip nennt, ob GovGuard es heute umsetzt.
 
-1. **Was der Code weiß, fragt man das Modell nicht.** Anker, Beleg und Gesamtstatus setzt der Code. *Umgesetzt* (ARCHITECTURE 1.1, Prinzip 1).
+1. **Was der Code weiß, fragt man das Modell nicht.** Anker, Beleg und Gesamtstatus setzt der Code. *Umgesetzt* (ARCHITECTURE 0.4, Prinzip 2).
 2. **Ein Aufruf, eine Aufgabe.** Das macht Fehler zuordenbar und Prompts kurz. *Umgesetzt:* acht Aufrufe mit je einer Aufgabe.
 3. **Anweisungen und Daten trennen.** Die Eingabe steht zwischen Markierungen, und ein Satz sagt, dass Anweisungen darin nicht gelten. *Teilweise:* Die Markierung gibt es, der Satz fehlt (T4).
 4. **Kriterien statt Bauchgefühl.** Statusdefinitionen im Prompt und Kriterien je Prüfregel. Die wichtigste Regel: *Schweigen ist keine Verletzung.* *Umgesetzt.*
@@ -402,11 +402,11 @@ Das Muster gilt für jedes Projekt: Eine Stufe beginnt mit einem gemessenen Fehl
 | v0 | Das Modell schreibt den Beleg als wörtliches Zitat ab: beim größten Musterfall (151 Prüfregeln) lehnte der Code 52 Belege ab, Folge: Abbruch | Das Modell nennt nur Zeilen, der Code schneidet den Beleg aus | [ADR 0017](adr/0017-beleg-per-zeilenverweis.md) |
 | v1 | FAIL mit Beleg, der keinen Verstoß zeigt: 130 von 151 Verstoßkriterien beschrieben ein Fehlen, und selbst mit Prompt-Regel vergab Groq noch 50 FAILs | Regel „offene Welt“ im Prompt, Kriterien als Festlegung umformuliert, ein zweiter Aufruf prüft jedes FAIL | [ADR 0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md) |
 | v2 | Pflichten, die für Behörden nie gelten, kosteten 24 Lücken je Audit | Bedingungs-Vorlauf: ein Aufruf mehr, den Rest entscheidet der Code (Lücken sanken um 15 bis 31 %) | [ADR 0028](adr/0028-bedingungen-im-spec-audit.md) |
-| v3 (heute) | Schwankung zwischen Läufen | keine Prompt-Änderung: Die Schwankung wird mit 3 Läufen je Musterfall gemessen, nicht erzwungen | [ARCHITECTURE 6.1](ARCHITECTURE.md#61-qualitätsszenarien-qs-1-bis-qs-9) (QS-3) |
+| v3 (heute) | Schwankung zwischen Läufen | keine Prompt-Änderung: Die Schwankung wird mit 3 Läufen je Musterfall gemessen, nicht erzwungen | [ARCHITECTURE 6.3](ARCHITECTURE.md#63-was-die-schale-nachweislich-leistet) (QS-3) |
 
 Die Lehre: Nicht jedes Fehlerbild ist ein Prompt-Problem. Die Änderungen v0 bis v2 liegen überwiegend im Code und in den Daten, nur ein Teil davon im Prompt-Text. Was nach v3 bleibt, ist Schwankung, und die misst man.
 
-**Ergebnis:** Den Ablauf eines Aufrufs und die acht Aufrufe zeigt [ARCHITECTURE 2.2](ARCHITECTURE.md#22-ein-modellaufruf-und-die-acht-aufrufe). Die Prompts selbst stehen im Code.
+**Ergebnis:** Den Ablauf eines Aufrufs und die acht Aufrufe zeigt [ARCHITECTURE 2.7](ARCHITECTURE.md#27-die-acht-modellaufrufe). Die Prompts selbst stehen im Code.
 
 ### 6.6 Typische Fehler
 
@@ -436,7 +436,7 @@ Im Fachgespräch wirkt ein Standardbegriff stärker als ein Eigenname. Das Entwu
 2. **Das Muster benennen,** mit Quelle, in einem Satz.
 3. **Grenzen nennen:** Wo passt das Muster nicht ganz?
 
-**Ergebnis:** [ARCHITECTURE 1.1 „Entwurfsprinzipien“](ARCHITECTURE.md#11-entwurfsprinzipien) mit Fundstelle im Code; die Muster-Tabelle ist in #72 entfallen.
+**Ergebnis:** [ARCHITECTURE 0.4 „Drei Leitprinzipien“](ARCHITECTURE.md#04-drei-leitprinzipien) und die Entwurfsentscheidungen am Anfang jeder Sicht, je mit Fundstelle im Code; die Muster stehen in [6.2](ARCHITECTURE.md#62-die-deterministische-schale).
 
 ### 7.4 Projekteigene Namen
 
@@ -456,7 +456,7 @@ Diese Namen stammen aus dem Projekt, nicht aus der Literatur. Sag sie nur zusamm
 | Anti-Muster | Warum gefährlich | Besser |
 |---|---|---|
 | Das Modell zählen, sortieren oder rechnen lassen | Fehler sind still und schwer zu finden | Code (Testfrage) |
-| Verbote nur im Prompt | Ein Prompt ist eine Bitte | Schranke im Validator oder Gate ([ARCHITECTURE 1.1](ARCHITECTURE.md#11-entwurfsprinzipien)) |
+| Verbote nur im Prompt | Ein Prompt ist eine Bitte | Schranke im Validator oder Gate ([ARCHITECTURE 0.4](ARCHITECTURE.md#04-drei-leitprinzipien)) |
 | Top-K-Retrieval bei Vollständigkeitspflicht | Fehlende Regeln fallen nicht auf | fester Katalog |
 | Kein Ausweg im Formular | Das Modell muss raten | WARN anbieten |
 | Retries oder Korrekturschleifen ohne Grenze | Zeit, Kosten, keine Konvergenz | feste Obergrenze, dann fail closed |
@@ -482,13 +482,13 @@ Diese Namen stammen aus dem Projekt, nicht aus der Literatur. Sag sie nur zusamm
 
 | Methode | Ergebnis | gehört in arc42 |
 |---|---|---|
-| Workflow-Muster (1) | [ARCHITECTURE 1.1](ARCHITECTURE.md#11-entwurfsprinzipien), [2.1](ARCHITECTURE.md#21-audit-von-der-eingabe-zum-report) | Kap. 4 |
+| Workflow-Muster (1) | [ARCHITECTURE 0.4](ARCHITECTURE.md#04-drei-leitprinzipien), [2.3](ARCHITECTURE.md#23-aktivität-spec-audit) | Kap. 4 |
 | arc42 + C4 (2) | [ARCHITECTURE](ARCHITECTURE.md) (Aufbau nach 4+1), [1 Logische Sicht](ARCHITECTURE.md#1-logische-sicht), [Code-Struktur](ARCHITECTURE.md#code-struktur) | Kap. 3, 5, 7 |
-| ISO 25012 + Szenarien (3) | [ARCHITECTURE 6](ARCHITECTURE.md#6-qualität), [Datenqualität](ARCHITECTURE.md#62-datenqualität-nach-isoiec-25012) | Kap. 10 |
-| Design by Contract (4) | [ARCHITECTURE 1.2](ARCHITECTURE.md#12-datentypen-eines-reports), [2.3](ARCHITECTURE.md#23-lebenslauf-eines-befunds), [3.2 Regeln in Klartext](ARCHITECTURE.md#32-regeln-in-klartext-wo-erzwingt-der-code-sie) | Kap. 5, 6, 8 |
-| DFD + STRIDE + OWASP (5) | [ARCHITECTURE 4](ARCHITECTURE.md#4-physische-sicht) | Kap. 8, 11 |
-| Prompt Engineering (6) | [ARCHITECTURE 2.2](ARCHITECTURE.md#22-ein-modellaufruf-und-die-acht-aufrufe), Weg v0 → v3 in 6.5 | Kap. 8 |
-| Muster (7) | [ARCHITECTURE 1.1](ARCHITECTURE.md#11-entwurfsprinzipien) | Kap. 4, 8 |
+| ISO 25012 + Szenarien (3) | [ARCHITECTURE 6](ARCHITECTURE.md#6-verlässlichkeit-trotz-sprachmodell), [Datenqualität](ARCHITECTURE.md#83-datenqualität-nach-isoiec-25012) | Kap. 10 |
+| Design by Contract (4) | [ARCHITECTURE 1.4](ARCHITECTURE.md#14-typen-des-audits-kern), [2.5](ARCHITECTURE.md#25-lebenslauf-eines-befunds), [3.6 Regeln in Klartext](ARCHITECTURE.md#36-regeln-in-klartext-wo-erzwingt-der-code-sie) | Kap. 5, 6, 8 |
+| DFD + STRIDE + OWASP (5) | [ARCHITECTURE 7](ARCHITECTURE.md#7-sicherheit), [8](ARCHITECTURE.md#8-abgleich-mit-den-standards) | Kap. 8, 11 |
+| Prompt Engineering (6) | [ARCHITECTURE 2.7](ARCHITECTURE.md#27-die-acht-modellaufrufe), Weg v0 → v3 in 6.5 | Kap. 8 |
+| Muster (7) | [ARCHITECTURE 0.4](ARCHITECTURE.md#04-drei-leitprinzipien) | Kap. 4, 8 |
 
 ### 8.2 Bewusst weggelassen
 
@@ -506,21 +506,21 @@ Ein unbefangener Leser kennt nur [README](../README.md) und [ARCHITECTURE](ARCHI
 
 | # | Rolle | Frage | Antwort steht in |
 |---|---|---|---|
-| 1 | Hiring Manager | Was entscheidet das Sprachmodell, was der Code, und warum ist GovGuard kein Agent? | [ARCHITECTURE 1.1](ARCHITECTURE.md#11-entwurfsprinzipien) (Prinzip 1 und 5), [2.1](ARCHITECTURE.md#21-audit-von-der-eingabe-zum-report) |
-| 2 | Hiring Manager | Wie gehen Sie mit erfundenen Antworten (Halluzinationen) um? | [ARCHITECTURE 6](ARCHITECTURE.md#6-qualität) (QS-1, Datenqualität), [2.3](ARCHITECTURE.md#23-lebenslauf-eines-befunds) |
-| 3 | Hiring Manager | Ist das Ergebnis reproduzierbar, und was haben Sie gemessen? | [ARCHITECTURE 6.1](ARCHITECTURE.md#61-qualitätsszenarien-qs-1-bis-qs-9) (QS-3, QS-4) |
-| 4 | Hiring Manager | Was kostet ein Audit, der Leerlauf, der Build? | [ARCHITECTURE 4.4](ARCHITECTURE.md#44-betrieb-und-kosten), Build: [ENTWICKLUNG 2](ENTWICKLUNG.md#2-wissensbasis-bauen) |
-| 5 | Hiring Manager | Welche Schwächen kennen Sie, und was kommt als Nächstes? | [ARCHITECTURE 6.3](ARCHITECTURE.md#63-restrisiken-und-grenzen), [AUSBAU](AUSBAU.md) |
-| 6 | Hiring Manager | Nach welchem Standard ist die Doku gegliedert, und wo finde ich Module und Datentypen? | [ARCHITECTURE (Kopf)](ARCHITECTURE.md#govguard--architektur-in-fünf-sichten), [Code-Struktur](ARCHITECTURE.md#code-struktur), [1.2](ARCHITECTURE.md#12-datentypen-eines-reports) |
-| 7 | Hiring Manager | Wie wurden die Prompts entwickelt und getestet? | [ARCHITECTURE 2.2](ARCHITECTURE.md#22-ein-modellaufruf-und-die-acht-aufrufe), Weg des Audit-Prompts in 6.5 dieses Handbuchs, [ARCHITECTURE 6.3](ARCHITECTURE.md#63-restrisiken-und-grenzen) (kein Entwicklungsset) |
-| 8 | Sicherheit | Wohin gehen welche Daten, und wer verarbeitet sie? | [ARCHITECTURE 4](ARCHITECTURE.md#4-physische-sicht), [4.1](ARCHITECTURE.md#41-datenort-und-aufbewahrung), [4.2](ARCHITECTURE.md#42-bedrohungen) |
-| 9 | Sicherheit | Welche Bedrohungen sind betrachtet, welche bleiben offen? | [ARCHITECTURE 4.2](ARCHITECTURE.md#42-bedrohungen), [4.3](ARCHITECTURE.md#43-owasp-top-10-für-llm-anwendungen) |
-| 10 | Sicherheit | Was ist nach BSI IT-Grundschutz nachgewiesen, was nicht? | [ARCHITECTURE 6.3](ARCHITECTURE.md#63-restrisiken-und-grenzen) (Schutzbedarf „normal“, kein Grundschutz-Check) |
-| 11 | Sicherheit | Wer darf Audits starten, wo liegen die Geheimnisse? | [ARCHITECTURE 4.2](ARCHITECTURE.md#42-bedrohungen) (T1), [4.4](ARCHITECTURE.md#44-betrieb-und-kosten) |
-| 12 | Sicherheit | Kann man später belegen, was geprüft wurde, und was ändert sich für echte Daten? | [ARCHITECTURE 1.2](ARCHITECTURE.md#12-datentypen-eines-reports) (`Trace`), [4.1](ARCHITECTURE.md#41-datenort-und-aufbewahrung), [AUSBAU](AUSBAU.md) (Szenario 12) |
-| 13 | Hiring Manager | Welche Alternativen haben Sie verworfen (Vektor-Datenbank, Agent-Framework, Bedrock im Demo-Stand), und warum? | [ARCHITECTURE 1.1](ARCHITECTURE.md#11-entwurfsprinzipien) (Prinzip 2, 5, 7), [1.3](ARCHITECTURE.md#13-fester-katalog-statt-suche) |
-| 14 | Hiring Manager | Wie testen Sie, ohne das Modell oder AWS aufzurufen? | [ARCHITECTURE 1.1](ARCHITECTURE.md#11-entwurfsprinzipien) (Prinzip 6), [3.1](ARCHITECTURE.md#31-testen-wenn-die-antwort-nicht-immer-gleich-ist), [3.2](ARCHITECTURE.md#32-regeln-in-klartext-wo-erzwingt-der-code-sie) |
-| 15 | Sicherheit | Was passiert, wenn die Eingabe Anweisungen an das Modell enthält (Prompt Injection)? | [ARCHITECTURE 4.2](ARCHITECTURE.md#42-bedrohungen) (T4), [4.3](ARCHITECTURE.md#43-owasp-top-10-für-llm-anwendungen) (LLM01), [AUSBAU](AUSBAU.md) (Szenario 14) |
+| 1 | Hiring Manager | Was entscheidet das Sprachmodell, was der Code, und warum ist GovGuard kein Agent? | [ARCHITECTURE 0.4](ARCHITECTURE.md#04-drei-leitprinzipien) (Prinzip 1), [2.1](ARCHITECTURE.md#21-entwurfsentscheidungen) (Workflow statt Agent) |
+| 2 | Hiring Manager | Wie gehen Sie mit erfundenen Antworten (Halluzinationen) um? | [ARCHITECTURE 6](ARCHITECTURE.md#6-verlässlichkeit-trotz-sprachmodell) (QS-1, Datenqualität), [2.5](ARCHITECTURE.md#25-lebenslauf-eines-befunds) |
+| 3 | Hiring Manager | Ist das Ergebnis reproduzierbar, und was haben Sie gemessen? | [ARCHITECTURE 6.3](ARCHITECTURE.md#63-was-die-schale-nachweislich-leistet) (QS-3, QS-4) |
+| 4 | Hiring Manager | Was kostet ein Audit, der Leerlauf, der Build? | [ARCHITECTURE 4.3](ARCHITECTURE.md#43-ausrollen-betrieb-und-kosten), Build: [ENTWICKLUNG 2](ENTWICKLUNG.md#2-wissensbasis-bauen) |
+| 5 | Hiring Manager | Welche Schwächen kennen Sie, und was kommt als Nächstes? | [ARCHITECTURE 6.4](ARCHITECTURE.md#64-wo-die-schale-endet), [AUSBAU](AUSBAU.md) |
+| 6 | Hiring Manager | Nach welchem Standard ist die Doku gegliedert, und wo finde ich Module und Datentypen? | [ARCHITECTURE (Kopf)](ARCHITECTURE.md#govguard--architektur-nach-kruchten-41), [Code-Struktur](ARCHITECTURE.md#code-struktur), [1.4](ARCHITECTURE.md#14-typen-des-audits-kern) |
+| 7 | Hiring Manager | Wie wurden die Prompts entwickelt und getestet? | [ARCHITECTURE 2.7](ARCHITECTURE.md#27-die-acht-modellaufrufe), Weg des Audit-Prompts in 6.5 dieses Handbuchs, [ARCHITECTURE 6.4](ARCHITECTURE.md#64-wo-die-schale-endet) (kein Entwicklungsset) |
+| 8 | Sicherheit | Wohin gehen welche Daten, und wer verarbeitet sie? | [ARCHITECTURE 4](ARCHITECTURE.md#4-physische-sicht), [7.3](ARCHITECTURE.md#73-datenort-aufbewahrung-und-drittlandtransfer), [7.2](ARCHITECTURE.md#72-bedrohungen-an-den-grenzen) |
+| 9 | Sicherheit | Welche Bedrohungen sind betrachtet, welche bleiben offen? | [ARCHITECTURE 7.2](ARCHITECTURE.md#72-bedrohungen-an-den-grenzen), [8.1](ARCHITECTURE.md#81-owasp-top-10-für-llm-anwendungen-2025) |
+| 10 | Sicherheit | Was ist nach BSI IT-Grundschutz nachgewiesen, was nicht? | [ARCHITECTURE 0.1](ARCHITECTURE.md#01-zweck-und-abgrenzung) (Schutzbedarf „normal“, kein Grundschutz-Check) |
+| 11 | Sicherheit | Wer darf Audits starten, wo liegen die Geheimnisse? | [ARCHITECTURE 7.2](ARCHITECTURE.md#72-bedrohungen-an-den-grenzen) (T1), [4.3](ARCHITECTURE.md#43-ausrollen-betrieb-und-kosten) |
+| 12 | Sicherheit | Kann man später belegen, was geprüft wurde, und was ändert sich für echte Daten? | [ARCHITECTURE 1.4](ARCHITECTURE.md#14-typen-des-audits-kern) (`Trace`), [7.3](ARCHITECTURE.md#73-datenort-aufbewahrung-und-drittlandtransfer), [AUSBAU](AUSBAU.md) (Szenario 12) |
+| 13 | Hiring Manager | Welche Alternativen haben Sie verworfen (Vektor-Datenbank, Agent-Framework, Bedrock im Demo-Stand), und warum? | [ARCHITECTURE 1.1](ARCHITECTURE.md#11-entwurfsentscheidungen), [2.1](ARCHITECTURE.md#21-entwurfsentscheidungen), [4.1](ARCHITECTURE.md#41-entwurfsentscheidungen), [6.2](ARCHITECTURE.md#62-die-deterministische-schale) |
+| 14 | Hiring Manager | Wie testen Sie, ohne das Modell oder AWS aufzurufen? | [ARCHITECTURE 3.1](ARCHITECTURE.md#31-entwurfsentscheidungen), [3.5](ARCHITECTURE.md#35-rund-um-den-code), [3.6](ARCHITECTURE.md#36-regeln-in-klartext-wo-erzwingt-der-code-sie) |
+| 15 | Sicherheit | Was passiert, wenn die Eingabe Anweisungen an das Modell enthält (Prompt Injection)? | [ARCHITECTURE 7.2](ARCHITECTURE.md#72-bedrohungen-an-den-grenzen) (T4), [8.1](ARCHITECTURE.md#81-owasp-top-10-für-llm-anwendungen-2025) (LLM01), [AUSBAU](AUSBAU.md) (Szenario 14) |
 
 ### 8.5 Glossar der Methodenbegriffe
 

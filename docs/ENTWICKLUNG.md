@@ -22,11 +22,11 @@ Dieses Dokument sagt, wie man GovGuard einrichtet, die Wissensbasis baut, ein Au
 | Code prüfen (`uv run ruff check .`) | Der Linter ruff liest den Code, ohne ihn auszuführen, und meldet Regelverstöße. Er prüft auch die Grenzen für kleine Einheiten (Komplexität, Argumente, Anweisungen je Funktion). |
 | Oberfläche starten (`uv run streamlit run streamlit_app.py`) | Startet die Demo-Oberfläche; die Galerie läuft ohne Schlüssel (auch `./start_streamlit.sh`). |
 
-**Audit erstellen in der lokalen Oberfläche:** Die Seite verlangt ein Passwort und, für das Modell, den Groq-Schlüssel. Beides kommt aus Umgebungsvariablen oder aus `.streamlit/secrets.toml`: `APP_PASSWORD=… GROQ_API_KEY=… uv run streamlit run streamlit_app.py`. Fehlt das Passwort (`APP_PASSWORD`), startet kein Audit (fail closed). Auf Streamlit Community Cloud stehen beide Werte in den Secrets der App ([ARCHITECTURE](ARCHITECTURE.md#44-betrieb-und-kosten) 4.4).
+**Audit erstellen in der lokalen Oberfläche:** Die Seite verlangt ein Passwort und, für das Modell, den Groq-Schlüssel. Beides kommt aus Umgebungsvariablen oder aus `.streamlit/secrets.toml`: `APP_PASSWORD=… GROQ_API_KEY=… uv run streamlit run streamlit_app.py`. Fehlt das Passwort (`APP_PASSWORD`), startet kein Audit (fail closed). Auf Streamlit Community Cloud stehen beide Werte in den Secrets der App ([ARCHITECTURE](ARCHITECTURE.md#43-ausrollen-betrieb-und-kosten) 4.3).
 
 ## 2 Wissensbasis bauen
 
-Der Build ist ein Werkzeug, das lokal läuft: `uv run python -m kb_build <befehl>`. Die Befehle laufen in dieser Reihenfolge; jeder liest das Ergebnis des vorigen. Ein Gate ist eine Prüfung im Code, die eine Prüfregel nur durchlässt, wenn sie eine feste Regel erfüllt. Ein Retry ist die erneute Frage ans Modell, nachdem der Code die Antwort mit Grund abgelehnt hat. Hintergrund und Gates: [ARCHITECTURE](ARCHITECTURE.md#24-build-aus-normtexten-wird-die-wissensbasis) 2.4.
+Der Build ist ein Werkzeug, das lokal läuft: `uv run python -m kb_build <befehl>`. Die Befehle laufen in dieser Reihenfolge; jeder liest das Ergebnis des vorigen. Ein Gate ist eine Prüfung im Code, die eine Prüfregel nur durchlässt, wenn sie eine feste Regel erfüllt. Ein Retry ist die erneute Frage ans Modell, nachdem der Code die Antwort mit Grund abgelehnt hat. Hintergrund und Gates: [ARCHITECTURE](ARCHITECTURE.md#32-paket-kb_build-der-build) 3.2.
 
 | Schritt (Befehl) | Was passiert | Ergebnis |
 |---|---|---|
@@ -93,7 +93,7 @@ Eine Quelle ist ein Regelwerk wie BSI oder CIS, aus dem Prüfregeln entstehen ([
 
 ## 6 Bekannte Grenzen
 
-Die Grenzen des Betriebs stehen hier, die Risiken des Entwurfs in [ARCHITECTURE](ARCHITECTURE.md#63-restrisiken-und-grenzen) 6.3.
+Die Grenzen des Betriebs stehen hier, die Risiken des Entwurfs in [ARCHITECTURE](ARCHITECTURE.md#64-wo-die-schale-endet) 6.4.
 
 | Grenze | Was es heißt | Maßnahme |
 |---|---|---|

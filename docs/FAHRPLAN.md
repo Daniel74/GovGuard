@@ -1034,18 +1034,18 @@ git grep -nIE "$P" -- data/input/presets/spec-govguard
 
 ### Schritt 13c – ARCHITECTURE.md als 4+1 nach Kruchten (#73)
 
-**Ziel:** Eine technische Referenz-Doku nach Kruchten ersetzt die dünne Fassung aus #72: Klassendiagramme je Pipeline, Nebenläufigkeit in der Prozess-Sicht, Sequenzdiagramme in den Szenarien, Kapitel 6 mit rotem Faden für Leser aus der deterministischen Programmierung.
+**Ziel:** Eine technische Referenz-Doku nach Kruchten ersetzt die dünne Fassung aus #72: Klassendiagramme je Pipeline, Nebenläufigkeit in der Prozess-Sicht, Sequenzdiagramme in den Szenarien, Kapitel 6 mit rotem Faden für Leser aus der deterministischen Programmierung, Sicherheit (7) und Standards (8) als eigene Kapitel.
 **Voraussetzung:** Schritt 13b (#70–#72 geschlossen), CLAUDE.md mit Ausnahme für ARCHITECTURE.md (fea6e33). Kein AWS, kein Groq.
 
-**Vorgaben:** Entscheidungen, Kruchten-Checkliste und roter Faden für Kapitel 6 stehen im ersten Kommentar von #73. Opus schreibt selbst, ohne Unteragenten für den Text.
+**Vorgaben:** Entscheidungen, Kruchten-Checkliste und roter Faden für Kapitel 6 stehen im ersten Kommentar von #73, die Gliederung 0–8 in den Akzeptanzkriterien. Opus schreibt selbst, ohne Unteragenten für den Text.
 
 **Ablauf:**
 
-- [ ] **Starten** 🆕 _Opus_ · 👤 „Lies docs/FAHRPLAN.md Schritt 13c und Issue #73 mit Kommentaren“ → Plan → Go
-- [ ] **Gerüst** 🤖 _Opus_ · alle Überschriften mit Leitfrage und ≤ 3 Zeilen Zusammenfassung, alle Diagramme (Mermaid), Typdiagramme aus `git show d3ff19d:docs/DESIGN.md` am Code geprüft
-- [ ] **Halt: Gerüst** 👤 in der Vorschau ansehen → Korrekturen oder Go
-- [ ] **Fließtext** 🤖 _Opus_ · Sichten, Szenarien, Kapitel 6–8; `validate-views.py` auf die in den Scratchpad geschnittenen Sichten, Drift-Tests nachziehen, pytest und ruff
-- [ ] **Prüfen** 🤖 frischer _Opus_-Agent `/code-review gegen Issue #73` mit Kruchten-Checkliste · zwei frische Leser: Senior Engineer (nur deterministische Programmierung) für Kapitel 6, IT-Sicherheitsbeauftragter für 6.5 → nachbessern → Commit
+- [x] **Starten** 🆕 _Opus_ · 👤 „Lies docs/FAHRPLAN.md Schritt 13c und Issue #73 mit Kommentaren“ → Plan → Go
+- [x] **Gerüst** 🤖 _Opus_ · alle Überschriften mit Leitfrage und ≤ 3 Zeilen Zusammenfassung, alle Diagramme (Mermaid), Typdiagramme aus `git show d3ff19d:docs/DESIGN.md` am Code geprüft
+- [x] **Halt: Gerüst** 👤 in der Vorschau ansehen → Korrekturen oder Go
+- [x] **Fließtext** 🤖 _Opus_ · Sichten, Szenarien, Kapitel 6–8, Links aus README, ENTWICKLUNG, METHODIK und Lehrbuch nachziehen; `validate-views.py` auf die in den Scratchpad geschnittenen Sichten, Drift-Tests nachziehen, pytest und ruff
+- [x] **Prüfen** 🤖 frischer _Opus_-Agent `/code-review gegen Issue #73` mit Kruchten-Checkliste · zwei frische Leser: Senior Engineer (nur deterministische Programmierung) für Kapitel 6, IT-Sicherheitsbeauftragter für Kapitel 7 und 8 → nachbessern → Commit
 - [ ] **Abschließen** 👤 committet und pusht, schließt #73
 
 **Fertig, wenn:** #73 geschlossen ist, jede Sicht die Checkliste erfüllt, beide Leser keine Lücke finden und `pytest` und ruff grün sind.

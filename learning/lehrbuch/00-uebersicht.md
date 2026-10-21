@@ -33,7 +33,7 @@ Nur `data/knowledge_base/rules_*.json` ist das Endergebnis und geht später nach
 
 ## Die Grundidee: LLM und Code teilen sich die Arbeit
 
-Testfrage für jede Aufgabe (Prinzip 1 in [ARCHITECTURE](../../docs/ARCHITECTURE.md#11-entwurfsprinzipien)): **Gibt es genau eine richtige Antwort, die sich ohne Sprachverständnis ermitteln lässt?** Ja: Code. Nein: LLM, und danach prüft der Code das Ergebnis. Das LLM sitzt immer zwischen zwei Code-Schichten.
+Testfrage für jede Aufgabe (Prinzip 1 in [ARCHITECTURE](../../docs/ARCHITECTURE.md#04-drei-leitprinzipien)): **Gibt es genau eine richtige Antwort, die sich ohne Sprachverständnis ermitteln lässt?** Ja: Code. Nein: LLM, und danach prüft der Code das Ergebnis. Das LLM sitzt immer zwischen zwei Code-Schichten.
 
 | Schritt | Code (deterministisch) | LLM (probabilistisch) |
 |---|---|---|
