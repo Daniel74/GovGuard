@@ -66,7 +66,7 @@ Checklist:
 
 ### Step 4 — Route concerns into each view
 
-Read `concerns/README.md` for the catalogue of concern modules. For each view, pull in the concerns that apply (by default: `gdpr-data-protection.md`, `security.md`, `bias-fairness.md` if ML is present, and `regulatory-compliance.md` if the system operates in a regulated sector).
+Read `concerns/README.md` for the catalogue of concern modules. For each view, pull in the concerns that apply (by default: `gdpr-data-protection.md`, `security.md`, `bias-fairness.md` if ML is present, `llm-uncertainty.md` if the system calls an LLM at run time, and `regulatory-compliance.md` if the system operates in a regulated sector).
 
 Each concern module has a per-view **prompts** section telling you what to check for that view. Surface any genuine concerns as `> **Concern (GDPR):** …` blockquotes inside the view document. Do not boilerplate — only flag what actually applies to this system.
 
@@ -174,6 +174,7 @@ If the user wants a single consolidated document, combine all five views with a 
 - `concerns/gdpr-data-protection.md`
 - `concerns/security.md`
 - `concerns/bias-fairness.md`
+- `concerns/llm-uncertainty.md`
 - `concerns/regulatory-compliance.md`
 - `concerns/sustainability-climate.md`
 - `concerns/accessibility.md`

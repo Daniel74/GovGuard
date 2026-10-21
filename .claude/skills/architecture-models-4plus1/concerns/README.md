@@ -9,6 +9,7 @@ Concerns are modular markdown files that tell Claude what to check and flag duri
 | `gdpr-data-protection.md` | System processes personal data of EU/UK residents | Logical, Process, Physical |
 | `security.md` | Always — every system has security concerns | All five views |
 | `bias-fairness.md` | System uses ML models in decisioning | Logical, Process, Scenarios |
+| `llm-uncertainty.md` | System calls an LLM at run time and uses its output as data, decision, or action | All five views, especially Process and Scenarios |
 | `regulatory-compliance.md` | System operates in a regulated sector | All views, especially Scenarios |
 | `sustainability-climate.md` | Apply for all production systems; mandatory for large-scale | Physical, Development |
 | `accessibility.md` | System has human-facing interfaces | Logical (user-facing components), Scenarios |
