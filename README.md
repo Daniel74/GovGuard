@@ -1,6 +1,6 @@
 # GovGuard
 
-GovGuard is a compliance copilot for public-sector cloud projects in Germany. It audits a specification against GDPR, the EU AI Act and the German Standard Data Protection Model (SDM), or an AWS architecture (CloudFormation template or plain text) against BSI IT-Grundschutz (the "Grundschutz++" catalog), BSI C5 (the BSI criteria catalogue for cloud services), the CIS AWS Benchmark and AWS Foundational Security Best Practices. The result is an audit report with PASS, WARN, FAIL or N/A for every rule, and each PASS or FAIL cites the lines of the input it rests on. The language model only judges and drafts; deterministic code pins the sources, checks every draft and every answer, and fails closed (no report at all instead of an unchecked one). Built as a portfolio project. It is a review assistant for specialists, not a proof of compliance, and a demo for fictitious data only.
+GovGuard is a compliance copilot for public-sector cloud projects in Germany. It audits a specification against GDPR, the EU AI Act and the German Standard Data Protection Model (SDM), or an AWS architecture (CloudFormation JSON, whose services the code reads itself, or plain text, YAML and Terraform, where the model names the services) against BSI IT-Grundschutz (the "Grundschutz++" catalog), BSI C5 (the BSI criteria catalogue for cloud services), the CIS AWS Benchmark and AWS Foundational Security Best Practices. The result is an audit report with PASS, WARN, FAIL or N/A for every rule, and each PASS or FAIL cites the lines of the input it rests on. The language model only judges and drafts; deterministic code pins the sources, checks every draft and every answer, and fails closed on an invalid answer (no report instead of an unchecked one); otherwise it falls back to the more cautious status (WARN instead of an unproven PASS or FAIL), never to a PASS. Built as a portfolio project. It is a review assistant for specialists, not a proof of compliance, and a demo for fictitious data only.
 
 **Deutsch:** GovGuard prüft Spezifikationen und Cloud-Architekturen von Behörden gegen DSGVO, KI-VO, SDM (Spezifikation) bzw. BSI Grundschutz++, BSI C5, CIS AWS und AWS FSBP (Architektur) und belegt jeden Verstoß und jede Einhaltung mit Zeilen aus der Eingabe.
 
@@ -12,7 +12,7 @@ GovGuard is a compliance copilot for public-sector cloud projects in Germany. It
 
 - **Das Modell als unzuverlässiger Partner:** Es urteilt nur im Formular; Code bereitet vor und kontrolliert (Schema, Belegzeilen, Vollständigkeit). Das ist ein fester Ablauf, kein Agent ([ADR 0021](docs/adr/0021-kein-orchestrierungs-framework.md)).
 - **Reproduzierbare Wissensbasis:** 525 Prüfregeln aus gepinnten Quellen (SHA-256), ohne Vektor-Datenbank, mit Prüfungen im Code (Gates) gegen erfundene Zitate ([ADR 0011](docs/adr/0011-vollstaendiger-katalog.md)).
-- **Gemessen und dokumentiert:** 19 Messläufe mit Kosten und Dauer, Doku in fünf Sichten (4+1, ein Standardmodell für Architekturdokumentation) mit C4-Diagrammen (System in Zoomstufen), STRIDE (Bedrohungsliste) und OWASP (Risikoliste für Anwendungen mit Sprachmodell), 0 € Leerlaufkosten.
+- **Gemessen und dokumentiert:** 19 Messläufe mit Kosten und Dauer, Doku in fünf Sichten (4+1, ein Standardmodell für Architekturdokumentation) mit einem C4-Diagramm (System in Zoomstufen), STRIDE (Bedrohungsliste) und OWASP (Risikoliste für Anwendungen mit Sprachmodell), 0 € Leerlaufkosten.
 
 ## Lösungsstrategie
 
@@ -39,10 +39,12 @@ flowchart LR
 **Beschreibung:**
 
 - **Gate:** Ein Gate ist eine Prüfung im Code, die eine Antwort nur durchlässt, wenn sie eine feste Regel erfüllt (Schema, gültige Belegzeilen, ein Befund je Prüfregel).
-- **Retry und fail closed:** Ein Retry stellt dem Modell die Frage noch einmal, mit dem gefundenen Problem. Fail closed heißt: Ist die Antwort auch dann ungültig, bricht das Audit ab, statt einen ungeprüften Report zu liefern.
+- **Retry und fail closed:** Ein Retry stellt dem Modell die Frage noch einmal, mit dem gefundenen Problem. Fail closed heißt: Ist die Antwort auch dann ungültig, bricht das Audit ab, statt einen ungeprüften Report zu liefern. Ein unbelegtes PASS oder FAIL wird stattdessen zu WARN, nie zu PASS ([ARCHITECTURE](docs/ARCHITECTURE.md#23-lebenslauf-eines-befunds) 2.3).
 - **Mehr:** [ARCHITECTURE](docs/ARCHITECTURE.md#11-entwurfsprinzipien) 1.1 und [2.1](docs/ARCHITECTURE.md#21-audit-von-der-eingabe-zum-report).
 
 ## Kennzahlen
+
+Ein **Musterfall** ist eine fiktive Beispiel-Eingabe mit von Hand festgelegtem Soll-Ergebnis. Es gibt sechs (drei Spezifikationen, drei Architekturen), darunter den Selbstaudit: GovGuard prüft die eigene Spezifikation.
 
 | Kennzahl | Wert |
 |---|---|
@@ -51,7 +53,7 @@ flowchart LR
 | Kosten je Audit | Spec 0,07 bis 0,10 $, Architektur 0,007 bis 0,018 $ (Median je Musterfall) |
 | Dauer je Audit | Spec 143 bis 214,5 s, Architektur 12 bis 26,5 s (Median je Musterfall) |
 
-Kosten und Dauer: Messkampagne #54, 19 Läufe über 6 Musterfälle, Groq `openai/gpt-oss-120b`, Preis 0,15 $ / 0,60 $ je Million Tokens. Die Einzelwerte stehen in [ARCHITECTURE](docs/ARCHITECTURE.md#44-betrieb-und-kosten) 4.4. Der Median gilt je Musterfall über die erfolgreichen Läufe (3; ein vierter Lauf bei GovGuard brach nach einem HTTP 400 von Groq ab, siehe [ARCHITECTURE](docs/ARCHITECTURE.md#61-qualitätsszenarien-qs-1-bis-qs-9) QS-2). Das Modell schwankt: Je Musterfall behalten 70 bis 99 % der Prüfregeln in allen Läufen denselben Status (#54). **Nicht gemessen:** wie viele der Befunde eine Fachperson bestätigen würde (Trefferquote), und was die Handprüfung kostet. Gemessen sind nur Stabilität, Gesamtstatus und wenige Pflichtbefunde je Musterfall (ein Musterfall ist eine fiktive Beispiel-Eingabe mit von Hand festgelegtem Soll, ein Pflichtbefund ein Befund, dessen Status das Soll festlegt; [ARCHITECTURE](docs/ARCHITECTURE.md#63-restrisiken-und-grenzen) 6.1 und 6.3).
+Kosten und Dauer: Messkampagne (Issue #54), 19 Läufe über 6 Musterfälle, Groq `openai/gpt-oss-120b`, Preis 0,15 $ / 0,60 $ je Million Tokens. Die Einzelwerte stehen in [ARCHITECTURE](docs/ARCHITECTURE.md#44-betrieb-und-kosten) 4.4. Der Median gilt je Musterfall über die erfolgreichen Läufe (3; ein vierter Lauf beim Selbstaudit brach nach einem HTTP 400 von Groq ab, siehe [ARCHITECTURE](docs/ARCHITECTURE.md#61-qualitätsszenarien-qs-1-bis-qs-9) QS-2). Das Modell schwankt: Je Musterfall behalten 70 bis 99 % der Prüfregeln in allen Läufen denselben Status (Issue #54). **Nicht gemessen:** wie viele der Befunde eine Fachperson bestätigen würde (Trefferquote), und was die Handprüfung kostet. Gemessen sind nur Stabilität, Gesamtstatus und wenige Pflichtbefunde je Musterfall (ein Pflichtbefund ist ein Befund, dessen Status das Soll festlegt; [ARCHITECTURE](docs/ARCHITECTURE.md#63-restrisiken-und-grenzen) 6.1 und 6.3).
 
 ## Quickstart
 

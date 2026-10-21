@@ -35,6 +35,8 @@ Begriffe stehen in [CONTEXT.md](../CONTEXT.md), Entscheidungen in [adr/](adr/), 
 | Fail closed | Fail closed heißt: Im Zweifel gibt es kein Ergebnis statt eines falschen. |
 | Prüfregel | Eine Prüfregel ist eine einzelne, prüfbare Regel aus genau einer Anforderung einer Norm, mit Kriterien für „konform“ und „Verstoß“. |
 | Befund | Ein Befund ist das Ergebnis genau einer Prüfregel in einem Audit, mit Status, Beleg und Empfehlung. |
+| Status | PASS heißt Einhaltung belegt, FAIL Verstoß belegt, N/A nicht anwendbar; WARN heißt nicht entscheidbar und hat drei Fälle: eine Lücke (die Eingabe schweigt), ein herabgestuftes FAIL (kein Zeilenbereich oder vom Prüfer nicht bestätigt) und ein unbelegtes PASS. |
+| Bedingung | Eine Bedingung ist eine Tatsache über das Vorhaben, von der Prüfregeln abhängen, etwa „Es wird ein KI-System eingesetzt“; nur ein ausdrückliches Nein setzt ihre Prüfregeln auf N/A. |
 | Anker | Ein Anker ist die Fundstelle einer Prüfregel in der Norm, etwa „DSGVO Art. 32“; der Code setzt ihn, nie das Modell. |
 | Musterfall | Ein Musterfall ist eine fiktive Beispiel-Eingabe mit einem von Hand festgelegten Soll-Ergebnis. |
 | Pflichtbefund | Ein Pflichtbefund ist ein Befund, dessen Anker und Status das Soll eines Musterfalls festlegt. |
@@ -118,7 +120,7 @@ Ein Prinzip ist eine Regel, die viele Einzelentscheidungen erklärt. Diese acht 
 |---|---|---|---|
 | 1 | *Das Modell entwirft, der Code entscheidet.* Was der Code schon weiß, fragt man das Modell nicht. | Der Teil, der halluzinieren kann, bleibt klein ([0005](adr/0005-pydantic-ai.md)). | `FindingDraft`, `RuleDraft`, `checks/` |
 | 2 | *Fester Katalog statt Suche.* Jede Prüfregel bekommt genau einen Befund. | Ein Audit mit Lücke ist wertlos ([0011](adr/0011-vollstaendiger-katalog.md)). | `RuleCatalog`, `completeness_problems` |
-| 3 | *Fail closed.* Nach einem Retry bricht das Audit ab (Exit 2); nur ein unbelegtes PASS wird zu WARN. | Ein falscher Report ist schlimmer als keiner ([0017](adr/0017-beleg-per-zeilenverweis.md)). | `AuditValidationError`, `fail_closed` |
+| 3 | *Fail closed.* Ist die Antwort nach einem Retry ungültig, bricht das Audit ab (Exit 2); die vier Rückfälle in 2.3 sind die einzigen Ausnahmen. | Ein falscher Report ist schlimmer als keiner ([0017](adr/0017-beleg-per-zeilenverweis.md)). | `AuditValidationError`, `fail_closed` |
 | 4 | *Beleg statt Behauptung.* Das Modell nennt Zeilen, der Code schneidet das Zitat aus; FAIL nur bei Festlegung. | Ein Befund muss nachprüfbar sein ([0017](adr/0017-beleg-per-zeilenverweis.md), [0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md)). | `evidence_of`, `judge_fails` |
 | 5 | *Workflow statt Agent.* Die Reihenfolge steht im Code. | Kein Modell wählt den nächsten Schritt ([0021](adr/0021-kein-orchestrierungs-framework.md)). | `run_audit` |
 | 6 | *Anschlüsse (Adapter) als einziger Weg nach außen.* | Die Prüflogik bleibt ohne Netz testbar ([0027](adr/0027-ordner-nach-aufgabe.md)). | `adapters/`, `source_fetch.py` |
@@ -148,7 +150,7 @@ RAG (Retrieval-Augmented Generation) holt per Ähnlichkeitssuche nur die passend
 | Leerlauf | die Vektor-Datenbank läuft weiter | 0 €, eine JSON-Datei |
 | Nachvollziehbarkeit | Auswahl je Anfrage verschieden | Auswahlprotokoll im Git |
 
-> **Concern (LLM-Unsicherheit):** *Unsicher:* Das Modell kann Belege erfinden oder auf die falsche Zeile zeigen (OWASP LLM09 Misinformation). *Schale:* Es füllt nur ein Formular mit festen Status-Werten, hat keine Werkzeuge und keine Schreibrechte (LLM06, AIC4 PF-09); den Beleg schneidet der Code aus der Eingabe (AIC4 DM-03). *Gemessen:* 0 umformulierte Belege in 4 Messläufen (QS-1); ein falsches PASS hat keinen Zweitprüfer (6.3).
+> **Concern (LLM-Unsicherheit):** *Unsicher:* Das Modell kann Belege erfinden oder auf die falsche Zeile zeigen (OWASP LLM09 Misinformation). *Schale:* Es füllt nur ein Formular mit festen Status-Werten, hat keine Werkzeuge und keine Schreibrechte (LLM06, AIC4 PF-09); den Beleg schneidet der Code aus der Eingabe (AIC4 DM-03). *Gemessen:* 0 umformulierte Belege in 4 Messläufen (QS-1); wie oft das Modell auf die falsche Zeile zeigt, ist nicht gemessen; ein falsches PASS hat keinen Zweitprüfer (6.3).
 
 > **Concern (Regulatory):** GovGuard liefert Hinweise für Fachleute, keinen Nachweis und keine Freigabe. Die Trefferquote gegen eine Fachprüfung ist nie erhoben worden (6.3).
 
@@ -211,7 +213,7 @@ Durchgezogener Pfeil = Ablauf in einer Bahn oder Übergabe, gestrichelt = Nachri
 
 **Variante Architektur-Audit:** Bei CloudFormation-JSON liest der Code die Ressourcentypen selbst (Ressourceninventar) und setzt nicht anwendbare Prüfregeln auf N/A; die Welt ist geschlossen, eine fehlende Einstellung kann FAIL sein. Bei Freitext, YAML und Terraform nennt das Modell die Typen mit Zeilenverweis, die Welt bleibt offen ([0015](adr/0015-cloudformation-einziges-inventarformat.md)).
 
-> **Concern (LLM-Unsicherheit):** *Unsicher:* Jede Antwort kann ungültig, unvollständig oder zu lang sein. *Schale:* Pro Paket läuft eine feste Kette aus Schema-, Vollständigkeits- und Zeilenprüfung (AIC4 DQ-02); ein Fehler geht mit Grund einmal zurück (`RETRIES = 1`), danach bricht das Audit ab; nur ein PASS ohne Beleg wird stattdessen zu WARN. 100.000 Zeichen, 1 Retry und höchstens 8.000 Ausgabe-Tokens begrenzen die Kosten (LLM10). *Gemessen:* In 19 Läufen gab es einen Abbruch, und der war ein HTTP 400 von Groq ohne Retry, kein ausgeschöpfter Retry (QS-2). Ein Mensch prüft im Ablauf nicht; die Oberfläche zeigt aber jede Herabstufung (AIC4 RE-04).
+> **Concern (LLM-Unsicherheit):** *Unsicher:* Jede Antwort kann ungültig, unvollständig oder zu lang sein. *Schale:* Pro Paket läuft eine feste Kette aus Schema-, Vollständigkeits- und Zeilenprüfung (AIC4 DQ-02); ein Fehler geht mit Grund einmal zurück (`RETRIES = 1`), danach bricht das Audit ab (Ausnahmen: die Rückfälle in 2.3). 100.000 Zeichen, 1 Retry und höchstens 8.000 Ausgabe-Tokens begrenzen die Kosten (LLM10). *Gemessen:* In 19 Läufen gab es einen Abbruch, und der war ein HTTP 400 von Groq ohne Retry, kein ausgeschöpfter Retry (QS-2). Ein Mensch prüft im Ablauf nicht; die Oberfläche zeigt aber jede Herabstufung (AIC4 RE-04).
 
 ### 2.2 Ein Modellaufruf und die acht Aufrufe
 
@@ -241,9 +243,9 @@ Jeder Aufruf hat dieselbe Form: Der Code baut den Auftrag mit nummerierter Einga
 | Gate | ⚙️ Code | Problem im ersten Versuch → zurück ans Modell mit Grund; im zweiten → Abbruch fail closed; kein Problem → Status gilt |
 | Zweite Meinung | 🤖 Modell | nur FAIL in offener Welt: bestätigt oder kein Urteil → FAIL, nicht bestätigt → WARN |
 
-Der alte Status einer Herabstufung bleibt am Befund sichtbar (`downgraded_from`). Ein PASS ohne gültigen Beleg wird nach dem Retry zu WARN, ein FAIL ohne Zeilenbereich sofort (`without_unproven_verdict`).
+Der alte Status einer Herabstufung bleibt am Befund sichtbar (`downgraded_from`). Vier Rückfälle ersetzen den Abbruch, alle zum vorsichtigeren Status: Ein FAIL ohne Zeilenbereich wird sofort WARN, ein PASS ohne gültigen Beleg nach dem Retry (`without_unproven_verdict`); fällt der Bedingungs-Vorlauf aus, sind alle Bedingungen `unstated`, und alle Prüfregeln gehen ans Modell; fällt der Verstoß-Prüfer aus, bleibt das FAIL ungeprüft stehen. Keiner der vier erzeugt ein PASS.
 
-> **Concern (LLM-Unsicherheit):** *Unsicher:* Der Verstoß-Prüfer ist selbst ein Modell und nicht reproduzierbar ([0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md)). *Schale:* Er senkt nur und hebt nie; fällt er aus, bleibt das FAIL. Alle drei Rückfälle (Vorlauf, unbelegtes PASS, Prüfer) gehen zum vorsichtigeren Status und können kein falsches PASS erzeugen. *Gemessen:* beim Wohngeld-Musterfall stufte er in 3 Läufen 3 von 4, 6 von 10 und 8 von 9 FAILs auf WARN herab (QS-5, #54).
+> **Concern (LLM-Unsicherheit):** *Unsicher:* Der Verstoß-Prüfer ist selbst ein Modell und nicht reproduzierbar ([0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md)). *Schale:* Er senkt nur und hebt nie; fällt er aus, bleibt das FAIL. Die Rückfälle oben gehen alle zum vorsichtigeren Status; ein falsches PASS kann nur das Modell selbst liefern (6.3). *Gemessen:* beim Wohngeld-Musterfall stufte er in 3 Läufen 3 von 4, 6 von 10 und 8 von 9 FAILs auf WARN herab (QS-5, #54).
 
 ### 2.4 Build: aus Normtexten wird die Wissensbasis
 
@@ -448,7 +450,7 @@ Ein Auftragsverarbeitungsvertrag mit Hosting und Groq ist nicht geprüft; für f
 
 > **Concern (GDPR):** Mit Groq und US-Hosting ist jeder Aufruf ein Drittlandtransfer (Art. 44 DSGVO), akzeptiert nur wegen fiktiver Daten ([0016](adr/0016-groq-zur-laufzeit-im-prototyp.md)). „Nur fiktive Daten“ lässt sich technisch nicht erzwingen. Jeder Report nennt sein Modell (`model_id`). Für echte Daten gilt wieder: Inferenz nur in der EU.
 
-> **Concern (LLM-Unsicherheit):** *Unsicher:* Das Modell läuft beim externen Anbieter; mit jedem Aufruf verlassen Eingabe und Prüfregeln die Vertrauenszone (AIC4 DM-02, OWASP LLM02). *Schale:* Der Groq-Schlüssel liegt nur in den Streamlit-Einstellungen, kein Endnutzer erreicht das Modell direkt. Bei HTTP 429 (Drosselung) wiederholt das Groq-SDK bis zu 6-mal mit Wartezeit (`MAX_RETRIES` in `adapters/groq_services.py`, OWASP LLM10); fällt Groq aus oder bleibt die Drosselung, endet das Audit fail closed; ein Ersatzmodell gibt es nicht (AIC4 RE-06). *Gemessen:* nichts zu Ausfällen; welches Modell lief, steht im Report (`model_id`), die Prompt-Fassung nicht (AIC4 RE-02).
+> **Concern (LLM-Unsicherheit):** *Unsicher:* Das Modell läuft beim externen Anbieter; mit jedem Aufruf verlassen Eingabe und Prüfregeln die Vertrauenszone (AIC4 DM-02, OWASP LLM02). *Schale:* Der Groq-Schlüssel liegt nur in den Streamlit-Einstellungen, kein Endnutzer erreicht das Modell direkt. Bei HTTP 429 (Drosselung), Zeitüberschreitung, Verbindungsfehler oder Serverfehler (5xx) wiederholt das Groq-SDK bis zu 6-mal mit Wartezeit (`MAX_RETRIES` in `adapters/groq_services.py`, OWASP LLM10); fällt Groq aus oder bleibt die Drosselung, endet das Audit fail closed; ein Ersatzmodell gibt es nicht (AIC4 RE-06). *Gemessen:* nichts zu Ausfällen; welches Modell lief, steht im Report (`model_id`), die Prompt-Fassung nicht (AIC4 RE-02).
 
 ### 4.2 Bedrohungen
 
@@ -459,10 +461,10 @@ STRIDE ist ein Merkwort für sechs Bedrohungsarten (Spoofing, Tampering, Repudia
 | T1 | S | Fremde starten Audits auf eigene Kosten | ein gemeinsames Passwort (`APP_PASSWORD`), verglichen in gleicher Zeit (`hmac.compare_digest`); keine Rotation, keine Sperre, kein Protokoll, wer startet | teilweise |
 | T3 | I | Echte Personendaten über US-Hosting und Groq | Hinweis „Keine echten oder personenbezogenen Daten“ (`DATA_RULE`); GovGuard speichert nichts, Belege im Report siehe 4.1 | akzeptiert |
 | T4 | T | Anweisungen in der Eingabe (Prompt Injection) | Formular und feste Status-Werte begrenzen die Wirkung; kein Code wird ausgeführt; PASS braucht Beleg | teilweise |
-| T5 | T | Antwort falsch, unvollständig oder erfunden | Schema, ein Befund je Prüfregel, Zeilenbereich, Retry, fail closed | umgesetzt; Rest: falsches PASS |
+| T5 | T | Antwort falsch, unvollständig oder erfunden | Schema, ein Befund je Prüfregel, Zeilenbereich, Retry, fail closed | teilweise: Form, Vollständigkeit und Beleg sind gefangen, ein falsches PASS nicht (QS-4: 10 von 19 Läufen im Soll) |
 | T6 | T | Modelltext als HTML schleust Markup ein | jeder dynamische Text wird maskiert (`html.escape` in `style.py`) | umgesetzt |
 | T7 | T | Prüfregeln werden unbemerkt verändert | Git-Historie, Katalog-Hash im Report (`catalog_sha256`); Branch-Schutz verbietet Force-Push, verlangt keine Reviews (Einzelentwickler); 2FA nicht geprüft | erkennbar |
-| T11 | D | Ausfall oder Token-Limit bei Groq | Groq-SDK wiederholt 429 bis zu 6-mal (`MAX_RETRIES`), dann fail closed; höchstens 2 Pakete gleichzeitig; kein zweites Modell | akzeptiert |
+| T11 | D | Ausfall oder Token-Limit bei Groq | Groq-SDK wiederholt 429, Zeitüberschreitung und 5xx bis zu 6-mal (`MAX_RETRIES`), dann fail closed; höchstens 2 Pakete gleichzeitig; kein zweites Modell | akzeptiert |
 | T12 | R | Nachträglich nicht belegbar, was geprüft wurde | Rückverfolgung mit Hashes, `model_id`; kein Zeitstempel, keine Prompt-Fassung, Report nicht gegen Änderung gesichert | teilweise |
 | T14 | T | Belegzeilen enthalten Anweisungen an den Verstoß-Prüfer | Prüfer sieht nur Kriterium und Belegzeilen, kann nur auf WARN senken (`downgraded_from`); kein Abwehrsatz im Prompt | offen, nicht gemessen |
 | T15 | E | Jemand oder etwas erlangt mehr Rechte als vorgesehen | Es gibt nur eine Rolle: Wer das Passwort kennt, startet Audits und sonst nichts; keine Verwaltungsfunktion; das Modell kann nichts ausführen (LLM06) | umgesetzt |
@@ -483,7 +485,7 @@ Die OWASP Top 10 for LLM Applications sind die Liste der zehn wichtigsten Sicher
 | LLM05 | Improper Output Handling | Pydantic, Gates, `html.escape`; nichts wird ausgeführt | umgesetzt |
 | LLM06 | Excessive Agency | Das „Tool“ ist ein Formular; feste Reihenfolge | umgesetzt |
 | LLM04, 07, 08 | Poisoning, System Prompt Leakage, Vector Weaknesses | Quellen gepinnt und Auswahl im Git-Diff prüfbar; Prompts und Katalog sind öffentlich (kein Geheimnis im Kontext); keine Vektor-Datenbank | umgesetzt oder entfällt |
-| LLM09 | Misinformation | Kernrisiko: Beleg per Zeilenverweis, Gates, Verstoß-Prüfer, Lücke statt Raten | umgesetzt; Rest 6.3 |
+| LLM09 | Misinformation | Kernrisiko: Beleg per Zeilenverweis, Gates, Verstoß-Prüfer, Lücke statt Raten | teilweise: Trefferquote nicht erhoben, falsches PASS größtes Restrisiko (6.3), QS-4 |
 | LLM10 | Unbounded Consumption | 100.000 Zeichen, 1 Retry, Passwort, Token-Budget, Pakete begrenzt | umgesetzt |
 
 ### 4.4 Betrieb und Kosten
@@ -494,7 +496,7 @@ Ausrollen heißt: Push auf `main`, Streamlit Community Cloud zieht den Stand des
 
 | Musterfall | Audit | Dauer (Median) | Kosten Groq (Min bis Max) |
 |---|---|---|---|
-| GovGuard (Systembeschreibung) | Spec | 214,5 s | 0,096 $ (0,093 bis 0,097) |
+| GovGuard-Selbstaudit (eigene Spezifikation) | Spec | 214,5 s | 0,096 $ (0,093 bis 0,097) |
 | Meldeportal Gesundheit | Spec | 143 s | 0,067 $ (0,066 bis 0,069) |
 | Wohngeld (OpenAPI) | Spec | 193 s | 0,099 $ (0,095 bis 0,100) |
 | Protokollarchiv | Architektur | 26,5 s | 0,014 $ (0,014 bis 0,015) |
@@ -503,7 +505,7 @@ Ausrollen heißt: Push auf `main`, Streamlit Community Cloud zieht den Stand des
 
 Median der erfolgreichen Läufe, je 3 (Messkampagne #54, 19 Läufe, zusammen 0,90 $). Bedrock Haiku 4.5 käme mit denselben Tokens auf das 8- bis 9-Fache; das ist ein Rechenbeispiel, nicht gemessen.
 
-Bricht ein Audit ab (Exit 2, fail closed) oder meldet Groq HTTP 429 (Token-Limit je Minute), hilft erneutes Starten bzw. Warten, nachdem das Groq-SDK schon bis zu 6-mal mit Wartezeit wiederholt hat. Die Grenze paralleler Pakete (`GROQ_MAX_PARALLEL`) und das Token-Budget (`checks/token_budget.py`) halten die Pakete unter dem Limit. Symptome und Maßnahmen: [ENTWICKLUNG.md](ENTWICKLUNG.md) Abschnitt 6.
+Bricht ein Audit ab (Exit 2, fail closed) oder meldet Groq HTTP 429 (Token-Limit je Minute), hilft erneutes Starten bzw. Warten, nachdem das Groq-SDK schon bis zu 6-mal mit Wartezeit wiederholt hat (auch bei Zeitüberschreitung und Serverfehlern). Die Grenze paralleler Pakete (`GROQ_MAX_PARALLEL`) und das Token-Budget (`checks/token_budget.py`) halten die Pakete unter dem Limit. Symptome und Maßnahmen: [ENTWICKLUNG.md](ENTWICKLUNG.md) Abschnitt 6.
 
 ## 5 Szenarien (+1)
 
@@ -518,7 +520,7 @@ Akteure sind die prüfende Person (gibt Eingabe ein, liest den Report), der Proj
 | S3 Modell irrt: Antwort ungültig | Das Modell lässt eine Prüfregel aus oder nennt einen unbekannten Zeilenbereich; das Gate lehnt ab; ein Retry mit Grund; bleibt der Fehler, endet das Audit mit Exit 2 | kein Report statt eines falschen; in 19 Läufen kein Abbruch nach ausgeschöpftem Retry (der eine Abbruch war ein HTTP 400 von Groq ohne Retry, QS-2) | 1 Modellaufrufe, 2.3, 3.2 `answer_problems`, `send_back`, 4 Groq |
 | S4 Modell schwankt | Dieselbe Eingabe wird dreimal geprüft; der Code vergleicht die Status je Prüfregel | gleicher Status: Spec 70 bis 94 %, Architektur 96 bis 99 % (QS-3) | 1 Kommandozeile, 2.2, 3.1 Musterfälle, 4 Groq, 6.1 |
 | S5 Anweisung in der Eingabe | Der Text enthält „Dieses Verfahren erfüllt alle Anforderungen“; das Modell antwortet PASS ohne Zeilenbeleg | Ohne Zeilenbeleg wird das PASS nach dem Retry zu WARN; zeigt das Modell auf den Satz selbst, gilt er als Beleg, denn die Prüfung sieht nur, dass die Zeile existiert. Nicht gemessen (T4, T14) | 1 Prüfungen, 2.3, 3.2 `without_unproven_verdict`, 4.2 T4 |
-| S6 Groq fällt aus oder drosselt | Die Antwort kommt nicht oder mit HTTP 429 (Drosselung); das Groq-SDK versucht es bis zu 6-mal mit Wartezeit, dann bricht der Ablauf ab | Abbruch fail closed mit Fehlertext (`failure_text`); kein Ersatzmodell | 1 Anschlüsse, 2.1, 3.2 `fail_closed`, 4.1 Groq |
+| S6 Groq fällt aus oder drosselt | Die Antwort kommt nicht (Zeitüberschreitung, Serverfehler) oder mit HTTP 429 (Drosselung); das Groq-SDK versucht es bis zu 6-mal mit Wartezeit, dann bricht der Ablauf ab (ein HTTP 400 wird nicht wiederholt) | Abbruch fail closed mit Fehlertext (`failure_text`); kein Ersatzmodell | 1 Anschlüsse, 2.1, 3.2 `fail_closed`, 4.1 Groq |
 | S7 Wissensbasis neu bauen | Quelle ändert sich: SHA-256 stimmt nicht, der Build bricht ab; der Betreiber trägt den neuen Hash ein, baut neu, liest den Diff, committet | Katalog mit neuem Hash; jeder Report nennt ihn (`catalog_sha256`) | 1 Wissensbasis-Build, 2.4, 3.2 `is_quoted`, 4 Rechner des Betreibers |
 
 Zum Nachvollziehen eines Urteils: Report → Katalog-Hash → Commit der Wissensbasis → Stand jeder Quelle im Katalog. Im Demo-Stand ist der Commit nur `local` (`kb_commit`), die Kette bis zur Datei gilt trotzdem.
@@ -552,14 +554,14 @@ Ein Qualitätsszenario beschreibt eine Situation, ein Ziel und einen Messwert. S
 | QS-1 | erreicht | Korrektheit | Das Modell liefert einen Beleg, der nicht in der Eingabe steht | 0 unwörtliche Belege | per Konstruktion: der Code schneidet den Beleg aus; 0 umformulierte Belege in 4 Messläufen ([0017](adr/0017-beleg-per-zeilenverweis.md), #26) |
 | QS-2 | erreicht | Vollständigkeit | Eine Prüfregel bekommt keinen oder zwei Befunde | nie ein unvollständiger Report | 0 unvollständige Reports in 18 Läufen mit Report; 1 Abbruch in 19 Läufen: HTTP 400 von Groq, sofort und ohne Retry (1 Aufruf; Ausnahme zur Retry-Regel in 3.2), nie nach ausgeschöpftem Retry (#54) |
 | QS-3 | teilweise | Zuverlässigkeit | Dieselbe Eingabe wird dreimal geprüft | offen (Schwankung messen, nicht erzwingen) | gleicher Status: Spec 70 bis 94 %, Architektur 96 bis 99 %; es kippen meist Lücke, PASS und N/A, 0 bis 13 Prüfregeln auch zwischen FAIL und WARN (#54). Mit dem früheren Katalog (151 Regeln) kippten bei Groq 42, bei Bedrock Haiku 19 Prüfregeln (#29) |
-| QS-4 | teilweise | Zuverlässigkeit | Ein Musterfall soll sein festgelegtes Soll erreichen | jeder Musterfall | 10 von 19 Läufen: Meldeportal 3/3, Fristenwecker 3/3, Antragseingang 3/3, GovGuard 1/4, Wohngeld 0/3, Protokollarchiv 0/3 (#54) |
+| QS-4 | teilweise | Zuverlässigkeit | Ein Musterfall soll sein festgelegtes Soll erreichen | jeder Musterfall | 10 von 19 Läufen: Meldeportal 3/3, Fristenwecker 3/3, Antragseingang 3/3, GovGuard-Selbstaudit 1/4, Wohngeld 0/3, Protokollarchiv 0/3 (#54) |
 | QS-5 | teilweise | Korrektheit | Fehlender Text wird als Verstoß gewertet | 0 FAIL wegen bloßen Fehlens | 0 und 0 in 2 Läufen nach dem Prüfer ([0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md), #46). Der Prüfer stufte beim Wohngeld 3 von 4, 6 von 10 und 8 von 9 FAILs herab, beim Meldeportal 12 bis 18 von 44 bis 46 (#54); ob die bestätigten FAILs berechtigt sind, hat keine Fachperson bewertet |
 | QS-6 | erreicht | Leistung | Ein Audit mit vollem Katalog | Spec höchstens 300 s | Median Spec 143 bis 214,5 s, längster Lauf 215,3 s; Architektur 12 bis 26,5 s (#54) |
 | QS-7 | offen | Kosten | Ein Audit kostet Geld | offen | Median Spec 0,067 bis 0,099 $, Architektur 0,007 bis 0,018 $ (#54) |
 | QS-8 | erreicht | Sicherheit | Die Rückverfolgung eines Reports soll keinen Eingabetext enthalten | 0 Eingabetexte in der Rückverfolgung | `Trace` enthält nur Hashes (Tests `test_cli.py`, `test_models.py`); Belege im Report sind Eingabeausschnitte (4.1) |
 | QS-9 | teilweise | Nachvollziehbarkeit | Welche Wissensbasis hat dieses Urteil erzeugt? | Report → Katalog-Hash → Commit → Quellenstand | Katalog-Hash und Quellenstand im Report; `kb_commit` ist im Demo-Stand nur `local` |
 
-Weitere Werte: Der Bedingungs-Vorlauf traf 18 von 21 Soll-Werten ([0028](adr/0028-bedingungen-im-spec-audit.md), #60); in der Messkampagne trafen alle Bedingungen ihr Soll nur bei Meldeportal (3 von 3 Läufen), bei GovGuard (0 von 4) und Wohngeld (0 von 3) nie. Alle automatischen Tests laufen ohne AWS und ohne Groq.
+Weitere Werte: Der Bedingungs-Vorlauf traf 18 von 21 Soll-Werten ([0028](adr/0028-bedingungen-im-spec-audit.md), #60); in der Messkampagne trafen alle Bedingungen ihr Soll nur beim Meldeportal (3 von 3 Läufen), beim Selbstaudit (0 von 3 Läufen mit Report) und beim Wohngeld (0 von 3) nie. Alle automatischen Tests laufen ohne AWS und ohne Groq.
 
 > **Concern (LLM-Unsicherheit):** *Unsicher:* Das Modell schwankt, und von sechs Musterfällen erreichen nur drei ihr Soll in jedem Lauf; Temperatur 0 senkt die Streuung, beseitigt sie nicht. *Schale:* Sie fängt Form, Vollständigkeit und Beleg (QS-1, QS-2, QS-8), nicht den Inhalt des Urteils. *Gemessen:* QS-3 und QS-4; darum bleiben PASS und WARN schwankend.
 
@@ -590,6 +592,7 @@ Die Norm ISO/IEC 25012 beschreibt die Qualität von Daten mit 15 Merkmalen; die 
 | Falsches FAIL bei Fehlen | Fehlalarm | Verstoß-Prüfer senkt auf WARN; er ist selbst ein Modell |
 | Unbekannte Trefferquote | Wie viele der ca. 350 Befunde eine Fachperson bestätigt, ist nie erhoben worden | GovGuard ist ein Prüfassistent, kein Ersatz für die Fachprüfung |
 | Kein getrenntes Entwicklungsset | Prompt-Änderungen werden an denselben 6 Musterfällen gemessen, die auch abnehmen | Wirkung auf neue Eingaben nicht belegt |
+| Falsches N/A durch den Bedingungs-Vorlauf | Eine falsch verneinte Bedingung versteckt ihre Prüfregeln als N/A. In der Kampagne (#54, 9 Läufe mit Report, 63 Werte) stand kein Wert falsch auf `no`; 12 Werte blieben `unstated` statt `yes` oder `no` (kostet nur Lücken); im Einzellauf von #60 trafen 18 von 21 das Soll | nur ein ausdrückliches Nein zählt; Wirkung auf neue Eingaben nicht belegt |
 | Mehrere Nutzer gleichzeitig | zwei Spec-Audits zugleich liegen nahe am Groq-Limit und können mit 429 abbrechen | fail closed, keine Warteschlange, nicht gemessen |
 | Schutzbedarf „normal“ | Der Vorfilter übernimmt nur Anforderungen des Niveaus normal-SdT (Stand der Technik, Grundschutz++); höherer Schutzbedarf braucht weitere Anforderungen und eine Risikoanalyse | nicht abgedeckt; kein Grundschutz-Check, keine Zertifizierung |
 | Nur Behörden | DSGVO Art. 20, 27, 41 und 47 gelten für Behörden nicht und sind ausgeschlossen ([0028](adr/0028-bedingungen-im-spec-audit.md)) | Verantwortliche außerhalb der EU werden nicht geprüft |
