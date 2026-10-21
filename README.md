@@ -73,7 +73,8 @@ Tests: `uv run pytest -q`. Eigene Audits, Wissensbasis-Build und Screenshot-Regr
 | Dokument | Frage |
 |---|---|
 | [SPEC](docs/SPEC.md) | Was leistet GovGuard fachlich? (GovGuard prüft sie in der Galerie selbst.) |
-| [ARCHITECTURE](docs/ARCHITECTURE.md) | Wie ist es gebaut, und wo irrt das Modell? (Funktionsweise, fünf Sichten nach 4+1, Verlässlichkeit trotz Sprachmodell, Sicherheit, Standards, Referenzen) |
+| [FUNKTIONSWEISE](docs/FUNKTIONSWEISE.md) | Wie arbeitet es fachlich? (Katalog, Build, Bedingungen, offene und geschlossene Welt, Inventar, Report; genug zum Nachbauen) |
+| [ARCHITECTURE](docs/ARCHITECTURE.md) | Wie ist es gebaut, und wo irrt das Modell? (Anwendungsfälle, fünf Sichten nach 4+1, Verlässlichkeit trotz Sprachmodell, Sicherheit, Standards, Referenzen) |
 | [METHODIK](docs/research/METHODIK.md) | Nach welcher Methode ist es entstanden? (Stand #65, nicht mehr nachgezogen) |
 | [ENTWICKLUNG](docs/ENTWICKLUNG.md) | Wie baue, teste und erweitere ich es? |
 | [ADRs](docs/adr/) und [CONTEXT](CONTEXT.md) | Welche Entscheidungen gelten, und was heißt ein Begriff? |

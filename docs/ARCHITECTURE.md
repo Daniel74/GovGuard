@@ -1,6 +1,6 @@
 # GovGuard – Architektur nach Kruchten 4+1
 
-GovGuard prüft Spezifikationen und Architekturen von Behörden-Vorhaben und liefert einen Audit-Report mit PASS, WARN, FAIL oder N/A. Dieses Dokument ist die technische Referenz. Kapitel 1 erklärt, was GovGuard leistet und mit welchen Konzepten. Die Kapitel 2 bis 6 zeigen in den fünf Sichten nach Philippe Kruchten, wie es gebaut ist. Kapitel 7 zeigt, wie ein deterministischer Rahmen ein probabilistisches Sprachmodell verlässlich macht, Kapitel 8 die klassische Sicherheit, Kapitel 9 den Abgleich mit den Standards und Kapitel 10 die Quellen.
+GovGuard prüft Spezifikationen und Architekturen von Behörden-Vorhaben und liefert einen Audit-Report mit PASS, WARN, FAIL oder N/A. Dieses Dokument ist die technische Referenz. Kapitel 1 nennt die Anwendungsfälle; wie GovGuard fachlich arbeitet, erklärt das eigene Dokument [FUNKTIONSWEISE.md](FUNKTIONSWEISE.md). Die Kapitel 2 bis 6 zeigen in den fünf Sichten nach Philippe Kruchten, wie es gebaut ist. Kapitel 7 zeigt, wie ein deterministischer Rahmen ein probabilistisches Sprachmodell verlässlich macht, Kapitel 8 die klassische Sicherheit, Kapitel 9 den Abgleich mit den Standards und Kapitel 10 die Quellen.
 
 ## 0 Einführung und Kontext
 
@@ -37,12 +37,12 @@ Die Quellen in je einem Satz: Die DSGVO ist das EU-Datenschutzgesetz. Die KI-VO 
 
 ### 0.2 Lesehilfe
 
-Kruchten beschreibt ein System in vier Sichten und prüft sie mit Szenarien. Jede Sicht beantwortet eine eigene Frage für eigene Leser; die Szenarien zeigen, dass die vier Sichten zusammenpassen. Vor den Sichten steht die Funktionsweise, nach ihnen stehen die querschnittlichen Kapitel zu Verlässlichkeit, Sicherheit und Standards.
+Kruchten beschreibt ein System in vier Sichten und prüft sie mit Szenarien. Jede Sicht beantwortet eine eigene Frage für eigene Leser; die Szenarien zeigen, dass die vier Sichten zusammenpassen. Vor den Sichten stehen die Anwendungsfälle, nach ihnen die querschnittlichen Kapitel zu Verlässlichkeit, Sicherheit und Standards. Die fachlichen Konzepte, die man zum Verstehen und Nachbauen braucht, stehen einmal in [FUNKTIONSWEISE.md](FUNKTIONSWEISE.md); die Sichten verweisen darauf, statt sie zu wiederholen.
 
 | Kapitel | Leitfrage | Leser |
 |---|---|---|
 | [0 Einführung](#0-einführung-und-kontext) | Was ist GovGuard, und wie liest man das Dokument? | alle |
-| [1 Funktionsweise](#1-funktionsweise) | Was leistet GovGuard, und mit welchen Konzepten erreicht es das? | alle, wer nachbauen will |
+| [1 Anwendungsfälle](#1-anwendungsfälle) | Was leistet GovGuard, und für wen? | alle |
 | [2 Logische Sicht](#2-logische-sicht) | Was sind die Fachbegriffe, und wie hängen sie zusammen? | Entwickler, Fachprüfer |
 | [3 Prozess-Sicht](#3-prozess-sicht) | Was läuft gleichzeitig, wo wird gewartet, was begrenzt? | Entwickler, Betrieb |
 | [4 Entwicklungs-Sicht](#4-entwicklungs-sicht) | Wie ist der Code organisiert, und was hält die Ordnung fest? | Entwickler |
@@ -67,7 +67,7 @@ Darum trägt jedes Diagramm und jede Tabelle über Verhalten dieselbe Kennzeichn
 |---|---|---|
 | 🤖 orange | Sprachmodell, probabilistisch: Es schreibt einen Entwurf. | Knoten, Klassen mit «🤖 Modell», Kasten „Sprachmodell“ in Sequenzdiagrammen |
 | ⚙️ blau | Code, deterministisch: Er prüft, ergänzt und entscheidet. | Knoten, Klassen mit «⚙️ Code», Kasten „Code“ in Sequenzdiagrammen |
-| blau mit orangem Rand | Ablauf, den ⚙️ Code führt und in dem er 🤖 das Modell fragt | Anwendungsfälle und Build-Schritte in Kapitel 1 |
+| blau mit orangem Rand | Ablauf, den ⚙️ Code führt und in dem er 🤖 das Modell fragt | Anwendungsfälle in 1.1, Build-Schritte in FUNKTIONSWEISE |
 | 🤖 vor einem Feld einer ⚙️-Klasse | Der Wert stammt aus einer Modellantwort; der Code hat ihn geerbt oder übernommen, oft nach einer Prüfung. | Klassendiagramme in 2.3 bis 2.5 |
 | 👤 grau | Mensch: Er gibt ein, liest oder pflegt von Hand. | Akteure, Klassen mit «👤 Hand» |
 | weiß | extern, kein Teil von GovGuard | Normherausgeber |
@@ -78,7 +78,6 @@ Tabellen, in denen etwas geschrieben, geprüft oder entschieden wird, nennen den
 | Diagramm | Kapitel | Formen und Pfeile |
 |---|---|---|
 | Anwendungsfalldiagramm | 1.1 | Kasten links = Akteur, abgerundetes Feld = Anwendungsfall, Linie = löst aus, «include» = enthält immer, «extend» = erweitert unter Bedingung |
-| Ablauf- und Entscheidungsbild | 1.3, 1.5 | Kasten = Schritt, Raute = Entscheidung des Codes, Zylinder = Datei; Pfeil = Daten oder Weg |
 | Schichtenbild | 2.2 | Raute = Gate (Prüfung im Code), Zylinder = Speicher, abgerundet = extern; Pfeil = „benutzt“ |
 | Klassendiagramm | 2.3–2.5 | `*--` = enthält, `o--` = kennt, `--\|>` = erweitert (erbt), `..>` = verweist per Kennung; «…» = wer schreibt; gezeigt sind nur die wichtigsten Felder |
 | Prozessbild | 3.2 | Rahmen = Betriebssystem-Prozess, Kasten = Thread oder Schleife |
@@ -88,7 +87,7 @@ Tabellen, in denen etwas geschrieben, geprüft oder entschieden wird, nennen den
 | Verteilungsdiagramm | 5.2 | Rahmen = Ebene, «Gerät», «Plattform», «API», «Repository», «Website» = Art des Knotens |
 | Sequenzdiagramm | 6 | durchgezogen = Aufruf, gestrichelt = Antwort an den Aufrufer, Balken = Teilnehmer arbeitet an einem Aufruf, `par` = gleichzeitig, `loop` = Wiederholung |
 | Schalenbild | 7.2 | Rahmen = Code vor und nach dem Modell, M1 bis M6 = Muster der Schale |
-| Datenflussdiagramm | 8.1 | Kreis = Prozess, Zylinder = Speicher, Kasten = externe Stelle, rot gestrichelt = Vertrauensgrenze, ① bis ⑨ = Fluss über eine Grenze |
+| Datenflussdiagramm | 8.1 | Kreis = Prozess, Zylinder = Speicher, Kasten = externe Stelle, rot gestrichelt = Vertrauensgrenze, ① bis ⑪ = Fluss über eine Grenze |
 
 ### 0.4 Drei Leitprinzipien
 
@@ -114,7 +113,7 @@ Die Begriffe, wie sie hier gebraucht werden; das vollständige Glossar steht in 
 | Befund | Ein Befund ist das Ergebnis genau einer Prüfregel in einem Audit, mit Status, Beleg und Empfehlung. |
 | Status | PASS heißt Einhaltung belegt, FAIL Verstoß belegt, N/A nicht anwendbar. WARN heißt nicht entscheidbar; die Oberfläche nennt es „Prüfbedarf“. |
 | Beleg | Ein Beleg ist der wörtliche Ausschnitt der Eingabe, auf den sich ein Befund stützt. |
-| Lücke | Eine Lücke ist ein WARN ohne Belegzeilen: Die Eingabe beschreibt die Anforderung nicht. |
+| Lücke | Eine Lücke ist ein WARN ohne Belegzeilen, das der Code nicht herabgestuft hat: Die Eingabe beschreibt die Anforderung nicht. |
 | Herabstufung | Eine Herabstufung ist der Wechsel von PASS oder FAIL auf WARN durch den Code; der alte Status bleibt am Befund sichtbar. |
 | Anker | Ein Anker ist die Fundstelle einer Prüfregel in der Norm, etwa „DSGVO Art. 32“; der Code setzt ihn, nie das Modell. |
 | Entwurf | Ein Entwurf (Draft) ist das Formular, das das Modell ausfüllt; der Code macht daraus den fertigen Typ. |
@@ -143,15 +142,13 @@ Die Begriffe, wie sie hier gebraucht werden; das vollständige Glossar steht in 
 | AIC4 | AIC4 ist der Kriterienkatalog des BSI für KI-Cloud-Dienste; er richtet sich an Anbieter, die Modelle trainieren, und wird hier sinngemäß angewandt. Kürzel wie PF-09 nennen ein Kriterium. |
 | BSI R und M | Im BSI-Papier „Generative KI-Modelle“ (Version 2.0, 2025) steht R mit Nummer für ein Risiko, etwa R26 für direkte Manipulation im Prompt, und M mit Nummer für eine Maßnahme. |
 
-## 1 Funktionsweise
+## 1 Anwendungsfälle
 
-*Leitfrage: Was leistet GovGuard, und mit welchen Konzepten erreicht es das?*
+*Leitfrage: Was leistet GovGuard, und für wen?*
 
-GovGuard bietet zwei Audits, eine Galerie und einen Build für die Wissensbasis. Ein Audit fragt 🤖 das Sprachmodell zu jeder Prüfregel eines festen Katalogs, und ⚙️ Code prüft jede Antwort. Welche Fragen das Modell überhaupt bekommt, steuern zwei Konzepte: die Bedingungen im Spec-Audit sowie Welt und Ressourceninventar im Architektur-Audit.
+GovGuard bietet zwei Audits, eine Galerie und einen Build für die Wissensbasis. Dieses Kapitel nennt die Anwendungsfälle; wie GovGuard dabei fachlich arbeitet, erklärt [FUNKTIONSWEISE.md](FUNKTIONSWEISE.md): Prüfregel und Katalog, Build, Bedingungen, offene und geschlossene Welt, Ressourceninventar, Report und Soll.
 
-Dieses Kapitel ist das Gesamtbild vor den Sichten, und es soll reichen, um GovGuard nachzubauen. Es beginnt bei den Funktionen aus Sicht der Nutzer (1.1). Danach erklärt es die Konzepte, auf denen sie beruhen: Prüfregel, Katalog und Befund (1.2), wie der Katalog entsteht (1.3), wie ein Spec-Audit urteilt (1.4) und wie ein Architektur-Audit urteilt (1.5). 1.6 beschreibt, was der Report zeigt und wozu Musterfälle und Galerie dienen. 1.7 nennt, wo Prompts, Formate und Grenzwerte festgelegt sind. Jedes Konzept steht an einem Musterfall: das „Meldeportal Gesundheit“ für das Spec-Audit, der „Fristenwecker“ für das Architektur-Audit. Die Sichten in den Kapiteln 2 bis 6 zeigen danach, wie diese Konzepte gebaut sind.
-
-Kruchten ordnet die Funktionen eines Systems der logischen Sicht und den Szenarien zu. Die Vorlage für das Architekturdokument im Rational Unified Process (RUP), das Kruchten verantwortet hat, stellt eine eigene Sicht der Anwendungsfälle vor die logische Sicht. Dieses Kapitel ist diese Sicht, ergänzt um die fachlichen Konzepte, die arc42 „Querschnittliche Konzepte“ nennt (Kapitel 10).
+Kruchten ordnet die Funktionen eines Systems der logischen Sicht und den Szenarien zu. Die Vorlage für das Architekturdokument im Rational Unified Process (RUP), das Kruchten verantwortet hat, stellt eine kurze Sicht der Anwendungsfälle vor die logische Sicht und verweist für die fachlichen Einzelheiten auf eigene Dokumente. Dieses Kapitel ist diese Sicht; die fachlichen Einzelheiten stehen in FUNKTIONSWEISE und in [SPEC.md](SPEC.md).
 
 ### 1.1 Was GovGuard leistet
 
@@ -204,290 +201,10 @@ flowchart LR
 | Report lesen und mit dem Soll abgleichen | 👤 prüfende Person | ein Report, bei Musterfällen mit Soll | Gesamtstatus, Befundtabelle, Lücken als Checkliste, Bedingungen, Soll-Abgleich, Report als JSON | nein | Oberfläche | F4 |
 | Galerie ansehen | 👤 prüfende Person | Wahl eines Musterfalls | gespeicherter Report neben der geprüften Eingabe | nein | Seite „Audits ansehen“ | F3 |
 | Wissensbasis bauen | 👤 Projektbetreiber | Quellenliste, Prüfumfang, Musterfälle | zwei Kataloge im Repository | Zerlegen, Einstufen, Formulieren, Verstoß-Prüfer des Builds | `python -m kb_build` mit je einem Schritt | F5 |
-| Wissensbasis erweitern | 👤 Projektbetreiber | neue Quelle in der Quellenliste | Katalog mit neuen Prüfregeln; die alten bleiben Byte für Byte | wie beim Bauen, nur für neue Anforderungen | Option `--only-missing` | F6 |
+| Wissensbasis erweitern | 👤 Projektbetreiber | neue Quelle in der Quellenliste | Katalog mit neuen Prüfregeln; die alten bleiben Byte für Byte; nur für das Spec-Audit gebaut | wie beim Bauen, nur für neue Anforderungen | Option `--only-missing` | F6 |
 | Musterfall pflegen | 👤 Projektbetreiber | fiktive Eingabe und ein Soll von Hand | Ordner unter `data/input/presets/`; der Report kommt per Commit in die Galerie | nein; der Report selbst entsteht mit 🤖 | Git | – |
 
 Die Spalte „SPEC“ nennt die fachliche Anforderung in [SPEC.md](SPEC.md). Was GovGuard bewusst nicht leistet, steht in 0.1.
-
-### 1.2 Prüfregel, Katalog und Befund
-
-Eine Prüfregel ist eine prüfbare Pflicht aus genau einer Anforderung einer Norm. Alle Prüfregeln einer Audit-Art bilden den Katalog, und jedes Audit liefert für jede Prüfregel genau einen Befund. Diese drei Begriffe tragen alles Weitere.
-
-*Die Prüfregel.* Eine Prüfregel sagt in zwei Sätzen, woran man Einhaltung und Verstoß erkennt. Der Build hat sie vorher aus der Norm formuliert; zur Laufzeit wird sie nur gelesen. Die Tabelle zeigt ihre Felder an der Prüfregel, die beim Fristenwecker ein FAIL ergibt.
-
-| Feld | Bedeutung | Beispiel | wer schreibt | im Code |
-|---|---|---|---|---|
-| Kennung | Audit-Art, Quelle und Kennung der Anforderung; über Builds hinweg stabil | ARCH-FSBP-SNS.1 | ⚙️ | `id` |
-| Primäranker | Fundstelle in der Norm | AWS FSBP SNS.1 | ⚙️ | `primary_anchor` |
-| Zitat | wörtlicher Auszug der Anforderung, der die Kernpflicht trägt | „This control checks whether an SNS topic is encrypted at rest using AWS KMS.“ | 🤖, vom Gate geprüft; bei zerlegten Rechtsakten ⚙️ | `source_quote` |
-| Titel | höchstens acht Wörter | Verschlüsselung von SNS-Topics | 🤖 | `title` |
-| Kriterium für „konform“ | ein Satz | Das SNS-Topic ist verschlüsselt (AWS::SNS::Topic mit KmsMasterKeyId). | 🤖 | `compliant_if` |
-| Kriterium für „Verstoß“ | ein Satz | Ein SNS-Topic ohne KmsMasterKeyId ist nicht verschlüsselt. | 🤖 | `violation_if` |
-| Empfehlung | ein Satz zur Abhilfe | KmsMasterKeyId auf einen KMS-Schlüssel setzen | 🤖 | `recommendation` |
-| Ressourcentypen | nur Architektur: an welchen CloudFormation-Typen sich die Pflicht zeigt | AWS::SNS::Topic | 🤖 eingestuft, ⚙️ gefiltert | `cfn_resource_types` |
-| Auswahlgrund | warum die Anforderung prüfbar ist | „anhand des Parameters KmsMasterKeyId des Typs AWS::SNS::Topic prüfbar“ | 🤖 | `selection_rationale` |
-| Querverweise | Bezüge auf andere Quellen, als Vorschlag markiert, ohne Einfluss auf den Status | – | 🤖 vorgeschlagen, ⚙️ geprüft | `cross_references` |
-
-*Der Katalog.* Ein Katalog ist eine JSON-Datei je Audit-Art (`RuleCatalog`): 350 Prüfregeln für das Spec-Audit, 175 für das Architektur-Audit. Er nennt dazu den Stand jeder Quelle (`source_versions`) und das Modell, das ihn formuliert hat. Der Katalog ist fest und vollständig: Ein Audit fragt jede Prüfregel, nicht nur die, die zur Eingabe zu passen scheinen. Eine Ähnlichkeitssuche würde eine unpassend wirkende Prüfregel unbemerkt weglassen; warum GovGuard darum auf RAG verzichtet, zeigt 7.2 (Muster 3).
-
-*Der Befund.* Ein Befund ist die Antwort auf eine Prüfregel in einem Audit. Er hat einen von vier Status. Die Oberfläche zeigt eine fünfte Kategorie, die Lücke, weil sie eine andere Handlung verlangt als ein WARN mit Beleg.
-
-| Status | Bedeutung | Belegzeilen | Empfehlung | wer setzt ihn |
-|---|---|---|---|---|
-| PASS | Die Eingabe belegt die Einhaltung. | Pflicht | – | 🤖; ⚙️ prüft den Beleg |
-| FAIL | Die Eingabe belegt einen Verstoß. | Pflicht | Pflicht | 🤖; ⚙️ prüft den Beleg, in offener Welt zusätzlich 🤖 der Verstoß-Prüfer |
-| WARN | Aus der Eingabe nicht entscheidbar („Prüfbedarf“). | möglich | Pflicht | 🤖, oder ⚙️ durch Herabstufung |
-| Lücke | ein WARN ohne Belegzeilen: Die Eingabe beschreibt die Anforderung nicht. | keine | Pflicht | 🤖 |
-| N/A | Die Prüfregel ist auf die Eingabe nicht anwendbar. | bei einer verneinten Bedingung die verneinende Zeile | – | ⚙️ vorab; 🤖 nur im Spec-Audit |
-
-Der Gesamtstatus eines Reports ist der schlechteste Status aller Befunde in der Reihenfolge FAIL, WARN, PASS, N/A; nur wenn alle Befunde N/A sind, ist er N/A (`overall_status`).
-
-*Beispiel.* Die Spezifikation des Meldeportals schreibt in den Zeilen 46 bis 49, dass die Gesundheitsangaben der Kinder ohne Einwilligung der Eltern ausgewertet werden, gestützt auf berechtigte Interessen. Die Prüfregel zu DSGVO Art. 9 Abs. 2 verlangt eine der dort genannten Ausnahmen. 🤖 Das Modell vergibt FAIL mit den Zeilen 46 bis 49, ⚙️ der Code schneidet diese Zeilen als Beleg aus, und 🤖 der Verstoß-Prüfer bestätigt das FAIL.
-
-### 1.3 Wie der Katalog entsteht
-
-Der Build macht aus öffentlichen Normtexten in vier Schritten die beiden Kataloge. 🤖 Das Modell zerlegt Rechtsartikel, stuft Anforderungen als prüfbar ein und formuliert Prüfregeln. ⚙️ Code extrahiert, filtert, prüft jeden Entwurf und ergänzt Kennung, Anker und Zitat; 👤 ein Mensch liest am Ende den Git-Diff.
-
-Ein Build ist teuer und würfelt; darum läuft er von Hand, Schritt für Schritt, und jeder Schritt schreibt sein Ergebnis erst, wenn seine Gates bestanden sind. Das Ablaufbild zeigt die vier Schritte von links nach rechts, darüber die Eingaben, die ein Mensch pflegt.
-
-```mermaid
-flowchart LR
-  subgraph IN["👤 von Hand gepflegt, data/input/"]
-    direction LR
-    QL[("Quellenliste<br/>URL, Version, SHA-256")]:::human
-    PU[("Prüfumfang, Steckbriefe<br/>der Referenzarchitekturen")]:::human
-    MF[("Musterfälle<br/>mit Pflichtankern")]:::human
-  end
-  CT[("⚙️ CloudFormation-Typen<br/>und Eigenschaften")]:::code
-  N(["Normherausgeber"]):::ext
-  E["⚙️ 1 Extrahieren<br/>Format lesen, Vorfilter"]:::code
-  Z["🤖 ⚙️ 2 Zerlegen<br/>nur DSGVO und KI-VO"]:::uc
-  A["🤖 ⚙️ 3 Auswählen<br/>prüfbar, Ebene, Typen"]:::uc
-  F["🤖 ⚙️ 4 Formulieren<br/>Entwurf, Gates, Ergänzung"]:::uc
-  K[("⚙️ Katalog je Audit-Art")]:::code
-  H["👤 Git-Diff lesen, committen"]:::human
-  N -->|"Normtext"| E
-  QL --> E
-  E -->|"Anforderungen"| Z
-  Z -->|"Anforderungen je Pflicht"| A
-  PU & MF --> A
-  CT --> A & F
-  A -->|"Auswahl"| F
-  F --> K --> H
-  classDef code fill:#a5d8ff,stroke:#1971c2,color:#1f1f1f,stroke-width:2px
-  classDef uc fill:#a5d8ff,stroke:#d9480f,color:#1f1f1f,stroke-width:3px
-  classDef human fill:#dee2e6,stroke:#495057,color:#1f1f1f,stroke-width:2px
-  classDef ext fill:#ffffff,stroke:#495057,color:#1f1f1f,stroke-width:2px
-```
-
-*Elemente.* Die vier Kästen in der Mitte sind die Schritte des Builds; jeder ist ein Befehl von `python -m kb_build`. Nur das Extrahieren kommt ohne Modell aus. Die anderen drei sind blau mit orangem Rand, weil ⚙️ Code den Schritt führt und 🤖 das Modell darin je Anforderung einmal fragt. Zylinder sind Dateien: grau die von Hand gepflegten Eingaben, blau die vom Code erzeugten. Der Kasten rechts ist der einzige menschliche Schritt.
-
-*Verbindungen.* Ein Pfeil zeigt, welche Daten ein Schritt vom vorigen oder aus einer Datei bekommt. Das Extrahieren lädt den Normtext von der Adresse in der Quellenliste und macht daraus Anforderungen. Das Zerlegen gibt die Anforderungen weiter, Rechtsartikel aufgeteilt in einzelne Pflichten. Das Auswählen liest dazu den Prüfumfang, die Steckbriefe der Referenzarchitekturen, die Pflichtanker der Musterfälle und die echten CloudFormation-Typen. Das Formulieren bekommt die Auswahl und prüft Eigenschaften gegen die echten CloudFormation-Typen. Am Ende steht der Katalog, und erst ein Commit macht ihn für die Audits gültig.
-
-*Schritt 1: Extrahieren.* Jede Quelle hat ein eigenes Format, und je Format gibt es einen Leser im Code. Ein Vorfilter mit festem Satz entscheidet ohne Modell, welche Anforderungen überhaupt in Frage kommen (`prefilter_reason`). Vorher vergleicht der Download die Prüfsumme der Datei mit dem Wert in der Quellenliste; weicht sie ab, bricht der Build ab (F1 in 6.4).
-
-| Quelle | Herausgeber und Format | eine Anforderung ist | Vorfilter behält | Prüfregeln |
-|---|---|---|---|---|
-| DSGVO | EUR-Lex, Formex-XML | ein Artikel, nach dem Zerlegen eine Pflicht | Kapitel II bis V (Art. 5 bis 49) ohne Art. 20, 27, 41 und 47, die für Behörden nicht gelten | 169 |
-| KI-VO | EUR-Lex, Formex-XML im ZIP | ein Artikel, nach dem Zerlegen eine Pflicht | Art. 4, 5, 6, 13, 14, 26, 27 und 50 | 65 |
-| SDM | Datenschutzkonferenz, ein PDF je Baustein: Löschen (M60), Trennen (M50), Zugriffe regeln (M51) | eine Maßnahme | alle | 116 |
-| BSI Grundschutz++ | BSI auf GitHub, OSCAL-JSON | eine Anforderung | Modalverb MUSS oder SOLLTE, Niveau „normal-SdT“, Praktiken DLS, BER, DET, KONF, BES und ARCH | 39 |
-| CIS AWS | Prowler-JSON | eine Empfehlung | Kapitel 2 IAM, 3 Storage, 4 Logging, 6 Networking | 20 |
-| AWS FSBP | Prowler-JSON | ein Control | Dienste im Prüfumfang | 105 |
-| BSI C5 | Prowler-JSON | ein Kriterium | Bereiche OPS, IAM, CRY, COS und PSS | 11 |
-
-*Schritt 2: Zerlegen.* Ein Rechtsartikel enthält oft mehrere Pflichten; DSGVO Art. 5 Abs. 1 etwa nennt sechs Grundsätze. 🤖 Das Modell ordnet jeden Abschnitt des Artikels genau einer Gruppe zu und nennt die Art der Gruppe. ⚙️ Der Code prüft, dass jeder Abschnitt in genau einer Gruppe steht, und bildet daraus Anforderungen mit eigenem Anker und dem wörtlichen Text der Abschnitte; das Modell zitiert nie (ADR [0026](adr/0026-rechtsartikel-zerlegen.md)).
-
-| Art der Gruppe | Bedeutung | wird zu | Beispiel |
-|---|---|---|---|
-| alle gelten | jeder Abschnitt eine eigene Pflicht | einer Anforderung je Abschnitt | Grundsätze in Art. 5 Abs. 1 lit. a bis f |
-| eine genügt | Alternativen, eine reicht | einer Anforderung für den ganzen Absatz | Rechtsgrundlagen in Art. 6 Abs. 1 |
-| je nach Risiko | Maßnahmen, soweit das Risiko sie erfordert | einer Anforderung je Abschnitt, mit Hinweis im Prompt | Maßnahmen in Art. 32 Abs. 1 |
-| keine Pflicht | Befugnisse anderer Stellen, Hinweise, Ausnahmen | keiner Anforderung | Aufgaben der Aufsicht |
-
-Bleibt die Antwort nach vier Retries ungültig, bleibt der Artikel ganz und wird als eine Anforderung weitergegeben (`llm_error` im Zerlegungsprotokoll).
-
-*Schritt 3: Auswählen.* 🤖 Das Modell beantwortet je Anforderung drei Fragen: Ist sie an der Eingabe prüfbar? Wessen Pflicht ist sie? An welchen CloudFormation-Typen zeigt sie sich? Die zweite und dritte Frage gibt es nur im Architektur-Audit. Für die Ebene der Pflicht (`scope_level`) gibt es vier Antworten: die Workload selbst (`template`), das Konto oder die Organisation, Personen und Prozesse oder der Cloud-Anbieter. ⚙️ Der Code entscheidet dann fest:
-
-| Ergebnis | Regel des Codes |
-|---|---|
-| vorgefiltert | Der Vorfilter aus Schritt 1 hat die Anforderung verworfen; das Modell wird nicht gefragt. |
-| nicht prüfbar | Das Modell sagt, eine Eingabe kann die Anforderung nicht zeigen. |
-| nicht relevant | nur Architektur: Die Pflicht liegt nicht bei der Workload, oder nach dem Streichen der Typen außerhalb des Prüfumfangs bleibt keiner übrig. Typen, die es in CloudFormation nicht gibt, streicht der Code ebenfalls. |
-| ausgewählt | alles andere; daraus wird genau eine Prüfregel |
-| Modellfehler | Die Antwort blieb nach zwei Retries ungültig; die Anforderung fehlt im Katalog und steht im Protokoll. |
-
-Zwei Gates halten die Auswahl fest. Jeder Anker, den ein Musterfall als Pflichtbefund fordert, muss ausgewählt sein (`check_pinned`); fordert ein Musterfall einen Befund an der Workload, setzt der Code die Ebene darum auf `template` (ADR [0022](adr/0022-pflichtanker-uebersteuern-die-ebene.md)). Jeder Ressourcentyp, den eine der drei Referenzarchitekturen mindestens braucht, muss mindestens eine Prüfregel haben (`check_coverage`). Das Ergebnis je Anforderung mit Grund steht im Auswahlprotokoll, damit ein Mensch jede Entscheidung nachlesen kann.
-
-*Schritt 4: Formulieren.* 🤖 Das Modell schreibt je ausgewählte Anforderung einen Entwurf (`RuleDraft`). ⚙️ Der Code prüft ihn, bevor er zählt, und schickt ihn mit dem Grund bis zu sechsmal zurück:
-
-| Gate | gilt für | Was der Code prüft | im Code |
-|---|---|---|---|
-| Zitat | beide | Das Zitat steht wörtlich im Text genau dieser Anforderung; bei zerlegten Rechtsakten setzt der Code das Zitat selbst. | `is_quoted`, `quoted_by_code` |
-| Querverweise | beide | Jeder Querverweis nennt einen Anker, den es in einer anderen Quelle gibt. | `invalid_cross_references` |
-| Kriterien am Template entscheidbar | Architektur | Die Kriterien nennen einen Ressourcentyp der Prüfregel wörtlich und nur Eigenschaften, die es an diesem Typ gibt; sie enthalten keine Wörter wie „angemessen“, die Wissen außerhalb des Templates brauchen; jeder genannte Typ liegt im Prüfumfang. | `criteria_problems` |
-| Verstoß ist eine Festlegung | Spezifikation | 🤖 Ein zweiter Modellaufruf, der Verstoß-Prüfer des Builds, urteilt, ob das Verstoßkriterium ein bloßes Fehlen beschreibt; dann geht der Entwurf zurück. | `judge_violation` |
-| Vollständigkeit | Katalog | genau eine Prüfregel je ausgewählter Anforderung | `check_rules` |
-
-Den fertigen Typ (`Rule`) ergänzt der Code um Kennung, Audit-Art, Quelle, Primäranker, Auswahlgrund und Ressourcentypen; das Modell kann darum keinen Anker erfinden. Scheitert eine Prüfregel, formuliert der Build die übrigen weiter und bricht erst am Ende ab.
-
-*Eingefrorener Katalog.* Ein neuer Build würde dieselbe Anforderung anders formulieren, denn das Modell schwankt. Damit die Musterfälle und ihr Soll vergleichbar bleiben, ergänzt der Modus „nur fehlende formulieren“ (`--only-missing`) nur neue Prüfregeln und lässt die vorhandenen Byte für Byte stehen (ADR [0025](adr/0025-ki-vo-als-neue-quelle-bei-eingefrorenem-katalog.md)).
-
-### 1.4 Wie ein Spec-Audit urteilt
-
-Ein Spec-Audit stellt zuerst fest, was die Spezifikation zu sieben Bedingungen sagt, und setzt die Prüfregeln verneinter Bedingungen ohne Modell auf N/A. Alle übrigen Prüfregeln gehen in Paketen ans Modell. Weil eine Spezifikation eine offene Welt ist, gilt ein Verstoß nur, wenn die Spezifikation etwas Widersprechendes festlegt; jedes FAIL prüft ein zweiter Modellaufruf.
-
-Den Ablauf als Aktivitätsdiagramm zeigt 3.3, die Sequenz der Aufrufe 6.2. Hier stehen die Konzepte, die diesen Ablauf bestimmen, in der Reihenfolge, in der sie wirken.
-
-*Nummerierte Eingabe.* Der Code stellt jeder Zeile der Eingabe ihre Nummer voran, etwa „12| “, und schickt die ganze nummerierte Eingabe mit jedem Aufruf. 🤖 Das Modell nennt einen Beleg nur als Anfang und Ende eines Zeilenbereichs; ⚙️ der Code schneidet den Text aus. So ist jeder Beleg wörtlich (ADR [0017](adr/0017-beleg-per-zeilenverweis.md)).
-
-*Bedingungen.* Manche Pflichten gelten nur unter einer Bedingung: Die KI-VO gilt nur, wenn ein KI-System eingesetzt wird. Ohne Bedingungen bekäme eine Spezifikation ohne KI-System bis zu 65 Lücken zur KI-VO, die nichts aussagen. Eine Bedingung ist darum eine Tatsache über das Vorhaben, von der eine feste Menge von Prüfregeln abhängt. Die sieben Bedingungen stehen von Hand gepflegt in `data/input/conditions.json` (`ConditionDef`), mit je einem Kriterium für „ja“ und „nein“ (ADR [0028](adr/0028-bedingungen-im-spec-audit.md)).
-
-| Bedingung | betroffene Prüfregeln |
-|---|---|
-| KI-System | KI-VO Art. 4, 5, 6 und 50 |
-| Hochrisiko-KI | KI-VO Art. 13, 14, 26 und 27 |
-| Drittlandübermittlung | DSGVO Art. 44, 45, 46, 48 und 49 |
-| Auftragsverarbeiter | DSGVO Art. 28 und 29 |
-| Einwilligung | DSGVO Art. 7 und 8 |
-| Mandantenfähigkeit | 16 Maßnahmen des SDM-Bausteins Trennen (M50) |
-| automatisierte Entscheidung | DSGVO Art. 22 |
-
-Ein Anker trifft den ganzen Artikel, aber nur diesen: „DSGVO Art. 4“ trifft „DSGVO Art. 4 Abs. 2“, nicht „DSGVO Art. 44“ (`affects`).
-
-🤖 Ein Vorlauf vor den Paketen, der Bedingungs-Vorlauf, nennt je Bedingung zwei Listen von Zeilen: Zeilen, die sie bejahen, und Zeilen, die sie ausdrücklich verneinen. Schließt eine Zeile die Bedingung nur für einen Teil des Vorhabens aus, gehört sie in keine Liste. ⚙️ Den Wert entscheidet der Code nach einer festen Tabelle (`condition_results`):
-
-| bejahende Zeilen | verneinende Zeilen | Wert | Wirkung |
-|---|---|---|---|
-| ja | nein | ja (`yes`) | Die Prüfregeln gehen ans Modell. |
-| nein | ja | nein (`no`) | Die Prüfregeln werden ohne Modell N/A; Beleg ist die erste verneinende Zeile. |
-| ja | ja | ja, mit Hinweis „Widerspruch“ | der strengere Wert: Die Prüfregeln gehen ans Modell. |
-| nein | nein | nicht genannt (`unstated`) | Die Prüfregeln gehen ans Modell; ihre Lücken stehen im Report gesondert unter „Nur wenn …“. |
-
-Dazu kommt eine Ableitung: Verneint die Spezifikation ein KI-System, ist auch die Hochrisiko-KI verneint, mit derselben Zeile als Beleg. Fällt der Vorlauf aus oder bleibt seine Antwort ungültig, sind alle Bedingungen „nicht genannt“, und alle Prüfregeln gehen ans Modell; ein falsches N/A kann so nicht entstehen (Rückfall, 7.2).
-
-*Beispiel Meldeportal.* Zeile 47 lautet: „Eine Einwilligung der Eltern wird für diese Auswertung nicht eingeholt“. Der Vorlauf nennt sie als verneinend für die Einwilligung, der Code setzt den Wert auf „nein“ und die Prüfregeln zu DSGVO Art. 7 und 8 auf N/A mit der Begründung „Die Spezifikation verneint: Einwilligung.“ Die Zeilen 53 bis 58 über ein Analysewerkzeug einer US-Firma bejahen die Drittlandübermittlung; deren Prüfregeln gehen ans Modell.
-
-*Pakete.* Die verbleibenden Prüfregeln teilt der Code in Pakete zu je zehn. Jedes Paket ist ein Modellaufruf und enthält von jeder Prüfregel nur Kennung, Titel und die beiden Kriterien, dazu die ganze nummerierte Eingabe zwischen den Markierungen `<eingabe>` und `</eingabe>`. Der Auftrag (`SYSTEM_PROMPT`) definiert die vier Status, verlangt Belegzeilen bei PASS und FAIL und eine Empfehlung bei WARN und FAIL. Die Antwort ist ein Formular mit genau einem Entwurf je Prüfregel (`AuditResponse`).
-
-*Offene Welt.* Eine Spezifikation sagt nicht alles: Was sie nicht erwähnt, kann im Pflichtenheft, im Betriebskonzept oder in einer Dienstanweisung geregelt sein. Das heißt hier offene Welt. Ein FAIL aus bloßem Schweigen wäre darum ein Fehlalarm; Schweigen ergibt eine Lücke. GovGuard setzt das an drei Stellen durch, weil keine allein reicht (ADR [0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md)):
-
-| Stelle | Mechanismus | wer |
-|---|---|---|
-| Build | Das Verstoßkriterium jeder Prüfregel beschreibt eine Festlegung, nie ein Fehlen; der Verstoß-Prüfer des Builds schickt ein Fehlen zurück. | 🤖 ⚙️ |
-| Paket | Der Auftrag enthält eine Regel für die offene Welt: FAIL nur, wenn die Belegzeilen etwas festlegen, das der Prüfregel widerspricht (`OPEN_WORLD_FAIL_RULE`). | 🤖 |
-| nach den Paketen | Der Verstoß-Prüfer prüft jedes FAIL noch einmal. | 🤖 ⚙️ |
-
-*Antwort prüfen.* ⚙️ Der Code prüft jede Antwort, bevor sie zählt: genau ein Befund je Prüfregel, Zeilenbereich gültig, PASS mit Beleg, Empfehlung bei WARN und FAIL. Was er selbst reparieren kann, repariert er ohne Retry: Bei Doppelbefunden gilt der schwerste Status, eine fehlende Empfehlung kommt aus der Prüfregel, und ein FAIL ohne Zeilen wird WARN. Alles andere geht einmal mit Grund zurück ans Modell; bleibt es ungültig, endet das Audit ohne Report. Die vollständige Liste der Regeln steht in 4.6, die Ausnahmen in 7.2 (Muster 5).
-
-*Verstoß-Prüfer.* Ob Belegzeilen einen Verstoß festlegen oder nur zum Thema schweigen, ist eine Frage der Bedeutung, die kein Code entscheidet. 🤖 Ein zweiter Modellaufruf bekommt darum alle FAILs zusammen, aber je FAIL nur Titel, Verstoßkriterium und die nummerierten Belegzeilen, nicht die Begründung des Pakets (`judge_fails`). Er bestätigt jedes FAIL oder nicht, mit einem Satz Grund. ⚙️ Ein nicht bestätigtes FAIL wird WARN, und der alte Status bleibt am Befund sichtbar. Ohne Urteil bleibt das FAIL. Der Prüfer kann nur senken, nie heben. Im gespeicherten Report des Meldeportals prüfte er 49 FAILs, bestätigte 33 und stufte 16 herab.
-
-*Report bilden.* Zum Schluss prüft der Code, dass alle Pakete zusammen genau einen Befund je Prüfregel ergeben, schneidet die Belege aus, ergänzt Titel, Anker und Korrekturen und bildet den Gesamtstatus. Zum Report gehören außerdem der Wert jeder Bedingung, die Zähler des Verstoß-Prüfers und die Rückverfolgung über Hashes (8.4).
-
-### 1.5 Wie ein Architektur-Audit urteilt
-
-Ein Architektur-Audit entscheidet zuerst am Format, ob die Welt geschlossen oder offen ist. Dann stellt es fest, welche Ressourcentypen die Eingabe enthält, und setzt jede Prüfregel ohne passenden Typ ohne Modell auf N/A. In geschlossener Welt darf ein fehlender Wert ein Verstoß sein, in offener nicht.
-
-Das Entscheidungsbild zeigt den Weg einer Eingabe von oben nach unten: zur Welt, zum Inventar, zur Anwendbarkeit jeder Prüfregel und zur Regel für FAIL.
-
-```mermaid
-flowchart TB
-  IN["👤 Eingabe des Architektur-Audits"]:::human
-  D{"⚙️ CloudFormation-JSON<br/>mit Abschnitt Resources?"}:::code
-  C["⚙️ geschlossene Welt<br/>Code liest die Typen selbst"]:::code
-  O["🤖 offene Welt<br/>Inventar-Vorlauf nennt Typen mit Zeilen"]:::llm
-  T[("⚙️ Ressourcentypen<br/>aller Prüfregeln")]:::code
-  AP{"⚙️ Prüfregel anwendbar?<br/>einer ihrer Typen im Inventar"}:::code
-  NA["⚙️ N/A mit festem Grund<br/>geht nie ans Modell"]:::code
-  PK["🤖 Paket ans Modell<br/>N/A verboten"]:::llm
-  W{"⚙️ Welt?"}:::code
-  FC["Fehlen heißt Standardwert:<br/>FAIL möglich, kein Verstoß-Prüfer"]:::code
-  FO["Fehlen heißt Lücke:<br/>jedes FAIL zum Verstoß-Prüfer"]:::llm
-  IN --> D
-  D -->|"ja"| C
-  D -->|"nein: YAML, Terraform, Freitext"| O
-  T -.->|"Kandidaten"| O
-  C --> AP
-  O -->|"dazu immer IAM, KMS, Logs"| AP
-  AP -->|"nein"| NA
-  AP -->|"ja"| PK
-  PK --> W
-  W -->|"geschlossen"| FC
-  W -->|"offen"| FO
-  classDef llm fill:#ffd8a8,stroke:#d9480f,color:#1f1f1f,stroke-width:2px
-  classDef code fill:#a5d8ff,stroke:#1971c2,color:#1f1f1f,stroke-width:2px
-  classDef human fill:#dee2e6,stroke:#495057,color:#1f1f1f,stroke-width:2px
-```
-
-*Elemente.* Rauten sind Entscheidungen, die ⚙️ der Code nach fester Regel trifft. Blaue Kästen sind Schritte ohne Modell, orange Kästen Schritte mit 🤖 Modell. Der Zylinder ist die Liste aller Ressourcentypen, die im Katalog vorkommen.
-
-*Verbindungen.* Die erste Raute teilt am Format. Ist die Eingabe ein CloudFormation-JSON mit einem Abschnitt „Resources“, liest der Code die Typen selbst (`template_resource_types`). Sonst nennt der Inventar-Vorlauf die Typen; er darf nur Typen aus der Liste der Prüfregeln nennen, darum der gestrichelte Pfeil. In offener Welt kommen IAM, KMS und Logs immer dazu. Beide Wege enden in derselben Raute: Eine Prüfregel ist anwendbar, wenn einer ihrer Typen im Inventar steht. Nicht anwendbare Prüfregeln werden N/A, anwendbare gehen ins Paket. Die letzte Raute legt fest, was fehlender Text für ein FAIL bedeutet.
-
-*Welt nach Format.* Der Code entscheidet die Welt, nie das Modell (`audit_input`). Geschlossen ist nur eine Eingabe, die der Code vollständig lesen kann; YAML und Terraform liest er nicht und behandelt sie wie Freitext (ADR [0015](adr/0015-cloudformation-einziges-inventarformat.md)).
-
-| Format | Welt | Inventar | eine fehlende Einstellung heißt | Verstoß-Prüfer |
-|---|---|---|---|---|
-| CloudFormation-JSON | geschlossen | ⚙️ Code liest die Typen | der Standardwert von AWS gilt; ein unsicherer Standardwert ist ein Verstoß | nein |
-| CloudFormation-YAML, Terraform, Freitext | offen | 🤖 Inventar-Vorlauf mit Belegzeilen | nicht beschrieben, also Lücke | ja |
-
-*Der Katalog der Ressourcentypen.* Das Architektur-Audit kennt nur Dienste, für die es Prüfregeln gibt. Drei Listen legen das fest. Der Prüfumfang (`data/input/scope.json`) nennt 23 Dienste von API Gateway bis Application Auto Scaling mit ihren CloudFormation-Typen; er ist von Hand gepflegt. Jede Prüfregel nennt die Typen, an denen sie sich zeigt (`cfn_resource_types`); die Vereinigung dieser Typen ist die Liste, aus der der Inventar-Vorlauf wählen darf. Die Liste aller echten CloudFormation-Typen (`data/input/cfn_resource_types.json`) und ihrer Eigenschaften (`data/input/cfn_properties.json`) braucht nur der Build: Er streicht damit erfundene Typen und Eigenschaften. Ein Dienst außerhalb des Prüfumfangs, etwa EC2, ergibt in keinem Audit einen Befund.
-
-*Inventar und Anwendbarkeit.* Das Ressourceninventar ist die Menge der Typen, die in der Eingabe vorkommen (`Inventory`). Eine Prüfregel ist anwendbar, wenn mindestens einer ihrer Typen darin steht (`Inventory.applies`). In offener Welt gelten Typen von IAM, KMS und CloudWatch Logs immer als vorhanden, weil jede Workload sie braucht, auch wenn der Text sie nicht nennt. Nicht anwendbare Prüfregeln werden ohne Modell N/A, mit dem Grund „Ressourcentyp nicht im Template“ oder „Dienst in der Eingabe nicht erkannt“. Für alle anderen sagt der Auftrag dem Modell, dass N/A verboten ist, und das Gate prüft es. Der Inventar-Vorlauf hat keinen Rückfall: Bleibt seine Antwort ungültig, endet das Audit, denn ein übersehener Dienst würde alle seine Prüfregeln still auf N/A setzen.
-
-*Nur die Workload.* Der Katalog enthält nur Pflichten, die sich an der Workload zeigen. Pflichten des Kontos, etwa Root-MFA, hat schon der Build als „nicht relevant“ aussortiert (1.3, Schritt 3). Das Architektur-Audit prüft also ein Template, nicht ein AWS-Konto.
-
-*Beispiel Fristenwecker.* Das Template enthält fünf Ressourcen: ein SNS-Topic, eine Subscription, eine Log-Gruppe, eine IAM-Rolle und eine Step-Functions-Zustandsmaschine. Es ist JSON, also ist die Welt geschlossen, und der Code liest die fünf Typen ohne Modell. 144 der 175 Prüfregeln haben keinen dieser Typen und werden N/A mit dem Grund „Ressourcentyp nicht im Template“. 31 gehen in vier Paketen ans Modell. Das SNS-Topic in den Zeilen 5 bis 11 hat keine Einstellung für einen KMS-Schlüssel; in geschlossener Welt gilt der Standardwert „unverschlüsselt“, und die Prüfregel AWS FSBP SNS.1 ergibt FAIL, ohne Verstoß-Prüfer.
-
-### 1.6 Report, Soll und Galerie
-
-Ein Report zeigt jeden Befund mit Beleg im Dokument und macht jeden Eingriff des Codes sichtbar. Musterfälle sind fiktive Eingaben mit einem Soll von Hand; die Galerie zeigt ihre gespeicherten Reports. Weicht ein Report vom Soll ab, zeigt GovGuard das, statt neu zu würfeln.
-
-*Der Report.* Der Report ist ein JSON-Dokument (`AuditReport`); die Oberfläche zeigt ihn neben der geprüften Eingabe und bietet ihn als JSON zum Herunterladen an.
-
-| Teil | Inhalt | im Code |
-|---|---|---|
-| Kopf | Audit-Art, Modell, Zahl der Retries, Gesamtstatus, Zähler je Kategorie mit Lücken, Zähler des Verstoß-Prüfers (geprüft, bestätigt, herabgestuft, nicht verfügbar) | `report_header.py` |
-| Soll-Abgleich | nur bei Musterfällen: Gesamtstatus und jeder Pflichtbefund gegen das Soll, Abweichungen markiert | `expected_checks` |
-| Bedingungen | nur Spec-Audit: Wert jeder Bedingung mit Kriterium, Belegzeilen und Wirkung | `conditions_view.py` |
-| Befundtabelle | alle Befunde außer Lücken, filterbar nach Status und Quelle; im Architektur-Audit nach Ressourcentyp sortiert, damit Doppelungen über Quellen nebeneinander stehen | `finding_table.py` |
-| Detail eines Befunds | Begründung, Empfehlung, Korrekturen des Codes, Querverweise; der Beleg markiert im Dokument | `finding_detail.py` |
-| Lücken | als Checkliste nach Quelle; im Spec-Audit getrennt nach Bedingungen, zu denen die Eingabe schweigt | `gaps_view.py` |
-
-*Musterfälle und Soll.* Ein Musterfall ist eine fiktive Eingabe mit einem Soll, das ein Mensch festlegt, nie ein früherer Lauf (`Preset`, `Expected`). Das Soll nennt den Gesamtstatus, wenige Pflichtbefunde als Anker mit PASS oder FAIL und beim Spec-Audit den Wert jeder Bedingung. Ein Pflichtbefund ist nie WARN, weil ein Urteil zwischen PASS und WARN schwankt. Jeder Anker eines Pflichtbefunds muss im Katalog stehen, sonst bricht der Build ab (1.3).
-
-| Musterfall | Audit | Eingabe | Soll | Pflichtbefunde |
-|---|---|---|---|---|
-| GovGuard prüft sich selbst | Spec | Markdown: [SPEC.md](SPEC.md) | FAIL | DSGVO Art. 46 Abs. 1 FAIL; KI-VO Art. 4 Abs. 1 und Art. 50 Abs. 2 PASS |
-| Meldeportal Gesundheit | Spec | Markdown | FAIL | DSGVO Art. 9 Abs. 2 FAIL; SDM Löschen M60.P01 FAIL |
-| Wohngeld online | Spec | OpenAPI als YAML | WARN | keine |
-| Antragseingang mit Sicherheitsmängeln | Architektur | CloudFormation-JSON | FAIL | CIS 3.1.4 und 4.6, BSI GS++ BER.4.1 FAIL |
-| Fristenwecker | Architektur | CloudFormation-JSON | FAIL | AWS FSBP SNS.1 FAIL; StepFunctions.1 PASS |
-| Protokollarchiv | Architektur | Freitext in Markdown | WARN | CIS 3.1.4 und BSI GS++ DET.3.1 PASS |
-
-Das Soll eines Musterfalls kann auch eine Referenzarchitektur nennen (`archetype`); das Feld ist ein Rest des nicht gebauten Archetyp-Pfads, und kein Code wertet es aus (ADR [0019](adr/0019-nur-audits.md)).
-
-*Galerie.* Die Galerie zeigt für jeden Musterfall den gespeicherten Report neben der Eingabe (`GalleryEntry`). Die Reports liegen als JSON in `data/gallery/` und ändern sich nur per Commit; die Galerie ruft kein Modell auf und kostet nichts. Das Selbstaudit prüft die eigene Spezifikation; darum muss der Musterfall Byte für Byte gleich `docs/SPEC.md` sein.
-
-### 1.7 Was ein Nachbau braucht
-
-Wer GovGuard nachbauen will, braucht drei Dinge, die nicht im Text dieses Dokuments stehen: die Prompts, die Datenformate und die Grenzwerte. Die Tabelle nennt, wo jedes davon festgelegt ist. Die Kataloge selbst sind ein Produkt des Modells; ein Nachbau übernimmt sie oder baut sie neu und muss dann mit anderen Formulierungen rechnen.
-
-| Was | festgelegt in | Hinweis |
-|---|---|---|
-| Auftrag der Pakete und Regel für die offene Welt | `SYSTEM_PROMPT`, `OPEN_WORLD_FAIL_RULE` in `calls/audit_packages.py` | Schema der Antwort: `AuditResponse` |
-| Auftrag des Bedingungs-Vorlaufs | `CONDITIONS_PROMPT` in `calls/conditions.py` | Kriterien aus `data/input/conditions.json` |
-| Auftrag des Inventar-Vorlaufs | `INVENTORY_PROMPT` in `calls/inventory.py` | Kandidaten sind die Typen der Prüfregeln |
-| Auftrag des Verstoß-Prüfers | `FAIL_JUDGE_PROMPT` in `calls/fail_judge.py` | Beispielpaar je Welt in `open_world.py` |
-| Aufträge des Builds | `INSTRUCTIONS` in `decompose/split.py`; `PROMPTS` in `select/prompts.py` und `rules/prompts.py`; `JUDGE_PROMPT` in `rules/violation_judge.py` | je Audit-Art ein eigener Auftrag |
-| Datenformate | `models.py`, `condition_models.py` im Laufzeit-Kern; `models.py` je Build-Schritt | Klassendiagramme in 2.3 bis 2.5 |
-| Eingaben von Hand | `data/input/sources.json`, `data/input/scope.json`, `data/input/archetype_profiles.json`, `data/input/conditions.json`, `data/input/presets/` | Quellen mit URL, Version und SHA-256 |
-| Grenzwerte | Konstanten wie `PACKAGE_SIZE`, `MAX_SPAN`, `RETRIES` | vollständig in 3.6 |
-| Modell | `openai/gpt-oss-120b` bei Groq, Temperatur 0 | Anbieterwechsel ändert Ergebnisse (7.4) |
-| Regeln, die der Code erzwingt | Gates in `checks/` und `kb_build/rules/gates.py` | Klartext mit Test in 4.6 |
-
-Die Reihenfolge für einen Nachbau folgt den Abhängigkeiten: zuerst die Datenformate und die reinen Prüfungen, die ohne Modell testbar sind (4.3); dann ein Modellaufruf mit Formular, Validator und einem Retry (3.7); dann der Ablauf des Audits (3.3, 3.4); zuletzt der Build, falls die Kataloge nicht übernommen werden.
-
-> **Concern (LLM-Unsicherheit):** Jedes Konzept dieses Kapitels legt fest, wo 🤖 das Modell urteilt und wo ⚙️ der Code entscheidet; welche Muster dahinterstehen, zeigt [7.2](#72-die-deterministische-schale), und was sie nicht verhindern, [7.4](#74-wo-die-schale-endet).
 
 ## 2 Logische Sicht
 
@@ -503,8 +220,8 @@ Diese Entscheidungen legen fest, welche Typen es gibt und wer welches Feld schre
 
 | Entscheidung | Was sie heißt | Warum | im Code |
 |---|---|---|---|
-| Fester Katalog statt Suche | Jede Prüfregel bekommt in jedem Audit genau einen Befund; es gibt keine Ähnlichkeitssuche und keine Vektor-Datenbank. | Ein Audit mit unbemerkter Lücke ist wertlos ([0011](adr/0011-vollstaendiger-katalog.md)); Muster „feste Fragen, feste Antworten“ in 6.2. | `RuleCatalog`, `completeness_problems` |
-| Entwurf-Muster | 🤖 Das Modell füllt einen Entwurfstyp; ⚙️ der fertige Typ erbt davon und ergänzt, was der Code schon weiß. | Ein Feld, das das Modell nicht ausfüllt, kann es nicht falsch ausfüllen ([0005](adr/0005-pydantic-ai.md)); Muster in 6.2. | `FindingDraft`, `Finding`, `RuleDraft`, `Rule` |
+| Fester Katalog statt Suche | Jede Prüfregel bekommt in jedem Audit genau einen Befund; es gibt keine Ähnlichkeitssuche und keine Vektor-Datenbank. | Ein Audit mit unbemerkter Lücke ist wertlos ([0011](adr/0011-vollstaendiger-katalog.md)); Muster „feste Fragen, feste Antworten“ in 7.2. | `RuleCatalog`, `completeness_problems` |
+| Entwurf-Muster | 🤖 Das Modell füllt einen Entwurfstyp; ⚙️ der fertige Typ erbt davon und ergänzt, was der Code schon weiß. | Ein Feld, das das Modell nicht ausfüllt, kann es nicht falsch ausfüllen ([0005](adr/0005-pydantic-ai.md)); Muster in 7.2. | `FindingDraft`, `Finding`, `RuleDraft`, `Rule` |
 | Beleg per Zeilenverweis | 🤖 Das Modell nennt Zeilen; ⚙️ der Code schneidet den Beleg aus der Eingabe. | Der Beleg ist per Konstruktion wörtlich ([0017](adr/0017-beleg-per-zeilenverweis.md)). | `evidence_of`, `LineRange` |
 | Die Welt entscheidet der Code | Nur ein CloudFormation-JSON, das der Code selbst lesen kann, ist eine geschlossene Welt; alles andere ist offen. | Das Modell darf die Regel für FAIL nicht selbst wählen ([0015](adr/0015-cloudformation-einziges-inventarformat.md), [0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md)). | `audit_input`, `OpenWorld` |
 | FAIL nur bei Festlegung | In offener Welt beschreibt das Verstoßkriterium eine Festlegung, kein Fehlen. | Ein FAIL aus Schweigen wäre ein Fehlalarm ([0020](adr/0020-fail-nur-bei-festgelegtem-verstoss.md)). | `violation_if`, `judge_fails` |
@@ -776,7 +493,7 @@ classDiagram
 | Urteil zum Verstoßkriterium | beschreibt das Kriterium nur ein Fehlen? (nur Spec) | 🤖 | `ViolationCheck` |
 | Prüfregel, Katalog | die fertige Regel mit Kennung, Anker, Herkunft; die Datei je Audit-Art mit Quellenständen | ⚙️ | `Rule`, `RuleCatalog` |
 
-*Elemente.* Jede Klasse ist ein Pydantic-Typ; die Tabelle oben fasst sie paarweise zusammen. Orange Klassen füllt 🤖 das Modell, blaue baut ⚙️ der Code, graue pflegt 👤 ein Mensch. In einer blauen Klasse markiert 🤖 ein Feld, dessen Wert aus einer Modellantwort stammt. Beim Auswahlprotokoll (`Verdict`) ist die Begründung nur bei Einstufungen vom Modell; vorgefilterte Anforderungen und Modellfehler bekommen einen festen Satz des Codes.
+*Elemente.* Jede Klasse ist ein Pydantic-Typ; die Tabelle oben fasst sie paarweise zusammen. Orange Klassen füllt 🤖 das Modell, blaue baut ⚙️ der Code, graue pflegt 👤 ein Mensch. In einer blauen Klasse markiert 🤖 ein Feld, dessen Wert aus einer Modellantwort stammt. Beim Auswahlprotokoll (`Verdict`) stammt die Begründung nur bei „ausgewählt“ und „nicht prüfbar“ vom Modell; vorgefilterte, nicht relevante Anforderungen und Modellfehler bekommen einen festen Satz des Codes.
 
 *Beziehungen.* Von links nach rechts folgen sie dem Weg einer Quelle durch den Build.
 
@@ -788,9 +505,9 @@ classDiagram
 - Ein Entwurf einer Prüfregel enthält null oder mehr Querverweise. Das Urteil des Verstoß-Prüfers im Build bezieht sich auf das Verstoßkriterium eines Entwurfs.
 - Die Prüfregel erbt vom Entwurf, entsteht genau einmal je ausgewählter Anforderung und gehört zu genau einem Katalog; der Katalog enthält mindestens eine Prüfregel.
 
-*Der Weg einer Quelle.* ⚙️ Der Code extrahiert jede Quelle in Anforderungen; Artikel der DSGVO und KI-VO zerlegt 🤖 das Modell vorher in Gruppen, aus denen ⚙️ der Code je Anker eine Anforderung bildet. 🤖 Das Modell stuft jede Anforderung als prüfbar ein; beim Architektur-Audit streicht ⚙️ der Code zusätzlich Typen außerhalb des Prüfumfangs und nimmt nur Pflichten der Ebene Workload (`template`) auf. Für jede ausgewählte Anforderung entwirft 🤖 das Modell eine Prüfregel, die ⚙️ der Code prüft und vervollständigt.
+*Der Weg einer Quelle.* Wie eine Quelle durch Extrahieren, Zerlegen, Auswählen und Formulieren läuft und welche Regel der Code dabei anwendet, erklärt [FUNKTIONSWEISE](FUNKTIONSWEISE.md#2-wie-der-katalog-entsteht) Kapitel 2.
 
-*Entwurf-Muster am Paar Entwurf und Prüfregel.* Die Prüfregel erbt vom Entwurf (`Rule(RuleDraft)`) und ergänzt nur Felder, die der Code schon kennt: Kennung, Audit-Art, Quelle, Primäranker, Auswahlgrund und Ressourcentypen. Bei zerlegten Rechtsakten ersetzt der Code auch das Zitat durch den Text der Abschnitte (`quoted_by_code`). Das Modell kann darum keinen Anker und keine Quelle erfinden.
+*Entwurf-Muster.* Die Prüfregel erbt vom Entwurf (`Rule(RuleDraft)`) und ergänzt nur Felder, die der Code schon kennt; das Muster dahinter erklärt [7.2](#72-die-deterministische-schale) (Muster 1).
 
 ### 2.4 Typen des Audits: Kern
 
@@ -939,7 +656,7 @@ classDiagram
 | Fortschritt | Phase und fertige Pakete, für den Fortschrittsbalken | ⚙️ | `Progress` |
 | Musterfall, Soll, Pflichtbefund | fiktive Eingabe mit Gesamtstatus und wenigen Pflichtbefunden, nie aus einem Lauf übernommen | 👤 | `Preset`, `Expected`, `RequiredFinding` |
 
-*Elemente.* Die Tabelle oben nennt jede Klasse. Im Befund (`Finding`) tragen die geerbten Felder ein 🤖: Status, Zeilenbereich, Begründung und Empfehlung kommen aus dem Entwurf des Modells, auch wenn der Code den Status herabstufen kann. In der Prüfregel stammen Titel, Kriterien, Empfehlung und Ressourcentypen aus dem Build, also ebenfalls von 🤖, aber geprüft und eingefroren. Der Fortschritt (`Progress`) hat keine Beziehung: Er wird während des Laufs gemeldet und nicht gespeichert.
+*Elemente.* Die Tabelle oben nennt jede Klasse. Im Befund (`Finding`) tragen die geerbten Felder ein 🤖: Status, Zeilenbereich, Begründung und Empfehlung kommen aus dem Entwurf des Modells, auch wenn der Code den Status herabstufen kann. Zwei Ausnahmen: Setzt der Code eine Prüfregel vorab auf N/A (verneinte Bedingung, Typ nicht im Inventar), schreibt er alle diese Felder selbst; beim Fristenwecker gilt das für 144 von 175 Befunden. Und eine fehlende Empfehlung ergänzt der Code aus der Prüfregel. In der Prüfregel stammen Titel, Kriterien, Empfehlung und Ressourcentypen aus dem Build, also ebenfalls von 🤖, aber geprüft und eingefroren. Der Fortschritt (`Progress`) hat keine Beziehung: Er wird während des Laufs gemeldet und nicht gespeichert.
 
 *Beziehungen.*
 
@@ -949,7 +666,7 @@ classDiagram
 - Ein Report enthält genau einen Befund je Prüfregel, genau eine Rückverfolgung und genau einen Zähler des Verstoß-Prüfers.
 - Ein Musterfall enthält genau ein Soll; das Soll enthält null oder mehr Pflichtbefunde. Das Soll verweist auf einen Report, wenn die Oberfläche beide abgleicht.
 
-*Entwurf-Muster am Paar Entwurf und Befund.* Der Befund erbt vom Entwurf (`Finding(FindingDraft)`). 🤖 Das Modell liefert Status, Zeilenbereich, Begründung und Empfehlung. ⚙️ Der Code ergänzt den Beleg aus den Zeilen, Titel und Anker aus der Prüfregel und die Korrekturen aus dem Sammler. Ein Report hat genau so viele Befunde wie der Katalog Prüfregeln, sortiert nach dem ersten Ressourcentyp, damit Doppelungen über Quellen hinweg nebeneinander stehen.
+*Entwurf-Muster.* Der Befund erbt vom Entwurf (`Finding(FindingDraft)`) und ergänzt Beleg, Titel, Anker und Korrekturen; das Muster erklärt [7.2](#72-die-deterministische-schale) (Muster 1), Status und Report [FUNKTIONSWEISE](FUNKTIONSWEISE.md#1-prüfregel-katalog-und-befund) Kapitel 1 und 5.
 
 Ein Audit-Ereignis (`AuditEvent`) gibt es als Klasse, aber kein Code schreibt es; darum fehlt es im Bild (8.4).
 
@@ -975,6 +692,8 @@ classDiagram
     <<👤 Hand>>
     id
     name
+    meaning
+    only_if
     yes
     no
     anchors
@@ -1068,7 +787,7 @@ classDiagram
 | Typ | Bedeutung | wer | im Code |
 |---|---|---|---|
 | Eingabe mit Welt | der Eingabetext und die Welt, die der Code dafür festgelegt hat; ohne Welt ist sie geschlossen | ⚙️ | `AuditInput`, `OpenWorld` |
-| Bedingung | Kriterium für „ja“ und „nein“ und die betroffenen Prüfregeln | 👤 | `ConditionDef` (`data/input/conditions.json`) |
+| Bedingung | Erklärung, Kriterium für „ja“ und „nein“, Satz für „Nur wenn …“ und die betroffenen Prüfregeln | 👤 | `ConditionDef` (`data/input/conditions.json`) |
 | Antwort des Bedingungs-Vorlaufs | je Bedingung Zeilen, die sie bejahen, und Zeilen, die sie verneinen | 🤖 | `ConditionsResponse`, `ConditionDraft`, `LineRange` |
 | Wert einer Bedingung | `yes`, `no` oder `unstated`, mit Belegen und Hinweis | ⚙️ | `ConditionResult` |
 | Antwort des Inventar-Vorlaufs | erkannte Ressourcentypen mit Zeilen (nur bei offener Welt) | 🤖 | `InventoryResponse`, `RecognizedType` |
@@ -1085,9 +804,7 @@ classDiagram
 - Eine Antwort des Inventar-Vorlaufs enthält null oder mehr erkannte Typen; der Code sammelt sie im Ressourceninventar.
 - Die Urteile des Verstoß-Prüfers enthalten null oder mehr Einzelurteile. Es gibt sie nur in offener Welt.
 
-*Das Modell nennt Zeilen, der Code entscheidet.* 🤖 Der Bedingungs-Vorlauf nennt nur Zeilen. ⚙️ Der Code entscheidet den Wert: Nur verneinende Zeilen ohne Widerspruch ergeben `no`, und nur ein `no` macht die Prüfregeln der Bedingung N/A, mit der Verneinung als Beleg. Schweigen bleibt `unstated`, und die Prüfregeln gehen ans Modell.
-
-*Die Welt entscheidet der Code.* Für ein CloudFormation-JSON liest der Code die Ressourcentypen selbst, und es gibt keinen Inventar-Vorlauf; die Welt ist geschlossen. Für Freitext, YAML und Terraform nennt 🤖 das Modell die Typen mit Zeilen, und die Welt bleibt offen. Nur in offener Welt gibt es den Verstoß-Prüfer.
+*Fachliche Regeln.* Nach welcher Tabelle der Code aus den Zeilen des Vorlaufs den Wert einer Bedingung macht, erklärt [FUNKTIONSWEISE](FUNKTIONSWEISE.md#3-wie-ein-spec-audit-urteilt) Kapitel 3; wie das Format die Welt und das Inventar bestimmt, [Kapitel 4](FUNKTIONSWEISE.md#4-wie-ein-architektur-audit-urteilt).
 
 > **Concern (LLM-Unsicherheit):** Wie diese Typen das Modell einhegen (Entwurf-Muster, feste Fragen und feste Antworten, Referenz statt Kopie), steht in [7.2](#72-die-deterministische-schale); was sie nicht verhindern, in [7.4](#74-wo-die-schale-endet).
 
@@ -1286,9 +1003,9 @@ stateDiagram-v2
 
 *Verbindungen.* Nach Längenprüfung und Welt führt die obere Raute ein CloudFormation-JSON zum Inventar aus dem Template und alles andere zum Inventar-Vorlauf. Beide Wege münden in dieselbe Aktivität: Prüfregeln ohne Typ im Inventar werden N/A. Gabelung, Pakete und Zusammenführung laufen wie beim Spec-Audit. Die untere Raute schickt nur offene Welt mit mindestens einem FAIL zum Verstoß-Prüfer; geschlossene Welt geht immer direkt zur Vollständigkeitsprüfung.
 
-Das Architektur-Audit verzweigt an der Welt. Ist die Eingabe ein CloudFormation-JSON, liest ⚙️ der Code die Ressourcentypen selbst, und ein 🤖 Aufruf entfällt; die Welt ist geschlossen, eine fehlende Einstellung gilt als Standardwert und kann FAIL sein, und es gibt keinen Verstoß-Prüfer. Bei Freitext, YAML und Terraform nennt 🤖 der Inventar-Vorlauf die Typen mit Zeilen; die Welt ist offen.
+Warum ein CloudFormation-JSON eine geschlossene Welt ist und was das für ein FAIL bedeutet, erklärt [FUNKTIONSWEISE](FUNKTIONSWEISE.md#4-wie-ein-architektur-audit-urteilt) Kapitel 4. Für den Ablauf zählt: Im JSON-Zweig entfällt ein Modellaufruf und am Ende der Verstoß-Prüfer.
 
-Der Inventar-Vorlauf hat keinen Rückfall: Bleibt seine Antwort nach dem Retry ungültig, endet das Audit fail closed, denn ein übersehener Dienst würde alle seine Prüfregeln still auf N/A setzen. Bei Freitext gelten IAM, KMS und Logs immer als vorhanden, weil sie jede Workload braucht, auch wenn der Text sie nicht nennt. Prüfregeln für erkannte Typen gehen mit dem Hinweis ans Modell, dass N/A dort verboten ist (`na_forbidden`).
+Der Inventar-Vorlauf hat keinen Rückfall: Bleibt seine Antwort nach dem Retry ungültig, endet das Audit fail closed. Prüfregeln für erkannte Typen gehen mit dem Hinweis ans Modell, dass N/A dort verboten ist (`na_forbidden`).
 
 Die Pakete laufen wie beim Spec-Audit; ein Architektur-Katalog mit 175 Prüfregeln ergibt bis zu 18 Pakete.
 
@@ -1347,7 +1064,7 @@ stateDiagram-v2
 | Gate → geprüft | ⚙️ | kein Problem | – |
 | geprüft → PASS, WARN | ⚙️ | der Status des Modells gilt | – |
 | geprüft → N/A | ⚙️ | nur im Spec-Audit; im Architektur-Audit ist N/A für die gefragten Prüfregeln verboten, und das Gate schickt es zurück | `answer_problems` (`na_forbidden`) |
-| FAIL → FAIL ohne Prüfer | ⚙️ | geschlossene Welt: Eine fehlende Einstellung ist der Standardwert, das FAIL bleibt | `judge_fails` |
+| FAIL → FAIL ohne Prüfer | ⚙️ | geschlossene Welt: Eine fehlende Einstellung ist der Standardwert, das FAIL bleibt; der Audit-Ablauf ruft den Verstoß-Prüfer gar nicht auf | `run_audit` |
 | FAIL → Verstoß-Prüfer | 🤖 | nur in offener Welt | `judge_fails` |
 | Verstoß-Prüfer → WARN oder FAIL | ⚙️ | nicht bestätigt: WARN mit altem Status in `downgraded_from`; bestätigt oder kein Urteil: FAIL | `record_verdict` |
 
@@ -1372,7 +1089,7 @@ Jede Grenze ist eine Konstante im Code; keine stellt das Modell selbst ein.
 
 ### 3.7 Die acht Modellaufrufe
 
-Jeder Aufruf hat dieselbe Form: ⚙️ Der Code baut den Auftrag mit nummerierter Eingabe (`12| …`), 🤖 das Modell füllt ein Formular, ⚙️ der Code prüft es und schickt es höchstens mit Grund zurück. Bei Groq erzwingt ein JSON-Schema die Form schon beim Erzeugen (`NativeOutput`), bei Bedrock ein erzwungenes Werkzeug; der Validator ist für beide gleich (`agents_for`).
+Jeder Aufruf hat dieselbe Form: ⚙️ Der Code baut den Auftrag mit nummerierter Eingabe (`12| …`), 🤖 das Modell füllt ein Formular, ⚙️ der Code prüft es und schickt es höchstens mit Grund zurück. Bei Groq erzwingt ein JSON-Schema die Form schon beim Erzeugen (`NativeOutput`), bei Bedrock ein erzwungenes Werkzeug; der Validator ist für beide gleich (`agents_for`). Für Groq ist jedes Feld eines Formulars Pflicht und hat keinen Standardwert; wo ein Wert fehlen darf, ist er `null`, sonst verwirft Groq die Antwort mit HTTP 400.
 
 | # | Aufruf | Phase | 🤖 liefert | unsicher: Art zu versagen (7.1) | Schale: ⚙️ prüft | Retry, dann | gemessen |
 |---|---|---|---|---|---|---|---|
@@ -1514,11 +1231,11 @@ flowchart TB
   CON["⚙️ Verträge und Textwerkzeuge<br/>models.py, condition_models.py, open_world.py, text.py"]:::code
   ADA["⚙️ Anschlüsse<br/>adapters/"]:::code
   M(["🤖 Sprachmodell"]):::llm
-  CLI --> SET & ENG & ADA
+  CLI --> SET & ENG & ADA & CON
   SET --> ENG
   ENG --> CALLS & CHECKS
   CALLS --> CHECKS
-  CALLS & CHECKS & ENG --> CON
+  CALLS & CHECKS & ENG & SET --> CON
   ADA -.->|"baut das Modell"| M
   CALLS -.->|"fragt, über das übergebene Modell"| M
   classDef llm fill:#ffd8a8,stroke:#d9480f,color:#1f1f1f,stroke-width:2px
@@ -1533,7 +1250,7 @@ Der Kern enthält die ganze Prüflogik. Die Anschlüsse bauen das Modell, aber n
 
 - Die Kommandozeile importiert das gemeinsame Modul (Katalog, Rückverfolgung, Fehlertext), den Audit-Ablauf und die Anschlüsse. Das gemeinsame Modul importiert den Audit-Ablauf nur für dessen Fehlertyp.
 - Der Audit-Ablauf importiert Modellaufrufe und Prüfungen. Die Modellaufrufe importieren die Prüfungen, weil jeder Validator ein Gate aufruft; die Prüfungen importieren nie einen Modellaufruf.
-- Modellaufrufe, Prüfungen und Audit-Ablauf importieren die Verträge.
+- Modellaufrufe, Prüfungen, Audit-Ablauf, gemeinsames Modul und Kommandozeile importieren die Verträge.
 - Die Anschlüsse bauen das Modell; die Modellaufrufe fragen es über das Modell, das ihnen übergeben wurde.
 
 | Teil | Aufgabe | wer | Tests (Auswahl) |
@@ -1560,11 +1277,11 @@ flowchart TB
   REP["⚙️ Report-Ansicht<br/>report/"]:::code
   LOOK["⚙️ Gestaltung und Texte<br/>style.py, texts.py"]:::code
   GAL["⚙️ Galerie laden<br/>gallery.py"]:::code
-  KERN["⚙️ Laufzeit-Kern<br/>audit_engine.py, audit_setup.py"]:::code
+  KERN["⚙️ Laufzeit-Kern<br/>audit_engine.py, audit_setup.py, models.py, checks/"]:::code
   GROQ["⚙️ Groq-Anschluss<br/>groq_services.py"]:::code
   ST --> NAV --> SCR
   SCR --> REP & LOOK & GAL & KERN & GROQ
-  REP --> LOOK
+  REP --> LOOK & KERN
   classDef code fill:#a5d8ff,stroke:#1971c2,color:#1f1f1f,stroke-width:2px
 ```
 
@@ -1572,7 +1289,7 @@ Die Oberfläche ist nach Verwendung geordnet: Seiten (`screens/`) benutzen die R
 
 *Elemente.* Jeder Kasten ist ein Modul oder Ordner der Oberfläche; die beiden unteren Kästen gehören zum Laufzeit-Kern und zu den Anschlüssen.
 
-*Verbindungen.* Jeder Pfeil heißt „importiert“. Der Streamlit-Start lädt die Navigation, die Navigation die Seiten. Die Seiten importieren Report-Ansicht, Gestaltung, Galerie, Laufzeit-Kern und Groq-Anschluss; nur die Seite „Audit erstellen“ braucht Kern und Anschluss. Die Report-Ansicht importiert nur die Gestaltung.
+*Verbindungen.* Jeder Pfeil heißt „importiert“. Der Streamlit-Start lädt die Navigation, die Navigation die Seiten. Die Seiten importieren Report-Ansicht, Gestaltung, Galerie, Laufzeit-Kern und Groq-Anschluss; nur die Seite „Audit erstellen“ braucht den Anschluss. Die Report-Ansicht importiert die Gestaltung und aus dem Kern nur Verträge, reine Prüfungen und das gemeinsame Modul, etwa um die Bedingungen zu lesen; nie den Audit-Ablauf oder einen Anschluss.
 
 | Teil | Aufgabe | wer | Tests (Auswahl) |
 |---|---|---|---|
@@ -1753,7 +1470,7 @@ sequenceDiagram
     actor B as Projektbetreiber
   end
   box rgb(231,245,255) ⚙️ Code, deterministisch
-    participant K as Build-Einstieg (python -m kb_build)
+    participant K as Build-Einstieg mit Extrahieren (kb_build)
     participant F as Quellen laden (source_fetch.py)
     participant D as Zerlegen (decompose/)
     participant S as Auswählen (select/)
@@ -1767,8 +1484,10 @@ sequenceDiagram
   end
   B->>+K: extract
   K->>+F: fetch_to_cache
-  F->>+N: HTTPS GET, gepinnte URL
-  N-->>-F: Normtext
+  opt Datei nicht im lokalen Cache
+    F->>+N: HTTPS GET, gepinnte URL
+    N-->>-F: Normtext
+  end
   F->>F: SHA-256 prüfen
   F-->>-K: Normtext aus dem Cache
   K->>K: Anforderungen extrahieren, Vorfilter
@@ -1784,12 +1503,13 @@ sequenceDiagram
   K-->>-B: Anforderungen je Pflicht
   B->>+K: select
   K->>+S: select_all
+  S->>S: check_pinned, zuerst
   loop je Anforderung, die den Vorfilter bestanden hat
     S->>+M: prüfbar, Ebene, Typen?
     M-->>-S: Classification
     S->>S: Prüfumfang und Ebene anwenden
   end
-  S->>S: check_pinned, check_coverage
+  S->>S: check_coverage
   S-->>-K: Auswahl
   K-->>-B: Auswahl und Auswahlprotokoll
   B->>+K: rules
@@ -1811,9 +1531,9 @@ sequenceDiagram
 
 *Abfolge.* Der Projektbetreiber startet vier Befehle nacheinander; jeder endet mit einer Antwort an ihn.
 
-1. „extract“: Der Einstieg lässt jede Quelle laden. Der Download holt die Datei über HTTPS von der gepinnten Adresse, vergleicht die Prüfsumme und gibt den Text aus dem lokalen Cache zurück. Der Einstieg extrahiert die Anforderungen mit dem Leser der Quelle, wendet den Vorfilter an und meldet die Anforderungen je Quelle.
+1. „extract“: Der Einstieg lässt jede Quelle laden. Liegt die Datei noch nicht im lokalen Cache, holt der Download sie über HTTPS von der gepinnten Adresse. In beiden Fällen vergleicht er die Prüfsumme und gibt den Text aus dem Cache zurück. Der Einstieg extrahiert die Anforderungen mit dem Leser der Quelle, wendet den Vorfilter an und meldet die Anforderungen je Quelle.
 2. „decompose“: Der Einstieg ruft das Zerlegen auf. Für jeden Artikel der DSGVO und der KI-VO fragt es 🤖 das Modell nach Gruppen von Abschnitten, und ⚙️ der Code prüft die Antwort; bei einem Problem geht sie mit Grund zurück. Das Zerlegen gibt das Protokoll an den Einstieg, der Einstieg meldet die Anforderungen je Pflicht.
-3. „select“: Der Einstieg ruft das Auswählen auf. Für jede Anforderung, die den Vorfilter bestanden hat, fragt es 🤖 das Modell, ob sie prüfbar ist, auf welcher Ebene sie liegt und an welchen Typen sie sich zeigt. ⚙️ Der Code wendet Prüfumfang und Ebene an. Am Ende prüfen zwei Gates Pflichtanker und Abdeckung. Die Auswahl geht an den Einstieg, der dem Betreiber Auswahl und Protokoll meldet.
+3. „select“: Der Einstieg ruft das Auswählen auf. Zuerst entscheidet es die Pflichtanker der Musterfälle und prüft sie (`check_pinned`), damit ein fehlender Anker abbricht, bevor die übrigen Aufrufe Geld kosten. Dann fragt es für jede Anforderung, die den Vorfilter bestanden hat, 🤖 das Modell, ob sie prüfbar ist, auf welcher Ebene sie liegt und an welchen Typen sie sich zeigt. ⚙️ Der Code wendet Prüfumfang und Ebene an. Am Ende prüft ein Gate die Abdeckung der Referenzarchitekturen. Die Auswahl geht an den Einstieg, der dem Betreiber Auswahl und Protokoll meldet.
 4. „rules“: Der Einstieg ruft das Formulieren auf. Für jede ausgewählte Anforderung schreibt 🤖 das Modell einen Entwurf, und ⚙️ der Code prüft Zitat und Querverweise. Nur beim Spec-Katalog fragt der Code danach 🤖 den Verstoß-Prüfer des Builds, ob das Verstoßkriterium ein Fehlen beschreibt. Zum Schluss prüft der Code den ganzen Katalog und gibt ihn zurück.
 5. Der Projektbetreiber liest den Git-Diff und committet; erst damit gilt der neue Katalog.
 
@@ -1823,7 +1543,7 @@ Ergebnis: ein neuer Katalog mit neuem Hash, den ein Mensch im Git-Diff gelesen h
 
 ### 6.2 S2 Spezifikation prüfen
 
-Die prüfende Person gibt den Musterfall „Meldeportal Gesundheit“ und das Passwort ein. Der Ablauf folgt dem Aktivitätsdiagramm in 2.3.
+Die prüfende Person gibt den Musterfall „Meldeportal Gesundheit“ und das Passwort ein. Der Ablauf folgt dem Aktivitätsdiagramm in 3.3.
 
 ```mermaid
 sequenceDiagram
@@ -1831,7 +1551,7 @@ sequenceDiagram
     actor P as Prüfende Person
   end
   box rgb(231,245,255) ⚙️ Code, deterministisch
-    participant UI as Oberfläche (create_page.py)
+    participant UI as Oberfläche (screens/)
     participant AE as Audit-Ablauf (run_audit)
     participant MC as Modellaufrufe (calls/)
     participant CH as Prüfungen (checks/)
@@ -1900,7 +1620,7 @@ sequenceDiagram
     actor P as Prüfende Person
   end
   box rgb(231,245,255) ⚙️ Code, deterministisch
-    participant UI as Oberfläche (create_page.py)
+    participant UI as Oberfläche (screens/)
     participant AE as Audit-Ablauf (run_audit)
     participant MC as Modellaufrufe (calls/)
     participant CH as Prüfungen (checks/)
@@ -1948,11 +1668,11 @@ Ergebnis: 175 Befunde; Prüfregeln für Typen, die nicht im Template stehen, sin
 
 ### 6.4 Fehlerfälle
 
-Fünf Fehlerfälle zeigen je eine Stelle, an der etwas schiefgeht, und was der Code daraus macht. Drei davon (F3, F5, F7) handeln davon, dass 🤖 das Modell irrt; F8 davon, dass es nicht antwortet; F1 betrifft den Build. Die Varianten F2, F4 und F6 brauchen kein eigenes Diagramm und stehen in 5.5.
+Fünf Fehlerfälle zeigen je eine Stelle, an der etwas schiefgeht, und was der Code daraus macht. Drei davon (F3, F5, F7) handeln davon, dass 🤖 das Modell irrt; F8 davon, dass es nicht antwortet; F1 betrifft den Build. Die Varianten F2, F4 und F6 brauchen kein eigenes Diagramm und stehen in 6.5.
 
 #### F1 Die Prüfsumme einer Quelle weicht ab
 
-Ein Herausgeber hat seine Datei geändert, etwa eine neue Fassung von Grundschutz++ veröffentlicht.
+Ein Herausgeber hat die Datei hinter einer Adresse geändert, etwa eine konsolidierte Fassung der DSGVO bei EUR-Lex. Der lokale Cache ist leer, etwa auf einem neuen Rechner; nur dann lädt der Build neu und sieht die Änderung. Bei Grundschutz++ und Prowler zeigt die Adresse auf einen festen Commit, dort ändert sich die Datei nicht.
 
 ```mermaid
 sequenceDiagram
@@ -1960,7 +1680,7 @@ sequenceDiagram
     actor B as Projektbetreiber
   end
   box rgb(231,245,255) ⚙️ Code, deterministisch
-    participant K as Build-Einstieg (python -m kb_build)
+    participant K as Build-Einstieg mit Extrahieren (kb_build)
     participant F as Quellen laden (source_fetch.py)
   end
   box rgb(255,255,255) Extern
@@ -1968,20 +1688,21 @@ sequenceDiagram
   end
   B->>+K: extract
   K->>+F: fetch_to_cache
+  Note over F: Datei nicht im lokalen Cache
   F->>+N: HTTPS GET, gepinnte URL
   N-->>-F: geänderte Datei
   F->>F: SHA-256 prüfen
   F-->>-K: SourceHashMismatchError
-  K-->>-B: Abbruch, alter Stand bleibt
+  K-->>-B: Abbruch, Auszug dieser Quelle bleibt alt
   B->>B: neue Fassung lesen, Hash eintragen, neu bauen
 ```
 
 *Abfolge.*
 
 1. Der Projektbetreiber startet „extract“; der Einstieg lässt die Quelle laden.
-2. Der Download holt die Datei von der gepinnten Adresse. Der Herausgeber liefert eine geänderte Fassung.
+2. Die Datei liegt nicht im Cache, also holt der Download sie von der gepinnten Adresse. Der Herausgeber liefert eine geänderte Fassung.
 3. ⚙️ Der Vergleich der Prüfsumme schlägt fehl, und der Download meldet den Fehler an den Einstieg.
-4. Der Einstieg bricht ab, bevor eine Datei geschrieben ist, und meldet das dem Betreiber.
+4. Der Einstieg bricht ab, bevor der Auszug dieser Quelle geschrieben ist; Quellen, die vorher an der Reihe waren, sind schon neu geschrieben. Er meldet den Fehler dem Betreiber.
 5. Der Betreiber entscheidet von Hand, ob er die neue Fassung übernimmt.
 
 Ergebnis: Der Build bricht ab, bevor ein Modell die neue Fassung sieht; der alte Katalog bleibt gültig. Ein Mensch entscheidet, ob die neue Fassung übernommen wird, und trägt ihren Hash in `data/input/sources.json` ein. *Sichten:* logisch Quelle (2.3); Prozess Build als Batch (3.2); Entwicklung `source_fetch.py` als einziger HTTP-Zugang (4.2); physisch Normherausgeber und Rechner (5.2).
@@ -1996,7 +1717,7 @@ sequenceDiagram
     actor P as Prüfende Person
   end
   box rgb(231,245,255) ⚙️ Code, deterministisch
-    participant UI as Oberfläche (create_page.py)
+    participant UI as Oberfläche (screens/)
     participant AE as Audit-Ablauf (run_audit)
     participant MC as Modellaufrufe (calls/)
     participant CH as Prüfungen (checks/)
@@ -2031,7 +1752,7 @@ sequenceDiagram
 5. Der Modellaufruf gibt auf und meldet das dem Audit-Ablauf. Der Audit-Ablauf endet fail closed mit einem Fehler, der die Gründe je Prüfregel enthält.
 6. Die Oberfläche zeigt den Fehlertext statt eines Reports.
 
-Ergebnis: kein Report statt eines falschen. Der Fehlertext nennt die Gründe je Prüfregel, dieselben, die das Modell im Retry gelesen hat. In 19 Läufen der Messkampagne endete kein Audit so; der eine Abbruch war ein HTTP 400 von Groq, gegen den es keinen Retry gibt (QS-2). *Sichten:* logisch Korrekturen (2.4); Prozess Lebenslauf eines Befunds (3.5); Entwicklung `checks/audit_gates.py` und `calls/model_call.py` (4.3); physisch Groq (5.2).
+Ergebnis: kein Report statt eines falschen. Der Fehlertext nennt je Prüfregel die Probleme des letzten Versuchs. In 19 Läufen der Messkampagne endete kein Audit so; der eine Abbruch war ein HTTP 400 von Groq, gegen den es keinen Retry gibt (QS-2). *Sichten:* logisch Korrekturen (2.4); Prozess Lebenslauf eines Befunds (3.5); Entwicklung `checks/audit_gates.py` und `calls/model_call.py` (4.3); physisch Groq (5.2).
 
 #### F5 Der Verstoß-Prüfer stuft ein FAIL herab
 
@@ -2077,7 +1798,7 @@ sequenceDiagram
     actor P as Prüfende Person
   end
   box rgb(231,245,255) ⚙️ Code, deterministisch
-    participant UI as Oberfläche (create_page.py)
+    participant UI as Oberfläche (screens/)
     participant AE as Audit-Ablauf (run_audit)
     participant MC as Modellaufrufe (calls/)
     participant CH as Prüfungen (checks/)
@@ -2091,9 +1812,9 @@ sequenceDiagram
   AE->>+MC: resource_inventory
   MC->>+M: Ressourcentypen der Liste mit Zeilen nennen
   M-->>-MC: InventoryResponse mit einem Typ außerhalb der Liste
-  MC->>+CH: range_problem
-  CH-->>-MC: Zeilen gültig
   MC->>MC: Typ steht nicht in der Liste
+  MC->>+CH: range_problem für die übrigen Typen
+  CH-->>-MC: Zeilen gültig
   MC->>+M: send_back, Retry mit dem Grund
   M-->>-MC: InventoryResponse, gültig
   MC-->>-AE: Inventory, dazu IAM, KMS und Logs
@@ -2110,7 +1831,7 @@ sequenceDiagram
 
 1. Die prüfende Person gibt eine Architektur als YAML ein. ⚙️ Der Audit-Ablauf erkennt, dass er YAML nicht selbst liest; die Welt ist offen.
 2. Er ruft die Inventur auf. 🤖 Das Modell nennt Typen mit Zeilen, darunter einen Typ, der in keiner Prüfregel vorkommt.
-3. ⚙️ Die Zeilen sind gültig, aber der Typ steht nicht in der Liste; der Modellaufruf schickt die Antwort mit diesem Grund zurück.
+3. ⚙️ Der Modellaufruf prüft zuerst jeden Typ gegen die Liste, dann die Zeilen der übrigen Typen. Ein Typ steht nicht in der Liste; die Antwort geht mit diesem Grund zurück.
 4. 🤖 Die zweite Antwort ist gültig. Das Inventar geht an den Audit-Ablauf; IAM, KMS und Logs gelten immer als vorhanden.
 5. Der Audit-Ablauf setzt Prüfregeln nicht erkannter Dienste auf N/A und startet die Pakete mit der Regel für die offene Welt.
 6. Jedes FAIL geht an den Verstoß-Prüfer; danach geht der Report über die Oberfläche an die prüfende Person.
@@ -2127,16 +1848,16 @@ sequenceDiagram
     actor P as Prüfende Person
   end
   box rgb(231,245,255) ⚙️ Code, deterministisch
-    participant UI as Oberfläche (create_page.py)
+    participant UI as Oberfläche (screens/)
     participant AE as Audit-Ablauf (run_audit)
-    participant AN as Anschluss (groq_services.py)
+    participant AN as Groq-SDK, gebaut in groq_services.py
   end
   box rgb(255,244,230) 🤖 Sprachmodell, probabilistisch
     participant M as Groq
   end
   P->>+UI: Audit starten
   UI->>+AE: run_audit
-  AE->>+AN: Anfrage eines Pakets, über die Modellaufrufe
+  AE->>+AN: Paket, über Modellaufrufe und Pydantic AI
   AN->>+M: HTTPS
   M-->>-AN: HTTP 429 oder 5xx
   loop bis zu 6-mal mit wachsender Wartezeit
@@ -2151,9 +1872,9 @@ sequenceDiagram
 
 *Abfolge.*
 
-1. Die prüfende Person startet ein Audit; ein Paket geht über den Groq-Anschluss hinaus.
+1. Die prüfende Person startet ein Audit. Ein Paket geht über die Modellaufrufe und Pydantic AI an das Groq-SDK; das Bild lässt die Zwischenschritte weg.
 2. Groq antwortet mit Drosselung (HTTP 429) oder einem Serverfehler.
-3. Das Groq-SDK im Anschluss wiederholt die Anfrage bis zu sechsmal mit wachsender Wartezeit; das Modell erfährt davon nichts.
+3. Das Groq-SDK, das der Anschluss mit sechs Wiederholungen gebaut hat, wiederholt die Anfrage bis zu sechsmal mit wachsender Wartezeit; das Modell erfährt davon nichts.
 4. Bleibt der Fehler, meldet der Anschluss ihn an den Audit-Ablauf. Der Audit-Ablauf endet fail closed.
 5. Die Oberfläche zeigt einen einfachen Satz statt des Fehlertexts der Bibliothek.
 
@@ -2266,7 +1987,7 @@ Die Schale besteht aus sechs Mustern; die Kürzel M1 bis M6 im Bild verweisen au
 | `RuleDraft` | `Rule` (erbt) | Kennung, Audit-Art, Quelle, Primäranker, Auswahlgrund, Ressourcentypen; bei zerlegten Rechtsakten das Zitat |
 | `ConditionDraft` | `ConditionResult` | den Wert `yes`, `no` oder `unstated`, Widerspruch, Ableitung aus einer anderen Bedingung |
 
-Die übrigen Paare, etwa für Zerlegung, Einstufung und Inventar, zeigen die Klassendiagramme in 2.3 bis 1.5. Das Modell kann darum keinen Anker, keine Kennung und keinen Beleg erfinden. Was es noch falsch machen kann, ist klein und benannt: Status, Zeilen, Begründung.
+Die übrigen Paare, etwa für Zerlegung, Einstufung und Inventar, zeigen die Klassendiagramme in 2.3 bis 2.5. Das Modell kann darum keinen Anker, keine Kennung und keinen Beleg erfinden. Was es noch falsch machen kann, ist klein und benannt: Status, Zeilen, Begründung.
 
 #### Muster 2: Vertrag statt Vertrauen
 
@@ -2285,11 +2006,11 @@ Die naheliegende Alternative wäre RAG. RAG (Retrieval-Augmented Generation) hol
 | Leerlauf | die Vektor-Datenbank läuft weiter | 0 €, eine JSON-Datei |
 | Nachvollziehbarkeit | Auswahl je Anfrage verschieden | Auswahlprotokoll im Git |
 
-Dazu gehört Leitprinzip 2: Was der Code wissen kann, fragt er nicht. Das Inventar eines Templates liest der Code selbst, ohne Modell. Bei Bedingungen und bei Architekturen in Freitext urteilt dagegen das Modell; es nennt aber nur Zeilen und Typen, und der Code wendet darauf eine feste Regel an, etwa „nur ein ausdrückliches Nein macht N/A“. Dieser Weg kann irren; die Grenze steht in 6.4.
+Dazu gehört Leitprinzip 2: Was der Code wissen kann, fragt er nicht. Das Inventar eines Templates liest der Code selbst, ohne Modell. Bei Bedingungen und bei Architekturen in Freitext urteilt dagegen das Modell; es nennt aber nur Zeilen und Typen, und der Code wendet darauf eine feste Regel an, etwa „nur ein ausdrückliches Nein macht N/A“. Dieser Weg kann irren; die Grenze steht in 7.4.
 
 #### Muster 4: Referenz statt Kopie
 
-*Problem:* Ein Zitat, das das Modell abschreibt, kann umformuliert oder erfunden sein, und man sieht es ihm nicht an. *Muster:* Statt Daten zu kopieren, verweist man auf sie, wie ein Fremdschlüssel in einer Datenbank. Die Eingabe geht nummeriert ans Modell (`12| …`); das Modell nennt nur Anfang und Ende eines Zeilenbereichs, und der Code schneidet den Beleg aus der Eingabe. Der Beleg ist damit per Konstruktion wörtlich. Der Code prüft dazu, dass die Zeilen existieren, höchstens 200 Zeilen umfassen und mindestens 15 Zeichen enthalten (`range_problem`). 200 Zeilen sind etwa ein Abschnitt einer Spezifikation; 40 Zeilen waren im Prototyp zu knapp (#26). 15 Zeichen schließen Belege wie „S3“ aus, die nichts belegen. Die obere Grenze ist großzügig, und ein langer Beleg ist unscharf; auch das gehört zur Grenze in 6.4. Im Build gilt dasselbe Muster für Normtexte: Das Gate prüft, dass ein Zitat wörtlich in genau der verankerten Anforderung steht (`is_quoted`), und bei zerlegten Rechtsakten setzt der Code das Zitat selbst.
+*Problem:* Ein Zitat, das das Modell abschreibt, kann umformuliert oder erfunden sein, und man sieht es ihm nicht an. *Muster:* Statt Daten zu kopieren, verweist man auf sie, wie ein Fremdschlüssel in einer Datenbank. Die Eingabe geht nummeriert ans Modell (`12| …`); das Modell nennt nur Anfang und Ende eines Zeilenbereichs, und der Code schneidet den Beleg aus der Eingabe. Der Beleg ist damit per Konstruktion wörtlich. Der Code prüft dazu, dass die Zeilen existieren, höchstens 200 Zeilen umfassen und mindestens 15 Zeichen enthalten (`range_problem`). 200 Zeilen sind etwa ein Abschnitt einer Spezifikation; 40 Zeilen waren im Prototyp zu knapp (#26). 15 Zeichen schließen Belege wie „S3“ aus, die nichts belegen. Die obere Grenze ist großzügig, und ein langer Beleg ist unscharf; auch das gehört zur Grenze in 7.4. Im Build gilt dasselbe Muster für Normtexte: Das Gate prüft, dass ein Zitat wörtlich in genau der verankerten Anforderung steht (`is_quoted`), und bei zerlegten Rechtsakten setzt der Code das Zitat selbst.
 
 Die Grenze dieses Musters: Der Code prüft, dass die Zeile existiert, nicht, dass sie das Urteil trägt (7.4).
 
@@ -2400,7 +2121,9 @@ flowchart TB
     NH["Normherausgeber"]:::ext
   end
   subgraph Z2["Grenze 2 · Rechner des Projektbetreibers"]
+    direction LR
     P4(("⚙️ 3 Build")):::code
+    P5(("⚙️ 4 Kommandozeile<br/>Audits der Musterfälle")):::code
   end
   subgraph Z3["Grenze 3 · GitHub"]
     direction LR
@@ -2419,6 +2142,8 @@ flowchart TB
   U <-->|"① Eingabe, Passwort<br/>② Report"| P1
   NH -->|"⑤ Normtext"| P4
   P4 -->|"⑦ Commit"| S2
+  P5 -->|"⑪ Commit der Reports"| S3
+  P5 <-->|"⑩ Prompt mit Eingabe<br/>und Antwort"| LLM
   P4 -->|"⑥ nur öffentliche Normtexte"| LLM
   S2 -->|"⑧ Prüfregeln"| P2
   S3 -->|"⑨ Reports der Musterfälle"| P1
@@ -2439,9 +2164,9 @@ flowchart TB
 
 Ein Datenflussdiagramm (DFD) zeigt, welche Daten zwischen Prozessen, Speichern und externen Stellen fließen. Eine Vertrauensgrenze ist eine Linie, an der Daten von jemandem kommen, dem man nicht voll vertraut; sie ist rot gestrichelt.
 
-*Elemente.* Die fünf Grenzen liegen als Schichten untereinander, in der Richtung, in der die Daten fließen: oben das Internet mit der prüfenden Person und den Normherausgebern, darunter der Rechner des Projektbetreibers mit dem Build, dann GitHub mit Wissensbasis und Galerie, dann Streamlit Community Cloud mit Oberfläche, Audit-Ablauf und Secrets, ganz unten Groq mit 🤖 dem Modell. Kreise sind Prozesse, Zylinder Speicher, Kästen externe Stellen.
+*Elemente.* Die fünf Grenzen liegen als Schichten untereinander, in der Richtung, in der die Daten fließen: oben das Internet mit der prüfenden Person und den Normherausgebern, darunter der Rechner des Projektbetreibers mit Build und Kommandozeile, dann GitHub mit Wissensbasis und Galerie, dann Streamlit Community Cloud mit Oberfläche, Audit-Ablauf und Secrets, ganz unten Groq mit 🤖 dem Modell. Kreise sind Prozesse, Zylinder Speicher, Kästen externe Stellen.
 
-*Verbindungen.* Jeder Pfeil ist ein Datenfluss über eine Grenze, nummeriert von ① bis ⑨; ein Doppelpfeil trägt Hin- und Rückfluss derselben Verbindung. Die Linien ohne Pfeil innerhalb von Grenze 4 sind keine Flüsse über eine Grenze: Die Oberfläche liest die Secrets und ruft den Audit-Ablauf im selben Prozess auf. Die Tabelle nennt Inhalt und Schutz jedes Flusses.
+*Verbindungen.* Jeder Pfeil ist ein Datenfluss über eine Grenze, nummeriert von ① bis ⑪; ein Doppelpfeil trägt Hin- und Rückfluss derselben Verbindung. Die Linien ohne Pfeil innerhalb von Grenze 4 sind keine Flüsse über eine Grenze: Die Oberfläche liest die Secrets und ruft den Audit-Ablauf im selben Prozess auf. Die Tabelle nennt Inhalt und Schutz jedes Flusses.
 
 | Fluss | Von → nach | Inhalt | Schutz |
 |---|---|---|---|
@@ -2454,6 +2179,8 @@ Ein Datenflussdiagramm (DFD) zeigt, welche Daten zwischen Prozessen, Speichern u
 | ⑦ | Build → GitHub | Commit des Katalogs | ein Mensch liest den Diff; Branch-Schutz gegen Force-Push |
 | ⑧ | GitHub → Audit-Ablauf | Prüfregeln | mit dem Code ausgeliefert; Katalog-Hash im Report |
 | ⑨ | GitHub → Oberfläche | Reports der Musterfälle | nur fiktive Eingaben; Texte maskiert |
+| ⑩ | Kommandozeile ↔ Groq | Prompt mit ganzer Eingabe und Antwort, bei Audits über die Kommandozeile; so entstehen die Reports der Galerie | wie ③ und ④; mit der Option für Bedrock ginge der Fluss stattdessen in die EU (8.3) |
+| ⑪ | Kommandozeile → GitHub | Reports der Musterfälle per Commit | ein Mensch liest den Diff; nur fiktive Eingaben |
 
 Die Secrets (Passwort, Groq-Schlüssel) liegen in den Einstellungen der Plattform und verlassen die Grenze 4 nicht; kein Endnutzer erreicht das Modell direkt.
 
@@ -2472,7 +2199,7 @@ STRIDE ist ein Merkwort für sechs Bedrohungsarten: Spoofing (falsche Identität
 | ID | Fluss | STRIDE | Bedrohung | Maßnahme im Demo-Stand | Status |
 |---|---|---|---|---|---|
 | T1 | ① | S | Fremde starten Audits auf eigene Kosten | ein gemeinsames Passwort (`APP_PASSWORD`), in gleicher Zeit verglichen; fehlt es in den Secrets, startet kein Audit; keine Rotation, keine Sperre, kein Protokoll, wer startet | teilweise |
-| T3 | ③ | I | Echte Personendaten gehen über US-Hosting zu Groq | Hinweis „Keine echten oder personenbezogenen Daten“ in der Oberfläche (`DATA_RULE`); GovGuard speichert nichts (8.3) | akzeptiert |
+| T3 | ③ ⑩ | I | Echte Personendaten gehen über US-Hosting zu Groq | Hinweis „Keine echten oder personenbezogenen Daten“ in der Oberfläche (`DATA_RULE`); GovGuard speichert nichts (8.3) | akzeptiert |
 | T4 | ③ ④ | T | Anweisungen in der Eingabe (Prompt Injection) | Formular mit festen Werten, keine Werkzeuge, PASS braucht Beleg (7.2) | teilweise, nicht gemessen |
 | T5 | ④ | T | Antwort falsch, unvollständig oder erfunden | Schema, ein Befund je Prüfregel, Zeilenbereich, Retry, fail closed (7.2) | teilweise: Form, Vollständigkeit und Beleg gefangen, ein falsches PASS nicht (7.4) |
 | T6 | ② ⑨ | T | Text des Modells schleust HTML ein | jeder dynamische Text maskiert (`html.escape` in `style.py`) | umgesetzt |
@@ -2631,22 +2358,22 @@ GovGuard prüft andere nach Grundschutz, ist aber selbst nicht danach bewertet. 
 
 *Leitfrage: Wo stehen die Normen, Standards und Methoden, auf die sich dieses Dokument stützt?*
 
-Die Tabellen nennen jede äußere Quelle mit Herausgeber und Link, geordnet nach ihrer Rolle: was GovGuard prüft, woran GovGuard selbst gemessen wird, nach welcher Methode dieses Dokument gebaut ist und welche Technik es beschreibt. Die genauen Fassungen der Normtexte, die der Build lädt, stehen mit Adresse und Prüfsumme in `data/input/sources.json`.
+Die Tabellen nennen jede äußere Quelle mit Herausgeber und Link, geordnet nach ihrer Rolle: was GovGuard prüft, woran GovGuard selbst gemessen wird, nach welcher Methode dieses Dokument gebaut ist und welche Technik es beschreibt. „FW“ in der letzten Spalte steht für [FUNKTIONSWEISE.md](FUNKTIONSWEISE.md). Die genauen Fassungen der Normtexte, die der Build lädt, stehen mit Adresse und Prüfsumme in `data/input/sources.json`.
 
 ### 10.1 Normen, gegen die GovGuard prüft
 
-Diese Quellen ergeben die Prüfregeln der beiden Kataloge (1.3).
+Diese Quellen ergeben die Prüfregeln der beiden Kataloge ([FUNKTIONSWEISE](FUNKTIONSWEISE.md), Kapitel 2).
 
 | Kurzname | Titel | Herausgeber | Link | im Dokument |
 |---|---|---|---|---|
-| DSGVO | Verordnung (EU) 2016/679, Datenschutz-Grundverordnung | EU, über EUR-Lex | [eur-lex.europa.eu/eli/reg/2016/679/oj](https://eur-lex.europa.eu/eli/reg/2016/679/oj) | 1.3, 1.4 |
-| KI-VO | Verordnung (EU) 2024/1689, KI-Verordnung | EU, über EUR-Lex | [eur-lex.europa.eu/eli/reg/2024/1689/oj](https://eur-lex.europa.eu/eli/reg/2024/1689/oj) | 1.3, 1.4 |
-| SDM | Standard-Datenschutzmodell, Bausteine Löschen, Trennen, Zugriffe regeln | Datenschutzkonferenz | [datenschutz-mv.de/datenschutz/datenschutzmodell](https://www.datenschutz-mv.de/datenschutz/datenschutzmodell/) | 1.3 |
-| BSI Grundschutz++ | Stand-der-Technik-Bibliothek, maschinenlesbarer IT-Grundschutz als OSCAL | BSI | [github.com/BSI-Bund/Stand-der-Technik-Bibliothek](https://github.com/BSI-Bund/Stand-der-Technik-Bibliothek) | 1.3, 1.5 |
-| BSI C5 | Cloud Computing Compliance Criteria Catalogue | BSI | [bsi.bund.de: Kriterienkatalog C5](https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/kriterienkatalog-c5_node.html) | 1.3, 9.4 |
-| CIS AWS | CIS Amazon Web Services Foundations Benchmark | Center for Internet Security | [cisecurity.org/benchmark/amazon_web_services](https://www.cisecurity.org/benchmark/amazon_web_services) | 1.3 |
-| AWS FSBP | AWS Foundational Security Best Practices | Amazon Web Services | [docs.aws.amazon.com: FSBP-Standard](https://docs.aws.amazon.com/securityhub/latest/userguide/fsbp-standard.html) | 1.3 |
-| Prowler | Open-Source-Prüfwerkzeug, liefert CIS, C5 und FSBP als JSON | Prowler | [github.com/prowler-cloud/prowler](https://github.com/prowler-cloud/prowler) | 0.1, 1.3 |
+| DSGVO | Verordnung (EU) 2016/679, Datenschutz-Grundverordnung | EU, über EUR-Lex | [eur-lex.europa.eu/eli/reg/2016/679/oj](https://eur-lex.europa.eu/eli/reg/2016/679/oj) | FW 2, 3 |
+| KI-VO | Verordnung (EU) 2024/1689, KI-Verordnung | EU, über EUR-Lex | [eur-lex.europa.eu/eli/reg/2024/1689/oj](https://eur-lex.europa.eu/eli/reg/2024/1689/oj) | FW 2, 3 |
+| SDM | Standard-Datenschutzmodell, Bausteine Löschen, Trennen, Zugriffe regeln | Datenschutzkonferenz | [datenschutz-mv.de/datenschutz/datenschutzmodell](https://www.datenschutz-mv.de/datenschutz/datenschutzmodell/) | FW 2, 3 |
+| BSI Grundschutz++ | Stand-der-Technik-Bibliothek, maschinenlesbarer IT-Grundschutz als OSCAL | BSI | [github.com/BSI-Bund/Stand-der-Technik-Bibliothek](https://github.com/BSI-Bund/Stand-der-Technik-Bibliothek) | FW 2, 4 |
+| BSI C5 | Cloud Computing Compliance Criteria Catalogue | BSI | [bsi.bund.de: Kriterienkatalog C5](https://www.bsi.bund.de/DE/Themen/Unternehmen-und-Organisationen/Informationen-und-Empfehlungen/Empfehlungen-nach-Angriffszielen/Cloud-Computing/Kriterienkatalog-C5/kriterienkatalog-c5_node.html) | FW 2; 9.4 |
+| CIS AWS | CIS Amazon Web Services Foundations Benchmark | Center for Internet Security | [cisecurity.org/benchmark/amazon_web_services](https://www.cisecurity.org/benchmark/amazon_web_services) | FW 2 |
+| AWS FSBP | AWS Foundational Security Best Practices | Amazon Web Services | [docs.aws.amazon.com: FSBP-Standard](https://docs.aws.amazon.com/securityhub/latest/userguide/fsbp-standard.html) | FW 2 |
+| Prowler | Open-Source-Prüfwerkzeug, liefert CIS, C5 und FSBP als JSON | Prowler | [github.com/prowler-cloud/prowler](https://github.com/prowler-cloud/prowler) | 0.1; FW 2 |
 
 ### 10.2 Standards, an denen GovGuard selbst gemessen wird
 
@@ -2670,9 +2397,7 @@ Diese Quellen tragen den Aufbau dieses Dokuments und die Muster in Kapitel 7.
 | Kurzname | Titel | Autor, Jahr | Link | im Dokument |
 |---|---|---|---|---|
 | 4+1 | Architectural Blueprints – The „4+1“ View Model of Software Architecture, IEEE Software 12 (6) | Philippe Kruchten, 1995 | [doi.org/10.1109/52.469759](https://doi.org/10.1109/52.469759) | 0.2, alle Sichten |
-| RUP | The Rational Unified Process: An Introduction (mit der Vorlage für das Architekturdokument) | Philippe Kruchten, Addison-Wesley, 3. Auflage 2003 | – | 1 |
-| arc42 | Vorlage für Architekturdokumentation, Kapitel „Querschnittliche Konzepte“ | Gernot Starke, Peter Hruschka | [arc42.org/overview](https://arc42.org/overview) | 1 |
-| Viewpoints | Software Systems Architecture, 2. Auflage (Kontext- und Funktionssicht) | Nick Rozanski, Eoin Woods, 2011 | [viewpoints-and-perspectives.info](https://www.viewpoints-and-perspectives.info/) | 1 |
+| RUP | The Rational Unified Process: An Introduction (mit der Vorlage für das Architekturdokument) | Philippe Kruchten, Addison-Wesley, 3. Auflage 2003 | – | 1; FW (Einleitung) |
 | Design by Contract | Object-Oriented Software Construction, 2. Auflage | Bertrand Meyer, 1997 | – | 7.2 (Muster 2) |
 | Content Enricher | Enterprise Integration Patterns | Gregor Hohpe, Bobby Woolf, 2003 | [enterpriseintegrationpatterns.com: Content Enricher](https://www.enterpriseintegrationpatterns.com/patterns/messaging/DataEnricher.html) | 7.2 (Muster 1) |
 
@@ -2682,7 +2407,7 @@ Diese Quellen beschreiben Formate, Bibliotheken und Dienste, die GovGuard nutzt.
 
 | Kurzname | Titel | Link | im Dokument |
 |---|---|---|---|
-| CloudFormation | Referenz der Ressourcentypen | [docs.aws.amazon.com: Resource type reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) | 1.5 |
+| CloudFormation | Referenz der Ressourcentypen | [docs.aws.amazon.com: Resource type reference](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-template-resource-type-ref.html) | FW 4 |
 | OSCAL | Open Security Controls Assessment Language des NIST | [pages.nist.gov/OSCAL](https://pages.nist.gov/OSCAL/) | 4.2 |
 | Formex | XML-Format des Amtsblatts der EU | [op.europa.eu: Formex](https://op.europa.eu/en/web/eu-vocabularies/formex) | 4.2 |
 | Pydantic AI | Bibliothek für Antwortformular, Validator und Retry | [ai.pydantic.dev](https://ai.pydantic.dev/) | 3.7, 4.3 |

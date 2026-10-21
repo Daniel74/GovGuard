@@ -1,4 +1,5 @@
-"""docs/ARCHITECTURE.md must not drift from the code: shown paths, classes, names, tests exist."""
+"""ARCHITECTURE.md and FUNKTIONSWEISE.md must not drift from the code: shown paths, classes,
+names and tests exist."""
 
 import ast
 import re
@@ -7,6 +8,8 @@ from pathlib import Path
 ROOT = Path(__file__).parent.parent
 SRC = ROOT / "src"
 ARCHITECTURE = (ROOT / "docs" / "ARCHITECTURE.md").read_text(encoding="utf-8")
+FUNKTIONSWEISE = (ROOT / "docs" / "FUNKTIONSWEISE.md").read_text(encoding="utf-8")
+DOCS = ARCHITECTURE + "\n" + FUNKTIONSWEISE  # every check below covers both
 MERMAID = re.compile(r"```mermaid\n(.*?)```", re.DOTALL)
 FILE_OR_DIR = re.compile(r"(?<![\w/.-])(?:[\w-]+/)*\w+\.py|(?<![\w/.-])(?:\w+/)+(?![\w])")
 SNAKE_OR_CAMEL = re.compile(r"(?<![\w/])(?:[a-z]+(?:_[a-z]+)+|[A-Z][a-z]+(?:[A-Z][a-z]+)+)\b(?!\.)")
@@ -17,7 +20,7 @@ def diagram_labels() -> list[str]:
     """Quoted label texts of all diagrams, `<br/>` as a space; in sequence diagrams also the
     message texts and the participant names."""
     labels = []
-    for block in MERMAID.findall(ARCHITECTURE):
+    for block in MERMAID.findall(DOCS):
         labels += [text.replace("<br/>", " ") for text in re.findall(r'"([^"]*)"', block)]
         if block.startswith("sequenceDiagram"):
             labels += [line.split(":", 1)[1] for line in block.splitlines() if ":" in line]
@@ -62,21 +65,21 @@ def test_every_code_name_in_the_diagrams_exists() -> None:
 
 def test_every_path_in_the_text_exists() -> None:
     """Python paths in backticks anywhere in the doc; the next test checks tests more strictly."""
-    paths = re.findall(r"`((?:[\w-]+/)*\w+\.py)`", ARCHITECTURE)
+    paths = re.findall(r"`((?:[\w-]+/)*\w+\.py)`", DOCS)
     assert len(paths) >= 10, "too few paths found in the text"
     assert sorted({p for p in paths if not path_exists(p)}) == []
 
 
 def test_every_test_named_in_the_text_exists() -> None:
-    files = set(re.findall(r"`(?:tests/)?(test_\w+\.py)`", ARCHITECTURE))
+    files = set(re.findall(r"`(?:tests/)?(test_\w+\.py)`", DOCS))
     assert files, "no tests named in ARCHITECTURE.md"
     assert sorted(f for f in files if not (ROOT / "tests" / f).exists()) == []
 
 
 EXTERNAL = {"FunctionModel", "NativeOutput", "ToolOutput"}  # Pydantic AI, not in src/
 # Backtick names that are settings, JSON values or libraries, not code names of src/
-NOT_IN_SRC = {"APP_PASSWORD", "GROQ_API_KEY", "llm_error", "unstated", "local", "html.escape",
-              "hmac.compare_digest", "subprocess", "uv.lock"}
+NOT_IN_SRC = {"APP_PASSWORD", "GROQ_API_KEY", "GROQ_MODEL", "llm_error", "unstated", "local",
+              "html.escape", "hmac.compare_digest", "subprocess", "uv.lock"}
 
 
 def section(heading: str) -> str:
@@ -125,7 +128,7 @@ def code_tokens(span: str) -> set[str]:
 
 def test_every_code_name_in_backticks_exists_in_src() -> None:
     """Functions, classes, fields and constants named anywhere in the doc are real."""
-    spans = re.findall(r"`([^`\n]+)`", ARCHITECTURE)
+    spans = re.findall(r"`([^`\n]+)`", DOCS)
     tokens = {w for span in spans for w in code_tokens(span)}
     assert len(tokens) >= 40, "too few code names found: the regex no longer matches the doc"
     assert sorted(tokens - identifiers_in_src()) == []
@@ -133,7 +136,7 @@ def test_every_code_name_in_backticks_exists_in_src() -> None:
 
 def test_every_class_named_in_the_text_exists() -> None:
     """CamelCase names in backticks are classes (`Finding(FindingDraft)` names two)."""
-    spans = re.findall(r"`([^`\n]+)`", ARCHITECTURE)
+    spans = re.findall(r"`([^`\n]+)`", DOCS)
     names = {n for span in spans for n in re.findall(r"\b[A-Z][a-z]+(?:[A-Z][a-z0-9]+)+\b", span)}
     names -= EXTERNAL
     assert len(names) >= 6, "too few class names found in the text"
@@ -175,7 +178,7 @@ def test_every_rule_in_the_rules_table_points_at_real_code_and_tests() -> None:
 
 
 def test_every_test_function_named_in_the_text_exists() -> None:
-    named = set(re.findall(r"`(test_\w+)`", ARCHITECTURE))
+    named = set(re.findall(r"`(test_\w+)`", DOCS))
     defined = {
         node.name
         for path in (ROOT / "tests").rglob("test_*.py")
@@ -187,7 +190,7 @@ def test_every_test_function_named_in_the_text_exists() -> None:
 
 
 def test_every_data_path_named_in_the_text_exists() -> None:
-    paths = {p.rstrip("/,.") for p in re.findall(r"`(data/[\w./<>|*-]+)`", ARCHITECTURE)}
+    paths = {p.rstrip("/,.") for p in re.findall(r"`(data/[\w./<>|*-]+)`", DOCS)}
     paths = {p for p in paths if not re.search(r"[<>|*]", p)}
     assert len(paths) >= 3, "too few data paths found in the text"
     assert sorted(p for p in paths if not (ROOT / p).exists()) == []
