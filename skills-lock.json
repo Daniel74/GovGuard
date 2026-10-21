@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "skills": {
+    "architecture-models-4plus1": {
+      "source": "MarieLynneBlock/arcanum-artifex",
+      "sourceType": "github",
+      "skillPath": "skills/architecture/architecture-models-4plus1/SKILL.md",
+      "computedHash": "cdaae0f632d3e613742ec95ac4ffd250bb2eb8cb496dcc355c3ca6cc16621f5d"
+    }
+  }
+}
