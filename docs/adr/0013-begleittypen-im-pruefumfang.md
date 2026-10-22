@@ -9,7 +9,7 @@ _Ergänzt [ADR 0011](0011-vollstaendiger-katalog.md) (Prüfumfang) und ersetzt d
 
 ## Entscheidung
 
-- **Begleittypen:** AWS Backup (`BackupVault`, `BackupPlan`, `BackupSelection`) und Application Auto Scaling (`ScalableTarget`, `ScalingPolicy`) kommen in den Prüfumfang. EFS, EBS-Volume und SSM-Parameter bleiben draußen (`AUSBAU.md`). Jede Änderung an `scope.json` heißt: Snapshot neu ziehen und Stufe ② voll neu laufen lassen (kein Nachfiltern des Caches).
+- **Begleittypen:** AWS Backup (`BackupVault`, `BackupPlan`, `BackupSelection`) und Application Auto Scaling (`ScalableTarget`, `ScalingPolicy`) kommen in den Prüfumfang. EFS, EBS-Volume und SSM-Parameter bleiben draußen (`AUSBAU.md`, bis 22.10.2026, Git-Verlauf). Jede Änderung an `scope.json` heißt: Snapshot neu ziehen und Stufe ② voll neu laufen lassen (kein Nachfiltern des Caches).
 - **Der Code streicht:** Stufe ② entfernt Typen außerhalb des Prüfumfangs aus der Antwort, ohne Retry. Relevant ist, wofür danach ein Typ übrig bleibt; der erste übrige ist der wichtigste. Konto-Pflichten wie der CloudTrail-Bucket fallen über die Ebene heraus (#18), nicht über die Reihenfolge der Typen.
 - **`formulate_rule` und Gate:** Kriterien mit Typen außerhalb des Prüfumfangs gehen per `ModelRetry` zurück; `check_rules` bricht ab, wenn eine Prüfregel solche Typen nennt.
 

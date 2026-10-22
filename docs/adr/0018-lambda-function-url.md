@@ -23,7 +23,7 @@ _Setzt den Plan B aus [ADR 0011](0011-vollstaendiger-katalog.md) um. Ändert [AD
 - Kein Stage-Throttling und keine WAF-Option. Ein gestohlener Access Key kann bis zum Budget-Alarm Kosten erzeugen (ca. 1 $ je großem Audit mit Bedrock).
 - Für `AWS::Lambda::Url` hat der Katalog keine Prüfregel: Das Selbst-Audit prüft den Eingang des eigenen Stacks nicht, nur cdk-nag und der CDK-Assertions-Test (`AuthType: AWS_IAM`). Die Ausnahmen `APIGateway.3` und `.4` braucht der Stack nicht mehr.
 - Keine Zugriffslogs am Eingang. Das `AuditEvent` des Handlers (ADR 0006) bleibt der einzige Nachweis je Aufruf.
-- Streaming der Antwort gibt es nur mit Node.js oder eigener Runtime, für Python also nicht. Für Produktion ist ein asynchroner Ablauf mit Job-ID der saubere Weg ([AUSBAU](../AUSBAU.md), Weg zu Asynchronität).
+- Streaming der Antwort gibt es nur mit Node.js oder eigener Runtime, für Python also nicht. Für Produktion ist ein asynchroner Ablauf mit Job-ID der saubere Weg ([AUSBAU](../AUSBAU.md), Phase 3).
 
 ## Fachgespräch-Satz
 

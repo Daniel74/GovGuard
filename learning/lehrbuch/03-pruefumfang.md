@@ -19,7 +19,7 @@ Das LLM darf nichts erfinden: keine Ressourcentypen, keine Eigenschaften, keine 
 - Ein Dienst-Name zeigt auf eine Liste von CloudFormation-Typen, z. B. `"DynamoDB": ["AWS::DynamoDB::Table", "AWS::DynamoDB::GlobalTable"]`.
 - Die 23 Dienste: API Gateway, Lambda, DynamoDB, SQS, SNS, S3, Kinesis Data Firehose, Kinesis Data Streams, Step Functions, EventBridge, Cognito, Secrets Manager, WAF, KMS, IAM, CloudWatch Logs, RDS/Aurora, ECS Fargate, ECR, Application/Network Load Balancer, VPC, AWS Backup, Application Auto Scaling.
 - **Serverless plus** RDS/Aurora und Fargate, dazu das, was beide brauchen (VPC-Typen, ECR, ELBv2). Nicht dabei: EC2-Instanzen, EKS, CloudTrail, CloudFront, Classic Load Balancer (ADR 0011).
-- **Begleittypen** (ADR 0013): AWS Backup und Application Auto Scaling gehören zum Prüfumfang, weil Dienste im Prüfumfang sie brauchen (FSBP DynamoDB.4 und RDS.26 verlangen Backup, DynamoDB skaliert über Auto Scaling). EFS, EBS-Volume und SSM-Parameter bleiben draußen (`docs/AUSBAU.md`).
+- **Begleittypen** (ADR 0013): AWS Backup und Application Auto Scaling gehören zum Prüfumfang, weil Dienste im Prüfumfang sie brauchen (FSBP DynamoDB.4 und RDS.26 verlangen Backup, DynamoDB skaliert über Auto Scaling). EFS, EBS-Volume und SSM-Parameter bleiben draußen (`docs/AUSBAU.md`, bis 22.10.2026, Git-Verlauf).
 - `Scope.types` liefert alle Typen, `Scope.outside(types)` die Typen außerhalb, jeden einmal in Reihenfolge.
 
 ## Echte Typen und echte Eigenschaften
@@ -62,7 +62,7 @@ Die Vereinigung dieser Typen sind die **Komponenten** (`select/run.py`). Jede Ko
 
 ## Grenzen
 
-- Der Prüfumfang ist eine bewusste Entscheidung, keine Vollständigkeit. Was fehlt, steht in `docs/AUSBAU.md`.
+- Der Prüfumfang ist eine bewusste Entscheidung, keine Vollständigkeit. Was fehlt, stand in `docs/AUSBAU.md` (bis 22.10.2026, Git-Verlauf).
 - Der Schnappschuss ist nur so aktuell wie der letzte Handbefehl.
 
 ## Fragen für das Fachgespräch

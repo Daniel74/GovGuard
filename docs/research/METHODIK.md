@@ -498,7 +498,7 @@ Diese Namen stammen aus dem Projekt, nicht aus der Literatur. Sag sie nur zusamm
 
 ### 8.3 Offene Verbesserungen
 
-Was als Nächstes lohnt, steht in [AUSBAU](AUSBAU.md), darunter die offenen Prinzipien 3, 5 und 6 aus 6.4 (Szenario 14). Ob eine Prompt-Änderung wirkt, zeigt eine Messung wie in 6.5.
+Was als Nächstes lohnt, steht in [AUSBAU](AUSBAU.md), darunter die offenen Prinzipien 3, 5 und 6 aus 6.4 (Phase 2). Ob eine Prompt-Änderung wirkt, zeigt eine Messung wie in 6.5.
 
 ### 8.4 Fragen für den Lesetest
 
@@ -517,10 +517,10 @@ Ein unbefangener Leser kennt nur [README](../README.md) und [ARCHITECTURE](ARCHI
 | 9 | Sicherheit | Welche Bedrohungen sind betrachtet, welche bleiben offen? | [ARCHITECTURE 7.2](ARCHITECTURE.md#72-bedrohungen-an-den-grenzen), [8.1](ARCHITECTURE.md#81-owasp-top-10-für-llm-anwendungen-2025) |
 | 10 | Sicherheit | Was ist nach BSI IT-Grundschutz nachgewiesen, was nicht? | [ARCHITECTURE 0.1](ARCHITECTURE.md#01-zweck-und-abgrenzung) (Schutzbedarf „normal“, kein Grundschutz-Check) |
 | 11 | Sicherheit | Wer darf Audits starten, wo liegen die Geheimnisse? | [ARCHITECTURE 7.2](ARCHITECTURE.md#72-bedrohungen-an-den-grenzen) (T1), [4.3](ARCHITECTURE.md#43-ausrollen-betrieb-und-kosten) |
-| 12 | Sicherheit | Kann man später belegen, was geprüft wurde, und was ändert sich für echte Daten? | [ARCHITECTURE 1.4](ARCHITECTURE.md#14-typen-des-audits-kern) (`Trace`), [7.3](ARCHITECTURE.md#73-datenort-aufbewahrung-und-drittlandtransfer), [AUSBAU](AUSBAU.md) (Szenario 12) |
+| 12 | Sicherheit | Kann man später belegen, was geprüft wurde, und was ändert sich für echte Daten? | [ARCHITECTURE 1.4](ARCHITECTURE.md#14-typen-des-audits-kern) (`Trace`), [7.3](ARCHITECTURE.md#73-datenort-aufbewahrung-und-drittlandtransfer), [AUSBAU](AUSBAU.md) (Phase 3) |
 | 13 | Hiring Manager | Welche Alternativen haben Sie verworfen (Vektor-Datenbank, Agent-Framework, Bedrock im Demo-Stand), und warum? | [ARCHITECTURE 1.1](ARCHITECTURE.md#11-entwurfsentscheidungen), [2.1](ARCHITECTURE.md#21-entwurfsentscheidungen), [4.1](ARCHITECTURE.md#41-entwurfsentscheidungen), [6.2](ARCHITECTURE.md#62-die-deterministische-schale) |
 | 14 | Hiring Manager | Wie testen Sie, ohne das Modell oder AWS aufzurufen? | [ARCHITECTURE 3.1](ARCHITECTURE.md#31-entwurfsentscheidungen), [3.5](ARCHITECTURE.md#35-rund-um-den-code), [3.6](ARCHITECTURE.md#36-regeln-in-klartext-wo-erzwingt-der-code-sie) |
-| 15 | Sicherheit | Was passiert, wenn die Eingabe Anweisungen an das Modell enthält (Prompt Injection)? | [ARCHITECTURE 7.2](ARCHITECTURE.md#72-bedrohungen-an-den-grenzen) (T4), [8.1](ARCHITECTURE.md#81-owasp-top-10-für-llm-anwendungen-2025) (LLM01), [AUSBAU](AUSBAU.md) (Szenario 14) |
+| 15 | Sicherheit | Was passiert, wenn die Eingabe Anweisungen an das Modell enthält (Prompt Injection)? | [ARCHITECTURE 7.2](ARCHITECTURE.md#72-bedrohungen-an-den-grenzen) (T4), [8.1](ARCHITECTURE.md#81-owasp-top-10-für-llm-anwendungen-2025) (LLM01), [AUSBAU](AUSBAU.md) (Phase 2) |
 
 ### 8.5 Glossar der Methodenbegriffe
 

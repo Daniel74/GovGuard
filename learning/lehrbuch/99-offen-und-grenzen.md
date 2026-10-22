@@ -13,7 +13,7 @@
 - **Fehlende Urteile (`llm_error`):** Je nach Lauf endeten andere Anforderungen ohne Urteil (z. B. FSBP S3.1, BSI BER.6.2, C5 OPS-19.01B). Im aktuellen `verdicts_arch.json` sind es 2 Einträge (BSI BER.6.4, CIS 2.14). Der Lauf geht trotzdem weiter, die Anforderung fehlt im Katalog und steht im Protokoll.
 - **Spec-Grenze Vorhaben/Betrieb** (v. a. SDM Ebene P): nicht stabil klassifizierbar; im Zweifel wird aufgenommen. Einige SDM-Prozess-Maßnahmen schießen über (z. B. M50.P05, M51.P28).
 - **Uneinheitliches Protokoll:** Konto-/Personenpflichten teils `not_testable` mit LLM-Text statt `not_relevant` mit festem Satz.
-- **SDM ohne Protokollieren (M43)**, **DSGVO-Einheit Artikel** (Art. 5), **CIS aus zweiter Hand** (Prowler), **keine kontoweiten Pflichten** (ADR 0007), **Prüfumfang bewusst begrenzt** (kein EC2, EKS, CloudTrail, CloudFront, Classic LB; `docs/AUSBAU.md`).
+- **SDM ohne Protokollieren (M43)**, **DSGVO-Einheit Artikel** (Art. 5), **CIS aus zweiter Hand** (Prowler), **keine kontoweiten Pflichten** (ADR 0007), **Prüfumfang bewusst begrenzt** (kein EC2, EKS, CloudTrail, CloudFront, Classic LB; `docs/AUSBAU.md`, bis 22.10.2026, Git-Verlauf).
 - **Eigenschafts-Gate mit Heuristik:** Einzelwörter werden nicht geprüft; Qualitätsbericht zählt, was nicht prüfbar ist.
 - **Datenschutz im Build:** Groq (US) und ggf. Bedrock `global.` sehen öffentliche Normtexte, auch lizenzierte CIS-Volltexte.
 

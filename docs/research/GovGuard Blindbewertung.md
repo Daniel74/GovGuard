@@ -64,9 +64,9 @@ Diese Punkte sind entworfen oder geplant, aber nicht gebaut. Sie sind in keine P
 
 | Zielbild | Quelle |
 |---|---|
-| Golden Archetypes mit Freigabe | ADR 0019, docs/AUSBAU.md Szenario 13 |
-| AWS-Betrieb in `eu-central-1` mit Lambda, KMS, Audit-Jobs (Recruiter-Stand) | ADR 0023 Nachtrag 19.10.2026, AUSBAU Szenario 12 |
+| Golden Archetypes mit Freigabe | ADR 0019, docs/AUSBAU.md Szenario 13 (bis 22.10.2026, Git-Verlauf) |
+| AWS-Betrieb in `eu-central-1` mit Lambda, KMS, Audit-Jobs (Recruiter-Stand) | ADR 0023 Nachtrag 19.10.2026, AUSBAU Phase 3 |
 | Audit-Protokoll in CloudWatch, 365 Tage | ADR 0006 |
-| Zweitprüfer für PASS | AUSBAU Szenario 14 |
-| Terraform mit Code-Inventar, vollständiges C5 | AUSBAU Szenarien 9 und 1 |
+| Zweitprüfer für PASS | AUSBAU Phase 2 |
+| Terraform mit Code-Inventar, vollständiges C5 | AUSBAU Szenarien 9 und 1 (bis 22.10.2026, Git-Verlauf) |
 | Geplante Remediation-Erweiterung | Kriterienkatalog A4 („Thema der geplanten Erweiterung“), im Code nicht vorhanden |

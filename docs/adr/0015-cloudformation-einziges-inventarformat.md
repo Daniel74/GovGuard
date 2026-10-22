@@ -1,6 +1,6 @@
 # 0015 – CloudFormation ist das einzige Format mit Code-Inventar, Terraform ungetestet
 
-_Ergänzt [ADR 0007](0007-relevanz-und-ausnahmen.md) (N/A bei CloudFormation) und [ADR 0011](0011-vollstaendiger-katalog.md) (Ressourceninventar). Ausbau: `AUSBAU.md`, Szenario 9._
+_Ergänzt [ADR 0007](0007-relevanz-und-ausnahmen.md) (N/A bei CloudFormation) und [ADR 0011](0011-vollstaendiger-katalog.md) (Ressourceninventar). Ausbau: `AUSBAU.md`, Szenario 9 (bis 22.10.2026, Git-Verlauf)._
 
 ## Kontext
 
@@ -19,7 +19,7 @@ _Ergänzt [ADR 0007](0007-relevanz-und-ausnahmen.md) (N/A bei CloudFormation) un
 
 - Es entsteht kein Code und kein neues Preset. `CONTEXT.md`, `SPEC.md` und `ARCHITECTURE.md` nennen dieselbe Einschränkung.
 - Ein übersehener Dienst in Terraform steht als „nicht erkannt“ im Befund, nicht als stilles N/A (ADR 0011).
-- Wer Terraform fest unterstützen will, folgt `AUSBAU.md`, Szenario 9, und legt zuerst ein Terraform-Preset an.
+- Wer Terraform fest unterstützen will, folgt `AUSBAU.md`, Szenario 9 (bis 22.10.2026, Git-Verlauf), und legt zuerst ein Terraform-Preset an.
 
 ## Fachgespräch-Satz
 

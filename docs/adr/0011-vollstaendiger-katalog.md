@@ -27,7 +27,7 @@ _Ersetzt [ADR 0002](0002-bounded-catalog.md). Ersetzt in [ADR 0007](0007-relevan
 - Übersieht der Freitext-Vorlauf einen Dienst, steht „nicht erkannt“ im Befund. Die Lücke bleibt sichtbar.
 - Der Code prüft beim Vorlauf, dass der Beleg wörtlich in der Eingabe steht, nicht, dass er zum Typ passt. Ein falsch zugeordneter Beleg führt höchstens zu einem überflüssigen Befund, nie zu einem verlorenen.
 - Ein 5. Preset mit einer fremden Architektur sichert die neue Behauptung ab.
-- Aurora und Fargate werden auditiert, aber nicht als Archetyp gebaut: Fargate hat Leerlaufkosten, Aurora braucht eine VPC (AUSBAU).
+- Aurora und Fargate werden auditiert, aber nicht als Archetyp gebaut: Fargate hat Leerlaufkosten, Aurora braucht eine VPC (AUSBAU, bis 22.10.2026, Git-Verlauf).
 - Das LLM urteilt trotz Temperatur 0 nicht stabil: Im zweiten Lauf (11.10.2026) kippten 41 von 1.077 Urteilen. Der Cache friert die Urteile ein, der Kontrollpunkt bleibt nötig.
 - Betrifft eine Anforderung mehrere Dienste, entscheidet die vom LLM gewählte Reihenfolge der Typen über die Relevanz, z. B. CIS 4.10 (CloudFront vor API Gateway). Diese Schwäche nehmen wir bewusst hin.
 - Die Grenze zwischen Vorhaben und Betrieb (v. a. SDM Ebene P) klassifiziert das LLM nicht stabil; ein Prompt-Versuch dazu verwarf auch Art. 35. Im Zweifel nehmen wir auf: Ein unnötiger WARN ist sichtbar, eine verlorene Anforderung nicht.
