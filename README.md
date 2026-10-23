@@ -102,6 +102,8 @@ Alternativ gehen Umgebungsvariablen: `APP_PASSWORD=… GROQ_API_KEY=… uv run s
 
 Die Abhängigkeiten liest Streamlit aus `uv.lock`. Danach geht jeder Push auf `main` von selbst live, im Leerlauf kostet die App nichts. Den Build der Prüfregeln und alle Einstellungen beschreibt [ENTWICKLUNG](docs/ENTWICKLUNG.md).
 
+Ohne Besuch schläft die App nach 12 Stunden ein; der GitHub-Workflow `keep-awake` öffnet sie deshalb alle 6 Stunden und weckt sie bei Bedarf, das Ergebnis steht unter „Actions“. GitHub schaltet geplante Workflows ab, wenn 60 Tage lang kein Commit kommt; dann dort „Enable workflow“ wählen.
+
 ## Roadmap
 
 Ziel ist, die Schwankung des Modells zu senken und dafür erst messen zu können ([AUSBAU](docs/AUSBAU.md)):

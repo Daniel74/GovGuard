@@ -1,0 +1,22 @@
+# Keeps the demo on Streamlit Community Cloud awake (#79); logic lives in tools/keep_awake.py.
+name: keep-awake
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  keep-awake:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Install Chromium
+        run: uv run python -m playwright install --with-deps chromium
+      - name: Visit the app
+        run: uv run python -m tools.keep_awake https://govguard.streamlit.app/
