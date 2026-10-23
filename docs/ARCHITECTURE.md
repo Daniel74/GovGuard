@@ -53,7 +53,7 @@ Kruchten beschreibt ein System in vier Sichten und prüft sie mit Szenarien. Jed
 | [9 Standards](#9-abgleich-mit-den-standards) | Wo ist behandelt, was OWASP, BSI und ISO verlangen? | IT-Sicherheit, Datenschutz |
 | [10 Referenzen](#10-referenzen) | Wo stehen die Normen, Standards und Methoden? | alle |
 
-Begriffe stehen in [CONTEXT.md](../CONTEXT.md), Entscheidungen in [adr/](adr/), Befehle in [ENTWICKLUNG.md](ENTWICKLUNG.md), Pläne für später in [AUSBAU.md](AUSBAU.md). Code und ADRs sind die Wahrheit. Ein Drift-Test (`tests/test_architecture_doc_drift.py`) prüft, dass jeder Pfad, jede Klasse, jeder Name und jeder Test aus diesem Dokument im Code existiert.
+Begriffe stehen in [CONTEXT.md](../CONTEXT.md), Entscheidungen in [adr/](adr/), Pflege und Befehle in [ENTWICKLUNG.md](ENTWICKLUNG.md), Pläne für später in [AUSBAU.md](AUSBAU.md). Code und ADRs sind die Wahrheit. Ein Drift-Test (`tests/test_architecture_doc_drift.py`) prüft, dass jeder Pfad, jede Klasse, jeder Name und jeder Test aus diesem Dokument im Code existiert.
 
 Das Dokument folgt Kruchten; der Skill `architecture-models-4plus1` dient nur als Checkliste. Zwei Abweichungen vom Skill sind gewollt. Erstens steht die LLM-Unsicherheit gebündelt in Kapitel 7 statt verteilt in jeder Sicht; jede Sicht endet nur mit einem Verweis dorthin. Zweitens ist die Notation UML-nah, also Klassen-, Aktivitäts-, Komponenten- und Sequenzdiagramme statt Swimlanes, weil die Leser Entwickler sind. Alle Diagramme sind Mermaid, weil GitHub nur Mermaid direkt anzeigt. AWS ist keine Plattform des Demo-Stands; Bedrock erscheint nur dort, wo der Code es als optionalen Weg der Kommandozeile kennt.
 
@@ -1449,7 +1449,7 @@ Ausrollen heißt: Push auf `main`; Streamlit Community Cloud zieht den neuen Sta
 
 Median der erfolgreichen Läufe, je drei (Messkampagne #54, 19 Läufe, zusammen 0,90 $). Bedrock Haiku 4.5 käme mit denselben Tokens auf das 8- bis 9-Fache; das ist ein Rechenbeispiel, nicht gemessen.
 
-Bricht ein Audit ab, weil Groq drosselt (HTTP 429) oder ausfällt, hat der Groq-Anschluss schon bis zu sechsmal mit Wartezeit wiederholt; dann hilft nur Warten und neu starten. Symptome und Maßnahmen stehen in [ENTWICKLUNG.md](ENTWICKLUNG.md) Abschnitt 6.
+Bricht ein Audit ab, weil Groq drosselt (HTTP 429) oder ausfällt, hat der Groq-Anschluss schon bis zu sechsmal mit Wartezeit wiederholt; dann hilft nur Warten und neu starten. Symptome und Maßnahmen stehen in [ENTWICKLUNG.md](ENTWICKLUNG.md#7-bekannte-grenzen) Abschnitt 7.
 
 > **Concern (LLM-Unsicherheit):** Mit jedem Aufruf verlassen Eingabe und Prüfregeln die eigene Vertrauenszone; Datenort und Drittlandtransfer behandelt [8.3](#83-datenort-aufbewahrung-und-drittlandtransfer), Ausfall und Kosten des Modells [7.3](#73-was-die-schale-nachweislich-leistet).
 

@@ -13,6 +13,7 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 - Wissensbasis als JSON in S3 bzw. im Repo, Bounded Catalog ohne Suche und ohne Obergrenze, keine Vektor-DB (ADR 0011).
 - Code modular nach `docs/ARCHITECTURE.md` → *Code-Struktur*: boto3 und das Bedrock-Modell für Pydantic AI nur in `adapters/aws_services.py`, kein subprocess in `src/` (ADR 0019; Tests dürfen Server starten), HTTP-Downloads nur in `src/kb_build/source_fetch.py`, Prüflogik rein, nie vermischt. Ordner nach Aufgabe (ADR 0027): `govguard/` hat `calls/` (spricht mit dem Modell), `checks/` (rein) und `adapters/`, `govguard_ui/` hat `screens/` und `report/`; `checks/` importiert nie `calls/` oder `adapters/`, `report/` nie `screens/`. Workflow-YAML enthält keine Logik, nur `python -m …`.
 - Kleine Einheiten: ein Modul = eine Aufgabe, ca. 200 Zeilen; eine Funktion ca. 30 Zeilen. Wird es größer, teile auf. Die Grenzen prüfen ruff (`pyproject.toml`) und ein pytest-Test.
+- Wissensbasis und Musterfälle: vor jeder Änderung `docs/ENTWICKLUNG.md` lesen. Ein Soll (`expected` in `preset.json`) kommt von mir, nie aus einem Lauf; passe es nie an einen Report an, auch nicht, um einen Test grün zu machen. Prüfregeln (`rules_*.json`) nie von Hand ändern, nur per Build.
 
 Verbindlich sind `CONTEXT.md` (Glossar) und `docs/adr/`. Fehlen sie, gilt das Gespräch mit mir.
 
@@ -33,7 +34,7 @@ Ich arbeite allein und sequentiell direkt auf `main`. Commits mache ich selbst o
 
 - Deutsch, einfach und klar, Niveau pragmatischer Senior Engineer.
 - Fachwort beim ersten Auftreten in einem eigenen ganzen Satz erklären, nicht in einem Halbsatz.
-- **Rule of 3**: maximal 3 Bulletpoints, Fließtext maximal 3 Zeilen (gilt nicht in `docs/ARCHITECTURE.md` und `docs/FUNKTIONSWEISE.md`, siehe *Doku*). Code-Erklärungen: Was macht es? Warum so (Bezug BSI/AWS)? Welcher Begriff ist fürs Fachgespräch wichtig?
+- **Rule of 3**: maximal 3 Bulletpoints, Fließtext maximal 3 Zeilen (gilt nicht in `docs/ARCHITECTURE.md`, `docs/FUNKTIONSWEISE.md` und `docs/ENTWICKLUNG.md`, siehe *Doku*). Code-Erklärungen: Was macht es? Warum so (Bezug BSI/AWS)? Welcher Begriff ist fürs Fachgespräch wichtig?
 - **Code-Namen nie allein im Satz:** Alltagswort zuerst, Code-Name in Klammern; Tabellen mit Spalte „im Code“.
 - **Projektsprache:** Code, Bezeichner, JSON-Felder und Kommentare englisch (Normbezug als Kürzel, z. B. `# Enforces BSI OPS.1.1.2.A3`). LLM-Prompts, Doku, UI und Inhalte der Audit-Reports deutsch. Englische Code-Namen der Fachbegriffe stehen in `CONTEXT.md` (*Code*).
 
@@ -45,7 +46,7 @@ Jeden Abschnitt muss ich in 2 Minuten lesen und verstehen können. Diese Regeln 
 - **ADR** (`docs/adr/NNNN-slug.md`): eine Seite. *Kontext*, *Entscheidung*, *Konsequenzen*, *Fachgespräch-Satz* (1 Satz zur Verteidigung).
 - **Glossar** (`CONTEXT.md`): ein Begriff, eine Zeile.
 - Dokumente entstehen erst, wenn es etwas Entschiedenes aufzuschreiben gibt.
-- **Ausnahme `docs/ARCHITECTURE.md` und `docs/FUNKTIONSWEISE.md`**: Referenz-Doku, vollständig vor kurz. ARCHITECTURE zeigt nach Kruchten 4+1, wie GovGuard gebaut ist; FUNKTIONSWEISE erklärt die fachlichen Konzepte so, dass man GovGuard nachbauen kann. Jedes Konzept steht nur einmal, in FUNKTIONSWEISE; ARCHITECTURE verweist darauf. Keine Zeilengrenze und keine Rule of 3; jeder Abschnitt beginnt mit einer Zusammenfassung von höchstens 3 Zeilen, die in 2 Minuten lesbar ist. Fachwort-Erklärung und Code-Namen-Regel gelten weiter.
+- **Ausnahme `docs/ARCHITECTURE.md`, `docs/FUNKTIONSWEISE.md` und `docs/ENTWICKLUNG.md`**: Referenz-Doku, vollständig vor kurz. ARCHITECTURE zeigt nach Kruchten 4+1, wie GovGuard gebaut ist; FUNKTIONSWEISE erklärt die fachlichen Konzepte so, dass man GovGuard nachbauen kann; ENTWICKLUNG erklärt, wie man Wissensbasis und Musterfälle sicher verändert, Befehle im Anhang. Jedes Konzept steht nur einmal, in FUNKTIONSWEISE; ARCHITECTURE und ENTWICKLUNG verweisen darauf. Keine Zeilengrenze und keine Rule of 3; jeder Abschnitt beginnt mit einer Zusammenfassung von höchstens 3 Zeilen, die in 2 Minuten lesbar ist. Fachwort-Erklärung und Code-Namen-Regel gelten weiter.
 
 ## Agent skills
 
