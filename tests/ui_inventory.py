@@ -54,4 +54,6 @@ INVENTORY: dict[str, str] = {
                     "test_with_the_password_the_audit_runs_and_stays_only_in_the_session",
     "button:new_audit": "tests/test_ui_create_session.py::"
                         "test_new_audit_clears_the_result_and_shows_the_form_again",
+    "guard:navigation_guard": "tests/visual/test_browser_guard.py::"
+                              "test_stay_keeps_the_audit_running_and_afterwards_links_switch_freely",
 }

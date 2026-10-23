@@ -83,6 +83,13 @@ def poisoned_url() -> Iterator[str]:
 
 
 @pytest.fixture(scope="session")
+def slow_url() -> Iterator[str]:
+    """The whole UI with a slow audit without Groq (#77)."""
+    with serve("tests/visual/slow_audit_app.py") as url:
+        yield url
+
+
+@pytest.fixture(scope="session")
 def browser_context_args(browser_context_args: dict) -> dict:
     """Overrides the pytest-playwright fixture: artboard width, German UI, no motion."""
     return {**browser_context_args, "viewport": {"width": WIDTH, "height": HEIGHT},

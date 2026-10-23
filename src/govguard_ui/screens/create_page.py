@@ -5,6 +5,7 @@ import time
 from pathlib import Path
 
 import streamlit as st
+from streamlit.delta_generator import DeltaGenerator
 
 from govguard.adapters.groq_services import MissingApiKeyError, groq_model, model_name
 from govguard.audit_engine import MAX_INPUT_CHARS, AuditValidationError, with_thousand_dots
@@ -19,10 +20,12 @@ from govguard_ui.screens.audit_runner import (
     run_local,
     start_problem,
 )
+from govguard_ui.screens.navigation_guard import guard_navigation
 from govguard_ui.style import CSS, status_word
 from govguard_ui.texts import DATA_RULE, TYPE_CHOICES
 
 FORMATS = {".md": "Markdown", ".yaml": "YAML", ".json": "JSON"}  # by file suffix of the preset
+STAY_NOTE = "Bitte während des Audits auf dieser Seite bleiben."  # a page switch stops it (#77)
 
 
 def secret(name: str) -> str | None:
@@ -37,6 +40,7 @@ def render() -> None:
     st.html(CSS)
     st.title("Audit erstellen")
     st.warning(f"**{DATA_RULE}**", icon=":material/warning:")
+    guard_slot = st.empty()  # same place in every run, see guard_navigation
     if problem := backend_problem(secret("AUDIT_BACKEND")):
         st.error(problem)
         return
@@ -53,7 +57,7 @@ def render() -> None:
             if problem := start_problem(source[1], password, secret("APP_PASSWORD")):
                 st.error(problem)
             else:
-                _run(audit_type, title, source, expected)
+                _run(audit_type, title, source, expected, guard_slot)
 
 
 def _input_form() -> tuple[AuditType, str, tuple[str, str], Expected | None]:
@@ -107,13 +111,16 @@ def _preset(audit_type: AuditType) -> tuple[str, tuple[str, str], Expected | Non
 
 
 def _run(
-    audit_type: AuditType, title: str, source: tuple[str, str], expected: Expected | None
+    audit_type: AuditType, title: str, source: tuple[str, str], expected: Expected | None,
+    guard_slot: DeltaGenerator,
 ) -> None:
     bar = st.progress(0.0, text="Audit startet …")
+    st.caption(STAY_NOTE)
     started = time.monotonic()
     try:
-        report = run_local(audit_type, source[1], groq_model(),
-                           lambda progress: bar.progress(*progress_view(progress)))
+        with guard_navigation(guard_slot):
+            report = run_local(audit_type, source[1], groq_model(),
+                               lambda progress: bar.progress(*progress_view(progress)))
     except MissingApiKeyError:
         st.error("Audit erstellen ist nicht eingerichtet: GROQ_API_KEY fehlt in den Secrets.")
         return

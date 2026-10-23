@@ -1,7 +1,11 @@
 """Smoke tests of the page "Audit erstellen", headless via AppTest (#11, #41)."""
 
+from collections.abc import Iterator
+from contextlib import contextmanager
+
 import pytest
 from pydantic_ai.models.function import FunctionModel
+from streamlit.delta_generator import DeltaGenerator
 from streamlit.proto.SelectWidgetFilterMode_pb2 import FILTER_MODE_NONE
 from test_run_audit_progress import warn_for_every_rule
 from ui_helpers import (
@@ -13,9 +17,12 @@ from ui_helpers import (
     open_text_tab,
     page,
     shown_text,
+    start,
 )
 
-from govguard.audit_engine import MAX_INPUT_CHARS, with_thousand_dots
+from govguard.audit_engine import MAX_INPUT_CHARS, AuditValidationError, with_thousand_dots
+from govguard_ui.screens import create_page as create_module
+from govguard_ui.screens.create_page import STAY_NOTE
 
 
 def test_create_page_without_the_password_starts_no_audit() -> None:
@@ -116,3 +123,45 @@ def test_with_the_password_the_audit_runs_and_stays_only_in_the_session(
     assert (report.audit_type, report.model_id) == ("spec", "fake-groq")
     assert "Audit fertig" in shown_text(app)
     assert "Soll-Abweichung" in shown_text(app)  # all WARN: the preset expects FAIL
+
+
+def failing_audit(monkeypatch: pytest.MonkeyPatch, calls: list[str]) -> None:
+    """The audit fails at once: the page keeps bar, note and error, no rerun hides them."""
+    def run(*_args) -> None:
+        calls.append("audit")
+        raise AuditValidationError([], api_error=True)
+
+    monkeypatch.setattr("govguard_ui.screens.create_page.groq_model", lambda: None)
+    monkeypatch.setattr("govguard_ui.screens.create_page.run_local", run)
+
+
+def test_while_the_audit_runs_a_note_asks_to_stay_on_the_page(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    failing_audit(monkeypatch, [])
+
+    app = start(create_page())
+
+    assert "Audit fehlgeschlagen" in shown_text(app)
+    assert STAY_NOTE in shown_text(app)
+
+
+def test_the_navigation_guard_watches_only_while_the_audit_runs(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    calls: list[str] = []
+    failing_audit(monkeypatch, calls)
+    guard = create_module.guard_navigation
+
+    @contextmanager
+    def noted_guard(slot: DeltaGenerator) -> Iterator[None]:
+        calls.append("guard")
+        with guard(slot):
+            yield
+
+    monkeypatch.setattr("govguard_ui.screens.create_page.guard_navigation", noted_guard)
+
+    app = start(create_page())
+
+    assert calls == ["guard", "audit"]
+    assert not app.get("bidi_component")  # gone after the run: links switch freely again
