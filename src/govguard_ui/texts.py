@@ -2,7 +2,7 @@
 
 from govguard_ui.style import LOOKS, STATUS_FILTERS
 
-DATA_RULE = "Keine echten oder personenbezogenen Daten eingeben."  # ADR 0004, 0016, 0023
+DATA_RULE = "Keine personenbezogenen oder vertraulichen Daten eingeben."  # ADR 0004, 0016, 0023
 
 OPEN_WORLD_ONLY = "Nur bei offener Welt: Spezifikation, Architektur als Freitext."  # ADR 0020
 HELP = {  # help on the report head; status help lives in style.LOOKS

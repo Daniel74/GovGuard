@@ -19,7 +19,7 @@ from govguard_ui.paths import GALLERY, PRESETS
 
 ARCH = "arch-antragseingang-fehlerhaft"  # 29 FAIL, 28 PASS, 109 N/A, no WARN
 SPEC = "spec-meldeportal-gesundheit"  # first in the gallery; numbers in the design of #11
-DATA_WARNING = "Keine echten oder personenbezogenen Daten eingeben."
+DATA_WARNING = "Keine personenbezogenen oder vertraulichen Daten eingeben."
 
 
 def start_script() -> None:

@@ -1,64 +1,78 @@
+<div align="center">
+
 # GovGuard
 
-GovGuard is a compliance copilot for public-sector cloud projects in Germany. It audits a specification against GDPR, the EU AI Act and the German Standard Data Protection Model (SDM), or an AWS architecture (CloudFormation JSON, whose services the code reads itself, or plain text, YAML and Terraform, where the model names the services) against BSI IT-Grundschutz (the "Grundschutz++" catalog), BSI C5 (the BSI criteria catalogue for cloud services), the CIS AWS Benchmark and AWS Foundational Security Best Practices. The result is an audit report with PASS, WARN, FAIL or N/A for every rule, and each PASS or FAIL cites the lines of the input it rests on. The language model only judges and drafts; deterministic code pins the sources, checks every draft and every answer, and fails closed on an invalid answer (no report instead of an unchecked one); otherwise it falls back to the more cautious status (WARN instead of an unproven PASS or FAIL), never to a PASS. Built as a portfolio project. It is a review assistant for specialists, not a proof of compliance, and a demo for fictitious data only.
+**Prüfassistent für Fachkonzepte von Behörden**
 
-**Deutsch:** GovGuard prüft Spezifikationen und Cloud-Architekturen von Behörden gegen DSGVO, KI-VO, SDM (Spezifikation) bzw. BSI Grundschutz++, BSI C5, CIS AWS und AWS FSBP (Architektur) und belegt jeden Verstoß und jede Einhaltung mit Zeilen aus der Eingabe.
+Prüft ein Fachkonzept gegen DSGVO, SDM und KI-Verordnung, bevor die erste Zeile Code entsteht.<br>
+350 Prüfregeln, und jeder Befund zitiert wörtlich die Stelle, auf die er sich stützt.
 
-**Live-Demo:** <https://govguard.streamlit.app/> – Die Galerie mit gespeicherten Audits ist frei, nur „Audit erstellen“ braucht ein Passwort (nur fiktive Daten).
+[![Live-Demo öffnen](https://img.shields.io/badge/%E2%96%B6%20Live--Demo%20%C3%B6ffnen-0A78B8?style=for-the-badge)](https://govguard.streamlit.app/)
 
-<img src="tests/visual/gallery-spec.png" alt="Audit-Report einer Spezifikation: Gesamtstatus, Befunde je Status, Bedingungen, Beleg im Dokument" width="720">
+![Python 3.13](https://img.shields.io/badge/Python-3.13-3776AB?logo=python&logoColor=white)
+![Streamlit](https://img.shields.io/badge/Streamlit-1.65-FF4B4B?logo=streamlit&logoColor=white)
+![Pydantic AI](https://img.shields.io/badge/Pydantic%20AI-2.54-E92063?logo=pydantic&logoColor=white)
+![Tests](https://img.shields.io/badge/Tests-970%20%2B%2024%20Browser-2EA44F)
+![Lizenz MIT](https://img.shields.io/badge/Lizenz-MIT-blue)
 
-## Was das Projekt zeigt
+[Die Lösung](#die-lösung) · [Architektur](#architektur) · [Kennzahlen](#kennzahlen) · [Quickstart](#quickstart) · [Dokumentation](#dokumentation)
 
-- **Das Modell als unzuverlässiger Partner:** Es urteilt nur im Formular; Code bereitet vor und kontrolliert (Schema, Belegzeilen, Vollständigkeit). Das ist ein fester Ablauf, kein Agent ([ADR 0021](docs/adr/0021-kein-orchestrierungs-framework.md)).
-- **Reproduzierbare Wissensbasis:** 525 Prüfregeln aus gepinnten Quellen (SHA-256), ohne Vektor-Datenbank, mit Prüfungen im Code (Gates) gegen erfundene Zitate ([ADR 0011](docs/adr/0011-vollstaendiger-katalog.md)).
-- **Gemessen und dokumentiert:** 19 Messläufe mit Kosten und Dauer, Doku in fünf Sichten (4+1, ein Standardmodell für Architekturdokumentation) mit Klassen-, Aktivitäts- und Sequenzdiagrammen, STRIDE (Bedrohungsliste) und OWASP (Risikoliste für Anwendungen mit Sprachmodell), 0 € Leerlaufkosten.
+_English: GovGuard audits public-sector system specifications against GDPR, the German Standard Data Protection Model (SDM) and the EU AI Act, with a verbatim citation for every finding._
 
-## Lösungsstrategie
+</div>
 
-**Kernaussage:** Jeder Modellaufruf steht zwischen zwei Code-Schichten: Der Code bereitet vor, das Modell urteilt, der Code kontrolliert.
+> [!NOTE]
+> Die Galerie mit gespeicherten Audits ist frei zugänglich, nur „Audit erstellen“ braucht ein Passwort. GovGuard ist ein Prototyp: Bitte keine personenbezogenen oder vertraulichen Daten eingeben, nur erfundene.
 
-```mermaid
-flowchart LR
-  E["Eingabe<br/>mit Zeilennummern"]:::code
-  V["⚙️ Vorbereiten<br/>Katalog laden, N/A setzen,<br/>Pakete à 10 Prüfregeln"]:::code
-  M["🤖 Urteilen<br/>füllt das Formular aus"]:::llm
-  G{"⚙️ Kontrolle<br/>Schema, Beleg,<br/>Vollständigkeit"}:::code
-  R["⚙️ Fertigstellen<br/>Beleg ausschneiden,<br/>Gesamtstatus"]:::code
-  X["Abbruch<br/>fail closed"]:::code
-  E --> V --> M --> G
-  G -->|ok| R
-  G -->|"Problem, Versuch übrig"| M
-  G -->|"kein Versuch übrig"| X
-  classDef llm fill:#ffd8a8,stroke:#d9480f,color:#1f1f1f,stroke-width:2px
-  classDef code fill:#a5d8ff,stroke:#1971c2,color:#1f1f1f,stroke-width:2px
-```
+## Das Problem
 
-**Legende:** Orange = Sprachmodell, blau = Code, Raute = Gate. Pfeil = Ablauf; der Pfeil zurück zum Modell ist der Retry.
+Bevor eine Behörde ein IT-System baut, beschreibt sie es in einem Fachkonzept. Ob es zu Datenschutz und KI-Verordnung passt, prüfen heute Menschen von Hand, mit Fragebögen und Formularen; automatische Prüfwerkzeuge gibt es erst für IaC (Infrastructure as Code). Ein Fehler im Fachkonzept fällt deshalb oft erst beim Bauen auf, wenn Ändern teuer ist.
 
-**Beschreibung:**
+## Die Lösung
 
-- **Gate:** Ein Gate ist eine Prüfung im Code, die eine Antwort nur durchlässt, wenn sie eine feste Regel erfüllt (Schema, gültige Belegzeilen, ein Befund je Prüfregel).
-- **Retry und fail closed:** Ein Retry stellt dem Modell die Frage noch einmal, mit dem gefundenen Problem. Fail closed heißt: Ist die Antwort auch dann ungültig, bricht das Audit ab, statt einen ungeprüften Report zu liefern. Ein unbelegtes PASS oder FAIL wird stattdessen zu WARN, nie zu PASS ([ARCHITECTURE](docs/ARCHITECTURE.md#72-die-deterministische-schale) 7.2). Der Code prüft, dass die Belegzeilen existieren, nicht, dass sie das Urteil tragen. Ein falsches PASS ist deshalb das größte Restrisiko ([ARCHITECTURE](docs/ARCHITECTURE.md#74-wo-die-schale-endet) 7.4).
-- **Mehr:** [ARCHITECTURE](docs/ARCHITECTURE.md#04-drei-leitprinzipien) 0.4 und [3.3](docs/ARCHITECTURE.md#33-aktivität-spec-audit).
+Die Fachperson lädt ihr Fachkonzept hoch, nach etwa drei Minuten liegt der Audit-Report vor. Das Beispiel ist ein erfundenes Meldeportal, über das Eltern ihr Kind zur Schuleingangsuntersuchung anmelden; die Antworten wertet ein Dienst in den USA aus.
+
+<img src="docs/img/report-ueberblick.png" alt="Kopf des Audit-Reports: Gesamtstatus Verstoß belegt, Kacheln mit der Zahl der Befunde je Status, Lücken, Zweitmeinungen und die Bedingungen des Vorhabens" width="760">
+
+Oben steht der Gesamtstatus; der schlechteste Befund zählt. Die Kacheln zählen die Befunde je Status. Eine Lücke ist eine Pflicht, zu der das Fachkonzept nichts sagt, und der Verstoß-Prüfer zeigt, wie viele Verstöße die Zweitmeinung bestätigt oder abgeschwächt hat. Darunter die Bedingungen: Was das Fachkonzept über das Vorhaben verrät, etwa ob Daten in ein Drittland gehen. Davon hängt ab, welche Prüfregeln überhaupt gelten.
+
+<img src="docs/img/report-befunde.png" alt="Befundliste mit Status, Prüfregel, Normanker und Zeilen; rechts Begründung und Empfehlung zum gewählten Befund und das geprüfte Dokument mit markierten Belegzeilen" width="760">
+
+Die Befundliste lässt sich nach Quelle und Status filtern. Wer einen Befund anklickt, sieht rechts Begründung, Empfehlung und die Eingriffe des Codes in die KI-Antwort. Darunter das geprüfte Dokument mit den markierten Belegzeilen, so lässt sich jeder Befund am Original nachprüfen.
+
+## Architektur
+
+<img src="docs/img/architektur.png" alt="Laufzeit: Browser, Streamlit Community Cloud mit Oberfläche und Audit, Groq mit gpt-oss-120b. Entwicklung: Build auf dem eigenen Rechner, git push nach GitHub, Streamlit holt jeden neuen Stand" width="1140">
+
+GovGuard hat zwei Wege: Zur Laufzeit prüft es ein Fachkonzept in der Cloud, in der Entwicklung entstehen Code und Prüfregeln auf dem eigenen Rechner. Beide treffen sich in GitHub, denn was dort liegt, ist live. In beiden Wegen urteilt das Sprachmodell, der Code bereitet vor und kontrolliert.
+
+**Laufzeit** (obere Zeile)
+
+- **Browser:** Die Fachperson lädt ihr Fachkonzept hoch und bekommt den Audit-Report mit Belegen zurück. Eine Galerie zeigt gespeicherte Audits.
+- **Streamlit Community Cloud:** führt die Oberfläche (Streamlit) und die Audit-Engine (Python, Pydantic AI) aus, kostenlos, immer online und ohne eigenen Server. Die Audit-Engine prüft in einem festen Ablauf statt mit KI-Agenten. Der Code nummeriert jede Zeile des Fachkonzepts. Das Modell klärt den Rahmen, etwa ob Daten ins Ausland gehen, und prüft dann je 10 Regeln pro Anfrage, indem es ein festes Formular füllt: Status, Zeilennummern, Begründung. Der Code kontrolliert jede Antwort, fragt bei Fehlern einmal nach und bricht sonst ab, statt zu raten. Jeder Verstoß bekommt eine Zweitmeinung, die nur abschwächen darf. Zum Schluss schneidet der Code die Zitate aus und bildet den Gesamtstatus; der schlechteste Befund zählt.
+- **Groq:** stellt das Sprachmodell gpt-oss-120b. Es hält das Antwortformat strikt ein und kostet 0,07 bis 0,10 $ je Audit, rund ein Zehntel von Claude über AWS.
+
+**Entwicklung** (untere Zeile)
+
+- **Eigener Rechner:** Hier läuft der Build, der die Prüfregeln einmal vorab baut. Der Code lädt die Gesetzestexte von EUR-Lex und der Datenschutzkonferenz und liest jeden Artikel aus. Das Modell bei Groq zerlegt ihn in einzelne Pflichten, wählt aus, was an einem Fachkonzept prüfbar ist, und formuliert Kriterien für Einhaltung und Verstoß. Der Code prüft jeden Entwurf, ein Mensch gibt ihn im Git-Diff frei. Tests laufen mit pytest, den Codestil prüft ruff.
+- **GitHub:** hält Code und Wissensbasis. Die Wissensbasis besteht aus 350 Prüfregeln als JSON im Repo, je eine Pflicht aus DSGVO (169), SDM (116) oder KI-VO (65). Es gibt keine Datenbank und keine Vektorsuche: Jedes Audit prüft alle Regeln, denn oft ist gerade das Fehlen der Verstoß.
+- **git push:** ist das ganze Deployment. Streamlit holt jeden neuen Stand von GitHub, im Leerlauf kostet GovGuard 0 €.
 
 ## Kennzahlen
 
-Ein **Musterfall** ist eine fiktive Beispiel-Eingabe mit von Hand festgelegtem Soll-Ergebnis. Es gibt sechs (drei Spezifikationen, drei Architekturen), darunter den Selbstaudit: GovGuard prüft die eigene Spezifikation.
+| Kennzahl         | Wert                                                              |
+| ---------------- | ----------------------------------------------------------------- |
+| Kosten je Audit  | 0,07 bis 0,10 $                                                   |
+| Dauer je Audit   | 2,5 bis 3,5 Minuten                                               |
+| Stabilität       | 70 bis 94 % der Prüfregeln behalten über 3 Läufe ihren Status     |
+| Erfundene Zitate | 0 in 18 Läufen                                                    |
+| Tests            | 970 automatische Tests, 24 Browser-Tests mit Screenshot-Vergleich |
 
-| Kennzahl | Wert |
-|---|---|
-| Prüfregeln | 350 im Spec-Katalog (DSGVO 169, SDM 116, KI-VO 65), 175 im Architektur-Katalog (AWS FSBP 105, BSI 39, CIS 20, C5 11) |
-| Tests | 965 automatische Tests, dazu 24 Browser-Tests der Oberfläche (`uv run pytest -q`, `uv run pytest -m visual`) |
-| Kosten je Audit | Spec 0,07 bis 0,10 $, Architektur 0,007 bis 0,018 $ (Median je Musterfall) |
-| Dauer je Audit | Spec 143 bis 214,5 s, Architektur 12 bis 26,5 s (Median je Musterfall) |
-| Soll erreicht | 10 von 19 Läufen; 3 von 6 Musterfällen in jedem Lauf ([QS-4](docs/ARCHITECTURE.md#73-was-die-schale-nachweislich-leistet)) |
-
-Kosten und Dauer: Messkampagne (Issue #54), 19 Läufe über 6 Musterfälle, Groq `openai/gpt-oss-120b`, Preis 0,15 $ / 0,60 $ je Million Tokens. Die Einzelwerte stehen in [ARCHITECTURE](docs/ARCHITECTURE.md#53-ausrollen-betrieb-und-kosten) 5.3. Der Median gilt je Musterfall über die erfolgreichen Läufe (3; ein vierter Lauf beim Selbstaudit brach nach einem HTTP 400 von Groq ab, siehe [ARCHITECTURE](docs/ARCHITECTURE.md#73-was-die-schale-nachweislich-leistet) QS-2). Das Modell schwankt: Je Musterfall behalten 70 bis 99 % der Prüfregeln in allen Läufen denselben Status (Issue #54). **Nicht gemessen:** wie viele der Befunde eine Fachperson bestätigen würde (Trefferquote), und was die Handprüfung kostet. Gemessen sind nur Stabilität, Gesamtstatus und wenige Pflichtbefunde je Musterfall (ein Pflichtbefund ist ein Befund, dessen Status das Soll festlegt; [ARCHITECTURE](docs/ARCHITECTURE.md#73-was-die-schale-nachweislich-leistet) 7.3 und 7.4).
+Gemessen in 19 Läufen über erfundene Musterfälle mit festgelegtem Soll. **Noch nicht gemessen ist die Trefferquote**, also wie viele Befunde eine Fachperson bestätigen würde. GovGuard ist darum ein Prüfassistent für Fachleute, kein Nachweis der Rechtskonformität.
 
 ## Quickstart
 
-Voraussetzung: [uv](https://docs.astral.sh/uv/), das Python 3.13 selbst holt. Weder AWS noch ein Schlüssel nötig, die Galerie läuft ohne.
+Voraussetzung ist [uv](https://docs.astral.sh/uv/). Die Galerie mit gespeicherten Audits läuft ohne Schlüssel und ohne AWS:
 
 ```bash
 git clone https://github.com/Daniel74/GovGuard.git && cd GovGuard
@@ -66,20 +80,55 @@ uv sync
 uv run streamlit run streamlit_app.py
 ```
 
-Tests: `uv run pytest -q`. Eigene Audits, Wissensbasis-Build und Screenshot-Regression stehen in [ENTWICKLUNG](docs/ENTWICKLUNG.md).
+Tests: `uv run pytest -q`.
+
+### Eigene Audits
+
+„Audit erstellen“ braucht zwei Werte: ein frei gewähltes Passwort für die Seite (`APP_PASSWORD`) und einen API-Schlüssel von Groq (`GROQ_API_KEY`, anzulegen unter [console.groq.com/keys](https://console.groq.com/keys)). Beide gehören in `.streamlit/secrets.toml`; die Datei ist von Git ausgenommen:
+
+```toml
+APP_PASSWORD = "ein-eigenes-passwort"
+GROQ_API_KEY = "gsk_..."
+```
+
+Alternativ gehen Umgebungsvariablen: `APP_PASSWORD=… GROQ_API_KEY=… uv run streamlit run streamlit_app.py`. Ohne Passwort startet kein Audit. Wie in der Demo gilt: keine personenbezogenen oder vertraulichen Daten, egal wo GovGuard läuft.
+
+### Auf Streamlit Community Cloud hosten
+
+1. Das Repo auf GitHub forken.
+2. Auf [share.streamlit.io](https://share.streamlit.io) mit GitHub anmelden und „Create app“ wählen.
+3. Repo, Branch `main` und Hauptdatei `streamlit_app.py` eintragen.
+4. Unter „Advanced settings“ Python 3.13 wählen und die beiden Zeilen aus `secrets.toml` in das Feld „Secrets“ kopieren.
+
+Die Abhängigkeiten liest Streamlit aus `uv.lock`. Danach geht jeder Push auf `main` von selbst live, im Leerlauf kostet die App nichts. Den Build der Prüfregeln und alle Einstellungen beschreibt [ENTWICKLUNG](docs/ENTWICKLUNG.md).
+
+## Roadmap
+
+Ziel ist, die Schwankung des Modells zu senken und dafür erst messen zu können ([AUSBAU](docs/AUSBAU.md)):
+
+- Protokoll aller Modellaufrufe, getrennte Testsets und eine Fachperson für die Trefferquote.
+- Experimente mit einer Prüfregel je Aufruf, Prompt Caching und einem stärkeren Modell.
+- Befunde den Behörden-Dokumenten zuordnen und Textvorschläge für jede Lücke.
+
+Ein zweites Audit für Cloud-Architekturen (BSI, CIS, AWS) ist gebaut, wird aber nicht weiterentwickelt: Dafür gibt es schon viele Prüfwerkzeuge.
 
 ## Dokumentation
 
-| Dokument | Frage |
-|---|---|
-| [SPEC](docs/SPEC.md) | Was leistet GovGuard fachlich? (GovGuard prüft sie in der Galerie selbst.) |
-| [FUNKTIONSWEISE](docs/FUNKTIONSWEISE.md) | Wie arbeitet es fachlich? (Katalog, Build, Bedingungen, offene und geschlossene Welt, Inventar, Report; genug zum Nachbauen) |
-| [ARCHITECTURE](docs/ARCHITECTURE.md) | Wie ist es gebaut, und wo irrt das Modell? (Anwendungsfälle, fünf Sichten nach 4+1, Verlässlichkeit trotz Sprachmodell, Sicherheit, Standards, Referenzen) |
-| [METHODIK](docs/research/METHODIK.md) | Nach welcher Methode ist es entstanden? (Stand #65, nicht mehr nachgezogen) |
-| [ENTWICKLUNG](docs/ENTWICKLUNG.md) | Wie baue, teste und erweitere ich es? |
+| Dokument                                    | Frage                                                    |
+| ------------------------------------------- | -------------------------------------------------------- |
+| [SPEC](docs/SPEC.md)                        | Was leistet GovGuard fachlich?                           |
+| [FUNKTIONSWEISE](docs/FUNKTIONSWEISE.md)    | Wie arbeitet es fachlich, genug zum Nachbauen?           |
+| [ARCHITECTURE](docs/ARCHITECTURE.md)        | Wie ist es gebaut, und wo irrt das Modell?               |
+| [AUSBAU](docs/AUSBAU.md)                    | Was kommt als Nächstes?                                  |
+| [ENTWICKLUNG](docs/ENTWICKLUNG.md)          | Wie baue, teste und erweitere ich es?                    |
 | [ADRs](docs/adr/) und [CONTEXT](CONTEXT.md) | Welche Entscheidungen gelten, und was heißt ein Begriff? |
+
+## Über das Projekt
+
+Gebaut mit Claude Code als Programmierpartner: 76 Issues, 199 Commits, 28 Architekturentscheidungen.
+
+Kontakt: [govguard@gmx.de](mailto:govguard@gmx.de)
 
 ## Lizenz
 
-- **Code:** MIT, siehe [LICENSE](LICENSE).
-- **Wissensbasis:** Sie bleibt unter den Lizenzen ihrer Quellen, siehe [NOTICE](NOTICE). Dateien mit BSI-Anker stehen unter CC BY-SA 4.0. Die Demo-UI nennt Quellen und Werkzeuge unter „Credits“ in der Seitenleiste.
+Code unter MIT ([LICENSE](LICENSE)). Die Wissensbasis bleibt unter den Lizenzen ihrer Quellen ([NOTICE](NOTICE)); Dateien mit BSI-Anker stehen unter CC BY-SA 4.0.

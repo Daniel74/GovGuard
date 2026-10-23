@@ -2202,7 +2202,7 @@ STRIDE ist ein Merkwort für sechs Bedrohungsarten: Spoofing (falsche Identität
 | ID | Fluss | STRIDE | Bedrohung | Maßnahme im Demo-Stand | Status |
 |---|---|---|---|---|---|
 | T1 | ① | S | Fremde starten Audits auf eigene Kosten | ein gemeinsames Passwort (`APP_PASSWORD`), in gleicher Zeit verglichen; fehlt es in den Secrets, startet kein Audit; keine Rotation, keine Sperre, kein Protokoll, wer startet | teilweise |
-| T3 | ③ ⑩ | I | Echte Personendaten gehen über US-Hosting zu Groq | Hinweis „Keine echten oder personenbezogenen Daten“ in der Oberfläche (`DATA_RULE`); GovGuard speichert nichts (8.3) | akzeptiert |
+| T3 | ③ ⑩ | I | Echte Personendaten gehen über US-Hosting zu Groq | Hinweis „Keine personenbezogenen oder vertraulichen Daten“ in der Oberfläche (`DATA_RULE`); GovGuard speichert nichts (8.3) | akzeptiert |
 | T4 | ③ ④ | T | Anweisungen in der Eingabe (Prompt Injection) | Formular mit festen Werten, keine Werkzeuge, PASS braucht Beleg (7.2) | teilweise, nicht gemessen |
 | T5 | ④ | T | Antwort falsch, unvollständig oder erfunden | Schema, ein Befund je Prüfregel, Zeilenbereich, Retry, fail closed (7.2) | teilweise: Form, Vollständigkeit und Beleg gefangen, ein falsches PASS nicht (7.4) |
 | T6 | ② ⑨ | T | Text des Modells schleust HTML ein | jeder dynamische Text maskiert (`html.escape` in `style.py`) | umgesetzt |
