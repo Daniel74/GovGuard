@@ -16,6 +16,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.13"  # as locally; uv would pick the newest, which pyarrow has no wheel for yet
       - name: Install Chromium
         run: uv run python -m playwright install --with-deps chromium
       - name: Visit the app
