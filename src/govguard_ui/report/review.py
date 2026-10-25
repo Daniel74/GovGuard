@@ -1,5 +1,6 @@
 """Pure view logic for reading an audit report; no Streamlit (#11)."""
 
+import re
 from collections import Counter
 from typing import Literal, get_args
 
@@ -79,6 +80,42 @@ def visible_findings(
     """The finding list: gaps stand below it as a checklist; FAIL first, then by line."""
     shown = [f for f in of_source(findings, source) if category(f) in categories - {"GAP"}]
     return sorted(shown, key=lambda f: (CATEGORIES.index(category(f)), f.line_start or 10**9))
+
+
+SortColumn = Literal["status", "title", "primary_anchor", "lines"]  # columns of the table
+
+
+class Sorting(BaseModel):  # order of the finding table; the default is the order of the list
+    column: SortColumn = "status"
+    descending: bool = False
+
+    def clicked(self, column: SortColumn) -> "Sorting":
+        """A click on the sorted column flips it, another column starts ascending (#80)."""
+        return Sorting(column=column, descending=self.column == column and not self.descending)
+
+
+def _natural(text: str) -> list[str | int]:
+    """Numbers as numbers: Art. 9 before Art. 10, OPS.1.1.2 before OPS.1.1.10."""
+    return [int(part) if part.isdigit() else part.casefold() for part in re.split(r"(\d+)", text)]
+
+
+_SORT_KEYS = {
+    "status": lambda f: CATEGORIES.index(category(f)),
+    "title": lambda f: _natural(f.title),
+    "primary_anchor": lambda f: _natural(f.primary_anchor),
+    "lines": lambda f: (f.line_start, f.line_end),
+}
+
+
+def sorted_findings(findings: list[Finding], sorting: Sorting) -> list[Finding]:
+    """findings in the order of visible_findings; equal values keep it, descending too (a stable
+    sort). Findings without lines stay last both ways, like in a spreadsheet."""
+    def last(finding: Finding) -> bool:
+        return sorting.column == "lines" and finding.line_start is None
+
+    ordered = sorted((f for f in findings if not last(f)), key=_SORT_KEYS[sorting.column],
+                     reverse=sorting.descending)
+    return ordered + [f for f in findings if last(f)]
 
 
 def source_of(finding: Finding) -> str:

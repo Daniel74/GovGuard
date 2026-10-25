@@ -1,4 +1,5 @@
-"""Finding table as own component (CCv2): columns, row click and arrow keys (#45).
+"""Finding table as own component (CCv2): columns, row click, arrow keys (#45) and a click on a
+column head that asks Python to sort (#80).
 
 No Streamlit widget is a table whose rows are buttons (prototype of #43, variant A). LLM text
 reaches the browser raw and goes into the cells as textContent: never a link, image or tag.
@@ -11,9 +12,13 @@ import streamlit as st
 from govguard_ui.style import badge_css
 
 TABLE_HEIGHT = 560  # the table scrolls inside, like the document next to it
+COLUMNS = {"status": "Status", "title": "Prüfregel", "primary_anchor": "Normanker",
+           "lines": "Zeilen"}  # field of a row (review.SortColumn) -> head
 
-_HTML = """<div class="wrap"><table role="grid" aria-label="Befunde">
-<thead><tr><th>Status</th><th>Prüfregel</th><th>Normanker</th><th>Zeilen</th></tr></thead>
+_HEAD = "".join(f'<th data-col="{field}" tabindex="0">{label}</th>'  # a button inside would
+                for field, label in COLUMNS.items())  # shift the text by subpixels per run
+_HTML = f"""<div class="wrap"><table role="grid" aria-label="Befunde">
+<thead><tr>{_HEAD}</tr></thead>
 <tbody></tbody></table></div>"""
 
 _CSS = f"""
@@ -23,6 +28,12 @@ _CSS = f"""
 table{{width:100%;border-collapse:collapse}}
 th{{position:sticky;top:0;z-index:1;background:#F5F6F8;color:#4A5361;font-weight:600;
   text-align:left;padding:8px}}
+th{{cursor:pointer}}
+th:hover{{color:#0B4F8A}}
+th:focus-visible{{outline:2px solid #0B4F8A;outline-offset:-2px}}
+th[aria-sort]::after{{font-size:.8em;margin-left:4px}}
+th[aria-sort=ascending]::after{{content:"▲" / ""}}  /* aria-sort says it */
+th[aria-sort=descending]::after{{content:"▼" / ""}}
 td{{padding:10px 8px;vertical-align:top;border-top:1px solid #E3E7EC;overflow-wrap:break-word}}
 th:first-child,td:first-child,th:last-child,td:last-child{{width:1%;white-space:nowrap}}
 td:first-child{{white-space:pre}}  /* the downgrade "↓ von …" goes on its own line */
@@ -67,14 +78,34 @@ function rowElement(row, selected, choose) {
   return tr
 }
 
+function markSorted(head, sort, sortBy) {  // the arrow comes from the CSS
+  for (const th of head.querySelectorAll("th")) {
+    if (th.dataset.col === sort.column) {
+      th.setAttribute("aria-sort", sort.descending ? "descending" : "ascending")
+    } else {
+      th.removeAttribute("aria-sort")
+    }
+    th.onclick = () => sortBy(th.dataset.col)
+    th.onkeydown = (event) => {  // Enter or Space, like a button
+      if (event.key !== "Enter" && event.key !== " ") return
+      event.preventDefault()
+      sortBy(th.dataset.col)
+    }
+  }
+}
+
 export default function ({ data, parentElement, setTriggerValue }) {
   const wrap = parentElement.querySelector(".wrap")
   const body = parentElement.querySelector("tbody")
   const focused = parentElement.activeElement?.dataset?.id  // survives the rebuild below
   const scrolled = wrap.scrollTop
   const choose = (id) => setTriggerValue("clicked", id)
+  markSorted(parentElement.querySelector("thead"), data.sort,
+             (column) => setTriggerValue("sorted", column))
   body.replaceChildren(...data.rows.map((row) => rowElement(row, data.selected, choose)))
-  wrap.scrollTop = scrolled
+  const order = JSON.stringify(data.sort)  // a new order starts at the top
+  wrap.scrollTop = wrap.dataset.order === order ? scrolled : 0
+  wrap.dataset.order = order
   // one Tab stop for the whole table, on the selected row after each rebuild
   const start = body.querySelector("tr.sel") ?? body.firstElementChild
   if (start) start.tabIndex = 0
@@ -84,15 +115,19 @@ export default function ({ data, parentElement, setTriggerValue }) {
 """
 
 
-def render_table(rows: list[dict[str, str]], selected: str, key: str,
-                 on_select: Callable[[str], None]) -> None:
-    """rows from finding_list.table_rows; a click or Enter on a row calls on_select."""
+def render_table(data: dict, key: str, on_select: Callable[[str], None],
+                 on_sort: Callable[[str], None]) -> None:
+    """data: rows (findings_view.table_rows), the selected rule id and the sort (review.Sorting);
+    a click or Enter on a row calls on_select, on a column head on_sort."""
     def clicked() -> None:
         if rule_id := st.session_state[key].clicked:
             on_select(rule_id)
 
+    def resorted() -> None:
+        if column := st.session_state[key].sorted:
+            on_sort(column)
+
     # registered on every run: each runtime (also AppTest) needs it, an equal one stays silent
     finding_table = st.components.v2.component(
         "govguard_finding_table", html=_HTML, css=_CSS, js=_JS)
-    finding_table(data={"rows": rows, "selected": selected}, key=key,
-                  on_clicked_change=clicked)
+    finding_table(data=data, key=key, on_clicked_change=clicked, on_sorted_change=resorted)

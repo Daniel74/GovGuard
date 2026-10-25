@@ -4,12 +4,14 @@ from govguard.models import Expected, RequiredFinding
 from govguard_ui.gallery import load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
 from govguard_ui.report.review import (
+    Sorting,
     category,
     category_counts,
     document_window,
     expected_checks,
     no_evidence_note,
     of_source,
+    sorted_findings,
     source_counts,
     source_of,
     visible_findings,
@@ -199,3 +201,50 @@ def test_source_alle_keeps_every_source() -> None:
 
     assert len(visible_findings(findings, {"PASS", "N/A"}, source=None)) == 28 + 38
 
+
+
+def row(rule_id: str, status: str, anchor: str, start: int | None):
+    """A finding of the table; title follows the anchor, so both sort the same (#80)."""
+    return with_lines(start, start).model_copy(update={
+        "rule_id": rule_id, "status": status, "primary_anchor": anchor, "title": anchor.lower(),
+        "downgraded_from": None, "range_dropped": False})
+
+
+TABLE = [row("A", "FAIL", "Art. 10", 30), row("B", "FAIL", "Art. 9", None),
+         row("C", "WARN", "Art. 2", 5), row("D", "PASS", "Art. 9", 12)]  # default order
+
+
+def ids(findings) -> list[str]:
+    return [f.rule_id for f in findings]
+
+
+def test_by_default_the_table_is_sorted_by_status_ascending_the_order_of_the_list() -> None:
+    assert Sorting() == Sorting(column="status", descending=False)
+    assert ids(sorted_findings(TABLE, Sorting())) == ["A", "B", "C", "D"]
+
+
+def test_a_click_on_the_sorted_column_flips_it_another_column_starts_ascending() -> None:
+    flipped = Sorting().clicked("status")
+
+    assert flipped == Sorting(column="status", descending=True)
+    assert flipped.clicked("status") == Sorting()
+    assert flipped.clicked("lines") == Sorting(column="lines", descending=False)
+
+
+def test_status_descending_starts_with_the_mildest_and_keeps_the_order_within_a_status() -> None:
+    assert ids(sorted_findings(TABLE, Sorting(column="status", descending=True))) == [
+        "D", "C", "A", "B"]
+
+
+def test_anchor_and_title_sort_naturally_equal_values_keep_the_default_order() -> None:
+    """Art. 9 before Art. 10, like OPS.1.1.2 before OPS.1.1.10; B (FAIL) stays before D (PASS)."""
+    for column in ("primary_anchor", "title"):
+        assert ids(sorted_findings(TABLE, Sorting(column=column))) == ["C", "B", "D", "A"]
+        assert ids(sorted_findings(TABLE, Sorting(column=column, descending=True))) == [
+            "A", "B", "D", "C"]
+
+
+def test_lines_sort_as_numbers_and_findings_without_lines_stay_last_both_ways() -> None:
+    assert ids(sorted_findings(TABLE, Sorting(column="lines"))) == ["C", "D", "A", "B"]
+    assert ids(sorted_findings(TABLE, Sorting(column="lines", descending=True))) == [
+        "A", "D", "C", "B"]

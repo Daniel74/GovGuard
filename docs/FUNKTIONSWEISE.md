@@ -279,7 +279,7 @@ Ein Report zeigt jeden Befund mit Beleg im Dokument und macht jeden Eingriff des
 | Kopf | Audit-Art, Modell, Zahl der Retries, Gesamtstatus, Zähler je Kategorie mit Lücken, Zähler des Verstoß-Prüfers (geprüft, bestätigt, herabgestuft, nicht verfügbar) |
 | Soll-Abgleich | nur bei Musterfällen: Gesamtstatus und jeder Pflichtbefund gegen das Soll, Abweichungen markiert (`expected_checks`) |
 | Bedingungen | nur Spec-Audit: Wert jeder Bedingung mit Kriterium, Belegzeilen und Wirkung |
-| Befundtabelle | alle Befunde außer Lücken, filterbar nach Status und Quelle; FAIL zuerst, dann WARN, PASS und N/A, innerhalb eines Status nach der ersten Belegzeile (`visible_findings`). Im JSON-Report stehen die Befunde des Architektur-Audits dagegen nach erstem Ressourcentyp sortiert, damit Doppelungen über Quellen nebeneinander stehen |
+| Befundtabelle | alle Befunde außer Lücken, filterbar nach Status und Quelle; FAIL zuerst, dann WARN, PASS und N/A, innerhalb eines Status nach der ersten Belegzeile (`visible_findings`). Ein Klick auf einen Spaltenkopf sortiert nach dieser Spalte, ein zweiter kehrt die Richtung um (`sorted_findings`, #80): Status nach Schwere, Zeilen als Zahl, Text mit Zahlen als Zahl (Art. 9 vor Art. 10); gleiche Werte behalten die Grundordnung, Befunde ohne Zeilen stehen beim Sortieren nach Zeilen immer unten. Im JSON-Report stehen die Befunde des Architektur-Audits dagegen nach erstem Ressourcentyp sortiert, damit Doppelungen über Quellen nebeneinander stehen |
 | Detail eines Befunds | Begründung, Empfehlung, Korrekturen des Codes, Querverweise; der Beleg markiert im Dokument |
 | Lücken | als Checkliste nach Quelle; im Spec-Audit getrennt nach Bedingungen, zu denen die Eingabe schweigt, unter „Nur wenn …“ |
 

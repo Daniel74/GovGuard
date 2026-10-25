@@ -8,6 +8,8 @@ SDM 28.
 from streamlit.testing.v1 import AppTest
 from ui_helpers import finding_tables, shown_text, spec_key, spec_page, table_rows
 
+from govguard_ui.report.review import Sorting
+
 
 def listed(app: AppTest) -> int:
     return len(table_rows(app))
@@ -88,6 +90,27 @@ def test_the_chosen_status_stays_when_the_source_changes() -> None:
 
     assert app.pills(key=spec_key("status")).value == ["FAIL"]
     assert listed(app) == 20
+
+
+def test_without_a_click_the_table_is_sorted_by_status_ascending() -> None:
+    [table] = finding_tables(spec_page())
+
+    assert table["sort"] == {"column": "status", "descending": False}
+
+
+def test_the_chosen_sorting_orders_the_rows_and_the_first_row_stands_in_for_the_selection(
+) -> None:
+    """AppTest cannot click the head (#45): the click's state is set directly (#80)."""
+    app = spec_page()
+    app.session_state[spec_key("sort")] = Sorting(column="lines", descending=True)
+
+    [table] = finding_tables(app.run())
+
+    starts = [int(row["lines"].split("–")[0]) for row in table["rows"] if row["lines"] != "–"]
+    assert starts == sorted(starts, reverse=True)
+    assert table["sort"] == {"column": "lines", "descending": True}
+    assert table["selected"] == table["rows"][0]["id"]
+    assert listed(app) == 33 + 17 + 28  # the filters stay
 
 
 

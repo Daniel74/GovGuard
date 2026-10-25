@@ -1,6 +1,6 @@
 """Finding table with status and source filter, the gap checklist and the selected finding;
-the same for spec and architecture audits. The selection (<key>_selected) is read and written
-only here (#11, #43, #45)."""
+the same for spec and architecture audits. The selection (<key>_selected) and the order
+(<key>_sort) are read and written only here (#11, #43, #45, #80)."""
 
 from functools import partial
 
@@ -11,10 +11,13 @@ from govguard_ui.report.finding_table import render_table
 from govguard_ui.report.gaps_view import render_gaps
 from govguard_ui.report.review import (
     ALL_SOURCES,
+    SortColumn,
+    Sorting,
     category,
     category_counts,
     lines_text,
     of_source,
+    sorted_findings,
     source_counts,
     visible_findings,
 )
@@ -32,7 +35,8 @@ def render_findings(report: AuditReport, key: str) -> Finding:
     chosen = st.pills("Status", STATUS_FILTERS, selection_mode="multi", default=DEFAULT_FILTERS,
                       key=f"{key}_status", format_func=lambda c: _filter_label(c, counts[c]),
                       label_visibility="collapsed")  # the colours say it (design artefact)
-    shown = visible_findings(report.findings, set(chosen), source)
+    shown = sorted_findings(visible_findings(report.findings, set(chosen), source),
+                            current_sorting(key))
     listed = sum(counts[c] for c in STATUS_FILTERS)
     st.caption(f"{len(shown)} von {listed} Befunden angezeigt")
     selected = _selected(report.findings, shown, key)
@@ -94,9 +98,20 @@ def current_source(key: str) -> str | None:
     return None if source in (None, ALL_SOURCES) else source
 
 
+def current_sorting(key: str) -> Sorting:
+    """The order the reader chose with a click on a column head; status ascending before (#80)."""
+    return st.session_state.get(f"{key}_sort", Sorting())
+
+
+def sort_by(key: str, column: SortColumn) -> None:
+    st.session_state[f"{key}_sort"] = current_sorting(key).clicked(column)
+
+
 def render_rows(findings: list[Finding], key: str, selected: Finding) -> None:
-    render_table(table_rows(findings), selected.rule_id, f"{key}_table",
-                 on_select=partial(select, key))
+    data = {"rows": table_rows(findings), "selected": selected.rule_id,
+            "sort": current_sorting(key).model_dump()}
+    render_table(data, f"{key}_table", on_select=partial(select, key),
+                 on_sort=partial(sort_by, key))
 
 
 def table_rows(findings: list[Finding]) -> list[dict[str, str]]:

@@ -206,3 +206,24 @@ def test_the_popover_of_a_condition_closes_when_the_jump_into_the_document_is_cl
 
     expect(page.get_by_text("Bedingung: Einwilligung")).to_be_visible()  # the card, in the detail
     expect(jump).to_be_hidden()  # the popover no longer covers the page
+
+
+def test_a_click_on_a_column_head_sorts_ascending_and_enter_on_it_flips_the_order(
+        page: Page, app_url: str) -> None:
+    """Python sorts (review.sorted_findings, #80); here: the head sends the column, shows it."""
+    status = spec(page, app_url).locator('th[data-col="status"]')
+    anchor = page.locator('th[data-col="primary_anchor"]')
+    first = page.locator("tr[data-id]").first.locator("td").nth(2)  # its anchor
+    expect(status).to_have_attribute("aria-sort", "ascending")  # the order of the list
+
+    anchor.click()
+    expect(anchor).to_have_attribute("aria-sort", "ascending")
+    expect(page.locator("th[aria-sort]")).to_have_count(1)
+    expect(first).to_have_text(re.compile(r"^DSGVO "))  # sources: DSGVO, KI-VO, SDM
+    arrow = anchor.evaluate( "e => getComputedStyle(e, '::after').content")
+    assert arrow.startswith('"▲"')
+
+    anchor.press("Enter")
+    expect(anchor).to_have_attribute("aria-sort", "descending")
+    expect(first).to_have_text(re.compile(r"^SDM "))
+    expect(anchor).to_be_focused()
