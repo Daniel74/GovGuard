@@ -9,6 +9,11 @@ import streamlit as st
 from govguard.models import AuditReport, Finding
 from govguard_ui.report.finding_table import render_table
 from govguard_ui.report.gaps_view import render_gaps
+from govguard_ui.report.prototype_81_cards import render_site_cards  # PROTOTYPE #81
+from govguard_ui.report.prototype_81_document import render_site_document
+from govguard_ui.report.prototype_81_inline import render_site_inline
+from govguard_ui.report.prototype_81_sites import VIEWS, group_sites, grouping, variant
+from govguard_ui.report.prototype_81_table import render_site_table
 from govguard_ui.report.review import (
     ALL_SOURCES,
     SortColumn,
@@ -26,7 +31,7 @@ from govguard_ui.style import LOOKS, STATUS_FILTERS, status_word
 DEFAULT_FILTERS = ["FAIL", "WARN", "PASS"]  # N/A hidden by default (design artefact)
 
 
-def render_findings(report: AuditReport, key: str) -> Finding:
+def render_findings(report: AuditReport, key: str, source_text: str = "") -> Finding:
     """Draws the table and returns the selected finding (state key <key>_selected).
     Every number follows the source: source count = sum of the status counts."""
     st.markdown("### Befunde")
@@ -40,7 +45,19 @@ def render_findings(report: AuditReport, key: str) -> Finding:
     listed = sum(counts[c] for c in STATUS_FILTERS)
     st.caption(f"{len(shown)} von {listed} Befunden angezeigt")
     selected = _selected(report.findings, shown, key)
-    render_rows(shown, key, selected)
+    if st.segmented_control("Ansicht", VIEWS, default=VIEWS[0], required=True,
+                            key=f"{key}_view", label_visibility="collapsed") == VIEWS[0]:
+        render_rows(shown, key, selected)
+    else:  # PROTOTYPE #81: the variant decides the shape, the filters and selection stay
+        sites = group_sites(shown, grouping(), by_severity=variant() != "C")
+        st.session_state[f"{key}_p81_sites"] = sites
+        st.caption(f"{len(sites)} Fundstellen für {len(shown)} Befunde")
+        draw = {"A": render_site_table, "B": render_site_cards, "D": render_site_table,
+                "E": partial(render_site_inline, text=source_text)}.get(variant())
+        if draw:
+            draw(sites, selected, key, partial(select, key))
+        else:
+            render_site_document(sites, source_text, selected, key, partial(select, key))
     render_gaps(report, source, key)
     return selected
 
