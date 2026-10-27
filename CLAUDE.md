@@ -16,12 +16,22 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 - Wissensbasis und Musterfälle: vor jeder Änderung `docs/ENTWICKLUNG.md` lesen. Ein Soll (`expected` in `preset.json`) kommt von mir, nie aus einem Lauf; passe es nie an einen Report an, auch nicht, um einen Test grün zu machen. Prüfregeln (`rules_*.json`) nie von Hand ändern, nur per Build.
 
 Verbindlich sind `CONTEXT.md` (Glossar) und `docs/adr/`. Fehlen sie, gilt das Gespräch mit mir.
+Die Roadmap steht allein in den Backup-Folien „Produktstrategie“ bis „Einbindung in Behördenwerkzeuge“ der [Abschlusspräsentation](https://claude.ai/artifact/9afnq6xg11xyqzPzGcjT7w); `docs/AUSBAU.md` ist veraltet. Nenne ich eine Quelle, ist sie die einzige Grundlage: Lies sie vollständig, und frag, bevor du eine weitere heranziehst.
 
 ## Arbeitsweise: ein Go pro Ticket
 
-1. Erkläre zu Beginn das Ticket für einen IT-Junior (max. 5 Zeilen): *Problem heute* (was fehlt oder geht schief), *Beispiel* (Eingabe → Ergebnis vorher/nachher), *Was neu entsteht* (Dateien/Funktionen in Alltagssprache), *Wo die Weiche liegt*. Danach der Plan: die TDD-Zyklen als nummerierte Liste, je eine Zeile (was, welche Datei).
-2. Nach meinem **Go** arbeite alle Zyklen am Stück ab. Halte nur an einer **Weichenstellung** an: IAM, Verschlüsselung, Netzwerk, Datenresidenz, Kosten-Trade-off, Prompt-Design. Oder wenn ein Test nach zwei Anläufen rot bleibt.
-3. Zum Schluss: geänderte Dateien, Ergebnis von pytest und ruff, offene Kriterien.
+Ich lese Pläne und Meldungen als **Product Owner**: zuerst Nutzen, Aufwand und meine Entscheidungen, die Technik zuletzt. Das gilt für Tickets, Pläne, Halte und Abschlussmeldungen.
+
+1. **Vorlage zu Beginn** (max. 8 Zeilen, je ein Absatz). Die erste Zeile nennt die *Quellen*, auf denen der Plan beruht. Danach:
+   - *Nutzen*: was der Anwender danach kann, als Beispiel vorher → nachher aus seiner Sicht.
+   - *Aufwand und Risiko*: Schätzung in % des Claude-Pro-Wochenbudgets; was schiefgehen kann und was es dann kostet.
+   - *Deine Entscheidungen*: jede offene Weiche als Frage mit Optionen und meiner Empfehlung.
+
+   Darunter der technische Plan: die TDD-Zyklen als nummerierte Liste, je eine Zeile (was, welche Datei).
+2. Nach meinem **Go** arbeite alle Zyklen am Stück ab. Halte nur an einer **Weichenstellung** an: IAM, Verschlüsselung, Netzwerk, Datenresidenz, Kosten-Trade-off, Prompt-Design, sichtbare Änderung der UI. Oder wenn ein Test nach zwei Anläufen rot bleibt. Einen Halt stellst du als Entscheidungsfrage: Optionen, Folge je Option für Anwender, Kosten und Zeit, Empfehlung.
+3. **Abnahme zum Schluss:** Akzeptanzkriterien als Tabelle mit erfüllt/offen; *So siehst du es* (ein Schritt in der App oder ein Befehl); Schätzung gegen Ist (Ist liest du mit `/usage` ab); nächster Schritt. Technik in einer Zeile: geänderte Dateien, pytest, ruff.
+
+Wie ein Ticket technisch funktioniert, erklärt `/verstehen` als Lernkarte, nicht die Vorlage.
 
 Ich arbeite allein und sequentiell direkt auf `main`. Commits mache ich selbst oder sage es explizit.
 

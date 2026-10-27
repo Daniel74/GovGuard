@@ -1,4 +1,6 @@
-# GovGuard – Roadmap für das Spec-Audit
+# GovGuard – Ausbau-Ideen vom 22.10.2026 (veraltet)
+
+> **Veraltet seit 25.10.2026 und keine Quelle für Planung.** Die Roadmap steht allein in den Backup-Folien „Produktstrategie“ bis „Einbindung in Behördenwerkzeuge“ der [Abschlusspräsentation](https://claude.ai/artifact/9afnq6xg11xyqzPzGcjT7w), Kern ist „Roadmap: GovGuard im Behördenablauf“. Diese Datei bleibt nur, weil README, ARCHITECTURE und ADRs auf sie verweisen.
 
 Stand 22.10.2026. Der Prototyp prüft Fachkonzepte gegen 350 Prüfregeln aus DSGVO, SDM und KI-VO, als Demo auf Streamlit Community Cloud mit Groq. Wie GovGuard heute arbeitet, steht in [FUNKTIONSWEISE](FUNKTIONSWEISE.md).
 Das Architektur-Audit ist gebaut, aber eingefroren: Für Cloud als Code gibt es viele Prüfwerkzeuge, für Fachkonzepte keins ([Markt und Forschung](research/Markt%20und%20Forschung%20–%20Audits%20und%20Remediation.md), #69).
