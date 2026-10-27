@@ -10,23 +10,23 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 
 **So steuerst du:**
 
-- **Vorlage statt Technik.** Claude beginnt jeden Schritt mit Nutzen, Aufwand und Risiko und deinen Entscheidungen (CLAUDE.md → *Arbeitsweise*). Du antwortest mit Go, Korrektur oder Stopp.
-- **Budget in % Weekly.** Lies `/usage` vor und nach jedem Schritt ab und schreib „Budget: geschätzt X %, Ist Y %“ als Kommentar ins Issue. Das Ist von #81 (P1) ist die Messlatte für alle weiteren Schätzungen, Methode wie [SCHAETZUNG.md](SCHAETZUNG.md) → *Kalibrierung*. Das Wochenlimit setzt montags zurück; wird es knapp, schneide den Umfang, nicht die Qualität.
+- **Vorlage statt Technik.** Claude beginnt jeden Schritt mit Nutzen, Aufwand und Risiko und deinen Entscheidungen (CLAUDE.md → _Arbeitsweise_). Du antwortest mit Go, Korrektur oder Stopp.
+- **Budget in % Weekly.** Lies `/usage` vor und nach jedem Schritt ab und schreib „Budget: geschätzt X %, Ist Y %“ als Kommentar ins Issue. Das Ist von #81 (P1) ist die Messlatte für alle weiteren Schätzungen, Methode wie [SCHAETZUNG.md](SCHAETZUNG.md) → _Kalibrierung_. Das Wochenlimit setzt montags zurück; wird es knapp, schneide den Umfang, nicht die Qualität.
 - **Modell und Session** wie in [FAHRPLAN.md](FAHRPLAN.md): Sonnet baut, Opus urteilt, jeder Schritt startet frisch mit „Lies docs/FAHRPLAN_PHASE_2.md Schritt N“.
 
 **Demo-Stand schützen:** Die IHK-Präsentation ist Mitte November. Der Stand vom 26.10. bekommt einen Tag (P0). Streamlit Community Cloud rollt bei jedem Push neu aus, darum pushst du erst nach der Abnahme.
 
 **Reihenfolge:**
 
-| Schritt | Was | Skill | Hängt ab von | Schätzung (Annahme) |
-| ------- | ----------------------------------- | ------------------------------ | ------------------------------- | ------------------- |
-| P0 | Stand sichern | – | – | < 1 % |
-| P1 | #81 Befunde nach Fundstelle | `/prototype`, `/tdd` | P0 | 10–15 %, Messlatte |
-| P2 | Recherche Testdaten | `/research` | P0, läuft im Hintergrund | 5–10 % |
-| P3 | Roadmap-Karte und Schätzung | `/wayfinder` | P1 (Messlatte), parallel zu P2 | 8–12 % |
-| P4 | Prüfregeln festlegen | `/grill-with-docs` | P2 und P3 | 3–5 % |
-| P5 | Karte in baubare Tickets | `/to-spec`, `/to-tickets` | P3 und P4 | 3–5 % |
-| P6 ff. | Umsetzung je Ticket | `/tdd`, `/code-review` | P5 | entsteht in P5 |
+| Schritt | Was                         | Skill                     | Hängt ab von                   | Schätzung (Annahme) |
+| ------- | --------------------------- | ------------------------- | ------------------------------ | ------------------- |
+| P0      | Stand sichern               | –                         | –                              | < 1 %               |
+| P1      | #81 Befunde nach Fundstelle | `/prototype`, `/tdd`      | P0                             | 10–15 %, Messlatte  |
+| P2      | Recherche Testdaten         | `/research`               | P0, läuft im Hintergrund       | 5–10 %              |
+| P3      | Roadmap-Karte und Schätzung | `/wayfinder`              | P1 (Messlatte), parallel zu P2 | 8–12 %              |
+| P4      | Prüfregeln festlegen        | `/grill-with-docs`        | P2 und P3                      | 3–5 %               |
+| P5      | Karte in baubare Tickets    | `/to-spec`, `/to-tickets` | P3 und P4                      | 3–5 %               |
+| P6 ff.  | Umsetzung je Ticket         | `/tdd`, `/code-review`    | P5                             | entsteht in P5      |
 
 ---
 
@@ -46,9 +46,9 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 **Ziel:** Der Report zeigt Befunde wahlweise nach Fundstelle: Wer das Fachkonzept korrigiert, behebt eine Stelle einmal, statt sieben Befunde einzeln zu lesen. Weil sich die UI sichtbar ändert, entscheidet ein Prototyp die Darstellung vor dem Bau.
 **Voraussetzung:** P0. Kein LLM-Aufruf, keine Groq-Kosten.
 
-- [ ] **Budget** 👤 `/usage` ablesen
+- [x] **Budget** 👤 `/usage` ablesen
 - [ ] **Prototyp** 🆕 _Opus_ · 👤 `/prototype Issue #81: 2–3 Varianten der Ansicht „nach Fundstelle“ auf der echten Galerie, umschaltbar per ?variant=, Branch prototype/81-fundstelle` → 🤖 startet ihn mit `/run`
-- [ ] **🔀 Halt: Variante wählen** 👤 alle Varianten mit `arch-antragseingang-fehlerhaft` und `spec-govguard` ansehen; Variante wählen und die offene Frage beantworten (überlappende Bereiche gruppieren?) → 🤖 schreibt den Prototyp-Kommentar in #81: gewählte Variante, was wiederverwendbar ist, was nicht übernommen wird
+- [x] **🔀 Halt: Variante wählen** 👤 alle Varianten mit `arch-antragseingang-fehlerhaft` und `spec-govguard` ansehen; Variante wählen und die offene Frage beantworten (überlappende Bereiche gruppieren?) → 🤖 schreibt den Prototyp-Kommentar in #81: gewählte Variante, was wiederverwendbar ist, was nicht übernommen wird
 - [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #81 umsetzen, nach dem Prototyp-Kommentar neu schreiben statt kopieren` → Vorlage → Go
 - [ ] **Design** 🤖 ergänzt das Design-Artefakt um die neue Ansicht · 👤 `/design-screenshots`
 - [ ] **🔀 Halt: Bilder freigeben** 👤 Vergleichsbilder in `tests/visual/output/` ansehen, dann `uv run pytest -m visual --update-snapshots`
@@ -69,12 +69,7 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 
 - [ ] **Budget** 👤 `/usage` ablesen
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/research Testdaten für das Spec-Audit, Fragen aus docs/FAHRPLAN_PHASE_2.md Schritt P2, Ablage docs/research/Testdaten für das Spec-Audit.md`
-      Fragen:
-      1. Welche Datensätze mit Soll von Fachleuten gibt es für die Prüfung von Texten gegen DSGVO oder KI-VO? Je Datensatz Zugang, Lizenz, Sprache, Umfang; mindestens Amaral, Briand u. a. 2023 und AIReg-Bench 2025.
-      2. Wie erzeugt die Forschung synthetische Testdokumente, und wie stellt sie sicher, dass das Soll von Menschen kommt und nicht vom Modell?
-      3. Welche Messgrößen und Protokolle nutzen die Studien: Trefferquote, Fehlalarme, falsche Einhaltung, Übereinstimmung zwischen Fachleuten?
-      4. Gibt es öffentliche deutschsprachige Fachkonzepte, Lastenhefte oder DSFA aus Behörden, die als Testfall taugen?
-      5. Welche Normteile decken die gefundenen Testsets ab (DSGVO-Artikel, SDM-Bausteine, KI-VO-Pflichten)? Antwort als Tabelle, sie ist die Eingabe für P4.
+      Fragen: 1. Welche Datensätze mit Soll von Fachleuten gibt es für die Prüfung von Texten gegen DSGVO oder KI-VO? Je Datensatz Zugang, Lizenz, Sprache, Umfang; mindestens Amaral, Briand u. a. 2023 und AIReg-Bench 2025. 2. Wie erzeugt die Forschung synthetische Testdokumente, und wie stellt sie sicher, dass das Soll von Menschen kommt und nicht vom Modell? 3. Welche Messgrößen und Protokolle nutzen die Studien: Trefferquote, Fehlalarme, falsche Einhaltung, Übereinstimmung zwischen Fachleuten? 4. Gibt es öffentliche deutschsprachige Fachkonzepte, Lastenhefte oder DSFA aus Behörden, die als Testfall taugen? 5. Welche Normteile decken die gefundenen Testsets ab (DSGVO-Artikel, SDM-Bausteine, KI-VO-Pflichten)? Antwort als Tabelle, sie ist die Eingabe für P4.
 - [ ] **Lesen** 👤 Zusammenfassung lesen. Braucht es Antworten von Forschenden oder einer Fachperson, z. B. Zugang zum Datensatz von Amaral u. a.? → `/to-questionnaire`
 - [ ] **Budget** 👤 `/usage` ablesen
 - [ ] **Abschließen** 👤 committet die Recherche
@@ -91,12 +86,12 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 - [ ] **Budget** 👤 `/usage` ablesen
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/wayfinder Roadmap Phase 2 allein aus den Backup-Folien „Produktstrategie“ bis „Einbindung in Behördenwerkzeuge“ im Deck https://claude.ai/artifact/9afnq6xg11xyqzPzGcjT7w, Kern „Roadmap: GovGuard im Behördenablauf“; docs/AUSBAU.md ist veraltet; die Recherche aus P2 ist ein Recherche-Ticket der Karte, „Prüfregeln festlegen“ (P4) ein Entscheidungs-Ticket`
 - [ ] **🔀 Entscheidungen** 👤 beantwortet die Entscheidungs-Tickets, die nicht blockiert sind, eins nach dem anderen; je Ticket eine frische Session
-- [ ] **Schätzen** 🤖 schätzt jedes Arbeitspaket in S, M oder L, rechnet über die Messlatte aus #81 in % Weekly um und legt eine Wochenplanung vor, als neuer Abschnitt *Phase 2* in [SCHAETZUNG.md](SCHAETZUNG.md)
+- [ ] **Schätzen** 🤖 schätzt jedes Arbeitspaket in S, M oder L, rechnet über die Messlatte aus #81 in % Weekly um und legt eine Wochenplanung vor, als neuer Abschnitt _Phase 2_ in [SCHAETZUNG.md](SCHAETZUNG.md)
 - [ ] **🔀 Halt: Plan freigeben** 👤 Wochenplanung lesen → „passt“ oder Umfang schneiden
 - [ ] **Budget** 👤 `/usage` ablesen
 - [ ] **Abschließen** 👤 committet SCHAETZUNG.md
 
-**Fertig, wenn:** Jeder Punkt der Roadmap an einem Ticket der Karte hängt, das Ticket „Prüfregeln festlegen“ existiert und SCHAETZUNG.md den Abschnitt *Phase 2* hat.
+**Fertig, wenn:** Jeder Punkt der Roadmap an einem Ticket der Karte hängt, das Ticket „Prüfregeln festlegen“ existiert und SCHAETZUNG.md den Abschnitt _Phase 2_ hat.
 
 ---
 
@@ -123,7 +118,7 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 
 - [ ] **Budget** 👤 `/usage` ablesen
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/to-spec aus der Wayfinder-Karte Roadmap Phase 2` → `/to-tickets` in derselben Session
-- [ ] **Eintragen** 🤖 legt je Ticket einen Schritt in diesem Fahrplan an, im Format von P1, und ergänzt die Tabelle *Reihenfolge*
+- [ ] **Eintragen** 🤖 legt je Ticket einen Schritt in diesem Fahrplan an, im Format von P1, und ergänzt die Tabelle _Reihenfolge_
 - [ ] **🔀 Halt: Schnitt freigeben** 👤 Tickets und Reihenfolge lesen → Go oder Korrektur
 - [ ] **Budget** 👤 `/usage` ablesen
 - [ ] **Abschließen** 👤 committet
