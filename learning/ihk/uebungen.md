@@ -29,16 +29,16 @@
 
 **CapEx, OpEx und TCO (45 s).**
 
-- Einmalig investiert Wasen rund 39.000 € in Arbeitszeit, ganz ohne gekaufte Server: für den Piloten mit Anbindung an ein europäisches Modell, die Anbindung an Prozesse und Systeme und die Architekturprüfung mit Open-Source-Werkzeugen. Das ist CapEx. Die Entwicklung davor trage ich selbst.
-- Laufend kostet GovGuard rund 5.800 € im Jahr: rund 200 € für Betrieb und Modell, der Rest für die Pflege der Prüfregeln und der Schnittstellen. Das ist OpEx.
-- Rund vier Fünftel der Prüfarbeit prüfen GovGuard und die Open-Source-Werkzeuge vor, bei Migrationen auch den Abgleich alter gegen neue Fassung. Dort bewerten die Fachleute nur noch Warnungen und Verstöße. Wir nehmen an, dass sich dieser Teil halbiert: rund 58.000 € weniger im Jahr. Den Grundschutz-Check machen weiter die Fachleute.
-- Die TCO, also alle Kosten über drei Jahre: ohne GovGuard 441.000 €, mit GovGuard rund 324.000 €. Das sind rund 117.000 € weniger, die Investition ist nach rund 9 Monaten bezahlt, und die Wartezeit sinkt von vier auf ein bis zwei Wochen.
+- Einmalig investiert Wasen rund 38.000 € in Arbeitszeit, ganz ohne gekaufte Server: für den Piloten mit Anbindung an ein europäisches Modell, die Anbindung an Prozesse und Systeme und die Architekturprüfung mit Open-Source-Werkzeugen. Das ist CapEx. Die Entwicklung davor trage ich selbst.
+- Laufend kostet GovGuard rund 5.800 € im Jahr: unter 200 € für Betrieb und Modell, der Rest für die Pflege der Prüfregeln und der Schnittstellen. Das ist OpEx.
+- Rund zwei Drittel der Prüfarbeit prüfen GovGuard und die Open-Source-Werkzeuge vor. Dort bewerten die Fachleute nur noch Warnungen und Verstöße. Wir nehmen an, dass sich dieser Teil halbiert: rund 47.000 € weniger im Jahr. Den Abgleich alter gegen neue Fassung und den Grundschutz-Check machen weiter die Fachleute.
+- Die TCO, also alle Kosten über drei Jahre: ohne GovGuard 441.000 €, mit GovGuard rund 354.000 €. Das sind rund 87.000 € weniger, die Investition ist nach rund 11 Monaten bezahlt, und die Wartezeit sinkt von vier auf ein bis zwei Wochen.
 
 **Betrieb nur in der EU (45 s).**
 
 - Heute läuft der Prototyp bei US-Anbietern: Oberfläche bei Streamlit, Modell bei Groq.
 - Das Modell GPT-OSS 120B ist offen. Europäische Anbieter ohne US-Mutterkonzern wie STACKIT, IONOS oder Scaleway betreiben es in der EU und rechnen pro Nutzung ab. Ein Audit kostet dort Cent-Beträge und dauert etwa dreimal so lange wie bei Groq, also Sekunden bis wenige Minuten.
-- Bevor ich Piloten suche, schließe ich eine Entwicklungsphase ab: Befunde werden nach Fundstelle gebündelt, die Prüfregeln auf die Dokumente für Neuentwicklung und Migration abgestimmt, ein Abgleich alter gegen neue Fassungen gebaut und alles mit öffentlichen, wissenschaftlichen oder synthetischen Musterfällen getestet.
+- Bevor ich Piloten suche, schließe ich eine Entwicklungsphase ab: Befunde werden nach Fundstelle gebündelt, die Prüfregeln auf die Dokumente für Neuentwicklung und Migration abgestimmt und mit öffentlichen, wissenschaftlichen oder synthetischen Musterfällen getestet.
 - Im Piloten läuft GovGuard als Docker-Container auf einem Server bei Wasen, ohne Zusatzkosten, und wird an den europäischen Modellanbieter angebunden, den Wasen wählt. Später kann GovGuard serverlos laufen, etwa bei Scaleway: Dann kostet der Betrieb nur, wenn jemand prüft.
 - Ist der Pilot erfolgreich, folgen Datenhaltung und die Anbindung an Prozesse und Systeme.
 
@@ -55,14 +55,14 @@ Die Belege hinter dem Pitch, als roter Faden in fünf Fragen: Wo steht der Markt
 | 1 | Wie verbreitet ist Cloud, und was bremst? | 86 % nutzen Cloud, aber erst 47 % der Anwendungen laufen dort; Vertrauen in Sicherheit und Compliance ist Muss-Kriterium Nr. 1. |
 | 2 | Migration oder Neuentwicklung: Wo hilft GovGuard? | Reines Rehosting ist die Minderheit; GovGuard hilft bei Neuentwicklungen am meisten, bei Migrationen als ein Baustein. |
 | 3 | Welche Dokumente kommen durch die Cloud dazu? | Auf drei Ebenen: einmal je Behörde, einmal je Cloud-Anbieter oder -Dienst, und je Projekt; ein Migrationskonzept nur bei Migration. |
-| 4 | Wie viel Arbeit machen die Dokumente je Projekt? | Annahme: 31 bzw. 33 Personentage, davon Prüfen 6 bei Neuentwicklung und 10 bei Migration; 147.000 € im Jahr, vier Fünftel davon vorprüfbar. |
+| 4 | Wie viel Arbeit machen die Dokumente je Projekt? | Annahme: 31 bzw. 33 Personentage, davon Prüfen 6 bei Neuentwicklung und 10 bei Migration; 147.000 € im Jahr, zwei Drittel davon vorprüfbar. |
 | 5 | Wie viele Fehler übersehen Menschen, was kostet das? | Reviews finden im Median 60 % der Fehler; spät gefundene Fehler kosten das 5- bis 100-Fache. |
 | 6 | Wie bleiben die Daten in der EU? | GPT-OSS 120B bei europäischen Anbietern ohne US-Mutterkonzern; ein Audit kostet Cent und dauert etwa 3-mal so lange wie bei Groq. |
 | 7 | Serverlos oder Container? | Serverlos geht nur bei Scaleway; der Pilot läuft als Container auf einem Server bei Wasen. |
 | 8 | Architektur-Audits selbst entwickeln? | Nein: Open-Source-Werkzeuge nutzen und eigene Regeln für europäische Clouds ergänzen. |
-| 9 | Wie sieht der Pilot aus? | Erst schließe ich die Entwicklungsphase ab, dann sucht GovGuard Piloten; bei Wasen kostet der Pilot rund 26 PT, für die Anbindung an den EU-Modellanbieter und vor allem für alte Dokumente mit Soll. |
+| 9 | Wie sieht der Pilot aus? | Erst schließe ich die Entwicklungsphase ab, dann sucht GovGuard Piloten; bei Wasen kostet der Pilot rund 24 PT, für die Anbindung an den EU-Modellanbieter und vor allem für alte Dokumente mit Soll. |
 | 10 | Wäre GovGuard als SaaS für Wasen interessant? | Eher nicht; Selbstbetrieb mit Wartungsvertrag passt besser. |
-| 11 | Lohnt sich GovGuard? | Für Wasen ab rund 16 % Ersparnis an den vorgeprüften Projekt-Dokumenten; bei angenommenen 50 % amortisiert es sich in rund 9 Monaten. |
+| 11 | Lohnt sich GovGuard? | Für Wasen ab rund 20 % Ersparnis an den vorgeprüften Projekt-Dokumenten; bei angenommenen 50 % amortisiert es sich in rund 11 Monaten. |
 
 ### A. Markt und Bedarf
 
@@ -118,7 +118,7 @@ Rehosting (auch Lift-and-Shift) heißt: Eine bestehende Anwendung zieht fast unv
 
 | Projektart                           | Fachkonzept                      | Datenschutz und IT-Sicherheit                                                                                                                                                                  | Rolle von GovGuard                                                                                                                          |
 | ------------------------------------ | -------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
-| Migration (Rehosting, Replatforming) | existiert, ist aber oft veraltet | Der Cloud-Anbieter kommt als Auftragsverarbeiter dazu; Verträge, technische und organisatorische Maßnahmen und die Modellierung nach IT-Grundschutz (Baustein OPS.2.2 Cloud-Nutzung) ändern sich | Prüft das überarbeitete Fachkonzept und gleicht es mit der alten Fassung ab; das größte Risiko liegt aber in der Konfiguration der Ziel-Cloud, und die prüfen Open-Source-Werkzeuge |
+| Migration (Rehosting, Replatforming) | existiert, ist aber oft veraltet | Der Cloud-Anbieter kommt als Auftragsverarbeiter dazu; Verträge, technische und organisatorische Maßnahmen und die Modellierung nach IT-Grundschutz (Baustein OPS.2.2 Cloud-Nutzung) ändern sich | Prüft das überarbeitete Fachkonzept; den Abgleich mit der alten Fassung machen vorerst die Fachleute; das größte Risiko liegt aber in der Konfiguration der Ziel-Cloud, und die prüfen Open-Source-Werkzeuge |
 | Neuentwicklung cloud-nativ           | entsteht neu                     | Datenschutz durch Technikgestaltung (Art. 25 DSGVO) muss von Anfang an im Konzept stehen                                                                                                       | Größter Hebel: Prüfung schon am ersten Entwurf, bevor Code entsteht                                                                         |
 
 **Schlussfolgerung:** GovGuard nützt bei Neuentwicklungen am meisten, weil Fehler im Fachkonzept dort am billigsten zu beheben sind (Punkt 5). Bei Migrationen bleibt GovGuard nützlich, ist aber nur ein Baustein neben der Konfigurationsprüfung. Da Migrationen oft teurer und später fertig werden als geplant, zählt jede Woche, die eine schnellere Vorprüfung spart.
@@ -169,7 +169,7 @@ Ein Cloud-Dienst ist ein einzelnes Angebot eines Anbieters, etwa ein Kubernetes-
 
 | Dokument | Grundlage | Neuentwicklung | Migration | GovGuard |
 | --- | --- | --- | --- | --- |
-| Fachkonzept | Folie 18, Schritt ① | schreiben | überarbeiten: Betrieb, Datenflüsse, Anbieter | Prüfen heute; Abgleich alt gegen neu in der Entwicklungsphase (Punkt 9) |
+| Fachkonzept | Folie 18, Schritt ① | schreiben | überarbeiten: Betrieb, Datenflüsse, Anbieter | Prüfen heute; Abgleich alt gegen neu als Option (Punkt 11) |
 | DSFA | DSGVO Art. 35 | neu, wenn hohes Risiko; ähnliche Verarbeitungen dürfen eine gemeinsame DSFA haben (Abs. 1 Satz 2) | überprüfen, weil sich das Risiko ändert (Abs. 11) | Regeln im Katalog; Abgleich alt gegen neu |
 | Eintrag im Verzeichnis von Verarbeitungstätigkeiten | DSGVO Art. 30 | neuer Eintrag | Eintrag ändern: Empfänger, Übermittlungen, technische und organisatorische Maßnahmen | Regeln im Katalog |
 | Löschregeln des Verfahrens | DSGVO Art. 5, 17 | neu | zusätzlich Altdaten im eigenen Rechenzentrum löschen | Prüfen heute |
@@ -183,7 +183,7 @@ OPS.2.2.A1–A4 sind Basis-Anforderungen (MUSS), A5–A14 Standard-Anforderungen
 
 | Schritt auf Folie 18 | Neuentwicklung | Migration |
 | --- | --- | --- |
-| ① Fachkonzept | schreiben, GovGuard prüft | bestehendes Fachkonzept überarbeiten; GovGuard gleicht alte und neue Fassung ab |
+| ① Fachkonzept | schreiben, GovGuard prüft | bestehendes Fachkonzept überarbeiten; GovGuard prüft die neue Fassung, der Abgleich mit der alten ist eine Option |
 | ③ Datenschutz | DSFA, Verzeichnis, Auftragsverarbeitung neu | dieselben Dokumente nachziehen; das Risiko einer veralteten DSFA ist hier am größten |
 | ④ IT-Sicherheit | Schutzbedarf, Grundschutz-Check, dazu OPS.2.2-Dokumente | zusätzlich Migrationskonzept; Modellierung ändert sich, weil OPS.2.2 dazukommt |
 | ⑥ Umsetzung | Cloud-Vorlage neu | Cloud-Vorlage neu, Testlauf der Migration |
@@ -194,7 +194,7 @@ Die Ebenen bestimmen, *wann* geprüft wird. Je Projekt prüft GovGuard die Proje
 
 #### 4. Dokumentenfluss und Prüfaufwand je Projekt
 
-**Kurz gesagt:** Laut Annahme arbeitet Wasen an den Dokumenten einer Neuentwicklung 31 Personentage, an denen einer Migration 33. Ein Viertel davon ist internes Prüfen: 6 bzw. 10 Personentage je Projekt, zusammen rund 210 Personentage oder 147.000 € im Jahr. Rund vier Fünftel davon können GovGuard und Open-Source-Werkzeuge vorprüfen.
+**Kurz gesagt:** Laut Annahme arbeitet Wasen an den Dokumenten einer Neuentwicklung 31 Personentage, an denen einer Migration 33. Ein Viertel davon ist internes Prüfen: 6 bzw. 10 Personentage je Projekt, zusammen rund 210 Personentage oder 147.000 € im Jahr. Rund zwei Drittel davon können GovGuard und Open-Source-Werkzeuge heute vorprüfen.
 
 **Dokumentenfluss je Projekt (Hypothese)**
 
@@ -232,20 +232,20 @@ Was das zeigt:
 
 | Dokument | Neuentwicklung: prüfen | Migration: prüfen | Migration: abgleichen alt gegen neu | Vorprüfung durch |
 | --- | --- | --- | --- | --- |
-| Fachkonzept | 2 | 2 | 1 | GovGuard, beim Abgleich mit der Funktion aus der Entwicklungsphase (Punkt 9) |
-| DSFA (Durchschnitt, nicht jedes Projekt braucht eine) | 1 | 1 | 0,5 | GovGuard, ebenso |
-| Verzeichnis-Eintrag und Löschregeln | 0,5 | 0,5 | 0,5 | GovGuard, ebenso |
+| Fachkonzept | 2 | 2 | 1 | GovGuard; Abgleich von Hand |
+| DSFA (Durchschnitt, nicht jedes Projekt braucht eine) | 1 | 1 | 0,5 | GovGuard; Abgleich von Hand |
+| Verzeichnis-Eintrag und Löschregeln | 0,5 | 0,5 | 0,5 | GovGuard; Abgleich von Hand |
 | Migrationskonzept mit Testlauf | – | 1,5 | – | GovGuard, mit OPS.2.2 aus der Entwicklungsphase (Punkt 9) |
 | Schutzbedarf und Grundschutz-Check | 1,5 | 1,5 | 0,5 | keine, erst laut Roadmap, auch kein Abgleich |
 | Cloud-Vorlage (Infrastructure as Code) | 1 | 1 | – | Open-Source-Werkzeuge (Punkt 8) |
 | **Summe je Projekt** | **6** | **7,5** | **2,5** | Migration zusammen **10** |
-| davon vorgeprüft | 4,5 | 6 | 2 | Migration zusammen 8 |
+| davon vorgeprüft | 4,5 | 6 | 0 | Migration zusammen 6 |
 
-Abgleichen heißt: prüfen, ob ein bestehendes Dokument die Änderung durch die Cloud mitgemacht hat. GovGuard prüft heute nur die neue Fassung; den Abgleich mit der alten baue ich in der Entwicklungsphase (Punkt 9). Ohne Vorprüfung bleibt nur der Grundschutz-Check. Dokumente je Behörde und je Cloud-Anbieter oder -Dienst bleiben zur Vereinfachung außen vor.
+Abgleichen heißt: prüfen, ob ein bestehendes Dokument die Änderung durch die Cloud mitgemacht hat. GovGuard prüft heute nur die neue Fassung; den Abgleich mit der alten machen in dieser Rechnung die Fachleute, als Funktion von GovGuard ist er eine Option (Punkt 11). Ohne Vorprüfung bleiben damit Abgleich und Grundschutz-Check. Dokumente je Behörde und je Cloud-Anbieter oder -Dienst bleiben zur Vereinfachung außen vor.
 
-Im Jahr sind das 10 × 6 + 15 × 10 = 210 Personentage Prüfung, davon 10 × 4,5 + 15 × 8 = 165 vorprüfbar (79 %). Das ist rund ein Viertel der Arbeitszeit der vier Fachleute; den Rest binden Beratung, Dokumente je Behörde und Anbieter, Kundenaudits und Vorfälle.
+Im Jahr sind das 10 × 6 + 15 × 10 = 210 Personentage Prüfung, davon 10 × 4,5 + 15 × 6 = 135 vorprüfbar (64 %). Das ist rund ein Viertel der Arbeitszeit der vier Fachleute; den Rest binden Beratung, Dokumente je Behörde und Anbieter, Kundenaudits und Vorfälle.
 
-**Schlussfolgerung:** Die Prüfarbeit hängt an der Projektart: Eine Migration kostet 10 statt 6 Personentage, ein Viertel davon ist Abgleich. Für die Wirtschaftlichkeit (Punkt 11) zählt der vorprüfbare Teil, 165 von 210 Personentagen. Alle Zeiten sind Annahmen; wie Dokumente wirklich zwischen Wasen, Prüfteam und Behörde laufen, müsste eine Erhebung zeigen.
+**Schlussfolgerung:** Die Prüfarbeit hängt an der Projektart: Eine Migration kostet 10 statt 6 Personentage, ein Viertel davon ist Abgleich. Für die Wirtschaftlichkeit (Punkt 11) zählt der heute vorprüfbare Teil, 135 von 210 Personentagen. Alle Zeiten sind Annahmen; wie Dokumente wirklich zwischen Wasen, Prüfteam und Behörde laufen, müsste eine Erhebung zeigen.
 
 #### 5. Fehler bei manuellen Prüfungen und ihre Kosten
 
@@ -346,7 +346,7 @@ Ein Faktor 10 ist also nicht zu erwarten, eher Faktor 3. Ein Fachkonzept-Audit e
 | Dauer bei europäischen GPU-Anbietern | etwa 3-mal so lang: ca. 7–11 min | Schätzung, siehe oben |
 | Modellkosten pro Fachkonzept-Audit bei Groq | 7–10 Cent | Messläufe Prototyp; IONOS und Scaleway haben ähnliche Preise |
 | Modellkosten pro Fachkonzept-Audit bei STACKIT | bis ca. 25 Cent | Schätzung: Eingabe überwiegt, Eingabepreis ca. 3,5-mal so hoch wie bei Groq |
-| Modellkosten im Jahr bei Wasen | ca. 700 Audits, davon 240 Abgleiche mit doppelter Eingabe: ca. 65–235 €/Jahr | Annahme: 4 Dokumente je Neuentwicklung, 5 je Migration, je 4 Läufe; ein Dokument kostet etwa so viel wie ein Fachkonzept, ein Abgleich doppelt so viel |
+| Modellkosten im Jahr bei Wasen | ca. 460 Audits × 7–25 Cent = ca. 30–115 €/Jahr | Annahme: 4 Dokumente je Neuentwicklung, 5 je Migration, je 4 Läufe; ein Dokument kostet etwa so viel wie ein Fachkonzept |
 
 **Schlussfolgerung:** Datenresidenz in der EU ist mit dem offenen Modell ohne Mehrkosten und ohne Umbau der Prüflogik erreichbar. Die längere Dauer ist unkritisch: Zehn Minuten Vorprüfung ersetzen heute vier Wochen Wartezeit. Ich empfehle STACKIT als ersten Anbieter, weil er in Baden-Württemberg sitzt und Tool-Aufrufe für dieses Modell dokumentiert; IONOS oder Scaleway sind die Ausweichlösung. Entschieden wird nach einem Test mit den Musterfällen, nicht nach dem Preis.
 
@@ -425,14 +425,14 @@ In welchen Schritten GovGuard zu Wasen kommt und in welcher Form.
 
 #### 9. Pilot und nächste Schritte
 
-**Kurz gesagt:** Bevor überhaupt Piloten gesucht werden, schließe ich als Entwickler eine Entwicklungsphase von rund 27 Personentagen auf eigene Kosten ab: Befunde nach Fundstelle, abgestimmte Prüfregeln für Neuentwicklung und Migration, Musterfälle aus öffentlichen, wissenschaftlichen oder synthetischen Quellen, Abgleich alter gegen neue Fassung, Docker-Image. Der Pilot bei Wasen bindet den europäischen Modellanbieter an, den der Kunde wählt, und ist aufwendiger als die Technik vermuten lässt: Alte Dokumente und ihr Soll müssen aufbereitet und getestet werden, angenommen rund 26 Personentage.
+**Kurz gesagt:** Bevor überhaupt Piloten gesucht werden, schließe ich als Entwickler eine Entwicklungsphase von rund 21 Personentagen auf eigene Kosten ab: Befunde nach Fundstelle, abgestimmte Prüfregeln für Neuentwicklung und Migration, Musterfälle aus öffentlichen, wissenschaftlichen oder synthetischen Quellen, Docker-Image. Der Pilot bei Wasen bindet den europäischen Modellanbieter an, den der Kunde wählt, und ist aufwendiger als die Technik vermuten lässt: Alte Dokumente und ihr Soll müssen aufbereitet und getestet werden, angenommen rund 24 Personentage.
 
 **Ablauf in drei Phasen**
 
 | Phase | Wer trägt die Kosten | Inhalt | Aufwand (Annahme) | Ergebnis |
 | --- | --- | --- | --- | --- |
-| 1 Entwicklungsphase | ich als Entwickler, vor der Suche nach Piloten | Fundstelle, Prüfregeln je Dokument- und Projektart, OPS.2.2, Musterfälle, Abgleich alt gegen neu, Docker-Image | 27 PT | ein pilotreifes GovGuard |
-| 2 Pilot | Wasen | EU-Modellanbieter anbinden, alte Dokumente und Soll aufbereiten, testen, Prüfzeit messen | 26 PT | gemessene Ersparnis an Prüfzeit |
+| 1 Entwicklungsphase | ich als Entwickler, vor der Suche nach Piloten | Fundstelle, Prüfregeln je Dokument- und Projektart, OPS.2.2, Musterfälle, Docker-Image | 21 PT | ein pilotreifes GovGuard |
+| 2 Pilot | Wasen | EU-Modellanbieter anbinden, alte Dokumente und Soll aufbereiten, testen, Prüfzeit messen | 24 PT | gemessene Ersparnis an Prüfzeit |
 | 3 Integration | Wasen | Datenhaltung, Transaktionen, Anbindung an Prozesse und Systeme, Architektur-Werkzeug | 30 PT | GovGuard im Projektablauf |
 
 **Phase 1: Entwicklungsphase vor der Suche nach Piloten**
@@ -443,7 +443,6 @@ In welchen Schritten GovGuard zu Wasen kommt und in welcher Form.
 | Prüfregeln je Dokument- und Projektart zuordnen | Heute prüfen alle 350 Regeln jedes Dokument als Fachkonzept. Für DSFA, Verzeichnis, Auftragsverarbeitung und Löschregeln (Punkt 3) braucht es die passenden Regeln je Dokument, getrennt für Neuentwicklung und Migration, und ohne Doppelungen zwischen DSGVO und SDM. | 6 PT |
 | BSI OPS.2.2 als neue Regelquelle | Ohne sie prüft GovGuard die Cloud-Dokumente (Migrationskonzept, Sicherheits- und Notfallkonzept) gar nicht. Neue Regeln entstehen nur über den Build mit Freigabe im Git-Diff. | 5 PT |
 | Musterfälle mit Soll für die neuen Dokumentarten | Ohne Soll lässt sich nicht unterscheiden, ob GovGuard oder die Regel falsch liegt. Quellen: öffentlich verfügbare Dokumente (z. B. veröffentlichte Verfahrensbeschreibungen von Behörden), von der Forschung geteilte Testsets oder synthetische Fälle wie bei AIReg-Bench. Das Soll kommt aus der Quelle oder von mir, nie aus einem Lauf. | 5 PT |
-| Abgleich alt gegen neu | Bei Migrationen ist ein Viertel der Prüfarbeit der Abgleich: Hat jedes bestehende Dokument die Änderung durch die Cloud mitgemacht, etwa neuer Auftragsverarbeiter, neue Orte und Datenflüsse? GovGuard bekommt alte und neue Fassung, meldet fehlende Änderungen mit Fundstelle in beiden Fassungen. Dazu Musterfälle als Paare mit Soll. Ohne den Abgleich bleibt der größte Teil der Migrationsarbeit von Hand (Punkt 4). | 6 PT |
 | Docker-Image | Ein Pilot soll ohne Umbau installiert werden können. Im Image ist `browser.gatherUsageStats = false` gesetzt; Streamlit sendet sonst Nutzungsstatistiken. | 1 PT |
 
 Harmonisieren heißt hier: ein abgestimmter Satz von Prüfregeln, in dem jede Regel weiß, für welches Dokument und welche Projektart sie gilt, und keine Pflicht doppelt oder widersprüchlich geprüft wird.
@@ -457,7 +456,7 @@ Ein IT-Dienstleister wird schon für interne Testfälle verlangen, dass die Date
 | Installation und Vertrag | Container auf einem internen Server, nur im Firmennetz erreichbar; Vertrag zur Auftragsverarbeitung mit dem Modellanbieter | 2 PT |
 | Anbindung an den EU-Modellanbieter | Den Anbieter wählt der Pilotkunde, etwa STACKIT oder IONOS. Dazu gehören ein Adapter für eine Schnittstelle wie bei OpenAI und ein Test aller Musterfälle gegen diesen Anbieter: Anbieter betreiben GPT-OSS unterschiedlich gut, besonders bei Tool-Aufrufen, und GovGuard braucht erzwungene Tool-Nutzung (ADR 0005). | 4 PT |
 | Alte Dokumente aufbereiten | aus 10–20 abgeschlossenen Projekten Fachkonzept, DSFA, Verzeichnis-Eintrag, Löschregeln und bei Migrationen das Migrationskonzept heraussuchen, Formate vereinheitlichen, Kundendaten wo nötig schwärzen | 5 PT |
-| Soll festlegen | Das Prüfteam legt je Dokument fest, welche Befunde richtig wären, bei Migrationen auch, welche Änderungen zwischen alter und neuer Fassung fehlen; das ist zugleich die Prüfung von Hand für den Vergleich | 10 PT |
+| Soll festlegen | Das Prüfteam legt je Dokument fest, welche Befunde richtig wären; das ist zugleich die Prüfung von Hand für den Vergleich | 8 PT |
 | Testen und auswerten | GovGuard-Läufe, Vergleich mit dem Soll, Prüfzeit, gefundene Mängel, Fehlalarme und Dauer je Audit messen | 5 PT |
 
 Aufbau: Der Container baut nur eine Verbindung nach außen auf, zum Modellanbieter in der EU. Testdokumente und Berichte bleiben in der Sitzung oder als Download; es gibt noch keine Datenbank. Architekturen prüft ein Open-Source-Werkzeug (Punkt 8). Für STACKIT und IONOS gibt es keine unabhängigen Geschwindigkeitsmessungen; der Pilot misst die Dauer selbst.
@@ -474,7 +473,7 @@ Aufbau: Der Container baut nur eine Verbindung nach außen auf, zum Modellanbiet
 
 Transaktionsmanagement heißt: Ein Vorgang wird entweder ganz oder gar nicht ausgeführt und gespeichert, damit nie halbe Ergebnisse entstehen. Für Audits ist das wichtig, weil ein Bericht später als Nachweis dienen soll.
 
-**Schlussfolgerung:** Die Risiken sind sauber getrennt. Ich trage die Entwicklungsphase (rund 27 Personentage) und gehe erst mit einem pilotreifen GovGuard auf Piloten zu. Wasen trägt bis zur Entscheidung nur den Pilot, rund 26 Personentage oder 18.200 €; der größte Teil davon ist Aufbereiten und Soll-Festlegen, nicht Technik. Die Anbindung an den Modellanbieter gehört in den Pilot, weil erst der Kunde den Anbieter wählt. Dafür beantwortet der Pilot die eine Frage, an der die Wirtschaftlichkeit hängt: Wie viel Prüfzeit spart GovGuard wirklich? Liegt die gemessene Ersparnis deutlich über 16 % (Punkt 11), lohnt sich Phase 3 mit Datenhaltung und Integration; liegt sie darunter, endet das Vorhaben nach dem Piloten. Die aufbereiteten Dokumente mit Soll behält Wasen als Testset für jede spätere Version.
+**Schlussfolgerung:** Die Risiken sind sauber getrennt. Ich trage die Entwicklungsphase (rund 21 Personentage) und gehe erst mit einem pilotreifen GovGuard auf Piloten zu. Wasen trägt bis zur Entscheidung nur den Pilot, rund 24 Personentage oder 16.800 €; der größte Teil davon ist Aufbereiten und Soll-Festlegen, nicht Technik. Die Anbindung an den Modellanbieter gehört in den Pilot, weil erst der Kunde den Anbieter wählt. Dafür beantwortet der Pilot die eine Frage, an der die Wirtschaftlichkeit hängt: Wie viel Prüfzeit spart GovGuard wirklich? Liegt die gemessene Ersparnis deutlich über 20 % (Punkt 11), lohnt sich Phase 3 mit Datenhaltung und Integration; liegt sie darunter, endet das Vorhaben nach dem Piloten. Die aufbereiteten Dokumente mit Soll behält Wasen als Testset für jede spätere Version.
 
 #### 10. Wäre GovGuard als SaaS für Wasen interessant?
 
@@ -485,7 +484,7 @@ Transaktionsmanagement heißt: Ein Vorgang wird entweder ganz oder gar nicht aus
 | Wasen ist selbst Auftragsverarbeiter       | Die Fachkonzepte gehören den Behörden. Ein SaaS-Anbieter wäre ein weiterer Unterauftragsverarbeiter, und den muss jeder Kunde vorher genehmigen (Art. 28 Abs. 2 DSGVO). |
 | Eigenes Rechenzentrum und Betriebspersonal | Einen Docker-Container zu betreiben ist für einen IT-Dienstleister Routine.                                                                                                |
 | Integration                                | Single Sign-on, Ticketsystem und Dokumentenmanagement lassen sich intern einfacher anbinden.                                                                               |
-| Geringe Menge                              | Rund 700 Audits im Jahr machen ein Abo pro Audit für beide Seiten uninteressant.                                                                                           |
+| Geringe Menge                              | Rund 460 Audits im Jahr machen ein Abo pro Audit für beide Seiten uninteressant.                                                                                           |
 
 **Wann ein fremder Anbieter doch Sinn hätte:** Der eigentliche Wert eines Anbieters ist die Pflege der Prüfregeln, wenn sich DSGVO-Auslegung, SDM oder IT-Grundschutz ändern. Das lässt sich auch ohne SaaS kaufen: als Software zum Selbstbetrieb mit Wartungsvertrag, der Regel-Updates liefert.
 
@@ -497,7 +496,7 @@ Was Pilot, Integration und Betrieb kosten und ab wann sich das rechnet.
 
 #### 11. Lohnt sich GovGuard? CapEx, OpEx und TCO
 
-**Kurz gesagt:** Betrieb und Modell kosten rund 200 € im Jahr; teuer ist die Arbeitszeit. Gerechnet wird nur mit dem Prüfen der Dokumente je Projekt (Punkt 4): rund 147.000 € im Jahr. Bei angenommenen 50 % Ersparnis an den vorgeprüften Dokumenten sind die 39.200 € für Pilot und Integration nach rund 9 Monaten bezahlt, lohnend ist es ab rund 16 %. Die Entwicklungsphase davor trage ich als Entwickler.
+**Kurz gesagt:** Betrieb und Modell kosten unter 200 € im Jahr; teuer ist die Arbeitszeit. Gerechnet wird nur mit dem Prüfen der Dokumente je Projekt (Punkt 4): rund 147.000 € im Jahr. Bei angenommenen 50 % Ersparnis an den vorgeprüften Dokumenten sind die 37.800 € für Pilot und Integration nach rund 11 Monaten bezahlt, lohnend ist es ab rund 20 %. Gerechnet ist nur, was GovGuard heute kann; Abgleich und Remediation sind Optionen. Die Entwicklungsphase davor trage ich als Entwickler.
 
 Die Rechnung beruht auf Annahmen für die Übung. Dauer und Modellkosten stammen aus Messläufen des Prototyps mit GPT-OSS 120B bei Groq (`data/measurements/`), Preise der Anbieter aus ihren Preislisten oder von Vergleichsseiten.
 
@@ -507,11 +506,11 @@ Die Rechnung beruht auf Annahmen für die Übung. Dauer und Modellkosten stammen
 | --- | --- | --- |
 | Prüfaufwand heute | 210 Personentage/Jahr | Punkt 4 |
 | Kosten der Prüfung ohne GovGuard | 210 × 700 € = 147.000 €/Jahr | Annahme: interner Tagessatz 700 € |
-| Vorgeprüfter Anteil | 165 Personentage/Jahr (79 %) | Punkt 4: GovGuard für Projekt-Dokumente und ihren Abgleich, Open-Source-Werkzeuge für die Cloud-Vorlage |
-| Ersparnis durch Vorprüfung | 50 % von 165 → 82,5 Personentage/Jahr | Annahme: Fachleute bewerten bei vorgeprüften Dokumenten nur Warnungen und Verstöße |
-| Wert der Ersparnis | 82,5 × 700 € = 57.750 €/Jahr | Annahme: interner Tagessatz 700 € |
+| Vorgeprüfter Anteil | 135 Personentage/Jahr (64 %) | Punkt 4: GovGuard für Projekt-Dokumente, Open-Source-Werkzeuge für die Cloud-Vorlage |
+| Ersparnis durch Vorprüfung | 50 % von 135 → 67,5 Personentage/Jahr | Annahme: Fachleute bewerten bei vorgeprüften Dokumenten nur Warnungen und Verstöße |
+| Wert der Ersparnis | 67,5 × 700 € = 47.250 €/Jahr | Annahme: interner Tagessatz 700 € |
 | Wartezeit pro Projekt | 4 Wochen → 1–2 Wochen | Annahme |
-| Betrieb und Modell | ca. 200 €/Jahr | Modell ca. 65–235 € (Punkt 6), Container auf vorhandenem Server ca. 0 € (Punkt 7) |
+| Betrieb und Modell | unter 200 €/Jahr | Modell ca. 30–115 € (Punkt 6), Container auf vorhandenem Server ca. 0 € (Punkt 7) |
 | Architektur-Audits mit Open-Source-Werkzeugen | 0 € Lizenz | Punkt 8 |
 
 **CapEx und OpEx**
@@ -523,7 +522,7 @@ CapEx (Capital Expenditure) sind einmalige Investitionen, die über Jahre genutz
 | Pilot: Installation, Vertrag mit dem Modellanbieter (Punkt 9)                                                           | CapEx          | 2 PT × 700 € = 1.400 €      | Annahme                               |
 | Pilot: Anbindung an den EU-Modellanbieter, Test aller Musterfälle gegen diesen Anbieter                                 | CapEx          | 4 PT × 700 € = 2.800 €      | Annahme                               |
 | Pilot: alte Dokumente aus 10–20 Projekten aufbereiten                                                                   | CapEx          | 5 PT × 700 € = 3.500 €      | Annahme                               |
-| Pilot: Soll je Dokument und je Abgleich durch das Prüfteam festlegen                                                    | CapEx          | 10 PT × 700 € = 7.000 €     | Annahme                               |
+| Pilot: Soll je Dokument durch das Prüfteam festlegen                                                                    | CapEx          | 8 PT × 700 € = 5.600 €      | Annahme                               |
 | Pilot: testen und auswerten nach Messplan                                                                               | CapEx          | 5 PT × 700 € = 3.500 €      | Annahme                               |
 | Integration: Datenhaltung und Transaktionsmanagement (Berichte speichern, Löschfristen, Versionen von Regeln und Modell) | CapEx          | 8 PT × 700 € = 5.600 €      | Annahme                               |
 | Integration: Anmeldung über das Firmenkonto (Single Sign-on)                                                            | CapEx          | 3 PT × 700 € = 2.100 €      | Annahme                               |
@@ -532,16 +531,16 @@ CapEx (Capital Expenditure) sind einmalige Investitionen, die über Jahre genutz
 | Integration in Prozesse: Prüfschritt und Freigabe im Projektablauf, Schulung des Prüfteams                              | CapEx          | 5 PT × 700 € = 3.500 €      | Annahme                               |
 | Architektur-Audit: Open-Source-Werkzeug in der Pipeline, eigene Regeln für europäische Clouds (Punkt 8)                 | CapEx          | 7 PT × 700 € = 4.900 €      | Annahme                               |
 | Server-Hardware                                                                                                         | CapEx          | 0 €                         | entfällt durch Cloud                  |
-| **Summe einmalig**                                                                                                      | **CapEx**      | **56 PT = 39.200 €**        | davon 26 PT Pilot                     |
-| Nicht bei Wasen: Entwicklungsphase vor der Suche nach Piloten (Punkt 9)                                                 | Vorleistung des Entwicklers | ca. 27 PT      | nicht in der TCO von Wasen            |
+| **Summe einmalig**                                                                                                      | **CapEx**      | **54 PT = 37.800 €**        | davon 24 PT Pilot                     |
+| Nicht bei Wasen: Entwicklungsphase vor der Suche nach Piloten (Punkt 9)                                                 | Vorleistung des Entwicklers | ca. 21 PT      | nicht in der TCO von Wasen            |
 | Optional, nur für ein SaaS-Angebot an Behörden: Umbau für serverlosen Betrieb (Audit-Job)                               | CapEx          | 15 PT × 700 € = 10.500 €    | Annahme; nicht in der TCO             |
-| Betrieb und Modell                                                                                                      | OpEx           | ca. 200 €/Jahr              | siehe Tabelle oben                    |
+| Betrieb und Modell                                                                                                      | OpEx           | unter 200 €/Jahr            | siehe Tabelle oben                    |
 | Pflege der Prüfregeln bei neuen Normständen                                                                             | OpEx           | 5 PT × 700 € = 3.500 €/Jahr | Annahme                               |
 | Wartung der Schnittstellen und der Regeln für das Architektur-Werkzeug                                                  | OpEx           | 3 PT × 700 € = 2.100 €/Jahr | Annahme                               |
 | **Summe laufend**                                                                                                       | **OpEx**       | **ca. 5.800 €/Jahr**        |                                       |
-| Ersparnis Prüfaufwand                                                                                                   | OpEx (weniger) | 57.750 €/Jahr               | siehe Tabelle oben                    |
-| **Netto-Ersparnis**                                                                                                     |                | **ca. 51.950 €/Jahr**       | 57.750 € − 5.800 €                    |
-| **Amortisation**                                                                                                        |                | **rund 9 Monate**           | 39.200 € ÷ 51.950 €/Jahr = 0,75 Jahre |
+| Ersparnis Prüfaufwand                                                                                                   | OpEx (weniger) | 47.250 €/Jahr               | siehe Tabelle oben                    |
+| **Netto-Ersparnis**                                                                                                     |                | **ca. 41.450 €/Jahr**       | 47.250 € − 5.800 €                    |
+| **Amortisation**                                                                                                        |                | **rund 11 Monate**          | 37.800 € ÷ 41.450 €/Jahr = 0,91 Jahre |
 
 Amortisation heißt: die Zeit, bis die Ersparnis die einmalige Investition wieder eingespielt hat. Selbst entwickelte Software darf nach § 248 Abs. 2 HGB aktiviert werden, muss aber nicht; ob der Umbau in der Bilanz als CapEx erscheint, entscheidet also die Buchhaltung.
 
@@ -551,32 +550,34 @@ TCO (Total Cost of Ownership) sind alle Kosten einer Lösung über ihre Nutzungs
 
 | Posten                                                      | Ohne GovGuard            | Mit GovGuard             |
 | ----------------------------------------------------------- | ------------------------ | ------------------------ |
-| CapEx: Pilot und Integration (einmalig)                     | 0 €                      | 39.200 €                 |
-| OpEx: Prüfung von Hand                                      | 3 × 147.000 € = 441.000 € | 3 × 89.250 € = 267.750 € |
+| CapEx: Pilot und Integration (einmalig)                     | 0 €                      | 37.800 €                 |
+| OpEx: Prüfung von Hand                                      | 3 × 147.000 € = 441.000 € | 3 × 99.750 € = 299.250 € |
 | OpEx: Betrieb, Modell, Pflege von Regeln und Schnittstellen | 0 €                      | 3 × 5.800 € = 17.400 €   |
-| **TCO 3 Jahre**                                             | **441.000 €**            | **324.350 €**            |
+| **TCO 3 Jahre**                                             | **441.000 €**            | **354.450 €**            |
 
-Unterschied: rund 116.650 € weniger in drei Jahren, das sind 26 %. Rund ein Fünftel der Prüfarbeit, der Grundschutz-Check, bleibt ohne Vorprüfung. Die Entwicklungsphase trage ich als Entwickler; sie steht deshalb nicht in der TCO von Wasen. Drei Jahre sind eine übliche Nutzungsdauer für IT-Investitionen. Nicht eingerechnet sind die kürzere Wartezeit und die früher gefundenen Fehler (Punkt 5), deren Wert sich schwer beziffern lässt.
+Unterschied: rund 86.550 € weniger in drei Jahren, das sind 20 %. Gut ein Drittel der Prüfarbeit, Abgleich alt gegen neu und Grundschutz-Check, bleibt ohne Vorprüfung. Die Entwicklungsphase trage ich als Entwickler; sie steht deshalb nicht in der TCO von Wasen. Drei Jahre sind eine übliche Nutzungsdauer für IT-Investitionen. Nicht eingerechnet sind die kürzere Wartezeit und die früher gefundenen Fehler (Punkt 5), deren Wert sich schwer beziffern lässt.
 
 **Wie stark hängt das Ergebnis an der Annahme von 50 %?**
 
 | Ersparnis an vorgeprüften Dokumenten | TCO 3 Jahre mit GovGuard | Vorteil gegenüber 441.000 € | Amortisation      |
 | ------------------------------------ | ------------------------ | --------------------------- | ----------------- |
-| 25 %                                 | 410.975 €                | 30.025 €                    | ca. 20 Monate     |
-| 50 % (Annahme)                       | 324.350 €                | 116.650 €                   | rund 9 Monate     |
-| 75 %                                 | 237.725 €                | 203.275 €                   | ca. 6 Monate      |
+| 25 %                                 | 425.325 €                | 15.675 €                    | ca. 25 Monate     |
+| 50 % (Annahme)                       | 354.450 €                | 86.550 €                    | rund 11 Monate    |
+| 75 %                                 | 283.575 €                | 157.425 €                   | ca. 7 Monate      |
 
-Gerechnet mit 39.200 € CapEx, 5.800 € OpEx pro Jahr und 165 vorgeprüften Personentagen im Jahr. Die Gewinnschwelle über drei Jahre liegt bei rund 16 % Ersparnis: (39.200 € + 3 × 5.800 €) ÷ (3 × 165 × 700 €) = 16,3 %.
+Gerechnet mit 37.800 € CapEx, 5.800 € OpEx pro Jahr und 135 vorgeprüften Personentagen im Jahr. Die Gewinnschwelle über drei Jahre liegt bei rund 20 % Ersparnis: (37.800 € + 3 × 5.800 €) ÷ (3 × 135 × 700 €) = 19,5 %.
 
 **Was die Rechnung weiter verbessern kann**
 
 | Hebel | Wirkung bei 50 % Ersparnis | Wer trägt es |
 | --- | --- | --- |
+| Abgleich alt gegen neu in GovGuard, wenn der Pilot den Bedarf zeigt | weitere 15 × 2 PT × 50 % = 15 PT = rund 10.500 €/Jahr; Amortisation rund 9 Monate, Gewinnschwelle rund 16 % | ich: ca. 6 PT Entwicklung; Wasen: ca. 2 PT mehr im Pilot für das Soll der Abgleiche |
+| Remediation: Textvorschlag für die Nachbesserung, den der Code nachprüft | bis rund 54.000 €/Jahr, wenn sie die Nachbesserung halbiert (Punkt 4); Annahme auf Annahme | ich, wenn der Bedarf belegt ist |
 | Grundschutz-Check vorprüfen und abgleichen, laut Roadmap | weitere (25 × 1,5 PT + 15 × 0,5 PT) × 50 % = 22,5 PT = rund 15.750 €/Jahr | ich, nach dem Piloten; Aufwand noch nicht geschätzt |
-| Integration schlank starten: Single Sign-on, Tickets und Dokumentenmanagement erst später | CapEx 10 PT weniger, also 32.200 €; Amortisation rund 7 Monate | Wasen |
+| Integration schlank starten: Single Sign-on, Tickets und Dokumentenmanagement erst später | CapEx 10 PT weniger, also 30.800 €; Amortisation rund 9 Monate | Wasen |
 | Vermiedene Nacharbeit und kürzere Wartezeit (Punkt 5) | nicht eingerechnet, weil schwer zu beziffern; spricht zusätzlich für GovGuard | – |
 
-**Schlussfolgerung:** Die Cloud-Rechnung ist für die Entscheidung unerheblich; es geht um Arbeitszeit. Wie viel GovGuard spart, hängt daran, wie viele Projekt-Dokumente es vorprüft: Eine Migration kostet 10 statt 6 Personentage, und ein Viertel davon ist Abgleich. Deshalb baue ich den Abgleich vor dem Piloten; damit sind rund vier Fünftel der Prüfarbeit vorgeprüft. Unter rund 16 % Ersparnis rechnet es sich über drei Jahre nicht; genau das muss der Pilot messen (Punkt 9).
+**Schlussfolgerung:** Die Cloud-Rechnung ist für die Entscheidung unerheblich; es geht um Arbeitszeit. Wie viel GovGuard spart, hängt daran, wie viele Projekt-Dokumente es vorprüft: Gerechnet ist nur, was GovGuard heute kann; damit sind rund zwei Drittel der Prüfarbeit vorgeprüft. Abgleich und Remediation würden die Rechnung verbessern, kommen aber erst in die Roadmap, wenn der Pilot oder eine Erhebung zeigt, dass Wasen sie braucht. Unter rund 20 % Ersparnis rechnet es sich über drei Jahre nicht; genau das muss der Pilot messen (Punkt 9).
 
 ## Quellen
 
