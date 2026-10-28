@@ -1,7 +1,15 @@
 GovGuard – Quellenvermerke
 
-Der Code steht unter der MIT-Lizenz (LICENSE). Für die Wissensbasis gelten die
-Lizenzen der Quellen unten.
+Geltungsbereich der Lizenzen
+
+Die MIT-Lizenz (LICENSE) gilt nur für den Quellcode von GovGuard.
+
+Sie gilt nicht für die Wissensbasis und die aus den Normen abgeleiteten Dateien
+in data/, also auch nicht für die Prüfregeln (data/knowledge_base/rules_*.json).
+Für sie gelten die Lizenzen der Quellen unten. Insbesondere stehen Dateien, die
+aus BSI IT-Grundschutz++ abgeleitet sind, unter CC BY-SA 4.0.
+
+Quellen
 
 Die Wissensbasis enthält Auszüge aus folgenden Quellen. Die Quelldateien selbst
 liegen nicht im Repo, der Build lädt sie vom Herausgeber (ADR 0008).

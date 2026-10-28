@@ -19,10 +19,3 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-
----
-
-Scope: This license covers the source code of GovGuard. The knowledge base and
-the files derived from the standards (data/) remain under the licenses of their
-sources, see NOTICE. In particular, files derived from BSI IT-Grundschutz++ are
-licensed under CC BY-SA 4.0.
