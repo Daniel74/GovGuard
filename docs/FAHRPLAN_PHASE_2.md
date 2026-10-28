@@ -10,7 +10,7 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 
 **So steuerst du:**
 
-- **Vorlage statt Technik.** Jeder Schritt startet frisch mit „Lies docs/FAHRPLAN_PHASE_2.md Schritt N“. Claude beginnt mit Nutzen, Aufwand und Risiko und deinen Entscheidungen (CLAUDE.md → _Arbeitsweise_), du antwortest mit Go, Korrektur oder Stopp. Braucht der Schritt danach nichts von dir, läuft er ohne Halt bis zur Abnahme.
+- **Vorlage statt Technik.** Jeder Schritt startet frisch mit „Lies docs/FAHRPLAN*PHASE_2.md Schritt N“. Claude beginnt mit Nutzen, Aufwand und Risiko und deinen Entscheidungen (CLAUDE.md → \_Arbeitsweise*), du antwortest mit Go, Korrektur oder Stopp. Braucht der Schritt danach nichts von dir, läuft er ohne Halt bis zur Abnahme.
 - **Budget automatisch, in % Weekly.** Die Statuszeile (`.claude/statusline.sh`) speichert den Wochenwert. Claude ruft zu Beginn `.claude/budget.sh start <Schritt>` und in der Abnahme `.claude/budget.sh end <Schritt> "<Schätzung>" [Issues]` auf: Das schreibt eine Zeile in [SCHAETZUNG.md](SCHAETZUNG.md) → _3. Budget je Schritt_ und einen Kommentar in jedes Issue. Fehlt der Wert, fragt Claude dich einmal nach `/usage` und trägt ihn mit `budget.sh set <Prozent>` ein. Für #81 (P1) liegt kein Ist vor; Messlatte ist darum das Ist von P1b, Methode wie SCHAETZUNG.md → _Kalibrierung_. Das Wochenlimit setzt montags zurück; wird es knapp, schneide den Umfang, nicht die Qualität.
 - **Bauen, Prüfen, Ansehen.** Nach dem Go baut ein Subagent mit _Sonnet_ per `/tdd`, ein zweiter mit _Opus_ prüft per `/code-review` gegen das Issue; Befunde behebt der Bau-Agent, bis das Review ohne offene Punkte ist. Die Haupt-Session (_Opus_) hält Vorlage, Halte und Abnahme. Ändert sich die UI sichtbar, startet Claude Streamlit lokal (`uv run streamlit run streamlit_app.py`) und nennt Link, Musterfall und was du prüfen sollst. Nach deinem „ok“ erneuert Claude die Vergleichsbilder (`uv run pytest -m visual --update-snapshots`) und sieht sie sich an. Design-Artefakt und `/design-screenshots` gibt es nur noch auf deinen Wunsch.
 - **Review-Befunde.** Technik (Tests, Doku, Sicherheit, Code-Regeln) behebt der Bau-Agent ohne Halt: „muss“ und „sollte“ immer, „kann“, wenn es wenig kostet. Berührt ein Befund deine Weichen (Akzeptanzkriterien, sichtbare UI, Prompt, Kosten), wird er ein 🔀 Halt mit Optionen und Empfehlung. Höchstens zwei Runden: Die zweite prüft vor der Abnahme den ganzen Stand; übriges „kann“ wird ein Kommentar im Issue oder ein neues Ticket.
@@ -19,17 +19,17 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 
 **Reihenfolge:**
 
-| Schritt | Was                         | Skill                     | Hängt ab von                   | Schätzung (Annahme) |
-| ------- | --------------------------- | ------------------------- | ------------------------------ | ------------------- |
-| P0      | Stand sichern               | –                         | –                              | < 1 %               |
-| P1      | #81 Befunde nach Fundstelle | `/prototype`, `/tdd`      | P0                             | 10–15 %, ohne Ist   |
-| P1b     | #83 KI-Kennzeichnung, #84 Fundstelle = Abschnitt, #82 Maßnahme je Fundstelle | `/prototype`, `/tdd`, `/code-review` (🧩) | P1 | 25–40 %, Messlatte |
-| P1c     | #85 Fehlenden Abschnitt vorschlagen | `/tdd`, `/code-review` (🧩) | P1b                | 8–12 %              |
-| P2      | Recherche Testdaten         | `/research`               | P0, läuft im Hintergrund       | 5–10 %              |
-| P3      | Roadmap-Karte und Schätzung | `/wayfinder`              | P1b (Messlatte), parallel zu P2 | 8–12 %             |
-| P4      | Prüfregeln festlegen        | `/grill-with-docs`        | P2 und P3                      | 3–5 %               |
-| P5      | Karte in baubare Tickets    | `/to-spec`, `/to-tickets` | P3 und P4                      | 3–5 %               |
-| P6 ff.  | Umsetzung je Ticket         | `/tdd`, `/code-review`    | P5                             | entsteht in P5      |
+| Schritt | Was                                                                          | Skill                                     | Hängt ab von                    | Schätzung (Annahme) |
+| ------- | ---------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------- | ------------------- |
+| P0      | Stand sichern                                                                | –                                         | –                               | < 1 %               |
+| P1      | #81 Befunde nach Fundstelle                                                  | `/prototype`, `/tdd`                      | P0                              | 10–15 %, ohne Ist   |
+| P1b     | #83 KI-Kennzeichnung, #84 Fundstelle = Abschnitt, #82 Maßnahme je Fundstelle | `/prototype`, `/tdd`, `/code-review` (🧩) | P1                              | 25–40 %, Messlatte  |
+| P1c     | #85 Fehlenden Abschnitt vorschlagen                                          | `/tdd`, `/code-review` (🧩)               | P1b                             | 8–12 %              |
+| P2      | Recherche Testdaten                                                          | `/research`                               | P0, läuft im Hintergrund        | 5–10 %              |
+| P3      | Roadmap-Karte und Schätzung                                                  | `/wayfinder`                              | P1b (Messlatte), parallel zu P2 | 8–12 %              |
+| P4      | Prüfregeln festlegen                                                         | `/grill-with-docs`                        | P2 und P3                       | 3–5 %               |
+| P5      | Karte in baubare Tickets                                                     | `/to-spec`, `/to-tickets`                 | P3 und P4                       | 3–5 %               |
+| P6 ff.  | Umsetzung je Ticket                                                          | `/tdd`, `/code-review`                    | P5                              | entsteht in P5      |
 
 ---
 
@@ -77,11 +77,11 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 - [x] **🔀 Halt: Variante wählen** 👤 alle Varianten an `s3:*` ansehen, Variante und Inhalt der Maßnahme wählen → 🤖 Prototyp-Kommentar und angepasster Body in #82, Folgeticket #84
 - [x] **Bauen #84** 🧩 _Sonnet_ `/tdd Issue #84`, FUNKTIONSWEISE 5 (Regel „nah“ ersetzt) eingeschlossen → 🧩 _Opus_ `/code-review gegen Issue #84` → 🧩 behebt die Befunde
 - [x] **🔀 Halt: Fundstellen ansehen** 🤖 startet Streamlit lokal · 👤 `arch-antragseingang-fehlerhaft` (Rolle mit `s3:*`) und `spec-govguard` → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder · 👤 committet #84 lokal
-- [ ] **Bauen #82** 🧩 _Sonnet_ `/tdd Issue #82` nach dem Prototyp-Kommentar, ADR-Nachtrag zu 0023 eingeschlossen → 🧩 _Opus_ `/code-review gegen Issue #82` → 🧩 behebt die Befunde
-- [ ] **🔀 Halt: Maßnahme ansehen** 🤖 startet Streamlit lokal mit Passwort · 👤 „Maßnahme vorschlagen“ an der Ressource mit `s3:*` in `arch-antragseingang-fehlerhaft` → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder
-- [ ] **Abnahme** 🤖 Akzeptanzkriterien aller drei Issues, `.claude/budget.sh end P1b "25–40 %" 83 84 82`
-- [ ] **Verstehen** 👤 `/verstehen 83 Kennzeichnung nach KI-VO Art. 50`, `/verstehen 84 Fundstelle als Einheit zum Ersetzen` und `/verstehen 82 Modell schlägt vor, Code prüft`
-- [ ] **Abschließen** 👤 committet und pusht, schließt #83, #84 und #82; löscht den Prototyp-Worktree
+- [x] **Bauen #82** 🆕 _Opus_ · 👤 `Lies docs/FAHRPLAN_PHASE_2.md Schritt P1b, weiter bei Bauen #82` (Budget-Start P1b liegt schon vor; Prototyp-Code im Worktree `.claude/worktrees/agent-a1d1bea16c712db4b`) → 🧩 _Sonnet_ `/tdd Issue #82` nach dem Prototyp-Kommentar, ADR-Nachtrag zu 0023 eingeschlossen → 🧩 _Opus_ `/code-review gegen Issue #82` → 🧩 behebt die Befunde
+- [x] **🔀 Halt: Maßnahme ansehen** 🤖 startet Streamlit lokal mit Passwort · 👤 „Maßnahme vorschlagen“ an der Ressource mit `s3:*` in `arch-antragseingang-fehlerhaft` → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder
+- [-] **Abnahme** 🤖 Akzeptanzkriterien aller drei Issues, `.claude/budget.sh end P1b "25–40 %" 83 84 82`
+- [-] **Verstehen** 👤 `/verstehen 83 Kennzeichnung nach KI-VO Art. 50`, `/verstehen 84 Fundstelle als Einheit zum Ersetzen` und `/verstehen 82 Modell schlägt vor, Code prüft`
+- [x] **Abschließen** 👤 committet und pusht, schließt #83, #84 und #82; löscht den Prototyp-Worktree
 
 **Fertig, wenn:** #83, #84 und #82 geschlossen sind, `pytest`, `pytest -m visual` und ruff grün sind und die Budget-Zeile in SCHAETZUNG.md steht.
 **Fürs Fachgespräch:** Das Modell schlägt nur vor, der Code prüft: Das Vorher steht wörtlich im Dokument, jeder Befund gehört zu genau einer Maßnahme, und eine Zeile gehört zu genau einer Fundstelle. Was ein Modell geschrieben hat, sieht man und erkennt eine Maschine.

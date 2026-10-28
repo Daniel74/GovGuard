@@ -90,6 +90,13 @@ def slow_url() -> Iterator[str]:
 
 
 @pytest.fixture(scope="session")
+def suggest_url() -> Iterator[str]:
+    """The whole UI with a fake model call and a fixed password for "Maßnahme vorschlagen" (#82)."""
+    with serve("tests/visual/suggest_app.py") as url:
+        yield url
+
+
+@pytest.fixture(scope="session")
 def browser_context_args(browser_context_args: dict) -> dict:
     """Overrides the pytest-playwright fixture: artboard width, German UI, no motion."""
     return {**browser_context_args, "viewport": {"width": WIDTH, "height": HEIGHT},

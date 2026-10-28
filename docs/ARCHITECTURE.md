@@ -829,7 +829,7 @@ classDiagram
 
 Ein Audit läuft als eine Ereignisschleife im Prozess des Aufrufers: 🤖 Vorlauf, dann 🤖 bis zu zwei Pakete gleichzeitig, dann 🤖 der Verstoß-Prüfer; zwischen jedem Modellschritt prüft ⚙️ Code. Der Build läuft als Batch, ein Modellaufruf nach dem anderen. Feste Grenzwerte halten Zeit und Kosten.
 
-3.1 nennt die Entwurfsentscheidungen zu Reihenfolge, Parallelität und Wiederholung. 3.2 zeigt die Betriebssystem-Prozesse. 3.3 und 3.4 zeigen den Ablauf der beiden Audits als Aktivitätsdiagramme, 3.5 den Lebenslauf eines einzelnen Befunds. 3.6 sammelt die Grenzwerte, 3.7 die acht Modellaufrufe mit ihren Prüfungen.
+3.1 nennt die Entwurfsentscheidungen zu Reihenfolge, Parallelität und Wiederholung. 3.2 zeigt die Betriebssystem-Prozesse. 3.3 und 3.4 zeigen den Ablauf der beiden Audits als Aktivitätsdiagramme, 3.5 den Lebenslauf eines einzelnen Befunds. 3.6 sammelt die Grenzwerte, 3.7 die neun Modellaufrufe mit ihren Prüfungen.
 
 ### 3.1 Entwurfsentscheidungen
 
@@ -1095,14 +1095,14 @@ Jede Grenze ist eine Konstante im Code; keine stellt das Modell selbst ein.
 | Paketgröße | 10 Prüfregeln je Aufruf | Antwortlänge und Dauer je Aufruf bleiben klein | `PACKAGE_SIZE` |
 | Parallele Pakete | 2 bei Groq, alle bei Bedrock | gemessen rund 110.000 Tokens je Minute und Platz (#26) | `GROQ_MAX_PARALLEL` |
 | Token-Budget | 200.000 Tokens je Minute und Audit | Groq erlaubt 250.000; der Rest ist Puffer für Retries und Verstoß-Prüfer (#53) | `GROQ_TOKENS_PER_MINUTE` |
-| Ausgabe je Aufruf | höchstens 8.000 Tokens (Pakete, Bedingungs-Vorlauf, Verstoß-Prüfer) | eine Endlosschleife des Modells endet nach rund 25 s (#28); der Inventar-Vorlauf hat keine eigene Grenze | `_SETTINGS` |
-| Temperatur | 0 bei allen acht Aufrufen | gleichförmigere Antworten (QS-3) | `_SETTINGS` |
+| Ausgabe je Aufruf | höchstens 8.000 Tokens (Pakete, Bedingungs-Vorlauf, Verstoß-Prüfer, Maßnahme) | eine Endlosschleife des Modells endet nach rund 25 s (#28); der Inventar-Vorlauf hat keine eigene Grenze | `_SETTINGS` |
+| Temperatur | 0 bei allen neun Aufrufen | gleichförmigere Antworten (QS-3) | `_SETTINGS` |
 | Retry zur Laufzeit | 1 je Aufruf | Zeitgrenze des Audits ([0023](adr/0023-demo-und-recruiter-stand.md)) | `RETRIES` |
 | Retries im Build | Zerlegen 4, Einstufen 2, Formulieren 6, Verstoß-Prüfer des Builds 2 | keine Zeitgrenze; Groq braucht mehr Anläufe als Haiku ([0014](adr/0014-groq-standard-im-build.md)) | `RETRIES` in `decompose/split.py`, `FORMULATE_RETRIES`, `JUDGE_RETRIES` |
 | Wiederholung im Netz | bis zu 6-mal mit Wartezeit bei HTTP 429, Serverfehler, Zeitüberschreitung, Verbindungsfehler | Drosselung ist bei Groq der Normalfall | `MAX_RETRIES` |
 | Beleg | höchstens 200 Zeilen, mindestens 15 Zeichen | ein Beleg ist etwa ein Abschnitt; „S3“ allein belegt nichts | `MAX_SPAN`, `MIN_QUOTE_LENGTH` |
 
-### 3.7 Die acht Modellaufrufe
+### 3.7 Die neun Modellaufrufe
 
 Jeder Aufruf hat dieselbe Form: ⚙️ Der Code baut den Auftrag mit nummerierter Eingabe (`12| …`), 🤖 das Modell füllt ein Formular, ⚙️ der Code prüft es und schickt es höchstens mit Grund zurück. Bei Groq erzwingt ein JSON-Schema die Form schon beim Erzeugen (`NativeOutput`), bei Bedrock ein erzwungenes Werkzeug; der Validator ist für beide gleich (`agents_for`). Für Groq ist jedes Feld eines Formulars Pflicht und hat keinen Standardwert; wo ein Wert fehlen darf, ist er `null`, sonst verwirft Groq die Antwort mit HTTP 400.
 
@@ -1116,6 +1116,7 @@ Jeder Aufruf hat dieselbe Form: ⚙️ Der Code baut den Auftrag mit nummerierte
 | 6 | Einstufen | Build, jede Anforderung | prüfbar, Ebene, Typen | irrt, schwankt | Typen gibt es wirklich; beim Architektur-Audit Typen außerhalb des Prüfumfangs gestrichen | 2, dann `llm_error` | rund 10 % der Auswahl wechseln bei Prompt- oder Modellwechsel ([0014](adr/0014-groq-standard-im-build.md)) |
 | 7 | Formulieren | Build, jede ausgewählte Anforderung | Entwurf der Prüfregel | irrt (erfundenes Zitat oder Querverweis) | Zitat wörtlich, Querverweise echt, Typen im Prüfumfang, Eigenschaften existieren | 6, dann gilt die Prüfregel als gescheitert; der Build bricht am Ende ab | – |
 | 8 | Verstoß-Prüfer des Builds | Build, nur Spec | beschreibt das Verstoßkriterium ein Fehlen? | irrt | Schema; „ja“ schickt den Entwurf mit Grund zurück | 2, dann Abbruch des Builds | – |
+| 9 | Maßnahme | Laufzeit, nur auf Klick und mit Passwort, nach dem Audit | je Fundstelle höchstens 3 Maßnahmen: Satz, Zeilenbereich (`from_line`, `to_line`), Nachher, Regel-IDs | irrt (Zeilen außerhalb, überlappend), erfindet Werte | Zeilen liegen in der Fundstelle, keine Überschneidung, jeder WARN/FAIL genau einer Maßnahme, bekannte Regel-IDs (`resolve_measures`); das Vorher schneidet und die Anker ergänzt der Code | 1, dann „Kein Vorschlag möglich“, kein Abbruch | Groq schrieb das Vorher nicht wörtlich ab (Einrückung, Klammerzeilen), darum Zeilennummern |
 
 Jeder Aufruf kann außerdem ausfallen oder gedrosselt werden (F8). Die Prompts stehen im Code bei ihrem Aufruf, zum Beispiel der Auftrag für die Pakete (`SYSTEM_PROMPT` in `calls/audit_packages.py`) und der für den Verstoß-Prüfer (`FAIL_JUDGE_PROMPT` in `calls/fail_judge.py`). Die Muster der Schale erklärt [7.2](#72-die-deterministische-schale); was gemessen ist, [7.3](#73-was-die-schale-nachweislich-leistet).
 
@@ -1163,6 +1164,7 @@ Die Abhängigkeiten zeigen in eine Richtung: Oberfläche und Build importieren d
 |---|---|---|
 | Prüfungen (`checks/`) importieren nie Modellaufrufe (`calls/`) oder Anschlüsse (`adapters/`) | Prüfungen bleiben ohne Modell testbar | `test_checks_import_neither_calls_nor_adapters` |
 | Die Report-Ansicht (`report/`) importiert nie eine Seite (`screens/`) | Seiten nutzen die Ansicht, nie umgekehrt | `test_the_report_view_imports_no_screen` |
+| Die Report-Ansicht importiert weder Modellaufruf (`calls/`) noch Anschluss (`adapters/`) | sie zeigt nur; was das Modell fragt, reicht eine Seite als Hook hinein | `test_the_report_view_imports_no_model_call_and_no_adapter` |
 | boto3, Groq und HTTP nur im eigenen Anschluss, `subprocess` nirgends | ein Ort je Außenkontakt ([0019](adr/0019-nur-audits.md)) | `test_io_imports_only_in_their_adapter` |
 | Die Oberfläche lädt weder Kommandozeile noch Bedrock-Anschluss | die Demo läuft ohne AWS ([0023](adr/0023-demo-und-recruiter-stand.md)) | `test_demo_ui_loads_no_aws_and_no_entry_point` |
 | Laufzeit-Kern und Oberfläche importieren nie den Build | der Build ist ein Werkzeug | `test_the_runtime_never_imports_the_build` |
@@ -1273,8 +1275,8 @@ Der Kern enthält die ganze Prüflogik. Die Anschlüsse bauen das Modell, aber n
 | Kommandozeile (`cli.py`) | Datei lesen, Modell wählen, Audit starten, Exit-Code 0 (Report), 1 (Eingabe zu lang), 2 (fail closed), 3 (Schlüssel fehlt) | ⚙️ | `test_cli.py` |
 | Gemeinsames (`audit_setup.py`) | Katalog laden, Rückverfolgung bauen, Fehlertext; von Kommandozeile und Oberfläche geteilt, ohne AWS | ⚙️ | `test_cli.py`, `test_audit_runner.py` |
 | Audit-Ablauf (`audit_engine.py`) | Länge, Welt, Vorlauf, Pakete, Verstoß-Prüfer, Vollständigkeit, Report | ⚙️ | `test_run_audit.py`, `test_run_audit_packages.py`, `test_run_audit_progress.py` |
-| Modellaufrufe (`calls/`) | je Aufruf ein Modul mit Prompt, Antwortformular und Validator; `model_call.py` baut die Agenten und zählt Retries | ⚙️ → 🤖 | `test_model_call.py`, `test_conditions_call.py`, `test_run_audit_fail_judge.py` |
-| Prüfungen (`checks/`) | reine Funktionen: Gates, Beleg, Reparaturen, Korrekturen, Bedingungen, Token-Budget | ⚙️ | `test_evidence.py`, `test_conditions_checks.py`, `test_token_budget.py` |
+| Modellaufrufe (`calls/`) | je Aufruf ein Modul mit Prompt, Antwortformular und Validator; `model_call.py` baut die Agenten und zählt Retries; `remediation.py` schlägt auf Klick Maßnahmen für eine Fundstelle vor, außerhalb des Audits | ⚙️ → 🤖 | `test_model_call.py`, `test_conditions_call.py`, `test_run_audit_fail_judge.py`, `test_remediation_call.py` |
+| Prüfungen (`checks/`) | reine Funktionen: Gates, Beleg, Reparaturen, Korrekturen, Bedingungen, Token-Budget, Fundstellen und die Prüfung einer Maßnahme (`remediation.py` mit den Typen in `remediation_models.py`) | ⚙️ | `test_evidence.py`, `test_conditions_checks.py`, `test_token_budget.py`, `test_remediation_checks.py` |
 | Verträge (`models.py`, `condition_models.py`, `open_world.py`, `text.py`) | Pydantic-Typen, Welt, Textwerkzeuge für Build und Laufzeit | ⚙️ | `test_models.py`, `test_text.py` |
 | Anschlüsse (`adapters/`) | Groq und Bedrock bauen; kein Prüfcode | ⚙️ → 🤖 | `test_groq_services.py`, `test_aws_services.py` |
 
@@ -1304,13 +1306,13 @@ Die Oberfläche ist nach Verwendung geordnet: Seiten (`screens/`) benutzen die R
 
 *Elemente.* Jeder Kasten ist ein Modul oder Ordner der Oberfläche; die beiden unteren Kästen gehören zum Laufzeit-Kern und zu den Anschlüssen.
 
-*Verbindungen.* Jeder Pfeil heißt „importiert“. Der Streamlit-Start lädt die Navigation, die Navigation die Seiten. Die Seiten importieren Report-Ansicht, Gestaltung, Galerie, Laufzeit-Kern und Groq-Anschluss; nur die Seite „Audit erstellen“ braucht den Anschluss. Die Report-Ansicht importiert die Gestaltung und aus dem Kern nur Verträge, reine Prüfungen und das gemeinsame Modul, etwa um die Bedingungen zu lesen; nie den Audit-Ablauf oder einen Anschluss.
+*Verbindungen.* Jeder Pfeil heißt „importiert“. Der Streamlit-Start lädt die Navigation, die Navigation die Seiten. Die Seiten importieren Report-Ansicht, Gestaltung, Galerie, Laufzeit-Kern und Groq-Anschluss; den Anschluss brauchen die Seite „Audit erstellen“ und `measure_runner.py` (Maßnahme vorschlagen, auf beiden Seiten). Die Report-Ansicht importiert die Gestaltung und aus dem Kern nur Verträge, reine Prüfungen und das gemeinsame Modul, etwa um die Bedingungen zu lesen; nie den Audit-Ablauf oder einen Anschluss. Was für eine Maßnahme (#82) das Modell fragt und das Passwort prüft, reicht eine Seite als Hook hinein (`Proposer`), und `report/` lädt weder einen Modellaufruf noch einen Anschluss.
 
 | Teil | Aufgabe | wer | Tests (Auswahl) |
 |---|---|---|---|
 | Start (`streamlit_app.py`, `app.py`, `navigation.py`) | Seitenaufbau und Navigation, keine Logik | ⚙️ | `test_ui_pages.py` |
-| Seiten (`screens/`) | Startseite, Audit erstellen, Galerie; `audit_runner.py` prüft Passwort und Länge und startet das Audit; `navigation_guard.py` fragt nach, wenn jemand während des Audits die Seite wechselt | ⚙️ | `test_ui_create_page.py`, `test_audit_runner.py`, `test_ui_gallery_filters.py`, `visual/test_browser_guard.py` |
-| Report-Ansicht (`report/`) | Kopf, Befundtabelle, Detail mit Beleg im Dokument, Lücken als Checkliste, Bedingungen, Soll-Abgleich; die Ansicht nach Fundstelle (`site_*.py`) zeichnet das Dokument mit einem Balken je Fundstelle in einer einzigen Spur, denn Abschnitte überschneiden sich nie; die Teilung in Abschnitte (`checks/sections.py` mit `sections_markdown.py`, `sections_json.py`, `sections_yaml.py`) und die Gruppierung der Befunde (`checks/sites.py`) sind rein ([FUNKTIONSWEISE 5](FUNKTIONSWEISE.md#5-report-soll-und-galerie)); die KI-Kennzeichnung (Kopfzeile und „KI“-Marke) kommt aus einem Baustein, `ai_label.py` | ⚙️ | `test_findings_view.py`, `test_ui_gaps.py`, `test_review.py`, `test_ui_by_site.py`, `test_sections.py`, `test_sites.py`, `test_sites_presets.py` (alle sechs Musterfälle: keine Zeile in zwei Fundstellen), `test_ui_ai_label.py`, `test_ai_label_everywhere.py` (jede Stelle mit Modelltext nutzt den Baustein), `visual/test_browser_findings.py` |
+| Seiten (`screens/`) | Startseite, Audit erstellen, Galerie; `audit_runner.py` prüft Passwort und Länge und startet das Audit; `navigation_guard.py` fragt nach, wenn jemand während des Audits die Seite wechselt; `password_gate.py` hält das eine Passwort für jeden Modellaufruf der Oberfläche (einmal je Sitzung), `measure_runner.py` fragt es für „Maßnahme vorschlagen“ ab und ruft das Modell (#82) | ⚙️ → 🤖 | `test_ui_create_page.py`, `test_audit_runner.py`, `test_ui_gallery_filters.py`, `test_password_gate.py`, `test_ui_remediation.py`, `visual/test_browser_guard.py`, `visual/test_browser_suggest.py` |
+| Report-Ansicht (`report/`) | Kopf, Befundtabelle, Detail mit Beleg im Dokument, Lücken als Checkliste, Bedingungen, Soll-Abgleich; die Ansicht nach Fundstelle (`site_*.py`) zeichnet das Dokument mit einem Balken je Fundstelle in einer einzigen Spur, denn Abschnitte überschneiden sich nie; die Teilung in Abschnitte (`checks/sections.py` mit `sections_markdown.py`, `sections_json.py`, `sections_yaml.py`) und die Gruppierung der Befunde (`checks/sites.py`) sind rein ([FUNKTIONSWEISE 5](FUNKTIONSWEISE.md#5-report-soll-und-galerie)); die KI-Kennzeichnung (Kopfzeile und „KI“-Marke) kommt aus einem Baustein, `ai_label.py`; vom Vorschlag einer Maßnahme (#82) zeigt sie nur das Ergebnis: `remediation_view.py` nimmt die Anfrage der Komponente an und reicht sie an den Hook der Seite, `remediation_data.py` bildet die Werte für die Komponente und wählt die Fundstelle für den Vorschlag: immer der Abschnitt mit allen Befunden, ohne Status- oder Quellfilter (`proposal_basis`, `site_view.py` reicht sie hinein); ohne Hook gibt es keinen Knopf | ⚙️ | `test_findings_view.py`, `test_ui_gaps.py`, `test_review.py`, `test_ui_by_site.py`, `test_sections.py`, `test_sites.py`, `test_sites_presets.py` (alle sechs Musterfälle: keine Zeile in zwei Fundstellen), `test_ui_ai_label.py`, `test_ai_label_everywhere.py` (jede Stelle mit Modelltext nutzt den Baustein), `test_remediation_data.py`, `visual/test_browser_findings.py` |
 | Gestaltung und Texte (`style.py`, `texts.py`) | Farben, Bezeichnungen der Status, Maskierung jedes dynamischen Texts (`html.escape`) | ⚙️ | `test_ui_style.py`, `test_ui_llm_text.py` |
 | Galerie (`gallery.py`) | gespeicherte Reports der Musterfälle laden | ⚙️ | `test_gallery.py` |
 
@@ -1360,6 +1362,9 @@ Jede Regel, die ein Befund oder eine Prüfregel erfüllen muss, steht hier mit d
 | Im Build steht das Zitat wörtlich im Text genau der verankerten Anforderung; Querverweise gibt es wirklich. | `is_quoted`, `invalid_cross_references` (`kb_build/rules/gates.py`) | `tests/test_gates.py` |
 | Jeder Pflichtanker steht im Katalog, jeder Pflicht-Ressourcentyp der Referenzarchitekturen hat eine Prüfregel. | `check_pinned`, `check_coverage` (`kb_build/select/gates.py`) | `tests/test_gates.py` |
 | Die Rückverfolgung enthält nur Hashes, nie die Eingabe. | `make_trace` (`govguard/audit_setup.py`) | `tests/test_cli.py`, `tests/test_models.py` |
+| Eine Maßnahme zu einer Fundstelle gilt nur, wenn ihre Zeilen in der Fundstelle liegen (das Vorher schneidet der Code daraus), die Zeilenbereiche sich nicht überschneiden, es höchstens drei Maßnahmen sind und jeder WARN oder FAIL der Fundstelle genau einer Maßnahme gehört und jede Maßnahme mindestens einen Befund behebt; sonst ein Retry, danach „Kein Vorschlag möglich“. | `resolve_measures` (`checks/remediation.py`), `suggest_measures` (`calls/remediation.py`) | `tests/test_remediation_checks.py`, `tests/test_remediation_call.py` |
+| Jeder Modellaufruf aus der Oberfläche verlangt das Passwort: fail closed ohne Secret, konstante Zeit, einmal je Sitzung für Audit und Maßnahme. | `password_problem`, `configured` (`screens/password_gate.py`), `start_problem` | `tests/test_password_gate.py`, `tests/test_ui_remediation.py` |
+| Ein Vorschlag gilt für alle WARN/FAIL seiner Fundstelle, egal welcher Filter gilt, und nur für das Dokument, das das Modell sah; ein neues Audit zeigt nie den alten Vorschlag. | `proposal_basis`, `suggestion_key` (`report/remediation_data.py`) | `tests/test_remediation_data.py`, `tests/test_ui_remediation.py`, `tests/test_ui_remediation_filter.py` |
 
 > **Concern (LLM-Unsicherheit):** Getrennte Module für Prompt, Schema und Prüfung machen die Schale ohne Modell testbar; was nur mit echtem Modell messbar ist und warum ein getrenntes Entwicklungsset fehlt, steht in [7.3](#73-was-die-schale-nachweislich-leistet) und [7.4](#74-wo-die-schale-endet).
 

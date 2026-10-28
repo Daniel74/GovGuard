@@ -1,6 +1,5 @@
 """Page "Audit erstellen": password, progress, result only in the session (ADR 0023, #11)."""
 
-import os
 import time
 from pathlib import Path
 
@@ -13,6 +12,7 @@ from govguard.audit_setup import failure_text
 from govguard.models import AuditType, Expected
 from govguard_ui.gallery import load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
+from govguard_ui.report.remediation_view import forget_proposals
 from govguard_ui.report.report_view import render_report
 from govguard_ui.screens.audit_runner import (
     backend_problem,
@@ -20,20 +20,14 @@ from govguard_ui.screens.audit_runner import (
     run_local,
     start_problem,
 )
+from govguard_ui.screens.measure_runner import proposer
 from govguard_ui.screens.navigation_guard import guard_navigation
+from govguard_ui.screens.password_gate import confirm, confirmed, secret
 from govguard_ui.style import CSS, status_word
 from govguard_ui.texts import DATA_RULE, TYPE_CHOICES
 
 FORMATS = {".md": "Markdown", ".yaml": "YAML", ".json": "JSON"}  # by file suffix of the preset
 STAY_NOTE = "Bitte während des Audits auf dieser Seite bleiben."  # a page switch stops it (#77)
-
-
-def secret(name: str) -> str | None:
-    """Streamlit secrets first; Community Cloud also exports them as environment variables."""
-    try:
-        return st.secrets.get(name) or os.getenv(name)
-    except FileNotFoundError:  # no secrets.toml, e.g. a local run
-        return os.getenv(name)
 
 
 def render() -> None:
@@ -50,14 +44,24 @@ def render() -> None:
     audit_type, title, source, expected = _input_form()
     with st.container(border=True):
         st.markdown("#### 4 · Starten")
-        password = st.text_input("Passwort", type="password", key="password", width=360)
-        st.caption("Schützt vor Kosten durch Fremde. Das Passwort erhalten Sie vom Betreiber der "
-                   "Demo.")
+        password = _password_field()
         if st.button("Audit starten", type="primary", key="start"):
-            if problem := start_problem(source[1], password, secret("APP_PASSWORD")):
+            if problem := start_problem(source[1], password, secret("APP_PASSWORD"), confirmed()):
                 st.error(problem)
             else:
+                confirm()  # one password for every LLM call of the session (#82)
                 _run(audit_type, title, source, expected, guard_slot)
+
+
+def _password_field() -> str:
+    """Asked once per session: after the right password (here or for a measure) only a note."""
+    if confirmed():
+        st.caption("Passwort bestätigt, es gilt für diese Sitzung.")
+        return ""
+    password = st.text_input("Passwort", type="password", key="password", width=360)
+    st.caption("Schützt vor Kosten durch Fremde. Das Passwort erhalten Sie vom Betreiber der "
+               "Demo.")
+    return password
 
 
 def _input_form() -> tuple[AuditType, str, tuple[str, str], Expected | None]:
@@ -127,6 +131,7 @@ def _run(
     except AuditValidationError as error:  # fail closed, no partial report
         st.error(failure_text(error))
         return
+    forget_proposals("created")  # a proposal belongs to the audit it saw
     st.session_state["created"] = {"report": report, "title": title, "source": source,
                                    "expected": expected,
                                    "seconds": round(time.monotonic() - started)}
@@ -138,6 +143,7 @@ def _result(created: dict) -> None:
                "Sitzung; laden Sie ihn herunter, wenn Sie ihn behalten möchten.")
     if st.button("Neues Audit", key="new_audit"):
         del st.session_state["created"]
+        forget_proposals("created")
         st.rerun()
     render_report(created["report"], created["title"], created["source"], created["expected"],
-                  key="created")
+                  key="created", propose=proposer())

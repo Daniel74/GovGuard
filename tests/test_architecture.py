@@ -129,6 +129,14 @@ def test_the_report_view_imports_no_screen(path: Path) -> None:
     assert [m for m in loaded if m.startswith("govguard_ui.screens")] == []
 
 
+@pytest.mark.parametrize("path", modules_in("govguard_ui/report"), ids=rel_id)
+def test_the_report_view_imports_no_model_call_and_no_adapter(path: Path) -> None:
+    """ADR 0027: the report view only shows; a page hands in what asks the model (#82). Direct
+    imports only: the shared audit_setup (conditions) reaches the engine, as it always did."""
+    assert [m for m in imported_modules(path)
+            if m.startswith(("govguard.calls", "govguard.adapters"))] == []
+
+
 ROOTS = {  # ADR 0027: only entry points and contracts that others import
     "govguard": {"audit_engine", "models", "condition_models", "open_world", "text", "audit_setup",
                  "cli"},

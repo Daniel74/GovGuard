@@ -35,7 +35,7 @@ def test_new_audit_clears_the_result_and_shows_the_form_again(
     assert "created" not in app.session_state
     assert "Audit fertig" not in shown_text(app)
     assert app.button(key="start").label == "Audit starten"
-    assert app.text_input(key="password").value == ""
+    assert not app.text_input  # the password was given: it holds for the session (#82)
     assert not app.get("download_button")
 
 

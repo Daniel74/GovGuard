@@ -52,6 +52,15 @@ button:disabled{cursor:default;color:#4A5361;opacity:.6}
 .item .t{font-weight:600}
 .item .a{color:#4A5361;font-size:13px}
 .item .w,.item .r{margin-top:4px}
+.sugg-btn{background:#0B4F8A;color:#FFFFFF;border-color:#0B4F8A;font-weight:600}
+.note{padding:4px 12px 0;color:#4A5361;font-size:13px}
+.sugg{padding:10px 12px;background:#F2F6FB;border-top:1px solid #0B4F8A}
+.sugg-h{display:flex;gap:8px;align-items:center;margin-bottom:4px}
+.sugg .muted,.m-c,.m-l{color:#4A5361;font-size:13px}
+.m-t{font-weight:600;margin-top:8px}
+.m-code{margin:2px 0 6px;padding:6px 8px;background:#FFFFFF;border:1px solid #A7AFBA;
+  border-radius:6px;font:13px/1.5 'Source Code Pro',ui-monospace,monospace;white-space:pre-wrap;
+  overflow-x:auto}
 .ai{margin-left:4px;""" + MARKER_CSS + """}
 .badge{display:inline-block;padding:0 6px;border:1px solid;border-radius:4px;font-size:13px;
   font-weight:600;margin-right:6px}

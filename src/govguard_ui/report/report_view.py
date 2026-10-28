@@ -13,21 +13,23 @@ from govguard_ui.report.findings_view import (
     current_view,
     render_findings,
 )
+from govguard_ui.report.remediation_view import Proposer
 from govguard_ui.report.report_header import render_expected, render_header
 from govguard_ui.report.site_view import render_by_site
 
 
-def render_report(
+def render_report(  # noqa: PLR0913  # sixth arg: the page's hook (#82)
     report: AuditReport, title: str, source: tuple[str, str], expected: Expected | None,
-    key: str,
+    key: str, propose: Proposer | None = None,
 ) -> None:
-    """source: file name and text of the audited input; key separates widget state."""
+    """source: file name and text of the audited input; key separates widget state. propose: the
+    page's hook for "Maßnahme vorschlagen" (#82); without it the report has no such button."""
     render_header(report, title, key)
     render_conditions(report, source[1], current_source(key), key)
     if expected:
         render_expected(report, expected, key)
     if current_view(key) == BY_SITE:  # no detail column: the findings open under their site
-        render_by_site(report, source, key)
+        render_by_site(report, source, key, propose)
         return
     findings, detail = st.columns([3, 2])  # table without side scroll at 1280 px too (#51)
     with findings:

@@ -2,6 +2,8 @@
 LLM text stays raw, the component sets it as textContent (#81, #84). Pure view logic, no
 Streamlit."""
 
+from collections.abc import Callable
+
 from govguard.checks.sites import Site, Sites
 from govguard.models import Finding
 from govguard_ui.report.ai_label import ai_texts
@@ -25,7 +27,7 @@ def _finding(finding: Finding) -> dict:
             "by_code": finding.by_code}  # texts without the "KI" marker (#83)
 
 
-def _site(site: Site) -> dict:
+def _site(site: Site, suggest: Callable[[Site], dict | None]) -> dict:
     where = place(site.line_start, site.line_end)
     mix = " · ".join(f"{LOOKS[s].symbol} {n}" for s, n in site.status_counts)
     counts = ", ".join(f"{n} × {LOOKS[s].label}" for s, n in site.status_counts)
@@ -33,11 +35,16 @@ def _site(site: Site) -> dict:
             "tip": f"{site.name}, {where}: {counts}. Klick öffnet die Befunde unter dem Abschnitt.",
             "look": LOOKS[site.worst].css, "count": str(len(site.findings)),
             "start": site.line_start, "end": site.line_end,
-            "findings": [_finding(f) for f in site.findings]}
+            "findings": [_finding(f) for f in site.findings],
+            "suggest": suggest(site)}  # button and proposal, None below two WARN/FAIL (#82)
 
 
-def site_data(sites: Sites, text: str, selected: Finding, closed: bool) -> dict:
-    """closed: the reader closed the box of this selection; it opens again with the next click."""
+def site_data(
+    sites: Sites, text: str, selected: Finding, closed: bool,
+    suggest: Callable[[Site], dict | None] = lambda site: None,
+) -> dict:
+    """closed: the reader closed the box of this selection; it opens again with the next click.
+    suggest: the measure proposal of a site (remediation_data.suggest_data, #82)."""
     current = next((i for i, s in enumerate(sites.placed) if selected in s.findings), None)
     span = None if selected.line_start is None else (selected.line_start, selected.last_line)
     rows = line_rows(text, sites.placed, current, span)
@@ -48,7 +55,7 @@ def site_data(sites: Sites, text: str, selected: Finding, closed: bool) -> dict:
         "lines": [{"n": r.number, "text": r.text, "bar": r.bar and r.bar.model_dump(),
                    "tint": r.tint and LOOKS[r.tint].css, "in_site": r.in_site,
                    "in_finding": r.in_finding} for r in rows],
-        "sites": [_site(s) for s in sites.placed],
+        "sites": [_site(s, suggest) for s in sites.placed],
         "current": current, "open": not closed, "selected": selected.rule_id, "back": back,
         "ai": ai_texts(),  # marker and tip of the AI label, one source with the Python views (#83)
     }

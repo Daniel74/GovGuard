@@ -5,6 +5,7 @@ import streamlit as st
 from govguard_ui.gallery import GalleryEntry, load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
 from govguard_ui.report.report_view import render_report
+from govguard_ui.screens.measure_runner import proposer
 from govguard_ui.style import CSS
 from govguard_ui.texts import TYPE_LABELS
 
@@ -31,4 +32,4 @@ def render() -> None:
                 "Commit; unter „Audit erstellen“ können Sie den Musterfall selbst prüfen.")
         return
     render_report(entry.report, entry.preset.title, (entry.source_name, entry.source_text),
-                  entry.preset.expected, key=f"gallery_{preset_id}")
+                  entry.preset.expected, key=f"gallery_{preset_id}", propose=proposer())

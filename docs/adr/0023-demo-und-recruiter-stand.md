@@ -1,6 +1,6 @@
 # 0023 – Demo-Stand ohne AWS, Recruiter-Stand mit Audit-Jobs
 
-_Ändert [ADR 0004](0004-streamlit-community-cloud.md) (Aufrufweg der UI), [ADR 0006](0006-cloudwatch-audit-protokoll.md) (Reports kurz in S3) und [ADR 0018](0018-lambda-function-url.md) (asynchroner Ablauf); kehrt in [ADR 0016](0016-groq-zur-laufzeit-im-prototyp.md) den Standard-Provider um. Umsetzung: #11, #36. **Nachtrag 19.10.2026:** Nur der Demo-Stand wird gebaut, siehe unten. **Seit [ADR 0029](0029-kein-us-anbieter-fuer-echte-daten.md) entfällt der Recruiter-Stand auf AWS.**_
+_Ändert [ADR 0004](0004-streamlit-community-cloud.md) (Aufrufweg der UI), [ADR 0006](0006-cloudwatch-audit-protokoll.md) (Reports kurz in S3) und [ADR 0018](0018-lambda-function-url.md) (asynchroner Ablauf); kehrt in [ADR 0016](0016-groq-zur-laufzeit-im-prototyp.md) den Standard-Provider um. Umsetzung: #11, #36. **Nachtrag 19.10.2026:** Nur der Demo-Stand wird gebaut, siehe unten. **Nachtrag 28.10.2026:** Das Passwort gilt für jeden LLM-Aufruf der UI. **Seit [ADR 0029](0029-kein-us-anbieter-fuer-echte-daten.md) entfällt der Recruiter-Stand auf AWS.**_
 
 ## Kontext
 
@@ -33,6 +33,11 @@ _Ändert [ADR 0004](0004-streamlit-community-cloud.md) (Aufrufweg der UI), [ADR 
 - AWS ist zurück, aber das Budget reicht nicht für Betrieb und Bau. Recruiter-Stand, Audit-Jobs, CDK-Stack und Pipeline sind Ausbau (#9, #34, #37, #38, Label `ausbau`); Haiku/Bedrock bleibt außen vor.
 - Das Selbst-Audit prüft nur `docs/SPEC.md` als Preset `spec-govguard` (#36); `arch-govguard-stack` entfällt. Kein Template, kein KMS-Schlüssel, keine Leerlaufkosten.
 - Die Entscheidungen oben zu Recruiter-Stand, S3 und CI gelten als Entwurf für den Ausbau.
+
+## Nachtrag 28.10.2026: ein Passwort für jeden LLM-Aufruf (#82)
+
+- Das Passwort gilt für jeden LLM-Aufruf aus der UI, nicht nur für „Audit erstellen“ (ersetzt „Passwort nur für ‚Audit erstellen‘“ oben). Der erste weitere Aufruf ist „Maßnahme vorschlagen“.
+- Ein richtiges Passwort gilt einmal je Sitzung, gemeinsam für Audit und Maßnahme; danach fragt keiner der beiden Wege noch einmal. Die Prüfung bleibt `APP_PASSWORD`, fail closed, konstante Zeit.
 
 ## Fachgespräch-Satz
 

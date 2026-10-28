@@ -25,6 +25,10 @@ INVENTORY: dict[str, str] = {
     "button:{}_{}_show_{}": "tests/test_ui_by_site.py::"
                             "test_a_click_on_a_finding_over_several_sections_selects_it_and_"
                             "marks_its_lines",
+    "text_input:{}_measure_password": "tests/test_ui_remediation.py::"
+                                      "test_a_wrong_password_calls_no_model_and_confirms_nothing",
+    "button:{}_measure_go": "tests/visual/test_browser_suggest.py::"
+                            "test_the_dialog_asks_once_then_the_block_stands_above_the_findings",
     "finding_table:{}": "tests/visual/test_browser_findings.py::"
                         "test_a_click_on_a_row_selects_the_finding_and_marks_only_this_row",
     "button:{}_required_{}": "tests/test_ui_report_header.py::"

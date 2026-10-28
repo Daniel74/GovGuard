@@ -1,6 +1,5 @@
 """Audit erstellen in the demo: Streamlit runs run_audit itself with Groq (ADR 0023)."""
 
-import hmac
 from pathlib import Path
 
 from pydantic_ai.models import Model
@@ -8,12 +7,16 @@ from pydantic_ai.models import Model
 from govguard.audit_engine import InputTooLongError, OnProgress, check_input_length, run_audit
 from govguard.audit_setup import CATALOGS, conditions_for, make_trace
 from govguard.models import AuditReport, AuditType, Progress, RuleCatalog
+from govguard_ui.screens.password_gate import configured, password_problem
 from govguard_ui.style import JUDGE_NAME
 
 
-def start_problem(text: str, password: str, secret: str | None) -> str | None:
-    """Why the audit must not start, or None. Checked before any LLM call: no cost."""
-    if not secret:  # fail closed: no configured password, no audit
+def start_problem(
+    text: str, password: str, secret: str | None, confirmed: bool = False,
+) -> str | None:
+    """Why the audit must not start, or None. Checked before any LLM call: no cost.
+    confirmed: the session gave the right password before (also for a measure, #82)."""
+    if not configured(secret):  # fail closed: no configured password, no audit
         return "Audit erstellen ist nicht eingerichtet: Das Passwort fehlt in den Secrets."
     if not text.strip():
         return "Die Eingabe ist leer. Bitte einen Text einfügen oder einen Musterfall wählen."
@@ -21,7 +24,7 @@ def start_problem(text: str, password: str, secret: str | None) -> str | None:
         check_input_length(text)
     except InputTooLongError as error:
         return str(error)
-    if not hmac.compare_digest(password.encode(), secret.encode()):  # constant time
+    if not confirmed and password_problem(password, secret):
         return "Passwort falsch. Ohne Passwort startet kein Audit."
     return None
 

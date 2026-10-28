@@ -45,6 +45,34 @@ function item(f, selected, choose, ai) {  // twin of _finding() in site_groups.p
   return div
 }
 
+function proposal(block) {  // the measures above the findings; all texts of the model as text
+  const div = el("div", "sugg")
+  const head = div.appendChild(el("div", "sugg-h"))
+  head.appendChild(el("strong", "", block.heading))
+  head.appendChild(el("span", "ai", block.ai.marker)).title = block.ai.tip
+  head.appendChild(el("span", "muted", block.hint))
+  if (block.failed) div.appendChild(el("div", "m-none", block.text))
+  block.measures.forEach((m, i) => {
+    div.appendChild(el("div", "m-t", (i + 1) + ". " + m.sentence))
+    for (const [name, text] of [["Vorher · " + m.lines, m.before], ["Nachher", m.after]]) {
+      div.appendChild(el("div", "m-l", name))
+      div.appendChild(el("pre", "m-code", text))
+    }
+    div.appendChild(el("div", "m-c", "deckt ab: " + m.anchors.join(" · ")))
+  })
+  return div
+}
+
+function suggestion(div, head, index, data, send) {  // #82: button in the head, block under it
+  const suggest = data.sites[index].suggest
+  if (!suggest) return  // fewer than two WARN/FAIL: no button
+  const button = el("button", "sugg-btn", suggest.label)
+  head.insertBefore(button, head.children[1])
+  press(button, () => send("suggest", String(index)))
+  if (suggest.note) div.appendChild(el("div", "note", suggest.note))
+  if (suggest.block) div.appendChild(proposal(suggest.block))
+}
+
 function box(index, data, send) {
   const site = data.sites[index]
   const div = el("div", "box")
@@ -56,6 +84,7 @@ function box(index, data, send) {
     press(button, () => send("site", String(index + step)))
   }
   press(head.appendChild(el("button", "", "schließen")), () => send("closed", data.selected))
+  suggestion(div, head, index, data, send)
   const choose = (id) => send("clicked", id)
   for (const f of site.findings) div.appendChild(item(f, data.selected, choose, data.ai))
   return div

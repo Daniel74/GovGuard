@@ -95,8 +95,10 @@ def preset_boxes(app: AppTest) -> list[str]:
 
 
 def start(app: AppTest, tab: str = "Musterfall laden") -> AppTest:
-    """Types the password and starts; the open tab is set again for this rerun too."""
-    app.text_input(key="password").input("geheim")
+    """Types the password (once per session) and starts; the open tab is set again for this rerun
+    too."""
+    if any(t.key == "password" for t in app.text_input):  # not asked again after the first audit
+        app.text_input(key="password").input("geheim")
     app.button(key="start").click()
     app.session_state["input_mode"] = tab
     return app.run()
