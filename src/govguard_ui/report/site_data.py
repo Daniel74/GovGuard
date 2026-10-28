@@ -1,5 +1,6 @@
 """Plain values for the document of "nach Fundstelle": bars, lines and the findings behind them.
-LLM text stays raw, the component sets it as textContent (#81). Pure view logic, no Streamlit."""
+LLM text stays raw, the component sets it as textContent (#81, #84). Pure view logic, no
+Streamlit."""
 
 from govguard.checks.sites import Site, Sites
 from govguard.models import Finding
@@ -28,8 +29,8 @@ def _site(site: Site) -> dict:
     where = place(site.line_start, site.line_end)
     mix = " · ".join(f"{LOOKS[s].symbol} {n}" for s, n in site.status_counts)
     counts = ", ".join(f"{n} × {LOOKS[s].label}" for s, n in site.status_counts)
-    return {"label": f"{where} · {len(site.findings)} Befunde · {mix}",
-            "tip": f"{where}: {counts}. Klick öffnet die Befunde unter der Stelle.",
+    return {"label": f"{site.name} · {where} · {len(site.findings)} Befunde · {mix}",
+            "tip": f"{site.name}, {where}: {counts}. Klick öffnet die Befunde unter dem Abschnitt.",
             "look": LOOKS[site.worst].css, "count": str(len(site.findings)),
             "start": site.line_start, "end": site.line_end,
             "findings": [_finding(f) for f in site.findings]}
@@ -38,13 +39,16 @@ def _site(site: Site) -> dict:
 def site_data(sites: Sites, text: str, selected: Finding, closed: bool) -> dict:
     """closed: the reader closed the box of this selection; it opens again with the next click."""
     current = next((i for i, s in enumerate(sites.placed) if selected in s.findings), None)
-    rows = line_rows(text, sites.placed, current)
+    span = None if selected.line_start is None else (selected.line_start, selected.last_line)
+    rows = line_rows(text, sites.placed, current, span)
+    back = None
+    if current is None and span:  # over several sections: the way back to its place in the group
+        back = {"title": selected.title, "lines": place(*span)}
     return {
-        "lines": [{"n": r.number, "text": r.text, "bars": [b and b.model_dump() for b in r.bars],
-                   "owner": r.owner, "tint": r.tint and LOOKS[r.tint].css, "selected": r.selected}
-                  for r in rows],
-        "lanes": max((len(r.bars) for r in rows), default=0),
+        "lines": [{"n": r.number, "text": r.text, "bar": r.bar and r.bar.model_dump(),
+                   "tint": r.tint and LOOKS[r.tint].css, "in_site": r.in_site,
+                   "in_finding": r.in_finding} for r in rows],
         "sites": [_site(s) for s in sites.placed],
-        "current": current, "open": not closed, "selected": selected.rule_id,
+        "current": current, "open": not closed, "selected": selected.rule_id, "back": back,
         "ai": ai_texts(),  # marker and tip of the AI label, one source with the Python views (#83)
     }

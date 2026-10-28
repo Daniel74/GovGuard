@@ -73,24 +73,37 @@ def test_the_status_filter_decides_which_findings_stand_in_the_sites() -> None:
     [document] = site_documents(app)
     shown = [f for s in document["sites"] for f in s["findings"]]
     assert {f["look"] for f in shown} == {"fail"}
-    assert f"{len(shown)} von 175 Befunden angezeigt" in shown_text(app)  # FAIL always has lines
+    several = next(int(m.value.split("·")[1]) for m in app.markdown
+                   if m.value.startswith("#### Betrifft mehrere"))  # FAIL always has lines
+    assert f"{len(shown) + several} von 175 Befunden angezeigt" in shown_text(app)
 
 
-def test_the_document_has_the_frame_and_head_of_the_table_view() -> None:
+def test_the_document_has_a_heading_with_the_count_and_a_caption_like_the_groups() -> None:
     app = arch_page(view=None)
 
-    assert "Geprüftes Dokument · template.json · 485 Zeilen" in shown_text(app).replace("`", "")
-    assert "Balken am Rand = eine Fundstelle" in shown_text(app)
+    heading = next(m for m in app.markdown if m.value.startswith("#### Geprüftes Dokument"))
+    assert heading.value == "#### Geprüftes Dokument · 8 Fundstellen"
+    assert "ist ein Dokumentabschnitt" in heading.proto.help
+    [caption] = [c for c in app.caption if "Balken am Rand = eine Fundstelle" in c.value]
+    assert caption.value.startswith("`template.json` · 485 Zeilen · Balken am Rand")
 
 
-def test_findings_over_the_whole_document_stand_above_it_with_the_help_of_the_page() -> None:
+def test_one_site_is_called_a_site_in_the_singular() -> None:
+    app = spec_page(view=None)
+    app.pills(key=spec_key("status")).set_value(["N/A"]).run()
+
+    heading = next(m for m in app.markdown if m.value.startswith("#### Geprüftes Dokument"))
+    assert heading.value == "#### Geprüftes Dokument · 1 Fundstelle"
+
+
+def test_findings_over_several_sections_stand_above_the_document() -> None:
     app = spec_page(view=None)
 
-    heading = next(m for m in app.markdown if m.value.startswith("#### Betrifft das ganze"))
-    assert heading.value == "#### Betrifft das ganze Dokument · 6"
-    assert "mehr als die Hälfte des Dokuments" in heading.proto.help
-    [whole] = [e for e in app.expander if "Hälfte des Dokuments" in e.label]
-    assert whole.label == "6 Befunde mit mehr als der Hälfte des Dokuments als Beleg"
+    heading = next(m for m in app.markdown if m.value.startswith("#### Betrifft mehrere"))
+    assert heading.value == "#### Betrifft mehrere Abschnitte · 8"
+    assert "in mehreren Abschnitten" in heading.proto.help
+    [several] = [e for e in app.expander if "aus mehreren Abschnitten" in e.label]
+    assert several.label == "8 Befunde mit Belegen aus mehreren Abschnitten"
 
 
 def test_findings_without_lines_stand_below_the_document() -> None:
@@ -125,8 +138,8 @@ def test_before_a_click_the_site_of_the_worst_finding_is_open() -> None:
     [document] = site_documents(arch_page(view=None))
 
     current = document["sites"][document["current"]]
-    assert current["findings"][0]["look"] == "fail" and document["open"]
-    assert document["selected"] in [f["id"] for f in current["findings"]]
+    chosen = next(f for f in current["findings"] if f["id"] == document["selected"])
+    assert chosen["look"] == "fail" and document["open"]
 
 
 def test_without_a_click_the_view_change_keeps_the_finding() -> None:
@@ -136,3 +149,61 @@ def test_without_a_click_the_view_change_keeps_the_finding() -> None:
     [table] = [t for t in finding_tables(by_rule(app)) if "rows" in t]
 
     assert table["selected"] == document["selected"]
+
+
+def test_a_finding_over_several_sections_chosen_in_the_table_is_marked_in_the_document() -> None:
+    """ARCH-CIS-2.20 names lines 1–200: no site is current, the lines stand marked all the same."""
+    app = arch_page(view=BY_RULE)
+    app.session_state[SELECTED] = "ARCH-CIS-2.20"
+    app.run()
+
+    app.segmented_control(key=VIEW).set_value(BY_SITE).run()
+
+    [document] = site_documents(app)
+    assert document["current"] is None and document["selected"] == "ARCH-CIS-2.20"
+    assert [n["n"] for n in document["lines"] if n["in_finding"]] == list(range(1, 201))
+
+
+MULTI_FINDING = "ARCH-CIS-2.20"  # lines 1–200: over several sections
+SHOW = arch_key(f"multi_show_{MULTI_FINDING}")
+
+
+def test_a_click_on_a_finding_over_several_sections_selects_it_and_marks_its_lines() -> None:
+    """The group has no bar to click: each finding carries a button that selects it (#84)."""
+    app = arch_page(view=None)
+    assert [e for e in app.expander if "aus mehreren Abschnitten" in e.label]
+
+    app.button(key=SHOW).click().run()
+
+    [document] = site_documents(app)
+    assert (document["selected"], document["current"]) == (MULTI_FINDING, None)
+    assert [n["n"] for n in document["lines"] if n["in_finding"]] == list(range(1, 201))
+    [several] = [e for e in app.expander if "aus mehreren Abschnitten" in e.label]
+    assert several.proto.expanded  # open while it holds the selected finding
+
+
+def has(app: AppTest, key: str) -> bool:
+    try:
+        return bool(app.get_by_key(key))
+    except KeyError:
+        return False
+
+
+def test_the_selected_finding_of_the_group_is_marked_and_the_others_are_not() -> None:
+    """The mark is a CSS class of the keyed container, like .item.sel in the box under a site."""
+    marked, idle = (arch_key(f"multi_item_{state}ARCH-CIS-2.20") for state in ("sel_", ""))
+    other = arch_key("multi_item_ARCH-CIS-2.15")
+    app = arch_page(view=None)
+    assert not has(app, marked) and has(app, idle)
+
+    app.button(key=SHOW).click().run()
+
+    assert has(app, marked) and not has(app, idle) and has(app, other)
+
+
+def test_findings_without_lines_have_no_button_to_show_lines() -> None:
+    app = spec_page(view=None)
+    app.pills(key=spec_key("status")).set_value(["N/A"]).run()
+
+    assert any(e.label.endswith("Befunde ohne Zeilen im Dokument") for e in app.expander)
+    assert not [b for b in app.button if b.key and "_show_" in b.key]

@@ -26,10 +26,10 @@ STEPS = f"""1. Audit-Art wählen: **Spezifikation** (Fachkonzept, OpenAPI) oder 
 GALLERY = "\n".join(f"- {sentence}" for sentence in [  # one per item (#41, #51, #81)
     "Die Galerie zeigt Musterfälle, also fiktive Beispiel-Eingaben mit festgelegtem "
     "Soll-Ergebnis.",
-    "Eine Fundstelle ist eine Stelle im Dokument, auf die mindestens ein Befund zeigt; Befunde "
-    "mit fast gleichen Zeilen stehen bei derselben Stelle.",
+    "Eine Fundstelle ist ein Abschnitt des Dokuments (Kapitel, Ressource oder Pfad), auf den "
+    "mindestens ein Befund zeigt; ihre Abschnitte überschneiden sich nie.",
     "In der Ansicht „nach Fundstelle“ steht das Dokument in voller Breite, ein Balken am Rand "
-    "zeigt je Stelle den schwersten Status und die Zahl der Befunde.",
+    "zeigt je Fundstelle den schwersten Status und die Zahl der Befunde.",
     "Ein Klick auf einen Balken öffnet darunter alle Befunde der Stelle mit Begründung und "
     "Empfehlung, so beheben Sie eine Stelle einmal.",
     "„nach Prüfregel“ zeigt links die Befundliste und rechts das Dokument mit den blau markierten "

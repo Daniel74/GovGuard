@@ -1,5 +1,5 @@
 """HTML and CSS of the document with its sites (CCv2): the bars in the margin, the box with the
-findings under a site (#81); the script is in site_script. Colours come from LOOKS, the shadow
+findings under a site (#81, #84); the script is in site_script. Colours come from LOOKS, the shadow
 DOM sees no page CSS."""
 
 from govguard_ui.report.ai_label import MARKER_CSS
@@ -15,9 +15,14 @@ CSS = """
 .doc{font-family:'Source Code Pro',ui-monospace,monospace;font-size:13px;line-height:1.6;
   max-height:720px;overflow:auto;font-variant-ligatures:none;
   scrollbar-color:#A7AFBA transparent}
-.l{display:grid;grid-template-columns:var(--lanes) 40px 1fr;gap:10px;white-space:pre-wrap;
+.back{position:sticky;top:0;z-index:2;display:flex;gap:12px;align-items:center;
+  padding:6px 12px;background:#E3EEF9;border-bottom:2px solid #0B4F8A;
+  font:14px/1.4 system-ui,sans-serif}
+.back span{flex:1}
+button.link{border:0;background:none;padding:0;color:#0B4F8A;text-decoration:underline}
+.l{display:grid;grid-template-columns:25px 40px 1fr;gap:10px;white-space:pre-wrap;
   padding-right:12px}
-.lanes{display:grid;grid-template-columns:repeat(var(--n),16px);gap:3px;padding-left:6px}
+.lane{display:grid;grid-template-columns:16px;padding-left:6px}
 .bar{cursor:pointer;margin:0 3px}
 .bar.top{border-radius:4px 4px 0 0;margin-top:3px}
 .bar.end{border-radius:0 0 4px 4px;margin-bottom:3px}
@@ -27,9 +32,11 @@ CSS = """
 .bar:hover{filter:brightness(.92)}
 .bar:focus-visible,.item:focus-visible,button:focus-visible{outline:2px solid #0B4F8A}
 .n{text-align:right;color:#4A5361}
-.l.sel{background:#E3EEF9}
-.l.sel .n{color:#0B4F8A;font-weight:700}
+.l.in-site{background:#EEF4FB}
+.l.in-finding{background:#CFE2F6;box-shadow:inset 4px 0 #0B4F8A}
+.l.in-finding .n{color:#0B4F8A;font-weight:700}
 .l.hov{box-shadow:inset 0 0 0 999px rgba(11,79,138,.07)}
+.l.hov.in-finding{box-shadow:inset 4px 0 #0B4F8A,inset 0 0 0 999px rgba(11,79,138,.07)}
 .l.click{cursor:pointer}
 .box{font-family:system-ui,sans-serif;font-size:14px;line-height:1.5;margin:6px 12px 10px 60px;
   border:1px solid #0B4F8A;border-radius:8px;background:#FFFFFF}

@@ -1,21 +1,27 @@
-"""Findings grouped by site (Fundstelle): one place in the document and every finding that points
-at it, so a reader fixes the place once (#81). Only re-orders, the findings stay as they are."""
+"""Findings grouped by site (Fundstelle): a section of the document with every finding whose lines
+lie inside it, so a reader fixes one unit once (#84). Only re-orders, the findings stay as they
+are."""
 
+from bisect import bisect_right
 from collections import Counter
 
 from pydantic import BaseModel
 
+from govguard.checks.sections import DocSection
 from govguard.models import SEVERITY, Finding, Status
 
-NEAR = 2  # lines a border may differ and still be the same place: 5–27 next to 6–27
 
-Span = tuple[int, int]
+def by_lines(finding: Finding) -> tuple[int, int, int, str]:
+    """Sort key of a located finding: top to bottom, on equal lines the worst status first."""
+    assert finding.line_start is not None and finding.last_line is not None
+    return finding.line_start, finding.last_line, -SEVERITY[finding.status], finding.rule_id
 
 
 class Site(BaseModel):
+    name: str  # of the section: chapter, resource or path
     line_start: int
     line_end: int
-    findings: list[Finding]  # worst status first
+    findings: list[Finding]  # by lines (by_lines)
 
     @property
     def worst(self) -> Status:
@@ -32,45 +38,40 @@ class Site(BaseModel):
 
 
 class Sites(BaseModel):
-    whole: list[Site]  # over half the document: no place, the reader fixes it everywhere
-    placed: list[Site]  # by line
+    multi: list[Finding]  # lines in several sections: no single place; by lines (by_lines)
+    placed: list[Site]  # by line, never overlapping
     without_lines: list[Finding]
 
 
-def _span(finding: Finding) -> Span:
+def _section_of(finding: Finding, starts: list[int], sections: list[DocSection]) -> int | None:
+    """Index of the one section holding all lines of the finding, else None. Lines beyond the end
+    of the document give None too (cannot happen in practice: range_problem drops such ranges)."""
     assert finding.line_start is not None and finding.last_line is not None
-    return finding.line_start, finding.last_line
+    first = bisect_right(starts, finding.line_start) - 1
+    last = bisect_right(starts, finding.last_line) - 1
+    if first < 0 or first != last:  # also: no sections at all
+        return None
+    return first if finding.last_line <= sections[first].line_end else None
 
 
-def _near(a: Span, b: Span) -> bool:
-    return abs(a[0] - b[0]) <= NEAR and abs(a[1] - b[1]) <= NEAR
-
-
-def _centres(counted: Counter[Span]) -> dict[Span, Span]:
-    """Span -> the centre of its site. The most used range comes first and takes every free
-    range near it; a range already taken is no centre, so sites are never chained."""
-    centre_of: dict[Span, Span] = {}
-    for span in sorted(counted, key=lambda s: (-counted[s], s[0] - s[1], s[0])):
-        if span not in centre_of:
-            for other in counted:
-                if other not in centre_of and _near(span, other):
-                    centre_of[other] = span
-    return centre_of
-
-
-def group_sites(findings: list[Finding], total_lines: int) -> Sites:
-    """A range joins the site whose centre it is near (NEAR, both borders), not every finding of
-    it: two findings of one site may lie up to 2 * NEAR lines apart (FUNKTIONSWEISE 5)."""
-    located = [f for f in findings if f.line_start is not None]
-    centre_of = _centres(Counter(_span(f) for f in located))
-    groups: dict[Span, list[Finding]] = {}
-    for finding in located:
-        groups.setdefault(centre_of[_span(finding)], []).append(finding)
-    sites = [Site(line_start=min(_span(f)[0] for f in items),
-                  line_end=max(_span(f)[1] for f in items),
-                  findings=sorted(items, key=lambda f: -SEVERITY[f.status]))
-             for items in groups.values()]
-    sites.sort(key=lambda s: (s.line_start, s.line_end))
-    whole = [s for s in sites if 2 * s.width > total_lines]
-    return Sites(whole=whole, placed=[s for s in sites if s not in whole],
+def group_sites(findings: list[Finding], sections: list[DocSection]) -> Sites:
+    """sections: from split_sections, in line order. A finding inside one section belongs to its
+    site; one over several sections (or outside all) stands apart (FUNKTIONSWEISE 5)."""
+    starts = [s.line_start for s in sections]
+    held: dict[int, list[Finding]] = {}
+    multi = []
+    for finding in findings:
+        if finding.line_start is None:
+            continue
+        index = _section_of(finding, starts, sections)
+        if index is None:
+            multi.append(finding)
+        else:
+            held.setdefault(index, []).append(finding)
+    sites = [Site(name=sections[i].name, line_start=sections[i].line_start,
+                  line_end=sections[i].line_end,
+                  findings=sorted(items, key=by_lines))
+             for i, items in sorted(held.items())]
+    multi.sort(key=by_lines)
+    return Sites(multi=multi, placed=sites,
                  without_lines=[f for f in findings if f.line_start is None])

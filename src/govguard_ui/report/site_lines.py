@@ -1,17 +1,17 @@
-"""The document line by line for "nach Fundstelle": the bars in the margin, the site a click on
-the line opens and the tint (#81). Pure view logic, no Streamlit."""
+"""The document line by line for "nach Fundstelle": the bar in the margin, the site a click on the
+line opens, the tint, and the marks of the current site and of the selected finding (#81, #84).
+Sites never overlap, so one lane is enough. Pure view logic, no Streamlit."""
 
 from pydantic import BaseModel
 
 from govguard.checks.sites import Site
-from govguard.models import SEVERITY, Status
-from govguard_ui.report.site_lanes import assign_lanes
+from govguard.models import Status
 
 TINT_BELOW = 15  # lines; a wider site shows only its bar, else it would colour half the document
 
 
 class Bar(BaseModel):  # the part of a site's bar that stands at one line
-    site: int  # index in the list of placed sites
+    site: int  # index in the list of placed sites; a click on the bar or the line opens it
     top: bool  # first line of the site: the count is written here
     end: bool
 
@@ -19,25 +19,28 @@ class Bar(BaseModel):  # the part of a site's bar that stands at one line
 class LineRow(BaseModel):
     number: int
     text: str
-    bars: list[Bar | None]  # one cell per lane
-    owner: int | None  # site a click on the line opens: the narrowest one holding it
+    bar: Bar | None
     tint: Status | None
-    selected: bool
+    in_site: bool  # a line of the current site: light
+    in_finding: bool  # a line of the selected finding, in any section: strong
 
 
-def line_rows(text: str, sites: list[Site], current: int | None) -> list[LineRow]:
-    lane_of = assign_lanes(sites)
-    lanes = max(lane_of, default=-1) + 1
+def _site_at(sites: list[Site]) -> dict[int, int]:
+    """Line -> index of the site holding it."""
+    return {n: i for i, s in enumerate(sites) for n in range(s.line_start, s.line_end + 1)}
+
+
+def line_rows(text: str, sites: list[Site], current: int | None,
+              span: tuple[int, int] | None) -> list[LineRow]:
+    """current: index of the open site; span: first and last line of the selected finding."""
+    held = _site_at(sites)
     rows = []
     for number, line in enumerate(text.splitlines(), 1):
-        holding = [i for i, s in enumerate(sites) if s.line_start <= number <= s.line_end]
-        bars: list[Bar | None] = [None] * lanes
-        for i in holding:
-            bars[lane_of[i]] = Bar(site=i, top=sites[i].line_start == number,
-                                   end=sites[i].line_end == number)
-        narrow = [sites[i].worst for i in holding if sites[i].width < TINT_BELOW]
-        rows.append(LineRow(
-            number=number, text=line, bars=bars,
-            owner=min(holding, key=lambda i: sites[i].width, default=None),
-            tint=max(narrow, key=SEVERITY.__getitem__, default=None), selected=current in holding))
+        i = held.get(number)
+        site = sites[i] if i is not None else None
+        bar = site and Bar(site=i, top=site.line_start == number, end=site.line_end == number)
+        tint = site.worst if site and site.width < TINT_BELOW else None
+        rows.append(LineRow(number=number, text=line, bar=bar, tint=tint,
+                            in_site=i is not None and i == current,
+                            in_finding=span is not None and span[0] <= number <= span[1]))
     return rows

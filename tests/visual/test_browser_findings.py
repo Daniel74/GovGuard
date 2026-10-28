@@ -274,13 +274,13 @@ def test_llm_text_stands_in_the_sites_as_text_never_as_link_image_or_tag(
 def test_a_click_on_a_line_opens_the_site_it_belongs_to(page: Page, app_url: str) -> None:
     """#81: not only the bar, the line of a site opens it too."""
     open_view(page, app_url, "gallery-spec")
-    line = page.locator(".doc .l.click:not(.sel)").first
+    line = page.locator(".doc .l.click:not(.in-site)").first
     number = line.locator(".n").inner_text()
 
     line.click()
     settled(page)
 
-    expect(page.locator(".doc .l.sel .n", has_text=re.compile(f"^{number}$"))).to_have_count(1)
+    expect(page.locator(".doc .l.in-site .n", has_text=re.compile(f"^{number}$"))).to_have_count(1)
     expect(page.locator(".box")).to_have_count(1)
 
 
@@ -302,5 +302,54 @@ def test_next_and_previous_go_through_the_sites_by_line(page: Page, app_url: str
 
 
 def first_line(label: str) -> int:
-    """"Zeilen 12–14 · 3 Befunde · …" -> 12."""
-    return int(re.search(r"\d+", label).group())
+    """"3 Prüfung · Zeilen 12–14 · 3 Befunde · …" -> 12."""
+    return int(re.search(r"Zeilen? (\d+)", label).group(1))
+
+
+def test_a_finding_over_several_sections_is_chosen_with_its_button_and_marked_in_the_document(
+        page: Page, app_url: str) -> None:
+    """#84: the group has no bar; the button marks the lines, the finding gets the box mark."""
+    open_view(page, app_url, "gallery-spec")
+    buttons = page.get_by_role("button", name="Zeilen im Dokument zeigen")
+    if not buttons.first.is_visible():  # the group is open while it holds the selected finding
+        page.get_by_text("Befunde mit Belegen aus mehreren Abschnitten").click()
+    expect(buttons.first).to_be_visible()
+
+    buttons.nth(2).click()
+    settled(page)
+
+    expect(page.locator(".doc .l.in-finding").first).to_be_visible()
+    assert page.locator(".doc .l.in-finding").count() > 1
+    expect(page.locator('[class*="_multi_item_sel_"]')).to_have_count(1)
+    expect(page.locator(".box")).to_have_count(0)  # no site is current
+
+
+def test_the_page_scrolls_to_the_marked_lines_and_a_link_leads_back_to_the_finding(
+        page: Page, app_url: str) -> None:
+    """#84: after the click the reader need not scroll down by hand, and a link goes back up."""
+    open_view(page, app_url, "gallery-spec")
+    buttons = page.get_by_role("button", name="Zeilen im Dokument zeigen")
+    if not buttons.first.is_visible():
+        page.get_by_text("Befunde mit Belegen aus mehreren Abschnitten").click()
+    expect(buttons.first).to_be_visible()
+
+    buttons.nth(2).click()
+    settled(page)
+
+    expect(page.locator(".doc .l.in-finding").first).to_be_in_viewport()
+    expect(page.locator(".doc .back")).to_contain_text("Markiert: ")
+    page.locator(".doc .back button", has_text="zurück zum Befund").click()
+    expect(page.locator('[class*="_multi_item_sel_"]')).to_be_in_viewport()
+
+
+def test_a_click_inside_the_document_does_not_make_the_page_jump(page: Page, app_url: str) -> None:
+    open_view(page, app_url, "gallery-spec")
+    page.locator(".doc .bar.top").nth(3).click()
+    settled(page)
+    before = page.evaluate("document.querySelector('section.stMain').scrollTop")
+
+    page.locator(".box .item").last.click()
+    settled(page)
+
+    assert page.evaluate("document.querySelector('section.stMain').scrollTop") == before
+    expect(page.locator(".doc .back")).to_have_count(0)

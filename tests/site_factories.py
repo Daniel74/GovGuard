@@ -1,4 +1,4 @@
-"""Findings and sites for the tests of "nach Fundstelle" (#81)."""
+"""Findings and sites for the tests of "nach Fundstelle" (#81, #84)."""
 
 from govguard.checks.sites import Site
 from govguard.models import Finding, Status
@@ -12,6 +12,6 @@ def finding(rule_id: str, status: Status = "FAIL", start: int | None = 5,
                    cross_references=[])
 
 
-def site(start: int, end: int, status: Status = "FAIL") -> Site:
-    return Site(line_start=start, line_end=end,
+def site(start: int, end: int, status: Status = "FAIL", name: str = "Abschnitt") -> Site:
+    return Site(name=name, line_start=start, line_end=end,
                 findings=[finding("R", status, start=start, end=end)])

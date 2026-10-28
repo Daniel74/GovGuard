@@ -1,4 +1,4 @@
-"""The script of the document with its sites (CCv2, #81). LLM text goes into the page as
+"""The script of the document with its sites (CCv2, #81, #84). LLM text goes into the page as
 textContent: never a link, image or tag."""
 
 JS = """
@@ -61,6 +61,22 @@ function box(index, data, send) {
   return div
 }
 
+function back(info) {  // a finding over several sections: its lines stand marked, the way back
+  const div = el("div", "back")
+  div.appendChild(el("span", "", "Markiert: " + info.title + " · " + info.lines))
+  const link = div.appendChild(el("button", "link", "↑ zurück zum Befund"))
+  press(link, () => {  // the chosen item of the group: in the page, outside this shadow root
+    const item = document.querySelector('[class*="_multi_item_sel_"]')
+    if (item) item.scrollIntoView({ block: "center", behavior: "smooth" })
+  })
+  return div
+}
+
+function onScreen(node) {  // inside the window, below the header of the page
+  const r = node.getBoundingClientRect()
+  return r.top >= 64 && r.bottom <= window.innerHeight
+}
+
 function bar(cell, data, send, lineDivs) {
   const site = data.sites[cell.site]
   const span = el("span", "bar f-" + site.look + (cell.top ? " top" : "") +
@@ -81,24 +97,20 @@ function bar(cell, data, send, lineDivs) {
 export default function ({ data, parentElement, setTriggerValue }) {
   const send = setTriggerValue
   const doc = parentElement.querySelector(".doc")
-  doc.style.setProperty("--n", data.lanes)
-  doc.style.setProperty("--lanes", (data.lanes * 19 + 6) + "px")
   const kept = doc.scrollTop
-  const rows = []
+  const rows = data.back ? [back(data.back)] : []
   const lineDivs = []
   for (const line of data.lines) {
     const div = el("div", "l" + (line.tint ? " t-" + line.tint : "") +
-                   (line.selected ? " sel" : ""))
-    const lanes = div.appendChild(el("span", "lanes"))
-    for (const cell of line.bars) {
-      lanes.appendChild(cell ? bar(cell, data, send, lineDivs) : el("span"))
-    }
+                   (line.in_site ? " in-site" : "") + (line.in_finding ? " in-finding" : ""))
+    const lane = div.appendChild(el("span", "lane"))  // one lane: sections never overlap
+    if (line.bar) lane.appendChild(bar(line.bar, data, send, lineDivs))
     div.appendChild(el("span", "n", line.n))
     div.appendChild(el("span", "", line.text || " "))
-    if (line.owner !== null) {
+    if (line.bar) {
       div.classList.add("click")
-      div.title = data.sites[line.owner].tip
-      div.onclick = () => send("site", String(line.owner))
+      div.title = data.sites[line.bar.site].tip
+      div.onclick = () => send("site", String(line.bar.site))
     }
     rows.push(div)
     lineDivs.push(div)
@@ -106,10 +118,14 @@ export default function ({ data, parentElement, setTriggerValue }) {
     if (data.open && current && current.end === line.n) rows.push(box(data.current, data, send))
   }
   doc.replaceChildren(...rows)
-  const chosen = doc.querySelector(".l.sel")  // scroll only when a new choice is out of sight
+  const chosen = doc.querySelector(".l.in-finding")  // first line of the finding, in any section
+  const fresh = doc.dataset.selected !== data.selected  // a new choice, not a rerun
   const top = chosen ? chosen.offsetTop - doc.offsetTop : 0
-  const hidden = top < kept || top > kept + doc.clientHeight - 80
-  doc.scrollTop = chosen && doc.dataset.selected !== data.selected && hidden ? top - 60 : kept
+  const hidden = top < kept || top > kept + doc.clientHeight - 80  // out of sight in the box
+  doc.scrollTop = chosen && fresh && hidden ? top - 60 : kept
+  if (chosen && fresh && doc.dataset.selected !== undefined && !onScreen(chosen)) {
+    chosen.scrollIntoView({ block: "center", behavior: "smooth" })  // the page too, not at load
+  }
   doc.dataset.selected = data.selected
 }
 """

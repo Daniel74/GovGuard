@@ -28,9 +28,12 @@ HELP = {  # help on the report head; status help lives in style.LOOKS
             f"JSON-Report: {LOOKS['GAP'].code}. Die Lücken stehen nicht in der Befundtabelle oben. "
             "Lücken unter einer Bedingung, zu der die Eingabe schweigt, stehen getrennt unter "
             "„Nur wenn …“: Trifft die Bedingung nicht zu, entfallen sie.",
-    "whole_document": "Diese Befunde nennen mehr als die Hälfte des Dokuments als Beleg. Ein "
-                      "Balken am Rand wäre so lang wie das Dokument und würde fast alles "
-                      "einfärben. Darum stehen sie hier gesammelt, mit Begründung und Empfehlung.",
+    "multi_section": "Die Belege dieser Befunde liegen in mehreren Abschnitten. Ein Balken am Rand "
+                     "gehört zu genau einem Abschnitt, darum stehen diese Befunde hier "
+                     "gesammelt, mit Begründung und Empfehlung.",
+    "document": "Eine Fundstelle ist ein Dokumentabschnitt (Kapitel, Ressource oder Pfad), in dem "
+                "mindestens ein Befund liegt. Jede Zeile gehört zu genau einer Fundstelle, darum "
+                "überschneiden sich die Balken nie.",
     "without_lines": "Diese Befunde nennen keine Zeilen, z. B. ein nicht anwendbarer Befund oder "
                      "einer, dessen Zeilenbereich der Code gestrichen hat. Lücken stehen getrennt "
                      "darunter.",

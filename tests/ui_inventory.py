@@ -20,8 +20,11 @@ INVENTORY: dict[str, str] = {
                                  "test_by_rule_shows_the_table_with_the_detail_column",
     "site_document:{}": "tests/visual/test_browser_findings.py::"
                         "test_a_click_on_a_site_bar_opens_its_findings_under_the_site",
-    "expander:{}": "tests/test_ui_by_site.py::"
-                   "test_findings_over_the_whole_document_stand_above_it_with_the_help_of_the_page",
+    "expander:{}_{}": "tests/test_ui_by_site.py::"
+                      "test_findings_over_several_sections_stand_above_the_document",
+    "button:{}_{}_show_{}": "tests/test_ui_by_site.py::"
+                            "test_a_click_on_a_finding_over_several_sections_selects_it_and_"
+                            "marks_its_lines",
     "finding_table:{}": "tests/visual/test_browser_findings.py::"
                         "test_a_click_on_a_row_selects_the_finding_and_marks_only_this_row",
     "button:{}_required_{}": "tests/test_ui_report_header.py::"

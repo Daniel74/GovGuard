@@ -1,80 +1,98 @@
-"""Grouping findings by site (Fundstelle): one place in the document, every finding pointing at it
-(#81). Pure: no model, no Streamlit."""
+"""Grouping findings by site (Fundstelle): a section of the document with every finding whose
+lines lie inside it (#84). Pure: no model, no Streamlit."""
 
 from site_factories import finding
 
+from govguard.checks.sections import DocSection
 from govguard.checks.sites import group_sites
 from govguard.models import Finding
 
-
-def places(findings: list[Finding], total: int = 100) -> list[tuple[int, int, list[str]]]:
-    return [(s.line_start, s.line_end, [f.rule_id for f in s.findings])
-            for s in group_sites(findings, total).placed]
-
-
-def test_findings_with_the_same_lines_are_one_site() -> None:
-    findings = [finding("A"), finding("B", start=40, end=41), finding("C")]
-
-    assert places(findings) == [(5, 27, ["A", "C"]), (40, 41, ["B"])]
+SECTIONS = [DocSection(name="Intro", line_start=1, line_end=9),
+            DocSection(name="Body", line_start=10, line_end=29),
+            DocSection(name="End", line_start=30, line_end=40)]
 
 
-def test_borders_that_differ_by_up_to_two_lines_are_one_site() -> None:
-    """The model shifts a border by a line or two: 5–27 next to 6–27."""
-    findings = [finding("A", start=5), finding("B", start=6), finding("C", start=7),
-                finding("D", start=9)]
-
-    assert places(findings) == [(5, 27, ["A", "B", "C"]), (9, 27, ["D"])]
+def places(findings: list[Finding]) -> list[tuple[str, int, int, list[str]]]:
+    return [(s.name, s.line_start, s.line_end, [f.rule_id for f in s.findings])
+            for s in group_sites(findings, SECTIONS).placed]
 
 
-def test_sites_are_not_chained() -> None:
-    """5 joins 7 and 7 joins 9, yet 5 and 9 are four lines apart: chaining would swallow a
-    document (52 findings became one site 1–287 in the gallery)."""
-    findings = [finding("A", start=5), finding("B", start=7), finding("C", start=9),
-                finding("D", start=11)]
+def test_a_finding_inside_a_section_belongs_to_the_site_with_the_lines_of_the_section() -> None:
+    findings = [finding("A", start=12, end=15), finding("B", start=2, end=2),
+                finding("C", start=20, end=29)]
 
-    assert places(findings) == [(5, 27, ["A", "B"]), (9, 27, ["C", "D"])]
+    assert places(findings) == [("Intro", 1, 9, ["B"]), ("Body", 10, 29, ["A", "C"])]
 
 
-def test_the_most_used_range_is_the_centre_of_its_site() -> None:
-    """A is first by line, but B and C are two findings on 6–27: they decide who joins."""
-    findings = [finding("A", start=4), finding("B", start=6), finding("C", start=6),
-                finding("D", start=8)]
-
-    assert places(findings) == [(4, 27, ["A", "B", "C", "D"])]
+def test_a_finding_without_end_line_is_one_line() -> None:
+    assert places([finding("A", start=30, end=None)]) == [("End", 30, 40, ["A"])]
 
 
-def test_a_site_knows_its_worst_status_and_the_mix_and_lists_the_worst_first() -> None:
-    """PASS next to FAIL stays visible: the bar takes the colour of the FAIL, the mix lists both."""
-    findings = [finding("A", "PASS"), finding("B", "WARN"), finding("C", "FAIL"),
-                finding("D", "PASS")]
+def test_sections_without_findings_are_no_sites() -> None:
+    assert [s.name for s in group_sites([finding("A", start=35, end=36)], SECTIONS).placed] == [
+        "End"]
 
-    site = group_sites(findings, 100).placed[0]
+
+def test_a_finding_over_several_sections_goes_to_the_group_of_several_sections() -> None:
+    findings = [finding("A", start=5, end=12), finding("B", start=3, end=4)]
+
+    sites = group_sites(findings, SECTIONS)
+
+    assert [f.rule_id for f in sites.multi] == ["A"]
+    assert [s.name for s in sites.placed] == ["Intro"]
+
+
+def test_a_finding_to_the_edge_of_a_section_still_belongs_to_it() -> None:
+    assert places([finding("A", start=10, end=29)]) == [("Body", 10, 29, ["A"])]
+
+
+def test_a_finding_outside_every_section_cannot_be_placed_and_joins_the_group_of_several() -> None:
+    assert [f.rule_id for f in group_sites([finding("A", start=39, end=45)], SECTIONS).multi] == [
+        "A"]
+
+
+def test_a_site_knows_its_worst_status_and_the_mix() -> None:
+    """PASS next to FAIL stays visible: the bar takes the colour of the FAIL, the mix lists both,
+    wherever the FAIL stands in the list."""
+    findings = [finding("A", "PASS", 12, 13), finding("B", "WARN", 12, 13),
+                finding("C", "FAIL", 14, 15), finding("D", "PASS", 12, 13)]
+
+    site = group_sites(findings, SECTIONS).placed[0]
 
     assert site.worst == "FAIL"
     assert site.status_counts == [("FAIL", 1), ("WARN", 1), ("PASS", 2)]
-    assert [f.rule_id for f in site.findings] == ["C", "B", "A", "D"]
 
 
-def test_a_site_over_more_than_half_the_document_concerns_the_whole_document() -> None:
-    findings = [finding("A", start=1, end=51), finding("B", start=1, end=50),
-                finding("C", start=10, end=20)]
+def test_the_findings_of_a_site_are_sorted_by_lines_then_worst_status_then_rule() -> None:
+    """Top to bottom through the document, like the group of several sections."""
+    findings = [finding("A", "PASS", 12, 13), finding("B", "WARN", 12, 13),
+                finding("C", "FAIL", 14, 15), finding("D", "PASS", 12, 13),
+                finding("E", "FAIL", 11, 20), finding("F", "FAIL", 11, 12)]
 
-    sites = group_sites(findings, total_lines=100)
+    site = group_sites(findings, SECTIONS).placed[0]
 
-    assert [(s.line_start, s.line_end, len(s.findings)) for s in sites.whole] == [(1, 51, 2)]
-    assert [(s.line_start, s.line_end) for s in sites.placed] == [(10, 20)]
-
-
-def test_exactly_half_the_document_is_still_a_place() -> None:
-    sites = group_sites([finding("A", start=1, end=50)], total_lines=100)
-
-    assert (len(sites.whole), len(sites.placed)) == (0, 1)
+    assert [f.rule_id for f in site.findings] == ["F", "E", "B", "A", "D", "C"]
 
 
 def test_findings_without_lines_come_last_and_stay_apart() -> None:
-    findings = [finding("A", "WARN", start=None, end=None), finding("B")]
+    findings = [finding("A", "WARN", start=None, end=None), finding("B", start=12, end=13)]
 
-    sites = group_sites(findings, 100)
+    sites = group_sites(findings, SECTIONS)
 
     assert [f.rule_id for f in sites.without_lines] == ["A"]
     assert [f.rule_id for s in sites.placed for f in s.findings] == ["B"]
+
+
+def test_without_sections_every_located_finding_stands_apart() -> None:
+    sites = group_sites([finding("A", start=3, end=4)], [])
+
+    assert [f.rule_id for f in sites.multi] == ["A"] and sites.placed == []
+
+
+def test_the_group_of_several_sections_is_sorted_by_lines_then_worst_status_then_rule() -> None:
+    findings = [finding("D", "PASS", 8, 28), finding("C", "WARN", 5, 12),
+                finding("B", "FAIL", 5, 12), finding("A", "FAIL", 5, 12),
+                finding("E", "FAIL", 5, 35), finding("F", "FAIL", 1, 12)]
+
+    assert [f.rule_id for f in group_sites(findings, SECTIONS).multi] == [
+        "F", "A", "B", "C", "E", "D"]

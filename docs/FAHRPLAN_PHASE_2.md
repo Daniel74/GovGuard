@@ -23,7 +23,8 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 | ------- | --------------------------- | ------------------------- | ------------------------------ | ------------------- |
 | P0      | Stand sichern               | –                         | –                              | < 1 %               |
 | P1      | #81 Befunde nach Fundstelle | `/prototype`, `/tdd`      | P0                             | 10–15 %, ohne Ist   |
-| P1b     | #83 KI-Kennzeichnung, #82 Maßnahme je Fundstelle | `/tdd`, `/code-review` (🧩) | P1                 | 12–20 %, Messlatte  |
+| P1b     | #83 KI-Kennzeichnung, #84 Fundstelle = Abschnitt, #82 Maßnahme je Fundstelle | `/prototype`, `/tdd`, `/code-review` (🧩) | P1 | 25–40 %, Messlatte |
+| P1c     | #85 Fehlenden Abschnitt vorschlagen | `/tdd`, `/code-review` (🧩) | P1b                | 8–12 %              |
 | P2      | Recherche Testdaten         | `/research`               | P0, läuft im Hintergrund       | 5–10 %              |
 | P3      | Roadmap-Karte und Schätzung | `/wayfinder`              | P1b (Messlatte), parallel zu P2 | 8–12 %             |
 | P4      | Prüfregeln festlegen        | `/grill-with-docs`        | P2 und P3                      | 3–5 %               |
@@ -64,22 +65,43 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 
 ---
 
-### Schritt P1b – #83 KI-Kennzeichnung und #82 Maßnahme je Fundstelle
+### Schritt P1b – #83 KI-Kennzeichnung, #84 Fundstelle = Abschnitt, #82 Maßnahme je Fundstelle
 
-**Ziel:** Jede Ausgabe eines Sprachmodells ist dezent als KI-generiert gekennzeichnet, sichtbar im Report und maschinenlesbar im JSON, wie es die KI-VO in Art. 50 verlangt (#83). Darauf aufbauend fasst ein Modell auf Klick die Befunde einer Fundstelle zu wenigen Maßnahmen zusammen, geschützt durch das Passwort (#82).
-**Voraussetzung:** P1. #83 zuerst, weil #82 den Baustein nutzt. #82 ruft Groq nur auf Klick auf, mit erfundenen Daten; lokal braucht das `APP_PASSWORD` und `GROQ_API_KEY` in `.streamlit/secrets.toml`.
+**Ziel:** Jede Ausgabe eines Sprachmodells ist dezent als KI-generiert gekennzeichnet, sichtbar im Report und maschinenlesbar im JSON, wie es die KI-VO in Art. 50 verlangt (#83). Eine Zeile gehört zu genau einer Fundstelle: Abschnitt im Fachkonzept, Ressource in der Vorlage (#84). Darauf schlägt ein Modell auf Klick je Fundstelle wenige Maßnahmen mit Vorher/Nachher vor, geschützt durch das Passwort (#82, Remediation Stufe 1 der Folie „Erweiterung: Remediation“).
+**Voraussetzung:** P1. Reihenfolge #83 → #84 → #82: #82 nutzt den Baustein aus #83 und braucht Fundstellen ohne Überschneidung, sonst schreiben zwei Vorschläge dieselbe Zeile um. #82 ruft Groq nur auf Klick auf, mit erfundenen Daten; lokal braucht das `APP_PASSWORD` und `GROQ_API_KEY` in `.streamlit/secrets.toml`.
 
-- [ ] **Starten** 🆕 _Opus_ · 👤 `Lies docs/FAHRPLAN_PHASE_2.md Schritt P1b` → 🤖 `.claude/budget.sh start P1b`, eine Vorlage für #83 und #82 mit den offenen Fragen beider Issues (Wortlaut der Kennzeichnung, Aufbau des Prompts) → 👤 Go
-- [ ] **Bauen #83** 🧩 _Sonnet_ `/tdd Issue #83` → 🧩 _Opus_ `/code-review gegen Issue #83` → 🧩 behebt die Befunde
-- [ ] **🔀 Halt: Kennzeichnung ansehen** 🤖 startet Streamlit lokal · 👤 Galerie und einen Report ansehen → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder
-- [ ] **Bauen #82** 🧩 _Sonnet_ `/tdd Issue #82`, ADR-Nachtrag zu 0023 eingeschlossen → 🧩 _Opus_ `/code-review gegen Issue #82` → 🧩 behebt die Befunde
-- [ ] **🔀 Halt: Maßnahme ansehen** 🤖 startet Streamlit lokal mit Passwort · 👤 „Maßnahme vorschlagen“ an `s3:*` in `arch-antragseingang-fehlerhaft` → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder
-- [ ] **Abnahme** 🤖 Akzeptanzkriterien beider Issues, `.claude/budget.sh end P1b "12–20 %" 83 82`
-- [ ] **Verstehen** 👤 `/verstehen 83 Kennzeichnung nach KI-VO Art. 50` und `/verstehen 82 Modell schlägt vor, Code ordnet zu`
-- [ ] **Abschließen** 👤 committet und pusht, schließt #83 und #82
+- [x] **Starten** 🆕 _Opus_ · 👤 `Lies docs/FAHRPLAN_PHASE_2.md Schritt P1b` → 🤖 `.claude/budget.sh start P1b`, eine Vorlage für #83 und #82 mit den offenen Fragen beider Issues (Wortlaut der Kennzeichnung, Aufbau des Prompts) → 👤 Go
+- [x] **Bauen #83** 🧩 _Sonnet_ `/tdd Issue #83` → 🧩 _Opus_ `/code-review gegen Issue #83` → 🧩 behebt die Befunde
+- [x] **🔀 Halt: Kennzeichnung ansehen** 🤖 startet Streamlit lokal · 👤 Galerie und einen Report ansehen → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder · 👤 committet #83 lokal
+- [x] **Prototyp #82** 🧩 _Sonnet_ `/prototype` Varianten A, B, C auf Branch `prototype/82-massnahme` (Worktree), Modellantwort erfunden
+- [x] **🔀 Halt: Variante wählen** 👤 alle Varianten an `s3:*` ansehen, Variante und Inhalt der Maßnahme wählen → 🤖 Prototyp-Kommentar und angepasster Body in #82, Folgeticket #84
+- [x] **Bauen #84** 🧩 _Sonnet_ `/tdd Issue #84`, FUNKTIONSWEISE 5 (Regel „nah“ ersetzt) eingeschlossen → 🧩 _Opus_ `/code-review gegen Issue #84` → 🧩 behebt die Befunde
+- [x] **🔀 Halt: Fundstellen ansehen** 🤖 startet Streamlit lokal · 👤 `arch-antragseingang-fehlerhaft` (Rolle mit `s3:*`) und `spec-govguard` → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder · 👤 committet #84 lokal
+- [ ] **Bauen #82** 🧩 _Sonnet_ `/tdd Issue #82` nach dem Prototyp-Kommentar, ADR-Nachtrag zu 0023 eingeschlossen → 🧩 _Opus_ `/code-review gegen Issue #82` → 🧩 behebt die Befunde
+- [ ] **🔀 Halt: Maßnahme ansehen** 🤖 startet Streamlit lokal mit Passwort · 👤 „Maßnahme vorschlagen“ an der Ressource mit `s3:*` in `arch-antragseingang-fehlerhaft` → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder
+- [ ] **Abnahme** 🤖 Akzeptanzkriterien aller drei Issues, `.claude/budget.sh end P1b "25–40 %" 83 84 82`
+- [ ] **Verstehen** 👤 `/verstehen 83 Kennzeichnung nach KI-VO Art. 50`, `/verstehen 84 Fundstelle als Einheit zum Ersetzen` und `/verstehen 82 Modell schlägt vor, Code prüft`
+- [ ] **Abschließen** 👤 committet und pusht, schließt #83, #84 und #82; löscht den Prototyp-Worktree
 
-**Fertig, wenn:** #83 und #82 geschlossen sind, `pytest`, `pytest -m visual` und ruff grün sind und die Budget-Zeile in SCHAETZUNG.md steht.
-**Fürs Fachgespräch:** Das Modell schlägt nur vor, der Code prüft, dass jeder Befund genau einer Maßnahme zugeordnet ist. Und was ein Modell geschrieben hat, sieht man und erkennt eine Maschine.
+**Fertig, wenn:** #83, #84 und #82 geschlossen sind, `pytest`, `pytest -m visual` und ruff grün sind und die Budget-Zeile in SCHAETZUNG.md steht.
+**Fürs Fachgespräch:** Das Modell schlägt nur vor, der Code prüft: Das Vorher steht wörtlich im Dokument, jeder Befund gehört zu genau einer Maßnahme, und eine Zeile gehört zu genau einer Fundstelle. Was ein Modell geschrieben hat, sieht man und erkennt eine Maschine.
+
+---
+
+### Schritt P1c – #85 Fehlenden Abschnitt vorschlagen
+
+**Ziel:** Für Befunde, die über mehrere Abschnitte reichen und meist etwas Fehlendes beschreiben, schlägt ein Modell auf Klick ein neues Kapitel mit Platzhaltern vor, eingefügt hinter einem genannten Abschnitt. Kein Umbau des Dokuments.
+**Voraussetzung:** P1b. Nutzt Knopf, Passwort, KI-Baustein und Datenformat aus #82 (leeres Vorher = einfügen); Groq nur auf Klick, mit erfundenen Daten.
+
+- [ ] **Starten** 🆕 _Opus_ · 👤 `Lies docs/FAHRPLAN_PHASE_2.md Schritt P1c` → 🤖 `.claude/budget.sh start P1c`, Vorlage mit der offenen Frage aus #85 (ein Kapitel je Befund oder gebündelt) → 👤 Go
+- [ ] **Bauen** 🧩 _Sonnet_ `/tdd Issue #85` → 🧩 _Opus_ `/code-review gegen Issue #85` → 🧩 behebt die Befunde
+- [ ] **🔀 Halt: Vorschlag ansehen** 🤖 startet Streamlit lokal mit Passwort · 👤 „Fehlenden Abschnitt vorschlagen“ in `spec-meldeportal-gesundheit` → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder
+- [ ] **Abnahme** 🤖 Akzeptanzkriterien von #85, `.claude/budget.sh end P1c "8–12 %" 85`
+- [ ] **Verstehen** 👤 `/verstehen 85 Einfügen statt ersetzen`
+- [ ] **Abschließen** 👤 committet und pusht, schließt #85
+
+**Fertig, wenn:** #85 geschlossen ist, `pytest`, `pytest -m visual` und ruff grün sind und die Budget-Zeile in SCHAETZUNG.md steht.
+**Fürs Fachgespräch:** GovGuard ergänzt ein fehlendes Kapitel, statt das Dokument umzubauen: Die Gliederung gibt die Vorlage der Behörde vor, und ein eingefügtes Kapitel kann ein Mensch Zeile für Zeile prüfen.
 
 ---
 

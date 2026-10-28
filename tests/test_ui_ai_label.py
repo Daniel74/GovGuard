@@ -20,7 +20,7 @@ def test_the_detail_marks_rationale_and_recommendation_as_written_by_the_model()
     assert ai_label("Empfehlung") in bodies
 
 
-def test_the_findings_over_the_whole_document_carry_the_marker_in_their_blocks() -> None:
+def test_the_findings_over_several_sections_carry_the_marker_in_their_blocks() -> None:
     app = spec_page(view=None)
 
     blocks = [b for b in html_bodies(app) if "Begründung" in b]

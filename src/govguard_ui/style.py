@@ -150,6 +150,9 @@ CSS = """<style>
   border-color:#0B4F8A}
 [class*="_source"] button[aria-checked="true"] p{color:#FFFFFF;font-weight:600}
 [class*="_gaps"] details{border-style:dashed}
+[class*="_item_"]{gap:0;padding:0 12px 8px;border-bottom:1px solid #E3E7EC}
+[class*="_show_"] [data-testid="stBaseButton-tertiary"] p{text-decoration:underline}
+[class*="_item_sel_"]{background:#F2F6FB;box-shadow:inset 4px 0 #0B4F8A}
 [class*="_document_head"]{background:#F5F6F8;margin:-15px -15px 0;width:calc(100% + 30px);
   max-width:none;padding:.5rem 15px;flex-wrap:nowrap;border-radius:7px 7px 0 0}
 [class*="_document_head"] p{font-size:14px}
