@@ -16,6 +16,12 @@ INVENTORY: dict[str, str] = {
                        "test_switching_a_status_on_or_off_changes_the_list_and_its_count",
     "segmented_control:{}_source": "tests/test_ui_gallery_filters.py::"
                                    "test_the_source_filter_keeps_only_findings_of_that_source",
+    "segmented_control:{}_view": "tests/test_ui_by_site.py::"
+                                 "test_by_rule_shows_the_table_with_the_detail_column",
+    "site_document:{}": "tests/visual/test_browser_findings.py::"
+                        "test_a_click_on_a_site_bar_opens_its_findings_under_the_site",
+    "expander:{}": "tests/test_ui_by_site.py::"
+                   "test_findings_over_the_whole_document_stand_above_it_with_the_help_of_the_page",
     "finding_table:{}": "tests/visual/test_browser_findings.py::"
                         "test_a_click_on_a_row_selects_the_finding_and_marks_only_this_row",
     "button:{}_required_{}": "tests/test_ui_report_header.py::"

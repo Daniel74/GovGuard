@@ -23,13 +23,17 @@ STEPS = f"""1. Audit-Art wählen: **Spezifikation** (Fachkonzept, OpenAPI) oder 
    höchstens {with_thousand_dots(MAX_INPUT_CHARS)} Zeichen.
 3. Passwort eingeben und „Audit starten“ wählen. Ein Audit dauert 20 bis 60 Sekunden.
 4. Report lesen und bei Bedarf als JSON herunterladen. Er bleibt nur in dieser Sitzung."""
-GALLERY = "\n".join(f"- {sentence}" for sentence in [  # one per item (#41, #51)
+GALLERY = "\n".join(f"- {sentence}" for sentence in [  # one per item (#41, #51, #81)
     "Die Galerie zeigt Musterfälle, also fiktive Beispiel-Eingaben mit festgelegtem "
     "Soll-Ergebnis.",
-    "Links steht die Befundliste, rechts das geprüfte Dokument.",
-    "Wählen Sie einen Befund, dann springt das Dokument zu seinen Belegzeilen: Es beginnt wenige "
-    "Zeilen darüber und markiert sie blau.",
-    "„Ganzes Dokument“ zeigt alle Zeilen.",
+    "Eine Fundstelle ist eine Stelle im Dokument, auf die mindestens ein Befund zeigt; Befunde "
+    "mit fast gleichen Zeilen stehen bei derselben Stelle.",
+    "In der Ansicht „nach Fundstelle“ steht das Dokument in voller Breite, ein Balken am Rand "
+    "zeigt je Stelle den schwersten Status und die Zahl der Befunde.",
+    "Ein Klick auf einen Balken öffnet darunter alle Befunde der Stelle mit Begründung und "
+    "Empfehlung, so beheben Sie eine Stelle einmal.",
+    "„nach Prüfregel“ zeigt links die Befundliste und rechts das Dokument mit den blau markierten "
+    "Belegzeilen; „Ganzes Dokument“ zeigt dort alle Zeilen.",
 ])
 TERMS = {  # two rows of four cards
     "Beleg": "Die Zeilen der Eingabe, auf die sich der Befund stützt, z. B. „Zeilen 46–49“. Im "

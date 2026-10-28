@@ -8,7 +8,8 @@ import html
 
 from pydantic import BaseModel
 
-from govguard_ui.report.review import Category
+from govguard.models import Finding
+from govguard_ui.report.review import Category, category
 
 
 class Look(BaseModel):  # the one table per category: badge, counter, help and start page
@@ -65,6 +66,15 @@ LOOKS: dict[Category, Look] = {
 def status_word(status: str) -> str:
     """German word of a status code; other words such as "fehlt" stay as they are."""
     return LOOKS[status].label if status in LOOKS else status
+
+
+def status_text(finding: Finding) -> str:
+    """Symbol and word of a finding's status, for the table and the sites."""
+    look = LOOKS[category(finding)]
+    status = f"{look.symbol} {look.label}"
+    if finding.downgraded_from:  # a downgrade stays visible in the list (ADR 0017)
+        status += f"\n↓ von {status_word(finding.downgraded_from)}"  # own line: narrow column
+    return status
 
 
 STATUS_FILTERS: tuple[Category, ...] = ("FAIL", "WARN", "PASS", "N/A")  # gaps: own list

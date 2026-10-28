@@ -16,6 +16,7 @@ from govguard.condition_models import ConditionDraft, LineRange
 from govguard.models import RuleCatalog
 from govguard_ui.gallery import GalleryEntry, load_gallery
 from govguard_ui.paths import GALLERY, PRESETS
+from govguard_ui.report.findings_view import BY_RULE
 
 ARCH = "arch-antragseingang-fehlerhaft"  # 29 FAIL, 28 PASS, 109 N/A, no WARN
 SPEC = "spec-meldeportal-gesundheit"  # first in the gallery; numbers in the design of #11
@@ -111,14 +112,19 @@ def fake_groq(monkeypatch: pytest.MonkeyPatch, seen: list[str]) -> None:
                         lambda: FunctionModel(answer, model_name="fake-groq"))
 
 
-def arch_page() -> AppTest:
+def in_view(app: AppTest, key: str, view: str | None) -> AppTest:
+    """"nach Fundstelle" is the default; most tests read the table, so they ask for BY_RULE."""
+    return app.segmented_control(key=key).set_value(view).run() if view else app
+
+
+def arch_page(view: str | None = BY_RULE) -> AppTest:
     app = page(gallery_script)
     app.selectbox(key="gallery_preset").select(ARCH).run()
-    return app
+    return in_view(app, f"gallery_{ARCH}_view", view)
 
 
-def spec_page() -> AppTest:
-    return page(gallery_script)
+def spec_page(view: str | None = BY_RULE) -> AppTest:
+    return in_view(page(gallery_script), f"gallery_{SPEC}_view", view)
 
 
 def finding_tables(block: AppTest | Block) -> list[dict]:
@@ -155,9 +161,10 @@ def report_script(entry_json: str) -> None:
                   None, key="report")
 
 
-def report_page(entry: GalleryEntry) -> AppTest:
-    return AppTest.from_function(report_script, args=(entry.model_dump_json(),),
-                                 default_timeout=30).run()
+def report_page(entry: GalleryEntry, view: str | None = BY_RULE) -> AppTest:
+    app = AppTest.from_function(report_script, args=(entry.model_dump_json(),),
+                                default_timeout=30).run()
+    return in_view(app, "report_view", view)
 
 
 def lines(start: int, end: int | None = None) -> list[LineRange]:
@@ -201,5 +208,5 @@ def without_conditions(entry: GalleryEntry) -> GalleryEntry:
         "report": entry.report.model_copy(update={"conditions": {}})})
 
 
-def conditions_page() -> AppTest:
-    return report_page(with_conditions(gallery_entry(SPEC)))
+def conditions_page(view: str | None = BY_RULE) -> AppTest:
+    return report_page(with_conditions(gallery_entry(SPEC)), view)

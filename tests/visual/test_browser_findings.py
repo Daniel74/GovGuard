@@ -21,7 +21,12 @@ ART9 = 'tr[data-id="SPEC-DSGVO-Art.9Abs.2"]'  # the locator pierces the shadow r
 
 
 def spec(page: Page, app_url: str) -> Page:
+    """The spec report as table: "nach Fundstelle" is the default (#81)."""
     open_view(page, app_url, "gallery-spec")
+    page.get_by_role("radio", name="nach Prüfregel").click()
+    page.get_by_role("grid", name="Befunde").wait_for()  # the rerun has drawn the table view
+    page.get_by_test_id("stCheckbox").filter(has_text="Ganzes Dokument").wait_for()
+    settled(page)
     return page
 
 
@@ -103,6 +108,8 @@ def test_arrows_move_the_focus_enter_selects_and_the_focus_stays_after_the_rerun
 def test_llm_text_stands_in_the_cells_as_text_never_as_link_image_or_tag(
         page: Page, poisoned_url: str) -> None:
     page.goto(poisoned_url)
+    settled(page)
+    page.get_by_role("radio", name="nach Prüfregel").click()
     settled(page)
     rows = page.locator("tr[data-id]")
     expect(rows.first).to_be_visible()
@@ -227,3 +234,73 @@ def test_a_click_on_a_column_head_sorts_ascending_and_enter_on_it_flips_the_orde
     expect(anchor).to_have_attribute("aria-sort", "descending")
     expect(first).to_have_text(re.compile(r"^SDM "))
     expect(anchor).to_be_focused()
+
+
+def test_a_click_on_a_site_bar_opens_its_findings_under_the_site(page: Page,
+                                                                  app_url: str) -> None:
+    """#81: the bar, the box under the last line of the site and a click on one of its findings."""
+    open_view(page, app_url, "gallery-spec")  # "nach Fundstelle" is the default
+    expect(page.locator(".doc .bar").first).to_be_visible()
+
+    page.locator(".doc .bar.top").nth(3).click()
+    settled(page)
+
+    box = page.locator(".box")
+    expect(box).to_have_count(1)
+    expect(box.locator(".item").first).to_be_visible()
+    box.locator(".item").last.click()
+    settled(page)
+    expect(page.locator(".box .item.sel")).to_have_count(1)
+    page.locator(".box button", has_text="schließen").click()
+    settled(page)
+    expect(page.locator(".box")).to_have_count(0)
+
+
+def test_llm_text_stands_in_the_sites_as_text_never_as_link_image_or_tag(
+        page: Page, poisoned_url: str) -> None:
+    page.goto(poisoned_url)
+    settled(page)
+    page.locator(".doc .bar.top").first.click()
+    settled(page)
+    items = page.locator(".box .item")
+    expect(items.first).to_be_visible()
+
+    assert items.locator("a, img, b").count() == 0
+    expect(items.first.locator(".t")).to_contain_text(POISON)
+    expect(items.first.locator(".a")).to_contain_text(POISON)
+
+
+
+def test_a_click_on_a_line_opens_the_site_it_belongs_to(page: Page, app_url: str) -> None:
+    """#81: not only the bar, the line of a site opens it too."""
+    open_view(page, app_url, "gallery-spec")
+    line = page.locator(".doc .l.click:not(.sel)").first
+    number = line.locator(".n").inner_text()
+
+    line.click()
+    settled(page)
+
+    expect(page.locator(".doc .l.sel .n", has_text=re.compile(f"^{number}$"))).to_have_count(1)
+    expect(page.locator(".box")).to_have_count(1)
+
+
+def test_next_and_previous_go_through_the_sites_by_line(page: Page, app_url: str) -> None:
+    open_view(page, app_url, "gallery-spec")  # its worst finding stands above the document
+    page.locator(".doc .bar.top").first.click()
+    settled(page)
+    head = page.locator(".box .head b")
+    before = head.inner_text()
+
+    page.locator(".box button", has_text="nächste").click()
+    settled(page)
+    expect(head).not_to_have_text(before)
+    assert first_line(head.inner_text()) > first_line(before)
+
+    page.locator(".box button", has_text="vorige").click()
+    settled(page)
+    expect(head).to_have_text(before)
+
+
+def first_line(label: str) -> int:
+    """"Zeilen 12–14 · 3 Befunde · …" -> 12."""
+    return int(re.search(r"\d+", label).group())

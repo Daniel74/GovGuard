@@ -21,15 +21,39 @@ from govguard_ui.report.review import (
     source_counts,
     visible_findings,
 )
-from govguard_ui.style import LOOKS, STATUS_FILTERS, status_word
+from govguard_ui.style import LOOKS, STATUS_FILTERS, status_text
 
 DEFAULT_FILTERS = ["FAIL", "WARN", "PASS"]  # N/A hidden by default (design artefact)
 
 
+VIEWS = ["nach Fundstelle", "nach Prüfregel"]  # the document with its sites, or the table (#81)
+BY_SITE, BY_RULE = VIEWS  # nach Fundstelle is the default: fix a place once, not seven findings
+
+
+def current_view(key: str) -> str:
+    return st.session_state.get(f"{key}_view") or BY_SITE
+
+
+def show_by_rule(key: str) -> None:
+    """The table again, e.g. for a condition: its focus works only there (#61)."""
+    st.session_state[f"{key}_view"] = BY_RULE
+
+
 def render_findings(report: AuditReport, key: str) -> Finding:
-    """Draws the table and returns the selected finding (state key <key>_selected).
-    Every number follows the source: source count = sum of the status counts."""
+    """Draws the table and returns the selected finding (state key <key>_selected)."""
+    source, shown = render_head(report, key)
+    selected = selected_of(report.findings, shown, key)
+    render_rows(shown, key, selected)
+    render_gaps(report, source, key)
+    return selected
+
+
+def render_head(report: AuditReport, key: str) -> tuple[str | None, list[Finding]]:
+    """Switch, source and status filter of both views; returns the source and the findings
+    shown. Every number follows the source: source count = sum of the status counts."""
     st.markdown("### Befunde")
+    st.segmented_control("Ansicht", VIEWS, default=BY_SITE, required=True, key=f"{key}_view",
+                         label_visibility="collapsed")
     source = _source_filter(report.findings, key)
     counts = category_counts(of_source(report.findings, source))
     chosen = st.pills("Status", STATUS_FILTERS, selection_mode="multi", default=DEFAULT_FILTERS,
@@ -39,10 +63,7 @@ def render_findings(report: AuditReport, key: str) -> Finding:
                             current_sorting(key))
     listed = sum(counts[c] for c in STATUS_FILTERS)
     st.caption(f"{len(shown)} von {listed} Befunden angezeigt")
-    selected = _selected(report.findings, shown, key)
-    render_rows(shown, key, selected)
-    render_gaps(report, source, key)
-    return selected
+    return source, shown
 
 
 def _filter_label(name: str, count: int) -> str:
@@ -61,7 +82,7 @@ def _source_filter(findings: list[Finding], key: str) -> str | None:
     return None if source == ALL_SOURCES else source
 
 
-def _selected(findings: list[Finding], shown: list[Finding], key: str) -> Finding:
+def selected_of(findings: list[Finding], shown: list[Finding], key: str) -> Finding:
     by_rule = {f.rule_id: f for f in findings}
     selected = by_rule.get(st.session_state.get(_selection_key(key)))
     return selected or (shown or findings)[0]
@@ -119,11 +140,3 @@ def table_rows(findings: list[Finding]) -> list[dict[str, str]]:
     return [{"id": f.rule_id, "look": LOOKS[category(f)].css, "status": status_text(f),
              "title": f.title, "primary_anchor": f.primary_anchor, "lines": lines_text(f)}
             for f in findings]
-
-
-def status_text(finding: Finding) -> str:
-    look = LOOKS[category(finding)]
-    status = f"{look.symbol} {look.label}"
-    if finding.downgraded_from:  # a downgrade stays visible in the list (ADR 0017)
-        status += f"\n↓ von {status_word(finding.downgraded_from)}"  # own line: narrow column
-    return status

@@ -89,6 +89,11 @@ class Finding(FindingDraft):  # completed by the code from the input and the cat
     range_dropped: bool = False  # the code dropped an unusable line range: never a gap (#74)
     corrections: list[str] = []  # readable reasons for retry and downgrade, same text as the retry
 
+    @property
+    def last_line(self) -> int | None:
+        """line_end, or line_start for a single line."""
+        return self.line_end or self.line_start
+
 
 class Trace(BaseModel):  # links a report to input, knowledge base and deploy (ADR 0006)
     audit_id: str

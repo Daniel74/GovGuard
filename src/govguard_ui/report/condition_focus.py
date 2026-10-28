@@ -15,7 +15,7 @@ from govguard_ui.report.condition_review import (
     lines_label,
     rules_text,
 )
-from govguard_ui.report.findings_view import selections
+from govguard_ui.report.findings_view import selections, show_by_rule
 from govguard_ui.texts import VALUE_WORDS
 
 
@@ -48,6 +48,7 @@ def _jumps(key: str) -> str:
 def focus_on(key: str, cond_id: str, kind: Kind) -> None:
     """Callback of the jump button: remembers the jump and the count of chosen findings, to
     notice a later choice. The popover would cover the page, so it gets a new identity."""
+    show_by_rule(key)  # "nach Fundstelle" has no detail column to mark the lines in (#81)
     st.session_state[_jumps(key)] = st.session_state.get(_jumps(key), 0) + 1
     st.session_state[_state(key)] = Jump(cond_id, kind, selections(key))
 

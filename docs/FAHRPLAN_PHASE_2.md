@@ -47,15 +47,15 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 **Voraussetzung:** P0. Kein LLM-Aufruf, keine Groq-Kosten.
 
 - [x] **Budget** 👤 `/usage` ablesen
-- [ ] **Prototyp** 🆕 _Opus_ · 👤 `/prototype Issue #81: 2–3 Varianten der Ansicht „nach Fundstelle“ auf der echten Galerie, umschaltbar per ?variant=, Branch prototype/81-fundstelle` → 🤖 startet ihn mit `/run`
+- [x] **Prototyp** 🆕 _Opus_ · 👤 `/prototype Issue #81: 2–3 Varianten der Ansicht „nach Fundstelle“ auf der echten Galerie, umschaltbar per ?variant=, Branch prototype/81-fundstelle` → 🤖 startet ihn mit `/run`
 - [x] **🔀 Halt: Variante wählen** 👤 alle Varianten mit `arch-antragseingang-fehlerhaft` und `spec-govguard` ansehen; Variante wählen und die offene Frage beantworten (überlappende Bereiche gruppieren?) → 🤖 schreibt den Prototyp-Kommentar in #81: gewählte Variante, was wiederverwendbar ist, was nicht übernommen wird
-- [ ] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #81 umsetzen, nach dem Prototyp-Kommentar neu schreiben statt kopieren` → Vorlage → Go
-- [ ] **Design** 🤖 ergänzt das Design-Artefakt um die neue Ansicht · 👤 `/design-screenshots`
-- [ ] **🔀 Halt: Bilder freigeben** 👤 Vergleichsbilder in `tests/visual/output/` ansehen, dann `uv run pytest -m visual --update-snapshots`
-- [ ] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #81` → Befunde beheben
-- [ ] **Budget** 👤 `/usage` ablesen → Kommentar in #81 „Budget: geschätzt 10–15 %, Ist Y %“
-- [ ] **Verstehen** 👤 `/verstehen 81 Gruppierung als reine Funktion`
-- [ ] **Abschließen** 👤 committet und pusht, schließt #81
+- [x] **Starten** 🆕 _Sonnet_ · 👤 `/tdd Issue #81 umsetzen, nach dem Prototyp-Kommentar neu schreiben statt kopieren` → Vorlage → Go
+- [x] **Design** 🤖 ergänzt das Design-Artefakt um die neue Ansicht · 👤 `/design-screenshots`
+- [x] **🔀 Halt: Bilder freigeben** 👤 Vergleichsbilder in `tests/visual/output/` ansehen, dann `uv run pytest -m visual --update-snapshots`
+- [x] **Prüfen** 🆕 _Opus_ · 👤 `/code-review gegen Issue #81` → Befunde beheben
+- [-] **Budget** 👤 `/usage` ablesen → Kommentar in #81 „Budget: geschätzt 10–15 %, Ist Y %“
+- [-] **Verstehen** 👤 `/verstehen 81 Gruppierung als reine Funktion`
+- [x] **Abschließen** 👤 committet und pusht, schließt #81
 
 **Fertig, wenn:** #81 geschlossen ist, `pytest`, `pytest -m visual` und ruff grün sind und der Budget-Kommentar in #81 steht.
 **Fürs Fachgespräch:** Die Ansicht sortiert nur um: dieselben Befunde, kein neuer Status, kein Modell beteiligt. Darum reicht eine reine Funktion mit Unit-Tests.

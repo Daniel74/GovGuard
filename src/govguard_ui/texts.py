@@ -28,6 +28,12 @@ HELP = {  # help on the report head; status help lives in style.LOOKS
             f"JSON-Report: {LOOKS['GAP'].code}. Die Lücken stehen nicht in der Befundtabelle oben. "
             "Lücken unter einer Bedingung, zu der die Eingabe schweigt, stehen getrennt unter "
             "„Nur wenn …“: Trifft die Bedingung nicht zu, entfallen sie.",
+    "whole_document": "Diese Befunde nennen mehr als die Hälfte des Dokuments als Beleg. Ein "
+                      "Balken am Rand wäre so lang wie das Dokument und würde fast alles "
+                      "einfärben. Darum stehen sie hier gesammelt, mit Begründung und Empfehlung.",
+    "without_lines": "Diese Befunde nennen keine Zeilen, z. B. ein nicht anwendbarer Befund oder "
+                     "einer, dessen Zeilenbereich der Code gestrichen hat. Lücken stehen getrennt "
+                     "darunter.",
     "overall": "Der strengste Status aller Befunde: "
                + " vor ".join(LOOKS[name].label for name in STATUS_FILTERS) + ".",
 }

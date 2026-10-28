@@ -160,7 +160,7 @@ def document_window(
     if marks is None:
         start = finding.line_start
         marks = [] if start is None else [
-            LineRange(line_start=start, line_end=finding.line_end or start)]
+            LineRange(line_start=start, line_end=finding.last_line)]
     first = 1 if full or not marks else max(1, min(m.line_start for m in marks) - CONTEXT_LINES)
     lines = [
         DocumentLine(number=number, text=line,

@@ -5,7 +5,7 @@ import json
 import pytest
 from streamlit.runtime.media_file_manager import MediaFileManager
 from streamlit.testing.v1 import AppTest
-from ui_helpers import frames, gallery_script, page
+from ui_helpers import frames, gallery_script, page, spec_page
 
 from govguard_ui.texts import HELP
 
@@ -130,7 +130,7 @@ def test_the_expected_result_is_one_strip_and_overall_status_is_no_button() -> N
 
 
 def test_a_click_on_a_required_finding_shows_it_in_the_detail() -> None:
-    app = page(gallery_script)
+    app = spec_page()
 
     next(b for b in app.button if b.label.startswith("DSGVO Art. 9 Abs. 2")).click().run()
 

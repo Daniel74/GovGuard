@@ -9,6 +9,7 @@ from ui_helpers import (
     list_items,
     page,
     shown_text,
+    spec_page,
     start_script,
 )
 
@@ -39,7 +40,7 @@ def test_the_start_page_has_no_buttons_the_sidebar_leads_on() -> None:
 def test_the_start_page_explains_the_gallery_one_sentence_per_line() -> None:
     app = page(start_script)
 
-    assert len(list_items(app, "Die Galerie zeigt")) == 4
+    assert len(list_items(app, "Die Galerie zeigt")) == 5
 
 
 def test_the_start_page_explains_conditions_open_world_and_the_split_gaps() -> None:
@@ -54,7 +55,7 @@ def test_the_start_page_explains_conditions_open_world_and_the_split_gaps() -> N
 
 
 def test_gallery_shows_the_first_preset_with_its_source_and_expected_result() -> None:
-    app = page(gallery_script)
+    app = spec_page()
 
     assert not app.exception
     text = shown_text(app)
@@ -181,7 +182,7 @@ def first_gap_rule() -> str:
 
 
 def test_the_detail_shows_status_and_meaning_as_one_mark() -> None:
-    app = page(gallery_script)
+    app = spec_page()
 
     detail = next(n.proto.body for n in app.get("html") if "gg-badge" in n.proto.body)
     assert detail == '<span class="gg-badge gg-fail">✕ Verstoß belegt</span>'
