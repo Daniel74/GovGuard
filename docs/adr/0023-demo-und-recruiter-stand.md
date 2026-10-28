@@ -1,6 +1,6 @@
 # 0023 – Demo-Stand ohne AWS, Recruiter-Stand mit Audit-Jobs
 
-_Ändert [ADR 0004](0004-streamlit-community-cloud.md) (Aufrufweg der UI), [ADR 0006](0006-cloudwatch-audit-protokoll.md) (Reports kurz in S3) und [ADR 0018](0018-lambda-function-url.md) (asynchroner Ablauf); kehrt in [ADR 0016](0016-groq-zur-laufzeit-im-prototyp.md) den Standard-Provider um. Umsetzung: #11, #36. **Nachtrag 19.10.2026:** Nur der Demo-Stand wird gebaut, siehe unten._
+_Ändert [ADR 0004](0004-streamlit-community-cloud.md) (Aufrufweg der UI), [ADR 0006](0006-cloudwatch-audit-protokoll.md) (Reports kurz in S3) und [ADR 0018](0018-lambda-function-url.md) (asynchroner Ablauf); kehrt in [ADR 0016](0016-groq-zur-laufzeit-im-prototyp.md) den Standard-Provider um. Umsetzung: #11, #36. **Nachtrag 19.10.2026:** Nur der Demo-Stand wird gebaut, siehe unten. **Seit [ADR 0029](0029-kein-us-anbieter-fuer-echte-daten.md) entfällt der Recruiter-Stand auf AWS.**_
 
 ## Kontext
 

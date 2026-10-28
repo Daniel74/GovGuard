@@ -6,11 +6,11 @@ Das Projekt ist bewusst **simpel**: lieber eine kleine Lösung, die ich vollstä
 
 ## Leitplanken
 
-- AWS: Daten nur in `eu-central-1`. Inferenz für Nutzereingaben im Prototyp über Groq (ADR 0016, 0023), Bedrock `eu.` nur noch per CLI; für echte Daten nur in der EU (ADR 0001).
+- Echte Daten nur bei EU-Anbietern ohne US-Mutterkonzern, Modell GPT-OSS 120B; AWS ist wegen des US CLOUD Act aus dem Scope (ADR 0029). Der Demo-Stand nutzt Groq nur mit erfundenen Daten (ADR 0016, 0023); `--provider bedrock` bleibt vorerst im Code, ist aber kein Weg zu echten Daten.
 - Ausnahme Build der Wissensbasis: Er schickt nur öffentliche Normtexte raus, standardmäßig an Groq (ADR 0014), nur auf ausdrücklichen Wunsch an Bedrock `global.` (ADR 0012).
-- 100 % serverless, 0 € Leerlaufkosten (FinOps, siehe `CONTEXT.md`): Der Prototyp läuft als Demo-Stand ohne AWS auf Streamlit Community Cloud mit Groq. AWS-Stack, KMS und Audit-Jobs sind Ausbau (ADR 0023, Nachtrag).
-- Python, Pydantic, Pydantic AI auf der Bedrock Converse API mit Tool-Choice (ADR 0005), Streamlit-UI.
-- Wissensbasis als JSON in S3 bzw. im Repo, Bounded Catalog ohne Suche und ohne Obergrenze, keine Vektor-DB (ADR 0011).
+- 100 % serverless, 0 € Leerlaufkosten (FinOps, siehe `CONTEXT.md`): Der Prototyp läuft als Demo-Stand ohne AWS auf Streamlit Community Cloud mit Groq. Ein Ausbau entsteht beim gewählten EU-Anbieter; der AWS-Stack aus ADR 0023 entfällt (ADR 0029).
+- Python, Pydantic, Pydantic AI mit erzwungener strukturierter Ausgabe (ADR 0005, 0016), Streamlit-UI.
+- Wissensbasis als JSON im Repo, Bounded Catalog ohne Suche und ohne Obergrenze, keine Vektor-DB (ADR 0011).
 - Code modular nach `docs/ARCHITECTURE.md` → *Code-Struktur*: boto3 und das Bedrock-Modell für Pydantic AI nur in `adapters/aws_services.py`, kein subprocess in `src/` (ADR 0019; Tests dürfen Server starten), HTTP-Downloads nur in `src/kb_build/source_fetch.py`, Prüflogik rein, nie vermischt. Ordner nach Aufgabe (ADR 0027): `govguard/` hat `calls/` (spricht mit dem Modell), `checks/` (rein) und `adapters/`, `govguard_ui/` hat `screens/` und `report/`; `checks/` importiert nie `calls/` oder `adapters/`, `report/` nie `screens/`. Workflow-YAML enthält keine Logik, nur `python -m …`.
 - Kleine Einheiten: ein Modul = eine Aufgabe, ca. 200 Zeilen; eine Funktion ca. 30 Zeilen. Wird es größer, teile auf. Die Grenzen prüfen ruff (`pyproject.toml`) und ein pytest-Test.
 - Wissensbasis und Musterfälle: vor jeder Änderung `docs/ENTWICKLUNG.md` lesen. Ein Soll (`expected` in `preset.json`) kommt von mir, nie aus einem Lauf; passe es nie an einen Report an, auch nicht, um einen Test grün zu machen. Prüfregeln (`rules_*.json`) nie von Hand ändern, nur per Build.
