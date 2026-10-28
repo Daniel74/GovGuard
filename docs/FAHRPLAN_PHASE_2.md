@@ -4,15 +4,15 @@ Phase 2 beginnt nach der Präsentation am 26.10.2026: erst ein UI-Ticket, dann d
 **Maßgeblich für die Roadmap** sind allein die Backup-Folien „Produktstrategie“ bis „Einbindung in Behördenwerkzeuge“ der [Abschlusspräsentation](https://claude.ai/artifact/9afnq6xg11xyqzPzGcjT7w), Kern ist „Roadmap: GovGuard im Behördenablauf“ (Phasen 1, 2a, 2b, 3, 4). [AUSBAU.md](AUSBAU.md) ist veraltet und keine Quelle.
 Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sich. Hier stehen nur Aufgaben und Befehle, Ergebnisse stehen in Issues, ADRs und `docs/research/`. Hake die Kästchen im Editor ab.
 
-**Legende:** 👤 du · 🤖 Claude · 🆕 neue Session (`/clear`) · 🔀 Halt: du entscheidest · `/…` Befehl zum Eintippen.
+**Legende:** 👤 du · 🤖 Claude · 🧩 Subagent · 🆕 neue Session (`/clear`) · 🔀 Halt: du entscheidest · `/…` Befehl zum Eintippen.
 
-**Rhythmus jedes Eintrags:** _Budget ablesen → Starten → Bauen oder Entscheiden → Prüfen → Verstehen → Budget ablesen → Abschließen._
+**Rhythmus jedes Eintrags:** _Starten mit Budget-Start 🤖 → Vorlage → Go → Bauen und Prüfen 🧩 oder Entscheiden 👤 → UI ansehen, falls sichtbar → Abnahme mit Budget-Ist 🤖 → Verstehen → Abschließen._
 
 **So steuerst du:**
 
-- **Vorlage statt Technik.** Claude beginnt jeden Schritt mit Nutzen, Aufwand und Risiko und deinen Entscheidungen (CLAUDE.md → _Arbeitsweise_). Du antwortest mit Go, Korrektur oder Stopp.
-- **Budget in % Weekly.** Lies `/usage` vor und nach jedem Schritt ab und schreib „Budget: geschätzt X %, Ist Y %“ als Kommentar ins Issue. Das Ist von #81 (P1) ist die Messlatte für alle weiteren Schätzungen, Methode wie [SCHAETZUNG.md](SCHAETZUNG.md) → _Kalibrierung_. Das Wochenlimit setzt montags zurück; wird es knapp, schneide den Umfang, nicht die Qualität.
-- **Modell und Session** wie in [FAHRPLAN.md](FAHRPLAN.md): Sonnet baut, Opus urteilt, jeder Schritt startet frisch mit „Lies docs/FAHRPLAN_PHASE_2.md Schritt N“.
+- **Vorlage statt Technik.** Jeder Schritt startet frisch mit „Lies docs/FAHRPLAN_PHASE_2.md Schritt N“. Claude beginnt mit Nutzen, Aufwand und Risiko und deinen Entscheidungen (CLAUDE.md → _Arbeitsweise_), du antwortest mit Go, Korrektur oder Stopp. Braucht der Schritt danach nichts von dir, läuft er ohne Halt bis zur Abnahme.
+- **Budget automatisch, in % Weekly.** Die Statuszeile (`.claude/statusline.sh`) speichert den Wochenwert. Claude ruft zu Beginn `.claude/budget.sh start <Schritt>` und in der Abnahme `.claude/budget.sh end <Schritt> "<Schätzung>" [Issues]` auf: Das schreibt eine Zeile in [SCHAETZUNG.md](SCHAETZUNG.md) → _3. Budget je Schritt_ und einen Kommentar in jedes Issue. Fehlt der Wert, fragt Claude dich einmal nach `/usage` und trägt ihn mit `budget.sh set <Prozent>` ein. Für #81 (P1) liegt kein Ist vor; Messlatte ist darum das Ist von P1b, Methode wie SCHAETZUNG.md → _Kalibrierung_. Das Wochenlimit setzt montags zurück; wird es knapp, schneide den Umfang, nicht die Qualität.
+- **Bauen, Prüfen, Ansehen.** Nach dem Go baut ein Subagent mit _Sonnet_ per `/tdd`, ein zweiter mit _Opus_ prüft per `/code-review` gegen das Issue; Befunde behebt der Bau-Agent, bis das Review ohne offene Punkte ist. Die Haupt-Session (_Opus_) hält Vorlage, Halte und Abnahme. Ändert sich die UI sichtbar, startet Claude Streamlit lokal (`uv run streamlit run streamlit_app.py`) und nennt Link, Musterfall und was du prüfen sollst. Nach deinem „ok“ erneuert Claude die Vergleichsbilder (`uv run pytest -m visual --update-snapshots`) und sieht sie sich an. Design-Artefakt und `/design-screenshots` gibt es nur noch auf deinen Wunsch.
 
 **Demo-Stand schützen:** Die IHK-Präsentation ist Mitte November. Der Stand vom 26.10. bekommt einen Tag (P0). Streamlit Community Cloud rollt bei jedem Push neu aus, darum pushst du erst nach der Abnahme.
 
@@ -21,9 +21,10 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 | Schritt | Was                         | Skill                     | Hängt ab von                   | Schätzung (Annahme) |
 | ------- | --------------------------- | ------------------------- | ------------------------------ | ------------------- |
 | P0      | Stand sichern               | –                         | –                              | < 1 %               |
-| P1      | #81 Befunde nach Fundstelle | `/prototype`, `/tdd`      | P0                             | 10–15 %, Messlatte  |
+| P1      | #81 Befunde nach Fundstelle | `/prototype`, `/tdd`      | P0                             | 10–15 %, ohne Ist   |
+| P1b     | #83 KI-Kennzeichnung, #82 Maßnahme je Fundstelle | `/tdd`, `/code-review` (🧩) | P1                 | 12–20 %, Messlatte  |
 | P2      | Recherche Testdaten         | `/research`               | P0, läuft im Hintergrund       | 5–10 %              |
-| P3      | Roadmap-Karte und Schätzung | `/wayfinder`              | P1 (Messlatte), parallel zu P2 | 8–12 %              |
+| P3      | Roadmap-Karte und Schätzung | `/wayfinder`              | P1b (Messlatte), parallel zu P2 | 8–12 %             |
 | P4      | Prüfregeln festlegen        | `/grill-with-docs`        | P2 und P3                      | 3–5 %               |
 | P5      | Karte in baubare Tickets    | `/to-spec`, `/to-tickets` | P3 und P4                      | 3–5 %               |
 | P6 ff.  | Umsetzung je Ticket         | `/tdd`, `/code-review`    | P5                             | entsteht in P5      |
@@ -62,16 +63,35 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 
 ---
 
+### Schritt P1b – #83 KI-Kennzeichnung und #82 Maßnahme je Fundstelle
+
+**Ziel:** Jede Ausgabe eines Sprachmodells ist dezent als KI-generiert gekennzeichnet, sichtbar im Report und maschinenlesbar im JSON, wie es die KI-VO in Art. 50 verlangt (#83). Darauf aufbauend fasst ein Modell auf Klick die Befunde einer Fundstelle zu wenigen Maßnahmen zusammen, geschützt durch das Passwort (#82).
+**Voraussetzung:** P1. #83 zuerst, weil #82 den Baustein nutzt. #82 ruft Groq nur auf Klick auf, mit erfundenen Daten; lokal braucht das `APP_PASSWORD` und `GROQ_API_KEY` in `.streamlit/secrets.toml`.
+
+- [ ] **Starten** 🆕 _Opus_ · 👤 `Lies docs/FAHRPLAN_PHASE_2.md Schritt P1b` → 🤖 `.claude/budget.sh start P1b`, eine Vorlage für #83 und #82 mit den offenen Fragen beider Issues (Wortlaut der Kennzeichnung, Aufbau des Prompts) → 👤 Go
+- [ ] **Bauen #83** 🧩 _Sonnet_ `/tdd Issue #83` → 🧩 _Opus_ `/code-review gegen Issue #83` → 🧩 behebt die Befunde
+- [ ] **🔀 Halt: Kennzeichnung ansehen** 🤖 startet Streamlit lokal · 👤 Galerie und einen Report ansehen → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder
+- [ ] **Bauen #82** 🧩 _Sonnet_ `/tdd Issue #82`, ADR-Nachtrag zu 0023 eingeschlossen → 🧩 _Opus_ `/code-review gegen Issue #82` → 🧩 behebt die Befunde
+- [ ] **🔀 Halt: Maßnahme ansehen** 🤖 startet Streamlit lokal mit Passwort · 👤 „Maßnahme vorschlagen“ an `s3:*` in `arch-antragseingang-fehlerhaft` → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder
+- [ ] **Abnahme** 🤖 Akzeptanzkriterien beider Issues, `.claude/budget.sh end P1b "12–20 %" 83 82`
+- [ ] **Verstehen** 👤 `/verstehen 83 Kennzeichnung nach KI-VO Art. 50` und `/verstehen 82 Modell schlägt vor, Code ordnet zu`
+- [ ] **Abschließen** 👤 committet und pusht, schließt #83 und #82
+
+**Fertig, wenn:** #83 und #82 geschlossen sind, `pytest`, `pytest -m visual` und ruff grün sind und die Budget-Zeile in SCHAETZUNG.md steht.
+**Fürs Fachgespräch:** Das Modell schlägt nur vor, der Code prüft, dass jeder Befund genau einer Maßnahme zugeordnet ist. Und was ein Modell geschrieben hat, sieht man und erkennt eine Maschine.
+
+---
+
 ### Schritt P2 – Recherche: Testdaten für das Spec-Audit
 
 **Ziel:** Eine belegte Übersicht, welche Testdaten mit Soll es für das Prüfen von Fachkonzepten gegen DSGVO, SDM und KI-VO gibt. Sie ist Grundlage für die Prüfregeln (P4) und für Roadmap-Phase 1 „Prüfen besser machen: messen“ (Folie „Qualität messen und lernen“).
-**Voraussetzung:** P0. Läuft als Hintergrund-Agent, du kannst parallel an P1 oder P3 arbeiten.
+**Voraussetzung:** P0. Läuft als Hintergrund-Agent, du kannst parallel an P1b oder P3 arbeiten.
 
-- [ ] **Budget** 👤 `/usage` ablesen
+- [ ] **Budget** 🤖 `.claude/budget.sh start P2`
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/research Testdaten für das Spec-Audit, Fragen aus docs/FAHRPLAN_PHASE_2.md Schritt P2, Ablage docs/research/Testdaten für das Spec-Audit.md`
       Fragen: 1. Welche Datensätze mit Soll von Fachleuten gibt es für die Prüfung von Texten gegen DSGVO oder KI-VO? Je Datensatz Zugang, Lizenz, Sprache, Umfang; mindestens Amaral, Briand u. a. 2023 und AIReg-Bench 2025. 2. Wie erzeugt die Forschung synthetische Testdokumente, und wie stellt sie sicher, dass das Soll von Menschen kommt und nicht vom Modell? 3. Welche Messgrößen und Protokolle nutzen die Studien: Trefferquote, Fehlalarme, falsche Einhaltung, Übereinstimmung zwischen Fachleuten? 4. Gibt es öffentliche deutschsprachige Fachkonzepte, Lastenhefte oder DSFA aus Behörden, die als Testfall taugen? 5. Welche Normteile decken die gefundenen Testsets ab (DSGVO-Artikel, SDM-Bausteine, KI-VO-Pflichten)? Antwort als Tabelle, sie ist die Eingabe für P4.
 - [ ] **Lesen** 👤 Zusammenfassung lesen. Braucht es Antworten von Forschenden oder einer Fachperson, z. B. Zugang zum Datensatz von Amaral u. a.? → `/to-questionnaire`
-- [ ] **Budget** 👤 `/usage` ablesen
+- [ ] **Budget** 🤖 `.claude/budget.sh end P2 "5–10 %"`
 - [ ] **Abschließen** 👤 committet die Recherche
 
 **Fertig, wenn:** Die Datei in `docs/research/` liegt, jede Aussage eine Quelle hat und Frage 5 als Tabelle beantwortet ist.
@@ -81,14 +101,14 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 ### Schritt P3 – Roadmap-Karte und Schätzung
 
 **Ziel:** Die Roadmap liegt als Karte aus Entscheidungs-Tickets auf GitHub, und jedes Arbeitspaket hat eine Schätzung in % Weekly. Quelle sind allein die Backup-Folien „Produktstrategie“ bis „Einbindung in Behördenwerkzeuge“ im Deck.
-**Voraussetzung:** P1 abgeschlossen (Messlatte). Läuft parallel zu P2; Entscheidungen, die Testdaten brauchen, stehen auf der Karte mit `Blocked by` auf die Recherche.
+**Voraussetzung:** P1b abgeschlossen (Messlatte). Läuft parallel zu P2; Entscheidungen, die Testdaten brauchen, stehen auf der Karte mit `Blocked by` auf die Recherche.
 
-- [ ] **Budget** 👤 `/usage` ablesen
+- [ ] **Budget** 🤖 `.claude/budget.sh start P3`
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/wayfinder Roadmap Phase 2 allein aus den Backup-Folien „Produktstrategie“ bis „Einbindung in Behördenwerkzeuge“ im Deck https://claude.ai/artifact/9afnq6xg11xyqzPzGcjT7w, Kern „Roadmap: GovGuard im Behördenablauf“; docs/AUSBAU.md ist veraltet; die Recherche aus P2 ist ein Recherche-Ticket der Karte, „Prüfregeln festlegen“ (P4) ein Entscheidungs-Ticket`
 - [ ] **🔀 Entscheidungen** 👤 beantwortet die Entscheidungs-Tickets, die nicht blockiert sind, eins nach dem anderen; je Ticket eine frische Session
-- [ ] **Schätzen** 🤖 schätzt jedes Arbeitspaket in S, M oder L, rechnet über die Messlatte aus #81 in % Weekly um und legt eine Wochenplanung vor, als neuer Abschnitt _Phase 2_ in [SCHAETZUNG.md](SCHAETZUNG.md)
+- [ ] **Schätzen** 🤖 schätzt jedes Arbeitspaket in S, M oder L, rechnet über die Messlatte aus P1b in % Weekly um und legt eine Wochenplanung vor, als neuer Abschnitt _Phase 2_ in [SCHAETZUNG.md](SCHAETZUNG.md)
 - [ ] **🔀 Halt: Plan freigeben** 👤 Wochenplanung lesen → „passt“ oder Umfang schneiden
-- [ ] **Budget** 👤 `/usage` ablesen
+- [ ] **Budget** 🤖 `.claude/budget.sh end P3 "8–12 %"`
 - [ ] **Abschließen** 👤 committet SCHAETZUNG.md
 
 **Fertig, wenn:** Jeder Punkt der Roadmap an einem Ticket der Karte hängt, das Ticket „Prüfregeln festlegen“ existiert und SCHAETZUNG.md den Abschnitt _Phase 2_ hat.
@@ -100,10 +120,10 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 **Ziel:** Entschieden und als ADR festgehalten ist, gegen welche Prüfregeln das Spec-Audit in Phase 2 läuft: welche Quellen, welcher Umfang, eingefroren oder neu gebaut. Die Entscheidung passt zu den Fähigkeiten, die zuerst kommen (P3), und zu den Testdaten, mit denen man sie messen kann (P2).
 **Voraussetzung:** P2 und die dafür nötigen Entscheidungen aus P3. Ist das Entscheidungs-Ticket auf der Karte.
 
-- [ ] **Budget** 👤 `/usage` ablesen
+- [ ] **Budget** 🤖 `.claude/budget.sh start P4`
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/grill-with-docs Prüfregeln für Phase 2, Entscheidungs-Ticket „Prüfregeln festlegen“; Grundlagen: docs/research/Testdaten für das Spec-Audit.md, docs/ENTWICKLUNG.md, ADR 0011 und 0025`
 - [ ] **🔀 Entscheidung** 👤 entscheidet im Grilling → 🤖 schreibt ADR und `CONTEXT.md`, kommentiert und schließt das Ticket auf der Karte. Prüfregeln ändert nur der Build, nie die Hand (CLAUDE.md).
-- [ ] **Budget** 👤 `/usage` ablesen
+- [ ] **Budget** 🤖 `.claude/budget.sh end P4 "3–5 %" <Ticket>`
 - [ ] **Abschließen** 👤 committet
 
 **Fertig, wenn:** Die ADR vorliegt und das Ticket geschlossen ist.
@@ -116,11 +136,11 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 **Ziel:** Aus den Entscheidungen der Karte werden eine Spec und baubare Tickets, mit `Blocked by`, Schätzung und Reihenfolge. Dieser Fahrplan bekommt je Ticket einen Schritt P6, P7 und so weiter.
 **Voraussetzung:** Alle Entscheidungs-Tickets der Karte sind geschlossen, P4 eingeschlossen.
 
-- [ ] **Budget** 👤 `/usage` ablesen
+- [ ] **Budget** 🤖 `.claude/budget.sh start P5`
 - [ ] **Starten** 🆕 _Opus_ · 👤 `/to-spec aus der Wayfinder-Karte Roadmap Phase 2` → `/to-tickets` in derselben Session
-- [ ] **Eintragen** 🤖 legt je Ticket einen Schritt in diesem Fahrplan an, im Format von P1, und ergänzt die Tabelle _Reihenfolge_
+- [ ] **Eintragen** 🤖 legt je Ticket einen Schritt in diesem Fahrplan an, im Format von P1b, und ergänzt die Tabelle _Reihenfolge_
 - [ ] **🔀 Halt: Schnitt freigeben** 👤 Tickets und Reihenfolge lesen → Go oder Korrektur
-- [ ] **Budget** 👤 `/usage` ablesen
+- [ ] **Budget** 🤖 `.claude/budget.sh end P5 "3–5 %"`
 - [ ] **Abschließen** 👤 committet
 
 **Fertig, wenn:** Jedes Ticket eine Schätzung und hier einen Schritt hat.
