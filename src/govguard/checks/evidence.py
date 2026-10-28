@@ -1,7 +1,7 @@
 """Evidence by line reference (ADR 0017): the model points to lines, the code cuts the quote."""
 
 from govguard.checks.corrections import Correction, Problem
-from govguard.models import FindingDraft
+from govguard.models import FindingDraft, with_code_text
 from govguard.text import MIN_QUOTE_LENGTH, too_short_to_prove
 
 MAX_SPAN = 200  # lines per evidence, about one section; 40 was too tight (prototype #26)
@@ -37,8 +37,9 @@ def without_unproven_verdict(draft: FindingDraft, text: str, last_attempt: bool)
     if draft.status == "FAIL" and _lines(draft) is None:
         return draft.model_copy(update={"status": "WARN"})
     if draft.status == "PASS" and last_attempt and evidence_problem(draft, text):
-        return draft.model_copy(update={"status": "WARN", "line_start": None, "line_end": None,
-                                        "recommendation": UNPROVEN_PASS})
+        return with_code_text(draft.model_copy(update={"status": "WARN", "line_start": None,
+                                                       "line_end": None}),
+                              recommendation=UNPROVEN_PASS)
     return draft
 
 

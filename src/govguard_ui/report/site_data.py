@@ -3,6 +3,7 @@ LLM text stays raw, the component sets it as textContent (#81). Pure view logic,
 
 from govguard.checks.sites import Site, Sites
 from govguard.models import Finding
+from govguard_ui.report.ai_label import ai_texts
 from govguard_ui.report.review import category
 from govguard_ui.report.site_lines import line_rows
 from govguard_ui.style import LOOKS, status_text
@@ -14,12 +15,13 @@ def place(start: int | None, end: int | None) -> str:
     return f"Zeile {start}" if start == end else f"Zeilen {start}–{end}"
 
 
-def _finding(finding: Finding) -> dict[str, str]:
+def _finding(finding: Finding) -> dict:
     return {"id": finding.rule_id, "look": LOOKS[category(finding)].css,
             "status": status_text(finding), "title": finding.title,
             "anchor": finding.primary_anchor,
             "lines": place(finding.line_start, finding.last_line),
-            "rationale": finding.rationale, "recommendation": finding.recommendation or ""}
+            "rationale": finding.rationale, "recommendation": finding.recommendation or "",
+            "by_code": finding.by_code}  # texts without the "KI" marker (#83)
 
 
 def _site(site: Site) -> dict:
@@ -44,4 +46,5 @@ def site_data(sites: Sites, text: str, selected: Finding, closed: bool) -> dict:
         "lanes": max((len(r.bars) for r in rows), default=0),
         "sites": [_site(s) for s in sites.placed],
         "current": current, "open": not closed, "selected": selected.rule_id,
+        "ai": ai_texts(),  # marker and tip of the AI label, one source with the Python views (#83)
     }

@@ -67,6 +67,8 @@ Jede Datei hat einen Urheber: ein Mensch, das Modell oder der Code. Ein Agent da
 | Galerie-Report | 🤖 Modell, ⚙️ Code | ein Lauf der Kommandozeile | nur auf Auftrag (kostet) | `data/gallery/<id>.json` |
 | Fingerabdrücke in Tests | ⚙️ abgeschrieben vom Ist | Abschnitt 3 | ja, mit Begründung im Commit | z. B. `test_review.py` |
 
+*Ausnahme Datenzusatz.* Ein Galerie-Report darf ohne neuen Modelllauf per Skript ergänzt werden, wenn der Diff nur Zeilen hinzufügt und keinen Status, Text oder Beleg ändert; so kam in #83 das Feld `by_code` in die sechs Reports. Das Skript gehört nicht ins Repository.
+
 *Warum keine Prüfregel von Hand?* Eine Prüfregel von Hand zu ändern, geht technisch. Aber der nächste Build überschreibt sie, und das Build-Log erklärt sie nicht mehr. Wer eine Prüfregel verbessern will, ändert den Grund, aus dem sie so geworden ist: den Vorfilter, ein Gate oder einen Prompt (Abschnitt 4.3).
 
 *Warum kein Soll aus einem Lauf?* Das Soll ist der Maßstab, an dem GovGuard gemessen wird. Schreibt man es vom Report ab, misst GovGuard sich an sich selbst, und jede Abweichung verschwindet. Darum legt ein Mensch das Soll fest, und ein zweites Modell prüft es blind, also ohne das Soll zu kennen (Abschnitt 4.1).

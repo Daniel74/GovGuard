@@ -32,7 +32,7 @@ def test_a_finding_carries_what_the_reader_needs_to_fix_the_place() -> None:
     assert data["sites"][0]["findings"][0] == {
         "id": "A", "look": "fail", "status": "✕ Verstoß belegt", "title": "title A",
         "anchor": "BSI OPS.1.1.2.A3", "lines": "Zeilen 5–7", "rationale": "why A",
-        "recommendation": "do A"}
+        "recommendation": "do A", "by_code": []}
 
 
 def test_llm_text_reaches_the_component_unchanged_the_browser_shows_it_as_text() -> None:

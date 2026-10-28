@@ -553,6 +553,7 @@ classDiagram
     🤖 line_end
     🤖 rationale
     🤖 recommendation
+    by_code
     evidence
     title
     primary_anchor
@@ -580,6 +581,15 @@ classDiagram
     fail_judge
     closed_world
     conditions
+    ai_disclosure
+  }
+  class AiDisclosure {
+    <<⚙️ Code>>
+    ai_generated
+    model
+    fields
+    except_if_listed_in
+    legal_basis
   }
   class Trace {
     <<⚙️ Code>>
@@ -627,6 +637,7 @@ classDiagram
   AuditReport "1" *-- "1..*" Finding : einer je Prüfregel
   AuditReport "1" *-- "1" Trace
   AuditReport "1" *-- "1" FailJudgeCount
+  AuditReport ..> AiDisclosure : berechnet aus model_id
   Preset "1" *-- "1" Expected
   Expected "1" *-- "0..*" RequiredFinding
   Expected ..> AuditReport : Soll-Abgleich
@@ -639,6 +650,7 @@ classDiagram
   class AuditReport:::code
   class Trace:::code
   class FailJudgeCount:::code
+  class AiDisclosure:::code
   class Progress:::code
   class Preset:::human
   class Expected:::human
@@ -652,13 +664,14 @@ classDiagram
 |---|---|---|---|
 | Katalog, Prüfregel | Ergebnis des Builds, zur Laufzeit nur gelesen | ⚙️ | `RuleCatalog`, `Rule` |
 | Antwort und Entwurf je Prüfregel | Status, Zeilenbereich, Begründung, Empfehlung | 🤖 | `AuditResponse`, `FindingDraft` |
-| Befund | der Entwurf plus Beleg, Titel, Anker, Querverweise, Herabstufung, Marke für gestrichene Zeilen und Korrekturen | ⚙️ | `Finding` |
+| Befund | der Entwurf plus Beleg, Titel, Anker, Querverweise, Herabstufung, Marke für gestrichene Zeilen, Korrekturen und die Texte, die der Code selbst geschrieben hat (`by_code`) | ⚙️ | `Finding` |
 | Korrekturen | Sammler aller Eingriffe des Codes in einem Audit: Herabstufungen, Reparaturen, gestrichene Zeilenbereiche, Retry-Gründe, Urteile des Verstoß-Prüfers | ⚙️ | `Corrections` |
 | Report, Rückverfolgung, Zähler | Gesamtstatus, ein Befund je Prüfregel, Modell, Hashes von Eingabe und Katalog, Zähler des Verstoß-Prüfers | ⚙️ | `AuditReport`, `Trace`, `FailJudgeCount` |
+| KI-Kennzeichnung | maschinenlesbarer Vermerk im JSON-Report: von KI erstellt, Modell, betroffene Felder, Rechtsgrundlage; der Code berechnet ihn aus `model_id`, er wird nie gespeichert (#83) | ⚙️ | `AiDisclosure` (`AuditReport.ai_disclosure`) |
 | Fortschritt | Phase und fertige Pakete, für den Fortschrittsbalken | ⚙️ | `Progress` |
 | Musterfall, Soll, Pflichtbefund | fiktive Eingabe mit Gesamtstatus und wenigen Pflichtbefunden, nie aus einem Lauf übernommen | 👤 | `Preset`, `Expected`, `RequiredFinding` |
 
-*Elemente.* Die Tabelle oben nennt jede Klasse. Im Befund (`Finding`) tragen die geerbten Felder ein 🤖: Status, Zeilenbereich, Begründung und Empfehlung kommen aus dem Entwurf des Modells, auch wenn der Code den Status herabstufen oder einen ungültigen Zeilenbereich streichen kann. Zwei Ausnahmen: Setzt der Code eine Prüfregel vorab auf N/A (verneinte Bedingung, Typ nicht im Inventar), schreibt er alle diese Felder selbst; beim Fristenwecker gilt das für 144 von 175 Befunden. Und eine fehlende Empfehlung ergänzt der Code aus der Prüfregel. In der Prüfregel stammen Titel, Kriterien, Empfehlung und Ressourcentypen aus dem Build, also ebenfalls von 🤖, aber geprüft und eingefroren. Der Fortschritt (`Progress`) hat keine Beziehung: Er wird während des Laufs gemeldet und nicht gespeichert.
+*Elemente.* Die Tabelle oben nennt jede Klasse. Im Befund (`Finding`) tragen die geerbten Felder ein 🤖: Status, Zeilenbereich, Begründung und Empfehlung kommen aus dem Entwurf des Modells, auch wenn der Code den Status herabstufen oder einen ungültigen Zeilenbereich streichen kann. Zwei Ausnahmen: Setzt der Code eine Prüfregel vorab auf N/A (verneinte Bedingung, Typ nicht im Inventar), schreibt er alle diese Felder selbst; beim Fristenwecker gilt das für 144 von 175 Befunden. Und eine fehlende Empfehlung ergänzt der Code aus der Prüfregel; sie stammt vom Modell des Builds und behält das „KI“-Zeichen. Dagegen schreibt der Code die Empfehlung eines nicht belegten PASS selbst. Welche Texte der Code selbst geschrieben hat, steht im Befund (`by_code`), damit sie kein „KI“-Zeichen tragen (#83); das Feld steht nicht im Schema des Modells, weil nur ein Code-Entwurf (`CodeDraft`) es trägt. In der Prüfregel stammen Titel, Kriterien, Empfehlung und Ressourcentypen aus dem Build, also ebenfalls von 🤖, aber geprüft und eingefroren. Der Fortschritt (`Progress`) hat keine Beziehung: Er wird während des Laufs gemeldet und nicht gespeichert.
 
 *Beziehungen.*
 
@@ -668,7 +681,7 @@ classDiagram
 - Ein Report enthält genau einen Befund je Prüfregel, genau eine Rückverfolgung und genau einen Zähler des Verstoß-Prüfers.
 - Ein Musterfall enthält genau ein Soll; das Soll enthält null oder mehr Pflichtbefunde. Das Soll verweist auf einen Report, wenn die Oberfläche beide abgleicht.
 
-*Entwurf-Muster.* Der Befund erbt vom Entwurf (`Finding(FindingDraft)`) und ergänzt Beleg, Titel, Anker und Korrekturen; das Muster erklärt [7.2](#72-die-deterministische-schale) (Muster 1), Status und Report [FUNKTIONSWEISE](FUNKTIONSWEISE.md#1-prüfregel-katalog-und-befund) Kapitel 1 und 5.
+*Entwurf-Muster.* Der Befund erbt vom Entwurf (`Finding(CodeDraft)`, der von `FindingDraft` erbt) und ergänzt Beleg, Titel, Anker und Korrekturen; das Muster erklärt [7.2](#72-die-deterministische-schale) (Muster 1), Status und Report [FUNKTIONSWEISE](FUNKTIONSWEISE.md#1-prüfregel-katalog-und-befund) Kapitel 1 und 5.
 
 Ein Audit-Ereignis (`AuditEvent`) gibt es als Klasse, aber kein Code schreibt es; darum fehlt es im Bild (8.4).
 
@@ -1297,7 +1310,7 @@ Die Oberfläche ist nach Verwendung geordnet: Seiten (`screens/`) benutzen die R
 |---|---|---|---|
 | Start (`streamlit_app.py`, `app.py`, `navigation.py`) | Seitenaufbau und Navigation, keine Logik | ⚙️ | `test_ui_pages.py` |
 | Seiten (`screens/`) | Startseite, Audit erstellen, Galerie; `audit_runner.py` prüft Passwort und Länge und startet das Audit; `navigation_guard.py` fragt nach, wenn jemand während des Audits die Seite wechselt | ⚙️ | `test_ui_create_page.py`, `test_audit_runner.py`, `test_ui_gallery_filters.py`, `visual/test_browser_guard.py` |
-| Report-Ansicht (`report/`) | Kopf, Befundtabelle, Detail mit Beleg im Dokument, Lücken als Checkliste, Bedingungen, Soll-Abgleich; die Ansicht nach Fundstelle (`site_*.py`) zeichnet das Dokument mit einem Balken je Fundstelle, die Gruppierung selbst ist rein (`checks/sites.py`, [FUNKTIONSWEISE 5](FUNKTIONSWEISE.md#5-report-soll-und-galerie)) | ⚙️ | `test_findings_view.py`, `test_ui_gaps.py`, `test_review.py`, `test_ui_by_site.py`, `test_sites.py`, `visual/test_browser_findings.py` |
+| Report-Ansicht (`report/`) | Kopf, Befundtabelle, Detail mit Beleg im Dokument, Lücken als Checkliste, Bedingungen, Soll-Abgleich; die Ansicht nach Fundstelle (`site_*.py`) zeichnet das Dokument mit einem Balken je Fundstelle, die Gruppierung selbst ist rein (`checks/sites.py`, [FUNKTIONSWEISE 5](FUNKTIONSWEISE.md#5-report-soll-und-galerie)); die KI-Kennzeichnung (Kopfzeile und „KI“-Marke) kommt aus einem Baustein, `ai_label.py` | ⚙️ | `test_findings_view.py`, `test_ui_gaps.py`, `test_review.py`, `test_ui_by_site.py`, `test_sites.py`, `test_ui_ai_label.py`, `test_ai_label_everywhere.py` (jede Stelle mit Modelltext nutzt den Baustein), `visual/test_browser_findings.py` |
 | Gestaltung und Texte (`style.py`, `texts.py`) | Farben, Bezeichnungen der Status, Maskierung jedes dynamischen Texts (`html.escape`) | ⚙️ | `test_ui_style.py`, `test_ui_llm_text.py` |
 | Galerie (`gallery.py`) | gespeicherte Reports der Musterfälle laden | ⚙️ | `test_gallery.py` |
 

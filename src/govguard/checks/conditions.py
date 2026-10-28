@@ -10,7 +10,7 @@ from govguard.condition_models import (
     ConditionResult,
     ConditionValue,
 )
-from govguard.models import FindingDraft, Rule
+from govguard.models import CodeDraft, FindingDraft, Rule
 
 
 def affects(condition: ConditionDef, rule_id: str, primary_anchor: str) -> bool:
@@ -77,10 +77,10 @@ def na_drafts(
     """
     names = {c.id: c.name for c in conditions}
     return [
-        FindingDraft(rule_id=rule.id, status="N/A", line_start=denial.line_start,
-                     line_end=denial.line_end, recommendation=None,
-                     rationale=f"Die Spezifikation verneint: "
-                               f"{names[result.derived_from or condition.id]}.")
+        CodeDraft(rule_id=rule.id, status="N/A", line_start=denial.line_start,
+                  line_end=denial.line_end, recommendation=None, by_code=["rationale"],
+                  rationale=f"Die Spezifikation verneint: "
+                            f"{names[result.derived_from or condition.id]}.")
         for condition in conditions
         if (result := results[condition.id]).value == "no" and (denial := result.denying[0])
         for rule in rules_of(condition, rules)

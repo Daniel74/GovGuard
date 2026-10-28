@@ -6,6 +6,7 @@ import streamlit as st
 
 from govguard.condition_models import LineRange
 from govguard.models import Finding
+from govguard_ui.report.ai_label import ai_label
 from govguard_ui.report.review import category, document_window, lines_text, no_evidence_note
 from govguard_ui.style import badge, paragraph, status_word, tag
 
@@ -32,10 +33,10 @@ def render_detail(finding: Finding) -> None:
         st.markdown(f"#### {plain(finding.title)}")  # LLM text stays text
         evidence = "keine Zeilen" if finding.line_start is None else f"Zeilen {lines_text(finding)}"
         st.caption(f"{plain(finding.primary_anchor)} · Beleg: {evidence}")  # rule_id stays internal
-        st.markdown("**Begründung**")
+        st.html(ai_label("Begründung", "rationale" in finding.by_code))  # the model wrote it (#83)
         st.html(paragraph(finding.rationale))
         if finding.recommendation:
-            st.markdown("**Empfehlung**")
+            st.html(ai_label("Empfehlung", "recommendation" in finding.by_code))
             st.html(paragraph(finding.recommendation))
         if finding.corrections:
             st.markdown("**Korrekturen** (Eingriffe des Codes in die KI-Antwort)")

@@ -6,7 +6,7 @@ Draft pattern: the LLM fills only *Draft models; the code adds what it already k
 from datetime import datetime
 from typing import Literal
 
-from pydantic import AliasChoices, BaseModel, Field, model_validator
+from pydantic import AliasChoices, BaseModel, Field, computed_field, model_validator
 from pydantic_ai.models import Model
 
 from govguard.condition_models import ConditionResult, ConditionValue
@@ -80,7 +80,24 @@ class InventoryResponse(BaseModel):  # schema of tool submit_inventory (free-tex
     resource_types: list[RecognizedType]
 
 
-class Finding(FindingDraft):  # completed by the code from the input and the catalog
+TextField = Literal["rationale", "recommendation"]
+
+
+class CodeDraft(FindingDraft):
+    """A draft in which the code wrote a text itself (N/A by code, repair); never in a schema of
+    the LLM, which asks for FindingDraft (#83)."""
+    by_code: list[TextField] = []  # texts the code wrote: they do not get the "KI" marker
+
+
+def with_code_text(draft: FindingDraft, **texts: str | None) -> CodeDraft:
+    """The draft with these texts (rationale=, recommendation=) written by the code."""
+    known = draft.by_code if isinstance(draft, CodeDraft) else []
+    named: list[TextField] = [f for f in ("rationale", "recommendation")
+                              if f in texts or f in known]
+    return CodeDraft(**draft.model_dump(exclude={"by_code"}) | texts, by_code=named)
+
+
+class Finding(CodeDraft):  # completed by the code from the input and the catalog
     evidence: str | None  # cut from the input lines by the code: verbatim by construction
     title: str
     primary_anchor: str
@@ -115,6 +132,15 @@ class Progress(BaseModel):  # reported while an audit runs, for UI and audit job
     packages_total: int = 0  # counts belong to phase "packages" only, known after the inventory
 
 
+class AiDisclosure(BaseModel):
+    """Machine-readable AI label of a report (#83): who wrote which fields, and why we say so."""
+    ai_generated: bool = True
+    model: str
+    fields: list[str] = ["findings[].rationale", "findings[].recommendation"]  # text of the LLM,
+    except_if_listed_in: str = "findings[].by_code"  # ... unless the finding says the code wrote it
+    legal_basis: str = "KI-VO (EU) 2024/1689 Art. 50"
+
+
 class AuditReport(BaseModel):
     audit_type: AuditType
     overall_status: Status
@@ -126,6 +152,11 @@ class AuditReport(BaseModel):
     fail_judge: FailJudgeCount = FailJudgeCount()
     closed_world: bool = False  # a template the code parsed: no FAIL judge (ADR 0020, #46)
     conditions: dict[str, ConditionResult] = {}  # spec audit: condition id -> value (#60)
+
+    @computed_field  # derived, never stored: it cannot diverge and stored reports load unchanged
+    @property
+    def ai_disclosure(self) -> AiDisclosure:
+        return AiDisclosure(model=self.model_id)
 
 
 class AuditEvent(BaseModel):  # one JSON line in CloudWatch Logs, no evidence (DSGVO Art. 5(1)(c))

@@ -219,6 +219,9 @@
       "line_end": 47,
       "rationale": "Die Spezifikation verneint: Einwilligung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "Anschrift ausgewertet. Eine Einwilligung der Eltern wird für diese Auswertung nicht eingeholt; die",
       "title": "Nachweis der Einwilligung",
       "primary_anchor": "DSGVO Art. 7 Abs. 1",
@@ -233,6 +236,9 @@
       "line_end": 47,
       "rationale": "Die Spezifikation verneint: Einwilligung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "Anschrift ausgewertet. Eine Einwilligung der Eltern wird für diese Auswertung nicht eingeholt; die",
       "title": "Verbindlichkeit von Erklärungsteilen",
       "primary_anchor": "DSGVO Art. 7 Abs. 2",
@@ -247,6 +253,9 @@
       "line_end": 47,
       "rationale": "Die Spezifikation verneint: Einwilligung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "Anschrift ausgewertet. Eine Einwilligung der Eltern wird für diese Auswertung nicht eingeholt; die",
       "title": "Einfacher Widerruf der Einwilligung",
       "primary_anchor": "DSGVO Art. 7 Abs. 3",
@@ -261,6 +270,9 @@
       "line_end": 47,
       "rationale": "Die Spezifikation verneint: Einwilligung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "Anschrift ausgewertet. Eine Einwilligung der Eltern wird für diese Auswertung nicht eingeholt; die",
       "title": "Freiwilligkeit der Einwilligung bei Vertragsabhängigkeit",
       "primary_anchor": "DSGVO Art. 7 Abs. 4",
@@ -275,6 +287,9 @@
       "line_end": 47,
       "rationale": "Die Spezifikation verneint: Einwilligung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "Anschrift ausgewertet. Eine Einwilligung der Eltern wird für diese Auswertung nicht eingeholt; die",
       "title": "Einwilligung bei Kindern unter 16",
       "primary_anchor": "DSGVO Art. 8 Abs. 1",
@@ -289,6 +304,9 @@
       "line_end": 47,
       "rationale": "Die Spezifikation verneint: Einwilligung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "Anschrift ausgewertet. Eine Einwilligung der Eltern wird für diese Auswertung nicht eingeholt; die",
       "title": "Verifizierung der elterlichen Einwilligung",
       "primary_anchor": "DSGVO Art. 8 Abs. 2",

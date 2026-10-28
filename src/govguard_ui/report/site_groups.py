@@ -7,6 +7,7 @@ from typing import NamedTuple
 import streamlit as st
 
 from govguard.models import Finding
+from govguard_ui.report.ai_label import ai_label
 from govguard_ui.report.review import category
 from govguard_ui.report.site_data import place
 from govguard_ui.style import badge
@@ -34,6 +35,10 @@ def render_group(texts: GroupTexts, findings: list[Finding], selected: Finding, 
             _finding(finding)
 
 
+def _text(label: str, text: str, by_code: bool) -> str:
+    return f"<div>{ai_label(label, by_code)}: {html.escape(text)}</div>"
+
+
 def _finding(finding: Finding) -> None:
     """Like the box under a site, in one block: status, rule, anchor and lines, why, then what.
     Twin of item() in site_script: the component draws in its own shadow root, a change of the
@@ -41,9 +46,9 @@ def _finding(finding: Finding) -> None:
     parts = [f"<div>{badge(category(finding))} <strong>{html.escape(finding.title)}</strong></div>",
              f'<div style="color:#4A5361;font-size:14px">{html.escape(finding.primary_anchor)} · '
              f"{place(finding.line_start, finding.last_line)}</div>",
-             f"<div><strong>Begründung:</strong> {html.escape(finding.rationale)}</div>"]
+             _text("Begründung", finding.rationale, "rationale" in finding.by_code)]
     if finding.recommendation:
-        recommendation = html.escape(finding.recommendation)
-        parts.append(f"<div><strong>Empfehlung:</strong> {recommendation}</div>")
+        code = "recommendation" in finding.by_code
+        parts.append(_text("Empfehlung", finding.recommendation, code))
     st.html('<div style="display:flex;flex-direction:column;gap:4px;padding:8px 0;'
             'border-bottom:1px solid #E3E7EC">' + "".join(parts) + "</div>")

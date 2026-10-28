@@ -5,6 +5,7 @@ import html
 import streamlit as st
 
 from govguard.models import AuditReport, Expected
+from govguard_ui.report.ai_label import disclosure_html
 from govguard_ui.report.condition_review import conditional_gaps
 from govguard_ui.report.findings_view import select
 from govguard_ui.report.review import Category, category_counts, expected_checks, warn_caption
@@ -29,6 +30,7 @@ def render_header(report: AuditReport, title: str, key: str) -> None:
         with overall.container(border=True, key=f"{key}_overall_{look.css}"):
             st.markdown("Gesamtstatus", help=HELP["overall"])
             st.html(f'<p class="gg-overall">{look.symbol} {look.label}</p>')
+        st.html(disclosure_html(report.model_id))  # the AI label, under the head (#83)
     _counters(report, key)
 
 

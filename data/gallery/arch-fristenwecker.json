@@ -9,6 +9,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "HTTP-Response-Header aktivieren",
       "primary_anchor": "BSI GS++ KONF.12.1.10",
@@ -23,6 +26,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Autorisationstyp für API-Gateway-Routen",
       "primary_anchor": "AWS FSBP APIGateway.8",
@@ -37,6 +43,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Logging für API‑Gateway‑Stages aktivieren",
       "primary_anchor": "AWS FSBP APIGateway.1",
@@ -51,6 +60,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "SSL‑Zertifikat für API‑Gateway‑Stage",
       "primary_anchor": "AWS FSBP APIGateway.2",
@@ -65,6 +77,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "X‑Ray‑Tracing für API‑Gateway‑Stages aktivieren",
       "primary_anchor": "AWS FSBP APIGateway.3",
@@ -79,6 +94,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselung des API-Gateway-Cache",
       "primary_anchor": "AWS FSBP APIGateway.5",
@@ -93,6 +111,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Access‑Logging für API‑Gateway‑Stage",
       "primary_anchor": "AWS FSBP APIGateway.9",
@@ -107,6 +128,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "EBS-Volume Backup-Plan Zuordnung",
       "primary_anchor": "AWS FSBP EC2.28",
@@ -121,6 +145,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Blockierung nach Fehlversuchen",
       "primary_anchor": "BSI GS++ BER.3.11",
@@ -135,6 +162,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Bedrohungsabwehr im Cognito‑User‑Pool",
       "primary_anchor": "AWS FSBP Cognito.1",
@@ -149,6 +179,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "DynamoDB Kapazität automatisch skalieren",
       "primary_anchor": "AWS FSBP DynamoDB.1",
@@ -163,6 +196,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "PITR für DynamoDB aktivieren",
       "primary_anchor": "AWS FSBP DynamoDB.2",
@@ -177,6 +213,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "DynamoDB-Tabellen in Backupplan",
       "primary_anchor": "AWS FSBP DynamoDB.4",
@@ -191,6 +230,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Deletion Protection für DynamoDB-Tabellen",
       "primary_anchor": "AWS FSBP DynamoDB.6",
@@ -205,6 +247,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "VPC Flow Logs aktivieren",
       "primary_anchor": "CIS AWS v7.0.0 4.7",
@@ -219,6 +264,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "VPC Flow Logs aktivieren",
       "primary_anchor": "AWS FSBP EC2.6",
@@ -233,6 +281,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Blockierung direkter öffentlicher Verbindungen",
       "primary_anchor": "BSI GS++ ARCH.5.2",
@@ -247,6 +298,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Unrestricted NACL admin ports prohibited",
       "primary_anchor": "CIS AWS v7.0.0 6.2",
@@ -261,6 +315,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Unused Network ACLs entfernen",
       "primary_anchor": "AWS FSBP EC2.16",
@@ -275,6 +332,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Unrestricted SSH/RDP über NACL",
       "primary_anchor": "AWS FSBP EC2.21",
@@ -289,6 +349,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Unbeschränkte SSH/RDP NACL-Einträge",
       "primary_anchor": "AWS FSBP EC2.22",
@@ -303,6 +366,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Routing-Tabellen minimal zulassen",
       "primary_anchor": "CIS AWS v7.0.0 6.6",
@@ -317,6 +383,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Segmentverbindungen einschränken",
       "primary_anchor": "BSI GS++ ARCH.2.2",
@@ -331,6 +400,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Netzwerkverbindungen einschränken",
       "primary_anchor": "BSI GS++ ARCH.5.1",
@@ -345,6 +417,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Blockierung anfälliger Protokolle",
       "primary_anchor": "BSI GS++ ARCH.5.1.1",
@@ -359,6 +434,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Blockierung bekannter UDP-Angriffe",
       "primary_anchor": "BSI GS++ ARCH.5.1.4",
@@ -373,6 +451,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Blockierung von Management-Zugriffen",
       "primary_anchor": "BSI GS++ ARCH.5.1.6",
@@ -387,6 +468,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Einschränkung von Netzwerkverkehr",
       "primary_anchor": "BSI GS++ KONF.7.15",
@@ -401,6 +485,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Unauthentifizierte Anschlüsse blockieren",
       "primary_anchor": "BSI GS++ KONF.11.5",
@@ -415,6 +502,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Einschränkung unerwünschter TK-Verbindungen",
       "primary_anchor": "BSI GS++ KONF.11.7.2",
@@ -429,6 +519,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Unrestricted Admin-Port Ingress Verbot",
       "primary_anchor": "CIS AWS v7.0.0 6.3",
@@ -443,6 +536,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Unrestricted Admin-Port Ingress verhindern",
       "primary_anchor": "CIS AWS v7.0.0 6.4",
@@ -457,6 +553,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "SSH-Ingress nicht öffentlich",
       "primary_anchor": "AWS FSBP EC2.13",
@@ -471,6 +570,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Ingress zu RDP nicht offen",
       "primary_anchor": "AWS FSBP EC2.14",
@@ -485,6 +587,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Unrestricted Ingress nur für autorisierte Ports",
       "primary_anchor": "AWS FSBP EC2.18",
@@ -499,6 +604,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Keine automatische öffentliche IP-Zuweisung",
       "primary_anchor": "AWS FSBP EC2.15",
@@ -513,6 +621,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Einschränkung externer Netzanschlüsse",
       "primary_anchor": "BSI GS++ ARCH.2.2.1",
@@ -527,6 +638,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Einschränkung von Gastnetz-Verbindungen",
       "primary_anchor": "BSI GS++ ARCH.2.2.2",
@@ -541,6 +655,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Netzsegmentierung Server‑Client",
       "primary_anchor": "BSI GS++ ARCH.2.2.3",
@@ -555,6 +672,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Netzwerkverbindungen einschränken und überwachen",
       "primary_anchor": "BSI C5 COS-03.02B",
@@ -569,6 +689,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "VPC‑Endpoints für Service‑Zugriff",
       "primary_anchor": "CIS AWS v7.0.0 6.8",
@@ -583,6 +706,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "VPC‑Endpoint für EC2 erforderlich",
       "primary_anchor": "AWS FSBP EC2.10",
@@ -597,6 +723,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Image-Scanning für private ECR-Repository",
       "primary_anchor": "AWS FSBP ECR.1",
@@ -611,6 +740,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Tag‑Immutabilität für ECR-Repository",
       "primary_anchor": "AWS FSBP ECR.2",
@@ -625,6 +757,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "ECR Repository Lifecycle Policy Required",
       "primary_anchor": "AWS FSBP ECR.3",
@@ -639,6 +774,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Container Insights für ECS-Cluster aktivieren",
       "primary_anchor": "AWS FSBP ECS.12",
@@ -653,6 +791,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Keine automatische öffentliche IP",
       "primary_anchor": "AWS FSBP ECS.2",
@@ -667,6 +808,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Fargate Service nutzt neueste Plattformversion",
       "primary_anchor": "AWS FSBP ECS.10",
@@ -681,6 +825,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Host-Netzwerkmodus mit Privilegien prüfen",
       "primary_anchor": "AWS FSBP ECS.1",
@@ -695,6 +842,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Keine gemeinsame Prozess-Namespace",
       "primary_anchor": "AWS FSBP ECS.3",
@@ -709,6 +859,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "ECS-TaskDefinition nicht privilegiert",
       "primary_anchor": "AWS FSBP ECS.4",
@@ -723,6 +876,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Read‑Only Root‑Filesystem für ECS‑Container",
       "primary_anchor": "AWS FSBP ECS.5",
@@ -737,6 +893,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Secrets nicht als Env-Variablen",
       "primary_anchor": "AWS FSBP ECS.8",
@@ -751,6 +910,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Logging configuration in ECS task definitions",
       "primary_anchor": "AWS FSBP ECS.9",
@@ -765,6 +927,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Etablierte TLS‑Algorithmen beim Transport",
       "primary_anchor": "BSI GS++ BER.7.6",
@@ -779,6 +944,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Transportverschlüsselung via TLS",
       "primary_anchor": "BSI GS++ KONF.14.1",
@@ -793,6 +961,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "HTTP‑zu‑HTTPS Weiterleitung prüfen",
       "primary_anchor": "AWS FSBP ELB.1",
@@ -807,6 +978,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Access-Logging für Web-Frontends aktivieren",
       "primary_anchor": "CIS AWS v7.0.0 4.10",
@@ -821,6 +995,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "ALB Header-Drop aktivieren",
       "primary_anchor": "AWS FSBP ELB.4",
@@ -835,6 +1012,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Logging für Load Balancer aktivieren",
       "primary_anchor": "AWS FSBP ELB.5",
@@ -849,6 +1029,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "ALB Löschschutz aktivieren",
       "primary_anchor": "AWS FSBP ELB.6",
@@ -863,6 +1046,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Desync‑Mitigation‑Modus beim ALB",
       "primary_anchor": "AWS FSBP ELB.12",
@@ -877,6 +1063,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Ressourcenbasierte Richtlinie für EventBus",
       "primary_anchor": "AWS FSBP EventBridge.3",
@@ -905,6 +1094,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Keine Vollzugriffs‑IAM‑Policies",
       "primary_anchor": "AWS FSBP IAM.1",
@@ -933,6 +1125,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Keine KMS‑Entschlüsselung für alle Schlüssel",
       "primary_anchor": "AWS FSBP KMS.1",
@@ -1185,6 +1380,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "IAM‑Berechtigungen nur über Gruppen",
       "primary_anchor": "CIS AWS v7.0.0 2.13",
@@ -1199,6 +1397,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Keine Richtlinien an IAM‑User",
       "primary_anchor": "AWS FSBP IAM.2",
@@ -1213,6 +1414,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "KMS-Schlüssellänge prüfen",
       "primary_anchor": "BSI GS++ BER.7.2",
@@ -1227,6 +1431,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Zweckbindung bei KMS-Schlüsseln",
       "primary_anchor": "BSI GS++ BER.7.9",
@@ -1241,6 +1448,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Hardware‑basierter KMS‑Key",
       "primary_anchor": "BSI GS++ KONF.3.1",
@@ -1255,6 +1465,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Kundenexklusiver Schlüsselbesitz",
       "primary_anchor": "BSI C5 CRY-05.02B",
@@ -1269,6 +1482,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Rotation für symmetrische CMKs aktivieren",
       "primary_anchor": "CIS AWS v7.0.0 4.6",
@@ -1283,6 +1499,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "KMS-Schlüsselrotation aktivieren",
       "primary_anchor": "AWS FSBP KMS.4",
@@ -1297,6 +1516,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "KMS-Schlüssel nicht öffentlich zugänglich",
       "primary_anchor": "AWS FSBP KMS.5",
@@ -1311,6 +1533,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselung von Kinesis-Streams",
       "primary_anchor": "AWS FSBP Kinesis.1",
@@ -1325,6 +1550,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Automatische Sicherheitsupdates aktivieren",
       "primary_anchor": "BSI GS++ KONF.8.2",
@@ -1353,6 +1581,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Öffentlichen Zugriff auf Lambda verhindern",
       "primary_anchor": "AWS FSBP Lambda.1",
@@ -1367,6 +1598,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Unterstützte Lambda‑Runtimes verwenden",
       "primary_anchor": "AWS FSBP Lambda.2",
@@ -1381,6 +1615,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Lambda-Funktion muss VPC nutzen",
       "primary_anchor": "AWS FSBP Lambda.3",
@@ -1451,6 +1688,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Deletion Protection für RDS aktivieren",
       "primary_anchor": "AWS FSBP RDS.7",
@@ -1465,6 +1705,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "IAM-Authentifizierung für RDS-Cluster aktivieren",
       "primary_anchor": "AWS FSBP RDS.12",
@@ -1479,6 +1722,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Backtracking für Aurora-Cluster aktivieren",
       "primary_anchor": "AWS FSBP RDS.14",
@@ -1493,6 +1739,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Multi-AZ Konfiguration für RDS",
       "primary_anchor": "AWS FSBP RDS.15",
@@ -1507,6 +1756,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Tags zu Snapshots kopieren",
       "primary_anchor": "AWS FSBP RDS.16",
@@ -1521,6 +1773,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Benutzername des Administrators nicht Standard",
       "primary_anchor": "AWS FSBP RDS.24",
@@ -1535,6 +1790,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselung von RDS-DB-Cluster",
       "primary_anchor": "AWS FSBP RDS.27",
@@ -1549,6 +1807,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Audit-Logs von Aurora MySQL nach CloudWatch",
       "primary_anchor": "AWS FSBP RDS.34",
@@ -1563,6 +1824,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Aurora PostgreSQL Logs to CloudWatch",
       "primary_anchor": "AWS FSBP RDS.37",
@@ -1577,6 +1841,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Automatische Sicherheitsupdates für RDS",
       "primary_anchor": "BSI GS++ KONF.8.1.1",
@@ -1591,6 +1858,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselung von RDS‑Instanzen",
       "primary_anchor": "CIS AWS v7.0.0 3.2.1",
@@ -1605,6 +1875,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Auto Minor Version Upgrade aktivieren",
       "primary_anchor": "CIS AWS v7.0.0 3.2.2",
@@ -1619,6 +1892,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "RDS nicht öffentlich zugänglich",
       "primary_anchor": "CIS AWS v7.0.0 3.2.3",
@@ -1633,6 +1909,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Multi-AZ Nutzung für RDS-Instanzen",
       "primary_anchor": "CIS AWS v7.0.0 3.2.4",
@@ -1647,6 +1926,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Öffentlicher Zugriff auf RDS verhindern",
       "primary_anchor": "AWS FSBP RDS.2",
@@ -1661,6 +1943,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselung von RDS-Instanzen",
       "primary_anchor": "AWS FSBP RDS.3",
@@ -1675,6 +1960,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselung von RDS Snapshots",
       "primary_anchor": "AWS FSBP RDS.4",
@@ -1689,6 +1977,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Mehrere AZs für RDS-Instanzen",
       "primary_anchor": "AWS FSBP RDS.5",
@@ -1703,6 +1994,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Enhanced Monitoring für RDS aktivieren",
       "primary_anchor": "AWS FSBP RDS.6",
@@ -1717,6 +2011,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Deletion Protection für RDS-Instanzen",
       "primary_anchor": "AWS FSBP RDS.8",
@@ -1731,6 +2028,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "RDS-Logs nach CloudWatch exportieren",
       "primary_anchor": "AWS FSBP RDS.9",
@@ -1745,6 +2045,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "IAM-Authentifizierung für RDS aktivieren",
       "primary_anchor": "AWS FSBP RDS.10",
@@ -1759,6 +2062,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Automatisierte Backups für RDS",
       "primary_anchor": "AWS FSBP RDS.11",
@@ -1773,6 +2079,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Automatische Minor-Version‑Upgrades aktivieren",
       "primary_anchor": "AWS FSBP RDS.13",
@@ -1787,6 +2096,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Tags zu Snapshots kopieren",
       "primary_anchor": "AWS FSBP RDS.17",
@@ -1801,6 +2113,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "RDS-Instanz in VPC bereitstellen",
       "primary_anchor": "AWS FSBP RDS.18",
@@ -1815,6 +2130,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Nicht‑Standard‑Port für RDS",
       "primary_anchor": "AWS FSBP RDS.23",
@@ -1829,6 +2147,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Custom RDS Administrator Username",
       "primary_anchor": "AWS FSBP RDS.25",
@@ -1843,6 +2164,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "RDS-Instanz durch Backup-Plan schützen",
       "primary_anchor": "AWS FSBP RDS.26",
@@ -1857,6 +2181,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Logs von PostgreSQL nach CloudWatch exportieren",
       "primary_anchor": "AWS FSBP RDS.36",
@@ -1871,6 +2198,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselung der PostgreSQL‑Verbindung",
       "primary_anchor": "AWS FSBP RDS.38",
@@ -1885,6 +2215,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselte MySQL‑Verbindung",
       "primary_anchor": "AWS FSBP RDS.39",
@@ -1899,6 +2232,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "RDS‑Event‑Abonnements für kritische Ereignisse",
       "primary_anchor": "AWS FSBP RDS.19",
@@ -1913,6 +2249,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "RDS Event Subscription kritischer Ereignisse",
       "primary_anchor": "AWS FSBP RDS.20",
@@ -1927,6 +2266,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "RDS‑Event‑Abonnement für kritische Parametergruppen",
       "primary_anchor": "AWS FSBP RDS.21",
@@ -1941,6 +2283,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "RDS-Event-Subscription für Sicherheitsgruppen",
       "primary_anchor": "AWS FSBP RDS.22",
@@ -1955,6 +2300,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Block Public Access für S3 Access Points",
       "primary_anchor": "AWS FSBP S3.19",
@@ -1983,6 +2331,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselung von Speicherressourcen",
       "primary_anchor": "BSI GS++ KONF.3.2",
@@ -2011,6 +2362,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Zugriffsbeschränkung und Verschlüsselung von Crash‑Dateien",
       "primary_anchor": "BSI C5 OPS-19.01B",
@@ -2039,6 +2393,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Block Public Access für S3-Buckets",
       "primary_anchor": "CIS AWS v7.0.0 3.1.4",
@@ -2053,6 +2410,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Server Access Logging aktivieren",
       "primary_anchor": "CIS AWS v7.0.0 4.4",
@@ -2067,6 +2427,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Öffentlichen Lesezugriff auf S3 verhindern",
       "primary_anchor": "AWS FSBP S3.2",
@@ -2081,6 +2444,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verbot von öffentlichem Schreibzugriff",
       "primary_anchor": "AWS FSBP S3.3",
@@ -2095,6 +2461,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Cross‑Region‑Replikation für S3‑Buckets",
       "primary_anchor": "AWS FSBP S3.7",
@@ -2109,6 +2478,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Bucket-Level Public Access Block",
       "primary_anchor": "AWS FSBP S3.8",
@@ -2123,6 +2495,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Server Access Logging Ziel prüfen",
       "primary_anchor": "AWS FSBP S3.9",
@@ -2137,6 +2512,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Lifecycle-Policy für versionierte Buckets",
       "primary_anchor": "AWS FSBP S3.10",
@@ -2151,6 +2529,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "S3‑Bucket Event‑Benachrichtigungen aktivieren",
       "primary_anchor": "AWS FSBP S3.11",
@@ -2165,6 +2546,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Keine ACLs für S3-Buckets verwenden",
       "primary_anchor": "AWS FSBP S3.12",
@@ -2179,6 +2563,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Lifecycle-Policy für S3-Bucket",
       "primary_anchor": "AWS FSBP S3.13",
@@ -2193,6 +2580,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Versionierung für S3 Buckets aktivieren",
       "primary_anchor": "AWS FSBP S3.14",
@@ -2207,6 +2597,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Object Lock für S3 Buckets",
       "primary_anchor": "AWS FSBP S3.15",
@@ -2221,6 +2614,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselung von S3 Buckets",
       "primary_anchor": "AWS FSBP S3.17",
@@ -2235,6 +2631,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Transportverschlüsselung bei S3",
       "primary_anchor": "BSI GS++ DLS.2.2",
@@ -2249,6 +2648,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Keine uneingeschränkten Principals in Policies",
       "primary_anchor": "CIS AWS v7.0.0 2.21",
@@ -2263,6 +2665,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "HTTPS‑Zugriff für S3 erzwingen",
       "primary_anchor": "CIS AWS v7.0.0 3.1.1",
@@ -2277,6 +2682,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "HTTPS‑Erzwingung für S3‑Buckets",
       "primary_anchor": "AWS FSBP S3.5",
@@ -2291,6 +2699,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Einschränkung von Fremdzugriffen auf S3",
       "primary_anchor": "AWS FSBP S3.6",
@@ -2347,6 +2758,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselung von SQS-Queues",
       "primary_anchor": "AWS FSBP SQS.1",
@@ -2361,6 +2775,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Secrets Rotation innerhalb 90 Tage",
       "primary_anchor": "AWS FSBP SecretsManager.4",
@@ -2375,6 +2792,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Verschlüsselung von Secrets",
       "primary_anchor": "BSI GS++ KONF.1.5",
@@ -2389,6 +2809,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Automatische Rotation von Secrets",
       "primary_anchor": "AWS FSBP SecretsManager.1",
@@ -2417,6 +2840,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "Aktivierung von WAF‑Filterung",
       "primary_anchor": "BSI GS++ KONF.12.1.7",
@@ -2431,6 +2857,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "API Gateway mit WAF-ACL verknüpfen",
       "primary_anchor": "AWS FSBP APIGateway.4",
@@ -2445,6 +2874,9 @@
       "line_end": null,
       "rationale": "Ressourcentyp nicht im Template",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": null,
       "title": "ALB mit WAF Web ACL verknüpfen",
       "primary_anchor": "AWS FSBP ELB.16",

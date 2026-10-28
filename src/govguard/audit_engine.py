@@ -19,6 +19,7 @@ from govguard.condition_models import ConditionDef, ConditionResult
 from govguard.models import (
     SEVERITY,
     AuditReport,
+    CodeDraft,
     Finding,
     FindingDraft,
     Progress,
@@ -163,8 +164,8 @@ async def _counted(
 
 
 def _na_by_code(rule: Rule, rationale: str) -> FindingDraft:
-    return FindingDraft(rule_id=rule.id, status="N/A", line_start=None, line_end=None,
-                        rationale=rationale, recommendation=None)
+    return CodeDraft(rule_id=rule.id, status="N/A", line_start=None, line_end=None,
+                     rationale=rationale, recommendation=None, by_code=["rationale"])
 
 
 def _complete_findings(

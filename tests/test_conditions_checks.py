@@ -4,7 +4,7 @@ from conftest import make_rule
 
 from govguard.checks.conditions import condition_results, na_drafts, unstated_results
 from govguard.condition_models import ConditionDef, ConditionDraft, LineRange
-from govguard.models import FindingDraft
+from govguard.models import CodeDraft
 
 LINES = [LineRange(line_start=3, line_end=4)]
 OTHER = [LineRange(line_start=9, line_end=9)]
@@ -110,9 +110,9 @@ def test_a_denied_condition_makes_its_rules_na_with_the_denying_lines() -> None:
         na_draft("SPEC-DSGVO-Art.7", "Die Spezifikation verneint: Name consent.")]
 
 
-def na_draft(rule_id: str, rationale: str) -> FindingDraft:
-    return FindingDraft(rule_id=rule_id, status="N/A", line_start=3, line_end=4,
-                        rationale=rationale, recommendation=None)
+def na_draft(rule_id: str, rationale: str) -> CodeDraft:
+    return CodeDraft(rule_id=rule_id, status="N/A", line_start=3, line_end=4,
+                     rationale=rationale, recommendation=None, by_code=["rationale"])
 
 
 def test_yes_and_unstated_conditions_keep_their_rules_for_the_model() -> None:

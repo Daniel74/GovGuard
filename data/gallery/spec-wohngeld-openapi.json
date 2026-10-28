@@ -1163,6 +1163,9 @@
       "line_end": 53,
       "rationale": "Die Spezifikation verneint: automatisierte Entscheidung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "       `202 Accepted` und einer Vorgangsnummer. Eine inhaltliche Entscheidung trifft die Schnittstelle nie.",
       "title": "Keine rein automatisierten Entscheidungen",
       "primary_anchor": "DSGVO Art. 22 Abs. 1",
@@ -1177,6 +1180,9 @@
       "line_end": 53,
       "rationale": "Die Spezifikation verneint: automatisierte Entscheidung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "       `202 Accepted` und einer Vorgangsnummer. Eine inhaltliche Entscheidung trifft die Schnittstelle nie.",
       "title": "Ausnahmen für automatisierte Entscheidungen",
       "primary_anchor": "DSGVO Art. 22 Abs. 2",
@@ -1191,6 +1197,9 @@
       "line_end": 53,
       "rationale": "Die Spezifikation verneint: automatisierte Entscheidung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "       `202 Accepted` und einer Vorgangsnummer. Eine inhaltliche Entscheidung trifft die Schnittstelle nie.",
       "title": "Rechte auf menschliche Intervention und Anfechtung",
       "primary_anchor": "DSGVO Art. 22 Abs. 3",
@@ -1205,6 +1214,9 @@
       "line_end": 53,
       "rationale": "Die Spezifikation verneint: automatisierte Entscheidung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "       `202 Accepted` und einer Vorgangsnummer. Eine inhaltliche Entscheidung trifft die Schnittstelle nie.",
       "title": "Verbot besonderer Datenkategorien",
       "primary_anchor": "DSGVO Art. 22 Abs. 4",
@@ -2217,6 +2229,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Zulässigkeit von Datenübermittlung",
       "primary_anchor": "DSGVO Art. 44",
@@ -2231,6 +2246,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Datenübermittlung bei Angemessenheitsbeschluss",
       "primary_anchor": "DSGVO Art. 45 Abs. 1",
@@ -2245,6 +2263,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Verweis auf Angemessenheitsliste",
       "primary_anchor": "DSGVO Art. 45 Abs. 8",
@@ -2259,6 +2280,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Datenübermittlung mit geeigneten Garantien",
       "primary_anchor": "DSGVO Art. 46 Abs. 1",
@@ -2273,6 +2297,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Geeignete Garantien für Datenübermittlung",
       "primary_anchor": "DSGVO Art. 46 Abs. 2",
@@ -2287,6 +2314,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Garantie durch Vertragsklauseln oder Verwaltungsvereinbarung",
       "primary_anchor": "DSGVO Art. 46 Abs. 3",
@@ -2301,6 +2331,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Internationale Übereinkunft als Rechtsgrundlage",
       "primary_anchor": "DSGVO Art. 48",
@@ -2315,6 +2348,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Ausnahmen für Datenübermittlung ohne Angemessenheitsbeschluss",
       "primary_anchor": "DSGVO Art. 49 Abs. 1",
@@ -2329,6 +2365,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Benachrichtigung bei Drittlandübermittlung",
       "primary_anchor": "DSGVO Art. 49 Abs. 1 UAbs. 2",
@@ -2343,6 +2382,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Keine Gesamtdatenübermittlung",
       "primary_anchor": "DSGVO Art. 49 Abs. 2",
@@ -2357,6 +2399,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Anerkennung des öffentlichen Interesses",
       "primary_anchor": "DSGVO Art. 49 Abs. 4",
@@ -2371,6 +2416,9 @@
       "line_end": 439,
       "rationale": "Die Spezifikation verneint: Drittlandübermittlung.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "  region: AWS-Region eu-central-1 (Frankfurt am Main); Daten verlassen die Region nicht.",
       "title": "Dokumentation von Beurteilung und Garantien",
       "primary_anchor": "DSGVO Art. 49 Abs. 6",

@@ -4392,6 +4392,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Transparenz des Betriebs",
       "primary_anchor": "KI-VO Art. 13 Abs. 1",
@@ -4406,6 +4409,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Bereitstellung barrierefreier Betriebsanleitungen",
       "primary_anchor": "KI-VO Art. 13 Abs. 2",
@@ -4420,6 +4426,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Angaben zum Anbieter in Betriebsanleitung",
       "primary_anchor": "KI-VO Art. 13 Abs. 3 lit. a",
@@ -4434,6 +4443,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Merkmale, Fähigkeiten und Leistungsgrenzen",
       "primary_anchor": "KI-VO Art. 13 Abs. 3 lit. b",
@@ -4448,6 +4460,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Dokumentation von Änderungen",
       "primary_anchor": "KI-VO Art. 13 Abs. 3 lit. c",
@@ -4462,6 +4477,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Menschliche Aufsicht und Interpretationshilfe",
       "primary_anchor": "KI-VO Art. 13 Abs. 3 lit. d",
@@ -4476,6 +4494,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Ressourcen, Lebensdauer und Wartungsangaben",
       "primary_anchor": "KI-VO Art. 13 Abs. 3 lit. e",
@@ -4490,6 +4511,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Dokumentation von Protokollierungsmechanismen",
       "primary_anchor": "KI-VO Art. 13 Abs. 3 lit. f",
@@ -4504,6 +4528,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Menschliche Aufsicht sicherstellen",
       "primary_anchor": "KI-VO Art. 14 Abs. 1",
@@ -4518,6 +4545,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Menschliche Aufsicht und Risikominimierung",
       "primary_anchor": "KI-VO Art. 14 Abs. 2",
@@ -4532,6 +4562,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Angemessene Aufsichtsmaßnahmen",
       "primary_anchor": "KI-VO Art. 14 Abs. 3",
@@ -4546,6 +4579,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Qualifikation der menschlichen Aufsicht",
       "primary_anchor": "KI-VO Art. 14 Abs. 4 lit. a",
@@ -4560,6 +4596,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Vermeidung von Automatisierungsbias",
       "primary_anchor": "KI-VO Art. 14 Abs. 4 lit. b",
@@ -4574,6 +4613,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Interpretationsinstrumente für Aufsicht",
       "primary_anchor": "KI-VO Art. 14 Abs. 4 lit. c",
@@ -4588,6 +4630,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Menschliche Aufsicht: Entscheidungsbefugnis zum Abschalten",
       "primary_anchor": "KI-VO Art. 14 Abs. 4 lit. d",
@@ -4602,6 +4647,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Eingriffsmöglichkeit bzw. Stop‑Taste",
       "primary_anchor": "KI-VO Art. 14 Abs. 4 lit. e",
@@ -4616,6 +4664,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Getrennte Überprüfung durch zwei Personen",
       "primary_anchor": "KI-VO Art. 14 Abs. 5",
@@ -4630,6 +4681,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Rollen‑ und Kompetenz‑Zuweisung für Aufsicht",
       "primary_anchor": "KI-VO Art. 26 Abs. 2",
@@ -4644,6 +4698,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Eingabedaten entsprechen Zweckbestimmung",
       "primary_anchor": "KI-VO Art. 26 Abs. 4",
@@ -4658,6 +4715,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Aufbewahrung von KI-Protokollen",
       "primary_anchor": "KI-VO Art. 26 Abs. 6",
@@ -4672,6 +4732,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Registrierung und Verzicht bei Nicht‑Eintrag",
       "primary_anchor": "KI-VO Art. 26 Abs. 8",
@@ -4686,6 +4749,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Genehmigungsantrag innerhalb 48 Stunden",
       "primary_anchor": "KI-VO Art. 26 Abs. 10",
@@ -4700,6 +4766,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Informationspflicht für betroffene Personen",
       "primary_anchor": "KI-VO Art. 26 Abs. 11",
@@ -4714,6 +4783,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Überwachung und Meldung bei Risiko",
       "primary_anchor": "KI-VO Art. 26 Abs. 5",
@@ -4728,6 +4800,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Nachweis der DPIA-Pflicht",
       "primary_anchor": "KI-VO Art. 26 Abs. 9",
@@ -4742,6 +4817,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Beschreibung der Verfahren im Einklang",
       "primary_anchor": "KI-VO Art. 27 Abs. 1 lit. a",
@@ -4756,6 +4834,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Zeitraum und Häufigkeit angeben",
       "primary_anchor": "KI-VO Art. 27 Abs. 1 lit. b",
@@ -4770,6 +4851,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Kategorien betroffener Personengruppen",
       "primary_anchor": "KI-VO Art. 27 Abs. 1 lit. c",
@@ -4784,6 +4868,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Spezifische Schadensrisiken prüfen",
       "primary_anchor": "KI-VO Art. 27 Abs. 1 lit. d",
@@ -4798,6 +4885,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Beschreibung menschlicher Aufsicht",
       "primary_anchor": "KI-VO Art. 27 Abs. 1 lit. e",
@@ -4812,6 +4902,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Maßnahmen, Governance und Beschwerdemechanismus",
       "primary_anchor": "KI-VO Art. 27 Abs. 1 lit. f",
@@ -4826,6 +4919,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Aktualisierung der Grundrechte‑Folgenabschätzung",
       "primary_anchor": "KI-VO Art. 27 Abs. 2",
@@ -4840,6 +4936,9 @@
       "line_end": 451,
       "rationale": "Die Spezifikation verneint: Hochrisiko-KI.",
       "recommendation": null,
+      "by_code": [
+        "rationale"
+      ],
       "evidence": "GovGuard ist kein Hochrisiko-System nach Art. 6 KI-VO. Es prüft Dokumente, bewertet keine Menschen\nund entscheidet nicht über Leistungen oder Rechte; das tun die Fachleute. Damit fällt es unter\nkeinen Einsatzbereich von Anhang III. Verbotene Praktiken nach Art. 5 kommen nicht vor.",
       "title": "Musterfragebogen mit D‑FA‑Verweisen",
       "primary_anchor": "KI-VO Art. 27 Abs. 5",

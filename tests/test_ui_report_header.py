@@ -169,3 +169,10 @@ def test_the_judge_help_explains_why_and_every_value_of_the_tile() -> None:
 
 def test_the_gaps_help_names_the_split_by_condition() -> None:
     assert "„Nur wenn …“" in HELP["gaps"]
+
+
+def test_the_head_labels_the_report_as_made_with_ai_under_the_title_frame() -> None:
+    head = head_frame(page(gallery_script))
+
+    assert ("Mit KI erstellt · Modell openai/gpt-oss-120b · "
+            "Status, Fundstellen und Zitate hat der Code nachgeprüft") in head

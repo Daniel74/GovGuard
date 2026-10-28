@@ -2,6 +2,7 @@
 findings under a site (#81); the script is in site_script. Colours come from LOOKS, the shadow
 DOM sees no page CSS."""
 
+from govguard_ui.report.ai_label import MARKER_CSS
 from govguard_ui.style import LOOKS, badge_css
 
 HTML = '<div class="doc"></div>'  # frame and head come from Streamlit, like the table view
@@ -44,8 +45,7 @@ button:disabled{cursor:default;color:#4A5361;opacity:.6}
 .item .t{font-weight:600}
 .item .a{color:#4A5361;font-size:13px}
 .item .w,.item .r{margin-top:4px}
-.item .w::before{content:"Begründung: ";font-weight:600}
-.item .r::before{content:"Empfehlung: ";font-weight:600}
+.ai{margin-left:4px;""" + MARKER_CSS + """}
 .badge{display:inline-block;padding:0 6px;border:1px solid;border-radius:4px;font-size:13px;
   font-weight:600;margin-right:6px}
 """ + _LOOKS_CSS + badge_css("b-")

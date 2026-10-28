@@ -19,16 +19,28 @@ function press(node, action) {  // a click, or Enter and Space like a button
   }
 }
 
-function item(f, selected, choose) {  // twin of _finding() in site_groups.py: change both
+function labelled(css, name, text, ai, byCode) {  // "Begründung KI: text", like ai_label()
+  const div = el("div", css)
+  div.appendChild(el("strong", "", name))
+  if (!byCode) div.appendChild(el("span", "ai", ai.marker)).title = ai.tip  // not on code text
+  div.appendChild(document.createTextNode(": "))
+  div.appendChild(el("span", "", text))  // LLM text: textContent, never innerHTML
+  return div
+}
 
+function item(f, selected, choose, ai) {  // twin of _finding() in site_groups.py: change both
   const div = el("div", "item" + (f.id === selected ? " sel" : ""))
   div.tabIndex = 0
   const head = div.appendChild(el("div"))
   head.appendChild(el("span", "badge b-" + f.look, f.status))
   head.appendChild(el("span", "t", f.title))
   div.appendChild(el("div", "a", f.anchor + " · " + f.lines))
-  div.appendChild(el("div", "w", f.rationale))  // order of the detail view: why, then what
-  if (f.recommendation) div.appendChild(el("div", "r", f.recommendation))
+  const code = (name) => f.by_code.includes(name)  // texts the code wrote: no marker
+  // order of the detail view: why, then what
+  div.appendChild(labelled("w", "Begründung", f.rationale, ai, code("rationale")))
+  if (f.recommendation) {
+    div.appendChild(labelled("r", "Empfehlung", f.recommendation, ai, code("recommendation")))
+  }
   press(div, () => choose(f.id))
   return div
 }
@@ -45,7 +57,7 @@ function box(index, data, send) {
   }
   press(head.appendChild(el("button", "", "schließen")), () => send("closed", data.selected))
   const choose = (id) => send("clicked", id)
-  for (const f of site.findings) div.appendChild(item(f, data.selected, choose))
+  for (const f of site.findings) div.appendChild(item(f, data.selected, choose, data.ai))
   return div
 }
 
