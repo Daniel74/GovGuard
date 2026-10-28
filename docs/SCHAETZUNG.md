@@ -51,3 +51,11 @@ Gemessen in **„% Weekly“**, also in der Einheit der Usage-Anzeige. Anthropic
 
 **Kalibrierung:** Notiere den Weekly-Wert vor und nach #1. Kostet #1 mehr als 13 %, multiplizierst du alle Werte mit *Ist ÷ 13*. Liegt der Bedarf dann über 185 %, kürzt du zuerst den Umfang (SDM in #5, UI in #11), bevor die Qualität leidet.
 **Sparen:** Sonnet baut, Opus urteilt; nach jedem Schritt `/clear`; große Dokumente nur abschnittsweise lesen lassen.
+
+## 3. Budget je Schritt (Phase 2)
+
+Ab Phase 2 misst Claude das Budget jedes Schritts selbst: Die Statuszeile speichert den Wochenwert, `.claude/budget.sh start` und `end` rechnen die Differenz und schreiben eine Zeile hierher, bei einem Issue auch einen Kommentar dort.
+Laufen zwei Schritte parallel, enthält jede Messung auch den anderen. Für #81 (P1) liegt kein Ist vor, Messlatte ist darum P1b.
+
+| Schritt | Datum | Issue | geschätzt | Ist |
+|---|---|---|---|---|

@@ -19,3 +19,6 @@ data/input/presets/*.local.md
 
 # Screenshots, diff and side-by-side images of the visual tests (#40)
 tests/visual/output/
+
+# Weekly budget written by the status line (.claude/statusline.sh)
+.claude/budget/
