@@ -1,7 +1,7 @@
 # GovGuard – Fahrplan Phase 2
 
 Phase 2 beginnt nach der Präsentation am 26.10.2026: erst ein UI-Ticket, dann die Roadmap recherchieren, schätzen, entscheiden und bauen.
-**Maßgeblich für die Roadmap** sind allein die Backup-Folien „Produktstrategie“ bis „Einbindung in Behördenwerkzeuge“ der [Abschlusspräsentation](https://claude.ai/artifact/9afnq6xg11xyqzPzGcjT7w), Kern ist „Roadmap: GovGuard im Behördenablauf“ (Phasen 1, 2a, 2b, 3, 4). [AUSBAU.md](AUSBAU.md) ist veraltet und keine Quelle.
+**Maßgeblich für die Roadmap** sind allein die Backup-Folien „Produktstrategie“ bis „Einbindung in Behördenwerkzeuge“ der [Abschlusspräsentation](https://claude.ai/artifact/9afnq6xg11xyqzPzGcjT7w), Kern ist „Roadmap: GovGuard im Behördenablauf“ (Phasen 1 Messen, 2 Verbessern nachgeprüft, 3 Abgleich klein, 4 Abgleich breit; Begründung der Reihenfolge auf „Nächste Schritte und Risiken“). [AUSBAU.md](AUSBAU.md) ist veraltet und keine Quelle.
 Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sich. Hier stehen nur Aufgaben und Befehle, Ergebnisse stehen in Issues, ADRs und `docs/research/`. Hake die Kästchen im Editor ab.
 
 **Legende:** 👤 du · 🤖 Claude · 🧩 Subagent · 🆕 neue Session (`/clear`) · 🔀 Halt: du entscheidest · `/…` Befehl zum Eintippen.
@@ -19,17 +19,19 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 
 **Reihenfolge:**
 
-| Schritt | Was                                                                          | Skill                                     | Hängt ab von                    | Schätzung (Annahme) |
-| ------- | ---------------------------------------------------------------------------- | ----------------------------------------- | ------------------------------- | ------------------- |
-| P0      | Stand sichern                                                                | –                                         | –                               | < 1 %               |
-| P1      | #81 Befunde nach Fundstelle                                                  | `/prototype`, `/tdd`                      | P0                              | 10–15 %, ohne Ist   |
-| P1b     | #83 KI-Kennzeichnung, #84 Fundstelle = Abschnitt, #82 Maßnahme je Fundstelle | `/prototype`, `/tdd`, `/code-review` (🧩) | P1                              | 25–40 %, Messlatte  |
-| P1c     | #85 Fehlenden Abschnitt vorschlagen                                          | `/tdd`, `/code-review` (🧩)               | P1b                             | 8–12 %              |
-| P2      | Recherche Testdaten                                                          | `/research`                               | P0, läuft im Hintergrund        | 5–10 %              |
-| P3      | Roadmap-Karte und Schätzung                                                  | `/wayfinder`                              | P1b (Messlatte), parallel zu P2 | 8–12 %              |
-| P4      | Prüfregeln festlegen                                                         | `/grill-with-docs`                        | P2 und P3                       | 3–5 %               |
-| P5      | Karte in baubare Tickets                                                     | `/to-spec`, `/to-tickets`                 | P3 und P4                       | 3–5 %               |
-| P6 ff.  | Umsetzung je Ticket                                                          | `/tdd`, `/code-review`                    | P5                              | entsteht in P5      |
+| Schritt | Was                                                                          | Skill                                     | Hängt ab von                     | Schätzung (Annahme) |
+| ------- | ---------------------------------------------------------------------------- | ----------------------------------------- | -------------------------------- | ------------------- |
+| P0      | Stand sichern                                                                | –                                         | –                                | < 1 %               |
+| P1      | #81 Befunde nach Fundstelle                                                  | `/prototype`, `/tdd`                      | P0                               | 10–15 %, ohne Ist   |
+| P1b     | #83 KI-Kennzeichnung, #84 Fundstelle = Abschnitt, #82 Maßnahme je Fundstelle | `/prototype`, `/tdd`, `/code-review` (🧩) | P1                               | 25–40 %, Messlatte  |
+| P1c     | #86 Kasten der Fundstelle entschlacken                                       | `/prototype`, `/tdd`, `/code-review` (🧩) | P1b                              | 10–15 %             |
+| P1d     | #85 Fehlenden Abschnitt vorschlagen                                          | `/tdd`, `/code-review` (🧩)               | P1c (Darstellung des Vorschlags) | 8–12 %              |
+| P2      | Recherche Testdaten                                                          | `/research`                               | P0, läuft im Hintergrund         | 5–10 %              |
+| P2b     | #88 Maßnahmen: Bündel messen und stabil machen                               | `/tdd`, `/code-review` (🧩)               | P1c                              | 10–15 %             |
+| P3      | Roadmap-Karte und Schätzung                                                  | `/wayfinder`                              | P1b (Messlatte), parallel zu P2  | 8–12 %              |
+| P4      | Prüfregeln festlegen                                                         | `/grill-with-docs`                        | P2 und P3                        | 3–5 %               |
+| P5      | Karte in baubare Tickets                                                     | `/to-spec`, `/to-tickets`                 | P3 und P4                        | 3–5 %               |
+| P6 ff.  | Umsetzung je Ticket                                                          | `/tdd`, `/code-review`                    | P5                               | entsteht in P5      |
 
 ---
 
@@ -88,15 +90,34 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 
 ---
 
-### Schritt P1c – #85 Fehlenden Abschnitt vorschlagen
+### Schritt P1c – #86 Kasten der Fundstelle entschlacken
+
+**Ziel:** Seit #82 ist der Kasten einer Fundstelle überladen. Wer eine Stelle behebt, soll auf einen Blick sehen, was zu tun ist; Befunde und Maßnahmen bleiben vollständig erreichbar. Ein Prototyp entscheidet die Darstellung vor dem Bau, auch die des eingefügten Kapitels aus #85.
+**Voraussetzung:** P1b. Vor #85, weil #85 einen zweiten Vorschlag zeigt: Was hier für den Vorschlag entschieden wird, übernimmt #85, statt danach umgebaut zu werden. Keine fachliche Änderung, kein neuer Modellaufruf, keine Groq-Kosten (Modellantwort im Prototyp erfunden).
+
+- [x] **Starten** 🆕 _Opus_ · 👤 `Lies docs/FAHRPLAN_PHASE_2.md Schritt P1c` → 🤖 `.claude/budget.sh start P1c`, Vorlage mit den offenen Fragen aus #86 (was zu viel ist) → 👤 Go
+- [x] **Prototyp** 🧩 _Sonnet_ `/prototype Issue #86` 2–3 Varianten des Kastens auf der echten Galerie, umschaltbar per `?variant=`, Branch `prototype/86-kasten` (Worktree); je Variante auch ein erfundener Vorschlag „Fehlender Abschnitt“ in der Gruppe „Betrifft mehrere Abschnitte“ → 🤖 startet ihn mit `/run`
+- [x] **🔀 Halt: Variante wählen** 👤 alle Varianten an `spec-meldeportal-gesundheit` (Zeilen 43–48) und an `arch-antragseingang-fehlerhaft` (ArchiveRole) ansehen → 🤖 Prototyp-Kommentar in #86 und Hinweis in #85, welche Darstellung #85 übernimmt
+- [x] **Bauen** 🧩 _Sonnet_ `/tdd Issue #86` nach dem Prototyp-Kommentar → 🧩 _Opus_ `/code-review gegen Issue #86` → 🧩 behebt die Befunde
+- [x] **🔀 Halt: Kasten ansehen** 🤖 startet Streamlit lokal mit Passwort · 👤 dieselben zwei Fälle, einmal mit Maßnahme → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder
+- [x] **Abnahme** 🤖 Akzeptanzkriterien von #86, `.claude/budget.sh end P1c "10–15 %" 86`
+- [-] **Verstehen** 👤 `/verstehen 86 Weniger zeigen, nichts verlieren`
+- [x] **Abschließen** 👤 committet und pusht, schließt #86; löscht den Prototyp-Worktree
+
+**Fertig, wenn:** #86 geschlossen ist, `pytest`, `pytest -m visual` und ruff grün sind, die Budget-Zeile in SCHAETZUNG.md steht und #85 auf die gewählte Darstellung verweist.
+**Fürs Fachgespräch:** Erst die Darstellung, dann der zweite Vorschlag: So entscheide ich das Muster einmal und baue es nicht zweimal.
+
+---
+
+### Schritt P1d – #85 Fehlenden Abschnitt vorschlagen
 
 **Ziel:** Für Befunde, die über mehrere Abschnitte reichen und meist etwas Fehlendes beschreiben, schlägt ein Modell auf Klick ein neues Kapitel mit Platzhaltern vor, eingefügt hinter einem genannten Abschnitt. Kein Umbau des Dokuments.
-**Voraussetzung:** P1b. Nutzt Knopf, Passwort, KI-Baustein und Datenformat aus #82 (leeres Vorher = einfügen); Groq nur auf Klick, mit erfundenen Daten.
+**Voraussetzung:** P1c. Nutzt Knopf, Passwort, KI-Baustein und Datenformat aus #82 (leeres Vorher = einfügen) und die Darstellung des Vorschlags aus #86; Groq nur auf Klick, mit erfundenen Daten.
 
-- [ ] **Starten** 🆕 _Opus_ · 👤 `Lies docs/FAHRPLAN_PHASE_2.md Schritt P1c` → 🤖 `.claude/budget.sh start P1c`, Vorlage mit der offenen Frage aus #85 (ein Kapitel je Befund oder gebündelt) → 👤 Go
-- [ ] **Bauen** 🧩 _Sonnet_ `/tdd Issue #85` → 🧩 _Opus_ `/code-review gegen Issue #85` → 🧩 behebt die Befunde
+- [ ] **Starten** 🆕 _Opus_ · 👤 `Lies docs/FAHRPLAN_PHASE_2.md Schritt P1d` → 🤖 `.claude/budget.sh start P1d`, Vorlage mit der offenen Frage aus #85 (ein Kapitel je Befund oder gebündelt) → 👤 Go
+- [ ] **Bauen** 🧩 _Sonnet_ `/tdd Issue #85` mit der Darstellung aus dem Prototyp-Kommentar in #86 → 🧩 _Opus_ `/code-review gegen Issue #85` → 🧩 behebt die Befunde
 - [ ] **🔀 Halt: Vorschlag ansehen** 🤖 startet Streamlit lokal mit Passwort · 👤 „Fehlenden Abschnitt vorschlagen“ in `spec-meldeportal-gesundheit` → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder
-- [ ] **Abnahme** 🤖 Akzeptanzkriterien von #85, `.claude/budget.sh end P1c "8–12 %" 85`
+- [ ] **Abnahme** 🤖 Akzeptanzkriterien von #85, `.claude/budget.sh end P1d "8–12 %" 85`
 - [ ] **Verstehen** 👤 `/verstehen 85 Einfügen statt ersetzen`
 - [ ] **Abschließen** 👤 committet und pusht, schließt #85
 
@@ -118,6 +139,25 @@ Ein Eintrag je Schritt, in Bearbeitungsreihenfolge; jeder Eintrag steht für sic
 - [ ] **Abschließen** 👤 committet die Recherche
 
 **Fertig, wenn:** Die Datei in `docs/research/` liegt, jede Aussage eine Quelle hat und Frage 5 als Tabelle beantwortet ist.
+
+---
+
+### Schritt P2b – #88 Maßnahmen: Bündel messen und stabil machen
+
+**Ziel:** Ein Vorschlag zur selben Fundstelle bündelt die Befunde bei jedem Lauf anders, und eine Maßnahme trägt bis zu 19 von 22 Befunden. Erst messen, wie stark die Bündel schwanken; dann entscheidest du, ob der Code die Bündel bildet und das Modell nur Satz und Nachher je Bündel schreibt.
+**Voraussetzung:** P1c (Darstellung der Maßnahmen). Groq nur mit erfundenen Daten; der Messlauf kostet Cent, lokal braucht er `GROQ_API_KEY` in `.env`.
+
+- [ ] **Starten** 🆕 _Opus_ · 👤 `Lies docs/FAHRPLAN_PHASE_2.md Schritt P2b` → 🤖 `.claude/budget.sh start P2b`, Vorlage mit den offenen Fragen aus #88 (Regel der Bündel, ein Aufruf je Bündel oder einer für alle) → 👤 Go
+- [ ] **Messen** 🧩 _Sonnet_ `/tdd` Mess-Skript neben `/audit-messen`, dann 5 Läufe an 3 Fundstellen, darunter „5 Analyse der Nutzung“ im Musterfall Schuleingangsuntersuchung → 🤖 Ergebnis und Kosten als Kommentar in #88
+- [ ] **🔀 Halt: Bündeln entscheiden** 👤 Paar-Übereinstimmung, Maßnahmen und Befunde je Maßnahme lesen → Code bündelt (ändert Prompt und Kosten) oder bleibt, wie es ist
+- [ ] **Bauen** (nur bei „Code bündelt“) 🧩 _Sonnet_ `/tdd Issue #88` → 🧩 _Opus_ `/code-review gegen Issue #88` → 🧩 behebt die Befunde; das Mess-Skript zeigt danach 100 %
+- [ ] **🔀 Halt: Maßnahme ansehen** 🤖 startet Streamlit lokal mit Passwort · 👤 „Maßnahme vorschlagen“ an „5 Analyse der Nutzung“, zweimal → „ok“ oder was nicht passt → 🤖 erneuert die Vergleichsbilder
+- [ ] **Abnahme** 🤖 Akzeptanzkriterien von #88, `.claude/budget.sh end P2b "10–15 %" 88`
+- [ ] **Verstehen** 👤 `/verstehen 88 Code bündelt, Modell formuliert`
+- [ ] **Abschließen** 👤 committet und pusht, schließt #88
+
+**Fertig, wenn:** #88 geschlossen ist, das Messergebnis in #88 steht, `pytest`, `pytest -m visual` und ruff grün sind und die Budget-Zeile in SCHAETZUNG.md steht.
+**Fürs Fachgespräch:** Was sich deterministisch entscheiden lässt, entscheidet der Code; das Sprachmodell formuliert nur. So wird der Vorschlag wiederholbar, und man kann ihn messen.
 
 ---
 

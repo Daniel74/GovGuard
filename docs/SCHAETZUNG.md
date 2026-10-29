@@ -60,3 +60,4 @@ Laufen zwei Schritte parallel, enthält jede Messung auch den anderen. Für #81 
 | Schritt | Datum | Issue | geschätzt | Ist |
 |---|---|---|---|---|
 | P1b | 28.10.2026 | #83, #84, #82 | 25–40 % | 0 % Weekly |
+| P1c | 29.10.2026 | #86 | 10–15 % | 0 % Weekly |

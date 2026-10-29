@@ -24,6 +24,7 @@ from govguard_ui.report.remediation_view import (
     request,
 )
 from govguard_ui.report.site_assets import CSS, HTML
+from govguard_ui.report.site_box import first_to_look_at
 from govguard_ui.report.site_data import site_data
 from govguard_ui.report.site_groups import MULTI, WITHOUT, render_group
 from govguard_ui.report.site_script import JS
@@ -70,10 +71,10 @@ def _render_document(
     closed = st.session_state.get(_closed_key(key)) == selected.rule_id
     state = f"{key}_sites"
 
-    def site_clicked() -> None:  # the bar or a line: the first finding of the site, by lines
+    def site_clicked() -> None:  # the bar or a line: the first WARN/FAIL of the site (#86)
         if index := st.session_state[state].site:
             st.session_state.pop(_closed_key(key), None)
-            select(key, sites.placed[int(index)].findings[0].rule_id)
+            select(key, first_to_look_at(sites.placed[int(index)]).rule_id)
 
     def finding_clicked() -> None:
         if rule_id := st.session_state[state].clicked:

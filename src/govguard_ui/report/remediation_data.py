@@ -47,8 +47,13 @@ def suggestion_key(site: Site, digest: str) -> str:
 def _measure(measure: Measure) -> dict:
     where = (f"Zeile {measure.line_start}" if measure.line_start == measure.line_end
              else f"Zeilen {measure.line_start}–{measure.line_end}")
-    return {"sentence": measure.sentence, "before": measure.before, "after": measure.after,
-            "lines": where, "anchors": measure.anchors}
+    n = len(measure.rule_ids)
+    content = "\n".join([measure.sentence, where, measure.before, measure.after])
+    return {"id": hashlib.sha256(content.encode()).hexdigest()[:12],  # the browser's fold key
+            "sentence": measure.sentence, "before": measure.before, "after": measure.after,
+            "lines": where, "anchors": measure.anchors,
+            "covers": f"deckt {n} {'Befund' if n == 1 else 'Befunde'} ab",
+            "rule_ids": measure.rule_ids}  # the box puts the visible findings under the measure
 
 
 def _block(stored: Proposals, key: str) -> dict | None:

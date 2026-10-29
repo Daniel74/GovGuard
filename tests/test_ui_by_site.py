@@ -9,6 +9,7 @@ import json
 
 from streamlit.testing.v1 import AppTest
 from ui_helpers import (
+    SPEC,
     arch_key,
     arch_page,
     conditions_page,
@@ -18,6 +19,8 @@ from ui_helpers import (
     spec_page,
 )
 
+from govguard_ui.gallery import load_gallery
+from govguard_ui.paths import GALLERY, PRESETS
 from govguard_ui.report.findings_view import BY_RULE, BY_SITE
 
 VIEW = arch_key("view")
@@ -179,7 +182,7 @@ def test_a_click_on_a_finding_over_several_sections_selects_it_and_marks_its_lin
     assert (document["selected"], document["current"]) == (MULTI_FINDING, None)
     assert [n["n"] for n in document["lines"] if n["in_finding"]] == list(range(1, 201))
     [several] = [e for e in app.expander if "aus mehreren Abschnitten" in e.label]
-    assert several.proto.expanded  # open while it holds the selected finding
+    assert not several.proto.expanded  # shut by default, also while it holds the selected one
 
 
 def has(app: AppTest, key: str) -> bool:
@@ -190,7 +193,7 @@ def has(app: AppTest, key: str) -> bool:
 
 
 def test_the_selected_finding_of_the_group_is_marked_and_the_others_are_not() -> None:
-    """The mark is a CSS class of the keyed container, like .item.sel in the box under a site."""
+    """The mark is a CSS class of the keyed container, like .frow.sel in the box under a site."""
     marked, idle = (arch_key(f"multi_item_{state}ARCH-CIS-2.20") for state in ("sel_", ""))
     other = arch_key("multi_item_ARCH-CIS-2.15")
     app = arch_page(view=None)
@@ -207,3 +210,56 @@ def test_findings_without_lines_have_no_button_to_show_lines() -> None:
 
     assert any(e.label.endswith("Befunde ohne Zeilen im Dokument") for e in app.expander)
     assert not [b for b in app.button if b.key and "_show_" in b.key]
+
+
+def test_the_fold_row_opens_by_itself_when_the_selected_finding_lies_inside() -> None:
+    """#86: a PASS chosen in the document must not hide behind a closed row."""
+    app = arch_page(view=None)
+    [document] = site_documents(app)
+    assert not any(s["rest_auto"] for s in document["sites"])  # the first row is a FAIL
+    passing = next(f["id"] for s in document["sites"] for f in s["findings"]
+                   if f["id"] in s["rest"])
+
+    app.session_state[SELECTED] = passing
+    app.run()
+
+    [document] = site_documents(app)
+    opened = [s for s in document["sites"] if s["rest_auto"]]
+    assert len(opened) == 1 and passing in opened[0]["rest"]
+
+
+def test_each_site_lists_warn_and_fail_apart_from_the_findings_without_need_to_act() -> None:
+    [document] = site_documents(arch_page(view=None))
+
+    for site in document["sites"]:
+        look = {f["id"]: f["look"] for f in site["findings"]}
+        assert {look[i] for i in site["open"]} <= {"fail", "warn"}
+        assert not {look[i] for i in site["rest"]} & {"fail", "warn"}
+        assert sorted(site["open"] + site["rest"]) == sorted(look)
+
+
+def test_the_group_over_several_sections_is_shut_even_when_it_holds_the_selected_finding() -> None:
+    """#86: the reader opens it; the group without lines still opens with its selected finding."""
+    app = arch_page(view=None)
+    app.session_state[SELECTED] = MULTI_FINDING
+    app.run()
+
+    [several] = [e for e in app.expander if "aus mehreren Abschnitten" in e.label]
+
+    assert not several.proto.expanded
+    assert has(app, arch_key(f"multi_item_sel_{MULTI_FINDING}"))  # marked, hidden in the shut group
+
+
+def test_the_group_without_lines_still_opens_with_its_selected_finding() -> None:
+    entry = next(e for e in load_gallery(PRESETS, GALLERY) if e.preset_id == SPEC)
+    unplaced = next(f.rule_id for f in entry.report.findings
+                    if f.line_start is None and f.status == "N/A")
+    app = spec_page(view=None)
+    app.pills(key=spec_key("status")).set_value(["N/A"]).run()  # the group shows N/A
+    label = "Befunde ohne Zeilen im Dokument"
+    assert not any(e.proto.expanded for e in app.expander if e.label.endswith(label))
+
+    app.session_state[spec_key("selected")] = unplaced
+    app.run()
+
+    assert next(e for e in app.expander if e.label.endswith(label)).proto.expanded

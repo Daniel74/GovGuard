@@ -8,6 +8,7 @@ from govguard.checks.sites import Site, Sites
 from govguard.models import Finding
 from govguard_ui.report.ai_label import ai_texts
 from govguard_ui.report.review import category
+from govguard_ui.report.site_box import box_parts
 from govguard_ui.report.site_lines import line_rows
 from govguard_ui.style import LOOKS, status_text
 
@@ -27,7 +28,10 @@ def _finding(finding: Finding) -> dict:
             "by_code": finding.by_code}  # texts without the "KI" marker (#83)
 
 
-def _site(site: Site, suggest: Callable[[Site], dict | None]) -> dict:
+def _site(site: Site, suggest: Callable[[Site], dict | None], selected: str) -> dict:
+    offered = suggest(site)  # button and proposal, None below two WARN/FAIL (#82)
+    block = offered and offered["block"]
+    measures = [] if not block or block["failed"] else block["measures"]
     where = place(site.line_start, site.line_end)
     mix = " · ".join(f"{LOOKS[s].symbol} {n}" for s, n in site.status_counts)
     counts = ", ".join(f"{n} × {LOOKS[s].label}" for s, n in site.status_counts)
@@ -36,7 +40,8 @@ def _site(site: Site, suggest: Callable[[Site], dict | None]) -> dict:
             "look": LOOKS[site.worst].css, "count": str(len(site.findings)),
             "start": site.line_start, "end": site.line_end,
             "findings": [_finding(f) for f in site.findings],
-            "suggest": suggest(site)}  # button and proposal, None below two WARN/FAIL (#82)
+            **box_parts(site, selected, measures),  # what the box shows where (#86)
+            "suggest": offered}
 
 
 def site_data(
@@ -55,7 +60,7 @@ def site_data(
         "lines": [{"n": r.number, "text": r.text, "bar": r.bar and r.bar.model_dump(),
                    "tint": r.tint and LOOKS[r.tint].css, "in_site": r.in_site,
                    "in_finding": r.in_finding} for r in rows],
-        "sites": [_site(s, suggest) for s in sites.placed],
+        "sites": [_site(s, suggest, selected.rule_id) for s in sites.placed],
         "current": current, "open": not closed, "selected": selected.rule_id, "back": back,
         "ai": ai_texts(),  # marker and tip of the AI label, one source with the Python views (#83)
     }

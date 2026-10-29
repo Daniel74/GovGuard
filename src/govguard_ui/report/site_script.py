@@ -1,102 +1,21 @@
-"""The script of the document with its sites (CCv2, #81, #84). LLM text goes into the page as
-textContent: never a link, image or tag."""
+"""The script of the document with its sites (CCv2, #81, #84): lines, bars, the way back. The box
+under a site is in site_box_script (#86), the DOM helpers in site_dom_js; the three are one
+script. LLM text goes into the page as textContent: never a link, image or tag."""
 
-JS = """
-function el(tag, css, text) {
-  const e = document.createElement(tag)
-  if (css) e.className = css
-  if (text !== undefined) e.textContent = text  // LLM text: textContent, never innerHTML
-  return e
-}
+from govguard_ui.report.site_box_script import BOX_JS
+from govguard_ui.report.site_dom_js import DOM_JS
 
-function press(node, action) {  // a click, or Enter and Space like a button
-  node.onclick = (event) => { event.stopPropagation(); action() }
-  node.onkeydown = (event) => {
-    if (event.key !== "Enter" && event.key !== " ") return
-    event.preventDefault()
-    event.stopPropagation()
-    action()
-  }
-}
-
-function labelled(css, name, text, ai, byCode) {  // "Begründung KI: text", like ai_label()
-  const div = el("div", css)
-  div.appendChild(el("strong", "", name))
-  if (!byCode) div.appendChild(el("span", "ai", ai.marker)).title = ai.tip  // not on code text
-  div.appendChild(document.createTextNode(": "))
-  div.appendChild(el("span", "", text))  // LLM text: textContent, never innerHTML
-  return div
-}
-
-function item(f, selected, choose, ai) {  // twin of _finding() in site_groups.py: change both
-  const div = el("div", "item" + (f.id === selected ? " sel" : ""))
-  div.tabIndex = 0
-  const head = div.appendChild(el("div"))
-  head.appendChild(el("span", "badge b-" + f.look, f.status))
-  head.appendChild(el("span", "t", f.title))
-  div.appendChild(el("div", "a", f.anchor + " · " + f.lines))
-  const code = (name) => f.by_code.includes(name)  // texts the code wrote: no marker
-  // order of the detail view: why, then what
-  div.appendChild(labelled("w", "Begründung", f.rationale, ai, code("rationale")))
-  if (f.recommendation) {
-    div.appendChild(labelled("r", "Empfehlung", f.recommendation, ai, code("recommendation")))
-  }
-  press(div, () => choose(f.id))
-  return div
-}
-
-function proposal(block) {  // the measures above the findings; all texts of the model as text
-  const div = el("div", "sugg")
-  const head = div.appendChild(el("div", "sugg-h"))
-  head.appendChild(el("strong", "", block.heading))
-  head.appendChild(el("span", "ai", block.ai.marker)).title = block.ai.tip
-  head.appendChild(el("span", "muted", block.hint))
-  if (block.failed) div.appendChild(el("div", "m-none", block.text))
-  block.measures.forEach((m, i) => {
-    div.appendChild(el("div", "m-t", (i + 1) + ". " + m.sentence))
-    for (const [name, text] of [["Vorher · " + m.lines, m.before], ["Nachher", m.after]]) {
-      div.appendChild(el("div", "m-l", name))
-      div.appendChild(el("pre", "m-code", text))
-    }
-    div.appendChild(el("div", "m-c", "deckt ab: " + m.anchors.join(" · ")))
-  })
-  return div
-}
-
-function suggestion(div, head, index, data, send) {  // #82: button in the head, block under it
-  const suggest = data.sites[index].suggest
-  if (!suggest) return  // fewer than two WARN/FAIL: no button
-  const button = el("button", "sugg-btn", suggest.label)
-  head.insertBefore(button, head.children[1])
-  press(button, () => send("suggest", String(index)))
-  if (suggest.note) div.appendChild(el("div", "note", suggest.note))
-  if (suggest.block) div.appendChild(proposal(suggest.block))
-}
-
-function box(index, data, send) {
-  const site = data.sites[index]
-  const div = el("div", "box")
-  const head = div.appendChild(el("div", "head"))
-  head.appendChild(el("b", "", site.label))
-  for (const [text, step] of [["‹ vorige", -1], ["nächste ›", 1]]) {
-    const button = head.appendChild(el("button", "", text))
-    button.disabled = !data.sites[index + step]
-    press(button, () => send("site", String(index + step)))
-  }
-  press(head.appendChild(el("button", "", "schließen")), () => send("closed", data.selected))
-  suggestion(div, head, index, data, send)
-  const choose = (id) => send("clicked", id)
-  for (const f of site.findings) div.appendChild(item(f, data.selected, choose, data.ai))
-  return div
-}
-
+_DOCUMENT_JS = """
 function back(info) {  // a finding over several sections: its lines stand marked, the way back
   const div = el("div", "back")
   div.appendChild(el("span", "", "Markiert: " + info.title + " · " + info.lines))
   const link = div.appendChild(el("button", "link", "↑ zurück zum Befund"))
   press(link, () => {  // the chosen item of the group: in the page, outside this shadow root
     const item = document.querySelector('[class*="_multi_item_sel_"]')
-    if (item) item.scrollIntoView({ block: "center", behavior: "smooth" })
+    if (!item) return
+    const group = item.closest("details")  // the group is shut by default: open it the way the
+    if (group && !group.open) group.querySelector("summary").click()  // reader would (#86)
+    setTimeout(() => item.scrollIntoView({ block: "center", behavior: "smooth" }), 100)
   })
   return div
 }
@@ -123,10 +42,15 @@ function bar(cell, data, send, lineDivs) {
   return span
 }
 
-export default function ({ data, parentElement, setTriggerValue }) {
-  const send = setTriggerValue
-  const doc = parentElement.querySelector(".doc")
+function focusKey(doc) {  // the row with the focus: the redraw replaces every node
+  const active = doc.getRootNode().activeElement
+  return active && active.dataset ? active.dataset.key : undefined
+}
+
+function paint(ctx) {  // the whole document; also a click on a fold, which is no rerun
+  const { data, send, doc } = ctx
   const kept = doc.scrollTop
+  const focus = focusKey(doc)
   const rows = data.back ? [back(data.back)] : []
   const lineDivs = []
   for (const line of data.lines) {
@@ -144,11 +68,12 @@ export default function ({ data, parentElement, setTriggerValue }) {
     rows.push(div)
     lineDivs.push(div)
     const current = data.sites[data.current]
-    if (data.open && current && current.end === line.n) rows.push(box(data.current, data, send))
+    if (data.open && current && current.end === line.n) rows.push(box(data.current, ctx))
   }
   doc.replaceChildren(...rows)
   const chosen = doc.querySelector(".l.in-finding")  // first line of the finding, in any section
-  const fresh = doc.dataset.selected !== data.selected  // a new choice, not a rerun
+  // a new choice, not a rerun; one made at the box (its line clicked) leaves the view where it is
+  const fresh = doc.dataset.selected !== data.selected && !ctx.ui.stay
   const top = chosen ? chosen.offsetTop - doc.offsetTop : 0
   const hidden = top < kept || top > kept + doc.clientHeight - 80  // out of sight in the box
   doc.scrollTop = chosen && fresh && hidden ? top - 60 : kept
@@ -156,5 +81,34 @@ export default function ({ data, parentElement, setTriggerValue }) {
     chosen.scrollIntoView({ block: "center", behavior: "smooth" })  // the page too, not at load
   }
   doc.dataset.selected = data.selected
+  const again = focus && doc.querySelector('[data-key="' + CSS.escape(focus) + '"]')
+  if (again) again.focus({ preventScroll: true })  // Enter on a row must not lose the focus
+}
+
+function foldState(doc, data) {  // what is open in the box lives here, in the browser (#86)
+  const ui = doc._ui || (doc._ui = { openMeasures: {}, openCovers: {}, openFindings: {} })
+  const site = data.sites[data.current]
+  const section = site ? site.start + "-" + site.end : null  // not the list index: a filter or
+  if (ui.section !== section) {  // a new audit moves other sections there; another one is fresh
+    Object.assign(ui, { openMeasures: {}, openCovers: {}, openFindings: {}, section })
+    delete ui.restOpen
+  }
+  if (ui.selected !== data.selected) {  // a finding starts shut, unless its line was clicked
+    const clicked = ui.opening === data.selected
+    Object.assign(ui, { openFindings: clicked ? { [data.selected]: true } : {},
+                        selected: data.selected, stay: clicked })  // stay: the view stays put
+    delete ui.opening
+    if (site && site.rest_auto) delete ui.restOpen  // the fold opens when the choice lies inside
+  }
+  return ui
+}
+
+export default function ({ data, parentElement, setTriggerValue }) {
+  const doc = parentElement.querySelector(".doc")
+  const ctx = { data, doc, send: setTriggerValue, ui: foldState(doc, data), draw: null }
+  ctx.draw = () => paint(ctx)
+  paint(ctx)
 }
 """
+
+JS = DOM_JS + BOX_JS + _DOCUMENT_JS

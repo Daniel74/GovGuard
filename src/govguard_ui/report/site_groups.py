@@ -21,20 +21,23 @@ class GroupTexts(NamedTuple):
     heading: str
     help: str
     label: str  # of the expander, after the count
+    opens_with_selection: bool = True  # else shut: the reader opens it, and it stays open (#86)
 
 
 MULTI = GroupTexts("multi", "Betrifft mehrere Abschnitte", HELP["multi_section"],
-                   "Befunde mit Belegen aus mehreren Abschnitten")
+                   "Befunde mit Belegen aus mehreren Abschnitten", opens_with_selection=False)
 WITHOUT = GroupTexts("without", "Ohne Zeilen", HELP["without_lines"],
                      "Befunde ohne Zeilen im Dokument")
 
 
 def render_group(texts: GroupTexts, findings: list[Finding], selected: Finding, key: str) -> None:
-    """key: of the report; the expander is open while it holds the selected finding."""
+    """key: of the report; the expander opens with the selected finding, unless the group is shut
+    by default (MULTI): there the reader opens it and the browser keeps it open."""
     if not findings:
         return
     st.markdown(f"#### {texts.heading} · {len(findings)}", help=texts.help)
-    with st.expander(f"{len(findings)} {texts.label}", expanded=selected in findings,
+    expanded = texts.opens_with_selection and selected in findings
+    with st.expander(f"{len(findings)} {texts.label}", expanded=expanded,
                      key=f"{key}_{texts.slug}"):
         for finding in findings:
             _item(texts, finding, finding == selected, key)
@@ -56,9 +59,9 @@ def _text(label: str, text: str, by_code: bool) -> str:
 
 
 def _finding(finding: Finding) -> None:
-    """Like the box under a site, in one block: status, rule, anchor and lines, why, then what.
-    Twin of item() in site_script: the component draws in its own shadow root, a change of the
-    layout goes to both."""
+    """Like the open finding in the box under a site, in one block: status, rule, anchor and
+    lines, why, then what. Twin of finding() and detail() in site_box_script: the component draws
+    in its own shadow root, a change of the layout goes to both."""
     parts = [f"<div>{badge(category(finding))} <strong>{html.escape(finding.title)}</strong></div>",
              f'<div style="color:#4A5361;font-size:14px">{html.escape(finding.primary_anchor)} · '
              f"{place(finding.line_start, finding.last_line)}</div>",

@@ -102,3 +102,46 @@ def test_a_finding_over_several_sections_gets_a_way_back_to_its_place_in_the_gro
 def test_a_finding_of_a_site_or_without_lines_has_no_way_back() -> None:
     assert data_for([finding("A"), finding("B", start=20, end=21)], "B")["back"] is None
     assert data_for([finding("A", start=None, end=None), finding("B")], "A")["back"] is None
+
+
+def test_a_site_names_what_the_box_shows_open_and_what_it_folds_away() -> None:
+    findings = [finding("P", "PASS", start=2, end=2), finding("W", "WARN", start=3, end=3),
+                finding("F", "FAIL", start=5, end=5), finding("N", "N/A", start=6, end=6)]
+
+    [site] = data_for(findings, "W")["sites"]
+
+    assert [f["id"] for f in site["findings"]] == ["P", "W", "F", "N"]  # all, by lines
+    assert (site["open"], site["rest"]) == (["F", "W"], ["P", "N"])
+    assert site["rest_text"] == "2 ohne Handlungsbedarf (1 erfüllt, 1 nicht anwendbar)"
+
+
+def test_the_fold_row_opens_by_itself_when_the_selected_finding_lies_inside() -> None:
+    findings = [finding("W", "WARN", start=3, end=3), finding("P", "PASS", start=5, end=5)]
+
+    assert data_for(findings, "P")["sites"][0]["rest_auto"] is True
+    assert data_for(findings, "W")["sites"][0]["rest_auto"] is False
+
+
+def test_with_a_proposal_the_visible_findings_are_assigned_to_its_measures() -> None:
+    findings = [finding("F", start=3, end=3), finding("W", "WARN", start=4, end=4),
+                finding("P", "PASS", start=5, end=5)]
+    block = {"measures": [{"id": "m1", "rule_ids": ["F", "W"]}], "failed": False}
+    chosen = findings[0]
+
+    data = site_data(group_sites(findings, SECTIONS), TEXT, chosen, False,
+                     suggest=lambda s: {"label": "x", "note": "", "block": block})
+
+    [site] = data["sites"]
+    assert site["by_measure"] == {"m1": ["F", "W"]} and site["leftover"] == []
+    assert site["rest"] == ["P"]
+
+
+def test_without_a_proposal_or_when_none_was_possible_nothing_is_assigned() -> None:
+    findings = [finding("F", start=3, end=3), finding("W", "WARN", start=4, end=4)]
+    failed = {"measures": [], "failed": True}
+
+    for offered in (None, {"label": "x", "note": "", "block": None},
+                    {"label": "x", "note": "", "block": failed}):
+        data = site_data(group_sites(findings, SECTIONS), TEXT, findings[0], False,
+                         suggest=lambda s, offered=offered: offered)
+        assert data["sites"][0]["by_measure"] == {} and data["sites"][0]["leftover"] == []

@@ -2,8 +2,8 @@
 
 The text of the LLM is Finding.rationale and Finding.recommendation and the measure of #82
 (Measure.sentence, Measure.after). A module that reads them must use the building block
-report/ai_label.py; the component in site_script is JS and takes the marker from its data
-(`ai.marker`). A new place that forgets the label fails here.
+report/ai_label.py; the component (site_dom_js, site_box_script) is JS and takes the marker from
+its data (`ai.marker`, drawn by `aiMark`). A new place that forgets the label fails here.
 """
 
 import re
@@ -13,7 +13,7 @@ UI = Path(__file__).parent.parent / "src" / "govguard_ui"
 MODEL_TEXT = re.compile(  # an attribute (finding.rationale) or a key ("rationale")
     r"""\.(?:rationale|recommendation|sentence|after)\b"""
     r"""|["'](?:rationale|recommendation|sentence|after)["']""")
-LABELLED = ("ai_label(", "ai_texts(", "ai.marker")  # a call of the block, or its data in the JS
+LABELLED = ("ai_label(", "ai_texts(", "ai.marker", "aiMark(")  # the block, or its data in the JS
 
 
 def unlabelled(root: Path) -> list[str]:

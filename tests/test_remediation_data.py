@@ -43,10 +43,33 @@ def test_a_proposal_shows_its_measures_and_the_button_says_neu_vorschlagen() -> 
     assert data["label"] == REDO
     block = data["block"]
     assert block["failed"] is False
-    assert block["measures"] == [{
+    assert [{k: v for k, v in m.items() if k != "id"} for m in block["measures"]] == [{
         "sentence": "Ziel eintragen.", "before": "  Resource: *", "after": "  Resource: [ARN]",
-        "lines": "Zeilen 5–6", "anchors": ["BSI X", "CIS Y"]}]
+        "lines": "Zeilen 5–6", "anchors": ["BSI X", "CIS Y"], "covers": "deckt 2 Befunde ab",
+        "rule_ids": ["A", "B"]}]
     assert "nur für diese Sitzung" in block["hint"] and "unverändert" in block["hint"]
+
+
+def test_a_measure_says_how_many_findings_it_covers_one_is_singular() -> None:
+    one = MEASURE.model_copy(update={"rule_ids": ["A"], "anchors": ["BSI X"]})
+
+    block = suggest_data(TWO, {suggestion_key(TWO, DIGEST): [MEASURE, one]}, "", DIGEST)["block"]
+
+    assert [m["covers"] for m in block["measures"]] == ["deckt 2 Befunde ab", "deckt 1 Befund ab"]
+
+
+def test_a_measure_has_an_id_of_its_content_a_new_proposal_gets_new_ids() -> None:
+    """The browser keeps a measure open by this id: a changed proposal must start closed."""
+    changed = MEASURE.model_copy(update={"after": "  Resource: [ANDERE ARN]"})
+    other = MEASURE.model_copy(update={"sentence": "Etwas anderes."})
+
+    def ids(*measures: Measure) -> list[str]:
+        stored = {suggestion_key(TWO, DIGEST): list(measures)}
+        block = suggest_data(TWO, stored, "", DIGEST)["block"]
+        return [m["id"] for m in block["measures"]]
+
+    assert ids(MEASURE) == ids(MEASURE)
+    assert len({*ids(MEASURE, other), *ids(changed)}) == 3
 
 
 def test_no_proposal_possible_is_shown_as_such_and_can_be_asked_again() -> None:

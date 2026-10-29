@@ -15,7 +15,13 @@ CODE = "  Zeile vorher\n  zweite Zeile"
 
 async def fake_measures(site: Site, document: str, model: object) -> list[Measure]:
     first = site.findings[0]
-    return [Measure(sentence="Bucket-Ziel eintragen.", before=CODE, after="  Zeile [Bucket-ARN]",
+    # the script runs again on every rerun: the count lives on the imported module
+    asked = vars(measure_runner).setdefault("fake_calls", [])
+    asked.append(site)
+    # long like a real one: it must wrap beside its caret, not under it (#86)
+    sentence = "Bucket-Ziel eintragen. " + "Die Protokolle landen in einem eigenen Bucket. " * 3
+    return [Measure(sentence=sentence.strip(), before=CODE,
+                    after=f"  Zeile [Bucket-ARN {len(asked)}]",
                     line_start=first.line_start, line_end=first.last_line,
                     rule_ids=[f.rule_id for f in site.findings],
                     anchors=[first.primary_anchor, "CIS AWS v7.0.0 3.1.4"])]

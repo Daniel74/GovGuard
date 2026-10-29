@@ -238,7 +238,9 @@ def test_a_click_on_a_column_head_sorts_ascending_and_enter_on_it_flips_the_orde
 
 def test_a_click_on_a_site_bar_opens_its_findings_under_the_site(page: Page,
                                                                   app_url: str) -> None:
-    """#81: the bar, the box under the last line of the site and a click on one of its findings."""
+    """#81, #86: the bar, the box under the last line of the site with the heading "Befunde", the
+    first WARN/FAIL chosen but shut; a click on a one-liner chooses and opens it, a second one
+    shuts it."""
     open_view(page, app_url, "gallery-spec")  # "nach Fundstelle" is the default
     expect(page.locator(".doc .bar").first).to_be_visible()
 
@@ -247,13 +249,163 @@ def test_a_click_on_a_site_bar_opens_its_findings_under_the_site(page: Page,
 
     box = page.locator(".box")
     expect(box).to_have_count(1)
-    expect(box.locator(".item").first).to_be_visible()
-    box.locator(".item").last.click()
+    expect(box.locator(".sec-h").first).to_have_text("Befunde")
+    chosen = box.locator(".frow.sel")
+    expect(chosen).to_have_count(1)
+    expect(chosen.locator(".badge")).to_have_class(re.compile("b-(fail|warn)"))  # not a PASS
+    expect(box.locator(".detail")).to_have_count(0)  # chosen, but shut
+    other = box.locator(".frow:not(.sel) .one").first
+    expect(other).to_be_visible()
+    other.click()
     settled(page)
-    expect(page.locator(".box .item.sel")).to_have_count(1)
-    page.locator(".box button", has_text="schließen").click()
+    expect(page.locator(".box .frow.sel")).to_have_count(1)
+    expect(page.locator(".box .frow.sel .detail")).to_contain_text("Begründung")  # stays open
+    expect(page.locator(".box .frow:not(.sel) .detail")).to_have_count(0)
+    page.locator(".box .frow.sel .one").click()  # the chosen one shuts, no rerun needed
+    expect(page.locator(".box .frow .detail")).to_have_count(0)
+    page.locator(".box .frow.sel .one").click()
+    expect(page.locator(".box .frow.sel .detail")).to_have_count(1)
+    page.locator('.box button[title="schließen"]').click()
     settled(page)
     expect(page.locator(".box")).to_have_count(0)
+
+
+def test_no_finding_opens_by_itself_not_with_the_arrows_either(page: Page, app_url: str) -> None:
+    open_view(page, app_url, "gallery-spec")
+    page.locator(".doc .bar.top").nth(3).click()
+    settled(page)
+    page.locator(".box .frow:not(.sel) .one").first.click()
+    expect(page.locator(".box .frow.sel .detail")).to_have_count(1)
+
+    page.locator('.box button[title="nächste Fundstelle"]').click()
+    settled(page)
+
+    expect(page.locator(".box .frow.sel")).to_have_count(1)  # the arrows choose, and leave it shut
+    expect(page.locator(".box .detail")).to_have_count(0)
+
+
+def test_pass_and_not_applicable_stand_behind_one_row_and_a_click_opens_it(
+        page: Page, app_url: str) -> None:
+    """#86: the box lists WARN/FAIL; the rest hides behind "n ohne Handlungsbedarf (…)"."""
+    open_view(page, app_url, "gallery-spec")
+    page.locator(".doc .bar.top").nth(3).click()
+    settled(page)
+    row = page.locator(".box .rest > .one")
+    expect(row).to_contain_text(re.compile(r"^▸\s*\d+ ohne Handlungsbedarf \(.*erfüllt"))
+    expect(page.locator(".box .frow .badge.b-pass")).to_have_count(0)
+    selected = page.locator(".box .frow.sel")
+    before = selected.text_content()
+
+    row.click()
+
+    expect(row).to_contain_text("▾")
+    expect(page.locator(".box .rest .frow")).not_to_have_count(0)
+    expect(page.locator(".box .rest .frow .badge.b-pass").first).to_be_visible()
+    expect(selected).to_have_text(before)  # opening the fold does not change the choice
+    row.click()
+    expect(page.locator(".box .rest .frow")).to_have_count(0)
+
+
+def test_the_keyboard_opens_the_fold_and_the_focus_stays_on_the_row(page: Page,
+                                                                    app_url: str) -> None:
+    """#86: Enter on a row redraws the box; the focus must not fall back to the page."""
+    open_view(page, app_url, "gallery-spec")
+    page.locator(".doc .bar.top").nth(3).click()
+    settled(page)
+    row = page.locator(".box .rest > .one")
+    expect(row).to_have_attribute("aria-expanded", "false")
+    expect(row.locator(".caret")).to_have_attribute("aria-hidden", "true")
+
+    row.focus()
+    page.keyboard.press("Enter")
+
+    expect(row).to_have_attribute("aria-expanded", "true")
+    expect(row).to_be_focused()
+    page.keyboard.press("Enter")
+    expect(row).to_have_attribute("aria-expanded", "false")
+    expect(row).to_be_focused()
+    expect(page.get_by_role("button", name="nächste Fundstelle")).to_be_visible()
+
+
+def test_enter_on_a_finding_chooses_it_and_the_focus_stays_after_the_rerun(
+        page: Page, app_url: str) -> None:
+    open_view(page, app_url, "gallery-spec")
+    page.locator(".doc .bar.top").nth(3).click()
+    settled(page)
+    other = page.locator(".box .frow:not(.sel) .one").first
+    key = other.get_attribute("data-key")
+
+    other.focus()
+    page.keyboard.press("Enter")
+    settled(page)
+
+    chosen = page.locator(".box .frow.sel .one")
+    expect(chosen).to_have_attribute("data-key", key)
+    expect(chosen).to_have_attribute("aria-expanded", "true")  # the click opens it
+    expect(chosen).to_be_focused()
+    page.keyboard.press("Enter")  # the chosen one shuts, the focus stays
+    expect(chosen).to_have_attribute("aria-expanded", "false")
+    expect(chosen).to_be_focused()
+
+
+def test_the_buttons_of_the_head_keep_the_focus_after_the_rerun(page: Page, app_url: str) -> None:
+    """#86: the redraw replaces the buttons, too; a keyboard reader must not start from the top."""
+    open_view(page, app_url, "gallery-spec")
+    page.locator(".doc .bar.top").nth(3).click()
+    settled(page)
+    head = page.locator(".box .head b")
+    before = head.inner_text()
+    button = page.get_by_role("button", name="nächste Fundstelle")
+
+    button.focus()
+    page.keyboard.press("Enter")
+    settled(page)
+
+    expect(head).not_to_have_text(before)
+    expect(page.get_by_role("button", name="nächste Fundstelle")).to_be_focused()
+
+
+def test_a_click_on_the_bar_opens_the_fold_again_that_the_reader_had_shut(
+        page: Page, app_url: str) -> None:
+    """#86: only PASS in the site, the second one chosen, the fold shut, the bar clicked: the
+    first PASS stands in sight, the fold opens by itself whenever the choice lies inside."""
+    open_view(page, app_url, "gallery-spec")
+    pills = page.locator('button[data-variant="pills"]')
+    for status in ("FAIL", "WARN", "N/A"):  # all four are on: a filter that leaves only PASS
+        pills.filter(has_text=LOOKS[status].label).click()
+    expect(page.locator(".doc .bar.top")).to_have_count(6)  # "6 Speicherung" has no PASS
+    settled(page)
+    bar = page.locator('.doc .bar[title^="4 Rechtsgrundlagen"]').first
+    bar.click()
+    expect(page.locator(".box .head b")).to_contain_text("4 Rechtsgrundlagen")
+    expect(page.locator(".box .rest .frow")).not_to_have_count(0)
+    page.locator(".box .rest .frow:not(.sel) .one").last.click()  # not the first PASS
+    settled(page)
+    first = page.locator(".box .rest .frow .one").first
+    expect(page.locator(".box .rest .frow.sel .one")).not_to_have_attribute(
+        "data-key", first.get_attribute("data-key"))
+    page.locator(".box .rest > .one").click()
+    expect(page.locator(".box .rest .frow")).to_have_count(0)  # shut by the reader
+
+    bar.click()
+    settled(page)
+
+    expect(page.locator(".box .rest > .one")).to_have_attribute("aria-expanded", "true")
+    expect(page.locator(".box .rest .frow.sel .one")).to_have_attribute(
+        "data-key", first.get_attribute("data-key"))
+
+
+def test_a_choice_inside_the_fold_opens_it_by_itself(page: Page, app_url: str) -> None:
+    """#86: the reader chose a PASS on purpose; it must not hide behind a closed row."""
+    open_view(page, app_url, "gallery-spec")
+    page.locator(".doc .bar.top").nth(3).click()
+    settled(page)
+    page.locator(".box .rest > .one").click()
+    page.locator(".box .rest .frow:not(.sel) .one").first.click()
+    settled(page)
+
+    expect(page.locator(".box .rest .frow.sel .detail")).to_have_count(1)
+    expect(page.locator(".box .rest > .one")).to_contain_text("▾")
 
 
 def test_llm_text_stands_in_the_sites_as_text_never_as_link_image_or_tag(
@@ -262,13 +414,14 @@ def test_llm_text_stands_in_the_sites_as_text_never_as_link_image_or_tag(
     settled(page)
     page.locator(".doc .bar.top").first.click()
     settled(page)
-    items = page.locator(".box .item")
+    items = page.locator(".box .frow")
     expect(items.first).to_be_visible()
+    items.first.locator(".one").click()  # the anchor stands in the text that opens
+    expect(items.first.locator(".a")).to_be_visible()
 
     assert items.locator("a, img, b").count() == 0
     expect(items.first.locator(".t")).to_contain_text(POISON)
-    expect(items.first.locator(".a")).to_contain_text(POISON)
-
+    expect(items.first.locator(".a")).to_contain_text(POISON)  # the chosen one stands open
 
 
 def test_a_click_on_a_line_opens_the_site_it_belongs_to(page: Page, app_url: str) -> None:
@@ -291,12 +444,12 @@ def test_next_and_previous_go_through_the_sites_by_line(page: Page, app_url: str
     head = page.locator(".box .head b")
     before = head.inner_text()
 
-    page.locator(".box button", has_text="nächste").click()
+    page.locator('.box button[title="nächste Fundstelle"]').click()
     settled(page)
     expect(head).not_to_have_text(before)
     assert first_line(head.inner_text()) > first_line(before)
 
-    page.locator(".box button", has_text="vorige").click()
+    page.locator('.box button[title="vorige Fundstelle"]').click()
     settled(page)
     expect(head).to_have_text(before)
 
@@ -322,6 +475,7 @@ def test_a_finding_over_several_sections_is_chosen_with_its_button_and_marked_in
     assert page.locator(".doc .l.in-finding").count() > 1
     expect(page.locator('[class*="_multi_item_sel_"]')).to_have_count(1)
     expect(page.locator(".box")).to_have_count(0)  # no site is current
+    expect(buttons.first).to_be_visible()  # the group the reader opened stays open (#86)
 
 
 def test_the_page_scrolls_to_the_marked_lines_and_a_link_leads_back_to_the_finding(
@@ -342,13 +496,58 @@ def test_the_page_scrolls_to_the_marked_lines_and_a_link_leads_back_to_the_findi
     expect(page.locator('[class*="_multi_item_sel_"]')).to_be_in_viewport()
 
 
+def test_the_group_over_several_sections_is_shut_and_the_way_back_opens_it(
+        page: Page, app_url: str) -> None:
+    """#86: the group is shut, also with the selected finding in it; "↑ zurück zum Befund" opens it
+    the way the reader would (a click on its head), then scrolls to the marked finding."""
+    open_view(page, app_url, "gallery-spec")  # the first row of the table is over several sections
+    buttons = page.get_by_role("button", name="Zeilen im Dokument zeigen")
+    expect(page.locator(".doc .back")).to_contain_text("Markiert: ")
+    expect(buttons.first).to_be_hidden()  # shut, though it holds the selected finding
+
+    page.locator(".doc .back button", has_text="zurück zum Befund").click()
+
+    expect(buttons.first).to_be_visible()
+    expect(page.locator('[class*="_multi_item_sel_"]')).to_be_in_viewport()
+
+
+def test_a_click_on_a_finding_in_the_box_marks_its_lines_but_moves_neither_document_nor_page(
+        page: Page, app_url: str) -> None:
+    """#86: the reader sits at the box; the lines of the finding may lie out of sight above it."""
+    open_view(page, app_url, "gallery-spec")
+    page.locator(".doc .bar.top").nth(3).click()  # "4 Rechtsgrundlagen", lines 37-50
+    expect(page.locator(".box .head b")).to_contain_text("4 Rechtsgrundlagen")
+    settled(page)
+    doc = page.locator(".doc")
+    target = page.locator(".box .frow:not(.sel) .one").first
+    target.scroll_into_view_if_needed()  # the document clips the box: show it first
+    top = target.evaluate("e => e.getBoundingClientRect().top")
+    page.evaluate(f"document.querySelector('section.stMain').scrollBy(0, {top} - 130)")
+    # the box stands near the top of the window, so its finding lines lie above the window
+
+    def scrolls() -> tuple[float, float]:  # the document (in a shadow root) and the page
+        return (doc.evaluate("e => e.scrollTop"),
+                page.evaluate("document.querySelector('section.stMain').scrollTop"))
+
+    before = scrolls()
+    marked = page.locator(".doc .l.in-finding").first.inner_text()
+
+    target.click()
+    settled(page)
+
+    expect(page.locator(".box .frow.sel .detail")).to_have_count(1)
+    assert page.locator(".doc .l.in-finding").first.inner_text() != marked  # marked anew
+    after = scrolls()
+    assert abs(after[0] - before[0]) <= 1 and abs(after[1] - before[1]) <= 1
+
+
 def test_a_click_inside_the_document_does_not_make_the_page_jump(page: Page, app_url: str) -> None:
     open_view(page, app_url, "gallery-spec")
     page.locator(".doc .bar.top").nth(3).click()
     settled(page)
     before = page.evaluate("document.querySelector('section.stMain').scrollTop")
 
-    page.locator(".box .item").last.click()
+    page.locator(".box .frow:not(.sel) .one").last.click()
     settled(page)
 
     assert page.evaluate("document.querySelector('section.stMain').scrollTop") == before
